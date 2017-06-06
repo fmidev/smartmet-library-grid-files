@@ -47,7 +47,7 @@ void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
 {
   try
   {
-    printf("IndexCacheSize = %u\n",(uint)mHashVector.size());
+    //printf("IndexCacheSize = %u\n",(uint)mHashVector.size());
     AutoThreadLock lock(&mThreadLock);
 
     if (mHashVector.size() == 0)

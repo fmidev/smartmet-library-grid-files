@@ -85,10 +85,10 @@ LIBS = -L$(libdir) \
 	-lfmt \
 	-lctpp2 \
 	-lgdal \
-	-lopenjpeg \
 	-ljpeg \
 	-lpng \
 	-lpthread -lrt
+#	-lopenjpeg \
 
 # What to install
 
