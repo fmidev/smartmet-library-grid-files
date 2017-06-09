@@ -5,7 +5,7 @@
 #include "common/GeneralDefinitions.h"
 #include "grib2/Message.h"
 
-#include <openjpeg.h>
+#include <openjpeg-1.5/openjpeg.h>
 #include <cstring>
 #include <iostream>
 #include <memory>

@@ -245,6 +245,25 @@ time_t getFileModificationTime(const char *filename)
 
 
 
+size_t getFileSize(const char *filename)
+{
+  try
+  {
+    struct stat buf;
+    if (stat(filename,&buf) == 0)
+      return buf.st_size;
+
+    return -1;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
 uint stringToId(const char *str,uint len)
 {
   try

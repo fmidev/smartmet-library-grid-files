@@ -2,6 +2,7 @@
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "common/AutoWriteLock.h"
+#include "common/AutoThreadLock.h"
 #include "common/AutoReadLock.h"
 
 
@@ -10,6 +11,8 @@ namespace SmartMet
 namespace T
 {
 
+
+ThreadLock GridPointValueList_sortLock;
 
 GridPointValue::ComparisonMethod gridPointValue_comparisonMethod = GridPointValue::ComparisonMethod::none;
 
@@ -658,6 +661,8 @@ void GridPointValueList::sort(GridPointValue::ComparisonMethod comparisonMethod)
   try
   {
     mComparisonMethod = comparisonMethod;
+
+    AutoThreadLock globalLock(&GridPointValueList_sortLock);
 
     gridPointValue_comparisonMethod = comparisonMethod;
 

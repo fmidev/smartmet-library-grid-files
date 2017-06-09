@@ -295,10 +295,10 @@ void StretchedLatLonImpl::initSpatialReference()
 
     if ((!radius) || (*radius == 0))
     {
-      double majorAxis = *mEarthShape.getScaledValueOfEarthMajorAxis();
-      double minorAxis = *mEarthShape.getScaledValueOfEarthMinorAxis();
+      auto majorAxis = mEarthShape.getScaledValueOfEarthMajorAxis();
+      auto minorAxis = mEarthShape.getScaledValueOfEarthMinorAxis();
 
-      if (!(majorAxis && minorAxis && majorAxis > 0 && minorAxis > 0))
+      if (!(majorAxis  &&  minorAxis && *majorAxis > 0 && *minorAxis > 0))
       {
         // TODO: Use code table 3.2 based values
         //
@@ -307,8 +307,11 @@ void StretchedLatLonImpl::initSpatialReference()
       }
       else
       {
-        dfSemiMajor = majorAxis;
-        dfInvFlattening = 1.0 / (1.0 - (minorAxis / dfSemiMajor));
+        if (majorAxis)
+          dfSemiMajor = *majorAxis;
+
+        if (minorAxis)
+          dfInvFlattening = 1.0 / (1.0 - (*minorAxis / dfSemiMajor));
       }
     }
     else
