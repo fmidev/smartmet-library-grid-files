@@ -134,6 +134,9 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
     sprintf(name,"%smessage[%u].newbaseParameterId",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,toString(mNewbaseParameterId));
 
+    sprintf(name,"%smessage[%u].newbaseParameterName",prefix.c_str(),(uint)mMessageIndex);
+    attributeList.addAttribute(name,toString(mNewbaseParameterName));
+
     sprintf(name,"%smessage[%u].cdmParameterId",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,mCdmParameterId);
 

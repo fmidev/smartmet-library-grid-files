@@ -643,7 +643,7 @@ void ProductSection::print(std::ostream& stream,uint level,uint optionFlags) con
     stream << space(level) << "- filePosition                    = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- sectionLength                   = " <<  toString(mSectionLength) << "\n";
     stream << space(level) << "- numberOfSection                 = " << toString(mNumberOfSection) << "\n";
-    stream << space(level) << "- NV                              = " << getNV() << "\n";
+    stream << space(level) << "- NV                              = " << toString(getNV()) << "\n";
     stream << space(level) << "- productDefinitionTemplateNumber = " << toString(getProductDefinitionTemplateNumber()) << "\n";
     stream << space(level) << "- productDefinitionString         = " <<  getProductDefinitionString() << "\n";
 

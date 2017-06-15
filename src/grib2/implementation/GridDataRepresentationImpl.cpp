@@ -144,7 +144,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     double R = mPacking.getReferenceValue();
 
     auto bits_per_value = mPacking.getBitsPerValue();
-    if (bits_per_value == 0)
+    if (!bits_per_value  ||  *bits_per_value == 0)
     {
       // If 'bitsPerValue' is zero then all values are same as the reference value
       for (std::uint32_t i = 0; i < numOfValues; i++)

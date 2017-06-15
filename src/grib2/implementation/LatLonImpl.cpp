@@ -402,7 +402,7 @@ void LatLonImpl::initSpatialReference()
     if (len >= 360)
       mGlobal = true;
     else
-    if (mLatLon.getGrid()->getLongitudeOfFirstGridPoint() != NULL  &&  mLatLon.getGrid()->getLongitudeOfLastGridPoint() != NULL)
+    if (!mLatLon.getGrid()->getLongitudeOfFirstGridPoint()  &&  !mLatLon.getGrid()->getLongitudeOfLastGridPoint())
     {
       double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
       double longitudeOfLastGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfLastGridPoint()) / 1000000;
