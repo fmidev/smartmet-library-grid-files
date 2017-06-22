@@ -16,6 +16,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/optional.hpp>
 
+
 namespace SmartMet
 {
 namespace GRIB1
@@ -136,6 +137,9 @@ class Message : public GRID::Message
     /*! \brief  A flag that indicates that the data decoding is impossible. */
     mutable bool          mValueDecodingFailed;
 
+    mutable uint*          mPointCacheCoordinate;
+    mutable T::ParamValue* mPointCacheValue;
+    mutable uint           mPointCachePosition;
 
   public:
 

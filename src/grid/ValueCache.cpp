@@ -1,6 +1,8 @@
 #include "ValueCache.h"
 #include "common/Exception.h"
 #include "common/GeneralDefinitions.h"
+#include "common/GeneralFunctions.h"
+#include "common/AutoThreadLock.h"
 
 
 namespace SmartMet
@@ -19,11 +21,13 @@ ValueCache::ValueCache()
 {
   try
   {
+    mAccessCounter = 0;
     mKeyCounter = 0;
     mValueList = NULL;
     mKeyList = NULL;
-    mAccessTimeList = NULL;
-    init(200,20);
+    mAccessCounterList = NULL;
+    mMaxUncompressedSize = 1000;
+    init(1000,1000,1000);
   }
   catch (...)
   {
@@ -55,38 +59,38 @@ ValueCache::~ValueCache()
 
 /*! \brief This method can be used for reinitializing the cache size and the time limit
     for the data removal.
-
-       \param size        The number of value vectors that can be in the cache at the same time.
-       \param removeTime  The cached vector can be removed if its last access time is older
-                          than the currentTime - removeTime. The remove time is given in seconds.
 */
 
-void ValueCache::init(uint size,uint removeLimit)
+void ValueCache::init(uint len,std::size_t maxUncompressedSize,std::size_t maxCompressedSize)
 {
   try
   {
     clear();
     mKeyCounter = 0;
-    mSize = size;
-    mRemoveLimit = removeLimit;
+    mLength = len;
+    mMaxUncompressedSize = maxUncompressedSize;
+    mMaxCompressedSize = maxCompressedSize;
 
-    mThreadLock.lock();
-    mValueList = new T::ParamValue_vec_ptr[mSize];
-    mKeyList = new uint[mSize];
-    mAccessTimeList = new time_t[mSize];
+    AutoThreadLock lock(&mThreadLock);
+    mValueList = new T::ParamValue_vec_ptr[mLength];
+    mKeyList = new uint[mLength];
+    mAccessCounterList = new UInt64[mLength];
 
-    for (uint t=0; t<mSize; t++)
+    mCompressedData = new puchar[mLength];
+    mCompressedDataSize = new uint[mLength];
+
+
+    for (uint t=0; t<mLength; t++)
     {
       mKeyList[t] = 0;
       mValueList[t] = NULL;
-      mAccessTimeList[t] = 0;
+      mAccessCounterList[t] = 0;
+      mCompressedData[t] = NULL;
+      mCompressedDataSize[t] = 0;
     }
-
-    mThreadLock.unlock();
   }
   catch (...)
   {
-    mThreadLock.unlock();
     throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
   }
 }
@@ -95,39 +99,119 @@ void ValueCache::init(uint size,uint removeLimit)
 
 
 
-/*! \brief The method clears cached data which is older than 'maxAge' seconds.
-
-       \param maxAge  The maximum allowed data age (in seconds).
-
-*/
-
-void ValueCache::clear(uint maxAge)
+bool ValueCache::compressOldestUncompressed()
 {
   try
   {
-    time_t currentTime = time(0);
-    time_t oldestTime = currentTime - maxAge;
+    //AutoThreadLock lock(&mThreadLock);
+    UInt64 ac = mAccessCounter;
+    uint idx = 0xFFFFFFFF;
 
-    mThreadLock.lock();
-    for (uint t=0; t<mSize; t++)
+    for (uint t=0; t<mLength; t++)
     {
-      if (mAccessTimeList[t] < oldestTime)
+      if (mValueList[t] != NULL  &&  mCompressedData[t] == NULL  &&  mAccessCounterList[t] < ac)
       {
-        mAccessTimeList[t] = 0;
-        mKeyList[t] = 0;
-
-        if (mValueList[t] != NULL)
-        {
-          delete mValueList[t];
-          mValueList[t] = NULL;
-        }
+        ac = mAccessCounterList[t];
+        idx = t;
       }
     }
-    mThreadLock.unlock();
+
+    if (idx != 0xFFFFFFFF)
+    {
+      return compressCachedValues(idx);
+    }
+    return false;
   }
   catch (...)
   {
-    mThreadLock.unlock();
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+uint ValueCache::getEmpty()
+{
+  try
+  {
+    UInt64 ac = mAccessCounter;
+    uint idx = 0xFFFFFFFF;
+
+    uint key = mKeyCounter;
+    uint k = 0;
+
+    for (uint t=0; t<mLength; t++)
+    {
+      key++;
+      uint i = key % mLength;
+
+      if (mValueList[i] == NULL  &&  mCompressedData[i] == NULL)
+        return key;
+
+      if (mAccessCounterList[i] < ac)
+      {
+        ac = mAccessCounterList[i];
+        idx = i;
+        k = key;
+      }
+    }
+
+    if (mValueList[idx] != NULL)
+    {
+      delete mValueList[idx];
+      mValueList[idx] = NULL;
+    }
+
+    if (mCompressedData[idx] != NULL)
+    {
+      delete mCompressedData[idx];
+      mCompressedData[idx] = NULL;
+    }
+
+    return k;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+bool ValueCache::compressOldestCompressed()
+{
+  try
+  {
+    //AutoThreadLock lock(&mThreadLock);
+    UInt64 ac = mAccessCounter;
+    uint idx = 0xFFFFFFFF;
+
+    for (uint t=0; t<mLength; t++)
+    {
+      if (mCompressedData[t] != NULL  &&  mValueList[t] != NULL)
+      {
+        if (mAccessCounterList[t] < ac)
+        {
+          ac = mAccessCounterList[t];
+          idx = t;
+        }
+      }
+    }
+
+    if (idx != 0xFFFFFFFF)
+    {
+      delete mValueList[idx];
+      mValueList[idx] = NULL;
+      return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
     throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
   }
 }
@@ -142,10 +226,10 @@ void ValueCache::clear()
 {
   try
   {
-    mThreadLock.lock();
+    AutoThreadLock lock(&mThreadLock);
     if (mValueList != NULL)
     {
-      for (uint t=0; t<mSize; t++)
+      for (uint t=0; t<mLength; t++)
       {
         if (mValueList[t] != NULL)
         {
@@ -163,19 +247,105 @@ void ValueCache::clear()
       mKeyList = NULL;
     }
 
-    if (mAccessTimeList)
+    if (mAccessCounterList)
     {
-      delete mAccessTimeList;
-      mAccessTimeList = NULL;
+      delete mAccessCounterList;
+      mAccessCounterList = NULL;
     }
-    mThreadLock.unlock();
+
+    if (mCompressedDataSize != NULL)
+    {
+      delete mCompressedDataSize;
+      mCompressedDataSize = NULL;
+    }
+
+    if (mCompressedData != NULL)
+    {
+      for (uint t=0; t<mLength; t++)
+      {
+        if (mCompressedData[t] != NULL)
+          delete mCompressedData[t];
+      }
+      delete mCompressedData;
+      mCompressedData = NULL;
+    }
   }
   catch (...)
   {
-    mThreadLock.unlock();
     throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
   }
 }
+
+
+
+
+void ValueCache::getSizeInBytes(std::size_t& memorySize,std::size_t& compressedSize)
+{
+  try
+  {
+    uint compCount = 0;
+    uint ncompCount = 0;
+
+    memorySize = 0;
+    compressedSize = 0;
+
+    if (mValueList != NULL)
+    {
+      for (uint t=0; t<mLength; t++)
+      {
+        if (mValueList[t] != NULL)
+        {
+          std::size_t s = mValueList[t]->size() * sizeof (T::ParamValue);
+          memorySize += s;
+
+          if (mCompressedData[t] != NULL)
+            ncompCount++;
+        }
+
+        if (mCompressedData[t] != NULL)
+        {
+          compressedSize += mCompressedDataSize[t];
+          compCount++;
+        }
+      }
+    }
+    //printf("Compressed=%u Uncompressed=%u\n",compCount,ncompCount);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+void ValueCache::checkLimits()
+{
+  try
+  {
+    AutoThreadLock lock(&mThreadLock);
+
+    std::size_t memorySize = 0;
+    std::size_t compressedSize = 0;
+    getSizeInBytes(memorySize,compressedSize);
+
+    while (memorySize > (mMaxUncompressedSize*1000000))
+    {
+      if (!compressOldestUncompressed())
+      {
+        compressOldestCompressed();
+      }
+      getSizeInBytes(memorySize,compressedSize);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
 
 
 
@@ -190,67 +360,25 @@ uint ValueCache::addValues(T::ParamValue_vec& values)
 {
   try
   {
-    time_t currentTime = time(0);
-    uint counter = 0;
-    uint idx = 0;
+    checkLimits();
 
-    // Lets jump over cached data that has been used during
-    // the 'removeLimit' seconds. If all cached data is used
-    // in this time frame then we just need to kick out the oldest.
+    AutoThreadLock lock(&mThreadLock);
 
-    time_t oldestTime = currentTime;
-    uint oldestCounter = 0;
-
-    mThreadLock.lock();
-    while (counter < mSize)
-    {
-      mKeyCounter++;
-      idx = mKeyCounter % mSize;
-
-      if ((currentTime - mAccessTimeList[idx]) > mRemoveLimit)
-      {
-        // The data in this position is so old that it can be removed. Let's
-        // exit the loop by increasing the counter size by 10.
-
-        counter = mSize + 10;
-      }
-      else
-      {
-        // The data in this position is not very old. However, it still might
-        // be the oldest in the cache.
-
-        if (mAccessTimeList[idx] < oldestTime)
-        {
-          oldestCounter = mKeyCounter;
-          oldestTime = mAccessTimeList[idx];
-        }
-        counter++;
-      }
-    }
-
-    if (counter == mSize)
-    {
-      // We should replace the oldest data, because we did not find any data which
-      // was older than the 'mRemoveLimit'.
-
-      mKeyCounter = oldestCounter;
-      idx = mKeyCounter % mSize;
-    }
+    mKeyCounter = getEmpty();
+    uint idx = mKeyCounter % mLength;
 
     if (mValueList[idx] == NULL)
       mValueList[idx] = new T::ParamValue_vec();
 
     *mValueList[idx] = values;
     mKeyList[idx] = mKeyCounter;
-    mAccessTimeList[idx] = time(0);
+    mAccessCounterList[idx] = mAccessCounter++;
 
-    mThreadLock.unlock();
-
+    //printf("ACCESS KEY %u (%u)\n",mKeyCounter,mKeyCounter % mLength);
     return mKeyCounter;
   }
   catch (...)
   {
-    mThreadLock.unlock();
     throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
   }
 }
@@ -271,27 +399,127 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
 {
   try
   {
-    uint idx = key % mSize;
+    uint idx = key % mLength;
 
-    mThreadLock.lock();
-    if (mValueList[idx] == NULL  ||  mKeyList[idx] != key)
-    {
-      mThreadLock.unlock();
+    AutoThreadLock lock(&mThreadLock);
+    if (mKeyList[idx] != key)
       return false;
+
+    if (mValueList[idx] == NULL  &&  mCompressedData[idx] != NULL)
+    {
+      decompressCachedValues(idx);
     }
 
+    if (mValueList[idx] == NULL)
+      return false;
+
     values = *mValueList[idx];
-    mAccessTimeList[idx] = time(0);
-    mThreadLock.unlock();
+    mAccessCounterList[idx] = mAccessCounter++;
     return true;
   }
   catch (...)
   {
-    mThreadLock.unlock();
     throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
   }
 }
 
+
+
+
+
+bool ValueCache::compressCachedValues(uint index)
+{
+  try
+  {
+    if (index >= mLength)
+      return false;
+
+    if (mCompressedData[index] != NULL  ||  mValueList[index] == NULL)
+      return false;
+
+    std::size_t len = mValueList[index]->size();
+    uint size = (uint)(len*sizeof(T::ParamValue));
+
+    T::ParamValue data[len];
+    uchar compressedData[size];
+
+    for (uint t=0; t<len; t++)
+      data[t] = mValueList[index]->at(t);
+
+    uint compressedDataSize = (uint)size;
+
+    int res = compressData(data,size,compressedData,compressedDataSize);
+    if (res == 0)
+    {
+      if (compressedDataSize > 0)
+      {
+        mCompressedDataSize[index] = compressedDataSize;
+        mCompressedData[index] = new uchar[compressedDataSize];
+        memcpy(mCompressedData[index],compressedData,compressedDataSize);
+        delete mValueList[index];
+        mValueList[index] = NULL;
+        return true;
+      }
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+bool ValueCache::decompressCachedValues(uint index)
+{
+  try
+  {
+    if (index >= mLength)
+      return false;
+
+    if (mCompressedData[index] == NULL)
+      return false;
+
+    if (mValueList[index] != NULL)
+      return false;
+
+
+    T::ParamValue *data = new T::ParamValue[10000000];
+    uint decompressedDataSize = 10000000*sizeof(T::ParamValue);
+
+    int res = decompressData(mCompressedData[index],mCompressedDataSize[index],data,decompressedDataSize);
+    if (res == 0)
+    {
+      if (mValueList[index] == NULL)
+        mValueList[index] = new T::ParamValue_vec();
+
+      uint len = decompressedDataSize / sizeof(T::ParamValue);
+      for (uint t=0; t<len; t++)
+      {
+        mValueList[index]->push_back(data[t]);
+      }
+      delete data;
+
+      //delete mCompressedData[index];
+      //mCompressedData[index] = NULL;
+      //mCompressedDataSize[index] = 0;
+      mAccessCounterList[index] = mAccessCounter++;
+      compressOldestUncompressed();
+
+      return true;
+    }
+
+    delete data;
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
 
 
 
@@ -313,12 +541,11 @@ bool ValueCache::getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamVal
     minValue = 1000000000;
     maxValue = -1000000000;
 
-    uint idx = key % mSize;
+    uint idx = key % mLength;
 
-    mThreadLock.lock();
+    AutoThreadLock lock(&mThreadLock);
     if (mValueList[idx] == NULL  ||  mKeyList[idx] != key)
     {
-      mThreadLock.unlock();
       return false;
     }
 
@@ -340,14 +567,12 @@ bool ValueCache::getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamVal
         }
       }
     }
-    mAccessTimeList[idx] = time(0);
-    mThreadLock.unlock();
+    mAccessCounterList[idx] = mAccessCounter++;
 
     return true;
   }
   catch (...)
   {
-    mThreadLock.unlock();
     throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
   }
 }

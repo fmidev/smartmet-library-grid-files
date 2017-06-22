@@ -54,6 +54,15 @@ class MessageIdentifier_fmi : public MessageIdentifier
     T::InterpolationMethod        getParamInterpolationMethod(GRIB1::Message& message);
     T::InterpolationMethod        getParamInterpolationMethod(GRIB2::Message& message);
 
+    ParameterDefinition_fmi_cptr  getParameterDefById(T::ParamId fmiParamId);
+    ParameterDefinition_fmi_cptr  getParameterDefByName(std::string fmiParamName);
+    ParameterDefinition_fmi_cptr  getParameterDefByNewbaseId(T::ParamId newbaseParamId);
+    ParameterDefinition_fmi_cptr  getParameterDefByNewbaseName(std::string newbaseParamName);
+    Parameter_grib1_fmi_cptr      getParameter_grib1(T::ParamId fmiParamId);
+    Parameter_grib2_fmi_cptr      getParameter_grib2(T::ParamId fmiParamId);
+    Parameter_newbase_cptr        getParameter_newbaseId(T::ParamId newbaseParamId);
+    Parameter_newbase_cptr        getParameter_newbaseName(std::string newbaseParamName);
+
   protected:
 
     virtual void                  loadParameterDefinitions();
@@ -63,12 +72,6 @@ class MessageIdentifier_fmi : public MessageIdentifier
     virtual void                  loadLevelDefinitions_grib1();
     virtual void                  loadLevelDefinitions_grib2();
     virtual uint                  countParameterMatchPoints(GRIB2::Message& message,const Parameter_grib2_fmi& p);
-
-    ParameterDefinition_fmi_cptr  getParameterDefById(T::ParamId fmiParamId);
-    ParameterDefinition_fmi_cptr  getParameterDefByName(std::string fmiParamName);
-    Parameter_grib1_fmi_cptr      getParameter_grib1(T::ParamId fmiParamId);
-    Parameter_grib2_fmi_cptr      getParameter_grib2(T::ParamId fmiParamId);
-    Parameter_newbase_cptr        getParameter_newbase(T::ParamId newbaseParamId);
 
     std::string                   mConfigDir;
     ParameterDefinition_fmi_vec   mParameterDefs;

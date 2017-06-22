@@ -86,6 +86,34 @@ GridPointValueList::GridPointValueList(GridPointValueList& gridPointValueList)
 
 
 
+GridPointValueList::GridPointValueList(const GridPointValueList& gridPointValueList)
+{
+  try
+  {
+    mReleaseObjects = true;
+    mSize = gridPointValueList.mSize;
+    mLength = gridPointValueList.mLength;
+    mArray = new GridPointValuePtr[mSize];
+    for (uint t=0; t<mSize; t++)
+    {
+      GridPointValue *info = gridPointValueList.mArray[t];
+      if (info != NULL)
+        mArray[t] = info->duplicate();
+      else
+        mArray[t] = NULL;
+    }
+    mComparisonMethod = gridPointValueList.mComparisonMethod;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
 GridPointValueList::~GridPointValueList()
 {
   try
@@ -103,6 +131,38 @@ GridPointValueList::~GridPointValueList()
 
 
 void GridPointValueList::operator=(GridPointValueList& gridPointValueList)
+{
+  try
+  {
+    if (&gridPointValueList == this)
+      return;
+
+    clear();
+
+    mSize = gridPointValueList.mSize;
+    mLength = gridPointValueList.mLength;
+    mArray = new GridPointValuePtr[mSize];
+    for (uint t=0; t<mSize; t++)
+    {
+      GridPointValue *info = gridPointValueList.mArray[t];
+      if (info != NULL  &&  mReleaseObjects)
+        mArray[t] = info->duplicate();
+      else
+        mArray[t] = info;
+    }
+    mComparisonMethod = gridPointValueList.mComparisonMethod;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+void GridPointValueList::operator=(const GridPointValueList& gridPointValueList)
 {
   try
   {
@@ -365,6 +425,28 @@ GridPointValue* GridPointValueList::getGridPointValueByIndexNoCheck(uint index)
   }
 }
 
+
+
+
+
+GridPointValue* GridPointValueList::getGridPointValueByFileMessageAndPoint(uint fileId,uint messageIndex,double x,double y)
+{
+  try
+  {
+    for (uint t=0; t<mLength; t++)
+    {
+      if (mArray[t]->mX == x  &&  mArray[t]->mY == y  &&  mArray[t]->mFileId == fileId  &&  mArray[t]->mMessageIndex == messageIndex)
+      {
+        return mArray[t];
+      }
+    }
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
 
 
 

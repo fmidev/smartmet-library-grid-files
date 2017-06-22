@@ -25,6 +25,8 @@ namespace GRIB1
 {
 
 
+#define POINT_CACHE_SIZE 400
+
 
 /*! \brief The constructor of the class. */
 
@@ -40,6 +42,15 @@ Message::Message()
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
+    mPointCachePosition = 0;
+    mPointCacheCoordinate = new uint[POINT_CACHE_SIZE];
+    mPointCacheValue = new T::ParamValue[POINT_CACHE_SIZE];
+
+    for (uint t=0; t<POINT_CACHE_SIZE; t++)
+    {
+      mPointCacheCoordinate[t] = 0xFFFFFFFF;
+      mPointCacheValue[t] = 0;
+    }
   }
   catch (...)
   {
@@ -65,6 +76,15 @@ Message::Message(GribFile *gribFile)
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
+    mPointCachePosition = 0;
+    mPointCacheCoordinate = new uint[POINT_CACHE_SIZE];
+    mPointCacheValue = new T::ParamValue[POINT_CACHE_SIZE];
+
+    for (uint t=0; t<POINT_CACHE_SIZE; t++)
+    {
+      mPointCacheCoordinate[t] = 0xFFFFFFFF;
+      mPointCacheValue[t] = 0;
+    }
   }
   catch (...)
   {
@@ -80,6 +100,15 @@ Message::Message(GribFile *gribFile)
 
 Message::~Message()
 {
+  try
+  {
+    delete mPointCacheCoordinate;
+    delete mPointCacheValue;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
 }
 
 
@@ -1071,16 +1100,54 @@ T::ParamValue Message::getParameterValueByGridPoint(uint grid_i,uint grid_j) con
 
     if (mCacheKey > 0)
     {
+      // Trying to get a memory cached value.
+
       if (GRID::valueCache.getValue(mCacheKey,(uint)idx,value))
       {
+        mPointCacheCoordinate[mPointCachePosition % POINT_CACHE_SIZE] = idx;
+        mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = value;
+        mPointCachePosition++;
+
         return value;
       }
     }
+
+    // Trying to find a value from the point cache.
+
+    uint endp = mPointCachePosition;
+    if (endp >= POINT_CACHE_SIZE)
+      endp = POINT_CACHE_SIZE;
+
+    for (uint t=0; t<endp; t++)
+    {
+      if (mPointCacheCoordinate[t] == (uint)idx)
+        return mPointCacheValue[t];
+    }
+
+
+    if (mCacheKey > 0)
+    {
+      // Trying to get a compressed cache value.
+
+      if (GRID::valueCache.getCompressedCacheValue(mCacheKey,(uint)idx,value))
+      {
+        mPointCacheCoordinate[mPointCachePosition % POINT_CACHE_SIZE] = idx;
+        mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = value;
+        mPointCachePosition++;
+
+        return value;
+      }
+    }
+
 
     T::ParamValue_vec values;
     getParameterValues(values);
     if ((std::size_t)idx >= values.size())
       return ParamValueMissing;
+
+    mPointCacheCoordinate[mPointCachePosition % POINT_CACHE_SIZE] = idx;
+    mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = values[idx];
+    mPointCachePosition++;
 
     return values[idx];
   }

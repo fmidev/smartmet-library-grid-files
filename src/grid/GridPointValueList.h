@@ -14,9 +14,11 @@ class GridPointValueList
   public:
                       GridPointValueList();
                       GridPointValueList(GridPointValueList& gridPointValueList);
+                      GridPointValueList(const GridPointValueList& gridPointValueList);
      virtual          ~GridPointValueList();
 
      void             operator=(GridPointValueList& gridPointValueList);
+     void             operator=(const GridPointValueList& gridPointValueList);
 
      void             addGridPointValue(GridPointValue *gridPointValue);
      void             clear();
@@ -25,6 +27,7 @@ class GridPointValueList
      GridPointValue*  getGridPointValueByIndex(uint index);
      GridPointValue*  getGridPointValueByIndexNoCheck(uint index);
      GridPointValue*  getGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,T::TimeString time);
+     GridPointValue*  getGridPointValueByFileMessageAndPoint(uint fileId,uint messageIndex,double x,double y);
      GridPointValue*  getPreviousGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,T::TimeString time);
      GridPointValue*  getNextGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,T::TimeString time);
      void             getGridPointValueListByPoint(double x,double y,T::ParamLevel level,GridPointValueList& gridPointValueList);

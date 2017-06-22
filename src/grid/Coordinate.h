@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 namespace SmartMet
 {
 namespace T
@@ -17,6 +19,8 @@ class Coordinate
     double mX;
     double mY;
 };
+
+typedef std::vector<T::Coordinate> Coordinate_vec;
 
 }
 }  // namespace SmartMet

@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <zlib.h>
 
 
 namespace SmartMet
@@ -457,7 +458,7 @@ std::string toString(float value)
 {
   try
   {
-    char tmp[20];
+    char tmp[100];
     sprintf(tmp,"%.3f",value);
     return std::string(tmp);
   }
@@ -475,7 +476,7 @@ std::string toString(double value)
 {
   try
   {
-    char tmp[20];
+    char tmp[100];
     sprintf(tmp,"%.3f",value);
     return std::string(tmp);
   }
@@ -687,6 +688,42 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
 
 
 
+
+int compressData(void *_data,uint _dataSize,void *_compressedData,uint& _compressedDataSize)
+{
+  uLongf comprLen = (uLongf)_compressedDataSize;
+  compress((Bytef*)_compressedData, &comprLen, (Bytef*)_data, (uLong)_dataSize);
+
+  if (comprLen > 0)
+  {
+    _compressedDataSize = comprLen;
+    return 0;
+  }
+
+  _compressedDataSize = 0;
+  return -1;
+}
+
+
+
+
+
+
+int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompressedData,uint& _decompressedDataSize)
+{
+  uLongf len = (uLongf)_decompressedDataSize;
+  int res = uncompress((Bytef*)_decompressedData, &len, (Bytef*)_compressedData, (uLong)_compressedDataSize);
+  //printf("UNCOMPRESS %d\n",res);
+  _decompressedDataSize = len;
+
+  if (res < 0)
+  {
+    _decompressedDataSize = 0;
+    return -1;
+  }
+
+  return 0;
+}
 
 
 }

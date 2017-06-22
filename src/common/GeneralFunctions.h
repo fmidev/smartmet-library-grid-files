@@ -53,4 +53,8 @@ std::string toString(T::Int64_opt value);
 
 std::string toString(boost::posix_time::ptime time);
 
+
+int compressData(void *_data,uint _dataSize,void *_compressedData,uint& _compressedDataSize);
+int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompressedData,uint& _decompressedDataSize);
+
 }

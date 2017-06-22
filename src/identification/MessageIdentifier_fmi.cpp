@@ -482,7 +482,7 @@ std::string MessageIdentifier_fmi::getNewbaseParamName(GRIB1::Message& message)
     if (p == NULL)
       return std::string("");
 
-    Parameter_newbase_cptr n = getParameter_newbase(p->mNewbaseId);
+    Parameter_newbase_cptr n = getParameter_newbaseId(p->mNewbaseId);
     if (n == NULL)
       return std::string("");
 
@@ -505,7 +505,7 @@ std::string MessageIdentifier_fmi::getNewbaseParamName(GRIB2::Message& message)
     if (p == NULL)
       return std::string("");
 
-    Parameter_newbase_cptr n = getParameter_newbase(p->mNewbaseId);
+    Parameter_newbase_cptr n = getParameter_newbaseId(p->mNewbaseId);
     if (n == NULL)
       return std::string("");
 
@@ -679,7 +679,55 @@ ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByName(std::s
 
 
 
-Parameter_newbase_cptr MessageIdentifier_fmi::getParameter_newbase(T::ParamId newbaseParamId)
+ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByNewbaseId(T::ParamId newbaseParamId)
+{
+  try
+  {
+    std::size_t sz = mParameterDefs.size();
+    for (std::size_t t=0; t<sz; t++)
+    {
+      if (strcasecmp(mParameterDefs[t].mNewbaseId.c_str(),newbaseParamId.c_str()) == 0)
+        return &mParameterDefs[t];
+    }
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByNewbaseName(std::string newbaseParamName)
+{
+  try
+  {
+    Parameter_newbase_cptr p = getParameter_newbaseName(newbaseParamName);
+    if (p == NULL)
+      return NULL;
+
+    std::size_t sz = mParameterDefs.size();
+    for (std::size_t t=0; t<sz; t++)
+    {
+      if (strcasecmp(mParameterDefs[t].mNewbaseId.c_str(),p->mNewbaseParameterId.c_str()) == 0)
+        return &mParameterDefs[t];
+    }
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+Parameter_newbase_cptr MessageIdentifier_fmi::getParameter_newbaseId(T::ParamId newbaseParamId)
 {
   try
   {
@@ -696,6 +744,28 @@ Parameter_newbase_cptr MessageIdentifier_fmi::getParameter_newbase(T::ParamId ne
     throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
   }
 }
+
+
+
+
+Parameter_newbase_cptr MessageIdentifier_fmi::getParameter_newbaseName(std::string newbaseParamName)
+{
+  try
+  {
+    std::size_t sz = mParameters_newbase.size();
+    for (std::size_t t=0; t<sz; t++)
+    {
+      if (strcasecmp(mParameters_newbase[t].mParameterName.c_str(),newbaseParamName.c_str()) == 0)
+        return &mParameters_newbase[t];
+    }
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
 
 
 
