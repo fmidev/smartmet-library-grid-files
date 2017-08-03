@@ -881,6 +881,23 @@ std::string Message::getWKT() const
 
 
 
+T::UInt8_opt Message::getTypeOfEnsembleForecast() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+T::UInt8_opt Message::getPerturbationNumber() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
 
 /*! \brief The method returns the closest or the interpolated value in the given grid position.
     The basic idea is that the given position is inside the rectangular area which

@@ -1151,6 +1151,48 @@ T::ParamLevelId Message::getParameterLevelId() const
 
 
 
+T::UInt8_opt Message::getTypeOfEnsembleForecast() const
+{
+  try
+  {
+    if (mProductSection == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductSection' attribute points to NULL!");
+
+    return mProductSection->getTypeOfEnsembleForecast();
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+T::UInt8_opt Message::getPerturbationNumber() const
+{
+  try
+  {
+    if (mProductSection == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductSection' attribute points to NULL!");
+
+    return mProductSection->getPerturbationNumber();
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the parameter level type string (define in Table 4.5).
 
         \return   The parameter level type (expressed in a string).
@@ -1854,24 +1896,27 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
       if ((optionFlags &  GRID::PrintFlag::bitmap) != 0  &&  mGridSection  &&  bitmap)
       {
         auto dimensions = mGridSection->getGridDimensions();
-        uint ny = dimensions->ny();
-        uint nx = dimensions->nx();
-
-        const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
-        uint c = 0;
-
-        for (uint y=0; y < ny; y++)
+        if (dimensions)
         {
-          for (uint x=0; x < nx; x++)
-          {
+          uint ny = dimensions->ny();
+          uint nx = dimensions->nx();
 
-            if ((bitmap[c / 8] & bitmask[c % 8]) == 0)
-              stream << "0";
-            else
-              stream << "1";
-            c++;
+          const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
+          uint c = 0;
+
+          for (uint y=0; y < ny; y++)
+          {
+            for (uint x=0; x < nx; x++)
+            {
+
+              if ((bitmap[c / 8] & bitmask[c % 8]) == 0)
+                stream << "0";
+              else
+                stream << "1";
+              c++;
+            }
+            stream << "\n";
           }
-          stream << "\n";
         }
       }
     }
@@ -1883,33 +1928,35 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
       if ((optionFlags &  GRID::PrintFlag::data) != 0  &&  mGridSection)
       {
         auto dimensions = mGridSection->getGridDimensions();
-
-        T::ParamValue_vec values;
-        mRepresentationSection->decodeValues(values);
-
-        stream << space(level+1) << "- data (from the grid corners):\n";
-
-        char st[1000];
-        uint c = 0;
-        uint ny = dimensions->ny();
-        uint nx = dimensions->nx();
-        std::size_t sz = values.size();
-
-        for (uint y=0; y < ny; y++)
+        if (dimensions)
         {
-          for (uint x=0; x < nx; x++)
-          {
-            if (c < sz  &&  (y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
-            {
-              auto val = values[c];
-              if (val != ParamValueMissing)
-                sprintf(st,"[%u,%u] %f",y+1,x+1,(double)(val));
-              else
-                sprintf(st,"[%u,%u] NA",y+1,x+1);
+          T::ParamValue_vec values;
+          mRepresentationSection->decodeValues(values);
 
-              stream << space(level+3) << st << "\n";
+          stream << space(level+1) << "- data (from the grid corners):\n";
+
+          char st[1000];
+          uint c = 0;
+          uint ny = dimensions->ny();
+          uint nx = dimensions->nx();
+          std::size_t sz = values.size();
+
+          for (uint y=0; y < ny; y++)
+          {
+            for (uint x=0; x < nx; x++)
+            {
+              if (c < sz  &&  (y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
+              {
+                auto val = values[c];
+                if (val != ParamValueMissing)
+                  sprintf(st,"[%u,%u] %f",y+1,x+1,(double)(val));
+                else
+                  sprintf(st,"[%u,%u] NA",y+1,x+1);
+
+                stream << space(level+3) << st << "\n";
+              }
+              c++;
             }
-            c++;
           }
         }
       }

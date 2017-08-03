@@ -137,7 +137,10 @@ void GridSection::read(MemoryReader& memoryReader)
       rowPositions.push_back(0);
 
       auto d = getGridDimensions();
-      uint rows = d->ny();
+      uint rows = 0;
+      if (d)
+        rows = d->ny();
+
       for (uint y=0; y<rows; y++)
       {
         std::uint16_t len = 0;

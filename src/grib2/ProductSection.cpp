@@ -470,6 +470,58 @@ T::ParamLevel ProductSection::getGribParameterLevel() const
 
 
 
+T::UInt8_opt ProductSection::getTypeOfEnsembleForecast() const
+{
+  try
+  {
+    if (mProductDefinition == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
+
+    T::UInt8_opt val = 0;
+    const EpsSettings *eps = mProductDefinition->getEps();
+    if (eps != NULL)
+      val = eps->getTypeOfEnsembleForecast();
+
+    return val;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
+    throw exception;
+  }
+}
+
+
+
+
+
+T::UInt8_opt ProductSection::getPerturbationNumber() const
+{
+  try
+  {
+    if (mProductDefinition == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
+
+    T::UInt8_opt val = 0;
+    const EpsSettings *eps = mProductDefinition->getEps();
+    if (eps != NULL)
+      val = eps->getPerturbationNumber();
+
+    return val;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
+    throw exception;
+  }
+}
+
+
+
+
+
 ProductDefinition* ProductSection::createProductDefinition(T::UInt16_opt number)
 {
   try

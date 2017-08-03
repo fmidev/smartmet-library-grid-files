@@ -435,7 +435,10 @@ std::size_t GridDefinition::getGridOriginalRowCount() const
       return mRowPositions.size() - 1;
 
     auto d = getGridDimensions();
-    return d->ny();
+    if (d)
+      return d->ny();
+
+    return 0;
   }
   catch (...)
   {
@@ -466,7 +469,10 @@ std::size_t GridDefinition::getGridOriginalColumnCount(std::size_t row) const
     }
 
     auto d = getGridDimensions();
-    return d->nx();
+    if (d)
+      return d->nx();
+
+    return 0;
   }
   catch (...)
   {
@@ -502,7 +508,10 @@ std::size_t GridDefinition::getGridOriginalColumnCount() const
     }
 
     auto d = getGridDimensions();
-    return d->nx();
+    if (d)
+      return d->nx();
+
+    return 0;
   }
   catch (...)
   {
@@ -544,15 +553,16 @@ int GridDefinition::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
     else
     {
       auto d = getGridDimensions();
-
-      if (grid_j >= d->ny())
-        return -1;
-
-      if (grid_i >= d->nx() &&  !isGridGlobal())
-        return -1;
-
       if (d)
+      {
+        if (grid_j >= d->ny())
+          return -1;
+
+        if (grid_i >= d->nx() &&  !isGridGlobal())
+          return -1;
+
         return (grid_j * d->nx() + (grid_i % d->nx()));
+      }
     }
     return -1;
   }

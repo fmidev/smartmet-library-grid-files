@@ -66,6 +66,9 @@ class Message : public GRID::Message
     T::TimeString         getReferenceTime() const;
     T::SpatialReference*  getSpatialReference() const;
     std::uint8_t          getTablesVersion() const;
+    T::UInt8_opt          getTypeOfEnsembleForecast() const;
+    T::UInt8_opt          getPerturbationNumber() const;
+
     std::string           getWKT() const;
     bool                  isGridGlobal() const;
     void                  print(std::ostream& stream,uint level,uint optionFlags) const;

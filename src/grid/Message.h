@@ -94,6 +94,8 @@ class Message
     virtual T::TimeString         getReferenceTime() const;
     virtual T::SpatialReference*  getSpatialReference() const;
     virtual std::string           getWKT() const;
+    virtual T::UInt8_opt          getTypeOfEnsembleForecast() const;
+    virtual T::UInt8_opt          getPerturbationNumber() const;
     virtual bool                  isGridGlobal() const;
     virtual void                  print(std::ostream& stream,uint level,uint optionFlags) const;
 

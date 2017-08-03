@@ -369,6 +369,23 @@ const StatisticalSettings* ProductDefinition::getStatistical() const
 
 
 
+
+const EpsSettings* ProductDefinition::getEps() const
+{
+  try
+  {
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method prints the content of the current object into the given stream.
 
         \param ostream      The output stream.

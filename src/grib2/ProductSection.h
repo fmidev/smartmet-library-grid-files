@@ -70,6 +70,8 @@ class ProductSection : public GRID::MessageSection
     const T::UInt8_opt    getGribParameterCategory() const;
     const T::UInt8_opt    getGribParameterNumber() const;
     T::UInt8_opt          getGeneratingProcessIdentifier() const;
+    T::UInt8_opt          getTypeOfEnsembleForecast() const;
+    T::UInt8_opt          getPerturbationNumber() const;
     std::uint8_t          getNumberOfSection() const;
     T::UInt16_opt         getNV() const;
     std::uint16_t         getProductDefinitionTemplateNumber() const;

@@ -1249,7 +1249,7 @@ void Message::getParameterValues(T::ParamValue_vec& values) const
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
-      if (n != (d->nx() * d->ny()))
+      if (d  &&  n != (d->nx() * d->ny()))
       {
         // Grid rows have different number of columns. Let's fill the rows so that they all have the same
         // number of columns.
@@ -1360,7 +1360,9 @@ void Message::getParameterOriginalValues(T::ParamValue_vec& values) const
         auto maxCols = getGridOriginalColumnCount();
 
         T::ParamValue_vec valVector;
-        std::size_t rows = d->ny();
+        std::size_t rows = 0;
+        if (d)
+          rows = d->ny();
 
         for (std::size_t r=0; r<rows; r++)
         {
@@ -1517,6 +1519,46 @@ std::string Message::getWKT() const
     }
 */
     return wkt;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+T::UInt8_opt Message::getTypeOfEnsembleForecast() const
+{
+  try
+  {
+    // *** Should be implemented.
+    T::UInt8_opt val = 0;
+    return val;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+T::UInt8_opt Message::getPerturbationNumber() const
+{
+  try
+  {
+    // *** Should be implemented.
+    T::UInt8_opt val = 0;
+    return val;
   }
   catch (...)
   {

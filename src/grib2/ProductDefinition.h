@@ -5,6 +5,7 @@
 #include "grib2/definition/ParameterSettings.h"
 #include "grib2/definition/HorizontalSettings.h"
 #include "grib2/definition/StatisticalSettings.h"
+#include "grib2/definition/EpsSettings.h"
 
 
 namespace SmartMet
@@ -39,6 +40,7 @@ class ProductDefinition
     virtual const HorizontalSettings*   getHorizontal() const;
     virtual const ParameterSettings*    getParameter() const;
     virtual const StatisticalSettings*  getStatistical() const;
+    virtual const EpsSettings*          getEps() const;
 
   protected:
 

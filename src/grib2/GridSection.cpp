@@ -707,7 +707,10 @@ std::size_t GridSection::getGridOriginalRowCount() const
   try
   {
     auto d = getGridDimensions();
-    return d->ny();
+    if (d)
+      return d->ny();
+
+    return 0;
   }
   catch (...)
   {
@@ -731,7 +734,10 @@ std::size_t GridSection::getGridOriginalColumnCount(std::size_t row) const
   try
   {
     auto d = getGridDimensions();
-    return d->nx();
+    if (d)
+      return d->nx();
+
+    return 0;
   }
   catch (...)
   {
@@ -754,7 +760,10 @@ std::size_t GridSection::getGridOriginalColumnCount() const
   try
   {
     auto d = getGridDimensions();
-    return d->nx();
+    if (d)
+      return d->nx();
+
+    return 0;
   }
   catch (...)
   {
@@ -776,7 +785,10 @@ std::size_t GridSection::getGridOriginalValueCount() const
   try
   {
     auto d = getGridDimensions();
-    return d->ny() * d->nx();
+    if (d)
+      return d->ny() * d->nx();
+
+    return 0;
   }
   catch (...)
   {
@@ -807,16 +819,16 @@ int GridSection::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
   try
   {
     auto d = getGridDimensions();
-
-    if (grid_j >= d->ny())
-      return -1;
-
-    if (grid_i >= d->nx() &&  !isGridGlobal())
-      return -1;
-
     if (d)
-      return (grid_j * d->nx() + (grid_i % d->nx()));
+    {
+      if (grid_j >= d->ny())
+        return -1;
 
+      if (grid_i >= d->nx() &&  !isGridGlobal())
+        return -1;
+
+      return (grid_j * d->nx() + (grid_i % d->nx()));
+    }
     return -1;
   }
   catch (...)
