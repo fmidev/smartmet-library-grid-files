@@ -18,6 +18,8 @@ class ShowFunction
     std::string   function;
     std::string   filename;
     uint          line;
+    unsigned long long startTime;
+
 };
 
 

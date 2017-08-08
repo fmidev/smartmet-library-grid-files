@@ -28,6 +28,7 @@ GridFile::GridFile()
     mProducerId = 0;
     mGenerationId = 0;
     mCheckTime = 0;
+    mSourceId = 0;
   }
   catch (...)
   {
@@ -174,6 +175,25 @@ time_t GridFile::getModificationTime() const
 
 
 
+uint GridFile::getSourceId() const
+{
+  try
+  {
+    if (mGridFile)
+      return mGridFile->getSourceId();
+
+    return mSourceId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
 bool GridFile::isMemoryMapped()
 {
   try
@@ -290,6 +310,24 @@ void GridFile::setFileName(std::string fileName)
     mFileModificationTime = getFileModificationTime(fileName.c_str());
     if (mGridFile)
       mGridFile->setFileName(fileName);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+void GridFile::setSourceId(uint sourceId)
+{
+  try
+  {
+    mSourceId = sourceId;
+    if (mGridFile)
+      mGridFile->setSourceId(sourceId);
   }
   catch (...)
   {

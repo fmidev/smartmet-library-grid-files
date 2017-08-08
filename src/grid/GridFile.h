@@ -53,6 +53,7 @@ class GridFile
     virtual T::FileType         getFileType() const;
     virtual std::string         getFileTypeString() const;
     virtual time_t              getCheckTime() const;
+    virtual uint                getSourceId() const;
 
     virtual bool                isMemoryMapped();
 
@@ -62,6 +63,7 @@ class GridFile
     virtual void                setGenerationId(uint generationId);
     virtual void                setFileName(std::string  fileName);
     virtual void                setCheckTime(time_t checkTime);
+    virtual void                setSourceId(uint sourceId);
 
     std::shared_ptr<GridFile>   getGridFile();
     void                        getGridLatlonAreaCoordinatesByParameterIdAndLevel(T::ParamId parameterId,T::ParamLevel level,double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
@@ -99,6 +101,7 @@ class GridFile
     uint                        mGroupFlags;
     uint                        mProducerId;
     uint                        mGenerationId;
+    uint                        mSourceId;
     std::unique_ptr<MappedFile> mMappedFile;
 
     bool                        mIsMemoryMapped;
