@@ -477,7 +477,7 @@ T::UInt8_opt ProductSection::getTypeOfEnsembleForecast() const
     if (mProductDefinition == NULL)
       throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
 
-    T::UInt8_opt val = 0;
+    T::UInt8_opt val;
     const EpsSettings *eps = mProductDefinition->getEps();
     if (eps != NULL)
       val = eps->getTypeOfEnsembleForecast();
@@ -503,7 +503,7 @@ T::UInt8_opt ProductSection::getPerturbationNumber() const
     if (mProductDefinition == NULL)
       throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
 
-    T::UInt8_opt val = 0;
+    T::UInt8_opt val;
     const EpsSettings *eps = mProductDefinition->getEps();
     if (eps != NULL)
       val = eps->getPerturbationNumber();
