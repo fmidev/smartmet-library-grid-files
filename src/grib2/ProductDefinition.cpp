@@ -39,7 +39,7 @@ const T::UInt8_opt ProductDefinition::getGribParameterCategory() const
 {
   try
   {
-    T::UInt8_opt val;
+    T::UInt8_opt val(0);
     const ParameterSettings *p = getParameter();
     if (p != NULL)
       return p->getParameterCategory();
@@ -59,7 +59,7 @@ const T::UInt8_opt ProductDefinition::getGribParameterNumber() const
 {
   try
   {
-    T::UInt8_opt val;
+    T::UInt8_opt val(0);
     const ParameterSettings *p = getParameter();
     if (p != NULL)
       return p->getParameterNumber();
@@ -80,7 +80,7 @@ T::UInt8_opt ProductDefinition::getGeneratingProcessIdentifier() const
 {
   try
   {
-    T::UInt8_opt val;
+    T::UInt8_opt val(0);
     const ParameterSettings *p = getParameter();
     if (p != NULL)
       return p->getGeneratingProcessIdentifier();

@@ -1537,7 +1537,7 @@ T::UInt8_opt Message::getTypeOfEnsembleForecast() const
   try
   {
     // *** Should be implemented.
-    T::UInt8_opt val;
+    T::UInt8_opt val(0);
     return val;
   }
   catch (...)
@@ -1557,7 +1557,7 @@ T::UInt8_opt Message::getPerturbationNumber() const
   try
   {
     // *** Should be implemented.
-    T::UInt8_opt val;
+    T::UInt8_opt val(0);
     return val;
   }
   catch (...)
