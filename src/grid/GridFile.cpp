@@ -307,7 +307,7 @@ void GridFile::setFileName(std::string fileName)
   try
   {
     mFileName = fileName;
-    mFileModificationTime = getFileModificationTime(fileName.c_str());
+    mFileModificationTime = time(0); //getFileModificationTime(fileName.c_str());
     if (mGridFile)
       mGridFile->setFileName(fileName);
   }
@@ -369,6 +369,7 @@ void GridFile::read(const bf::path& path)
     params.length = fsize;
     mMappedFile.reset(new MappedFile(params));
     mIsMemoryMapped = true;
+    mFileModificationTime = getFileModificationTime(mFileName.c_str());
 
     //mMapping.reset(new bi::file_mapping(path.c_str(), bi::read_only));
     // mRegion.reset(new bi::mapped_region(*mMapping, bi::read_only, 0, fsize));
