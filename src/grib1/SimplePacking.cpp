@@ -52,6 +52,7 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
 {
   try
   {
+    std::size_t numOfValues = message->getGridOriginalValueCount();
     T::Data_ptr data = message->getDataPtr();
     std::size_t dataSize = message->getDataSize();
     std::int16_t binaryScaleFactor = message->getBinaryScaleFactor();
@@ -80,6 +81,9 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
     const double EDfac = Efac * Dfac;
     uint X = 0;
 
+    std::size_t ss = ((numOfValues * bitsPerValue) / 8) + 1;
+    if (dataSize < ss)
+      dataSize = message->getDataSizeMax();
 
     BitArrayReader bitArrayReader(data,dataSize*8);
     bitArrayReader.setReadPosition(index*bitsPerValue);
@@ -186,6 +190,9 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
     unsigned int bits = 0;      // The actual bits in register
     std::uint64_t bytepos = 0;  // Byte position
 
+    std::size_t ss = ((numOfValues * bitsPerValue) / 8) + 1;
+    if (dataSize < ss)
+      dataSize = message->getDataSizeMax();
 
     for (std::uint32_t i = 0; i < numOfValues; i++)
     {

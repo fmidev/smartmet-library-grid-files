@@ -67,6 +67,7 @@ class DataSection : public GRID::MessageSection
     std::uint8_t      getBitsPerValue() const;
     T::Data_ptr       getDataPtr() const;
     std::size_t       getDataSize() const;
+    std::size_t       getDataSizeMax() const;
     PackingMethod     getPackingMethod() const;
     bool              getValueByIndex(uint index,T::ParamValue& value) const;
 
@@ -91,6 +92,7 @@ class DataSection : public GRID::MessageSection
     DataDefintionUptr mDataDefinition;
     T::Data_ptr       mDataPtr;
     std::size_t       mDataLength;
+    std::size_t       mDataLengthMax;
 };
 
 

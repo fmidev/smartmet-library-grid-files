@@ -1692,6 +1692,31 @@ std::size_t Message::getDataSize() const
 
 
 
+/*! \brief The method returns the max size of the grid data expressed in bytes.
+ * This value is used if the original data size is too small (because of the
+ * error in the grib file */
+
+std::size_t Message::getDataSizeMax() const
+{
+  try
+  {
+    if (mDataSection)
+      return mDataSection->getDataSizeMax();
+
+    return 0;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the value of the binary scale factor. */
 
 std::int16_t Message::getBinaryScaleFactor() const

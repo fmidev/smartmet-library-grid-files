@@ -107,6 +107,7 @@ class Message : public GRID::Message
     std::uint8_t          getFlags() const;
     T::Data_ptr           getDataPtr() const;
     std::size_t           getDataSize() const;
+    std::size_t           getDataSizeMax() const;
 
   private:
 

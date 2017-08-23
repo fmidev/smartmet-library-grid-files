@@ -34,6 +34,7 @@ DataSection::DataSection(Message *message)
     mBitsPerValue = 0;
     mDataPtr = NULL;
     mDataLength = 0;
+    mDataLengthMax = 0;
   }
   catch (...)
   {
@@ -171,6 +172,8 @@ void DataSection::read(MemoryReader& memoryReader)
     }
 
     mDataLength = mSectionLength - (memoryReader.getReadPosition() - rPos);
+    mDataLengthMax = memoryReader.getDataSize() - (memoryReader.getReadPosition() - rPos);
+
     mDataPtr = memoryReader.getReadPtr();
     memoryReader.setReadPosition(rPos + mSectionLength);
   }
@@ -346,6 +349,22 @@ std::size_t DataSection::getDataSize() const
   try
   {
     return mDataLength;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+std::size_t DataSection::getDataSizeMax() const
+{
+  try
+  {
+    return mDataLengthMax;
   }
   catch (...)
   {
