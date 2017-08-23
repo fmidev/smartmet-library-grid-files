@@ -296,7 +296,7 @@ long long BitmapSection::getHash()
       return mHash;
 
     for (std::size_t t=0; t<mBitmapDataSizeInBytes; t++)
-      mHash += (long long)(mBitmapDataPtr[t] * t);
+      mHash += (long long)(t+ mBitmapDataPtr[t] * t);
 
     return mHash;
   }
