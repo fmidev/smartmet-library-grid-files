@@ -44,6 +44,15 @@ GridFile::GridFile()
 
 GridFile::~GridFile()
 {
+  try
+  {
+    if (mMappedFile  &&  mIsMemoryMapped)
+      mMappedFile->close();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
 }
 
 

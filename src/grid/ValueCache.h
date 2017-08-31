@@ -2,11 +2,10 @@
 
 #include <string>
 #include <vector>
-#include <vector>
 #include "Typedefs.h"
 #include "common/Exception.h"
 #include "common/AutoThreadLock.h"
-#include <boost/thread.hpp>
+//#include <boost/thread.hpp>
 
 namespace SmartMet
 {

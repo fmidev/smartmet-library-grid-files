@@ -300,8 +300,11 @@ uint Log::getSize()
 {
   try
   {
-    size_t size = getFileSize(filename.c_str());
-    return (uint)size;
+    long long size = getFileSize(filename.c_str());
+    if (size > 0)
+      return (uint)size;
+
+    return 0;
   }
   catch (...)
   {

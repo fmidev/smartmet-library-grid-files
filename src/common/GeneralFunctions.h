@@ -26,7 +26,7 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
 
 time_t toTimeT(boost::posix_time::ptime tim);
 time_t getFileModificationTime(const char *filename);
-size_t getFileSize(const char *filename);
+long long getFileSize(const char *filename);
 
 std::string space(uint size);
 
