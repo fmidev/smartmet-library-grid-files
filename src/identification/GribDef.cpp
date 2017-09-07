@@ -1377,22 +1377,22 @@ void GribDef::loadGeometryDefinitions()
               latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
               latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
 
-              if (strcasecmp(field[9],"+x+y") == 0)
+              if (strcasecmp(scanningMode,"+x+y") == 0)
                 scanningMode2.setScanningMode(0x40);
               else
-              if (strcasecmp(field[9],"-x+y") == 0)
+              if (strcasecmp(scanningMode,"-x+y") == 0)
               {
                 lastLongitude = longitude - (ni*iInc - iInc);
                 scanningMode2.setScanningMode(0x80+0x40);
               }
               else
-              if (strcasecmp(field[9],"+x-y") == 0)
+              if (strcasecmp(scanningMode,"+x-y") == 0)
               {
                 lastLatitude = latitude - (nj*jInc - jInc);
                 scanningMode2.setScanningMode(0);
               }
               else
-              if (strcasecmp(field[9],"-x-y") == 0)
+              if (strcasecmp(scanningMode,"-x-y") == 0)
               {
                 lastLongitude = longitude - (ni*iInc - iInc);
                 lastLatitude = latitude - (nj*jInc - jInc);
@@ -1503,13 +1503,23 @@ void GribDef::loadGeometryDefinitions()
                 scanningMode2.setScanningMode(0x40);
               else
               if (strcasecmp(scanningMode,"-x+y") == 0)
+              {
+                lastLongitude = longitude - (ni*iInc - iInc);
                 scanningMode2.setScanningMode(0x80+0x40);
+              }
               else
               if (strcasecmp(scanningMode,"+x-y") == 0)
+              {
+                lastLatitude = latitude - (nj*jInc - jInc);
                 scanningMode2.setScanningMode(0);
+              }
               else
               if (strcasecmp(scanningMode,"-x-y") == 0)
+              {
+                lastLongitude = longitude - (ni*iInc - iInc);
+                lastLatitude = latitude - (nj*jInc - jInc);
                 scanningMode2.setScanningMode(0x80);
+              }
 
               latLon.setScanningMode(scanningMode2);
               def2->setLatLon(latLon);
@@ -1568,9 +1578,9 @@ void GribDef::loadGeometryDefinitions()
               def1->setGridGeometryId(geometryId);
               def1->setGridGeometryName(geometryName);
 
-              //def1->print(std::cout,0,0);
-              //hash = def1->getGridHash();
-              //printf("HASH %llu\n",(unsigned long long)hash);
+              // def1->print(std::cout,0,0);
+              // T::Hash hash = def1->getGridHash();
+              // printf("HASH %llu\n",(unsigned long long)hash);
 
               mGridDefinitions1.push_back(def1);
             }
