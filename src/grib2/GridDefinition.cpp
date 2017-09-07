@@ -120,6 +120,38 @@ void GridDefinition::setGridGeometryId(uint geometryId)
 
 
 
+std::string  GridDefinition::getGridGeometryName()
+{
+  try
+  {
+    return mGeometryName;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+void GridDefinition::setGridGeometryName(std::string geometryName)
+{
+  try
+  {
+    mGeometryName = geometryName;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the first and the last latlon coordinates used in the grid.
      This method could be overridden in the child classes in order to make
      the implementation faster.

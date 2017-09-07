@@ -25,6 +25,7 @@ class GridDefinition
     virtual T::Hash             countHash(); // Do not call this, call getGridHash() instead.
     virtual void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     virtual uint                getGridGeometryId() const;
+    virtual std::string         getGridGeometryName();
     virtual void                getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     virtual void                getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const;
     virtual T::Coordinate_vec   getGridCoordinates() const;
@@ -41,6 +42,7 @@ class GridDefinition
     bool                        isGridGlobal() const;
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
     virtual void                setGridGeometryId(uint geometryId);
+    virtual void                setGridGeometryName(std::string geometryName);
     virtual void                read(MemoryReader& memoryReader) {}
 
   protected:
@@ -59,6 +61,9 @@ class GridDefinition
 
     /*! \brief The geometry identifier. */
     uint                        mGeometryId;
+
+    /*! \brief The geometry identifier. */
+    std::string                 mGeometryName;
 
     /*! \brief The grid projection. */
     T::GridProjection           mGridProjection;

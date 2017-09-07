@@ -1342,6 +1342,7 @@ void GribDef::loadGeometryDefinitions()
             case T::GridProjection::LatLon:
             {
               uint geometryId = (uint)atoll(field[1]);
+              char *geometryName = field[2];
               int ni = atoll(field[3]);
               int nj = atoll(field[4]);
               int longitude = (int)(atof(field[5])*1000000);
@@ -1402,6 +1403,7 @@ void GribDef::loadGeometryDefinitions()
               def2->setLatLon(latLon);
 
               def2->setGridGeometryId(geometryId);
+              def2->setGridGeometryName(geometryName);
 
               //def2->print(std::cout,0,0);
               //T::Hash hash = def2->getGridHash();
@@ -1445,6 +1447,7 @@ void GribDef::loadGeometryDefinitions()
               def1->setScanningMode(scanningMode1);
 
               def1->setGridGeometryId(geometryId);
+              def1->setGridGeometryName(geometryName);
 
               //def1->print(std::cout,0,0);
               //hash = def1->getGridHash();
@@ -1457,6 +1460,7 @@ void GribDef::loadGeometryDefinitions()
             case T::GridProjection::RotatedLatLon:
             {
               uint geometryId = (uint)atoll(field[1]);
+              char *geometryName = field[2];
               int ni = atoll(field[3]);
               int nj = atoll(field[4]);
               int longitude = (int)(atof(field[5])*1000000);
@@ -1516,6 +1520,7 @@ void GribDef::loadGeometryDefinitions()
               def2->setRotation(rotation2);
 
               def2->setGridGeometryId(geometryId);
+              def2->setGridGeometryName(geometryName);
 
               //def2->print(std::cout,0,0);
               //T::Hash hash = def2->getGridHash();
@@ -1561,6 +1566,7 @@ void GribDef::loadGeometryDefinitions()
               def1->setScanningMode(scanningMode1);
 
               def1->setGridGeometryId(geometryId);
+              def1->setGridGeometryName(geometryName);
 
               //def1->print(std::cout,0,0);
               //hash = def1->getGridHash();
@@ -1594,6 +1600,7 @@ void GribDef::loadGeometryDefinitions()
             case T::GridProjection::LambertConformal:
             {
               uint geometryId = (uint)atoll(field[1]);
+              char *geometryName = field[2];
               int ni = atoll(field[3]);
               int nj = atoll(field[4]);
               int longitude = (int)(atof(field[5])*1000000);
@@ -1642,6 +1649,7 @@ void GribDef::loadGeometryDefinitions()
               def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
 
               def2->setGridGeometryId(geometryId);
+              def2->setGridGeometryName(geometryName);
 
               //def2->print(std::cout,0,0);
               //T::Hash hash = def2->getGridHash();
@@ -1683,6 +1691,7 @@ void GribDef::loadGeometryDefinitions()
               def1->setLongitudeOfSouthernPole((std::int24_t)longitudeOfSouthernPole);
 
               def1->setGridGeometryId(geometryId);
+              def1->setGridGeometryName(geometryName);
 
               //def1->print(std::cout,0,0);
               //hash = def1->getGridHash();
