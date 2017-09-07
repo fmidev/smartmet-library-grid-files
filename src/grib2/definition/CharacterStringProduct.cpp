@@ -8,10 +8,10 @@
 
 #include "grib2/definition/CharacterStringProduct.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ CharacterStringProduct::~CharacterStringProduct() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void CharacterStringProduct::read(MemoryReader &memoryReader) {
@@ -57,42 +55,33 @@ void CharacterStringProduct::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void CharacterStringProduct::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void CharacterStringProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sCharacterStringProduct.ParameterCategory", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterCategory));
     sprintf(name, "%sCharacterStringProduct.ParameterNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sCharacterStringProduct.NumberOfCharacters",
-            prefix.c_str());
+    sprintf(name, "%sCharacterStringProduct.NumberOfCharacters", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfCharacters));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void CharacterStringProduct::print(std::ostream &stream, uint level,
-                                   uint optionFlags) const {
+void CharacterStringProduct::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "CharacterStringProduct\n";
-    stream << space(level)
-           << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
-    stream << space(level)
-           << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
-    stream << space(level)
-           << "- NumberOfCharacters = " << toString(mNumberOfCharacters)
-           << "\n";
+    stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
+    stream << space(level) << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
+    stream << space(level) << "- NumberOfCharacters = " << toString(mNumberOfCharacters) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -115,8 +104,7 @@ T::Hash CharacterStringProduct::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterCategory}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterCategory} attribute. */
 
 const T::UInt8_opt &CharacterStringProduct::getParameterCategory() const {
   try {
@@ -126,8 +114,7 @@ const T::UInt8_opt &CharacterStringProduct::getParameterCategory() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterNumber}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterNumber} attribute. */
 
 const T::UInt8_opt &CharacterStringProduct::getParameterNumber() const {
   try {
@@ -137,12 +124,35 @@ const T::UInt8_opt &CharacterStringProduct::getParameterNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfCharacters}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfCharacters} attribute. */
 
 const T::UInt32_opt &CharacterStringProduct::getNumberOfCharacters() const {
   try {
     return mNumberOfCharacters;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CharacterStringProduct::setParameterCategory(T::UInt8_opt parameterCategory) {
+  try {
+    mParameterCategory = parameterCategory;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CharacterStringProduct::setParameterNumber(T::UInt8_opt parameterNumber) {
+  try {
+    mParameterNumber = parameterNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CharacterStringProduct::setNumberOfCharacters(T::UInt32_opt numberOfCharacters) {
+  try {
+    mNumberOfCharacters = numberOfCharacters;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

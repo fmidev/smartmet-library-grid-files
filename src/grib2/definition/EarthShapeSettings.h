@@ -13,8 +13,7 @@
 
 namespace SmartMet {
 namespace GRIB2 {
-/*! \brief The class is automatically created from the template
- * (3.shape_of_the_earth).*/
+/*! \brief The class is automatically created from the template (3.shape_of_the_earth).*/
 
 class EarthShapeSettings {
 public:
@@ -22,30 +21,33 @@ public:
   virtual ~EarthShapeSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::UInt8_opt &getShapeOfTheEarth() const;
+  void setShapeOfTheEarth(T::UInt8_opt shapeOfTheEarth);
   const T::UInt8_opt &getScaleFactorOfRadiusOfSphericalEarth() const;
+  void setScaleFactorOfRadiusOfSphericalEarth(T::UInt8_opt scaleFactorOfRadiusOfSphericalEarth);
   const T::UInt32_opt &getScaledValueOfRadiusOfSphericalEarth() const;
+  void setScaledValueOfRadiusOfSphericalEarth(T::UInt32_opt scaledValueOfRadiusOfSphericalEarth);
   const T::UInt8_opt &getScaleFactorOfEarthMajorAxis() const;
+  void setScaleFactorOfEarthMajorAxis(T::UInt8_opt scaleFactorOfEarthMajorAxis);
   const T::UInt32_opt &getScaledValueOfEarthMajorAxis() const;
+  void setScaledValueOfEarthMajorAxis(T::UInt32_opt scaledValueOfEarthMajorAxis);
   const T::UInt8_opt &getScaleFactorOfEarthMinorAxis() const;
+  void setScaleFactorOfEarthMinorAxis(T::UInt8_opt scaleFactorOfEarthMinorAxis);
   const T::UInt32_opt &getScaledValueOfEarthMinorAxis() const;
+  void setScaledValueOfEarthMinorAxis(T::UInt32_opt scaledValueOfEarthMinorAxis);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   //
@@ -55,54 +57,44 @@ protected:
 
   //
   // #  Scale factor of radius of spherical earth
-  // unsigned[1] scaleFactorOfRadiusOfSphericalEarth = missing() :
-  // can_be_missing, edition_specific;
+  // unsigned[1] scaleFactorOfRadiusOfSphericalEarth = missing() : can_be_missing, edition_specific;
 
   T::UInt8_opt mScaleFactorOfRadiusOfSphericalEarth;
 
   //
   // #  Scaled value of radius of spherical earth
-  // unsigned[4] scaledValueOfRadiusOfSphericalEarth = missing():
-  // can_be_missing, edition_specific;
+  // unsigned[4] scaledValueOfRadiusOfSphericalEarth = missing(): can_be_missing, edition_specific;
 
   T::UInt32_opt mScaledValueOfRadiusOfSphericalEarth;
 
   //
   // #  Scale factor of major axis of oblate spheroid earth
-  // unsigned[1] scaleFactorOfEarthMajorAxis = missing(): can_be_missing,
-  // edition_specific;
+  // unsigned[1] scaleFactorOfEarthMajorAxis = missing(): can_be_missing, edition_specific;
 
   T::UInt8_opt mScaleFactorOfEarthMajorAxis;
 
-  // alias
-  // scaleFactorOfMajorAxisOfOblateSpheroidEarth=scaleFactorOfEarthMajorAxis;
+  // alias scaleFactorOfMajorAxisOfOblateSpheroidEarth=scaleFactorOfEarthMajorAxis;
   //
   // #  Scaled value of major axis of oblate spheroid earth
-  // unsigned[4] scaledValueOfEarthMajorAxis = missing(): can_be_missing,
-  // edition_specific;
+  // unsigned[4] scaledValueOfEarthMajorAxis = missing(): can_be_missing, edition_specific;
 
   T::UInt32_opt mScaledValueOfEarthMajorAxis;
 
-  // alias
-  // scaledValueOfMajorAxisOfOblateSpheroidEarth=scaledValueOfEarthMajorAxis;
+  // alias scaledValueOfMajorAxisOfOblateSpheroidEarth=scaledValueOfEarthMajorAxis;
   //
   // #  Scale factor of minor axis of oblate spheroid earth
-  // unsigned[1] scaleFactorOfEarthMinorAxis = missing(): can_be_missing,
-  // edition_specific;
+  // unsigned[1] scaleFactorOfEarthMinorAxis = missing(): can_be_missing, edition_specific;
 
   T::UInt8_opt mScaleFactorOfEarthMinorAxis;
 
-  // alias
-  // scaleFactorOfMinorAxisOfOblateSpheroidEarth=scaleFactorOfEarthMinorAxis ;
+  // alias scaleFactorOfMinorAxisOfOblateSpheroidEarth=scaleFactorOfEarthMinorAxis ;
   //
   // #  Scaled value of minor axis of oblate spheroid earth
-  // unsigned[4] scaledValueOfEarthMinorAxis = missing(): can_be_missing,
-  // edition_specific;
+  // unsigned[4] scaledValueOfEarthMinorAxis = missing(): can_be_missing, edition_specific;
 
   T::UInt32_opt mScaledValueOfEarthMinorAxis;
 
-  // alias
-  // scaledValueOfMinorAxisOfOblateSpheroidEarth=scaledValueOfEarthMinorAxis;
+  // alias scaledValueOfMinorAxisOfOblateSpheroidEarth=scaledValueOfEarthMinorAxis;
   //
   // alias earthIsOblate=one;
   //

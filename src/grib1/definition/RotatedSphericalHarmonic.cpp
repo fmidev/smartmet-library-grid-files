@@ -8,10 +8,10 @@
 
 #include "grib1/definition/RotatedSphericalHarmonic.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -39,11 +39,9 @@ RotatedSphericalHarmonic::~RotatedSphericalHarmonic() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void RotatedSphericalHarmonic::read(MemoryReader &memoryReader) {
@@ -65,8 +63,7 @@ void RotatedSphericalHarmonic::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void RotatedSphericalHarmonic::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void RotatedSphericalHarmonic::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sRotatedSphericalHarmonic.J", prefix.c_str());
@@ -75,11 +72,9 @@ void RotatedSphericalHarmonic::getAttributeList(
     attributeList.addAttribute(name, toString(mK));
     sprintf(name, "%sRotatedSphericalHarmonic.M", prefix.c_str());
     attributeList.addAttribute(name, toString(mM));
-    sprintf(name, "%sRotatedSphericalHarmonic.RepresentationType",
-            prefix.c_str());
+    sprintf(name, "%sRotatedSphericalHarmonic.RepresentationType", prefix.c_str());
     attributeList.addAttribute(name, toString(mRepresentationType));
-    sprintf(name, "%sRotatedSphericalHarmonic.RepresentationMode",
-            prefix.c_str());
+    sprintf(name, "%sRotatedSphericalHarmonic.RepresentationMode", prefix.c_str());
     attributeList.addAttribute(name, toString(mRepresentationMode));
     sprintf(name, "%sRotatedSphericalHarmonic.", prefix.c_str());
     mRotation.getAttributeList(name, attributeList);
@@ -88,28 +83,21 @@ void RotatedSphericalHarmonic::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void RotatedSphericalHarmonic::print(std::ostream &stream, uint level,
-                                     uint optionFlags) const {
+void RotatedSphericalHarmonic::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "RotatedSphericalHarmonic\n";
     stream << space(level) << "- J = " << toString(mJ) << "\n";
     stream << space(level) << "- K = " << toString(mK) << "\n";
     stream << space(level) << "- M = " << toString(mM) << "\n";
-    stream << space(level)
-           << "- RepresentationType = " << toString(mRepresentationType)
-           << "\n";
-    stream << space(level)
-           << "- RepresentationMode = " << toString(mRepresentationMode)
-           << "\n";
+    stream << space(level) << "- RepresentationType = " << toString(mRepresentationType) << "\n";
+    stream << space(level) << "- RepresentationMode = " << toString(mRepresentationMode) << "\n";
     mRotation.print(stream, level + 1, optionFlags);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
@@ -163,8 +151,7 @@ std::uint16_t RotatedSphericalHarmonic::getM() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mRepresentationType}
- * attribute. */
+/*! \brief The method returns the value of the {@link mRepresentationType} attribute. */
 
 std::uint8_t RotatedSphericalHarmonic::getRepresentationType() const {
   try {
@@ -174,8 +161,7 @@ std::uint8_t RotatedSphericalHarmonic::getRepresentationType() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mRepresentationMode}
- * attribute. */
+/*! \brief The method returns the value of the {@link mRepresentationMode} attribute. */
 
 std::uint8_t RotatedSphericalHarmonic::getRepresentationMode() const {
   try {
@@ -190,6 +176,54 @@ std::uint8_t RotatedSphericalHarmonic::getRepresentationMode() const {
 const RotationSettings *RotatedSphericalHarmonic::getRotation() const {
   try {
     return &mRotation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedSphericalHarmonic::setJ(std::uint16_t j) {
+  try {
+    mJ = j;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedSphericalHarmonic::setK(std::uint16_t k) {
+  try {
+    mK = k;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedSphericalHarmonic::setM(std::uint16_t m) {
+  try {
+    mM = m;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedSphericalHarmonic::setRepresentationType(std::uint8_t representationType) {
+  try {
+    mRepresentationType = representationType;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedSphericalHarmonic::setRepresentationMode(std::uint8_t representationMode) {
+  try {
+    mRepresentationMode = representationMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedSphericalHarmonic::setRotation(RotationSettings rotation) {
+  try {
+    mRotation = rotation;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

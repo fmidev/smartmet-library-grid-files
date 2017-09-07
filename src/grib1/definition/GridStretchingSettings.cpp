@@ -8,10 +8,10 @@
 
 #include "grib1/definition/GridStretchingSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -36,11 +36,9 @@ GridStretchingSettings::~GridStretchingSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void GridStretchingSettings::read(MemoryReader &memoryReader) {
@@ -59,15 +57,12 @@ void GridStretchingSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void GridStretchingSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void GridStretchingSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sGridStretchingSettings.LatitudeOfStretchingPole",
-            prefix.c_str());
+    sprintf(name, "%sGridStretchingSettings.LatitudeOfStretchingPole", prefix.c_str());
     attributeList.addAttribute(name, toString(mLatitudeOfStretchingPole));
-    sprintf(name, "%sGridStretchingSettings.LongitudeOfStretchingPole",
-            prefix.c_str());
+    sprintf(name, "%sGridStretchingSettings.LongitudeOfStretchingPole", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfStretchingPole));
     sprintf(name, "%sGridStretchingSettings.StretchingFactor", prefix.c_str());
     attributeList.addAttribute(name, toString(mStretchingFactor));
@@ -76,25 +71,19 @@ void GridStretchingSettings::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GridStretchingSettings::print(std::ostream &stream, uint level,
-                                   uint optionFlags) const {
+void GridStretchingSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "GridStretchingSettings\n";
-    stream << space(level) << "- LatitudeOfStretchingPole = "
-           << toString(mLatitudeOfStretchingPole) << "\n";
-    stream << space(level) << "- LongitudeOfStretchingPole = "
-           << toString(mLongitudeOfStretchingPole) << "\n";
-    stream << space(level)
-           << "- StretchingFactor = " << toString(mStretchingFactor) << "\n";
+    stream << space(level) << "- LatitudeOfStretchingPole = " << toString(mLatitudeOfStretchingPole) << "\n";
+    stream << space(level) << "- LongitudeOfStretchingPole = " << toString(mLongitudeOfStretchingPole) << "\n";
+    stream << space(level) << "- StretchingFactor = " << toString(mStretchingFactor) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -114,8 +103,7 @@ T::Hash GridStretchingSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfStretchingPole}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfStretchingPole} attribute. */
 
 std::int24_t GridStretchingSettings::getLatitudeOfStretchingPole() const {
   try {
@@ -125,8 +113,7 @@ std::int24_t GridStretchingSettings::getLatitudeOfStretchingPole() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfStretchingPole} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfStretchingPole} attribute. */
 
 std::int24_t GridStretchingSettings::getLongitudeOfStretchingPole() const {
   try {
@@ -136,12 +123,35 @@ std::int24_t GridStretchingSettings::getLongitudeOfStretchingPole() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mStretchingFactor}
- * attribute. */
+/*! \brief The method returns the value of the {@link mStretchingFactor} attribute. */
 
 ibmfloat GridStretchingSettings::getStretchingFactor() const {
   try {
     return mStretchingFactor;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridStretchingSettings::setLatitudeOfStretchingPole(std::int24_t latitudeOfStretchingPole) {
+  try {
+    mLatitudeOfStretchingPole = latitudeOfStretchingPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridStretchingSettings::setLongitudeOfStretchingPole(std::int24_t longitudeOfStretchingPole) {
+  try {
+    mLongitudeOfStretchingPole = longitudeOfStretchingPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridStretchingSettings::setStretchingFactor(ibmfloat stretchingFactor) {
+  try {
+    mStretchingFactor = stretchingFactor;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

@@ -11,6 +11,7 @@ namespace GRIB2
 
 CrossSectionImpl::CrossSectionImpl()
 {
+  mGridProjection = T::GridProjection::CrossSection;
 }
 
 

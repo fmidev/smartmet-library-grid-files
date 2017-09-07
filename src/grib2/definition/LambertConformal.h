@@ -25,39 +25,51 @@ public:
   virtual ~LambertConformal();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings earthShape);
   const T::UInt32_opt &getNx() const;
+  void setNx(T::UInt32_opt nx);
   const T::UInt32_opt &getNy() const;
+  void setNy(T::UInt32_opt ny);
   const T::Int32_opt &getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::UInt32_opt &getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint);
   const ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings resolution);
   const T::Int32_opt &getLaD() const;
+  void setLaD(T::Int32_opt laD);
   const T::UInt32_opt &getLoV() const;
+  void setLoV(T::UInt32_opt loV);
   const T::UInt32_opt &getDx() const;
+  void setDx(T::UInt32_opt dx);
   const T::UInt32_opt &getDy() const;
+  void setDy(T::UInt32_opt dy);
   std::uint8_t getProjectionCentreFlag() const;
+  void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   const T::Int32_opt &getLatin1() const;
+  void setLatin1(T::Int32_opt latin1);
   const T::Int32_opt &getLatin2() const;
+  void setLatin2(T::Int32_opt latin2);
   const T::Int32_opt &getLatitudeOfSouthernPole() const;
+  void setLatitudeOfSouthernPole(T::Int32_opt latitudeOfSouthernPole);
   const T::UInt32_opt &getLongitudeOfSouthernPole() const;
+  void setLongitudeOfSouthernPole(T::UInt32_opt longitudeOfSouthernPole);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // # TEMPLATE 3.30, Lambert conformal
@@ -89,11 +101,9 @@ protected:
 
   // alias La1  = latitudeOfFirstGridPoint;
   // meta  geography.latitudeOfFirstGridPointInDegrees
-  //         scale(latitudeOfFirstGridPoint,one,grib2divider,truncateDegrees) :
-  //         dump;
+  //         scale(latitudeOfFirstGridPoint,one,grib2divider,truncateDegrees) : dump;
   // alias La1InDegrees=latitudeOfFirstGridPointInDegrees;
-  // #meta latitudeOfFirstGridPointInMicrodegrees
-  // times(latitudeOfFirstGridPointInDegrees,oneConstant): no_copy;
+  // #meta latitudeOfFirstGridPointInMicrodegrees times(latitudeOfFirstGridPointInDegrees,oneConstant): no_copy;
   //
   // #  Lo1 - longitude of first grid point
   // unsigned[4] longitudeOfFirstGridPoint : edition_specific;
@@ -102,11 +112,9 @@ protected:
 
   // alias Lo1  = longitudeOfFirstGridPoint;
   // meta  geography.longitudeOfFirstGridPointInDegrees
-  //         scale(longitudeOfFirstGridPoint,one,grib2divider,truncateDegrees) :
-  //         dump;
+  //         scale(longitudeOfFirstGridPoint,one,grib2divider,truncateDegrees) : dump;
   // alias Lo1InDegrees = longitudeOfFirstGridPointInDegrees;
-  // #meta longitudeOfFirstGridPointInMicrodegrees
-  // times(longitudeOfFirstGridPoint,oneConstant) : no_copy;
+  // #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,oneConstant) : no_copy;
   //
   // include "template.3.resolution_flags.def";
 
@@ -119,17 +127,14 @@ protected:
   T::Int32_opt mLaD;
 
   // alias latitudeWhereDxAndDyAreSpecified=LaD;
-  // meta  geography.LaDInDegrees scale(LaD,one,grib2divider,truncateDegrees) :
-  // dump;
+  // meta  geography.LaDInDegrees scale(LaD,one,grib2divider,truncateDegrees) : dump;
   //
-  // #  LoV - Longitude of meridian parallel to Y-axis along which latitude
-  // increases as the Y-coordinate increases
+  // #  LoV - Longitude of meridian parallel to Y-axis along which latitude increases as the Y-coordinate increases
   // unsigned[4] LoV  : edition_specific;
 
   T::UInt32_opt mLoV;
 
-  // meta  geography.LoVInDegrees scale(LoV,one,grib2divider,truncateDegrees) :
-  // dump;
+  // meta  geography.LoVInDegrees scale(LoV,one,grib2divider,truncateDegrees) : dump;
   //
   // #  Dx - X-direction grid length
   // # NOTE 1 NOT FOUND
@@ -152,8 +157,7 @@ protected:
   // meta  geography.DyInMetres scale(Dy,one,thousand) : dump;
   //
   // #  Projection centre flag
-  // flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' :
-  // dump;
+  // flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
 
   std::uint8_t mProjectionCentreFlag;
 
@@ -163,25 +167,21 @@ protected:
   ScanningModeSettings mScanningMode;
 
   //
-  // #  Latin 1 - first latitude from the pole at which the secant cone cuts the
-  // sphere
+  // #  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
   // signed[4] Latin1   : edition_specific;
 
   T::Int32_opt mLatin1;
 
   // alias FirstLatitude=Latin1;
-  // meta  geography.Latin1InDegrees
-  // scale(Latin1,one,grib2divider,truncateDegrees) : dump;
+  // meta  geography.Latin1InDegrees scale(Latin1,one,grib2divider,truncateDegrees) : dump;
   //
-  // #  Latin 2 - second latitude from the pole at which the secant cone cuts
-  // the sphere
+  // #  Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
   // signed[4] Latin2  : dump;
 
   T::Int32_opt mLatin2;
 
   // alias SecondLatitude=Latin2;
-  // meta  geography.Latin2InDegrees
-  // scale(Latin2,one,grib2divider,truncateDegrees) : dump;
+  // meta  geography.Latin2InDegrees scale(Latin2,one,grib2divider,truncateDegrees) : dump;
   //
   // #  Latitude of the southern pole of projection
   // signed[4] latitudeOfSouthernPole : edition_specific;
@@ -189,9 +189,7 @@ protected:
   T::Int32_opt mLatitudeOfSouthernPole;
 
   // alias latitudeOfTheSouthernPoleOfProjection=latitudeOfSouthernPole;
-  // meta  geography.latitudeOfSouthernPoleInDegrees
-  // scale(latitudeOfSouthernPole          ,one,grib2divider,truncateDegrees) :
-  // dump;
+  // meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfSouthernPole          ,one,grib2divider,truncateDegrees) : dump;
   //
   // #  Longitude of the southern pole of projection
   // unsigned[4] longitudeOfSouthernPole : edition_specific;
@@ -199,9 +197,7 @@ protected:
   T::UInt32_opt mLongitudeOfSouthernPole;
 
   // alias longitudeOfTheSouthernPoleOfProjection=longitudeOfSouthernPole;
-  // meta  geography.longitudeOfSouthernPoleInDegrees
-  // scale(longitudeOfSouthernPole,oneConstant,grib2divider,truncateDegrees) :
-  // dump;
+  // meta  geography.longitudeOfSouthernPoleInDegrees   scale(longitudeOfSouthernPole,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // iterator lambert_conformal(numberOfPoints,missingValue,values,
   //           radius,Nx,Ny,

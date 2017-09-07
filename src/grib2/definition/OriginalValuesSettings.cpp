@@ -8,10 +8,10 @@
 
 #include "grib2/definition/OriginalValuesSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ OriginalValuesSettings::~OriginalValuesSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void OriginalValuesSettings::read(MemoryReader &memoryReader) {
@@ -55,33 +53,27 @@ void OriginalValuesSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void OriginalValuesSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void OriginalValuesSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sOriginalValuesSettings.TypeOfOriginalFieldValues",
-            prefix.c_str());
+    sprintf(name, "%sOriginalValuesSettings.TypeOfOriginalFieldValues", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfOriginalFieldValues));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void OriginalValuesSettings::print(std::ostream &stream, uint level,
-                                   uint optionFlags) const {
+void OriginalValuesSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "OriginalValuesSettings\n";
-    stream << space(level) << "- TypeOfOriginalFieldValues = "
-           << toString(mTypeOfOriginalFieldValues) << "\n";
+    stream << space(level) << "- TypeOfOriginalFieldValues = " << toString(mTypeOfOriginalFieldValues) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -100,13 +92,19 @@ T::Hash OriginalValuesSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mTypeOfOriginalFieldValues} attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfOriginalFieldValues} attribute. */
 
-const T::UInt8_opt &
-OriginalValuesSettings::getTypeOfOriginalFieldValues() const {
+const T::UInt8_opt &OriginalValuesSettings::getTypeOfOriginalFieldValues() const {
   try {
     return mTypeOfOriginalFieldValues;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void OriginalValuesSettings::setTypeOfOriginalFieldValues(T::UInt8_opt typeOfOriginalFieldValues) {
+  try {
+    mTypeOfOriginalFieldValues = typeOfOriginalFieldValues;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

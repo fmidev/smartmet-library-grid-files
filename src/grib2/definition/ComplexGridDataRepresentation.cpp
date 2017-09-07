@@ -8,10 +8,10 @@
 
 #include "grib2/definition/ComplexGridDataRepresentation.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ ComplexGridDataRepresentation::~ComplexGridDataRepresentation() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void ComplexGridDataRepresentation::read(MemoryReader &memoryReader) {
@@ -67,99 +65,63 @@ void ComplexGridDataRepresentation::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void ComplexGridDataRepresentation::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void ComplexGridDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sComplexGridDataRepresentation.", prefix.c_str());
     mPacking.getAttributeList(name, attributeList);
     sprintf(name, "%sComplexGridDataRepresentation.", prefix.c_str());
     mOriginalValues.getAttributeList(name, attributeList);
-    sprintf(name, "%sComplexGridDataRepresentation.GroupSplittingMethodUsed",
-            prefix.c_str());
+    sprintf(name, "%sComplexGridDataRepresentation.GroupSplittingMethodUsed", prefix.c_str());
     attributeList.addAttribute(name, toString(mGroupSplittingMethodUsed));
-    sprintf(name, "%sComplexGridDataRepresentation.MissingValueManagementUsed",
-            prefix.c_str());
+    sprintf(name, "%sComplexGridDataRepresentation.MissingValueManagementUsed", prefix.c_str());
     attributeList.addAttribute(name, toString(mMissingValueManagementUsed));
-    sprintf(name,
-            "%sComplexGridDataRepresentation.PrimaryMissingValueSubstitute",
-            prefix.c_str());
+    sprintf(name, "%sComplexGridDataRepresentation.PrimaryMissingValueSubstitute", prefix.c_str());
     attributeList.addAttribute(name, toString(mPrimaryMissingValueSubstitute));
-    sprintf(name,
-            "%sComplexGridDataRepresentation.SecondaryMissingValueSubstitute",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mSecondaryMissingValueSubstitute));
-    sprintf(name, "%sComplexGridDataRepresentation.NumberOfGroupsOfDataValues",
-            prefix.c_str());
+    sprintf(name, "%sComplexGridDataRepresentation.SecondaryMissingValueSubstitute", prefix.c_str());
+    attributeList.addAttribute(name, toString(mSecondaryMissingValueSubstitute));
+    sprintf(name, "%sComplexGridDataRepresentation.NumberOfGroupsOfDataValues", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfGroupsOfDataValues));
-    sprintf(name, "%sComplexGridDataRepresentation.ReferenceForGroupWidths",
-            prefix.c_str());
+    sprintf(name, "%sComplexGridDataRepresentation.ReferenceForGroupWidths", prefix.c_str());
     attributeList.addAttribute(name, toString(mReferenceForGroupWidths));
-    sprintf(name,
-            "%sComplexGridDataRepresentation.NumberOfBitsUsedForTheGroupWidths",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mNumberOfBitsUsedForTheGroupWidths));
-    sprintf(name, "%sComplexGridDataRepresentation.ReferenceForGroupLengths",
-            prefix.c_str());
+    sprintf(name, "%sComplexGridDataRepresentation.NumberOfBitsUsedForTheGroupWidths", prefix.c_str());
+    attributeList.addAttribute(name, toString(mNumberOfBitsUsedForTheGroupWidths));
+    sprintf(name, "%sComplexGridDataRepresentation.ReferenceForGroupLengths", prefix.c_str());
     attributeList.addAttribute(name, toString(mReferenceForGroupLengths));
-    sprintf(name,
-            "%sComplexGridDataRepresentation.LengthIncrementForTheGroupLengths",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mLengthIncrementForTheGroupLengths));
-    sprintf(name, "%sComplexGridDataRepresentation.TrueLengthOfLastGroup",
-            prefix.c_str());
+    sprintf(name, "%sComplexGridDataRepresentation.LengthIncrementForTheGroupLengths", prefix.c_str());
+    attributeList.addAttribute(name, toString(mLengthIncrementForTheGroupLengths));
+    sprintf(name, "%sComplexGridDataRepresentation.TrueLengthOfLastGroup", prefix.c_str());
     attributeList.addAttribute(name, toString(mTrueLengthOfLastGroup));
-    sprintf(name,
-            "%sComplexGridDataRepresentation.NumberOfBitsForScaledGroupLengths",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mNumberOfBitsForScaledGroupLengths));
+    sprintf(name, "%sComplexGridDataRepresentation.NumberOfBitsForScaledGroupLengths", prefix.c_str());
+    attributeList.addAttribute(name, toString(mNumberOfBitsForScaledGroupLengths));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ComplexGridDataRepresentation::print(std::ostream &stream, uint level,
-                                          uint optionFlags) const {
+void ComplexGridDataRepresentation::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "ComplexGridDataRepresentation\n";
     mPacking.print(stream, level + 1, optionFlags);
     mOriginalValues.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- GroupSplittingMethodUsed = "
-           << toString(mGroupSplittingMethodUsed) << "\n";
-    stream << space(level) << "- MissingValueManagementUsed = "
-           << toString(mMissingValueManagementUsed) << "\n";
-    stream << space(level) << "- PrimaryMissingValueSubstitute = "
-           << toString(mPrimaryMissingValueSubstitute) << "\n";
-    stream << space(level) << "- SecondaryMissingValueSubstitute = "
-           << toString(mSecondaryMissingValueSubstitute) << "\n";
-    stream << space(level) << "- NumberOfGroupsOfDataValues = "
-           << toString(mNumberOfGroupsOfDataValues) << "\n";
-    stream << space(level) << "- ReferenceForGroupWidths = "
-           << toString(mReferenceForGroupWidths) << "\n";
-    stream << space(level) << "- NumberOfBitsUsedForTheGroupWidths = "
-           << toString(mNumberOfBitsUsedForTheGroupWidths) << "\n";
-    stream << space(level) << "- ReferenceForGroupLengths = "
-           << toString(mReferenceForGroupLengths) << "\n";
-    stream << space(level) << "- LengthIncrementForTheGroupLengths = "
-           << toString(mLengthIncrementForTheGroupLengths) << "\n";
-    stream << space(level)
-           << "- TrueLengthOfLastGroup = " << toString(mTrueLengthOfLastGroup)
-           << "\n";
-    stream << space(level) << "- NumberOfBitsForScaledGroupLengths = "
-           << toString(mNumberOfBitsForScaledGroupLengths) << "\n";
+    stream << space(level) << "- GroupSplittingMethodUsed = " << toString(mGroupSplittingMethodUsed) << "\n";
+    stream << space(level) << "- MissingValueManagementUsed = " << toString(mMissingValueManagementUsed) << "\n";
+    stream << space(level) << "- PrimaryMissingValueSubstitute = " << toString(mPrimaryMissingValueSubstitute) << "\n";
+    stream << space(level) << "- SecondaryMissingValueSubstitute = " << toString(mSecondaryMissingValueSubstitute) << "\n";
+    stream << space(level) << "- NumberOfGroupsOfDataValues = " << toString(mNumberOfGroupsOfDataValues) << "\n";
+    stream << space(level) << "- ReferenceForGroupWidths = " << toString(mReferenceForGroupWidths) << "\n";
+    stream << space(level) << "- NumberOfBitsUsedForTheGroupWidths = " << toString(mNumberOfBitsUsedForTheGroupWidths) << "\n";
+    stream << space(level) << "- ReferenceForGroupLengths = " << toString(mReferenceForGroupLengths) << "\n";
+    stream << space(level) << "- LengthIncrementForTheGroupLengths = " << toString(mLengthIncrementForTheGroupLengths) << "\n";
+    stream << space(level) << "- TrueLengthOfLastGroup = " << toString(mTrueLengthOfLastGroup) << "\n";
+    stream << space(level) << "- NumberOfBitsForScaledGroupLengths = " << toString(mNumberOfBitsForScaledGroupLengths) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -210,11 +172,9 @@ const PackingSettings *ComplexGridDataRepresentation::getPacking() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mOriginalValues}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mOriginalValues} attribute. */
 
-const OriginalValuesSettings *
-ComplexGridDataRepresentation::getOriginalValues() const {
+const OriginalValuesSettings *ComplexGridDataRepresentation::getOriginalValues() const {
   try {
     return &mOriginalValues;
   } catch (...) {
@@ -222,11 +182,9 @@ ComplexGridDataRepresentation::getOriginalValues() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mGroupSplittingMethodUsed}
- * attribute. */
+/*! \brief The method returns the value of the {@link mGroupSplittingMethodUsed} attribute. */
 
-const T::UInt8_opt &
-ComplexGridDataRepresentation::getGroupSplittingMethodUsed() const {
+const T::UInt8_opt &ComplexGridDataRepresentation::getGroupSplittingMethodUsed() const {
   try {
     return mGroupSplittingMethodUsed;
   } catch (...) {
@@ -234,11 +192,9 @@ ComplexGridDataRepresentation::getGroupSplittingMethodUsed() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mMissingValueManagementUsed} attribute. */
+/*! \brief The method returns the value of the {@link mMissingValueManagementUsed} attribute. */
 
-const T::UInt8_opt &
-ComplexGridDataRepresentation::getMissingValueManagementUsed() const {
+const T::UInt8_opt &ComplexGridDataRepresentation::getMissingValueManagementUsed() const {
   try {
     return mMissingValueManagementUsed;
   } catch (...) {
@@ -246,11 +202,9 @@ ComplexGridDataRepresentation::getMissingValueManagementUsed() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mPrimaryMissingValueSubstitute} attribute. */
+/*! \brief The method returns the value of the {@link mPrimaryMissingValueSubstitute} attribute. */
 
-const T::UInt32_opt &
-ComplexGridDataRepresentation::getPrimaryMissingValueSubstitute() const {
+const T::UInt32_opt &ComplexGridDataRepresentation::getPrimaryMissingValueSubstitute() const {
   try {
     return mPrimaryMissingValueSubstitute;
   } catch (...) {
@@ -258,11 +212,9 @@ ComplexGridDataRepresentation::getPrimaryMissingValueSubstitute() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mSecondaryMissingValueSubstitute} attribute. */
+/*! \brief The method returns the value of the {@link mSecondaryMissingValueSubstitute} attribute. */
 
-const T::UInt32_opt &
-ComplexGridDataRepresentation::getSecondaryMissingValueSubstitute() const {
+const T::UInt32_opt &ComplexGridDataRepresentation::getSecondaryMissingValueSubstitute() const {
   try {
     return mSecondaryMissingValueSubstitute;
   } catch (...) {
@@ -270,11 +222,9 @@ ComplexGridDataRepresentation::getSecondaryMissingValueSubstitute() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mNumberOfGroupsOfDataValues} attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfGroupsOfDataValues} attribute. */
 
-const T::UInt32_opt &
-ComplexGridDataRepresentation::getNumberOfGroupsOfDataValues() const {
+const T::UInt32_opt &ComplexGridDataRepresentation::getNumberOfGroupsOfDataValues() const {
   try {
     return mNumberOfGroupsOfDataValues;
   } catch (...) {
@@ -282,11 +232,9 @@ ComplexGridDataRepresentation::getNumberOfGroupsOfDataValues() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mReferenceForGroupWidths}
- * attribute. */
+/*! \brief The method returns the value of the {@link mReferenceForGroupWidths} attribute. */
 
-const T::UInt8_opt &
-ComplexGridDataRepresentation::getReferenceForGroupWidths() const {
+const T::UInt8_opt &ComplexGridDataRepresentation::getReferenceForGroupWidths() const {
   try {
     return mReferenceForGroupWidths;
   } catch (...) {
@@ -294,11 +242,9 @@ ComplexGridDataRepresentation::getReferenceForGroupWidths() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mNumberOfBitsUsedForTheGroupWidths} attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfBitsUsedForTheGroupWidths} attribute. */
 
-const T::UInt8_opt &
-ComplexGridDataRepresentation::getNumberOfBitsUsedForTheGroupWidths() const {
+const T::UInt8_opt &ComplexGridDataRepresentation::getNumberOfBitsUsedForTheGroupWidths() const {
   try {
     return mNumberOfBitsUsedForTheGroupWidths;
   } catch (...) {
@@ -306,11 +252,9 @@ ComplexGridDataRepresentation::getNumberOfBitsUsedForTheGroupWidths() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mReferenceForGroupLengths}
- * attribute. */
+/*! \brief The method returns the value of the {@link mReferenceForGroupLengths} attribute. */
 
-const T::UInt32_opt &
-ComplexGridDataRepresentation::getReferenceForGroupLengths() const {
+const T::UInt32_opt &ComplexGridDataRepresentation::getReferenceForGroupLengths() const {
   try {
     return mReferenceForGroupLengths;
   } catch (...) {
@@ -318,11 +262,9 @@ ComplexGridDataRepresentation::getReferenceForGroupLengths() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLengthIncrementForTheGroupLengths} attribute. */
+/*! \brief The method returns the value of the {@link mLengthIncrementForTheGroupLengths} attribute. */
 
-const T::UInt8_opt &
-ComplexGridDataRepresentation::getLengthIncrementForTheGroupLengths() const {
+const T::UInt8_opt &ComplexGridDataRepresentation::getLengthIncrementForTheGroupLengths() const {
   try {
     return mLengthIncrementForTheGroupLengths;
   } catch (...) {
@@ -330,11 +272,9 @@ ComplexGridDataRepresentation::getLengthIncrementForTheGroupLengths() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTrueLengthOfLastGroup}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTrueLengthOfLastGroup} attribute. */
 
-const T::UInt32_opt &
-ComplexGridDataRepresentation::getTrueLengthOfLastGroup() const {
+const T::UInt32_opt &ComplexGridDataRepresentation::getTrueLengthOfLastGroup() const {
   try {
     return mTrueLengthOfLastGroup;
   } catch (...) {
@@ -342,13 +282,115 @@ ComplexGridDataRepresentation::getTrueLengthOfLastGroup() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mNumberOfBitsForScaledGroupLengths} attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfBitsForScaledGroupLengths} attribute. */
 
-const T::UInt8_opt &
-ComplexGridDataRepresentation::getNumberOfBitsForScaledGroupLengths() const {
+const T::UInt8_opt &ComplexGridDataRepresentation::getNumberOfBitsForScaledGroupLengths() const {
   try {
     return mNumberOfBitsForScaledGroupLengths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setPacking(PackingSettings packing) {
+  try {
+    mPacking = packing;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setOriginalValues(OriginalValuesSettings originalValues) {
+  try {
+    mOriginalValues = originalValues;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setGroupSplittingMethodUsed(T::UInt8_opt groupSplittingMethodUsed) {
+  try {
+    mGroupSplittingMethodUsed = groupSplittingMethodUsed;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setMissingValueManagementUsed(T::UInt8_opt missingValueManagementUsed) {
+  try {
+    mMissingValueManagementUsed = missingValueManagementUsed;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setPrimaryMissingValueSubstitute(T::UInt32_opt primaryMissingValueSubstitute) {
+  try {
+    mPrimaryMissingValueSubstitute = primaryMissingValueSubstitute;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setSecondaryMissingValueSubstitute(T::UInt32_opt secondaryMissingValueSubstitute) {
+  try {
+    mSecondaryMissingValueSubstitute = secondaryMissingValueSubstitute;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setNumberOfGroupsOfDataValues(T::UInt32_opt numberOfGroupsOfDataValues) {
+  try {
+    mNumberOfGroupsOfDataValues = numberOfGroupsOfDataValues;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setReferenceForGroupWidths(T::UInt8_opt referenceForGroupWidths) {
+  try {
+    mReferenceForGroupWidths = referenceForGroupWidths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setNumberOfBitsUsedForTheGroupWidths(T::UInt8_opt numberOfBitsUsedForTheGroupWidths) {
+  try {
+    mNumberOfBitsUsedForTheGroupWidths = numberOfBitsUsedForTheGroupWidths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setReferenceForGroupLengths(T::UInt32_opt referenceForGroupLengths) {
+  try {
+    mReferenceForGroupLengths = referenceForGroupLengths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setLengthIncrementForTheGroupLengths(T::UInt8_opt lengthIncrementForTheGroupLengths) {
+  try {
+    mLengthIncrementForTheGroupLengths = lengthIncrementForTheGroupLengths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setTrueLengthOfLastGroup(T::UInt32_opt trueLengthOfLastGroup) {
+  try {
+    mTrueLengthOfLastGroup = trueLengthOfLastGroup;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ComplexGridDataRepresentation::setNumberOfBitsForScaledGroupLengths(T::UInt8_opt numberOfBitsForScaledGroupLengths) {
+  try {
+    mNumberOfBitsForScaledGroupLengths = numberOfBitsForScaledGroupLengths;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

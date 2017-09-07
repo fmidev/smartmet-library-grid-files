@@ -13,8 +13,7 @@
 
 namespace SmartMet {
 namespace GRIB2 {
-/*! \brief The class is automatically created from the template
- * (4.rectangular_cluster).*/
+/*! \brief The class is automatically created from the template (4.rectangular_cluster).*/
 
 class RectangularClusterSettings {
 public:
@@ -22,37 +21,47 @@ public:
   virtual ~RectangularClusterSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::UInt8_opt &getClusterIdentifier() const;
+  void setClusterIdentifier(T::UInt8_opt clusterIdentifier);
   const T::UInt8_opt &getNH() const;
+  void setNH(T::UInt8_opt nH);
   const T::UInt8_opt &getNL() const;
+  void setNL(T::UInt8_opt nL);
   const T::UInt8_opt &getTotalNumberOfClusters() const;
+  void setTotalNumberOfClusters(T::UInt8_opt totalNumberOfClusters);
   const T::UInt8_opt &getClusteringMethod() const;
+  void setClusteringMethod(T::UInt8_opt clusteringMethod);
   const T::UInt32_opt &getNorthernLatitudeOfClusterDomain() const;
+  void setNorthernLatitudeOfClusterDomain(T::UInt32_opt northernLatitudeOfClusterDomain);
   const T::UInt32_opt &getSouthernLatitudeOfClusterDomain() const;
+  void setSouthernLatitudeOfClusterDomain(T::UInt32_opt southernLatitudeOfClusterDomain);
   const T::UInt32_opt &getEasternLongitudeOfClusterDomain() const;
+  void setEasternLongitudeOfClusterDomain(T::UInt32_opt easternLongitudeOfClusterDomain);
   const T::UInt32_opt &getWesternLongitudeOfClusterDomain() const;
+  void setWesternLongitudeOfClusterDomain(T::UInt32_opt westernLongitudeOfClusterDomain);
   const T::UInt8_opt &getNumberOfForecastsInTheCluster() const;
+  void setNumberOfForecastsInTheCluster(T::UInt8_opt numberOfForecastsInTheCluster);
   const T::UInt8_opt &getScaleFactorOfStandardDeviation() const;
+  void setScaleFactorOfStandardDeviation(T::UInt8_opt scaleFactorOfStandardDeviation);
   const T::UInt32_opt &getScaledValueOfStandardDeviation() const;
+  void setScaledValueOfStandardDeviation(T::UInt32_opt scaledValueOfStandardDeviation);
   const T::UInt8_opt &getScaleFactorOfDistanceFromEnsembleMean() const;
+  void setScaleFactorOfDistanceFromEnsembleMean(T::UInt8_opt scaleFactorOfDistanceFromEnsembleMean);
   const T::UInt32_opt &getScaledValueOfDistanceFromEnsembleMean() const;
+  void setScaledValueOfDistanceFromEnsembleMean(T::UInt32_opt scaledValueOfDistanceFromEnsembleMean);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // label "Rectangular cluster";
@@ -125,16 +134,14 @@ protected:
 
   T::UInt8_opt mScaleFactorOfStandardDeviation;
 
-  // alias
-  // scaleFactorOfStandardDeviationInTheCluster=scaleFactorOfStandardDeviation;
+  // alias scaleFactorOfStandardDeviationInTheCluster=scaleFactorOfStandardDeviation;
   //
   // #  Scaled value of standard deviation in the cluster
   // unsigned[4] scaledValueOfStandardDeviation : dump ;
 
   T::UInt32_opt mScaledValueOfStandardDeviation;
 
-  // alias
-  // scaledValueOfStandardDeviationInTheCluster=scaledValueOfStandardDeviation;
+  // alias scaledValueOfStandardDeviationInTheCluster=scaledValueOfStandardDeviation;
   //
   // #  Scale factor of distance of the cluster from ensemble mean
   // unsigned[1] scaleFactorOfDistanceFromEnsembleMean : dump ;

@@ -8,10 +8,10 @@
 
 #include "grib2/definition/Triangular.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -36,11 +36,9 @@ Triangular::~Triangular() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void Triangular::read(MemoryReader &memoryReader) {
@@ -67,8 +65,7 @@ void Triangular::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void Triangular::getAttributeList(std::string prefix,
-                                  T::AttributeList &attributeList) const {
+void Triangular::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTriangular.N2", prefix.c_str());
@@ -83,10 +80,8 @@ void Triangular::getAttributeList(std::string prefix,
     attributeList.addAttribute(name, toString(mLatitudeOfThePolePoint));
     sprintf(name, "%sTriangular.LongitudeOfThePolePoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfThePolePoint));
-    sprintf(name, "%sTriangular.LongitudeOfFirstDiamondCenterLine",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mLongitudeOfFirstDiamondCenterLine));
+    sprintf(name, "%sTriangular.LongitudeOfFirstDiamondCenterLine", prefix.c_str());
+    attributeList.addAttribute(name, toString(mLongitudeOfFirstDiamondCenterLine));
     sprintf(name, "%sTriangular.GridPointPosition", prefix.c_str());
     attributeList.addAttribute(name, toString(mGridPointPosition));
     sprintf(name, "%sTriangular.NumberingOrderOfDiamonds", prefix.c_str());
@@ -100,38 +95,27 @@ void Triangular::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void Triangular::print(std::ostream &stream, uint level,
-                       uint optionFlags) const {
+void Triangular::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "Triangular\n";
     stream << space(level) << "- N2 = " << toString(mN2) << "\n";
     stream << space(level) << "- N3 = " << toString(mN3) << "\n";
     stream << space(level) << "- Ni = " << toString(mNi) << "\n";
     stream << space(level) << "- Nd = " << toString(mNd) << "\n";
-    stream << space(level)
-           << "- LatitudeOfThePolePoint = " << toString(mLatitudeOfThePolePoint)
-           << "\n";
-    stream << space(level) << "- LongitudeOfThePolePoint = "
-           << toString(mLongitudeOfThePolePoint) << "\n";
-    stream << space(level) << "- LongitudeOfFirstDiamondCenterLine = "
-           << toString(mLongitudeOfFirstDiamondCenterLine) << "\n";
-    stream << space(level)
-           << "- GridPointPosition = " << toString(mGridPointPosition) << "\n";
-    stream << space(level) << "- NumberingOrderOfDiamonds = "
-           << toString(mNumberingOrderOfDiamonds) << "\n";
-    stream << space(level) << "- ScanningModeForOneDiamond = "
-           << toString(mScanningModeForOneDiamond) << "\n";
-    stream << space(level) << "- TotalNumberOfGridPoints = "
-           << toString(mTotalNumberOfGridPoints) << "\n";
+    stream << space(level) << "- LatitudeOfThePolePoint = " << toString(mLatitudeOfThePolePoint) << "\n";
+    stream << space(level) << "- LongitudeOfThePolePoint = " << toString(mLongitudeOfThePolePoint) << "\n";
+    stream << space(level) << "- LongitudeOfFirstDiamondCenterLine = " << toString(mLongitudeOfFirstDiamondCenterLine) << "\n";
+    stream << space(level) << "- GridPointPosition = " << toString(mGridPointPosition) << "\n";
+    stream << space(level) << "- NumberingOrderOfDiamonds = " << toString(mNumberingOrderOfDiamonds) << "\n";
+    stream << space(level) << "- ScanningModeForOneDiamond = " << toString(mScanningModeForOneDiamond) << "\n";
+    stream << space(level) << "- TotalNumberOfGridPoints = " << toString(mTotalNumberOfGridPoints) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -208,8 +192,7 @@ const T::UInt8_opt &Triangular::getNd() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfThePolePoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfThePolePoint} attribute. */
 
 const T::Int32_opt &Triangular::getLatitudeOfThePolePoint() const {
   try {
@@ -219,8 +202,7 @@ const T::Int32_opt &Triangular::getLatitudeOfThePolePoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfThePolePoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfThePolePoint} attribute. */
 
 const T::UInt32_opt &Triangular::getLongitudeOfThePolePoint() const {
   try {
@@ -230,8 +212,7 @@ const T::UInt32_opt &Triangular::getLongitudeOfThePolePoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfFirstDiamondCenterLine} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfFirstDiamondCenterLine} attribute. */
 
 const T::UInt32_opt &Triangular::getLongitudeOfFirstDiamondCenterLine() const {
   try {
@@ -241,8 +222,7 @@ const T::UInt32_opt &Triangular::getLongitudeOfFirstDiamondCenterLine() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mGridPointPosition}
- * attribute. */
+/*! \brief The method returns the value of the {@link mGridPointPosition} attribute. */
 
 const T::UInt8_opt &Triangular::getGridPointPosition() const {
   try {
@@ -252,8 +232,7 @@ const T::UInt8_opt &Triangular::getGridPointPosition() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberingOrderOfDiamonds}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberingOrderOfDiamonds} attribute. */
 
 std::uint8_t Triangular::getNumberingOrderOfDiamonds() const {
   try {
@@ -263,8 +242,7 @@ std::uint8_t Triangular::getNumberingOrderOfDiamonds() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScanningModeForOneDiamond} attribute. */
+/*! \brief The method returns the value of the {@link mScanningModeForOneDiamond} attribute. */
 
 std::uint8_t Triangular::getScanningModeForOneDiamond() const {
   try {
@@ -274,12 +252,99 @@ std::uint8_t Triangular::getScanningModeForOneDiamond() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTotalNumberOfGridPoints}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTotalNumberOfGridPoints} attribute. */
 
 const T::UInt32_opt &Triangular::getTotalNumberOfGridPoints() const {
   try {
     return mTotalNumberOfGridPoints;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setN2(T::UInt8_opt n2) {
+  try {
+    mN2 = n2;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setN3(T::UInt8_opt n3) {
+  try {
+    mN3 = n3;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setNi(T::UInt16_opt ni) {
+  try {
+    mNi = ni;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setNd(T::UInt8_opt nd) {
+  try {
+    mNd = nd;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setLatitudeOfThePolePoint(T::Int32_opt latitudeOfThePolePoint) {
+  try {
+    mLatitudeOfThePolePoint = latitudeOfThePolePoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setLongitudeOfThePolePoint(T::UInt32_opt longitudeOfThePolePoint) {
+  try {
+    mLongitudeOfThePolePoint = longitudeOfThePolePoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setLongitudeOfFirstDiamondCenterLine(T::UInt32_opt longitudeOfFirstDiamondCenterLine) {
+  try {
+    mLongitudeOfFirstDiamondCenterLine = longitudeOfFirstDiamondCenterLine;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setGridPointPosition(T::UInt8_opt gridPointPosition) {
+  try {
+    mGridPointPosition = gridPointPosition;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setNumberingOrderOfDiamonds(std::uint8_t numberingOrderOfDiamonds) {
+  try {
+    mNumberingOrderOfDiamonds = numberingOrderOfDiamonds;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setScanningModeForOneDiamond(std::uint8_t scanningModeForOneDiamond) {
+  try {
+    mScanningModeForOneDiamond = scanningModeForOneDiamond;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Triangular::setTotalNumberOfGridPoints(T::UInt32_opt totalNumberOfGridPoints) {
+  try {
+    mTotalNumberOfGridPoints = totalNumberOfGridPoints;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

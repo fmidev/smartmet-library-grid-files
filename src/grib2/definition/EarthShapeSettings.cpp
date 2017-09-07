@@ -8,10 +8,10 @@
 
 #include "grib2/definition/EarthShapeSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ EarthShapeSettings::~EarthShapeSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void EarthShapeSettings::read(MemoryReader &memoryReader) {
@@ -61,64 +59,45 @@ void EarthShapeSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void EarthShapeSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void EarthShapeSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sEarthShapeSettings.ShapeOfTheEarth", prefix.c_str());
     attributeList.addAttribute(name, toString(mShapeOfTheEarth));
-    sprintf(name, "%sEarthShapeSettings.ScaleFactorOfRadiusOfSphericalEarth",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mScaleFactorOfRadiusOfSphericalEarth));
-    sprintf(name, "%sEarthShapeSettings.ScaledValueOfRadiusOfSphericalEarth",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mScaledValueOfRadiusOfSphericalEarth));
-    sprintf(name, "%sEarthShapeSettings.ScaleFactorOfEarthMajorAxis",
-            prefix.c_str());
+    sprintf(name, "%sEarthShapeSettings.ScaleFactorOfRadiusOfSphericalEarth", prefix.c_str());
+    attributeList.addAttribute(name, toString(mScaleFactorOfRadiusOfSphericalEarth));
+    sprintf(name, "%sEarthShapeSettings.ScaledValueOfRadiusOfSphericalEarth", prefix.c_str());
+    attributeList.addAttribute(name, toString(mScaledValueOfRadiusOfSphericalEarth));
+    sprintf(name, "%sEarthShapeSettings.ScaleFactorOfEarthMajorAxis", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfEarthMajorAxis));
-    sprintf(name, "%sEarthShapeSettings.ScaledValueOfEarthMajorAxis",
-            prefix.c_str());
+    sprintf(name, "%sEarthShapeSettings.ScaledValueOfEarthMajorAxis", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfEarthMajorAxis));
-    sprintf(name, "%sEarthShapeSettings.ScaleFactorOfEarthMinorAxis",
-            prefix.c_str());
+    sprintf(name, "%sEarthShapeSettings.ScaleFactorOfEarthMinorAxis", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfEarthMinorAxis));
-    sprintf(name, "%sEarthShapeSettings.ScaledValueOfEarthMinorAxis",
-            prefix.c_str());
+    sprintf(name, "%sEarthShapeSettings.ScaledValueOfEarthMinorAxis", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfEarthMinorAxis));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void EarthShapeSettings::print(std::ostream &stream, uint level,
-                               uint optionFlags) const {
+void EarthShapeSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "EarthShapeSettings\n";
-    stream << space(level)
-           << "- ShapeOfTheEarth = " << toString(mShapeOfTheEarth) << "\n";
-    stream << space(level) << "- ScaleFactorOfRadiusOfSphericalEarth = "
-           << toString(mScaleFactorOfRadiusOfSphericalEarth) << "\n";
-    stream << space(level) << "- ScaledValueOfRadiusOfSphericalEarth = "
-           << toString(mScaledValueOfRadiusOfSphericalEarth) << "\n";
-    stream << space(level) << "- ScaleFactorOfEarthMajorAxis = "
-           << toString(mScaleFactorOfEarthMajorAxis) << "\n";
-    stream << space(level) << "- ScaledValueOfEarthMajorAxis = "
-           << toString(mScaledValueOfEarthMajorAxis) << "\n";
-    stream << space(level) << "- ScaleFactorOfEarthMinorAxis = "
-           << toString(mScaleFactorOfEarthMinorAxis) << "\n";
-    stream << space(level) << "- ScaledValueOfEarthMinorAxis = "
-           << toString(mScaledValueOfEarthMinorAxis) << "\n";
+    stream << space(level) << "- ShapeOfTheEarth = " << toString(mShapeOfTheEarth) << "\n";
+    stream << space(level) << "- ScaleFactorOfRadiusOfSphericalEarth = " << toString(mScaleFactorOfRadiusOfSphericalEarth) << "\n";
+    stream << space(level) << "- ScaledValueOfRadiusOfSphericalEarth = " << toString(mScaledValueOfRadiusOfSphericalEarth) << "\n";
+    stream << space(level) << "- ScaleFactorOfEarthMajorAxis = " << toString(mScaleFactorOfEarthMajorAxis) << "\n";
+    stream << space(level) << "- ScaledValueOfEarthMajorAxis = " << toString(mScaledValueOfEarthMajorAxis) << "\n";
+    stream << space(level) << "- ScaleFactorOfEarthMinorAxis = " << toString(mScaleFactorOfEarthMinorAxis) << "\n";
+    stream << space(level) << "- ScaledValueOfEarthMinorAxis = " << toString(mScaledValueOfEarthMinorAxis) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -149,8 +128,7 @@ T::Hash EarthShapeSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mShapeOfTheEarth}
- * attribute. */
+/*! \brief The method returns the value of the {@link mShapeOfTheEarth} attribute. */
 
 const T::UInt8_opt &EarthShapeSettings::getShapeOfTheEarth() const {
   try {
@@ -160,11 +138,9 @@ const T::UInt8_opt &EarthShapeSettings::getShapeOfTheEarth() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaleFactorOfRadiusOfSphericalEarth} attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfRadiusOfSphericalEarth} attribute. */
 
-const T::UInt8_opt &
-EarthShapeSettings::getScaleFactorOfRadiusOfSphericalEarth() const {
+const T::UInt8_opt &EarthShapeSettings::getScaleFactorOfRadiusOfSphericalEarth() const {
   try {
     return mScaleFactorOfRadiusOfSphericalEarth;
   } catch (...) {
@@ -172,11 +148,9 @@ EarthShapeSettings::getScaleFactorOfRadiusOfSphericalEarth() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaledValueOfRadiusOfSphericalEarth} attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfRadiusOfSphericalEarth} attribute. */
 
-const T::UInt32_opt &
-EarthShapeSettings::getScaledValueOfRadiusOfSphericalEarth() const {
+const T::UInt32_opt &EarthShapeSettings::getScaledValueOfRadiusOfSphericalEarth() const {
   try {
     return mScaledValueOfRadiusOfSphericalEarth;
   } catch (...) {
@@ -184,8 +158,7 @@ EarthShapeSettings::getScaledValueOfRadiusOfSphericalEarth() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaleFactorOfEarthMajorAxis} attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfEarthMajorAxis} attribute. */
 
 const T::UInt8_opt &EarthShapeSettings::getScaleFactorOfEarthMajorAxis() const {
   try {
@@ -195,11 +168,9 @@ const T::UInt8_opt &EarthShapeSettings::getScaleFactorOfEarthMajorAxis() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaledValueOfEarthMajorAxis} attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfEarthMajorAxis} attribute. */
 
-const T::UInt32_opt &
-EarthShapeSettings::getScaledValueOfEarthMajorAxis() const {
+const T::UInt32_opt &EarthShapeSettings::getScaledValueOfEarthMajorAxis() const {
   try {
     return mScaledValueOfEarthMajorAxis;
   } catch (...) {
@@ -207,8 +178,7 @@ EarthShapeSettings::getScaledValueOfEarthMajorAxis() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaleFactorOfEarthMinorAxis} attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfEarthMinorAxis} attribute. */
 
 const T::UInt8_opt &EarthShapeSettings::getScaleFactorOfEarthMinorAxis() const {
   try {
@@ -218,13 +188,67 @@ const T::UInt8_opt &EarthShapeSettings::getScaleFactorOfEarthMinorAxis() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaledValueOfEarthMinorAxis} attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfEarthMinorAxis} attribute. */
 
-const T::UInt32_opt &
-EarthShapeSettings::getScaledValueOfEarthMinorAxis() const {
+const T::UInt32_opt &EarthShapeSettings::getScaledValueOfEarthMinorAxis() const {
   try {
     return mScaledValueOfEarthMinorAxis;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EarthShapeSettings::setShapeOfTheEarth(T::UInt8_opt shapeOfTheEarth) {
+  try {
+    mShapeOfTheEarth = shapeOfTheEarth;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EarthShapeSettings::setScaleFactorOfRadiusOfSphericalEarth(T::UInt8_opt scaleFactorOfRadiusOfSphericalEarth) {
+  try {
+    mScaleFactorOfRadiusOfSphericalEarth = scaleFactorOfRadiusOfSphericalEarth;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EarthShapeSettings::setScaledValueOfRadiusOfSphericalEarth(T::UInt32_opt scaledValueOfRadiusOfSphericalEarth) {
+  try {
+    mScaledValueOfRadiusOfSphericalEarth = scaledValueOfRadiusOfSphericalEarth;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EarthShapeSettings::setScaleFactorOfEarthMajorAxis(T::UInt8_opt scaleFactorOfEarthMajorAxis) {
+  try {
+    mScaleFactorOfEarthMajorAxis = scaleFactorOfEarthMajorAxis;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EarthShapeSettings::setScaledValueOfEarthMajorAxis(T::UInt32_opt scaledValueOfEarthMajorAxis) {
+  try {
+    mScaledValueOfEarthMajorAxis = scaledValueOfEarthMajorAxis;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EarthShapeSettings::setScaleFactorOfEarthMinorAxis(T::UInt8_opt scaleFactorOfEarthMinorAxis) {
+  try {
+    mScaleFactorOfEarthMinorAxis = scaleFactorOfEarthMinorAxis;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EarthShapeSettings::setScaledValueOfEarthMinorAxis(T::UInt32_opt scaledValueOfEarthMinorAxis) {
+  try {
+    mScaledValueOfEarthMinorAxis = scaledValueOfEarthMinorAxis;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

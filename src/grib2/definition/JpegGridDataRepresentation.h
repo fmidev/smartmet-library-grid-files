@@ -24,27 +24,27 @@ public:
   virtual ~JpegGridDataRepresentation();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const PackingSettings *getPacking() const;
+  void setPacking(PackingSettings packing);
   const OriginalValuesSettings *getOriginalValues() const;
+  void setOriginalValues(OriginalValuesSettings originalValues);
   const T::UInt8_opt &getTypeOfCompressionUsed() const;
+  void setTypeOfCompressionUsed(T::UInt8_opt typeOfCompressionUsed);
   const T::UInt8_opt &getTargetCompressionRatio() const;
+  void setTargetCompressionRatio(T::UInt8_opt targetCompressionRatio);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // #Data Representation Template 5.40:
@@ -66,10 +66,8 @@ protected:
   T::UInt8_opt mTypeOfCompressionUsed;
 
   //
-  // # Octets 23 Target compression ratio, M:1 (with respect to the bit-depth
-  // specified in octet 20),
-  // # when octet 22 indicates Lossy Compression.   Otherwise, set to missing.
-  // (see Note 3)
+  // # Octets 23 Target compression ratio, M:1 (with respect to the bit-depth specified in octet 20),
+  // # when octet 22 indicates Lossy Compression.   Otherwise, set to missing. (see Note 3)
   //
   // unsigned[1] targetCompressionRatio = 255;
 

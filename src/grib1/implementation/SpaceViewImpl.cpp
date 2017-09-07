@@ -11,6 +11,7 @@ namespace GRIB1
 
 SpaceViewImpl::SpaceViewImpl()
 {
+  mGridProjection = T::GridProjection::SpaceView;
 }
 
 

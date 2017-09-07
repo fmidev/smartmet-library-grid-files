@@ -11,6 +11,7 @@ namespace GRIB2
 
 EquatorialAzimuthalEquidistantImpl::EquatorialAzimuthalEquidistantImpl()
 {
+  mGridProjection = T::GridProjection::EquatorialAzimuthalEquidistant;
 }
 
 

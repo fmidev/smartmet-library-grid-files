@@ -8,10 +8,10 @@
 
 #include "grib2/definition/TransverseMercator.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -35,11 +35,9 @@ TransverseMercator::~TransverseMercator() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void TransverseMercator::read(MemoryReader &memoryReader) {
@@ -71,8 +69,7 @@ void TransverseMercator::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void TransverseMercator::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void TransverseMercator::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTransverseMercator.", prefix.c_str());
@@ -81,16 +78,13 @@ void TransverseMercator::getAttributeList(
     attributeList.addAttribute(name, toString(mNi));
     sprintf(name, "%sTransverseMercator.Nj", prefix.c_str());
     attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sTransverseMercator.LatitudeOfReferencePoint",
-            prefix.c_str());
+    sprintf(name, "%sTransverseMercator.LatitudeOfReferencePoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLatitudeOfReferencePoint));
-    sprintf(name, "%sTransverseMercator.LongitudeOfReferencePoint",
-            prefix.c_str());
+    sprintf(name, "%sTransverseMercator.LongitudeOfReferencePoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfReferencePoint));
     sprintf(name, "%sTransverseMercator.", prefix.c_str());
     mResolution.getAttributeList(name, attributeList);
-    sprintf(name, "%sTransverseMercator.ScaleFactorAtReferencePoint",
-            prefix.c_str());
+    sprintf(name, "%sTransverseMercator.ScaleFactorAtReferencePoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorAtReferencePoint));
     sprintf(name, "%sTransverseMercator.XR", prefix.c_str());
     attributeList.addAttribute(name, toString(mXR));
@@ -115,29 +109,23 @@ void TransverseMercator::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void TransverseMercator::print(std::ostream &stream, uint level,
-                               uint optionFlags) const {
+void TransverseMercator::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "TransverseMercator\n";
     mEarthShape.print(stream, level + 1, optionFlags);
     stream << space(level) << "- Ni = " << toString(mNi) << "\n";
     stream << space(level) << "- Nj = " << toString(mNj) << "\n";
-    stream << space(level) << "- LatitudeOfReferencePoint = "
-           << toString(mLatitudeOfReferencePoint) << "\n";
-    stream << space(level) << "- LongitudeOfReferencePoint = "
-           << toString(mLongitudeOfReferencePoint) << "\n";
+    stream << space(level) << "- LatitudeOfReferencePoint = " << toString(mLatitudeOfReferencePoint) << "\n";
+    stream << space(level) << "- LongitudeOfReferencePoint = " << toString(mLongitudeOfReferencePoint) << "\n";
     mResolution.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- ScaleFactorAtReferencePoint = "
-           << toString(mScaleFactorAtReferencePoint) << "\n";
+    stream << space(level) << "- ScaleFactorAtReferencePoint = " << toString(mScaleFactorAtReferencePoint) << "\n";
     stream << space(level) << "- XR = " << toString(mXR) << "\n";
     stream << space(level) << "- YR = " << toString(mYR) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
@@ -182,8 +170,8 @@ T::Hash TransverseMercator::countHash() {
       boost::hash_combine(seed, *mX2);
     if (mY2)
       boost::hash_combine(seed, *mY2);
-    boost::hash_combine(seed, mEarthShape.countHash());
-    boost::hash_combine(seed, mResolution.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
+    // boost::hash_combine(seed,mResolution.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
@@ -191,8 +179,7 @@ T::Hash TransverseMercator::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *TransverseMercator::getEarthShape() const {
   try {
@@ -222,8 +209,7 @@ const T::UInt32_opt &TransverseMercator::getNj() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfReferencePoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfReferencePoint} attribute. */
 
 const T::Int32_opt &TransverseMercator::getLatitudeOfReferencePoint() const {
   try {
@@ -233,8 +219,7 @@ const T::Int32_opt &TransverseMercator::getLatitudeOfReferencePoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfReferencePoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfReferencePoint} attribute. */
 
 const T::Int32_opt &TransverseMercator::getLongitudeOfReferencePoint() const {
   try {
@@ -244,8 +229,7 @@ const T::Int32_opt &TransverseMercator::getLongitudeOfReferencePoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mResolution} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mResolution} attribute. */
 
 const ResolutionSettings *TransverseMercator::getResolution() const {
   try {
@@ -255,8 +239,7 @@ const ResolutionSettings *TransverseMercator::getResolution() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaleFactorAtReferencePoint} attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorAtReferencePoint} attribute. */
 
 float TransverseMercator::getScaleFactorAtReferencePoint() const {
   try {
@@ -286,8 +269,7 @@ const T::Int32_opt &TransverseMercator::getYR() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *TransverseMercator::getScanningMode() const {
   try {
@@ -352,6 +334,134 @@ const T::Int32_opt &TransverseMercator::getX2() const {
 const T::Int32_opt &TransverseMercator::getY2() const {
   try {
     return mY2;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setNi(T::UInt32_opt ni) {
+  try {
+    mNi = ni;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setNj(T::UInt32_opt nj) {
+  try {
+    mNj = nj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setLatitudeOfReferencePoint(T::Int32_opt latitudeOfReferencePoint) {
+  try {
+    mLatitudeOfReferencePoint = latitudeOfReferencePoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setLongitudeOfReferencePoint(T::Int32_opt longitudeOfReferencePoint) {
+  try {
+    mLongitudeOfReferencePoint = longitudeOfReferencePoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setResolution(ResolutionSettings resolution) {
+  try {
+    mResolution = resolution;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setScaleFactorAtReferencePoint(float scaleFactorAtReferencePoint) {
+  try {
+    mScaleFactorAtReferencePoint = scaleFactorAtReferencePoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setXR(T::Int32_opt xR) {
+  try {
+    mXR = xR;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setYR(T::Int32_opt yR) {
+  try {
+    mYR = yR;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setDi(T::UInt32_opt di) {
+  try {
+    mDi = di;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setDj(T::UInt32_opt dj) {
+  try {
+    mDj = dj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setX1(T::Int32_opt x1) {
+  try {
+    mX1 = x1;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setY1(T::Int32_opt y1) {
+  try {
+    mY1 = y1;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setX2(T::Int32_opt x2) {
+  try {
+    mX2 = x2;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TransverseMercator::setY2(T::Int32_opt y2) {
+  try {
+    mY2 = y2;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

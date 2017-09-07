@@ -8,10 +8,10 @@
 
 #include "grib2/definition/HorizontalSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ HorizontalSettings::~HorizontalSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void HorizontalSettings::read(MemoryReader &memoryReader) {
@@ -60,60 +58,42 @@ void HorizontalSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void HorizontalSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void HorizontalSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sHorizontalSettings.TypeOfFirstFixedSurface",
-            prefix.c_str());
+    sprintf(name, "%sHorizontalSettings.TypeOfFirstFixedSurface", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfFirstFixedSurface));
-    sprintf(name, "%sHorizontalSettings.ScaleFactorOfFirstFixedSurface",
-            prefix.c_str());
+    sprintf(name, "%sHorizontalSettings.ScaleFactorOfFirstFixedSurface", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfFirstFixedSurface));
-    sprintf(name, "%sHorizontalSettings.ScaledValueOfFirstFixedSurface",
-            prefix.c_str());
+    sprintf(name, "%sHorizontalSettings.ScaledValueOfFirstFixedSurface", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfFirstFixedSurface));
-    sprintf(name, "%sHorizontalSettings.TypeOfSecondFixedSurface",
-            prefix.c_str());
+    sprintf(name, "%sHorizontalSettings.TypeOfSecondFixedSurface", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfSecondFixedSurface));
-    sprintf(name, "%sHorizontalSettings.ScaleFactorOfSecondFixedSurface",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mScaleFactorOfSecondFixedSurface));
-    sprintf(name, "%sHorizontalSettings.ScaledValueOfSecondFixedSurface",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mScaledValueOfSecondFixedSurface));
+    sprintf(name, "%sHorizontalSettings.ScaleFactorOfSecondFixedSurface", prefix.c_str());
+    attributeList.addAttribute(name, toString(mScaleFactorOfSecondFixedSurface));
+    sprintf(name, "%sHorizontalSettings.ScaledValueOfSecondFixedSurface", prefix.c_str());
+    attributeList.addAttribute(name, toString(mScaledValueOfSecondFixedSurface));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void HorizontalSettings::print(std::ostream &stream, uint level,
-                               uint optionFlags) const {
+void HorizontalSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "HorizontalSettings\n";
-    stream << space(level) << "- TypeOfFirstFixedSurface = "
-           << toString(mTypeOfFirstFixedSurface) << "\n";
-    stream << space(level) << "- ScaleFactorOfFirstFixedSurface = "
-           << toString(mScaleFactorOfFirstFixedSurface) << "\n";
-    stream << space(level) << "- ScaledValueOfFirstFixedSurface = "
-           << toString(mScaledValueOfFirstFixedSurface) << "\n";
-    stream << space(level) << "- TypeOfSecondFixedSurface = "
-           << toString(mTypeOfSecondFixedSurface) << "\n";
-    stream << space(level) << "- ScaleFactorOfSecondFixedSurface = "
-           << toString(mScaleFactorOfSecondFixedSurface) << "\n";
-    stream << space(level) << "- ScaledValueOfSecondFixedSurface = "
-           << toString(mScaledValueOfSecondFixedSurface) << "\n";
+    stream << space(level) << "- TypeOfFirstFixedSurface = " << toString(mTypeOfFirstFixedSurface) << "\n";
+    stream << space(level) << "- ScaleFactorOfFirstFixedSurface = " << toString(mScaleFactorOfFirstFixedSurface) << "\n";
+    stream << space(level) << "- ScaledValueOfFirstFixedSurface = " << toString(mScaledValueOfFirstFixedSurface) << "\n";
+    stream << space(level) << "- TypeOfSecondFixedSurface = " << toString(mTypeOfSecondFixedSurface) << "\n";
+    stream << space(level) << "- ScaleFactorOfSecondFixedSurface = " << toString(mScaleFactorOfSecondFixedSurface) << "\n";
+    stream << space(level) << "- ScaledValueOfSecondFixedSurface = " << toString(mScaledValueOfSecondFixedSurface) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -142,8 +122,7 @@ T::Hash HorizontalSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfFirstFixedSurface}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfFirstFixedSurface} attribute. */
 
 const T::UInt8_opt &HorizontalSettings::getTypeOfFirstFixedSurface() const {
   try {
@@ -153,11 +132,9 @@ const T::UInt8_opt &HorizontalSettings::getTypeOfFirstFixedSurface() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaleFactorOfFirstFixedSurface} attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfFirstFixedSurface} attribute. */
 
-const T::Int8_opt &
-HorizontalSettings::getScaleFactorOfFirstFixedSurface() const {
+const T::Int8_opt &HorizontalSettings::getScaleFactorOfFirstFixedSurface() const {
   try {
     return mScaleFactorOfFirstFixedSurface;
   } catch (...) {
@@ -165,11 +142,9 @@ HorizontalSettings::getScaleFactorOfFirstFixedSurface() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaledValueOfFirstFixedSurface} attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfFirstFixedSurface} attribute. */
 
-const T::UInt32_opt &
-HorizontalSettings::getScaledValueOfFirstFixedSurface() const {
+const T::UInt32_opt &HorizontalSettings::getScaledValueOfFirstFixedSurface() const {
   try {
     return mScaledValueOfFirstFixedSurface;
   } catch (...) {
@@ -177,8 +152,7 @@ HorizontalSettings::getScaledValueOfFirstFixedSurface() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfSecondFixedSurface}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfSecondFixedSurface} attribute. */
 
 const T::UInt8_opt &HorizontalSettings::getTypeOfSecondFixedSurface() const {
   try {
@@ -188,11 +162,9 @@ const T::UInt8_opt &HorizontalSettings::getTypeOfSecondFixedSurface() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaleFactorOfSecondFixedSurface} attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfSecondFixedSurface} attribute. */
 
-const T::Int8_opt &
-HorizontalSettings::getScaleFactorOfSecondFixedSurface() const {
+const T::Int8_opt &HorizontalSettings::getScaleFactorOfSecondFixedSurface() const {
   try {
     return mScaleFactorOfSecondFixedSurface;
   } catch (...) {
@@ -200,13 +172,59 @@ HorizontalSettings::getScaleFactorOfSecondFixedSurface() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaledValueOfSecondFixedSurface} attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfSecondFixedSurface} attribute. */
 
-const T::UInt32_opt &
-HorizontalSettings::getScaledValueOfSecondFixedSurface() const {
+const T::UInt32_opt &HorizontalSettings::getScaledValueOfSecondFixedSurface() const {
   try {
     return mScaledValueOfSecondFixedSurface;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void HorizontalSettings::setTypeOfFirstFixedSurface(T::UInt8_opt typeOfFirstFixedSurface) {
+  try {
+    mTypeOfFirstFixedSurface = typeOfFirstFixedSurface;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void HorizontalSettings::setScaleFactorOfFirstFixedSurface(T::Int8_opt scaleFactorOfFirstFixedSurface) {
+  try {
+    mScaleFactorOfFirstFixedSurface = scaleFactorOfFirstFixedSurface;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void HorizontalSettings::setScaledValueOfFirstFixedSurface(T::UInt32_opt scaledValueOfFirstFixedSurface) {
+  try {
+    mScaledValueOfFirstFixedSurface = scaledValueOfFirstFixedSurface;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void HorizontalSettings::setTypeOfSecondFixedSurface(T::UInt8_opt typeOfSecondFixedSurface) {
+  try {
+    mTypeOfSecondFixedSurface = typeOfSecondFixedSurface;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void HorizontalSettings::setScaleFactorOfSecondFixedSurface(T::Int8_opt scaleFactorOfSecondFixedSurface) {
+  try {
+    mScaleFactorOfSecondFixedSurface = scaleFactorOfSecondFixedSurface;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void HorizontalSettings::setScaledValueOfSecondFixedSurface(T::UInt32_opt scaledValueOfSecondFixedSurface) {
+  try {
+    mScaledValueOfSecondFixedSurface = scaledValueOfSecondFixedSurface;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

@@ -8,10 +8,10 @@
 
 #include "grib2/definition/TimeIntervalAggregateForecast.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ TimeIntervalAggregateForecast::~TimeIntervalAggregateForecast() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void TimeIntervalAggregateForecast::read(MemoryReader &memoryReader) {
@@ -60,8 +58,7 @@ void TimeIntervalAggregateForecast::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void TimeIntervalAggregateForecast::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void TimeIntervalAggregateForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTimeIntervalAggregateForecast.", prefix.c_str());
@@ -70,44 +67,33 @@ void TimeIntervalAggregateForecast::getAttributeList(
     mPointInTime.getAttributeList(name, attributeList);
     sprintf(name, "%sTimeIntervalAggregateForecast.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
-    sprintf(name, "%sTimeIntervalAggregateForecast.StatisticalProcess",
-            prefix.c_str());
+    sprintf(name, "%sTimeIntervalAggregateForecast.StatisticalProcess", prefix.c_str());
     attributeList.addAttribute(name, toString(mStatisticalProcess));
-    sprintf(name, "%sTimeIntervalAggregateForecast.SpatialProcessing",
-            prefix.c_str());
+    sprintf(name, "%sTimeIntervalAggregateForecast.SpatialProcessing", prefix.c_str());
     attributeList.addAttribute(name, toString(mSpatialProcessing));
-    sprintf(name, "%sTimeIntervalAggregateForecast.NumberOfPointsUsed",
-            prefix.c_str());
+    sprintf(name, "%sTimeIntervalAggregateForecast.NumberOfPointsUsed", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfPointsUsed));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void TimeIntervalAggregateForecast::print(std::ostream &stream, uint level,
-                                          uint optionFlags) const {
+void TimeIntervalAggregateForecast::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "TimeIntervalAggregateForecast\n";
     mParameter.print(stream, level + 1, optionFlags);
     mPointInTime.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- StatisticalProcess = " << toString(mStatisticalProcess)
-           << "\n";
-    stream << space(level)
-           << "- SpatialProcessing = " << toString(mSpatialProcessing) << "\n";
-    stream << space(level)
-           << "- NumberOfPointsUsed = " << toString(mNumberOfPointsUsed)
-           << "\n";
+    stream << space(level) << "- StatisticalProcess = " << toString(mStatisticalProcess) << "\n";
+    stream << space(level) << "- SpatialProcessing = " << toString(mSpatialProcessing) << "\n";
+    stream << space(level) << "- NumberOfPointsUsed = " << toString(mNumberOfPointsUsed) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -133,8 +119,7 @@ T::Hash TimeIntervalAggregateForecast::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mParameter} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
 const ParameterSettings *TimeIntervalAggregateForecast::getParameter() const {
   try {
@@ -144,11 +129,9 @@ const ParameterSettings *TimeIntervalAggregateForecast::getParameter() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mPointInTime} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
 
-const PointInTimeSettings *
-TimeIntervalAggregateForecast::getPointInTime() const {
+const PointInTimeSettings *TimeIntervalAggregateForecast::getPointInTime() const {
   try {
     return &mPointInTime;
   } catch (...) {
@@ -156,8 +139,7 @@ TimeIntervalAggregateForecast::getPointInTime() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mHorizontal} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
 const HorizontalSettings *TimeIntervalAggregateForecast::getHorizontal() const {
   try {
@@ -167,11 +149,9 @@ const HorizontalSettings *TimeIntervalAggregateForecast::getHorizontal() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mStatisticalProcess}
- * attribute. */
+/*! \brief The method returns the value of the {@link mStatisticalProcess} attribute. */
 
-const T::UInt8_opt &
-TimeIntervalAggregateForecast::getStatisticalProcess() const {
+const T::UInt8_opt &TimeIntervalAggregateForecast::getStatisticalProcess() const {
   try {
     return mStatisticalProcess;
   } catch (...) {
@@ -179,11 +159,9 @@ TimeIntervalAggregateForecast::getStatisticalProcess() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSpatialProcessing}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSpatialProcessing} attribute. */
 
-const T::UInt8_opt &
-TimeIntervalAggregateForecast::getSpatialProcessing() const {
+const T::UInt8_opt &TimeIntervalAggregateForecast::getSpatialProcessing() const {
   try {
     return mSpatialProcessing;
   } catch (...) {
@@ -191,13 +169,59 @@ TimeIntervalAggregateForecast::getSpatialProcessing() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfPointsUsed}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfPointsUsed} attribute. */
 
-const T::UInt8_opt &
-TimeIntervalAggregateForecast::getNumberOfPointsUsed() const {
+const T::UInt8_opt &TimeIntervalAggregateForecast::getNumberOfPointsUsed() const {
   try {
     return mNumberOfPointsUsed;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeIntervalAggregateForecast::setParameter(ParameterSettings parameter) {
+  try {
+    mParameter = parameter;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeIntervalAggregateForecast::setPointInTime(PointInTimeSettings pointInTime) {
+  try {
+    mPointInTime = pointInTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeIntervalAggregateForecast::setHorizontal(HorizontalSettings horizontal) {
+  try {
+    mHorizontal = horizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeIntervalAggregateForecast::setStatisticalProcess(T::UInt8_opt statisticalProcess) {
+  try {
+    mStatisticalProcess = statisticalProcess;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeIntervalAggregateForecast::setSpatialProcessing(T::UInt8_opt spatialProcessing) {
+  try {
+    mSpatialProcessing = spatialProcessing;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeIntervalAggregateForecast::setNumberOfPointsUsed(T::UInt8_opt numberOfPointsUsed) {
+  try {
+    mNumberOfPointsUsed = numberOfPointsUsed;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

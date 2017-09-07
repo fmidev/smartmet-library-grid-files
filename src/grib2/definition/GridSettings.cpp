@@ -8,10 +8,10 @@
 
 #include "grib2/definition/GridSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ GridSettings::~GridSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void GridSettings::read(MemoryReader &memoryReader) {
@@ -63,18 +61,15 @@ void GridSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void GridSettings::getAttributeList(std::string prefix,
-                                    T::AttributeList &attributeList) const {
+void GridSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sGridSettings.Ni", prefix.c_str());
     attributeList.addAttribute(name, toString(mNi));
     sprintf(name, "%sGridSettings.Nj", prefix.c_str());
     attributeList.addAttribute(name, toString(mNj));
-    sprintf(name, "%sGridSettings.BasicAngleOfTheInitialProductionDomain",
-            prefix.c_str());
-    attributeList.addAttribute(
-        name, toString(mBasicAngleOfTheInitialProductionDomain));
+    sprintf(name, "%sGridSettings.BasicAngleOfTheInitialProductionDomain", prefix.c_str());
+    attributeList.addAttribute(name, toString(mBasicAngleOfTheInitialProductionDomain));
     sprintf(name, "%sGridSettings.SubdivisionsOfBasicAngle", prefix.c_str());
     attributeList.addAttribute(name, toString(mSubdivisionsOfBasicAngle));
     sprintf(name, "%sGridSettings.LatitudeOfFirstGridPoint", prefix.c_str());
@@ -92,34 +87,25 @@ void GridSettings::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GridSettings::print(std::ostream &stream, uint level,
-                         uint optionFlags) const {
+void GridSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "GridSettings\n";
     stream << space(level) << "- Ni = " << toString(mNi) << "\n";
     stream << space(level) << "- Nj = " << toString(mNj) << "\n";
-    stream << space(level) << "- BasicAngleOfTheInitialProductionDomain = "
-           << toString(mBasicAngleOfTheInitialProductionDomain) << "\n";
-    stream << space(level) << "- SubdivisionsOfBasicAngle = "
-           << toString(mSubdivisionsOfBasicAngle) << "\n";
-    stream << space(level) << "- LatitudeOfFirstGridPoint = "
-           << toString(mLatitudeOfFirstGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfFirstGridPoint = "
-           << toString(mLongitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- BasicAngleOfTheInitialProductionDomain = " << toString(mBasicAngleOfTheInitialProductionDomain) << "\n";
+    stream << space(level) << "- SubdivisionsOfBasicAngle = " << toString(mSubdivisionsOfBasicAngle) << "\n";
+    stream << space(level) << "- LatitudeOfFirstGridPoint = " << toString(mLatitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfFirstGridPoint = " << toString(mLongitudeOfFirstGridPoint) << "\n";
     mResolution.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- LatitudeOfLastGridPoint = "
-           << toString(mLatitudeOfLastGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfLastGridPoint = "
-           << toString(mLongitudeOfLastGridPoint) << "\n";
+    stream << space(level) << "- LatitudeOfLastGridPoint = " << toString(mLatitudeOfLastGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfLastGridPoint = " << toString(mLongitudeOfLastGridPoint) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -134,10 +120,8 @@ T::Hash GridSettings::countHash() {
       boost::hash_combine(seed, *mNi);
     if (mNj)
       boost::hash_combine(seed, *mNj);
-    if (mBasicAngleOfTheInitialProductionDomain)
-      boost::hash_combine(seed, *mBasicAngleOfTheInitialProductionDomain);
-    if (mSubdivisionsOfBasicAngle)
-      boost::hash_combine(seed, *mSubdivisionsOfBasicAngle);
+    // if (mBasicAngleOfTheInitialProductionDomain) boost::hash_combine(seed,*mBasicAngleOfTheInitialProductionDomain);
+    // if (mSubdivisionsOfBasicAngle) boost::hash_combine(seed,*mSubdivisionsOfBasicAngle);
     if (mLatitudeOfFirstGridPoint)
       boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
@@ -146,7 +130,7 @@ T::Hash GridSettings::countHash() {
       boost::hash_combine(seed, *mLatitudeOfLastGridPoint);
     if (mLongitudeOfLastGridPoint)
       boost::hash_combine(seed, *mLongitudeOfLastGridPoint);
-    boost::hash_combine(seed, mResolution.countHash());
+    // boost::hash_combine(seed,mResolution.countHash());
     return seed;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
@@ -173,11 +157,9 @@ const T::UInt32_opt &GridSettings::getNj() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mBasicAngleOfTheInitialProductionDomain} attribute. */
+/*! \brief The method returns the value of the {@link mBasicAngleOfTheInitialProductionDomain} attribute. */
 
-const T::UInt32_opt &
-GridSettings::getBasicAngleOfTheInitialProductionDomain() const {
+const T::UInt32_opt &GridSettings::getBasicAngleOfTheInitialProductionDomain() const {
   try {
     return mBasicAngleOfTheInitialProductionDomain;
   } catch (...) {
@@ -185,8 +167,7 @@ GridSettings::getBasicAngleOfTheInitialProductionDomain() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSubdivisionsOfBasicAngle}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSubdivisionsOfBasicAngle} attribute. */
 
 const T::UInt32_opt &GridSettings::getSubdivisionsOfBasicAngle() const {
   try {
@@ -196,8 +177,7 @@ const T::UInt32_opt &GridSettings::getSubdivisionsOfBasicAngle() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
 const T::Int32_opt &GridSettings::getLatitudeOfFirstGridPoint() const {
   try {
@@ -207,8 +187,7 @@ const T::Int32_opt &GridSettings::getLatitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfFirstGridPoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
 const T::Int32_opt &GridSettings::getLongitudeOfFirstGridPoint() const {
   try {
@@ -218,8 +197,7 @@ const T::Int32_opt &GridSettings::getLongitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mResolution} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mResolution} attribute. */
 
 const ResolutionSettings *GridSettings::getResolution() const {
   try {
@@ -229,8 +207,7 @@ const ResolutionSettings *GridSettings::getResolution() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint} attribute. */
 
 const T::Int32_opt &GridSettings::getLatitudeOfLastGridPoint() const {
   try {
@@ -240,12 +217,83 @@ const T::Int32_opt &GridSettings::getLatitudeOfLastGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint} attribute. */
 
 const T::Int32_opt &GridSettings::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridSettings::setNi(T::UInt32_opt ni) {
+  try {
+    mNi = ni;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridSettings::setNj(T::UInt32_opt nj) {
+  try {
+    mNj = nj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridSettings::setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAngleOfTheInitialProductionDomain) {
+  try {
+    mBasicAngleOfTheInitialProductionDomain = basicAngleOfTheInitialProductionDomain;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridSettings::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasicAngle) {
+  try {
+    mSubdivisionsOfBasicAngle = subdivisionsOfBasicAngle;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridSettings::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint) {
+  try {
+    mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridSettings::setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint) {
+  try {
+    mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridSettings::setResolution(ResolutionSettings resolution) {
+  try {
+    mResolution = resolution;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridSettings::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint) {
+  try {
+    mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridSettings::setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint) {
+  try {
+    mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

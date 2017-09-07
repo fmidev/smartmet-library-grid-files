@@ -8,10 +8,10 @@
 
 #include "grib2/definition/StretchedSphericalHarmonic.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ StretchedSphericalHarmonic::~StretchedSphericalHarmonic() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void StretchedSphericalHarmonic::read(MemoryReader &memoryReader) {
@@ -56,8 +54,7 @@ void StretchedSphericalHarmonic::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void StretchedSphericalHarmonic::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void StretchedSphericalHarmonic::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sStretchedSphericalHarmonic.", prefix.c_str());
@@ -69,17 +66,14 @@ void StretchedSphericalHarmonic::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void StretchedSphericalHarmonic::print(std::ostream &stream, uint level,
-                                       uint optionFlags) const {
+void StretchedSphericalHarmonic::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "StretchedSphericalHarmonic\n";
     mSphericalHarmonic.print(stream, level + 1, optionFlags);
@@ -102,11 +96,9 @@ T::Hash StretchedSphericalHarmonic::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mSphericalHarmonic}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mSphericalHarmonic} attribute. */
 
-const SphericalHarmonicSettings *
-StretchedSphericalHarmonic::getSphericalHarmonic() const {
+const SphericalHarmonicSettings *StretchedSphericalHarmonic::getSphericalHarmonic() const {
   try {
     return &mSphericalHarmonic;
   } catch (...) {
@@ -114,12 +106,27 @@ StretchedSphericalHarmonic::getSphericalHarmonic() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mStretching} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mStretching} attribute. */
 
 const StretchingSettings *StretchedSphericalHarmonic::getStretching() const {
   try {
     return &mStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings sphericalHarmonic) {
+  try {
+    mSphericalHarmonic = sphericalHarmonic;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedSphericalHarmonic::setStretching(StretchingSettings stretching) {
+  try {
+    mStretching = stretching;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

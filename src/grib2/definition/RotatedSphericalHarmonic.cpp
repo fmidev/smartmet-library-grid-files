@@ -8,10 +8,10 @@
 
 #include "grib2/definition/RotatedSphericalHarmonic.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ RotatedSphericalHarmonic::~RotatedSphericalHarmonic() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void RotatedSphericalHarmonic::read(MemoryReader &memoryReader) {
@@ -56,8 +54,7 @@ void RotatedSphericalHarmonic::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void RotatedSphericalHarmonic::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void RotatedSphericalHarmonic::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sRotatedSphericalHarmonic.", prefix.c_str());
@@ -69,17 +66,14 @@ void RotatedSphericalHarmonic::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void RotatedSphericalHarmonic::print(std::ostream &stream, uint level,
-                                     uint optionFlags) const {
+void RotatedSphericalHarmonic::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "RotatedSphericalHarmonic\n";
     mSphericalHarmonic.print(stream, level + 1, optionFlags);
@@ -102,11 +96,9 @@ T::Hash RotatedSphericalHarmonic::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mSphericalHarmonic}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mSphericalHarmonic} attribute. */
 
-const SphericalHarmonicSettings *
-RotatedSphericalHarmonic::getSphericalHarmonic() const {
+const SphericalHarmonicSettings *RotatedSphericalHarmonic::getSphericalHarmonic() const {
   try {
     return &mSphericalHarmonic;
   } catch (...) {
@@ -119,6 +111,22 @@ RotatedSphericalHarmonic::getSphericalHarmonic() const {
 const RotationSettings *RotatedSphericalHarmonic::getRotation() const {
   try {
     return &mRotation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings sphericalHarmonic) {
+  try {
+    mSphericalHarmonic = sphericalHarmonic;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedSphericalHarmonic::setRotation(RotationSettings rotation) {
+  try {
+    mRotation = rotation;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

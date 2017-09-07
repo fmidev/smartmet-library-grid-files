@@ -8,10 +8,10 @@
 
 #include "grib2/definition/Mercator.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ Mercator::~Mercator() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void Mercator::read(MemoryReader &memoryReader) {
@@ -67,8 +65,7 @@ void Mercator::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void Mercator::getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const {
+void Mercator::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sMercator.", prefix.c_str());
@@ -102,12 +99,10 @@ void Mercator::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
@@ -117,20 +112,14 @@ void Mercator::print(std::ostream &stream, uint level, uint optionFlags) const {
     mEarthShape.print(stream, level + 1, optionFlags);
     stream << space(level) << "- Ni = " << toString(mNi) << "\n";
     stream << space(level) << "- Nj = " << toString(mNj) << "\n";
-    stream << space(level) << "- LatitudeOfFirstGridPoint = "
-           << toString(mLatitudeOfFirstGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfFirstGridPoint = "
-           << toString(mLongitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LatitudeOfFirstGridPoint = " << toString(mLatitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfFirstGridPoint = " << toString(mLongitudeOfFirstGridPoint) << "\n";
     mResolution.print(stream, level + 1, optionFlags);
     stream << space(level) << "- LaD = " << toString(mLaD) << "\n";
-    stream << space(level) << "- LatitudeOfLastGridPoint = "
-           << toString(mLatitudeOfLastGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfLastGridPoint = "
-           << toString(mLongitudeOfLastGridPoint) << "\n";
+    stream << space(level) << "- LatitudeOfLastGridPoint = " << toString(mLatitudeOfLastGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfLastGridPoint = " << toString(mLongitudeOfLastGridPoint) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- OrientationOfTheGrid = " << toString(mOrientationOfTheGrid)
-           << "\n";
+    stream << space(level) << "- OrientationOfTheGrid = " << toString(mOrientationOfTheGrid) << "\n";
     stream << space(level) << "- Di = " << toString(mDi) << "\n";
     stream << space(level) << "- Dj = " << toString(mDj) << "\n";
   } catch (...) {
@@ -163,8 +152,8 @@ T::Hash Mercator::countHash() {
       boost::hash_combine(seed, *mDi);
     if (mDj)
       boost::hash_combine(seed, *mDj);
-    boost::hash_combine(seed, mEarthShape.countHash());
-    boost::hash_combine(seed, mResolution.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
+    // boost::hash_combine(seed,mResolution.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
@@ -172,8 +161,7 @@ T::Hash Mercator::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *Mercator::getEarthShape() const {
   try {
@@ -203,8 +191,7 @@ const T::UInt32_opt &Mercator::getNj() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
 const T::Int32_opt &Mercator::getLatitudeOfFirstGridPoint() const {
   try {
@@ -214,8 +201,7 @@ const T::Int32_opt &Mercator::getLatitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfFirstGridPoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
 const T::Int32_opt &Mercator::getLongitudeOfFirstGridPoint() const {
   try {
@@ -225,8 +211,7 @@ const T::Int32_opt &Mercator::getLongitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mResolution} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mResolution} attribute. */
 
 const ResolutionSettings *Mercator::getResolution() const {
   try {
@@ -246,8 +231,7 @@ const T::Int32_opt &Mercator::getLaD() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint} attribute. */
 
 const T::Int32_opt &Mercator::getLatitudeOfLastGridPoint() const {
   try {
@@ -257,8 +241,7 @@ const T::Int32_opt &Mercator::getLatitudeOfLastGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint} attribute. */
 
 const T::Int32_opt &Mercator::getLongitudeOfLastGridPoint() const {
   try {
@@ -268,8 +251,7 @@ const T::Int32_opt &Mercator::getLongitudeOfLastGridPoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *Mercator::getScanningMode() const {
   try {
@@ -279,8 +261,7 @@ const ScanningModeSettings *Mercator::getScanningMode() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mOrientationOfTheGrid}
- * attribute. */
+/*! \brief The method returns the value of the {@link mOrientationOfTheGrid} attribute. */
 
 const T::UInt32_opt &Mercator::getOrientationOfTheGrid() const {
   try {
@@ -305,6 +286,110 @@ const T::UInt32_opt &Mercator::getDi() const {
 const T::UInt32_opt &Mercator::getDj() const {
   try {
     return mDj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setNi(T::UInt32_opt ni) {
+  try {
+    mNi = ni;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setNj(T::UInt32_opt nj) {
+  try {
+    mNj = nj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint) {
+  try {
+    mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint) {
+  try {
+    mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setResolution(ResolutionSettings resolution) {
+  try {
+    mResolution = resolution;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setLaD(T::Int32_opt laD) {
+  try {
+    mLaD = laD;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint) {
+  try {
+    mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint) {
+  try {
+    mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setOrientationOfTheGrid(T::UInt32_opt orientationOfTheGrid) {
+  try {
+    mOrientationOfTheGrid = orientationOfTheGrid;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setDi(T::UInt32_opt di) {
+  try {
+    mDi = di;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setDj(T::UInt32_opt dj) {
+  try {
+    mDj = dj;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

@@ -13,8 +13,7 @@
 
 namespace SmartMet {
 namespace GRIB1 {
-/*! \brief The class is automatically created from the template
- * (grid_rotation).*/
+/*! \brief The class is automatically created from the template (grid_rotation).*/
 
 class RotationSettings {
 public:
@@ -22,44 +21,38 @@ public:
   virtual ~RotationSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   std::int24_t getLatitudeOfSouthernPole() const;
+  void setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole);
   std::int24_t getLongitudeOfSouthernPole() const;
+  void setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole);
   ibmfloat getGeography_angleOfRotationInDegrees() const;
+  void setGeography_angleOfRotationInDegrees(ibmfloat geography_angleOfRotationInDegrees);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
-  //
   //
   // signed[3] latitudeOfSouthernPole : edition_specific;
 
   std::int24_t mLatitudeOfSouthernPole;
 
-  // meta  geography.latitudeOfSouthernPoleInDegrees
-  // scale(latitudeOfSouthernPole ,oneConstant,grib1divider,truncateDegrees) :
-  // dump;
+  // meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfSouthernPole ,oneConstant,grib1divider,truncateDegrees) : dump;
   //
   // signed[3] longitudeOfSouthernPole : edition_specific ;
 
   std::int24_t mLongitudeOfSouthernPole;
 
-  // meta  geography.longitudeOfSouthernPoleInDegrees
-  // scale(longitudeOfSouthernPole ,oneConstant,grib1divider,truncateDegrees) :
-  // dump;
+  // meta  geography.longitudeOfSouthernPoleInDegrees   scale(longitudeOfSouthernPole ,oneConstant,grib1divider,truncateDegrees) : dump;
   //
   // ibmfloat geography.angleOfRotationInDegrees : dump;
 
@@ -67,6 +60,7 @@ protected:
 
   //
   // alias angleOfRotation =angleOfRotationInDegrees;
+  // alias is_rotated_grid = one;
 };
 
 } // namespace GRIB1

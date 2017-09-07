@@ -21,26 +21,25 @@ public:
   virtual ~RotationSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::Int32_opt &getLatitudeOfSouthernPole() const;
+  void setLatitudeOfSouthernPole(T::Int32_opt latitudeOfSouthernPole);
   const T::UInt32_opt &getLongitudeOfSouthernPole() const;
+  void setLongitudeOfSouthernPole(T::UInt32_opt longitudeOfSouthernPole);
   float getAngleOfRotation() const;
+  void setAngleOfRotation(float angleOfRotation);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // #  Latitude of the southern pole of projection
@@ -57,12 +56,9 @@ protected:
 
   // alias longitudeOfTheSouthernPoleOfProjection=longitudeOfSouthernPole;
   //
-  // meta  geography.latitudeOfSouthernPoleInDegrees
-  // scale(latitudeOfSouthernPole
-  //                                                  ,one,grib2divider,truncateDegrees)
-  //                                                  : dump;
-  // meta  geography.longitudeOfSouthernPoleInDegrees
-  // g2lon(longitudeOfSouthernPole) : dump;
+  // meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfSouthernPole
+  //                                                  ,one,grib2divider,truncateDegrees) : dump;
+  // meta  geography.longitudeOfSouthernPoleInDegrees   g2lon(longitudeOfSouthernPole) : dump;
   //
   // #  Angle of rotation of projection
   // ieeefloat angleOfRotation : dump,edition_specific ;
@@ -73,6 +69,7 @@ protected:
   //
   // alias angleOfRotationOfProjection=angleOfRotation;
   //
+  // alias is_rotated_grid=one;
 };
 
 } // namespace GRIB2

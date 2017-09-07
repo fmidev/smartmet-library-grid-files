@@ -74,6 +74,7 @@ class GridSection : public GRID::MessageSection
     std::uint32_t         getNumberOfGridPoints() const;
     std::uint8_t          getNumberOfOctetsForNumberOfPoints() const;
     std::uint8_t          getInterpretationOfNumberOfPoints() const;
+    uint                  getGridGeometryId() const;
     T::UInt16_opt         getGridDefinitionTemplateNumber() const;
     std::string           getGridProjectionString() const;
     void                  getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
@@ -89,10 +90,11 @@ class GridSection : public GRID::MessageSection
     bool                  getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     T::GridLayout         getGridLayout() const;
     T::GridProjection     getGridProjection() const;
-    T::Hash               getHash() const;
+    T::Hash               getGridHash() const;
     T::SpatialReference*  getSpatialReference() const;
     bool                  isGridGlobal() const;
     void                  read(MemoryReader& memoryReader);
+    void                  setGridGeometryId(uint geometryId);
 
   private:
 
@@ -127,9 +129,6 @@ class GridSection : public GRID::MessageSection
 
     /*! \brief The pointer to the GridDefinition object. */
     GridDefinition_uptr   mGridDefinition;  // abstract interface to the grid definition
-
-    /*! \brief The type of the grid. */
-    T::GridProjection     mGridProjection;
 
     /*! \brief  The optional list of numbers defining number of points. */
     std::vector<unsigned int> mDataPoints;

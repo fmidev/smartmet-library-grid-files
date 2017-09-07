@@ -25,43 +25,53 @@ public:
   virtual ~SpaceView();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings earthShape);
   const T::UInt32_opt &getNx() const;
+  void setNx(T::UInt32_opt nx);
   const T::UInt32_opt &getNy() const;
+  void setNy(T::UInt32_opt ny);
   const T::Int32_opt &getLatitudeOfSubSatellitePoint() const;
+  void setLatitudeOfSubSatellitePoint(T::Int32_opt latitudeOfSubSatellitePoint);
   const T::Int32_opt &getLongitudeOfSubSatellitePoint() const;
+  void setLongitudeOfSubSatellitePoint(T::Int32_opt longitudeOfSubSatellitePoint);
   const ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings resolution);
   const T::UInt32_opt &getDx() const;
+  void setDx(T::UInt32_opt dx);
   const T::UInt32_opt &getDy() const;
+  void setDy(T::UInt32_opt dy);
   const T::UInt32_opt &getXp() const;
+  void setXp(T::UInt32_opt xp);
   const T::UInt32_opt &getYp() const;
+  void setYp(T::UInt32_opt yp);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   const T::Int32_opt &getOrientationOfTheGrid() const;
+  void setOrientationOfTheGrid(T::Int32_opt orientationOfTheGrid);
   const T::UInt32_opt &getNr() const;
+  void setNr(T::UInt32_opt nr);
   const T::UInt32_opt &getXo() const;
+  void setXo(T::UInt32_opt xo);
   const T::UInt32_opt &getYo() const;
+  void setYo(T::UInt32_opt yo);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   //
-  // # START 2/template.3.90
-  // ----------------------------------------------------------------------
+  // # START 2/template.3.90 ----------------------------------------------------------------------
   // # TEMPLATE 3.90, Space view perspective or orthographic
   // include "template.3.shape_of_the_earth.def";
 
@@ -96,11 +106,8 @@ protected:
   T::Int32_opt mLongitudeOfSubSatellitePoint;
 
   //
-  // meta  geography.latitudeOfSubSatellitePointInDegrees
-  // scale(latitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
-  // meta  geography.longitudeOfSubSatellitePointInDegrees
-  // scale(longitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) :
-  // dump;
+  // meta  geography.latitudeOfSubSatellitePointInDegrees   scale(latitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
+  // meta  geography.longitudeOfSubSatellitePointInDegrees   scale(longitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
   //
   // include "template.3.resolution_flags.def";
 
@@ -144,27 +151,22 @@ protected:
   ScanningModeSettings mScanningMode;
 
   //
-  // #  Orientation of the grid; i.e., the angle between the increasing Y-axis
-  // and the meridian of the sub-satellite point in the direction of increasing
-  // latitude
+  // #  Orientation of the grid; i.e., the angle between the increasing Y-axis and the meridian of the sub-satellite point in the direction of increasing latitude
   // signed[4] orientationOfTheGrid : edition_specific;
 
   T::Int32_opt mOrientationOfTheGrid;
 
   // meta geography.orientationOfTheGridInDegrees
-  //     scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) :
-  //     dump;
+  //     scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
   //
-  // #  Nr - altitude of the camera from the Earth's centre, measured in units
-  // of the Earth's
+  // #  Nr - altitude of the camera from the Earth's centre, measured in units of the Earth's
   // # (equatorial)
   // unsigned[4] Nr : edition_specific,no_copy;
 
   T::UInt32_opt mNr;
 
   // alias altitudeOfTheCameraFromTheEarthSCenterMeasuredInUnitsOfTheEarth = Nr;
-  // meta geography.NrInRadiusOfEarth
-  // scale(Nr,oneConstant,oneMillionConstant,truncateDegrees) : dump;
+  // meta geography.NrInRadiusOfEarth scale(Nr,oneConstant,oneMillionConstant,truncateDegrees) : dump;
   //
   // #  Xo - X-coordinate of origin of sector image
   // unsigned[4] Xo  : dump;

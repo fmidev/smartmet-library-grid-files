@@ -41,8 +41,10 @@ class Message : public GRID::Message
     T::TimeString         getForecastEndTime() const;
     GribFile*             getGribFile() const;
 
+    uint                  getGridGeometryId() const;
     T::Coordinate_vec     getGridCoordinates() const;
     T::Dimensions_opt     getGridDimensions() const;
+    T::Hash               getGridHash() const;
     void                  getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     T::GridLayout         getGridLayout() const;
     void                  getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const;
@@ -91,6 +93,7 @@ class Message : public GRID::Message
     void                  setPreviousBitmapSection(boost::shared_ptr<BitmapSection> previousBitmapSection);
 
     void                  read(MemoryReader& memoryReader);
+    void                  setGridGeometryId(uint geometryId);
 
     // Fast access to substructures
 

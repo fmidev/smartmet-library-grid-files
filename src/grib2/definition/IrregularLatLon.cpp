@@ -8,10 +8,10 @@
 
 #include "grib2/definition/IrregularLatLon.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ IrregularLatLon::~IrregularLatLon() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void IrregularLatLon::read(MemoryReader &memoryReader) {
@@ -57,8 +55,7 @@ void IrregularLatLon::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void IrregularLatLon::getAttributeList(std::string prefix,
-                                       T::AttributeList &attributeList) const {
+void IrregularLatLon::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sIrregularLatLon.", prefix.c_str());
@@ -72,17 +69,14 @@ void IrregularLatLon::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void IrregularLatLon::print(std::ostream &stream, uint level,
-                            uint optionFlags) const {
+void IrregularLatLon::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "IrregularLatLon\n";
     mEarthShape.print(stream, level + 1, optionFlags);
@@ -102,15 +96,14 @@ T::Hash IrregularLatLon::countHash() {
       boost::hash_combine(seed, *mLatitude);
     if (mLongitude)
       boost::hash_combine(seed, *mLongitude);
-    boost::hash_combine(seed, mEarthShape.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
     return seed;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *IrregularLatLon::getEarthShape() const {
   try {
@@ -135,6 +128,30 @@ const T::Int32_opt &IrregularLatLon::getLatitude() const {
 const T::Int32_opt &IrregularLatLon::getLongitude() const {
   try {
     return mLongitude;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void IrregularLatLon::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void IrregularLatLon::setLatitude(T::Int32_opt latitude) {
+  try {
+    mLatitude = latitude;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void IrregularLatLon::setLongitude(T::Int32_opt longitude) {
+  try {
+    mLongitude = longitude;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

@@ -18,6 +18,7 @@ MercatorImpl::MercatorImpl()
 {
   try
   {
+    mGridProjection = T::GridProjection::Mercator;
     mSr_mercator = NULL;
     mCt_latlon2mercator = NULL;
     mCt_mercator2latlon = NULL;

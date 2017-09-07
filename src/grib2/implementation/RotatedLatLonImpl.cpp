@@ -17,6 +17,7 @@ namespace GRIB2
 
 RotatedLatLonImpl::RotatedLatLonImpl()
 {
+  mGridProjection = T::GridProjection::RotatedLatLon;
 }
 
 

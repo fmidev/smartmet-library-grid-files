@@ -11,6 +11,7 @@ namespace GRIB2
 
 TransverseMercatorImpl::TransverseMercatorImpl()
 {
+  mGridProjection = T::GridProjection::TransverseMercator;
 }
 
 

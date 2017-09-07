@@ -8,10 +8,10 @@
 
 #include "grib2/definition/CrossSection.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ CrossSection::~CrossSection() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void CrossSection::read(MemoryReader &memoryReader) {
@@ -68,18 +66,15 @@ void CrossSection::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void CrossSection::getAttributeList(std::string prefix,
-                                    T::AttributeList &attributeList) const {
+void CrossSection::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sCrossSection.", prefix.c_str());
     mEarthShape.getAttributeList(name, attributeList);
     sprintf(name, "%sCrossSection.NumberOfHorizontalPoints", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfHorizontalPoints));
-    sprintf(name, "%sCrossSection.BasicAngleOfTheInitialProductionDomain",
-            prefix.c_str());
-    attributeList.addAttribute(
-        name, toString(mBasicAngleOfTheInitialProductionDomain));
+    sprintf(name, "%sCrossSection.BasicAngleOfTheInitialProductionDomain", prefix.c_str());
+    attributeList.addAttribute(name, toString(mBasicAngleOfTheInitialProductionDomain));
     sprintf(name, "%sCrossSection.SubdivisionsOfBasicAngle", prefix.c_str());
     attributeList.addAttribute(name, toString(mSubdivisionsOfBasicAngle));
     sprintf(name, "%sCrossSection.LatitudeOfFirstGridPoint", prefix.c_str());
@@ -107,46 +102,29 @@ void CrossSection::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void CrossSection::print(std::ostream &stream, uint level,
-                         uint optionFlags) const {
+void CrossSection::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "CrossSection\n";
     mEarthShape.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- NumberOfHorizontalPoints = "
-           << toString(mNumberOfHorizontalPoints) << "\n";
-    stream << space(level) << "- BasicAngleOfTheInitialProductionDomain = "
-           << toString(mBasicAngleOfTheInitialProductionDomain) << "\n";
-    stream << space(level) << "- SubdivisionsOfBasicAngle = "
-           << toString(mSubdivisionsOfBasicAngle) << "\n";
-    stream << space(level) << "- LatitudeOfFirstGridPoint = "
-           << toString(mLatitudeOfFirstGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfFirstGridPoint = "
-           << toString(mLongitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- NumberOfHorizontalPoints = " << toString(mNumberOfHorizontalPoints) << "\n";
+    stream << space(level) << "- BasicAngleOfTheInitialProductionDomain = " << toString(mBasicAngleOfTheInitialProductionDomain) << "\n";
+    stream << space(level) << "- SubdivisionsOfBasicAngle = " << toString(mSubdivisionsOfBasicAngle) << "\n";
+    stream << space(level) << "- LatitudeOfFirstGridPoint = " << toString(mLatitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfFirstGridPoint = " << toString(mLongitudeOfFirstGridPoint) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- LatitudeOfLastGridPoint = "
-           << toString(mLatitudeOfLastGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfLastGridPoint = "
-           << toString(mLongitudeOfLastGridPoint) << "\n";
-    stream << space(level)
-           << "- TypeOfHorizontalLine = " << toString(mTypeOfHorizontalLine)
-           << "\n";
-    stream << space(level)
-           << "- NumberOfVerticalPoints = " << toString(mNumberOfVerticalPoints)
-           << "\n";
-    stream << space(level) << "- MeaningOfVerticalCoordinate = "
-           << toString(mMeaningOfVerticalCoordinate) << "\n";
-    stream << space(level)
-           << "- VerticalCoordinate = " << toString(mVerticalCoordinate)
-           << "\n";
+    stream << space(level) << "- LatitudeOfLastGridPoint = " << toString(mLatitudeOfLastGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfLastGridPoint = " << toString(mLongitudeOfLastGridPoint) << "\n";
+    stream << space(level) << "- TypeOfHorizontalLine = " << toString(mTypeOfHorizontalLine) << "\n";
+    stream << space(level) << "- NumberOfVerticalPoints = " << toString(mNumberOfVerticalPoints) << "\n";
+    stream << space(level) << "- MeaningOfVerticalCoordinate = " << toString(mMeaningOfVerticalCoordinate) << "\n";
+    stream << space(level) << "- VerticalCoordinate = " << toString(mVerticalCoordinate) << "\n";
     stream << space(level) << "- NC = " << toString(mNC) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
@@ -160,10 +138,8 @@ T::Hash CrossSection::countHash() {
     std::size_t seed = 0;
     if (mNumberOfHorizontalPoints)
       boost::hash_combine(seed, *mNumberOfHorizontalPoints);
-    if (mBasicAngleOfTheInitialProductionDomain)
-      boost::hash_combine(seed, *mBasicAngleOfTheInitialProductionDomain);
-    if (mSubdivisionsOfBasicAngle)
-      boost::hash_combine(seed, *mSubdivisionsOfBasicAngle);
+    // if (mBasicAngleOfTheInitialProductionDomain) boost::hash_combine(seed,*mBasicAngleOfTheInitialProductionDomain);
+    // if (mSubdivisionsOfBasicAngle) boost::hash_combine(seed,*mSubdivisionsOfBasicAngle);
     if (mLatitudeOfFirstGridPoint)
       boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
@@ -182,7 +158,7 @@ T::Hash CrossSection::countHash() {
       boost::hash_combine(seed, *mVerticalCoordinate);
     if (mNC)
       boost::hash_combine(seed, *mNC);
-    boost::hash_combine(seed, mEarthShape.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
@@ -190,8 +166,7 @@ T::Hash CrossSection::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *CrossSection::getEarthShape() const {
   try {
@@ -201,8 +176,7 @@ const EarthShapeSettings *CrossSection::getEarthShape() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfHorizontalPoints}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfHorizontalPoints} attribute. */
 
 const T::UInt32_opt &CrossSection::getNumberOfHorizontalPoints() const {
   try {
@@ -212,11 +186,9 @@ const T::UInt32_opt &CrossSection::getNumberOfHorizontalPoints() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mBasicAngleOfTheInitialProductionDomain} attribute. */
+/*! \brief The method returns the value of the {@link mBasicAngleOfTheInitialProductionDomain} attribute. */
 
-const T::UInt32_opt &
-CrossSection::getBasicAngleOfTheInitialProductionDomain() const {
+const T::UInt32_opt &CrossSection::getBasicAngleOfTheInitialProductionDomain() const {
   try {
     return mBasicAngleOfTheInitialProductionDomain;
   } catch (...) {
@@ -224,8 +196,7 @@ CrossSection::getBasicAngleOfTheInitialProductionDomain() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSubdivisionsOfBasicAngle}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSubdivisionsOfBasicAngle} attribute. */
 
 const T::UInt32_opt &CrossSection::getSubdivisionsOfBasicAngle() const {
   try {
@@ -235,8 +206,7 @@ const T::UInt32_opt &CrossSection::getSubdivisionsOfBasicAngle() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
 const T::Int32_opt &CrossSection::getLatitudeOfFirstGridPoint() const {
   try {
@@ -246,8 +216,7 @@ const T::Int32_opt &CrossSection::getLatitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfFirstGridPoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
 const T::UInt32_opt &CrossSection::getLongitudeOfFirstGridPoint() const {
   try {
@@ -257,8 +226,7 @@ const T::UInt32_opt &CrossSection::getLongitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *CrossSection::getScanningMode() const {
   try {
@@ -268,8 +236,7 @@ const ScanningModeSettings *CrossSection::getScanningMode() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint} attribute. */
 
 const T::Int32_opt &CrossSection::getLatitudeOfLastGridPoint() const {
   try {
@@ -279,8 +246,7 @@ const T::Int32_opt &CrossSection::getLatitudeOfLastGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint} attribute. */
 
 const T::UInt32_opt &CrossSection::getLongitudeOfLastGridPoint() const {
   try {
@@ -290,8 +256,7 @@ const T::UInt32_opt &CrossSection::getLongitudeOfLastGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfHorizontalLine}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfHorizontalLine} attribute. */
 
 const T::UInt8_opt &CrossSection::getTypeOfHorizontalLine() const {
   try {
@@ -301,8 +266,7 @@ const T::UInt8_opt &CrossSection::getTypeOfHorizontalLine() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfVerticalPoints}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfVerticalPoints} attribute. */
 
 const T::UInt16_opt &CrossSection::getNumberOfVerticalPoints() const {
   try {
@@ -312,8 +276,7 @@ const T::UInt16_opt &CrossSection::getNumberOfVerticalPoints() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mMeaningOfVerticalCoordinate} attribute. */
+/*! \brief The method returns the value of the {@link mMeaningOfVerticalCoordinate} attribute. */
 
 const T::UInt8_opt &CrossSection::getMeaningOfVerticalCoordinate() const {
   try {
@@ -323,8 +286,7 @@ const T::UInt8_opt &CrossSection::getMeaningOfVerticalCoordinate() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mVerticalCoordinate}
- * attribute. */
+/*! \brief The method returns the value of the {@link mVerticalCoordinate} attribute. */
 
 const T::UInt8_opt &CrossSection::getVerticalCoordinate() const {
   try {
@@ -339,6 +301,118 @@ const T::UInt8_opt &CrossSection::getVerticalCoordinate() const {
 const T::UInt16_opt &CrossSection::getNC() const {
   try {
     return mNC;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setNumberOfHorizontalPoints(T::UInt32_opt numberOfHorizontalPoints) {
+  try {
+    mNumberOfHorizontalPoints = numberOfHorizontalPoints;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAngleOfTheInitialProductionDomain) {
+  try {
+    mBasicAngleOfTheInitialProductionDomain = basicAngleOfTheInitialProductionDomain;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasicAngle) {
+  try {
+    mSubdivisionsOfBasicAngle = subdivisionsOfBasicAngle;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint) {
+  try {
+    mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint) {
+  try {
+    mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint) {
+  try {
+    mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setLongitudeOfLastGridPoint(T::UInt32_opt longitudeOfLastGridPoint) {
+  try {
+    mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setTypeOfHorizontalLine(T::UInt8_opt typeOfHorizontalLine) {
+  try {
+    mTypeOfHorizontalLine = typeOfHorizontalLine;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setNumberOfVerticalPoints(T::UInt16_opt numberOfVerticalPoints) {
+  try {
+    mNumberOfVerticalPoints = numberOfVerticalPoints;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setMeaningOfVerticalCoordinate(T::UInt8_opt meaningOfVerticalCoordinate) {
+  try {
+    mMeaningOfVerticalCoordinate = meaningOfVerticalCoordinate;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setVerticalCoordinate(T::UInt8_opt verticalCoordinate) {
+  try {
+    mVerticalCoordinate = verticalCoordinate;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CrossSection::setNC(T::UInt16_opt nC) {
+  try {
+    mNC = nC;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

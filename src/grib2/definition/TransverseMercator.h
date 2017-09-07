@@ -25,39 +25,51 @@ public:
   virtual ~TransverseMercator();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings earthShape);
   const T::UInt32_opt &getNi() const;
+  void setNi(T::UInt32_opt ni);
   const T::UInt32_opt &getNj() const;
+  void setNj(T::UInt32_opt nj);
   const T::Int32_opt &getLatitudeOfReferencePoint() const;
+  void setLatitudeOfReferencePoint(T::Int32_opt latitudeOfReferencePoint);
   const T::Int32_opt &getLongitudeOfReferencePoint() const;
+  void setLongitudeOfReferencePoint(T::Int32_opt longitudeOfReferencePoint);
   const ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings resolution);
   float getScaleFactorAtReferencePoint() const;
+  void setScaleFactorAtReferencePoint(float scaleFactorAtReferencePoint);
   const T::Int32_opt &getXR() const;
+  void setXR(T::Int32_opt xR);
   const T::Int32_opt &getYR() const;
+  void setYR(T::Int32_opt yR);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   const T::UInt32_opt &getDi() const;
+  void setDi(T::UInt32_opt di);
   const T::UInt32_opt &getDj() const;
+  void setDj(T::UInt32_opt dj);
   const T::Int32_opt &getX1() const;
+  void setX1(T::Int32_opt x1);
   const T::Int32_opt &getY1() const;
+  void setY1(T::Int32_opt y1);
   const T::Int32_opt &getX2() const;
+  void setX2(T::Int32_opt x2);
   const T::Int32_opt &getY2() const;
+  void setY2(T::Int32_opt y2);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // # TEMPLATE 3.12, Transverse Mercator
@@ -89,9 +101,7 @@ protected:
   T::Int32_opt mLatitudeOfReferencePoint;
 
   // alias LaR = latitudeOfReferencePoint;
-  // meta geography.latitudeOfReferencePointInDegrees
-  // scale(latitudeOfReferencePoint,oneConstant,grib2divider,truncateDegrees) :
-  // dump;
+  // meta geography.latitudeOfReferencePointInDegrees scale(latitudeOfReferencePoint,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // # LoR - geographic longitude of reference point
   // signed[4] longitudeOfReferencePoint : edition_specific,no_copy;
@@ -99,17 +109,14 @@ protected:
   T::Int32_opt mLongitudeOfReferencePoint;
 
   // alias LoR = longitudeOfReferencePoint;
-  // meta geography.longitudeOfReferencePointInDegrees
-  // scale(longitudeOfReferencePoint,oneConstant,grib2divider,truncateDegrees) :
-  // dump;
+  // meta geography.longitudeOfReferencePointInDegrees scale(longitudeOfReferencePoint,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // include "template.3.resolution_flags.def";
 
   ResolutionSettings mResolution;
 
   //
-  // # m - scale factor at reference point ratio of distance on map to distance
-  // on spheroid
+  // # m - scale factor at reference point ratio of distance on map to distance on spheroid
   // # (IEEE 32-bit floating-point values)
   // ieeefloat scaleFactorAtReferencePoint : edition_specific,no_copy;
 
@@ -118,8 +125,7 @@ protected:
   // alias m = scaleFactorAtReferencePoint;
   // alias geography.m=m;
   //
-  // # XR - false easting, i-direction coordinate of reference point in units of
-  // 10-2 m
+  // # XR - false easting, i-direction coordinate of reference point in units of 10-2 m
   // signed[4] XR : edition_specific,no_copy;
 
   T::Int32_opt mXR;
@@ -127,8 +133,7 @@ protected:
   // alias falseEasting = XR;
   // meta geography.XRInMetres scale(XR,one,hundred) : dump;
   //
-  // # YR - false northing, j-direction coordinate of reference point in units
-  // of 10-2 m
+  // # YR - false northing, j-direction coordinate of reference point in units of 10-2 m
   // signed[4] YR : edition_specific,no_copy ;
 
   T::Int32_opt mYR;
@@ -147,8 +152,7 @@ protected:
   T::UInt32_opt mDi;
 
   // alias iDirectionIncrementGridLength = Di;
-  // meta geography.DiInMetres scale(Di,oneConstant,hundred,truncateDegrees) :
-  // dump;
+  // meta geography.DiInMetres scale(Di,oneConstant,hundred,truncateDegrees) : dump;
   //
   // # Dj - j-direction increment length in units of 10-2 m
   // unsigned[4] Dj : edition_specific,no_copy;
@@ -156,8 +160,7 @@ protected:
   T::UInt32_opt mDj;
 
   // alias jDirectionIncrementGridLength = Dj;
-  // meta geography.DjInMetres scale(Dj,oneConstant,hundred,truncateDegrees) :
-  // dump;
+  // meta geography.DjInMetres scale(Dj,oneConstant,hundred,truncateDegrees) : dump;
   //
   // # x1 - i-direction coordinate of the first grid point in units of 10-2 m
   // signed[4] X1 : no_copy;

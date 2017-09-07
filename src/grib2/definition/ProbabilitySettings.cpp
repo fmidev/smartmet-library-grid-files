@@ -8,10 +8,10 @@
 
 #include "grib2/definition/ProbabilitySettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ ProbabilitySettings::~ProbabilitySettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void ProbabilitySettings::read(MemoryReader &memoryReader) {
@@ -61,63 +59,45 @@ void ProbabilitySettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void ProbabilitySettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void ProbabilitySettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sProbabilitySettings.ForecastProbabilityNumber",
-            prefix.c_str());
+    sprintf(name, "%sProbabilitySettings.ForecastProbabilityNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastProbabilityNumber));
-    sprintf(name, "%sProbabilitySettings.TotalNumberOfForecastProbabilities",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mTotalNumberOfForecastProbabilities));
+    sprintf(name, "%sProbabilitySettings.TotalNumberOfForecastProbabilities", prefix.c_str());
+    attributeList.addAttribute(name, toString(mTotalNumberOfForecastProbabilities));
     sprintf(name, "%sProbabilitySettings.ProbabilityType", prefix.c_str());
     attributeList.addAttribute(name, toString(mProbabilityType));
-    sprintf(name, "%sProbabilitySettings.ScaleFactorOfLowerLimit",
-            prefix.c_str());
+    sprintf(name, "%sProbabilitySettings.ScaleFactorOfLowerLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfLowerLimit));
-    sprintf(name, "%sProbabilitySettings.ScaledValueOfLowerLimit",
-            prefix.c_str());
+    sprintf(name, "%sProbabilitySettings.ScaledValueOfLowerLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfLowerLimit));
-    sprintf(name, "%sProbabilitySettings.ScaleFactorOfUpperLimit",
-            prefix.c_str());
+    sprintf(name, "%sProbabilitySettings.ScaleFactorOfUpperLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfUpperLimit));
-    sprintf(name, "%sProbabilitySettings.ScaledValueOfUpperLimit",
-            prefix.c_str());
+    sprintf(name, "%sProbabilitySettings.ScaledValueOfUpperLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfUpperLimit));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ProbabilitySettings::print(std::ostream &stream, uint level,
-                                uint optionFlags) const {
+void ProbabilitySettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "ProbabilitySettings\n";
-    stream << space(level) << "- ForecastProbabilityNumber = "
-           << toString(mForecastProbabilityNumber) << "\n";
-    stream << space(level) << "- TotalNumberOfForecastProbabilities = "
-           << toString(mTotalNumberOfForecastProbabilities) << "\n";
-    stream << space(level)
-           << "- ProbabilityType = " << toString(mProbabilityType) << "\n";
-    stream << space(level) << "- ScaleFactorOfLowerLimit = "
-           << toString(mScaleFactorOfLowerLimit) << "\n";
-    stream << space(level) << "- ScaledValueOfLowerLimit = "
-           << toString(mScaledValueOfLowerLimit) << "\n";
-    stream << space(level) << "- ScaleFactorOfUpperLimit = "
-           << toString(mScaleFactorOfUpperLimit) << "\n";
-    stream << space(level) << "- ScaledValueOfUpperLimit = "
-           << toString(mScaledValueOfUpperLimit) << "\n";
+    stream << space(level) << "- ForecastProbabilityNumber = " << toString(mForecastProbabilityNumber) << "\n";
+    stream << space(level) << "- TotalNumberOfForecastProbabilities = " << toString(mTotalNumberOfForecastProbabilities) << "\n";
+    stream << space(level) << "- ProbabilityType = " << toString(mProbabilityType) << "\n";
+    stream << space(level) << "- ScaleFactorOfLowerLimit = " << toString(mScaleFactorOfLowerLimit) << "\n";
+    stream << space(level) << "- ScaledValueOfLowerLimit = " << toString(mScaledValueOfLowerLimit) << "\n";
+    stream << space(level) << "- ScaleFactorOfUpperLimit = " << toString(mScaleFactorOfUpperLimit) << "\n";
+    stream << space(level) << "- ScaledValueOfUpperLimit = " << toString(mScaledValueOfUpperLimit) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -148,8 +128,7 @@ T::Hash ProbabilitySettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mForecastProbabilityNumber} attribute. */
+/*! \brief The method returns the value of the {@link mForecastProbabilityNumber} attribute. */
 
 const T::UInt8_opt &ProbabilitySettings::getForecastProbabilityNumber() const {
   try {
@@ -159,11 +138,9 @@ const T::UInt8_opt &ProbabilitySettings::getForecastProbabilityNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mTotalNumberOfForecastProbabilities} attribute. */
+/*! \brief The method returns the value of the {@link mTotalNumberOfForecastProbabilities} attribute. */
 
-const T::UInt8_opt &
-ProbabilitySettings::getTotalNumberOfForecastProbabilities() const {
+const T::UInt8_opt &ProbabilitySettings::getTotalNumberOfForecastProbabilities() const {
   try {
     return mTotalNumberOfForecastProbabilities;
   } catch (...) {
@@ -171,8 +148,7 @@ ProbabilitySettings::getTotalNumberOfForecastProbabilities() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mProbabilityType}
- * attribute. */
+/*! \brief The method returns the value of the {@link mProbabilityType} attribute. */
 
 const T::UInt8_opt &ProbabilitySettings::getProbabilityType() const {
   try {
@@ -182,8 +158,7 @@ const T::UInt8_opt &ProbabilitySettings::getProbabilityType() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaleFactorOfLowerLimit}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfLowerLimit} attribute. */
 
 const T::Int8_opt &ProbabilitySettings::getScaleFactorOfLowerLimit() const {
   try {
@@ -193,8 +168,7 @@ const T::Int8_opt &ProbabilitySettings::getScaleFactorOfLowerLimit() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaledValueOfLowerLimit}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfLowerLimit} attribute. */
 
 const T::Int32_opt &ProbabilitySettings::getScaledValueOfLowerLimit() const {
   try {
@@ -204,8 +178,7 @@ const T::Int32_opt &ProbabilitySettings::getScaledValueOfLowerLimit() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaleFactorOfUpperLimit}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfUpperLimit} attribute. */
 
 const T::Int8_opt &ProbabilitySettings::getScaleFactorOfUpperLimit() const {
   try {
@@ -215,12 +188,67 @@ const T::Int8_opt &ProbabilitySettings::getScaleFactorOfUpperLimit() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaledValueOfUpperLimit}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfUpperLimit} attribute. */
 
 const T::Int32_opt &ProbabilitySettings::getScaledValueOfUpperLimit() const {
   try {
     return mScaledValueOfUpperLimit;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ProbabilitySettings::setForecastProbabilityNumber(T::UInt8_opt forecastProbabilityNumber) {
+  try {
+    mForecastProbabilityNumber = forecastProbabilityNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ProbabilitySettings::setTotalNumberOfForecastProbabilities(T::UInt8_opt totalNumberOfForecastProbabilities) {
+  try {
+    mTotalNumberOfForecastProbabilities = totalNumberOfForecastProbabilities;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ProbabilitySettings::setProbabilityType(T::UInt8_opt probabilityType) {
+  try {
+    mProbabilityType = probabilityType;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ProbabilitySettings::setScaleFactorOfLowerLimit(T::Int8_opt scaleFactorOfLowerLimit) {
+  try {
+    mScaleFactorOfLowerLimit = scaleFactorOfLowerLimit;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ProbabilitySettings::setScaledValueOfLowerLimit(T::Int32_opt scaledValueOfLowerLimit) {
+  try {
+    mScaledValueOfLowerLimit = scaledValueOfLowerLimit;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ProbabilitySettings::setScaleFactorOfUpperLimit(T::Int8_opt scaleFactorOfUpperLimit) {
+  try {
+    mScaleFactorOfUpperLimit = scaleFactorOfUpperLimit;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ProbabilitySettings::setScaledValueOfUpperLimit(T::Int32_opt scaledValueOfUpperLimit) {
+  try {
+    mScaledValueOfUpperLimit = scaledValueOfUpperLimit;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

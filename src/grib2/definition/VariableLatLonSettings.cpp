@@ -8,10 +8,10 @@
 
 #include "grib2/definition/VariableLatLonSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ VariableLatLonSettings::~VariableLatLonSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void VariableLatLonSettings::read(MemoryReader &memoryReader) {
@@ -62,21 +60,16 @@ void VariableLatLonSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void VariableLatLonSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void VariableLatLonSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sVariableLatLonSettings.Ni", prefix.c_str());
     attributeList.addAttribute(name, toString(mNi));
     sprintf(name, "%sVariableLatLonSettings.Nj", prefix.c_str());
     attributeList.addAttribute(name, toString(mNj));
-    sprintf(name,
-            "%sVariableLatLonSettings.BasicAngleOfTheInitialProductionDomain",
-            prefix.c_str());
-    attributeList.addAttribute(
-        name, toString(mBasicAngleOfTheInitialProductionDomain));
-    sprintf(name, "%sVariableLatLonSettings.SubdivisionsOfBasicAngle",
-            prefix.c_str());
+    sprintf(name, "%sVariableLatLonSettings.BasicAngleOfTheInitialProductionDomain", prefix.c_str());
+    attributeList.addAttribute(name, toString(mBasicAngleOfTheInitialProductionDomain));
+    sprintf(name, "%sVariableLatLonSettings.SubdivisionsOfBasicAngle", prefix.c_str());
     attributeList.addAttribute(name, toString(mSubdivisionsOfBasicAngle));
     sprintf(name, "%sVariableLatLonSettings.", prefix.c_str());
     mResolution.getAttributeList(name, attributeList);
@@ -91,29 +84,23 @@ void VariableLatLonSettings::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void VariableLatLonSettings::print(std::ostream &stream, uint level,
-                                   uint optionFlags) const {
+void VariableLatLonSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "VariableLatLonSettings\n";
     stream << space(level) << "- Ni = " << toString(mNi) << "\n";
     stream << space(level) << "- Nj = " << toString(mNj) << "\n";
-    stream << space(level) << "- BasicAngleOfTheInitialProductionDomain = "
-           << toString(mBasicAngleOfTheInitialProductionDomain) << "\n";
-    stream << space(level) << "- SubdivisionsOfBasicAngle = "
-           << toString(mSubdivisionsOfBasicAngle) << "\n";
+    stream << space(level) << "- BasicAngleOfTheInitialProductionDomain = " << toString(mBasicAngleOfTheInitialProductionDomain) << "\n";
+    stream << space(level) << "- SubdivisionsOfBasicAngle = " << toString(mSubdivisionsOfBasicAngle) << "\n";
     mResolution.print(stream, level + 1, optionFlags);
     mScanningMode.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- Longitudes = " << toString(mLongitudes)
-           << "\n";
+    stream << space(level) << "- Longitudes = " << toString(mLongitudes) << "\n";
     stream << space(level) << "- Latitudes = " << toString(mLatitudes) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
@@ -129,15 +116,13 @@ T::Hash VariableLatLonSettings::countHash() {
       boost::hash_combine(seed, *mNi);
     if (mNj)
       boost::hash_combine(seed, *mNj);
-    if (mBasicAngleOfTheInitialProductionDomain)
-      boost::hash_combine(seed, *mBasicAngleOfTheInitialProductionDomain);
-    if (mSubdivisionsOfBasicAngle)
-      boost::hash_combine(seed, *mSubdivisionsOfBasicAngle);
+    // if (mBasicAngleOfTheInitialProductionDomain) boost::hash_combine(seed,*mBasicAngleOfTheInitialProductionDomain);
+    // if (mSubdivisionsOfBasicAngle) boost::hash_combine(seed,*mSubdivisionsOfBasicAngle);
     if (mLongitudes)
       boost::hash_combine(seed, *mLongitudes);
     if (mLatitudes)
       boost::hash_combine(seed, *mLatitudes);
-    boost::hash_combine(seed, mResolution.countHash());
+    // boost::hash_combine(seed,mResolution.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
@@ -165,11 +150,9 @@ const T::UInt32_opt &VariableLatLonSettings::getNj() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mBasicAngleOfTheInitialProductionDomain} attribute. */
+/*! \brief The method returns the value of the {@link mBasicAngleOfTheInitialProductionDomain} attribute. */
 
-const T::UInt32_opt &
-VariableLatLonSettings::getBasicAngleOfTheInitialProductionDomain() const {
+const T::UInt32_opt &VariableLatLonSettings::getBasicAngleOfTheInitialProductionDomain() const {
   try {
     return mBasicAngleOfTheInitialProductionDomain;
   } catch (...) {
@@ -177,11 +160,9 @@ VariableLatLonSettings::getBasicAngleOfTheInitialProductionDomain() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSubdivisionsOfBasicAngle}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSubdivisionsOfBasicAngle} attribute. */
 
-const T::UInt32_opt &
-VariableLatLonSettings::getSubdivisionsOfBasicAngle() const {
+const T::UInt32_opt &VariableLatLonSettings::getSubdivisionsOfBasicAngle() const {
   try {
     return mSubdivisionsOfBasicAngle;
   } catch (...) {
@@ -189,8 +170,7 @@ VariableLatLonSettings::getSubdivisionsOfBasicAngle() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mResolution} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mResolution} attribute. */
 
 const ResolutionSettings *VariableLatLonSettings::getResolution() const {
   try {
@@ -200,8 +180,7 @@ const ResolutionSettings *VariableLatLonSettings::getResolution() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *VariableLatLonSettings::getScanningMode() const {
   try {
@@ -226,6 +205,70 @@ const T::UInt32_opt &VariableLatLonSettings::getLongitudes() const {
 const T::Int32_opt &VariableLatLonSettings::getLatitudes() const {
   try {
     return mLatitudes;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void VariableLatLonSettings::setNi(T::UInt32_opt ni) {
+  try {
+    mNi = ni;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void VariableLatLonSettings::setNj(T::UInt32_opt nj) {
+  try {
+    mNj = nj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void VariableLatLonSettings::setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAngleOfTheInitialProductionDomain) {
+  try {
+    mBasicAngleOfTheInitialProductionDomain = basicAngleOfTheInitialProductionDomain;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void VariableLatLonSettings::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasicAngle) {
+  try {
+    mSubdivisionsOfBasicAngle = subdivisionsOfBasicAngle;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void VariableLatLonSettings::setResolution(ResolutionSettings resolution) {
+  try {
+    mResolution = resolution;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void VariableLatLonSettings::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void VariableLatLonSettings::setLongitudes(T::UInt32_opt longitudes) {
+  try {
+    mLongitudes = longitudes;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void VariableLatLonSettings::setLatitudes(T::Int32_opt latitudes) {
+  try {
+    mLatitudes = latitudes;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

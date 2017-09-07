@@ -13,8 +13,7 @@
 
 namespace SmartMet {
 namespace GRIB2 {
-/*! \brief The class is automatically created from the template
- * (3.resolution_flags).*/
+/*! \brief The class is automatically created from the template (3.resolution_flags).*/
 
 class ResolutionSettings {
 public:
@@ -22,50 +21,40 @@ public:
   virtual ~ResolutionSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   std::uint8_t getResolutionAndComponentFlags() const;
+  void setResolutionAndComponentFlags(std::uint8_t resolutionAndComponentFlags);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // #  Resolution and component flags
-  // flags[1] resolutionAndComponentFlags
-  // 'grib2/tables/[tablesVersion]/3.3.table' : edition_specific,no_copy;
+  // flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : edition_specific,no_copy;
 
   std::uint8_t mResolutionAndComponentFlags;
 
   //
-  // # Note our flagbit numbers run from 7 to 0, while WMO convention uses 1 to
-  // 8
+  // # Note our flagbit numbers run from 7 to 0, while WMO convention uses 1 to 8
   // # (most significant to least significant)
   //
-  // flagbit resolutionAndComponentFlags1(resolutionAndComponentFlags,7) = 0:
-  // read_only;
-  // flagbit resolutionAndComponentFlags2(resolutionAndComponentFlags,6) = 0:
-  // read_only;
+  // flagbit resolutionAndComponentFlags1(resolutionAndComponentFlags,7) = 0: read_only;
+  // flagbit resolutionAndComponentFlags2(resolutionAndComponentFlags,6) = 0: read_only;
   // flagbit iDirectionIncrementGiven(resolutionAndComponentFlags,5);
   // flagbit jDirectionIncrementGiven(resolutionAndComponentFlags,4);
   // flagbit uvRelativeToGrid(resolutionAndComponentFlags,3);
-  // flagbit resolutionAndComponentFlags6(resolutionAndComponentFlags,7) = 0:
-  // read_only;
-  // flagbit resolutionAndComponentFlags7(resolutionAndComponentFlags,6) = 0:
-  // read_only;
-  // flagbit resolutionAndComponentFlags8(resolutionAndComponentFlags,6) = 0:
-  // read_only;
+  // flagbit resolutionAndComponentFlags6(resolutionAndComponentFlags,7) = 0: read_only;
+  // flagbit resolutionAndComponentFlags7(resolutionAndComponentFlags,6) = 0: read_only;
+  // flagbit resolutionAndComponentFlags8(resolutionAndComponentFlags,6) = 0: read_only;
   //
   // concept ijDirectionIncrementGiven {
   //   '1' = {

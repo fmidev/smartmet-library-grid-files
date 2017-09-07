@@ -8,10 +8,10 @@
 
 #include "grib2/definition/CategoricalForecast.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ CategoricalForecast::~CategoricalForecast() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void CategoricalForecast::read(MemoryReader &memoryReader) {
@@ -58,8 +56,7 @@ void CategoricalForecast::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void CategoricalForecast::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void CategoricalForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sCategoricalForecast.", prefix.c_str());
@@ -75,17 +72,14 @@ void CategoricalForecast::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void CategoricalForecast::print(std::ostream &stream, uint level,
-                                uint optionFlags) const {
+void CategoricalForecast::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "CategoricalForecast\n";
     mParameter.print(stream, level + 1, optionFlags);
@@ -112,8 +106,7 @@ T::Hash CategoricalForecast::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mParameter} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
 const ParameterSettings *CategoricalForecast::getParameter() const {
   try {
@@ -123,8 +116,7 @@ const ParameterSettings *CategoricalForecast::getParameter() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mPointInTime} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
 
 const PointInTimeSettings *CategoricalForecast::getPointInTime() const {
   try {
@@ -134,8 +126,7 @@ const PointInTimeSettings *CategoricalForecast::getPointInTime() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mHorizontal} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
 const HorizontalSettings *CategoricalForecast::getHorizontal() const {
   try {
@@ -145,12 +136,43 @@ const HorizontalSettings *CategoricalForecast::getHorizontal() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mCategorical} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mCategorical} attribute. */
 
 const CategoricalSettings *CategoricalForecast::getCategorical() const {
   try {
     return &mCategorical;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalForecast::setParameter(ParameterSettings parameter) {
+  try {
+    mParameter = parameter;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalForecast::setPointInTime(PointInTimeSettings pointInTime) {
+  try {
+    mPointInTime = pointInTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalForecast::setHorizontal(HorizontalSettings horizontal) {
+  try {
+    mHorizontal = horizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalForecast::setCategorical(CategoricalSettings categorical) {
+  try {
+    mCategorical = categorical;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

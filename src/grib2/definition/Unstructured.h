@@ -23,26 +23,25 @@ public:
   virtual ~Unstructured();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::UInt8_opt &getShapeOfTheEarth() const;
+  void setShapeOfTheEarth(T::UInt8_opt shapeOfTheEarth);
   const T::UInt8_opt &getNumberOfGridInReference() const;
+  void setNumberOfGridInReference(T::UInt8_opt numberOfGridInReference);
   const std::array<char, 16> &getUuidOfHGrid() const;
+  void setUuidOfHGrid(std::array<char, 16> uuidOfHGrid);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // # TEMPLATE 3.101, General Unstructured Grid

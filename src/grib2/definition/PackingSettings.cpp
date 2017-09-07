@@ -8,10 +8,10 @@
 
 #include "grib2/definition/PackingSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -35,11 +35,9 @@ PackingSettings::~PackingSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void PackingSettings::read(MemoryReader &memoryReader) {
@@ -59,8 +57,7 @@ void PackingSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void PackingSettings::getAttributeList(std::string prefix,
-                                       T::AttributeList &attributeList) const {
+void PackingSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPackingSettings.ReferenceValue", prefix.c_str());
@@ -76,28 +73,20 @@ void PackingSettings::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PackingSettings::print(std::ostream &stream, uint level,
-                            uint optionFlags) const {
+void PackingSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "PackingSettings\n";
-    stream << space(level) << "- ReferenceValue = " << toString(mReferenceValue)
-           << "\n";
-    stream << space(level)
-           << "- BinaryScaleFactor = " << toString(mBinaryScaleFactor) << "\n";
-    stream << space(level)
-           << "- DecimalScaleFactor = " << toString(mDecimalScaleFactor)
-           << "\n";
-    stream << space(level) << "- BitsPerValue = " << toString(mBitsPerValue)
-           << "\n";
+    stream << space(level) << "- ReferenceValue = " << toString(mReferenceValue) << "\n";
+    stream << space(level) << "- BinaryScaleFactor = " << toString(mBinaryScaleFactor) << "\n";
+    stream << space(level) << "- DecimalScaleFactor = " << toString(mDecimalScaleFactor) << "\n";
+    stream << space(level) << "- BitsPerValue = " << toString(mBitsPerValue) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -121,8 +110,7 @@ T::Hash PackingSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mReferenceValue}
- * attribute. */
+/*! \brief The method returns the value of the {@link mReferenceValue} attribute. */
 
 float PackingSettings::getReferenceValue() const {
   try {
@@ -132,8 +120,7 @@ float PackingSettings::getReferenceValue() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mBinaryScaleFactor}
- * attribute. */
+/*! \brief The method returns the value of the {@link mBinaryScaleFactor} attribute. */
 
 const T::Int16_opt &PackingSettings::getBinaryScaleFactor() const {
   try {
@@ -143,8 +130,7 @@ const T::Int16_opt &PackingSettings::getBinaryScaleFactor() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mDecimalScaleFactor}
- * attribute. */
+/*! \brief The method returns the value of the {@link mDecimalScaleFactor} attribute. */
 
 const T::Int16_opt &PackingSettings::getDecimalScaleFactor() const {
   try {
@@ -154,12 +140,43 @@ const T::Int16_opt &PackingSettings::getDecimalScaleFactor() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mBitsPerValue} attribute.
- */
+/*! \brief The method returns the value of the {@link mBitsPerValue} attribute. */
 
 const T::UInt8_opt &PackingSettings::getBitsPerValue() const {
   try {
     return mBitsPerValue;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PackingSettings::setReferenceValue(float referenceValue) {
+  try {
+    mReferenceValue = referenceValue;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PackingSettings::setBinaryScaleFactor(T::Int16_opt binaryScaleFactor) {
+  try {
+    mBinaryScaleFactor = binaryScaleFactor;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PackingSettings::setDecimalScaleFactor(T::Int16_opt decimalScaleFactor) {
+  try {
+    mDecimalScaleFactor = decimalScaleFactor;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PackingSettings::setBitsPerValue(T::UInt8_opt bitsPerValue) {
+  try {
+    mBitsPerValue = bitsPerValue;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

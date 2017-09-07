@@ -8,10 +8,10 @@
 
 #include "grib1/definition/GridAreaSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -38,11 +38,9 @@ GridAreaSettings::~GridAreaSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void GridAreaSettings::read(MemoryReader &memoryReader) {
@@ -63,50 +61,39 @@ void GridAreaSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void GridAreaSettings::getAttributeList(std::string prefix,
-                                        T::AttributeList &attributeList) const {
+void GridAreaSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sGridAreaSettings.LatitudeOfFirstGridPoint",
-            prefix.c_str());
+    sprintf(name, "%sGridAreaSettings.LatitudeOfFirstGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sGridAreaSettings.LongitudeOfFirstGridPoint",
-            prefix.c_str());
+    sprintf(name, "%sGridAreaSettings.LongitudeOfFirstGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
     sprintf(name, "%sGridAreaSettings.", prefix.c_str());
     mResolutionFlags.getAttributeList(name, attributeList);
     sprintf(name, "%sGridAreaSettings.LatitudeOfLastGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLatitudeOfLastGridPoint));
-    sprintf(name, "%sGridAreaSettings.LongitudeOfLastGridPoint",
-            prefix.c_str());
+    sprintf(name, "%sGridAreaSettings.LongitudeOfLastGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfLastGridPoint));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GridAreaSettings::print(std::ostream &stream, uint level,
-                             uint optionFlags) const {
+void GridAreaSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "GridAreaSettings\n";
-    stream << space(level) << "- LatitudeOfFirstGridPoint = "
-           << toString(mLatitudeOfFirstGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfFirstGridPoint = "
-           << toString(mLongitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LatitudeOfFirstGridPoint = " << toString(mLatitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfFirstGridPoint = " << toString(mLongitudeOfFirstGridPoint) << "\n";
     mResolutionFlags.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- LatitudeOfLastGridPoint = "
-           << toString(mLatitudeOfLastGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfLastGridPoint = "
-           << toString(mLongitudeOfLastGridPoint) << "\n";
+    stream << space(level) << "- LatitudeOfLastGridPoint = " << toString(mLatitudeOfLastGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfLastGridPoint = " << toString(mLongitudeOfLastGridPoint) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -121,15 +108,14 @@ T::Hash GridAreaSettings::countHash() {
     boost::hash_combine(seed, mLongitudeOfFirstGridPoint);
     boost::hash_combine(seed, mLatitudeOfLastGridPoint);
     boost::hash_combine(seed, mLongitudeOfLastGridPoint);
-    boost::hash_combine(seed, mResolutionFlags.countHash());
+    // boost::hash_combine(seed,mResolutionFlags.countHash());
     return seed;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
 std::int24_t GridAreaSettings::getLatitudeOfFirstGridPoint() const {
   try {
@@ -139,8 +125,7 @@ std::int24_t GridAreaSettings::getLatitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfFirstGridPoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
 std::int24_t GridAreaSettings::getLongitudeOfFirstGridPoint() const {
   try {
@@ -150,8 +135,7 @@ std::int24_t GridAreaSettings::getLongitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mResolutionFlags}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mResolutionFlags} attribute. */
 
 const ResolutionFlagsSettings *GridAreaSettings::getResolutionFlags() const {
   try {
@@ -161,8 +145,7 @@ const ResolutionFlagsSettings *GridAreaSettings::getResolutionFlags() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint} attribute. */
 
 std::int24_t GridAreaSettings::getLatitudeOfLastGridPoint() const {
   try {
@@ -172,12 +155,51 @@ std::int24_t GridAreaSettings::getLatitudeOfLastGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint} attribute. */
 
 std::int24_t GridAreaSettings::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridAreaSettings::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint) {
+  try {
+    mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridAreaSettings::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint) {
+  try {
+    mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridAreaSettings::setResolutionFlags(ResolutionFlagsSettings resolutionFlags) {
+  try {
+    mResolutionFlags = resolutionFlags;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridAreaSettings::setLatitudeOfLastGridPoint(std::int24_t latitudeOfLastGridPoint) {
+  try {
+    mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GridAreaSettings::setLongitudeOfLastGridPoint(std::int24_t longitudeOfLastGridPoint) {
+  try {
+    mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

@@ -24,8 +24,9 @@ GridDefinition::GridDefinition()
     mCoordinateTranformation_latlon2orig = NULL;
     mCoordinateTranformation_orig2latlon = NULL;
     mGlobal = false;
-
-    getHash();
+    mGeometryId = 0;
+    mGridProjection = T::GridProjection::Unknown;
+    getGridHash();
   }
   catch (...)
   {
@@ -64,6 +65,38 @@ GridDefinition::~GridDefinition()
 
 void GridDefinition::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
 {
+}
+
+
+
+
+
+uint GridDefinition::getGridGeometryId() const
+{
+  try
+  {
+    return mGeometryId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+void GridDefinition::setGridGeometryId(uint geometryId)
+{
+  try
+  {
+    mGeometryId = geometryId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
 }
 
 
@@ -343,6 +376,22 @@ T::SpatialReference* GridDefinition::getSpatialReference()
 
 
 
+T::GridProjection GridDefinition::getGridProjection() const
+{
+  try
+  {
+    return mGridProjection;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the type of the grid layout.
 
      \return   The layout of the grid (expressed as an enum value).
@@ -364,7 +413,7 @@ T::GridLayout GridDefinition::getGridLayout()
 
 
 
-T::Hash GridDefinition::getHash()
+T::Hash GridDefinition::getGridHash()
 {
   try
   {

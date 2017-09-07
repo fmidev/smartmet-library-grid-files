@@ -8,10 +8,10 @@
 
 #include "grib1/definition/SphericalHarmonic.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -39,11 +39,9 @@ SphericalHarmonic::~SphericalHarmonic() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void SphericalHarmonic::read(MemoryReader &memoryReader) {
@@ -64,8 +62,7 @@ void SphericalHarmonic::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void SphericalHarmonic::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void SphericalHarmonic::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sSphericalHarmonic.J", prefix.c_str());
@@ -83,28 +80,21 @@ void SphericalHarmonic::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SphericalHarmonic::print(std::ostream &stream, uint level,
-                              uint optionFlags) const {
+void SphericalHarmonic::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "SphericalHarmonic\n";
     stream << space(level) << "- J = " << toString(mJ) << "\n";
     stream << space(level) << "- K = " << toString(mK) << "\n";
     stream << space(level) << "- M = " << toString(mM) << "\n";
-    stream << space(level)
-           << "- RepresentationType = " << toString(mRepresentationType)
-           << "\n";
-    stream << space(level)
-           << "- RepresentationMode = " << toString(mRepresentationMode)
-           << "\n";
+    stream << space(level) << "- RepresentationType = " << toString(mRepresentationType) << "\n";
+    stream << space(level) << "- RepresentationMode = " << toString(mRepresentationMode) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -156,8 +146,7 @@ std::uint16_t SphericalHarmonic::getM() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mRepresentationType}
- * attribute. */
+/*! \brief The method returns the value of the {@link mRepresentationType} attribute. */
 
 std::uint8_t SphericalHarmonic::getRepresentationType() const {
   try {
@@ -167,12 +156,51 @@ std::uint8_t SphericalHarmonic::getRepresentationType() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mRepresentationMode}
- * attribute. */
+/*! \brief The method returns the value of the {@link mRepresentationMode} attribute. */
 
 std::uint8_t SphericalHarmonic::getRepresentationMode() const {
   try {
     return mRepresentationMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SphericalHarmonic::setJ(std::uint16_t j) {
+  try {
+    mJ = j;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SphericalHarmonic::setK(std::uint16_t k) {
+  try {
+    mK = k;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SphericalHarmonic::setM(std::uint16_t m) {
+  try {
+    mM = m;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SphericalHarmonic::setRepresentationType(std::uint8_t representationType) {
+  try {
+    mRepresentationType = representationType;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SphericalHarmonic::setRepresentationMode(std::uint8_t representationMode) {
+  try {
+    mRepresentationMode = representationMode;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

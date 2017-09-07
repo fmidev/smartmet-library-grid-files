@@ -14,8 +14,7 @@
 
 namespace SmartMet {
 namespace GRIB1 {
-/*! \brief The class is automatically created from the template
- * (grid_first_last_resandcomp).*/
+/*! \brief The class is automatically created from the template (grid_first_last_resandcomp).*/
 
 class GridAreaSettings {
 public:
@@ -23,28 +22,29 @@ public:
   virtual ~GridAreaSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   std::int24_t getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint);
   std::int24_t getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint);
   const ResolutionFlagsSettings *getResolutionFlags() const;
+  void setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
   std::int24_t getLatitudeOfLastGridPoint() const;
+  void setLatitudeOfLastGridPoint(std::int24_t latitudeOfLastGridPoint);
   std::int24_t getLongitudeOfLastGridPoint() const;
+  void setLongitudeOfLastGridPoint(std::int24_t longitudeOfLastGridPoint);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // #  La1 - latitude of first grid point
@@ -52,9 +52,7 @@ protected:
 
   std::int24_t mLatitudeOfFirstGridPoint;
 
-  // meta geography.latitudeOfFirstGridPointInDegrees
-  // scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees)
-  // :dump;
+  // meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) :dump;
   // alias La1 = latitudeOfFirstGridPoint;
   //
   // #  Lo1 - longitude of first grid point
@@ -62,9 +60,7 @@ protected:
 
   std::int24_t mLongitudeOfFirstGridPoint;
 
-  // meta geography.longitudeOfFirstGridPointInDegrees
-  // scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) :
-  // dump;
+  // meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lo1 = longitudeOfFirstGridPoint;
   //
   // include "resolution_flags.def";
@@ -77,9 +73,7 @@ protected:
 
   std::int24_t mLatitudeOfLastGridPoint;
 
-  // meta geography.latitudeOfLastGridPointInDegrees
-  // scale(latitudeOfLastGridPoint,oneConstant,grib1divider,truncateDegrees) :
-  // dump;
+  // meta geography.latitudeOfLastGridPointInDegrees scale(latitudeOfLastGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias La2 = latitudeOfLastGridPoint;
   //
   // #  Lo2 - longitude of last grid point
@@ -87,9 +81,7 @@ protected:
 
   std::int24_t mLongitudeOfLastGridPoint;
 
-  // meta geography.longitudeOfLastGridPointInDegrees
-  // scale(longitudeOfLastGridPoint,oneConstant,grib1divider,truncateDegrees) :
-  // dump;
+  // meta geography.longitudeOfLastGridPointInDegrees scale(longitudeOfLastGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lo2 = longitudeOfLastGridPoint;
   //
   // # for change_scanning_direction

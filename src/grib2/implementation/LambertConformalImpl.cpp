@@ -19,6 +19,7 @@ LambertConformalImpl::LambertConformalImpl()
 {
   try
   {
+    mGridProjection = T::GridProjection::LambertConformal;
     mSr_lambertConformal = NULL;
     mCt_latlon2lambert = NULL;
     mCt_lambert2latlon = NULL;

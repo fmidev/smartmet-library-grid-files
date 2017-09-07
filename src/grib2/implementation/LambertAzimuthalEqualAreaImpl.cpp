@@ -11,6 +11,7 @@ namespace GRIB2
 
 LambertAzimuthalEqualAreaImpl::LambertAzimuthalEqualAreaImpl()
 {
+  mGridProjection = T::GridProjection::LambertAzimuthalEqualArea;
 }
 
 

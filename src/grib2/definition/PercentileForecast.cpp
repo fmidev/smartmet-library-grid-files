@@ -8,10 +8,10 @@
 
 #include "grib2/definition/PercentileForecast.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ PercentileForecast::~PercentileForecast() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void PercentileForecast::read(MemoryReader &memoryReader) {
@@ -58,8 +56,7 @@ void PercentileForecast::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void PercentileForecast::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void PercentileForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPercentileForecast.", prefix.c_str());
@@ -75,17 +72,14 @@ void PercentileForecast::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PercentileForecast::print(std::ostream &stream, uint level,
-                               uint optionFlags) const {
+void PercentileForecast::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "PercentileForecast\n";
     mParameter.print(stream, level + 1, optionFlags);
@@ -112,8 +106,7 @@ T::Hash PercentileForecast::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mParameter} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
 const ParameterSettings *PercentileForecast::getParameter() const {
   try {
@@ -123,8 +116,7 @@ const ParameterSettings *PercentileForecast::getParameter() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mPointInTime} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
 
 const PointInTimeSettings *PercentileForecast::getPointInTime() const {
   try {
@@ -134,8 +126,7 @@ const PointInTimeSettings *PercentileForecast::getPointInTime() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mHorizontal} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
 const HorizontalSettings *PercentileForecast::getHorizontal() const {
   try {
@@ -145,12 +136,43 @@ const HorizontalSettings *PercentileForecast::getHorizontal() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mPercentile} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mPercentile} attribute. */
 
 const PercentileSettings *PercentileForecast::getPercentile() const {
   try {
     return &mPercentile;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PercentileForecast::setParameter(ParameterSettings parameter) {
+  try {
+    mParameter = parameter;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PercentileForecast::setPointInTime(PointInTimeSettings pointInTime) {
+  try {
+    mPointInTime = pointInTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PercentileForecast::setHorizontal(HorizontalSettings horizontal) {
+  try {
+    mHorizontal = horizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PercentileForecast::setPercentile(PercentileSettings percentile) {
+  try {
+    mPercentile = percentile;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

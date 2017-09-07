@@ -188,6 +188,9 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
     sprintf(name,"%smessage[%u].referenceTime",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,getReferenceTime());
 
+    sprintf(name,"%smessage[%u].gridGeometryId",prefix.c_str(),(uint)mMessageIndex);
+    attributeList.addAttribute(name,toString((uint)getGridGeometryId()));
+
     sprintf(name,"%smessage[%u].gridType",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,toString((uint)getGridProjection()));
 
@@ -499,6 +502,23 @@ void Message::initParameterInfo()
 
     mCdmParameterId = Identification::gribDef.mMessageIdentifier_cdm.getParamId(*this);
     mCdmParameterName = Identification::gribDef.mMessageIdentifier_cdm.getParamName(*this);
+
+    if (getGridGeometryId() == 0)
+    {
+      T::Hash hash = getGridHash();
+      if (hash != 0)
+      {
+        GRIB2::GridDefinition_ptr def = Identification::gribDef.getGridDefinition2ByHash(hash);
+        if (def != NULL)
+          setGridGeometryId(def->getGridGeometryId());
+        else
+          printf("Geometry not found %llu\n",(unsigned long long)hash);
+      }
+      else
+      {
+        printf("Hash is zero!\n");
+      }
+    }
   }
   catch (...)
   {
@@ -552,6 +572,65 @@ bool Message::hasRequiredSections() const
 
     return (!!mIndicatorSection && !!mIdentificationSection && !!mGridSection && !!mProductSection && !!mRepresentationSection &&
             !!mBitmapSection && !!mDataSection);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+T::Hash Message::getGridHash() const
+{
+  try
+  {
+    if (mGridSection != NULL)
+      return mGridSection->getGridHash();
+
+    return 0;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+uint Message::getGridGeometryId() const
+{
+  try
+  {
+    if (mGridSection != NULL)
+      return mGridSection->getGridGeometryId();
+
+    return 0;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+void Message::setGridGeometryId(uint geometryId)
+{
+  try
+  {
+    if (mGridSection != NULL)
+      return mGridSection->setGridGeometryId(geometryId);
   }
   catch (...)
   {
@@ -1856,6 +1935,8 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- referenceTime            = " << getReferenceTime() << "\n";
     stream << space(level) << "- startTime                = " << getForecastStartTime() << "\n";
     stream << space(level) << "- endTime                  = " << getForecastEndTime() << "\n";
+    stream << space(level) << "- gridGeometryId           = " << getGridGeometryId() << "\n";
+    stream << space(level) << "- gridHash                 = " << getGridHash() << "\n";
     stream << space(level) << "- gridProjection           = " << T::get_gridProjectionString(getGridProjection()) << "\n";
     stream << space(level) << "- gridLayout               = " << T::get_gridLayoutString(getGridLayout()) << "\n";
     stream << space(level) << "- gridOriginalRowCount     = " << toString(getGridOriginalRowCount()) << "\n";

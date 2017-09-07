@@ -8,10 +8,10 @@
 
 #include "grib2/definition/RotatedGaussian.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ RotatedGaussian::~RotatedGaussian() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void RotatedGaussian::read(MemoryReader &memoryReader) {
@@ -57,8 +55,7 @@ void RotatedGaussian::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void RotatedGaussian::getAttributeList(std::string prefix,
-                                       T::AttributeList &attributeList) const {
+void RotatedGaussian::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sRotatedGaussian.", prefix.c_str());
@@ -72,17 +69,14 @@ void RotatedGaussian::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void RotatedGaussian::print(std::ostream &stream, uint level,
-                            uint optionFlags) const {
+void RotatedGaussian::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "RotatedGaussian\n";
     mEarthShape.print(stream, level + 1, optionFlags);
@@ -98,7 +92,7 @@ void RotatedGaussian::print(std::ostream &stream, uint level,
 T::Hash RotatedGaussian::countHash() {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mEarthShape.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
     boost::hash_combine(seed, mGaussian.countHash());
     boost::hash_combine(seed, mRotation.countHash());
     return seed;
@@ -107,8 +101,7 @@ T::Hash RotatedGaussian::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *RotatedGaussian::getEarthShape() const {
   try {
@@ -133,6 +126,30 @@ const GaussianSettings *RotatedGaussian::getGaussian() const {
 const RotationSettings *RotatedGaussian::getRotation() const {
   try {
     return &mRotation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedGaussian::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedGaussian::setGaussian(GaussianSettings gaussian) {
+  try {
+    mGaussian = gaussian;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotatedGaussian::setRotation(RotationSettings rotation) {
+  try {
+    mRotation = rotation;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

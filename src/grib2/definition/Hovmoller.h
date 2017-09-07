@@ -24,49 +24,65 @@ public:
   virtual ~Hovmoller();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings earthShape);
   const T::UInt32_opt &getBasicAngleOfTheInitialProductionDomain() const;
+  void setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAngleOfTheInitialProductionDomain);
   const T::UInt32_opt &getSubdivisionsOfBasicAngle() const;
+  void setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasicAngle);
   const T::Int32_opt &getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::UInt32_opt &getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
+  void setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint);
   const T::UInt32_opt &getLongitudeOfLastGridPoint() const;
+  void setLongitudeOfLastGridPoint(T::UInt32_opt longitudeOfLastGridPoint);
   const T::UInt8_opt &getTypeOfHorizontalLine() const;
+  void setTypeOfHorizontalLine(T::UInt8_opt typeOfHorizontalLine);
   const T::UInt32_opt &getNumberOfTimeSteps() const;
+  void setNumberOfTimeSteps(T::UInt32_opt numberOfTimeSteps);
   const T::UInt8_opt &getUnitOfOffsetFromReferenceTime() const;
+  void setUnitOfOffsetFromReferenceTime(T::UInt8_opt unitOfOffsetFromReferenceTime);
   const T::UInt32_opt &getOffsetFromReferenceOfFirstTime() const;
+  void setOffsetFromReferenceOfFirstTime(T::UInt32_opt offsetFromReferenceOfFirstTime);
   const T::UInt8_opt &getTypeOfTimeIncrement() const;
+  void setTypeOfTimeIncrement(T::UInt8_opt typeOfTimeIncrement);
   const T::UInt8_opt &getUnitOfTimeIncrement() const;
+  void setUnitOfTimeIncrement(T::UInt8_opt unitOfTimeIncrement);
   const T::UInt32_opt &getTimeIncrement() const;
+  void setTimeIncrement(T::UInt32_opt timeIncrement);
   const T::UInt16_opt &getYear() const;
+  void setYear(T::UInt16_opt year);
   const T::UInt8_opt &getMonth() const;
+  void setMonth(T::UInt8_opt month);
   const T::UInt8_opt &getDay() const;
+  void setDay(T::UInt8_opt day);
   const T::UInt8_opt &getHour() const;
+  void setHour(T::UInt8_opt hour);
   const T::UInt8_opt &getMinute() const;
+  void setMinute(T::UInt8_opt minute);
   const T::UInt8_opt &getSecond() const;
+  void setSecond(T::UInt8_opt second);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   //
-  // # TEMPLATE 3.1100, Hovmoller diagram grid with points equally spaced on the
-  // horizontal
+  // # TEMPLATE 3.1100, Hovmoller diagram grid with points equally spaced on the horizontal
   // include "template.3.shape_of_the_earth.def";
 
   EarthShapeSettings mEarthShape;
@@ -82,8 +98,7 @@ protected:
   T::UInt32_opt mBasicAngleOfTheInitialProductionDomain;
 
   //
-  // #  Subdivisions of basic angle used to define extreme longitudes and
-  // latitudes
+  // #  Subdivisions of basic angle used to define extreme longitudes and latitudes
   // # NOTE 1 NOT FOUND
   // unsigned[4] subdivisionsOfBasicAngle = missing() : can_be_missing,dump;
 
@@ -142,8 +157,7 @@ protected:
   //
   // alias NT =  numberOfTimeSteps;
   // #  Unit of offset from reference time
-  // codetable[1] unitOfOffsetFromReferenceTime ('4.4.table',masterDir,localDir)
-  // : dump;
+  // codetable[1] unitOfOffsetFromReferenceTime ('4.4.table',masterDir,localDir) : dump;
 
   T::UInt8_opt mUnitOfOffsetFromReferenceTime;
 

@@ -15,8 +15,7 @@
 
 namespace SmartMet {
 namespace GRIB1 {
-/*! \brief The class is automatically created from the template
- * (grid_definition_60).*/
+/*! \brief The class is automatically created from the template (grid_definition_60).*/
 
 class RotatedSphericalHarmonic : public GridDefinition {
 public:
@@ -24,51 +23,48 @@ public:
   virtual ~RotatedSphericalHarmonic();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   std::uint16_t getJ() const;
+  void setJ(std::uint16_t j);
   std::uint16_t getK() const;
+  void setK(std::uint16_t k);
   std::uint16_t getM() const;
+  void setM(std::uint16_t m);
   std::uint8_t getRepresentationType() const;
+  void setRepresentationType(std::uint8_t representationType);
   std::uint8_t getRepresentationMode() const;
+  void setRepresentationMode(std::uint8_t representationMode);
   const RotationSettings *getRotation() const;
+  void setRotation(RotationSettings rotation);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # GRID DEFINITION spherical harmonic coefficients (including rotated,
-  // stretched, or stretched and rotated)
+  // # GRID DEFINITION Rotated spherical harmonic coefficients
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 51;
   //
   // template commonBlock "grib1/grid_definition_spherical_harmonics.def";
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # GRID DEFINITION spherical harmonic coefficients (including rotated,
-  // stretched, or stretched and rotated)
+  // # GRID DEFINITION spherical harmonic coefficients (including rotated, stretched, or stretched and rotated)
   //
   // #  J - pentagonal resolution parameter
   // unsigned[2] J : dump ;
@@ -120,7 +116,8 @@ protected:
   // constant Nj = 0;
   //
   // # Rotation parameters
-  // include  "grid_rotation.def"
+  // include "grid_rotation.def"
+
   RotationSettings mRotation;
 };
 

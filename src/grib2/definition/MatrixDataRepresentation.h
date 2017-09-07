@@ -23,41 +23,49 @@ public:
   virtual ~MatrixDataRepresentation();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const PackingSettings *getPacking() const;
+  void setPacking(PackingSettings packing);
   const T::UInt8_opt &getMatrixBitmapsPresent() const;
+  void setMatrixBitmapsPresent(T::UInt8_opt matrixBitmapsPresent);
   const T::UInt32_opt &getNumberOfCodedValues() const;
+  void setNumberOfCodedValues(T::UInt32_opt numberOfCodedValues);
   const T::UInt16_opt &getFirstDimension() const;
+  void setFirstDimension(T::UInt16_opt firstDimension);
   const T::UInt16_opt &getSecondDimension() const;
+  void setSecondDimension(T::UInt16_opt secondDimension);
   const T::UInt8_opt &getFirstDimensionCoordinateValueDefinition() const;
+  void setFirstDimensionCoordinateValueDefinition(T::UInt8_opt firstDimensionCoordinateValueDefinition);
   const T::UInt8_opt &getNC1() const;
+  void setNC1(T::UInt8_opt nC1);
   const T::UInt8_opt &getSecondDimensionCoordinateValueDefinition() const;
+  void setSecondDimensionCoordinateValueDefinition(T::UInt8_opt secondDimensionCoordinateValueDefinition);
   const T::UInt8_opt &getNC2() const;
+  void setNC2(T::UInt8_opt nC2);
   const T::UInt8_opt &getFirstDimensionPhysicalSignificance() const;
+  void setFirstDimensionPhysicalSignificance(T::UInt8_opt firstDimensionPhysicalSignificance);
   const T::UInt8_opt &getSecondDimensionPhysicalSignificance() const;
+  void setSecondDimensionPhysicalSignificance(T::UInt8_opt secondDimensionPhysicalSignificance);
   float getCoefsFirst() const;
+  void setCoefsFirst(float coefsFirst);
   float getCoefsSecond() const;
+  void setCoefsSecond(float coefsSecond);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   //
-  // # START 2/template.5.1
-  // ----------------------------------------------------------------------
+  // # START 2/template.5.1 ----------------------------------------------------------------------
   // # TEMPLATE 5.1, Matrix values at grid point -simple packing
   //
   // include "template.5.packing.def";
@@ -102,14 +110,12 @@ protected:
   T::UInt8_opt mFirstDimensionCoordinateValueDefinition;
 
   //
-  // #  NC1 - number of coefficients or values used to specify first dimension
-  // coordinate function
+  // #  NC1 - number of coefficients or values used to specify first dimension coordinate function
   // unsigned[1] NC1 : dump ;
 
   T::UInt8_opt mNC1;
 
-  // alias
-  // numberOfCoefficientsOrValuesUsedToSpecifyFirstDimensionCoordinateFunction=NC1;
+  // alias numberOfCoefficientsOrValuesUsedToSpecifyFirstDimensionCoordinateFunction=NC1;
   //
   // #  Second dimension coordinate value definition
   // # (Code Table 5.2)
@@ -118,15 +124,12 @@ protected:
   T::UInt8_opt mSecondDimensionCoordinateValueDefinition;
 
   //
-  // #  NC2 - number of coefficients or values used to specify second dimension
-  // coordinate function
+  // #  NC2 - number of coefficients or values used to specify second dimension coordinate function
   // unsigned[1] NC2 : dump ;
 
   T::UInt8_opt mNC2;
 
-  // alias
-  // numberOfCoefficientsOrValuesUsedToSpecifySecondDimensionCoordinateFunction
-  // = NC2;
+  // alias numberOfCoefficientsOrValuesUsedToSpecifySecondDimensionCoordinateFunction = NC2;
   //
   // #  First dimension physical significance
   // # (Code Table 5.3)

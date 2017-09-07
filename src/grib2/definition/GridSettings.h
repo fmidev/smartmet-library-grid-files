@@ -22,32 +22,37 @@ public:
   virtual ~GridSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::UInt32_opt &getNi() const;
+  void setNi(T::UInt32_opt ni);
   const T::UInt32_opt &getNj() const;
+  void setNj(T::UInt32_opt nj);
   const T::UInt32_opt &getBasicAngleOfTheInitialProductionDomain() const;
+  void setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAngleOfTheInitialProductionDomain);
   const T::UInt32_opt &getSubdivisionsOfBasicAngle() const;
+  void setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasicAngle);
   const T::Int32_opt &getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::Int32_opt &getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint);
   const ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings resolution);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
+  void setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint);
   const T::Int32_opt &getLongitudeOfLastGridPoint() const;
+  void setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // unsigned[4] Ni : can_be_missing,dump;
@@ -72,8 +77,7 @@ protected:
 
   T::UInt32_opt mBasicAngleOfTheInitialProductionDomain;
 
-  // transient
-  // mBasicAngle=basicAngleOfTheInitialProductionDomain*oneMillionConstant;
+  // transient mBasicAngle=basicAngleOfTheInitialProductionDomain*oneMillionConstant;
   // transient angleMultiplier  = 1;
   // transient mAngleMultiplier = 1000000;
   // when (basicAngleOfTheInitialProductionDomain == 0) {
@@ -84,8 +88,7 @@ protected:
   //   set mAngleMultiplier = mBasicAngle;
   // }
   //
-  // #  Subdivisions of basic angle used to define extreme longitudes and
-  // latitudes, and direction increments
+  // #  Subdivisions of basic angle used to define extreme longitudes and latitudes, and direction increments
   // unsigned[4] subdivisionsOfBasicAngle = missing() : can_be_missing;
 
   T::UInt32_opt mSubdivisionsOfBasicAngle;
@@ -106,8 +109,7 @@ protected:
   T::Int32_opt mLatitudeOfFirstGridPoint;
 
   // alias La1  = latitudeOfFirstGridPoint;
-  // #meta latitudeOfFirstGridPointInMicrodegrees
-  // times(latitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
+  // #meta latitudeOfFirstGridPointInMicrodegrees times(latitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
   //
   // #  Lo1 - longitude of first grid point
   //
@@ -116,8 +118,7 @@ protected:
   T::Int32_opt mLongitudeOfFirstGridPoint;
 
   // alias Lo1  = longitudeOfFirstGridPoint;
-  // #meta longitudeOfFirstGridPointInMicrodegrees
-  // times(longitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
+  // #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
   //
   // include "template.3.resolution_flags.def"
 
@@ -130,8 +131,7 @@ protected:
   T::Int32_opt mLatitudeOfLastGridPoint;
 
   // alias La2 =  latitudeOfLastGridPoint;
-  // #meta latitudeOfLastGridPointInMicrodegrees
-  // times(latitudeOfLastGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
+  // #meta latitudeOfLastGridPointInMicrodegrees times(latitudeOfLastGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
   //
   // #  Lo2 - longitude of last grid point
   // signed[4] longitudeOfLastGridPoint :  edition_specific ;
@@ -139,8 +139,7 @@ protected:
   T::Int32_opt mLongitudeOfLastGridPoint;
 
   // alias Lo2 =  longitudeOfLastGridPoint;
-  // #meta longitudeOfLastGridPointInMicrodegrees
-  // times(longitudeOfLastGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
+  // #meta longitudeOfLastGridPointInMicrodegrees times(longitudeOfLastGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
   //
 };
 

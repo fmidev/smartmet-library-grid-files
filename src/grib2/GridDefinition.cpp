@@ -17,13 +17,15 @@ GridDefinition::GridDefinition()
 {
   try
   {
+    mGridProjection = T::GridProjection::Unknown;
     mGridLayout = T::GridLayout::Regular;
     mHash = 0;
     mOrigSpatialReference = NULL;
     mCoordinateTranformation_latlon2orig = NULL;
     mCoordinateTranformation_orig2latlon = NULL;
     mGlobal = false;
-    getHash();
+    mGeometryId = 0;
+    getGridHash();
   }
   catch (...)
   {
@@ -62,6 +64,56 @@ GridDefinition::~GridDefinition()
 
 void GridDefinition::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
 {
+}
+
+
+
+
+
+uint GridDefinition::getGridGeometryId() const
+{
+  try
+  {
+    return mGeometryId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+
+T::GridProjection GridDefinition::getGridProjection()
+{
+  try
+  {
+    return mGridProjection;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+
+void GridDefinition::setGridGeometryId(uint geometryId)
+{
+  try
+  {
+    mGeometryId = geometryId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
 }
 
 
@@ -391,7 +443,7 @@ T::GridLayout GridDefinition::getGridLayout()
 
 
 
-T::Hash GridDefinition::getHash()
+T::Hash GridDefinition::getGridHash()
 {
   try
   {

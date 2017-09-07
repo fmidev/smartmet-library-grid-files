@@ -11,6 +11,7 @@ namespace GRIB2
 
 StretchedGaussianImpl::StretchedGaussianImpl()
 {
+  mGridProjection = T::GridProjection::StretchedGaussian;
 }
 
 

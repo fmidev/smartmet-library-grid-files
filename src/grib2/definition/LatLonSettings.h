@@ -23,27 +23,27 @@ public:
   virtual ~LatLonSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const GridSettings *getGrid() const;
+  void setGrid(GridSettings grid);
   const T::UInt32_opt &getIDirectionIncrement() const;
+  void setIDirectionIncrement(T::UInt32_opt iDirectionIncrement);
   const T::UInt32_opt &getJDirectionIncrement() const;
+  void setJDirectionIncrement(T::UInt32_opt jDirectionIncrement);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // include "template.3.grid.def";
@@ -85,14 +85,10 @@ protected:
   //   subdivisionsOfBasicAngle
   //   );
   //
-  // meta      geography.latitudeOfFirstGridPointInDegrees    g2latlon(g2grid,0)
-  // : dump;
-  // meta      geography.longitudeOfFirstGridPointInDegrees   g2latlon(g2grid,1)
-  // : dump;
-  // meta      geography.latitudeOfLastGridPointInDegrees     g2latlon(g2grid,2)
-  // : dump;
-  // meta      geography.longitudeOfLastGridPointInDegrees    g2latlon(g2grid,3)
-  // : dump;
+  // meta      geography.latitudeOfFirstGridPointInDegrees    g2latlon(g2grid,0) : dump;
+  // meta      geography.longitudeOfFirstGridPointInDegrees   g2latlon(g2grid,1) : dump;
+  // meta      geography.latitudeOfLastGridPointInDegrees     g2latlon(g2grid,2) : dump;
+  // meta      geography.longitudeOfLastGridPointInDegrees    g2latlon(g2grid,3) : dump;
   //
   // alias xFirst=longitudeOfFirstGridPointInDegrees;
   // alias yFirst=latitudeOfFirstGridPointInDegrees;
@@ -119,8 +115,7 @@ protected:
   //       latitudeFirstInDegrees,longitudeFirstInDegrees,
   //       latitudeLastInDegrees,longitudeLastInDegrees,
   //       Nj,DjInDegrees,pl);
-  //   nearest
-  //   latlon_reduced(values,radius,Nj,pl,longitudeFirstInDegrees,longitudeLastInDegrees);
+  //   nearest latlon_reduced(values,radius,Nj,pl,longitudeFirstInDegrees,longitudeLastInDegrees);
   // } else {
   //   iterator latlon(numberOfPoints,missingValue,values,
   //                   longitudeFirstInDegrees,DiInDegrees  ,

@@ -13,8 +13,7 @@
 
 namespace SmartMet {
 namespace GRIB2 {
-/*! \brief The class is automatically created from the template
- * (4.probability).*/
+/*! \brief The class is automatically created from the template (4.probability).*/
 
 class ProbabilitySettings {
 public:
@@ -22,30 +21,33 @@ public:
   virtual ~ProbabilitySettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::UInt8_opt &getForecastProbabilityNumber() const;
+  void setForecastProbabilityNumber(T::UInt8_opt forecastProbabilityNumber);
   const T::UInt8_opt &getTotalNumberOfForecastProbabilities() const;
+  void setTotalNumberOfForecastProbabilities(T::UInt8_opt totalNumberOfForecastProbabilities);
   const T::UInt8_opt &getProbabilityType() const;
+  void setProbabilityType(T::UInt8_opt probabilityType);
   const T::Int8_opt &getScaleFactorOfLowerLimit() const;
+  void setScaleFactorOfLowerLimit(T::Int8_opt scaleFactorOfLowerLimit);
   const T::Int32_opt &getScaledValueOfLowerLimit() const;
+  void setScaledValueOfLowerLimit(T::Int32_opt scaledValueOfLowerLimit);
   const T::Int8_opt &getScaleFactorOfUpperLimit() const;
+  void setScaleFactorOfUpperLimit(T::Int8_opt scaleFactorOfUpperLimit);
   const T::Int32_opt &getScaledValueOfUpperLimit() const;
+  void setScaledValueOfUpperLimit(T::Int32_opt scaledValueOfUpperLimit);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // label "Forecast probability";

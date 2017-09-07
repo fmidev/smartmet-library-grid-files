@@ -8,10 +8,10 @@
 
 #include "grib2/definition/AuxiliarySatelliteProduct.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ AuxiliarySatelliteProduct::~AuxiliarySatelliteProduct() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void AuxiliarySatelliteProduct::read(MemoryReader &memoryReader) {
@@ -65,83 +63,57 @@ void AuxiliarySatelliteProduct::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void AuxiliarySatelliteProduct::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void AuxiliarySatelliteProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sAuxiliarySatelliteProduct.ParameterCategory",
-            prefix.c_str());
+    sprintf(name, "%sAuxiliarySatelliteProduct.ParameterCategory", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sAuxiliarySatelliteProduct.ParameterNumber",
-            prefix.c_str());
+    sprintf(name, "%sAuxiliarySatelliteProduct.ParameterNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sAuxiliarySatelliteProduct.TypeOfGeneratingProcess",
-            prefix.c_str());
+    sprintf(name, "%sAuxiliarySatelliteProduct.TypeOfGeneratingProcess", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(
-        name,
-        "%sAuxiliarySatelliteProduct.ObservationGeneratingProcessIdentifier",
-        prefix.c_str());
-    attributeList.addAttribute(
-        name, toString(mObservationGeneratingProcessIdentifier));
+    sprintf(name, "%sAuxiliarySatelliteProduct.ObservationGeneratingProcessIdentifier", prefix.c_str());
+    attributeList.addAttribute(name, toString(mObservationGeneratingProcessIdentifier));
     sprintf(name, "%sAuxiliarySatelliteProduct.NB", prefix.c_str());
     attributeList.addAttribute(name, toString(mNB));
-    sprintf(name, "%sAuxiliarySatelliteProduct.TypeOfAuxiliaryInformation",
-            prefix.c_str());
+    sprintf(name, "%sAuxiliarySatelliteProduct.TypeOfAuxiliaryInformation", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfAuxiliaryInformation));
-    sprintf(name, "%sAuxiliarySatelliteProduct.SatelliteSeries",
-            prefix.c_str());
+    sprintf(name, "%sAuxiliarySatelliteProduct.SatelliteSeries", prefix.c_str());
     attributeList.addAttribute(name, toString(mSatelliteSeries));
-    sprintf(name, "%sAuxiliarySatelliteProduct.SatelliteNumber",
-            prefix.c_str());
+    sprintf(name, "%sAuxiliarySatelliteProduct.SatelliteNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mSatelliteNumber));
     sprintf(name, "%sAuxiliarySatelliteProduct.InstrumentType", prefix.c_str());
     attributeList.addAttribute(name, toString(mInstrumentType));
-    sprintf(name, "%sAuxiliarySatelliteProduct.ScaleFactorOfCentralWaveNumber",
-            prefix.c_str());
+    sprintf(name, "%sAuxiliarySatelliteProduct.ScaleFactorOfCentralWaveNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfCentralWaveNumber));
-    sprintf(name, "%sAuxiliarySatelliteProduct.ScaledValueOfCentralWaveNumber",
-            prefix.c_str());
+    sprintf(name, "%sAuxiliarySatelliteProduct.ScaledValueOfCentralWaveNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfCentralWaveNumber));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void AuxiliarySatelliteProduct::print(std::ostream &stream, uint level,
-                                      uint optionFlags) const {
+void AuxiliarySatelliteProduct::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "AuxiliarySatelliteProduct\n";
-    stream << space(level)
-           << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
-    stream << space(level)
-           << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
-    stream << space(level) << "- TypeOfGeneratingProcess = "
-           << toString(mTypeOfGeneratingProcess) << "\n";
-    stream << space(level) << "- ObservationGeneratingProcessIdentifier = "
-           << toString(mObservationGeneratingProcessIdentifier) << "\n";
+    stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
+    stream << space(level) << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
+    stream << space(level) << "- TypeOfGeneratingProcess = " << toString(mTypeOfGeneratingProcess) << "\n";
+    stream << space(level) << "- ObservationGeneratingProcessIdentifier = " << toString(mObservationGeneratingProcessIdentifier) << "\n";
     stream << space(level) << "- NB = " << toString(mNB) << "\n";
-    stream << space(level) << "- TypeOfAuxiliaryInformation = "
-           << toString(mTypeOfAuxiliaryInformation) << "\n";
-    stream << space(level)
-           << "- SatelliteSeries = " << toString(mSatelliteSeries) << "\n";
-    stream << space(level)
-           << "- SatelliteNumber = " << toString(mSatelliteNumber) << "\n";
-    stream << space(level) << "- InstrumentType = " << toString(mInstrumentType)
-           << "\n";
-    stream << space(level) << "- ScaleFactorOfCentralWaveNumber = "
-           << toString(mScaleFactorOfCentralWaveNumber) << "\n";
-    stream << space(level) << "- ScaledValueOfCentralWaveNumber = "
-           << toString(mScaledValueOfCentralWaveNumber) << "\n";
+    stream << space(level) << "- TypeOfAuxiliaryInformation = " << toString(mTypeOfAuxiliaryInformation) << "\n";
+    stream << space(level) << "- SatelliteSeries = " << toString(mSatelliteSeries) << "\n";
+    stream << space(level) << "- SatelliteNumber = " << toString(mSatelliteNumber) << "\n";
+    stream << space(level) << "- InstrumentType = " << toString(mInstrumentType) << "\n";
+    stream << space(level) << "- ScaleFactorOfCentralWaveNumber = " << toString(mScaleFactorOfCentralWaveNumber) << "\n";
+    stream << space(level) << "- ScaledValueOfCentralWaveNumber = " << toString(mScaledValueOfCentralWaveNumber) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -180,8 +152,7 @@ T::Hash AuxiliarySatelliteProduct::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterCategory}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterCategory} attribute. */
 
 const T::UInt8_opt &AuxiliarySatelliteProduct::getParameterCategory() const {
   try {
@@ -191,8 +162,7 @@ const T::UInt8_opt &AuxiliarySatelliteProduct::getParameterCategory() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterNumber}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterNumber} attribute. */
 
 const T::UInt8_opt &AuxiliarySatelliteProduct::getParameterNumber() const {
   try {
@@ -202,11 +172,9 @@ const T::UInt8_opt &AuxiliarySatelliteProduct::getParameterNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfGeneratingProcess}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfGeneratingProcess} attribute. */
 
-const T::UInt8_opt &
-AuxiliarySatelliteProduct::getTypeOfGeneratingProcess() const {
+const T::UInt8_opt &AuxiliarySatelliteProduct::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
@@ -214,11 +182,9 @@ AuxiliarySatelliteProduct::getTypeOfGeneratingProcess() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mObservationGeneratingProcessIdentifier} attribute. */
+/*! \brief The method returns the value of the {@link mObservationGeneratingProcessIdentifier} attribute. */
 
-const T::UInt8_opt &
-AuxiliarySatelliteProduct::getObservationGeneratingProcessIdentifier() const {
+const T::UInt8_opt &AuxiliarySatelliteProduct::getObservationGeneratingProcessIdentifier() const {
   try {
     return mObservationGeneratingProcessIdentifier;
   } catch (...) {
@@ -236,11 +202,9 @@ const T::UInt8_opt &AuxiliarySatelliteProduct::getNB() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mTypeOfAuxiliaryInformation} attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfAuxiliaryInformation} attribute. */
 
-const T::UInt8_opt &
-AuxiliarySatelliteProduct::getTypeOfAuxiliaryInformation() const {
+const T::UInt8_opt &AuxiliarySatelliteProduct::getTypeOfAuxiliaryInformation() const {
   try {
     return mTypeOfAuxiliaryInformation;
   } catch (...) {
@@ -248,8 +212,7 @@ AuxiliarySatelliteProduct::getTypeOfAuxiliaryInformation() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSatelliteSeries}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSatelliteSeries} attribute. */
 
 const T::UInt16_opt &AuxiliarySatelliteProduct::getSatelliteSeries() const {
   try {
@@ -259,8 +222,7 @@ const T::UInt16_opt &AuxiliarySatelliteProduct::getSatelliteSeries() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSatelliteNumber}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSatelliteNumber} attribute. */
 
 const T::UInt16_opt &AuxiliarySatelliteProduct::getSatelliteNumber() const {
   try {
@@ -270,8 +232,7 @@ const T::UInt16_opt &AuxiliarySatelliteProduct::getSatelliteNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mInstrumentType}
- * attribute. */
+/*! \brief The method returns the value of the {@link mInstrumentType} attribute. */
 
 const T::UInt16_opt &AuxiliarySatelliteProduct::getInstrumentType() const {
   try {
@@ -281,11 +242,9 @@ const T::UInt16_opt &AuxiliarySatelliteProduct::getInstrumentType() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaleFactorOfCentralWaveNumber} attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfCentralWaveNumber} attribute. */
 
-const T::UInt8_opt &
-AuxiliarySatelliteProduct::getScaleFactorOfCentralWaveNumber() const {
+const T::UInt8_opt &AuxiliarySatelliteProduct::getScaleFactorOfCentralWaveNumber() const {
   try {
     return mScaleFactorOfCentralWaveNumber;
   } catch (...) {
@@ -293,13 +252,99 @@ AuxiliarySatelliteProduct::getScaleFactorOfCentralWaveNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaledValueOfCentralWaveNumber} attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfCentralWaveNumber} attribute. */
 
-const T::UInt32_opt &
-AuxiliarySatelliteProduct::getScaledValueOfCentralWaveNumber() const {
+const T::UInt32_opt &AuxiliarySatelliteProduct::getScaledValueOfCentralWaveNumber() const {
   try {
     return mScaledValueOfCentralWaveNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setParameterCategory(T::UInt8_opt parameterCategory) {
+  try {
+    mParameterCategory = parameterCategory;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setParameterNumber(T::UInt8_opt parameterNumber) {
+  try {
+    mParameterNumber = parameterNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGeneratingProcess) {
+  try {
+    mTypeOfGeneratingProcess = typeOfGeneratingProcess;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setObservationGeneratingProcessIdentifier(T::UInt8_opt observationGeneratingProcessIdentifier) {
+  try {
+    mObservationGeneratingProcessIdentifier = observationGeneratingProcessIdentifier;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setNB(T::UInt8_opt nB) {
+  try {
+    mNB = nB;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setTypeOfAuxiliaryInformation(T::UInt8_opt typeOfAuxiliaryInformation) {
+  try {
+    mTypeOfAuxiliaryInformation = typeOfAuxiliaryInformation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setSatelliteSeries(T::UInt16_opt satelliteSeries) {
+  try {
+    mSatelliteSeries = satelliteSeries;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setSatelliteNumber(T::UInt16_opt satelliteNumber) {
+  try {
+    mSatelliteNumber = satelliteNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setInstrumentType(T::UInt16_opt instrumentType) {
+  try {
+    mInstrumentType = instrumentType;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setScaleFactorOfCentralWaveNumber(T::UInt8_opt scaleFactorOfCentralWaveNumber) {
+  try {
+    mScaleFactorOfCentralWaveNumber = scaleFactorOfCentralWaveNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AuxiliarySatelliteProduct::setScaledValueOfCentralWaveNumber(T::UInt32_opt scaledValueOfCentralWaveNumber) {
+  try {
+    mScaledValueOfCentralWaveNumber = scaledValueOfCentralWaveNumber;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

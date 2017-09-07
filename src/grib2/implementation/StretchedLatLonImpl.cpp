@@ -12,6 +12,7 @@ namespace GRIB2
 
 StretchedLatLonImpl::StretchedLatLonImpl()
 {
+  mGridProjection = T::GridProjection::StretchedLatLon;
 }
 
 

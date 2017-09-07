@@ -8,10 +8,10 @@
 
 #include "grib1/definition/RotationSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -36,11 +36,9 @@ RotationSettings::~RotationSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void RotationSettings::read(MemoryReader &memoryReader) {
@@ -59,43 +57,33 @@ void RotationSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void RotationSettings::getAttributeList(std::string prefix,
-                                        T::AttributeList &attributeList) const {
+void RotationSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sRotationSettings.LatitudeOfSouthernPole", prefix.c_str());
     attributeList.addAttribute(name, toString(mLatitudeOfSouthernPole));
     sprintf(name, "%sRotationSettings.LongitudeOfSouthernPole", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
-    sprintf(name, "%sRotationSettings.Geography_angleOfRotationInDegrees",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mGeography_angleOfRotationInDegrees));
+    sprintf(name, "%sRotationSettings.Geography_angleOfRotationInDegrees", prefix.c_str());
+    attributeList.addAttribute(name, toString(mGeography_angleOfRotationInDegrees));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void RotationSettings::print(std::ostream &stream, uint level,
-                             uint optionFlags) const {
+void RotationSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "RotationSettings\n";
-    stream << space(level)
-           << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole)
-           << "\n";
-    stream << space(level) << "- LongitudeOfSouthernPole = "
-           << toString(mLongitudeOfSouthernPole) << "\n";
-    stream << space(level) << "- Geography_angleOfRotationInDegrees = "
-           << toString(mGeography_angleOfRotationInDegrees) << "\n";
+    stream << space(level) << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole) << "\n";
+    stream << space(level) << "- LongitudeOfSouthernPole = " << toString(mLongitudeOfSouthernPole) << "\n";
+    stream << space(level) << "- Geography_angleOfRotationInDegrees = " << toString(mGeography_angleOfRotationInDegrees) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -115,8 +103,7 @@ T::Hash RotationSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole} attribute. */
 
 std::int24_t RotationSettings::getLatitudeOfSouthernPole() const {
   try {
@@ -126,8 +113,7 @@ std::int24_t RotationSettings::getLatitudeOfSouthernPole() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole} attribute. */
 
 std::int24_t RotationSettings::getLongitudeOfSouthernPole() const {
   try {
@@ -137,12 +123,35 @@ std::int24_t RotationSettings::getLongitudeOfSouthernPole() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mGeography_angleOfRotationInDegrees} attribute. */
+/*! \brief The method returns the value of the {@link mGeography_angleOfRotationInDegrees} attribute. */
 
 ibmfloat RotationSettings::getGeography_angleOfRotationInDegrees() const {
   try {
     return mGeography_angleOfRotationInDegrees;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotationSettings::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole) {
+  try {
+    mLatitudeOfSouthernPole = latitudeOfSouthernPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotationSettings::setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole) {
+  try {
+    mLongitudeOfSouthernPole = longitudeOfSouthernPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotationSettings::setGeography_angleOfRotationInDegrees(ibmfloat geography_angleOfRotationInDegrees) {
+  try {
+    mGeography_angleOfRotationInDegrees = geography_angleOfRotationInDegrees;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

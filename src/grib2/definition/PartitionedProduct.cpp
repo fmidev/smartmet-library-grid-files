@@ -8,10 +8,10 @@
 
 #include "grib2/definition/PartitionedProduct.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ PartitionedProduct::~PartitionedProduct() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void PartitionedProduct::read(MemoryReader &memoryReader) {
@@ -57,8 +55,7 @@ void PartitionedProduct::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void PartitionedProduct::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void PartitionedProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPartitionedProduct.", prefix.c_str());
@@ -72,17 +69,14 @@ void PartitionedProduct::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PartitionedProduct::print(std::ostream &stream, uint level,
-                               uint optionFlags) const {
+void PartitionedProduct::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "PartitionedProduct\n";
     mParameterPartition.print(stream, level + 1, optionFlags);
@@ -107,11 +101,9 @@ T::Hash PartitionedProduct::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mParameterPartition}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mParameterPartition} attribute. */
 
-const ParameterPartitionSettings *
-PartitionedProduct::getParameterPartition() const {
+const ParameterPartitionSettings *PartitionedProduct::getParameterPartition() const {
   try {
     return &mParameterPartition;
   } catch (...) {
@@ -119,8 +111,7 @@ PartitionedProduct::getParameterPartition() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mPointInTime} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
 
 const PointInTimeSettings *PartitionedProduct::getPointInTime() const {
   try {
@@ -130,12 +121,35 @@ const PointInTimeSettings *PartitionedProduct::getPointInTime() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mHorizontal} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
 const HorizontalSettings *PartitionedProduct::getHorizontal() const {
   try {
     return &mHorizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PartitionedProduct::setParameterPartition(ParameterPartitionSettings parameterPartition) {
+  try {
+    mParameterPartition = parameterPartition;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PartitionedProduct::setPointInTime(PointInTimeSettings pointInTime) {
+  try {
+    mPointInTime = pointInTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PartitionedProduct::setHorizontal(HorizontalSettings horizontal) {
+  try {
+    mHorizontal = horizontal;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

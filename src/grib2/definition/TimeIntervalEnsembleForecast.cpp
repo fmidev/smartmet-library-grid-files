@@ -8,10 +8,10 @@
 
 #include "grib2/definition/TimeIntervalEnsembleForecast.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ TimeIntervalEnsembleForecast::~TimeIntervalEnsembleForecast() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void TimeIntervalEnsembleForecast::read(MemoryReader &memoryReader) {
@@ -58,8 +56,7 @@ void TimeIntervalEnsembleForecast::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void TimeIntervalEnsembleForecast::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void TimeIntervalEnsembleForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTimeIntervalEnsembleForecast.", prefix.c_str());
@@ -75,17 +72,14 @@ void TimeIntervalEnsembleForecast::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void TimeIntervalEnsembleForecast::print(std::ostream &stream, uint level,
-                                         uint optionFlags) const {
+void TimeIntervalEnsembleForecast::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "TimeIntervalEnsembleForecast\n";
     mParameter.print(stream, level + 1, optionFlags);
@@ -112,8 +106,7 @@ T::Hash TimeIntervalEnsembleForecast::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mParameter} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
 const ParameterSettings *TimeIntervalEnsembleForecast::getParameter() const {
   try {
@@ -123,8 +116,7 @@ const ParameterSettings *TimeIntervalEnsembleForecast::getParameter() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mHorizontal} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
 const HorizontalSettings *TimeIntervalEnsembleForecast::getHorizontal() const {
   try {
@@ -144,13 +136,43 @@ const EpsSettings *TimeIntervalEnsembleForecast::getEps() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mStatistical} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mStatistical} attribute. */
 
-const StatisticalSettings *
-TimeIntervalEnsembleForecast::getStatistical() const {
+const StatisticalSettings *TimeIntervalEnsembleForecast::getStatistical() const {
   try {
     return &mStatistical;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeIntervalEnsembleForecast::setParameter(ParameterSettings parameter) {
+  try {
+    mParameter = parameter;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeIntervalEnsembleForecast::setHorizontal(HorizontalSettings horizontal) {
+  try {
+    mHorizontal = horizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeIntervalEnsembleForecast::setEps(EpsSettings eps) {
+  try {
+    mEps = eps;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeIntervalEnsembleForecast::setStatistical(StatisticalSettings statistical) {
+  try {
+    mStatistical = statistical;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

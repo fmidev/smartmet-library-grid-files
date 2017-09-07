@@ -19,6 +19,7 @@ namespace GRIB2
 
 GaussianImpl::GaussianImpl()
 {
+  mGridProjection = T::GridProjection::Gaussian;
 }
 
 

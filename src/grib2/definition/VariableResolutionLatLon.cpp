@@ -8,10 +8,10 @@
 
 #include "grib2/definition/VariableResolutionLatLon.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ VariableResolutionLatLon::~VariableResolutionLatLon() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void VariableResolutionLatLon::read(MemoryReader &memoryReader) {
@@ -56,8 +54,7 @@ void VariableResolutionLatLon::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void VariableResolutionLatLon::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void VariableResolutionLatLon::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sVariableResolutionLatLon.", prefix.c_str());
@@ -69,17 +66,14 @@ void VariableResolutionLatLon::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void VariableResolutionLatLon::print(std::ostream &stream, uint level,
-                                     uint optionFlags) const {
+void VariableResolutionLatLon::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "VariableResolutionLatLon\n";
     mEarthShape.print(stream, level + 1, optionFlags);
@@ -94,7 +88,7 @@ void VariableResolutionLatLon::print(std::ostream &stream, uint level,
 T::Hash VariableResolutionLatLon::countHash() {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mEarthShape.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
     boost::hash_combine(seed, mVariableLatLon.countHash());
     return seed;
   } catch (...) {
@@ -102,8 +96,7 @@ T::Hash VariableResolutionLatLon::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *VariableResolutionLatLon::getEarthShape() const {
   try {
@@ -113,13 +106,27 @@ const EarthShapeSettings *VariableResolutionLatLon::getEarthShape() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mVariableLatLon}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mVariableLatLon} attribute. */
 
-const VariableLatLonSettings *
-VariableResolutionLatLon::getVariableLatLon() const {
+const VariableLatLonSettings *VariableResolutionLatLon::getVariableLatLon() const {
   try {
     return &mVariableLatLon;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void VariableResolutionLatLon::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void VariableResolutionLatLon::setVariableLatLon(VariableLatLonSettings variableLatLon) {
+  try {
+    mVariableLatLon = variableLatLon;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

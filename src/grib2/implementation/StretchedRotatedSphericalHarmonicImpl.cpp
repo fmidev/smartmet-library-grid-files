@@ -11,6 +11,7 @@ namespace GRIB2
 
 StretchedRotatedSphericalHarmonicImpl::StretchedRotatedSphericalHarmonicImpl()
 {
+  mGridProjection = T::GridProjection::StretchedRotatedSphericalHarmonic;
 }
 
 

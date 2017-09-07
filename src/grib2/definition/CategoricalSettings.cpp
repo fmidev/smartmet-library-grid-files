@@ -8,10 +8,10 @@
 
 #include "grib2/definition/CategoricalSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ CategoricalSettings::~CategoricalSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void CategoricalSettings::read(MemoryReader &memoryReader) {
@@ -61,8 +59,7 @@ void CategoricalSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void CategoricalSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void CategoricalSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sCategoricalSettings.NumberOfCategories", prefix.c_str());
@@ -71,51 +68,36 @@ void CategoricalSettings::getAttributeList(
     attributeList.addAttribute(name, toString(mCategoryType));
     sprintf(name, "%sCategoricalSettings.CodeFigure", prefix.c_str());
     attributeList.addAttribute(name, toString(mCodeFigure));
-    sprintf(name, "%sCategoricalSettings.ScaleFactorOfLowerLimit",
-            prefix.c_str());
+    sprintf(name, "%sCategoricalSettings.ScaleFactorOfLowerLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfLowerLimit));
-    sprintf(name, "%sCategoricalSettings.ScaledValueOfLowerLimit",
-            prefix.c_str());
+    sprintf(name, "%sCategoricalSettings.ScaledValueOfLowerLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfLowerLimit));
-    sprintf(name, "%sCategoricalSettings.ScaleFactorOfUpperLimit",
-            prefix.c_str());
+    sprintf(name, "%sCategoricalSettings.ScaleFactorOfUpperLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfUpperLimit));
-    sprintf(name, "%sCategoricalSettings.ScaledValueOfUpperLimit",
-            prefix.c_str());
+    sprintf(name, "%sCategoricalSettings.ScaledValueOfUpperLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfUpperLimit));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void CategoricalSettings::print(std::ostream &stream, uint level,
-                                uint optionFlags) const {
+void CategoricalSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "CategoricalSettings\n";
-    stream << space(level)
-           << "- NumberOfCategories = " << toString(mNumberOfCategories)
-           << "\n";
-    stream << space(level) << "- CategoryType = " << toString(mCategoryType)
-           << "\n";
-    stream << space(level) << "- CodeFigure = " << toString(mCodeFigure)
-           << "\n";
-    stream << space(level) << "- ScaleFactorOfLowerLimit = "
-           << toString(mScaleFactorOfLowerLimit) << "\n";
-    stream << space(level) << "- ScaledValueOfLowerLimit = "
-           << toString(mScaledValueOfLowerLimit) << "\n";
-    stream << space(level) << "- ScaleFactorOfUpperLimit = "
-           << toString(mScaleFactorOfUpperLimit) << "\n";
-    stream << space(level) << "- ScaledValueOfUpperLimit = "
-           << toString(mScaledValueOfUpperLimit) << "\n";
+    stream << space(level) << "- NumberOfCategories = " << toString(mNumberOfCategories) << "\n";
+    stream << space(level) << "- CategoryType = " << toString(mCategoryType) << "\n";
+    stream << space(level) << "- CodeFigure = " << toString(mCodeFigure) << "\n";
+    stream << space(level) << "- ScaleFactorOfLowerLimit = " << toString(mScaleFactorOfLowerLimit) << "\n";
+    stream << space(level) << "- ScaledValueOfLowerLimit = " << toString(mScaledValueOfLowerLimit) << "\n";
+    stream << space(level) << "- ScaleFactorOfUpperLimit = " << toString(mScaleFactorOfUpperLimit) << "\n";
+    stream << space(level) << "- ScaledValueOfUpperLimit = " << toString(mScaledValueOfUpperLimit) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -146,8 +128,7 @@ T::Hash CategoricalSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfCategories}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfCategories} attribute. */
 
 const T::UInt8_opt &CategoricalSettings::getNumberOfCategories() const {
   try {
@@ -157,8 +138,7 @@ const T::UInt8_opt &CategoricalSettings::getNumberOfCategories() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mCategoryType} attribute.
- */
+/*! \brief The method returns the value of the {@link mCategoryType} attribute. */
 
 const T::UInt8_opt &CategoricalSettings::getCategoryType() const {
   try {
@@ -178,8 +158,7 @@ const T::UInt8_opt &CategoricalSettings::getCodeFigure() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaleFactorOfLowerLimit}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfLowerLimit} attribute. */
 
 const T::UInt8_opt &CategoricalSettings::getScaleFactorOfLowerLimit() const {
   try {
@@ -189,8 +168,7 @@ const T::UInt8_opt &CategoricalSettings::getScaleFactorOfLowerLimit() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaledValueOfLowerLimit}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfLowerLimit} attribute. */
 
 const T::UInt32_opt &CategoricalSettings::getScaledValueOfLowerLimit() const {
   try {
@@ -200,8 +178,7 @@ const T::UInt32_opt &CategoricalSettings::getScaledValueOfLowerLimit() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaleFactorOfUpperLimit}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfUpperLimit} attribute. */
 
 const T::UInt8_opt &CategoricalSettings::getScaleFactorOfUpperLimit() const {
   try {
@@ -211,12 +188,67 @@ const T::UInt8_opt &CategoricalSettings::getScaleFactorOfUpperLimit() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaledValueOfUpperLimit}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfUpperLimit} attribute. */
 
 const T::UInt32_opt &CategoricalSettings::getScaledValueOfUpperLimit() const {
   try {
     return mScaledValueOfUpperLimit;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalSettings::setNumberOfCategories(T::UInt8_opt numberOfCategories) {
+  try {
+    mNumberOfCategories = numberOfCategories;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalSettings::setCategoryType(T::UInt8_opt categoryType) {
+  try {
+    mCategoryType = categoryType;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalSettings::setCodeFigure(T::UInt8_opt codeFigure) {
+  try {
+    mCodeFigure = codeFigure;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalSettings::setScaleFactorOfLowerLimit(T::UInt8_opt scaleFactorOfLowerLimit) {
+  try {
+    mScaleFactorOfLowerLimit = scaleFactorOfLowerLimit;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalSettings::setScaledValueOfLowerLimit(T::UInt32_opt scaledValueOfLowerLimit) {
+  try {
+    mScaledValueOfLowerLimit = scaledValueOfLowerLimit;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalSettings::setScaleFactorOfUpperLimit(T::UInt8_opt scaleFactorOfUpperLimit) {
+  try {
+    mScaleFactorOfUpperLimit = scaleFactorOfUpperLimit;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void CategoricalSettings::setScaledValueOfUpperLimit(T::UInt32_opt scaledValueOfUpperLimit) {
+  try {
+    mScaledValueOfUpperLimit = scaledValueOfUpperLimit;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

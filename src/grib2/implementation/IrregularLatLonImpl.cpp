@@ -12,6 +12,7 @@ namespace GRIB2
 
 IrregularLatLonImpl::IrregularLatLonImpl()
 {
+  mGridProjection = T::GridProjection::IrregularLatLon;
 }
 
 

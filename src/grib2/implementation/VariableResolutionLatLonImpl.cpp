@@ -11,6 +11,7 @@ namespace GRIB2
 
 VariableResolutionLatLonImpl::VariableResolutionLatLonImpl()
 {
+  mGridProjection = T::GridProjection::VariableResolutionLatLon;
 }
 
 

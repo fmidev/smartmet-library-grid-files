@@ -16,8 +16,7 @@
 
 namespace SmartMet {
 namespace GRIB1 {
-/*! \brief The class is automatically created from the template
- * (grid_definition_1).*/
+/*! \brief The class is automatically created from the template (grid_definition_1).*/
 
 class Mercator : public GridDefinition {
 public:
@@ -25,33 +24,36 @@ public:
   virtual ~Mercator();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   std::int16_t getNi() const;
+  void setNi(std::int16_t ni);
   std::int16_t getNj() const;
+  void setNj(std::int16_t nj);
   const GridAreaSettings *getGridArea() const;
+  void setGridArea(GridAreaSettings gridArea);
   std::int24_t getLatin() const;
+  void setLatin(std::int24_t latin);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   std::int24_t getDiInMetres() const;
+  void setDiInMetres(std::int24_t diInMetres);
   std::int24_t getDjInMetres() const;
+  void setDjInMetres(std::int24_t djInMetres);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # GRID DEFINITION Mercator
+  // # GRID DEFINITION Mercator projection
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 20;
   //
@@ -80,8 +82,7 @@ protected:
 
   std::int24_t mLatin;
 
-  // meta geography.LaDInDegrees
-  // scale(Latin,oneConstant,grib1divider,truncateDegrees) : dump;
+  // meta geography.LaDInDegrees scale(Latin,oneConstant,grib1divider,truncateDegrees) : dump;
   //
   // pad padding_grid1_1(1);
   //
@@ -118,9 +119,7 @@ protected:
   //
   // meta numberOfDataPoints number_of_points(Ni,Nj) : dump;
   // alias numberOfPoints=numberOfDataPoints;
-  // meta numberOfValues
-  // number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues)
-  // : dump;
+  // meta numberOfValues number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues) : dump;
   // #alias ls.valuesCount=numberOfValues;
   //
 };

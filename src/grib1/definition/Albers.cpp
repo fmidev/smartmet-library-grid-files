@@ -8,10 +8,10 @@
 
 #include "grib1/definition/Albers.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -46,11 +46,9 @@ Albers::~Albers() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void Albers::read(MemoryReader &memoryReader) {
@@ -80,8 +78,7 @@ void Albers::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void Albers::getAttributeList(std::string prefix,
-                              T::AttributeList &attributeList) const {
+void Albers::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sAlbers.Nx", prefix.c_str());
@@ -117,12 +114,10 @@ void Albers::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
@@ -131,27 +126,18 @@ void Albers::print(std::ostream &stream, uint level, uint optionFlags) const {
     stream << space(level) << "Albers\n";
     stream << space(level) << "- Nx = " << toString(mNx) << "\n";
     stream << space(level) << "- Ny = " << toString(mNy) << "\n";
-    stream << space(level) << "- LatitudeOfFirstGridPoint = "
-           << toString(mLatitudeOfFirstGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfFirstGridPoint = "
-           << toString(mLongitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LatitudeOfFirstGridPoint = " << toString(mLatitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfFirstGridPoint = " << toString(mLongitudeOfFirstGridPoint) << "\n";
     mResolutionFlags.print(stream, level + 1, optionFlags);
     stream << space(level) << "- LoV = " << toString(mLoV) << "\n";
-    stream << space(level) << "- DxInMetres = " << toString(mDxInMetres)
-           << "\n";
-    stream << space(level) << "- DyInMetres = " << toString(mDyInMetres)
-           << "\n";
-    stream << space(level)
-           << "- ProjectionCentreFlag = " << toString(mProjectionCentreFlag)
-           << "\n";
+    stream << space(level) << "- DxInMetres = " << toString(mDxInMetres) << "\n";
+    stream << space(level) << "- DyInMetres = " << toString(mDyInMetres) << "\n";
+    stream << space(level) << "- ProjectionCentreFlag = " << toString(mProjectionCentreFlag) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
     stream << space(level) << "- Latin1 = " << toString(mLatin1) << "\n";
     stream << space(level) << "- Latin2 = " << toString(mLatin2) << "\n";
-    stream << space(level)
-           << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole)
-           << "\n";
-    stream << space(level) << "- LongitudeOfSouthernPole = "
-           << toString(mLongitudeOfSouthernPole) << "\n";
+    stream << space(level) << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole) << "\n";
+    stream << space(level) << "- LongitudeOfSouthernPole = " << toString(mLongitudeOfSouthernPole) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -174,7 +160,7 @@ T::Hash Albers::countHash() {
     boost::hash_combine(seed, mLatin2);
     boost::hash_combine(seed, mLatitudeOfSouthernPole);
     boost::hash_combine(seed, mLongitudeOfSouthernPole);
-    boost::hash_combine(seed, mResolutionFlags.countHash());
+    // boost::hash_combine(seed,mResolutionFlags.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
@@ -202,8 +188,7 @@ std::uint16_t Albers::getNy() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
 std::int24_t Albers::getLatitudeOfFirstGridPoint() const {
   try {
@@ -213,8 +198,7 @@ std::int24_t Albers::getLatitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfFirstGridPoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
 std::int24_t Albers::getLongitudeOfFirstGridPoint() const {
   try {
@@ -224,8 +208,7 @@ std::int24_t Albers::getLongitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mResolutionFlags}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mResolutionFlags} attribute. */
 
 const ResolutionFlagsSettings *Albers::getResolutionFlags() const {
   try {
@@ -265,8 +248,7 @@ std::uint24_t Albers::getDyInMetres() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mProjectionCentreFlag}
- * attribute. */
+/*! \brief The method returns the value of the {@link mProjectionCentreFlag} attribute. */
 
 std::uint8_t Albers::getProjectionCentreFlag() const {
   try {
@@ -276,8 +258,7 @@ std::uint8_t Albers::getProjectionCentreFlag() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *Albers::getScanningMode() const {
   try {
@@ -307,8 +288,7 @@ std::int24_t Albers::getLatin2() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole} attribute. */
 
 std::int24_t Albers::getLatitudeOfSouthernPole() const {
   try {
@@ -318,12 +298,123 @@ std::int24_t Albers::getLatitudeOfSouthernPole() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole} attribute. */
 
 std::int24_t Albers::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setNx(std::uint16_t nx) {
+  try {
+    mNx = nx;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setNy(std::uint16_t ny) {
+  try {
+    mNy = ny;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint) {
+  try {
+    mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint) {
+  try {
+    mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setResolutionFlags(ResolutionFlagsSettings resolutionFlags) {
+  try {
+    mResolutionFlags = resolutionFlags;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setLoV(std::int24_t loV) {
+  try {
+    mLoV = loV;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setDxInMetres(std::uint24_t dxInMetres) {
+  try {
+    mDxInMetres = dxInMetres;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setDyInMetres(std::uint24_t dyInMetres) {
+  try {
+    mDyInMetres = dyInMetres;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setProjectionCentreFlag(std::uint8_t projectionCentreFlag) {
+  try {
+    mProjectionCentreFlag = projectionCentreFlag;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setLatin1(std::int24_t latin1) {
+  try {
+    mLatin1 = latin1;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setLatin2(std::int24_t latin2) {
+  try {
+    mLatin2 = latin2;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole) {
+  try {
+    mLatitudeOfSouthernPole = latitudeOfSouthernPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Albers::setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole) {
+  try {
+    mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

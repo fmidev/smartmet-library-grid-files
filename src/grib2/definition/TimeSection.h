@@ -22,39 +22,51 @@ public:
   virtual ~TimeSection();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::UInt32_opt &getNumberOfTimeSteps() const;
+  void setNumberOfTimeSteps(T::UInt32_opt numberOfTimeSteps);
   const T::UInt8_opt &getUnitOfOffsetFromReferenceTime() const;
+  void setUnitOfOffsetFromReferenceTime(T::UInt8_opt unitOfOffsetFromReferenceTime);
   const T::UInt32_opt &getOffsetFromReferenceOfFirstTime() const;
+  void setOffsetFromReferenceOfFirstTime(T::UInt32_opt offsetFromReferenceOfFirstTime);
   const T::UInt8_opt &getTypeOfTimeIncrement() const;
+  void setTypeOfTimeIncrement(T::UInt8_opt typeOfTimeIncrement);
   const T::UInt8_opt &getUnitOfTimeIncrement() const;
+  void setUnitOfTimeIncrement(T::UInt8_opt unitOfTimeIncrement);
   const T::UInt32_opt &getTimeIncrement() const;
+  void setTimeIncrement(T::UInt32_opt timeIncrement);
   const T::UInt16_opt &getYear() const;
+  void setYear(T::UInt16_opt year);
   const T::UInt8_opt &getMonth() const;
+  void setMonth(T::UInt8_opt month);
   const T::UInt8_opt &getDay() const;
+  void setDay(T::UInt8_opt day);
   const T::UInt8_opt &getHour() const;
+  void setHour(T::UInt8_opt hour);
   const T::UInt8_opt &getMinute() const;
+  void setMinute(T::UInt8_opt minute);
   const T::UInt8_opt &getSecond() const;
+  void setSecond(T::UInt8_opt second);
   const T::UInt16_opt &getNumberOfVerticalPoints() const;
+  void setNumberOfVerticalPoints(T::UInt16_opt numberOfVerticalPoints);
   const T::UInt8_opt &getPhysicalMeaningOfVerticalCoordinate() const;
+  void setPhysicalMeaningOfVerticalCoordinate(T::UInt8_opt physicalMeaningOfVerticalCoordinate);
   const T::UInt8_opt &getVerticalCoordinate() const;
+  void setVerticalCoordinate(T::UInt8_opt verticalCoordinate);
   const T::UInt16_opt &getNC() const;
+  void setNC(T::UInt16_opt nC);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // # TEMPLATE 3.1200, Time section grid
@@ -66,8 +78,7 @@ protected:
   //
   // alias NT =  numberOfTimeSteps;
   // #  Unit of offset from reference time
-  // codetable[1] unitOfOffsetFromReferenceTime ('4.4.table',masterDir,localDir)
-  // : dump;
+  // codetable[1] unitOfOffsetFromReferenceTime ('4.4.table',masterDir,localDir) : dump;
 
   T::UInt8_opt mUnitOfOffsetFromReferenceTime;
 
@@ -141,8 +152,7 @@ protected:
 
   //
   // #  Physical meaning of vertical coordinate
-  // codetable[1] physicalMeaningOfVerticalCoordinate
-  // ('3.15.table',masterDir,localDir) : dump;
+  // codetable[1] physicalMeaningOfVerticalCoordinate ('3.15.table',masterDir,localDir) : dump;
 
   T::UInt8_opt mPhysicalMeaningOfVerticalCoordinate;
 
@@ -153,15 +163,13 @@ protected:
   T::UInt8_opt mVerticalCoordinate;
 
   //
-  // #  NC - Number of coefficients or values used to specify vertical
-  // coordinates
+  // #  NC - Number of coefficients or values used to specify vertical coordinates
   // unsigned[2] NC  : dump;
 
   T::UInt16_opt mNC;
 
   //
-  // # Octets 43-(42+NC*4) : Coefficients to define vertical dimension
-  // coordinate values in functional form, or the explicit coordinate values
+  // # Octets 43-(42+NC*4) : Coefficients to define vertical dimension coordinate values in functional form, or the explicit coordinate values
   // # (IEEE 32-bit floating-point values)
   // # ????          coefficients_to_define_vertical_dimension;
   //

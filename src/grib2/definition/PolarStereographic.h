@@ -24,40 +24,47 @@ public:
   virtual ~PolarStereographic();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings earthShape);
   const T::UInt32_opt &getNx() const;
+  void setNx(T::UInt32_opt nx);
   const T::UInt32_opt &getNy() const;
+  void setNy(T::UInt32_opt ny);
   const T::Int32_opt &getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::UInt32_opt &getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint);
   std::uint8_t getResolutionAndComponentFlag() const;
+  void setResolutionAndComponentFlag(std::uint8_t resolutionAndComponentFlag);
   const T::Int32_opt &getLaD() const;
+  void setLaD(T::Int32_opt laD);
   const T::Int32_opt &getOrientationOfTheGrid() const;
+  void setOrientationOfTheGrid(T::Int32_opt orientationOfTheGrid);
   const T::UInt32_opt &getDx() const;
+  void setDx(T::UInt32_opt dx);
   const T::UInt32_opt &getDy() const;
+  void setDy(T::UInt32_opt dy);
   std::uint8_t getProjectionCentreFlag() const;
+  void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   //
-  // # START 2/template.3.20
-  // ----------------------------------------------------------------------
+  // # START 2/template.3.20 ----------------------------------------------------------------------
   // # TEMPLATE 3.20, Polar stereographic projection
   // include "template.3.shape_of_the_earth.def";
 
@@ -88,9 +95,7 @@ protected:
 
   T::Int32_opt mLatitudeOfFirstGridPoint;
 
-  // meta geography.latitudeOfFirstGridPointInDegrees
-  // scale(latitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) :
-  // dump;
+  // meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
   // alias La1 =  latitudeOfFirstGridPoint;
   //
   // #  Lo1 - longitude of first grid point
@@ -98,15 +103,12 @@ protected:
 
   T::UInt32_opt mLongitudeOfFirstGridPoint;
 
-  // meta geography.longitudeOfFirstGridPointInDegrees
-  // scale(longitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) :
-  // dump;
+  // meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
   // alias Lo1 =  longitudeOfFirstGridPoint;
   //
   // #  Resolution and component flag
   // # NOTE 1 NOT FOUND
-  // flags[1] resolutionAndComponentFlag
-  // 'grib2/tables/[tablesVersion]/3.3.table' : dump;
+  // flags[1] resolutionAndComponentFlag 'grib2/tables/[tablesVersion]/3.3.table' : dump;
 
   std::uint8_t mResolutionAndComponentFlag;
 
@@ -117,8 +119,7 @@ protected:
   T::Int32_opt mLaD;
 
   // alias latitudeWhereDxAndDyAreSpecified=LaD;
-  // meta geography.LaDInDegrees
-  // scale(LaD,oneConstant,grib2divider,truncateDegrees) : dump;
+  // meta geography.LaDInDegrees scale(LaD,oneConstant,grib2divider,truncateDegrees) : dump;
   // alias latitudeWhereDxAndDyAreSpecifiedInDegrees=LaDInDegrees;
   //
   // #  LoV - orientation of the grid
@@ -128,13 +129,10 @@ protected:
   T::Int32_opt mOrientationOfTheGrid;
 
   // alias LoV =  orientationOfTheGrid ;
-  // meta geography.orientationOfTheGridInDegrees
-  // scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) :
-  // dump;
+  // meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // #  Dx - X-direction grid length
-  // # NOTE 3: Grid length is in units of 10-3 m at the latitude specified by
-  // LaD
+  // # NOTE 3: Grid length is in units of 10-3 m at the latitude specified by LaD
   // unsigned[4] Dx  : edition_specific;
 
   T::UInt32_opt mDx;
@@ -143,8 +141,7 @@ protected:
   // alias xDirectionGridLength=Dx;
   //
   // #  Dy - Y-direction grid length
-  // # NOTE 3: Grid length is in units of 10-3 m at the latitude specified by
-  // LaD
+  // # NOTE 3: Grid length is in units of 10-3 m at the latitude specified by LaD
   // unsigned[4] Dy  : edition_specific;
 
   T::UInt32_opt mDy;
@@ -153,17 +150,14 @@ protected:
   // alias yDirectionGridLength=Dy;
   //
   // #  Projection centre flag
-  // flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' :
-  // dump;
+  // flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
 
   std::uint8_t mProjectionCentreFlag;
 
-  // # Note our flagbit numbers go from 7 to 0, while WMO convention is from 1
-  // to 8
+  // # Note our flagbit numbers go from 7 to 0, while WMO convention is from 1 to 8
   // # If bit 1 is 0, then the North Pole is on the projection plane
   // # If bit 1 is 1, then the South Pole is on the projection plane
-  // flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO
-  // bit 1
+  // flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO bit 1
   //
   // include "template.3.scanning_mode.def";
 
@@ -183,8 +177,7 @@ protected:
   //           alternativeRowScanning);
   //
   //
-  // # END   2/template.3.20
-  // ----------------------------------------------------------------------
+  // # END   2/template.3.20 ----------------------------------------------------------------------
 };
 
 } // namespace GRIB2

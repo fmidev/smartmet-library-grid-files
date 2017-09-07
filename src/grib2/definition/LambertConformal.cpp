@@ -8,10 +8,10 @@
 
 #include "grib2/definition/LambertConformal.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -35,11 +35,9 @@ LambertConformal::~LambertConformal() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void LambertConformal::read(MemoryReader &memoryReader) {
@@ -71,8 +69,7 @@ void LambertConformal::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void LambertConformal::getAttributeList(std::string prefix,
-                                        T::AttributeList &attributeList) const {
+void LambertConformal::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sLambertConformal.", prefix.c_str());
@@ -81,11 +78,9 @@ void LambertConformal::getAttributeList(std::string prefix,
     attributeList.addAttribute(name, toString(mNx));
     sprintf(name, "%sLambertConformal.Ny", prefix.c_str());
     attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sLambertConformal.LatitudeOfFirstGridPoint",
-            prefix.c_str());
+    sprintf(name, "%sLambertConformal.LatitudeOfFirstGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sLambertConformal.LongitudeOfFirstGridPoint",
-            prefix.c_str());
+    sprintf(name, "%sLambertConformal.LongitudeOfFirstGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
     sprintf(name, "%sLambertConformal.", prefix.c_str());
     mResolution.getAttributeList(name, attributeList);
@@ -114,42 +109,32 @@ void LambertConformal::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void LambertConformal::print(std::ostream &stream, uint level,
-                             uint optionFlags) const {
+void LambertConformal::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "LambertConformal\n";
     mEarthShape.print(stream, level + 1, optionFlags);
     stream << space(level) << "- Nx = " << toString(mNx) << "\n";
     stream << space(level) << "- Ny = " << toString(mNy) << "\n";
-    stream << space(level) << "- LatitudeOfFirstGridPoint = "
-           << toString(mLatitudeOfFirstGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfFirstGridPoint = "
-           << toString(mLongitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LatitudeOfFirstGridPoint = " << toString(mLatitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfFirstGridPoint = " << toString(mLongitudeOfFirstGridPoint) << "\n";
     mResolution.print(stream, level + 1, optionFlags);
     stream << space(level) << "- LaD = " << toString(mLaD) << "\n";
     stream << space(level) << "- LoV = " << toString(mLoV) << "\n";
     stream << space(level) << "- Dx = " << toString(mDx) << "\n";
     stream << space(level) << "- Dy = " << toString(mDy) << "\n";
-    stream << space(level)
-           << "- ProjectionCentreFlag = " << toString(mProjectionCentreFlag)
-           << "\n";
+    stream << space(level) << "- ProjectionCentreFlag = " << toString(mProjectionCentreFlag) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
     stream << space(level) << "- Latin1 = " << toString(mLatin1) << "\n";
     stream << space(level) << "- Latin2 = " << toString(mLatin2) << "\n";
-    stream << space(level)
-           << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole)
-           << "\n";
-    stream << space(level) << "- LongitudeOfSouthernPole = "
-           << toString(mLongitudeOfSouthernPole) << "\n";
+    stream << space(level) << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole) << "\n";
+    stream << space(level) << "- LongitudeOfSouthernPole = " << toString(mLongitudeOfSouthernPole) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -185,8 +170,8 @@ T::Hash LambertConformal::countHash() {
       boost::hash_combine(seed, *mLatitudeOfSouthernPole);
     if (mLongitudeOfSouthernPole)
       boost::hash_combine(seed, *mLongitudeOfSouthernPole);
-    boost::hash_combine(seed, mEarthShape.countHash());
-    boost::hash_combine(seed, mResolution.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
+    // boost::hash_combine(seed,mResolution.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
@@ -194,8 +179,7 @@ T::Hash LambertConformal::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *LambertConformal::getEarthShape() const {
   try {
@@ -225,8 +209,7 @@ const T::UInt32_opt &LambertConformal::getNy() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
 const T::Int32_opt &LambertConformal::getLatitudeOfFirstGridPoint() const {
   try {
@@ -236,8 +219,7 @@ const T::Int32_opt &LambertConformal::getLatitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfFirstGridPoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
 const T::UInt32_opt &LambertConformal::getLongitudeOfFirstGridPoint() const {
   try {
@@ -247,8 +229,7 @@ const T::UInt32_opt &LambertConformal::getLongitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mResolution} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mResolution} attribute. */
 
 const ResolutionSettings *LambertConformal::getResolution() const {
   try {
@@ -298,8 +279,7 @@ const T::UInt32_opt &LambertConformal::getDy() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mProjectionCentreFlag}
- * attribute. */
+/*! \brief The method returns the value of the {@link mProjectionCentreFlag} attribute. */
 
 std::uint8_t LambertConformal::getProjectionCentreFlag() const {
   try {
@@ -309,8 +289,7 @@ std::uint8_t LambertConformal::getProjectionCentreFlag() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *LambertConformal::getScanningMode() const {
   try {
@@ -340,8 +319,7 @@ const T::Int32_opt &LambertConformal::getLatin2() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole} attribute. */
 
 const T::Int32_opt &LambertConformal::getLatitudeOfSouthernPole() const {
   try {
@@ -351,12 +329,139 @@ const T::Int32_opt &LambertConformal::getLatitudeOfSouthernPole() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole} attribute. */
 
 const T::UInt32_opt &LambertConformal::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setNx(T::UInt32_opt nx) {
+  try {
+    mNx = nx;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setNy(T::UInt32_opt ny) {
+  try {
+    mNy = ny;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint) {
+  try {
+    mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint) {
+  try {
+    mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setResolution(ResolutionSettings resolution) {
+  try {
+    mResolution = resolution;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setLaD(T::Int32_opt laD) {
+  try {
+    mLaD = laD;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setLoV(T::UInt32_opt loV) {
+  try {
+    mLoV = loV;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setDx(T::UInt32_opt dx) {
+  try {
+    mDx = dx;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setDy(T::UInt32_opt dy) {
+  try {
+    mDy = dy;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setProjectionCentreFlag(std::uint8_t projectionCentreFlag) {
+  try {
+    mProjectionCentreFlag = projectionCentreFlag;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setLatin1(T::Int32_opt latin1) {
+  try {
+    mLatin1 = latin1;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setLatin2(T::Int32_opt latin2) {
+  try {
+    mLatin2 = latin2;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setLatitudeOfSouthernPole(T::Int32_opt latitudeOfSouthernPole) {
+  try {
+    mLatitudeOfSouthernPole = latitudeOfSouthernPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LambertConformal::setLongitudeOfSouthernPole(T::UInt32_opt longitudeOfSouthernPole) {
+  try {
+    mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

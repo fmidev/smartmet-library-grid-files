@@ -8,10 +8,10 @@
 
 #include "grib2/definition/RotationSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -35,11 +35,9 @@ RotationSettings::~RotationSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void RotationSettings::read(MemoryReader &memoryReader) {
@@ -58,8 +56,7 @@ void RotationSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void RotationSettings::getAttributeList(std::string prefix,
-                                        T::AttributeList &attributeList) const {
+void RotationSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sRotationSettings.LatitudeOfSouthernPole", prefix.c_str());
@@ -73,26 +70,19 @@ void RotationSettings::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void RotationSettings::print(std::ostream &stream, uint level,
-                             uint optionFlags) const {
+void RotationSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "RotationSettings\n";
-    stream << space(level)
-           << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole)
-           << "\n";
-    stream << space(level) << "- LongitudeOfSouthernPole = "
-           << toString(mLongitudeOfSouthernPole) << "\n";
-    stream << space(level)
-           << "- AngleOfRotation = " << toString(mAngleOfRotation) << "\n";
+    stream << space(level) << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole) << "\n";
+    stream << space(level) << "- LongitudeOfSouthernPole = " << toString(mLongitudeOfSouthernPole) << "\n";
+    stream << space(level) << "- AngleOfRotation = " << toString(mAngleOfRotation) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -114,8 +104,7 @@ T::Hash RotationSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfSouthernPole} attribute. */
 
 const T::Int32_opt &RotationSettings::getLatitudeOfSouthernPole() const {
   try {
@@ -125,8 +114,7 @@ const T::Int32_opt &RotationSettings::getLatitudeOfSouthernPole() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfSouthernPole} attribute. */
 
 const T::UInt32_opt &RotationSettings::getLongitudeOfSouthernPole() const {
   try {
@@ -136,12 +124,35 @@ const T::UInt32_opt &RotationSettings::getLongitudeOfSouthernPole() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mAngleOfRotation}
- * attribute. */
+/*! \brief The method returns the value of the {@link mAngleOfRotation} attribute. */
 
 float RotationSettings::getAngleOfRotation() const {
   try {
     return mAngleOfRotation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotationSettings::setLatitudeOfSouthernPole(T::Int32_opt latitudeOfSouthernPole) {
+  try {
+    mLatitudeOfSouthernPole = latitudeOfSouthernPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotationSettings::setLongitudeOfSouthernPole(T::UInt32_opt longitudeOfSouthernPole) {
+  try {
+    mLongitudeOfSouthernPole = longitudeOfSouthernPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RotationSettings::setAngleOfRotation(float angleOfRotation) {
+  try {
+    mAngleOfRotation = angleOfRotation;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

@@ -8,10 +8,10 @@
 
 #include "grib2/definition/LatLonSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ LatLonSettings::~LatLonSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void LatLonSettings::read(MemoryReader &memoryReader) {
@@ -58,8 +56,7 @@ void LatLonSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void LatLonSettings::getAttributeList(std::string prefix,
-                                      T::AttributeList &attributeList) const {
+void LatLonSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sLatLonSettings.", prefix.c_str());
@@ -75,26 +72,19 @@ void LatLonSettings::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void LatLonSettings::print(std::ostream &stream, uint level,
-                           uint optionFlags) const {
+void LatLonSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "LatLonSettings\n";
     mGrid.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- IDirectionIncrement = " << toString(mIDirectionIncrement)
-           << "\n";
-    stream << space(level)
-           << "- JDirectionIncrement = " << toString(mJDirectionIncrement)
-           << "\n";
+    stream << space(level) << "- IDirectionIncrement = " << toString(mIDirectionIncrement) << "\n";
+    stream << space(level) << "- JDirectionIncrement = " << toString(mJDirectionIncrement) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
@@ -128,8 +118,7 @@ const GridSettings *LatLonSettings::getGrid() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mIDirectionIncrement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mIDirectionIncrement} attribute. */
 
 const T::UInt32_opt &LatLonSettings::getIDirectionIncrement() const {
   try {
@@ -139,8 +128,7 @@ const T::UInt32_opt &LatLonSettings::getIDirectionIncrement() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mJDirectionIncrement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mJDirectionIncrement} attribute. */
 
 const T::UInt32_opt &LatLonSettings::getJDirectionIncrement() const {
   try {
@@ -150,12 +138,43 @@ const T::UInt32_opt &LatLonSettings::getJDirectionIncrement() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *LatLonSettings::getScanningMode() const {
   try {
     return &mScanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LatLonSettings::setGrid(GridSettings grid) {
+  try {
+    mGrid = grid;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LatLonSettings::setIDirectionIncrement(T::UInt32_opt iDirectionIncrement) {
+  try {
+    mIDirectionIncrement = iDirectionIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LatLonSettings::setJDirectionIncrement(T::UInt32_opt jDirectionIncrement) {
+  try {
+    mJDirectionIncrement = jDirectionIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void LatLonSettings::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

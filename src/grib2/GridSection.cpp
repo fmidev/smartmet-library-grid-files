@@ -54,7 +54,6 @@ GridSection::GridSection(Message *message)
   {
     mMessage = message;
     mFilePosition = 0;
-    mGridProjection = T::GridProjection::Unknown;
   }
   catch (...)
   {
@@ -134,7 +133,6 @@ void GridSection::read(MemoryReader& memoryReader)
 {
   try
   {
-    mGridProjection = T::GridProjection::Unknown;
     mFilePosition = memoryReader.getGlobalReadPosition();
 
     memoryReader >> mSectionLength;
@@ -203,7 +201,7 @@ void GridSection::read(MemoryReader& memoryReader)
     if (mGridDefinition != NULL)
       mGridDefinition->initSpatialReference();
 
-    getHash();
+    getGridHash();
 
     //if (memoryReader.getDataSize() < (mFilePosition + *mSectionLength))
     //  memoryReader.setReadPosition(mFilePosition + *mSectionLength);
@@ -492,6 +490,42 @@ void GridSection::getGridLatlonAreaCoordinates(double& firstLat,double& firstLon
 
 
 
+uint GridSection::getGridGeometryId() const
+{
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->getGridGeometryId();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+void GridSection::setGridGeometryId(uint geometryId)
+{
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->setGridGeometryId(geometryId);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the first and the last original coordinates used in the grid.
 
       \param x1    The returned x-coordinate of the top-left corner.
@@ -552,12 +586,12 @@ T::Coordinate_vec GridSection::getGridCoordinates() const
        \return   The hash value of the grid attributes.
 */
 
-T::Hash GridSection::getHash() const
+T::Hash GridSection::getGridHash() const
 {
   try
   {
     if (mGridDefinition != NULL)
-      return mGridDefinition->getHash();
+      return mGridDefinition->getGridHash();
 
     return 0;
   }
@@ -685,7 +719,10 @@ T::GridProjection GridSection::getGridProjection() const
 {
   try
   {
-    return mGridProjection;
+    if (mGridDefinition == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+
+    return mGridDefinition->getGridProjection();
   }
   catch (...)
   {
@@ -902,91 +939,62 @@ GridDefinition* GridSection::createGridDefinition(T::UInt16_opt(number))
     switch (*number)
     {
       case 0:
-        mGridProjection = T::GridProjection::LatLon;
         return new LatLonImpl();
       case 1:
-        mGridProjection = T::GridProjection::RotatedLatLon;
         return new RotatedLatLonImpl();
       case 2:
-        mGridProjection = T::GridProjection::StretchedLatLon;
         return new StretchedLatLonImpl();
       case 3:
-        mGridProjection = T::GridProjection::StretchedRotatedLatLon;
         return new StretchedRotatedLatLonImpl();
       case 4:
-        mGridProjection = T::GridProjection::VariableResolutionLatLon;
         return new VariableResolutionLatLonImpl();
       case 5:
-        mGridProjection = T::GridProjection::VariableResolutionRotatedLatLon;
         return new VariableResolutionRotatedLatLonImpl();
       case 10:
-        mGridProjection = T::GridProjection::Mercator;
         return new MercatorImpl();
       case 12:
-        mGridProjection = T::GridProjection::TransverseMercator;
         return new TransverseMercatorImpl();
       case 20:
-        mGridProjection = T::GridProjection::PolarStereographic;
         return new PolarStereographicImpl();
       case 30:
-        mGridProjection = T::GridProjection::LambertConformal;
         return new LambertConformalImpl();
       case 31:
-        mGridProjection = T::GridProjection::Albers;
         return new AlbersImpl();
       case 40:
-        mGridProjection = T::GridProjection::Gaussian;
         return new GaussianImpl();
       case 41:
-        mGridProjection = T::GridProjection::RotatedGaussian;
         return new RotatedGaussianImpl();
       case 42:
-        mGridProjection = T::GridProjection::StretchedGaussian;
         return new StretchedGaussianImpl();
       case 43:
-        mGridProjection = T::GridProjection::StretchedRotatedGaussian;
         return new StretchedRotatedGaussianImpl();
       case 50:
-        mGridProjection = T::GridProjection::SphericalHarmonic;
         return new SphericalHarmonicImpl();
       case 51:
-        mGridProjection = T::GridProjection::RotatedSphericalHarmonic;
         return new RotatedSphericalHarmonicImpl();
       case 52:
-        mGridProjection = T::GridProjection::StretchedSphericalHarmonic;
         return new StretchedSphericalHarmonicImpl();
       case 53:
-        mGridProjection = T::GridProjection::StretchedRotatedSphericalHarmonic;
         return new StretchedRotatedSphericalHarmonicImpl();
       case 90:
-        mGridProjection = T::GridProjection::SpaceView;
         return new SpaceViewImpl();
       case 100:
-        mGridProjection = T::GridProjection::Triangular;
         return new TriangularImpl();
       case 101:
-        mGridProjection = T::GridProjection::Unstructured;
         return new UnstructuredImpl();
       case 110:
-        mGridProjection = T::GridProjection::EquatorialAzimuthalEquidistant;
         return new EquatorialAzimuthalEquidistantImpl();
       case 120:
-        mGridProjection = T::GridProjection::AzimuthRange;
         return new AzimuthRangeImpl();
       case 130:
-        mGridProjection = T::GridProjection::IrregularLatLon;
         return new IrregularLatLonImpl();
       case 140:
-        mGridProjection = T::GridProjection::LambertAzimuthalEqualArea;
         return new LambertAzimuthalEqualAreaImpl();
       case 1000:
-        mGridProjection = T::GridProjection::CrossSection;
         return new CrossSectionImpl();
       case 1100:
-        mGridProjection = T::GridProjection::Hovmoller;
         return new HovmollerImpl();
       case 1200:
-        mGridProjection = T::GridProjection::TimeSection;
         return new TimeSectionImpl();
       default:
         throw SmartMet::Spine::Exception(BCP,"Unknown grid definition template number '" +

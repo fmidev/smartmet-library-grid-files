@@ -11,6 +11,7 @@ namespace GRIB2
 
 UnstructuredImpl::UnstructuredImpl()
 {
+  mGridProjection = T::GridProjection::Unstructured;
 }
 
 

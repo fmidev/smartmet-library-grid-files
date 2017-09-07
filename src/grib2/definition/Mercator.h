@@ -25,36 +25,45 @@ public:
   virtual ~Mercator();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings earthShape);
   const T::UInt32_opt &getNi() const;
+  void setNi(T::UInt32_opt ni);
   const T::UInt32_opt &getNj() const;
+  void setNj(T::UInt32_opt nj);
   const T::Int32_opt &getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::Int32_opt &getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint);
   const ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings resolution);
   const T::Int32_opt &getLaD() const;
+  void setLaD(T::Int32_opt laD);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
+  void setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint);
   const T::Int32_opt &getLongitudeOfLastGridPoint() const;
+  void setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   const T::UInt32_opt &getOrientationOfTheGrid() const;
+  void setOrientationOfTheGrid(T::UInt32_opt orientationOfTheGrid);
   const T::UInt32_opt &getDi() const;
+  void setDi(T::UInt32_opt di);
   const T::UInt32_opt &getDj() const;
+  void setDj(T::UInt32_opt dj);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // # TEMPLATE 3.10, Mercator
@@ -86,9 +95,7 @@ protected:
   T::Int32_opt mLatitudeOfFirstGridPoint;
 
   // alias La1 =  latitudeOfFirstGridPoint;
-  // meta geography.latitudeOfFirstGridPointInDegrees
-  // scale(latitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) :
-  // dump;
+  // meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // # Lo1 - longitude of first grid point
   // signed[4] longitudeOfFirstGridPoint : edition_specific,no_copy;
@@ -96,9 +103,7 @@ protected:
   T::Int32_opt mLongitudeOfFirstGridPoint;
 
   // alias Lo1 =  longitudeOfFirstGridPoint;
-  // meta geography.longitudeOfFirstGridPointInDegrees
-  // scale(longitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) :
-  // dump;
+  // meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // include "template.3.resolution_flags.def";
 
@@ -111,8 +116,7 @@ protected:
 
   T::Int32_opt mLaD;
 
-  // meta geography.LaDInDegrees
-  // scale(LaD,oneConstant,grib2divider,truncateDegrees) : dump;
+  // meta geography.LaDInDegrees scale(LaD,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // # La2 - latitude of last grid point
   // signed[4] latitudeOfLastGridPoint : edition_specific,no_copy;
@@ -120,9 +124,7 @@ protected:
   T::Int32_opt mLatitudeOfLastGridPoint;
 
   // alias La2 =  latitudeOfLastGridPoint;
-  // meta geography.latitudeOfLastGridPointInDegrees
-  // scale(latitudeOfLastGridPoint,oneConstant,grib2divider,truncateDegrees) :
-  // dump;
+  // meta geography.latitudeOfLastGridPointInDegrees scale(latitudeOfLastGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // # Lo2 - longitude of last grid point
   // signed[4] longitudeOfLastGridPoint: edition_specific,no_copy ;
@@ -130,31 +132,25 @@ protected:
   T::Int32_opt mLongitudeOfLastGridPoint;
 
   // alias Lo2 =  longitudeOfLastGridPoint;
-  // meta geography.longitudeOfLastGridPointInDegrees
-  // scale(longitudeOfLastGridPoint,oneConstant,grib2divider,truncateDegrees) :
-  // dump;
+  // meta geography.longitudeOfLastGridPointInDegrees scale(longitudeOfLastGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // include "template.3.scanning_mode.def";
 
   ScanningModeSettings mScanningMode;
 
   //
-  // # Orientation of the grid, angle between i direction on the map and the
-  // equator
-  // # NOTE 1: Limited to the range of 0 to 90 degrees; if the angle of
-  // orientation of the grid is neither 0 nor 90 degrees,
+  // # Orientation of the grid, angle between i direction on the map and the equator
+  // # NOTE 1: Limited to the range of 0 to 90 degrees; if the angle of orientation of the grid is neither 0 nor 90 degrees,
   // #         Di and Dj must be equal to each other
   // unsigned[4] orientationOfTheGrid : dump ;
 
   T::UInt32_opt mOrientationOfTheGrid;
 
   // meta geography.orientationOfTheGridInDegrees
-  //     scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) :
-  //     dump;
+  //     scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // # Di - longitudinal direction grid length
-  // # NOTE 2: Grid lengths are in units of 10**-3 m, at the latitude specified
-  // by LaD
+  // # NOTE 2: Grid lengths are in units of 10**-3 m, at the latitude specified by LaD
   // unsigned[4] Di  : edition_specific,no_copy ;
 
   T::UInt32_opt mDi;
@@ -164,8 +160,7 @@ protected:
   //     scale(Di,oneConstant,thousand,truncateDegrees) : dump;
   //
   // # Dj - latitudinal direction grid length
-  // # NOTE 2: Grid lengths are in units of 10**-3 m, at the latitude specified
-  // by LaD
+  // # NOTE 2: Grid lengths are in units of 10**-3 m, at the latitude specified by LaD
   // unsigned[4] Dj  : edition_specific,no_copy ;
 
   T::UInt32_opt mDj;
@@ -175,8 +170,7 @@ protected:
   //     scale(Dj,oneConstant,thousand,truncateDegrees) : dump;
   //
   //
-  // # END   2/template.3.10
-  // ----------------------------------------------------------------------
+  // # END   2/template.3.10 ----------------------------------------------------------------------
 };
 
 } // namespace GRIB2

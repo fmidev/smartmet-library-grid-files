@@ -13,8 +13,7 @@
 
 namespace SmartMet {
 namespace GRIB2 {
-/*! \brief The class is automatically created from the template
- * (5.second_order).*/
+/*! \brief The class is automatically created from the template (5.second_order).*/
 
 class SecondOrderSettings {
 public:
@@ -22,45 +21,50 @@ public:
   virtual ~SecondOrderSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::UInt8_opt &getGroupSplitting() const;
+  void setGroupSplitting(T::UInt8_opt groupSplitting);
   const T::UInt8_opt &getMissingValueManagement() const;
+  void setMissingValueManagement(T::UInt8_opt missingValueManagement);
   const T::UInt32_opt &getPrimaryMissingValue() const;
+  void setPrimaryMissingValue(T::UInt32_opt primaryMissingValue);
   const T::UInt32_opt &getSecondaryMissingValue() const;
+  void setSecondaryMissingValue(T::UInt32_opt secondaryMissingValue);
   const T::UInt32_opt &getNumberOfGroups() const;
+  void setNumberOfGroups(T::UInt32_opt numberOfGroups);
   const T::UInt8_opt &getReferenceOfWidths() const;
+  void setReferenceOfWidths(T::UInt8_opt referenceOfWidths);
   const T::UInt8_opt &getWidthOfWidths() const;
+  void setWidthOfWidths(T::UInt8_opt widthOfWidths);
   const T::UInt32_opt &getReferenceOfLengths() const;
+  void setReferenceOfLengths(T::UInt32_opt referenceOfLengths);
   const T::UInt8_opt &getIncrementOfLengths() const;
+  void setIncrementOfLengths(T::UInt8_opt incrementOfLengths);
   const T::UInt32_opt &getTrueLengthOfLastGroup() const;
+  void setTrueLengthOfLastGroup(T::UInt32_opt trueLengthOfLastGroup);
   const T::UInt8_opt &getWidthOfLengths() const;
+  void setWidthOfLengths(T::UInt8_opt widthOfLengths);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   //
-  // codetable[1] groupSplitting ('5.4.table',masterDir,localDir) = 1 ; #default
-  // general
+  // codetable[1] groupSplitting ('5.4.table',masterDir,localDir) = 1 ; #default general
 
   T::UInt8_opt mGroupSplitting;
 
   //
-  // codetable[1] missingValueManagement ('5.5.table',masterDir,localDir) = 0;
-  // #default as grib1
+  // codetable[1] missingValueManagement ('5.5.table',masterDir,localDir) = 0; #default as grib1
 
   T::UInt8_opt mMissingValueManagement;
 

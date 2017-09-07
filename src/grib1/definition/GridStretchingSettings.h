@@ -13,8 +13,7 @@
 
 namespace SmartMet {
 namespace GRIB1 {
-/*! \brief The class is automatically created from the template
- * (grid_stretching).*/
+/*! \brief The class is automatically created from the template (grid_stretching).*/
 
 class GridStretchingSettings {
 public:
@@ -22,26 +21,25 @@ public:
   virtual ~GridStretchingSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   std::int24_t getLatitudeOfStretchingPole() const;
+  void setLatitudeOfStretchingPole(std::int24_t latitudeOfStretchingPole);
   std::int24_t getLongitudeOfStretchingPole() const;
+  void setLongitudeOfStretchingPole(std::int24_t longitudeOfStretchingPole);
   ibmfloat getStretchingFactor() const;
+  void setStretchingFactor(ibmfloat stretchingFactor);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // signed[3] latitudeOfStretchingPole : edition_specific,no_copy;
@@ -54,11 +52,9 @@ protected:
 
   //
   // meta  geography.latitudeOfStretchingPoleInDegrees
-  //       scale(latitudeOfStretchingPole,oneConstant,grib1divider,truncateDegrees)
-  //       : dump;
+  //       scale(latitudeOfStretchingPole,oneConstant,grib1divider,truncateDegrees) : dump;
   // meta  geography.longitudeOfStretchingPoleInDegrees
-  //       scale(longitudeOfStretchingPole,oneConstant,grib1divider,truncateDegrees)
-  //       : dump;
+  //       scale(longitudeOfStretchingPole,oneConstant,grib1divider,truncateDegrees) : dump;
   // ibmfloat stretchingFactor : dump;
 
   ibmfloat mStretchingFactor;

@@ -24,29 +24,25 @@ public:
   virtual ~PartitionedEnsembleProduct();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const PartitionedProduct *getPartitionedProduct() const;
+  void setPartitionedProduct(PartitionedProduct partitionedProduct);
   const EpsSettings *getEps() const;
+  void setEps(EpsSettings eps);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
-  // # TEMPLATE 4.54, Individual ensemble forecast, control and perturbed, at a
-  // horizontal level or in a horizontal layer at a point in time for
-  // partitioned parameters
+  // # TEMPLATE 4.54, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for partitioned parameters
   //
   // include "template.4.53.def"
 

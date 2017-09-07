@@ -55,8 +55,10 @@ class Message : public GRID::Message
     T::TimeString         getForecastEndTime() const;
     GribFile*             getGribFile() const;
 
+    uint                  getGridGeometryId() const;
     T::Coordinate_vec     getGridCoordinates() const;
     T::Dimensions_opt     getGridDimensions() const;
+    T::Hash               getGridHash() const;
     void                  getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     T::GridLayout         getGridLayout() const;
     std::size_t           getGridOriginalColumnCount() const;
@@ -95,6 +97,7 @@ class Message : public GRID::Message
     const DataSection*    getDataSection() const;
 
     void                  read(MemoryReader& memoryReader);
+    void                  setGridGeometryId(uint geometryId);
 
     // Fast access to substructures
 

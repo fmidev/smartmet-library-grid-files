@@ -8,10 +8,10 @@
 
 #include "grib2/definition/RectangularClusterSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ RectangularClusterSettings::~RectangularClusterSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void RectangularClusterSettings::read(MemoryReader &memoryReader) {
@@ -68,109 +66,66 @@ void RectangularClusterSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void RectangularClusterSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void RectangularClusterSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sRectangularClusterSettings.ClusterIdentifier",
-            prefix.c_str());
+    sprintf(name, "%sRectangularClusterSettings.ClusterIdentifier", prefix.c_str());
     attributeList.addAttribute(name, toString(mClusterIdentifier));
     sprintf(name, "%sRectangularClusterSettings.NH", prefix.c_str());
     attributeList.addAttribute(name, toString(mNH));
     sprintf(name, "%sRectangularClusterSettings.NL", prefix.c_str());
     attributeList.addAttribute(name, toString(mNL));
-    sprintf(name, "%sRectangularClusterSettings.TotalNumberOfClusters",
-            prefix.c_str());
+    sprintf(name, "%sRectangularClusterSettings.TotalNumberOfClusters", prefix.c_str());
     attributeList.addAttribute(name, toString(mTotalNumberOfClusters));
-    sprintf(name, "%sRectangularClusterSettings.ClusteringMethod",
-            prefix.c_str());
+    sprintf(name, "%sRectangularClusterSettings.ClusteringMethod", prefix.c_str());
     attributeList.addAttribute(name, toString(mClusteringMethod));
-    sprintf(name,
-            "%sRectangularClusterSettings.NorthernLatitudeOfClusterDomain",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mNorthernLatitudeOfClusterDomain));
-    sprintf(name,
-            "%sRectangularClusterSettings.SouthernLatitudeOfClusterDomain",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mSouthernLatitudeOfClusterDomain));
-    sprintf(name,
-            "%sRectangularClusterSettings.EasternLongitudeOfClusterDomain",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mEasternLongitudeOfClusterDomain));
-    sprintf(name,
-            "%sRectangularClusterSettings.WesternLongitudeOfClusterDomain",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mWesternLongitudeOfClusterDomain));
-    sprintf(name, "%sRectangularClusterSettings.NumberOfForecastsInTheCluster",
-            prefix.c_str());
+    sprintf(name, "%sRectangularClusterSettings.NorthernLatitudeOfClusterDomain", prefix.c_str());
+    attributeList.addAttribute(name, toString(mNorthernLatitudeOfClusterDomain));
+    sprintf(name, "%sRectangularClusterSettings.SouthernLatitudeOfClusterDomain", prefix.c_str());
+    attributeList.addAttribute(name, toString(mSouthernLatitudeOfClusterDomain));
+    sprintf(name, "%sRectangularClusterSettings.EasternLongitudeOfClusterDomain", prefix.c_str());
+    attributeList.addAttribute(name, toString(mEasternLongitudeOfClusterDomain));
+    sprintf(name, "%sRectangularClusterSettings.WesternLongitudeOfClusterDomain", prefix.c_str());
+    attributeList.addAttribute(name, toString(mWesternLongitudeOfClusterDomain));
+    sprintf(name, "%sRectangularClusterSettings.NumberOfForecastsInTheCluster", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfForecastsInTheCluster));
-    sprintf(name, "%sRectangularClusterSettings.ScaleFactorOfStandardDeviation",
-            prefix.c_str());
+    sprintf(name, "%sRectangularClusterSettings.ScaleFactorOfStandardDeviation", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfStandardDeviation));
-    sprintf(name, "%sRectangularClusterSettings.ScaledValueOfStandardDeviation",
-            prefix.c_str());
+    sprintf(name, "%sRectangularClusterSettings.ScaledValueOfStandardDeviation", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfStandardDeviation));
-    sprintf(
-        name,
-        "%sRectangularClusterSettings.ScaleFactorOfDistanceFromEnsembleMean",
-        prefix.c_str());
-    attributeList.addAttribute(
-        name, toString(mScaleFactorOfDistanceFromEnsembleMean));
-    sprintf(
-        name,
-        "%sRectangularClusterSettings.ScaledValueOfDistanceFromEnsembleMean",
-        prefix.c_str());
-    attributeList.addAttribute(
-        name, toString(mScaledValueOfDistanceFromEnsembleMean));
+    sprintf(name, "%sRectangularClusterSettings.ScaleFactorOfDistanceFromEnsembleMean", prefix.c_str());
+    attributeList.addAttribute(name, toString(mScaleFactorOfDistanceFromEnsembleMean));
+    sprintf(name, "%sRectangularClusterSettings.ScaledValueOfDistanceFromEnsembleMean", prefix.c_str());
+    attributeList.addAttribute(name, toString(mScaledValueOfDistanceFromEnsembleMean));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void RectangularClusterSettings::print(std::ostream &stream, uint level,
-                                       uint optionFlags) const {
+void RectangularClusterSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "RectangularClusterSettings\n";
-    stream << space(level)
-           << "- ClusterIdentifier = " << toString(mClusterIdentifier) << "\n";
+    stream << space(level) << "- ClusterIdentifier = " << toString(mClusterIdentifier) << "\n";
     stream << space(level) << "- NH = " << toString(mNH) << "\n";
     stream << space(level) << "- NL = " << toString(mNL) << "\n";
-    stream << space(level)
-           << "- TotalNumberOfClusters = " << toString(mTotalNumberOfClusters)
-           << "\n";
-    stream << space(level)
-           << "- ClusteringMethod = " << toString(mClusteringMethod) << "\n";
-    stream << space(level) << "- NorthernLatitudeOfClusterDomain = "
-           << toString(mNorthernLatitudeOfClusterDomain) << "\n";
-    stream << space(level) << "- SouthernLatitudeOfClusterDomain = "
-           << toString(mSouthernLatitudeOfClusterDomain) << "\n";
-    stream << space(level) << "- EasternLongitudeOfClusterDomain = "
-           << toString(mEasternLongitudeOfClusterDomain) << "\n";
-    stream << space(level) << "- WesternLongitudeOfClusterDomain = "
-           << toString(mWesternLongitudeOfClusterDomain) << "\n";
-    stream << space(level) << "- NumberOfForecastsInTheCluster = "
-           << toString(mNumberOfForecastsInTheCluster) << "\n";
-    stream << space(level) << "- ScaleFactorOfStandardDeviation = "
-           << toString(mScaleFactorOfStandardDeviation) << "\n";
-    stream << space(level) << "- ScaledValueOfStandardDeviation = "
-           << toString(mScaledValueOfStandardDeviation) << "\n";
-    stream << space(level) << "- ScaleFactorOfDistanceFromEnsembleMean = "
-           << toString(mScaleFactorOfDistanceFromEnsembleMean) << "\n";
-    stream << space(level) << "- ScaledValueOfDistanceFromEnsembleMean = "
-           << toString(mScaledValueOfDistanceFromEnsembleMean) << "\n";
+    stream << space(level) << "- TotalNumberOfClusters = " << toString(mTotalNumberOfClusters) << "\n";
+    stream << space(level) << "- ClusteringMethod = " << toString(mClusteringMethod) << "\n";
+    stream << space(level) << "- NorthernLatitudeOfClusterDomain = " << toString(mNorthernLatitudeOfClusterDomain) << "\n";
+    stream << space(level) << "- SouthernLatitudeOfClusterDomain = " << toString(mSouthernLatitudeOfClusterDomain) << "\n";
+    stream << space(level) << "- EasternLongitudeOfClusterDomain = " << toString(mEasternLongitudeOfClusterDomain) << "\n";
+    stream << space(level) << "- WesternLongitudeOfClusterDomain = " << toString(mWesternLongitudeOfClusterDomain) << "\n";
+    stream << space(level) << "- NumberOfForecastsInTheCluster = " << toString(mNumberOfForecastsInTheCluster) << "\n";
+    stream << space(level) << "- ScaleFactorOfStandardDeviation = " << toString(mScaleFactorOfStandardDeviation) << "\n";
+    stream << space(level) << "- ScaledValueOfStandardDeviation = " << toString(mScaledValueOfStandardDeviation) << "\n";
+    stream << space(level) << "- ScaleFactorOfDistanceFromEnsembleMean = " << toString(mScaleFactorOfDistanceFromEnsembleMean) << "\n";
+    stream << space(level) << "- ScaledValueOfDistanceFromEnsembleMean = " << toString(mScaledValueOfDistanceFromEnsembleMean) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -215,8 +170,7 @@ T::Hash RectangularClusterSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mClusterIdentifier}
- * attribute. */
+/*! \brief The method returns the value of the {@link mClusterIdentifier} attribute. */
 
 const T::UInt8_opt &RectangularClusterSettings::getClusterIdentifier() const {
   try {
@@ -246,11 +200,9 @@ const T::UInt8_opt &RectangularClusterSettings::getNL() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTotalNumberOfClusters}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTotalNumberOfClusters} attribute. */
 
-const T::UInt8_opt &
-RectangularClusterSettings::getTotalNumberOfClusters() const {
+const T::UInt8_opt &RectangularClusterSettings::getTotalNumberOfClusters() const {
   try {
     return mTotalNumberOfClusters;
   } catch (...) {
@@ -258,8 +210,7 @@ RectangularClusterSettings::getTotalNumberOfClusters() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mClusteringMethod}
- * attribute. */
+/*! \brief The method returns the value of the {@link mClusteringMethod} attribute. */
 
 const T::UInt8_opt &RectangularClusterSettings::getClusteringMethod() const {
   try {
@@ -269,11 +220,9 @@ const T::UInt8_opt &RectangularClusterSettings::getClusteringMethod() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mNorthernLatitudeOfClusterDomain} attribute. */
+/*! \brief The method returns the value of the {@link mNorthernLatitudeOfClusterDomain} attribute. */
 
-const T::UInt32_opt &
-RectangularClusterSettings::getNorthernLatitudeOfClusterDomain() const {
+const T::UInt32_opt &RectangularClusterSettings::getNorthernLatitudeOfClusterDomain() const {
   try {
     return mNorthernLatitudeOfClusterDomain;
   } catch (...) {
@@ -281,11 +230,9 @@ RectangularClusterSettings::getNorthernLatitudeOfClusterDomain() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mSouthernLatitudeOfClusterDomain} attribute. */
+/*! \brief The method returns the value of the {@link mSouthernLatitudeOfClusterDomain} attribute. */
 
-const T::UInt32_opt &
-RectangularClusterSettings::getSouthernLatitudeOfClusterDomain() const {
+const T::UInt32_opt &RectangularClusterSettings::getSouthernLatitudeOfClusterDomain() const {
   try {
     return mSouthernLatitudeOfClusterDomain;
   } catch (...) {
@@ -293,11 +240,9 @@ RectangularClusterSettings::getSouthernLatitudeOfClusterDomain() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mEasternLongitudeOfClusterDomain} attribute. */
+/*! \brief The method returns the value of the {@link mEasternLongitudeOfClusterDomain} attribute. */
 
-const T::UInt32_opt &
-RectangularClusterSettings::getEasternLongitudeOfClusterDomain() const {
+const T::UInt32_opt &RectangularClusterSettings::getEasternLongitudeOfClusterDomain() const {
   try {
     return mEasternLongitudeOfClusterDomain;
   } catch (...) {
@@ -305,11 +250,9 @@ RectangularClusterSettings::getEasternLongitudeOfClusterDomain() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mWesternLongitudeOfClusterDomain} attribute. */
+/*! \brief The method returns the value of the {@link mWesternLongitudeOfClusterDomain} attribute. */
 
-const T::UInt32_opt &
-RectangularClusterSettings::getWesternLongitudeOfClusterDomain() const {
+const T::UInt32_opt &RectangularClusterSettings::getWesternLongitudeOfClusterDomain() const {
   try {
     return mWesternLongitudeOfClusterDomain;
   } catch (...) {
@@ -317,11 +260,9 @@ RectangularClusterSettings::getWesternLongitudeOfClusterDomain() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mNumberOfForecastsInTheCluster} attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfForecastsInTheCluster} attribute. */
 
-const T::UInt8_opt &
-RectangularClusterSettings::getNumberOfForecastsInTheCluster() const {
+const T::UInt8_opt &RectangularClusterSettings::getNumberOfForecastsInTheCluster() const {
   try {
     return mNumberOfForecastsInTheCluster;
   } catch (...) {
@@ -329,11 +270,9 @@ RectangularClusterSettings::getNumberOfForecastsInTheCluster() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaleFactorOfStandardDeviation} attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfStandardDeviation} attribute. */
 
-const T::UInt8_opt &
-RectangularClusterSettings::getScaleFactorOfStandardDeviation() const {
+const T::UInt8_opt &RectangularClusterSettings::getScaleFactorOfStandardDeviation() const {
   try {
     return mScaleFactorOfStandardDeviation;
   } catch (...) {
@@ -341,11 +280,9 @@ RectangularClusterSettings::getScaleFactorOfStandardDeviation() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaledValueOfStandardDeviation} attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfStandardDeviation} attribute. */
 
-const T::UInt32_opt &
-RectangularClusterSettings::getScaledValueOfStandardDeviation() const {
+const T::UInt32_opt &RectangularClusterSettings::getScaledValueOfStandardDeviation() const {
   try {
     return mScaledValueOfStandardDeviation;
   } catch (...) {
@@ -353,11 +290,9 @@ RectangularClusterSettings::getScaledValueOfStandardDeviation() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaleFactorOfDistanceFromEnsembleMean} attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfDistanceFromEnsembleMean} attribute. */
 
-const T::UInt8_opt &
-RectangularClusterSettings::getScaleFactorOfDistanceFromEnsembleMean() const {
+const T::UInt8_opt &RectangularClusterSettings::getScaleFactorOfDistanceFromEnsembleMean() const {
   try {
     return mScaleFactorOfDistanceFromEnsembleMean;
   } catch (...) {
@@ -365,13 +300,123 @@ RectangularClusterSettings::getScaleFactorOfDistanceFromEnsembleMean() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaledValueOfDistanceFromEnsembleMean} attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfDistanceFromEnsembleMean} attribute. */
 
-const T::UInt32_opt &
-RectangularClusterSettings::getScaledValueOfDistanceFromEnsembleMean() const {
+const T::UInt32_opt &RectangularClusterSettings::getScaledValueOfDistanceFromEnsembleMean() const {
   try {
     return mScaledValueOfDistanceFromEnsembleMean;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setClusterIdentifier(T::UInt8_opt clusterIdentifier) {
+  try {
+    mClusterIdentifier = clusterIdentifier;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setNH(T::UInt8_opt nH) {
+  try {
+    mNH = nH;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setNL(T::UInt8_opt nL) {
+  try {
+    mNL = nL;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setTotalNumberOfClusters(T::UInt8_opt totalNumberOfClusters) {
+  try {
+    mTotalNumberOfClusters = totalNumberOfClusters;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setClusteringMethod(T::UInt8_opt clusteringMethod) {
+  try {
+    mClusteringMethod = clusteringMethod;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setNorthernLatitudeOfClusterDomain(T::UInt32_opt northernLatitudeOfClusterDomain) {
+  try {
+    mNorthernLatitudeOfClusterDomain = northernLatitudeOfClusterDomain;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setSouthernLatitudeOfClusterDomain(T::UInt32_opt southernLatitudeOfClusterDomain) {
+  try {
+    mSouthernLatitudeOfClusterDomain = southernLatitudeOfClusterDomain;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setEasternLongitudeOfClusterDomain(T::UInt32_opt easternLongitudeOfClusterDomain) {
+  try {
+    mEasternLongitudeOfClusterDomain = easternLongitudeOfClusterDomain;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setWesternLongitudeOfClusterDomain(T::UInt32_opt westernLongitudeOfClusterDomain) {
+  try {
+    mWesternLongitudeOfClusterDomain = westernLongitudeOfClusterDomain;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setNumberOfForecastsInTheCluster(T::UInt8_opt numberOfForecastsInTheCluster) {
+  try {
+    mNumberOfForecastsInTheCluster = numberOfForecastsInTheCluster;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setScaleFactorOfStandardDeviation(T::UInt8_opt scaleFactorOfStandardDeviation) {
+  try {
+    mScaleFactorOfStandardDeviation = scaleFactorOfStandardDeviation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setScaledValueOfStandardDeviation(T::UInt32_opt scaledValueOfStandardDeviation) {
+  try {
+    mScaledValueOfStandardDeviation = scaledValueOfStandardDeviation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setScaleFactorOfDistanceFromEnsembleMean(T::UInt8_opt scaleFactorOfDistanceFromEnsembleMean) {
+  try {
+    mScaleFactorOfDistanceFromEnsembleMean = scaleFactorOfDistanceFromEnsembleMean;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void RectangularClusterSettings::setScaledValueOfDistanceFromEnsembleMean(T::UInt32_opt scaledValueOfDistanceFromEnsembleMean) {
+  try {
+    mScaledValueOfDistanceFromEnsembleMean = scaledValueOfDistanceFromEnsembleMean;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

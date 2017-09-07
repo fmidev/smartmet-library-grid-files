@@ -26,31 +26,30 @@ public:
   virtual ~AerosolEnsembleProduct();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const ParameterAerosolSettings *getParameterAerosol() const;
+  void setParameterAerosol(ParameterAerosolSettings parameterAerosol);
   const PointInTimeSettings *getPointInTime() const;
+  void setPointInTime(PointInTimeSettings pointInTime);
   const HorizontalSettings *getHorizontal() const;
+  void setHorizontal(HorizontalSettings horizontal);
   const EpsSettings *getEps() const;
+  void setEps(EpsSettings eps);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # TEMPLATE 4.45, Individual ensemble forecast, control and perturbed, at a
-  // horizontal level or in a horizontal layer at a point in time for aerosol
+  // # TEMPLATE 4.45, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for aerosol
   //
   // include "template.4.parameter_aerosol.def"
 

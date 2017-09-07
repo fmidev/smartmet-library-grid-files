@@ -8,10 +8,10 @@
 
 #include "grib2/definition/TimeSection.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ TimeSection::~TimeSection() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void TimeSection::read(MemoryReader &memoryReader) {
@@ -70,17 +68,14 @@ void TimeSection::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void TimeSection::getAttributeList(std::string prefix,
-                                   T::AttributeList &attributeList) const {
+void TimeSection::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTimeSection.NumberOfTimeSteps", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfTimeSteps));
-    sprintf(name, "%sTimeSection.UnitOfOffsetFromReferenceTime",
-            prefix.c_str());
+    sprintf(name, "%sTimeSection.UnitOfOffsetFromReferenceTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mUnitOfOffsetFromReferenceTime));
-    sprintf(name, "%sTimeSection.OffsetFromReferenceOfFirstTime",
-            prefix.c_str());
+    sprintf(name, "%sTimeSection.OffsetFromReferenceOfFirstTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mOffsetFromReferenceOfFirstTime));
     sprintf(name, "%sTimeSection.TypeOfTimeIncrement", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfTimeIncrement));
@@ -102,10 +97,8 @@ void TimeSection::getAttributeList(std::string prefix,
     attributeList.addAttribute(name, toString(mSecond));
     sprintf(name, "%sTimeSection.NumberOfVerticalPoints", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfVerticalPoints));
-    sprintf(name, "%sTimeSection.PhysicalMeaningOfVerticalCoordinate",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mPhysicalMeaningOfVerticalCoordinate));
+    sprintf(name, "%sTimeSection.PhysicalMeaningOfVerticalCoordinate", prefix.c_str());
+    attributeList.addAttribute(name, toString(mPhysicalMeaningOfVerticalCoordinate));
     sprintf(name, "%sTimeSection.VerticalCoordinate", prefix.c_str());
     attributeList.addAttribute(name, toString(mVerticalCoordinate));
     sprintf(name, "%sTimeSection.NC", prefix.c_str());
@@ -115,47 +108,31 @@ void TimeSection::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void TimeSection::print(std::ostream &stream, uint level,
-                        uint optionFlags) const {
+void TimeSection::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "TimeSection\n";
-    stream << space(level)
-           << "- NumberOfTimeSteps = " << toString(mNumberOfTimeSteps) << "\n";
-    stream << space(level) << "- UnitOfOffsetFromReferenceTime = "
-           << toString(mUnitOfOffsetFromReferenceTime) << "\n";
-    stream << space(level) << "- OffsetFromReferenceOfFirstTime = "
-           << toString(mOffsetFromReferenceOfFirstTime) << "\n";
-    stream << space(level)
-           << "- TypeOfTimeIncrement = " << toString(mTypeOfTimeIncrement)
-           << "\n";
-    stream << space(level)
-           << "- UnitOfTimeIncrement = " << toString(mUnitOfTimeIncrement)
-           << "\n";
-    stream << space(level) << "- TimeIncrement = " << toString(mTimeIncrement)
-           << "\n";
+    stream << space(level) << "- NumberOfTimeSteps = " << toString(mNumberOfTimeSteps) << "\n";
+    stream << space(level) << "- UnitOfOffsetFromReferenceTime = " << toString(mUnitOfOffsetFromReferenceTime) << "\n";
+    stream << space(level) << "- OffsetFromReferenceOfFirstTime = " << toString(mOffsetFromReferenceOfFirstTime) << "\n";
+    stream << space(level) << "- TypeOfTimeIncrement = " << toString(mTypeOfTimeIncrement) << "\n";
+    stream << space(level) << "- UnitOfTimeIncrement = " << toString(mUnitOfTimeIncrement) << "\n";
+    stream << space(level) << "- TimeIncrement = " << toString(mTimeIncrement) << "\n";
     stream << space(level) << "- Year = " << toString(mYear) << "\n";
     stream << space(level) << "- Month = " << toString(mMonth) << "\n";
     stream << space(level) << "- Day = " << toString(mDay) << "\n";
     stream << space(level) << "- Hour = " << toString(mHour) << "\n";
     stream << space(level) << "- Minute = " << toString(mMinute) << "\n";
     stream << space(level) << "- Second = " << toString(mSecond) << "\n";
-    stream << space(level)
-           << "- NumberOfVerticalPoints = " << toString(mNumberOfVerticalPoints)
-           << "\n";
-    stream << space(level) << "- PhysicalMeaningOfVerticalCoordinate = "
-           << toString(mPhysicalMeaningOfVerticalCoordinate) << "\n";
-    stream << space(level)
-           << "- VerticalCoordinate = " << toString(mVerticalCoordinate)
-           << "\n";
+    stream << space(level) << "- NumberOfVerticalPoints = " << toString(mNumberOfVerticalPoints) << "\n";
+    stream << space(level) << "- PhysicalMeaningOfVerticalCoordinate = " << toString(mPhysicalMeaningOfVerticalCoordinate) << "\n";
+    stream << space(level) << "- VerticalCoordinate = " << toString(mVerticalCoordinate) << "\n";
     stream << space(level) << "- NC = " << toString(mNC) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
@@ -205,8 +182,7 @@ T::Hash TimeSection::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfTimeSteps}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfTimeSteps} attribute. */
 
 const T::UInt32_opt &TimeSection::getNumberOfTimeSteps() const {
   try {
@@ -216,8 +192,7 @@ const T::UInt32_opt &TimeSection::getNumberOfTimeSteps() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mUnitOfOffsetFromReferenceTime} attribute. */
+/*! \brief The method returns the value of the {@link mUnitOfOffsetFromReferenceTime} attribute. */
 
 const T::UInt8_opt &TimeSection::getUnitOfOffsetFromReferenceTime() const {
   try {
@@ -227,8 +202,7 @@ const T::UInt8_opt &TimeSection::getUnitOfOffsetFromReferenceTime() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mOffsetFromReferenceOfFirstTime} attribute. */
+/*! \brief The method returns the value of the {@link mOffsetFromReferenceOfFirstTime} attribute. */
 
 const T::UInt32_opt &TimeSection::getOffsetFromReferenceOfFirstTime() const {
   try {
@@ -238,8 +212,7 @@ const T::UInt32_opt &TimeSection::getOffsetFromReferenceOfFirstTime() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfTimeIncrement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfTimeIncrement} attribute. */
 
 const T::UInt8_opt &TimeSection::getTypeOfTimeIncrement() const {
   try {
@@ -249,8 +222,7 @@ const T::UInt8_opt &TimeSection::getTypeOfTimeIncrement() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mUnitOfTimeIncrement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mUnitOfTimeIncrement} attribute. */
 
 const T::UInt8_opt &TimeSection::getUnitOfTimeIncrement() const {
   try {
@@ -260,8 +232,7 @@ const T::UInt8_opt &TimeSection::getUnitOfTimeIncrement() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTimeIncrement} attribute.
- */
+/*! \brief The method returns the value of the {@link mTimeIncrement} attribute. */
 
 const T::UInt32_opt &TimeSection::getTimeIncrement() const {
   try {
@@ -331,8 +302,7 @@ const T::UInt8_opt &TimeSection::getSecond() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfVerticalPoints}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfVerticalPoints} attribute. */
 
 const T::UInt16_opt &TimeSection::getNumberOfVerticalPoints() const {
   try {
@@ -342,11 +312,9 @@ const T::UInt16_opt &TimeSection::getNumberOfVerticalPoints() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mPhysicalMeaningOfVerticalCoordinate} attribute. */
+/*! \brief The method returns the value of the {@link mPhysicalMeaningOfVerticalCoordinate} attribute. */
 
-const T::UInt8_opt &
-TimeSection::getPhysicalMeaningOfVerticalCoordinate() const {
+const T::UInt8_opt &TimeSection::getPhysicalMeaningOfVerticalCoordinate() const {
   try {
     return mPhysicalMeaningOfVerticalCoordinate;
   } catch (...) {
@@ -354,8 +322,7 @@ TimeSection::getPhysicalMeaningOfVerticalCoordinate() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mVerticalCoordinate}
- * attribute. */
+/*! \brief The method returns the value of the {@link mVerticalCoordinate} attribute. */
 
 const T::UInt8_opt &TimeSection::getVerticalCoordinate() const {
   try {
@@ -370,6 +337,134 @@ const T::UInt8_opt &TimeSection::getVerticalCoordinate() const {
 const T::UInt16_opt &TimeSection::getNC() const {
   try {
     return mNC;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setNumberOfTimeSteps(T::UInt32_opt numberOfTimeSteps) {
+  try {
+    mNumberOfTimeSteps = numberOfTimeSteps;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setUnitOfOffsetFromReferenceTime(T::UInt8_opt unitOfOffsetFromReferenceTime) {
+  try {
+    mUnitOfOffsetFromReferenceTime = unitOfOffsetFromReferenceTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setOffsetFromReferenceOfFirstTime(T::UInt32_opt offsetFromReferenceOfFirstTime) {
+  try {
+    mOffsetFromReferenceOfFirstTime = offsetFromReferenceOfFirstTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setTypeOfTimeIncrement(T::UInt8_opt typeOfTimeIncrement) {
+  try {
+    mTypeOfTimeIncrement = typeOfTimeIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setUnitOfTimeIncrement(T::UInt8_opt unitOfTimeIncrement) {
+  try {
+    mUnitOfTimeIncrement = unitOfTimeIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setTimeIncrement(T::UInt32_opt timeIncrement) {
+  try {
+    mTimeIncrement = timeIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setYear(T::UInt16_opt year) {
+  try {
+    mYear = year;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setMonth(T::UInt8_opt month) {
+  try {
+    mMonth = month;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setDay(T::UInt8_opt day) {
+  try {
+    mDay = day;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setHour(T::UInt8_opt hour) {
+  try {
+    mHour = hour;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setMinute(T::UInt8_opt minute) {
+  try {
+    mMinute = minute;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setSecond(T::UInt8_opt second) {
+  try {
+    mSecond = second;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setNumberOfVerticalPoints(T::UInt16_opt numberOfVerticalPoints) {
+  try {
+    mNumberOfVerticalPoints = numberOfVerticalPoints;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setPhysicalMeaningOfVerticalCoordinate(T::UInt8_opt physicalMeaningOfVerticalCoordinate) {
+  try {
+    mPhysicalMeaningOfVerticalCoordinate = physicalMeaningOfVerticalCoordinate;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setVerticalCoordinate(T::UInt8_opt verticalCoordinate) {
+  try {
+    mVerticalCoordinate = verticalCoordinate;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void TimeSection::setNC(T::UInt16_opt nC) {
+  try {
+    mNC = nC;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

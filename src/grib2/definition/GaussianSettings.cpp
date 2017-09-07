@@ -8,10 +8,10 @@
 
 #include "grib2/definition/GaussianSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ GaussianSettings::~GaussianSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void GaussianSettings::read(MemoryReader &memoryReader) {
@@ -58,8 +56,7 @@ void GaussianSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void GaussianSettings::getAttributeList(std::string prefix,
-                                        T::AttributeList &attributeList) const {
+void GaussianSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sGaussianSettings.", prefix.c_str());
@@ -75,23 +72,18 @@ void GaussianSettings::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void GaussianSettings::print(std::ostream &stream, uint level,
-                             uint optionFlags) const {
+void GaussianSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "GaussianSettings\n";
     mGrid.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- IDirectionIncrement = " << toString(mIDirectionIncrement)
-           << "\n";
+    stream << space(level) << "- IDirectionIncrement = " << toString(mIDirectionIncrement) << "\n";
     stream << space(level) << "- N = " << toString(mN) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
@@ -126,8 +118,7 @@ const GridSettings *GaussianSettings::getGrid() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mIDirectionIncrement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mIDirectionIncrement} attribute. */
 
 const T::UInt32_opt &GaussianSettings::getIDirectionIncrement() const {
   try {
@@ -147,12 +138,43 @@ const T::UInt32_opt &GaussianSettings::getN() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *GaussianSettings::getScanningMode() const {
   try {
     return &mScanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GaussianSettings::setGrid(GridSettings grid) {
+  try {
+    mGrid = grid;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GaussianSettings::setIDirectionIncrement(T::UInt32_opt iDirectionIncrement) {
+  try {
+    mIDirectionIncrement = iDirectionIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GaussianSettings::setN(T::UInt32_opt n) {
+  try {
+    mN = n;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void GaussianSettings::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

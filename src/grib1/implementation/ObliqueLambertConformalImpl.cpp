@@ -13,6 +13,7 @@ ObliqueLambertConformalImpl::ObliqueLambertConformalImpl()
 {
   try
   {
+    mGridProjection = T::GridProjection::ObliqueLambertConformal;
     mSr_lambertConformal = NULL;
     mCt_latlon2lambert = NULL;
     mCt_lambert2latlon = NULL;

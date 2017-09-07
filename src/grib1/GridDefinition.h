@@ -23,13 +23,15 @@ class GridDefinition
                                 GridDefinition();
     virtual                     ~GridDefinition();
 
-    virtual T::Hash             countHash(); // Do not call this, call getHash() instead.
+    virtual T::Hash             countHash(); // Do not call this, call getGridHash() instead.
     virtual void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    virtual uint                getGridGeometryId() const;
     virtual T::Coordinate_vec   getGridCoordinates() const;
     virtual T::Dimensions_opt   getGridDimensions() const;
     virtual void                getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     virtual bool                getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
+    virtual T::GridProjection   getGridProjection() const;
     virtual void                getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const;
     virtual std::size_t         getGridOriginalColumnCount(std::size_t row) const;
     virtual std::size_t         getGridOriginalColumnCount() const;
@@ -42,10 +44,11 @@ class GridDefinition
     virtual void                initRowPositions(std::vector<std::uint32_t>& rowPositions);
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
     virtual void                read(MemoryReader& memoryReader) {}
+    virtual void                setGridGeometryId(uint geometryId);
 
     T::SpatialReference*        getSpatialReference();
     T::GridLayout               getGridLayout();
-    T::Hash                     getHash();
+    T::Hash                     getGridHash();
     bool                        isGridGlobal() const;
 
    protected:
@@ -66,6 +69,13 @@ class GridDefinition
      /*! \brief The start indexes of the grid rows when the grid is irregular. */
      std::vector<std::uint32_t> mRowPositions;
 
+     /*! \brief The geometry identifier. */
+     uint                       mGeometryId;
+
+     /*! \brief The grid projection. */
+     T::GridProjection          mGridProjection;
+
+
    private:
 
      /*! \brief The pointer to the original spatial reference (or actually to its clone). */
@@ -78,7 +88,10 @@ class GridDefinition
      mutable OGRCoordinateTransformation* mCoordinateTranformation_orig2latlon;
 };
 
+typedef GridDefinition* GridDefinition_ptr;
 typedef std::unique_ptr<GridDefinition> GridDefinition_uptr;
+typedef std::vector<GridDefinition_ptr> GridDefinition_pvec;
+
 
 }  // namespace GRID
 }  // namespace SmartMet

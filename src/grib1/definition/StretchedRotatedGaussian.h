@@ -18,8 +18,7 @@
 
 namespace SmartMet {
 namespace GRIB1 {
-/*! \brief The class is automatically created from the template
- * (grid_definition_34).*/
+/*! \brief The class is automatically created from the template (grid_definition_34).*/
 
 class StretchedRotatedGaussian : public GridDefinition {
 public:
@@ -27,48 +26,49 @@ public:
   virtual ~StretchedRotatedGaussian();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   std::uint16_t getNi() const;
+  void setNi(std::uint16_t ni);
   std::int16_t getNj() const;
+  void setNj(std::int16_t nj);
   const GridAreaSettings *getGridArea() const;
+  void setGridArea(GridAreaSettings gridArea);
   std::uint16_t getIDirectionIncrement() const;
+  void setIDirectionIncrement(std::uint16_t iDirectionIncrement);
   std::uint16_t getN() const;
+  void setN(std::uint16_t n);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   const RotationSettings *getRotation() const;
+  void setRotation(RotationSettings rotation);
   const GridStretchingSettings *getGridStretching() const;
+  void setGridStretching(GridStretchingSettings gridStretching);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # GRID DEFINITION stretched Rotated Gaussian latitude/longitude grid
+  // # GRID DEFINITION Stretched and rotated Gaussian latitude/longitude grids
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 43;
   //
   // template commonBlock "grib1/grid_definition_gaussian.def";
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // unsigned[2] Ni : can_be_missing,dump;
@@ -97,9 +97,7 @@ protected:
 
   std::uint16_t mIDirectionIncrement;
 
-  // meta geography.iDirectionIncrementInDegrees
-  // scale(iDirectionIncrement,oneConstant,grib1divider,truncateDegrees) :
-  // can_be_missing,dump;
+  // meta geography.iDirectionIncrementInDegrees scale(iDirectionIncrement,oneConstant,grib1divider,truncateDegrees) : can_be_missing,dump;
   // alias Di = iDirectionIncrement;
   //
   // #  N - number of parallels between a pole and the equator
@@ -139,14 +137,11 @@ protected:
   // meta numberOfDataPoints number_of_points_gaussian(Ni,Nj,PLPresent,pl,
   //   N,
   //   latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-  //   latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees) :
-  //   dump;
+  //   latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees) : dump;
   //
   // alias numberOfPoints=numberOfDataPoints;
   // # alias numberOfExpectedPoints=numberOfDataPoints;
-  // meta numberOfValues
-  // number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues)
-  // : dump;
+  // meta numberOfValues number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues) : dump;
   // #alias ls.valuesCount=numberOfValues;
   //
   // if(missing(Ni)){
@@ -155,20 +150,17 @@ protected:
   //        latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
   //        N,pl,Nj);
   //    nearest reduced(values,radius,Nj,pl);
-  //    box
-  //    reduced_gaussian(latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+  //    box reduced_gaussian(latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
   //           latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
   // 		  N,pl);
   // } else {
-  //    iterator
-  //    gaussian(numberOfPoints,missingValue,values,longitudeFirstInDegrees,
+  //    iterator   gaussian(numberOfPoints,missingValue,values,longitudeFirstInDegrees,
   //             DiInDegrees  ,Ni,Nj,iScansNegatively ,
   //             latitudeFirstInDegrees, latitudeLastInDegrees,
   //             N,jScansPositively);
   //    nearest regular(values,radius,Ni,Nj);
-  //  #  box
-  //  regular_gaussian(latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-  //  # latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
+  //  #  box regular_gaussian(latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+  //  #         latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
   // #		  DiInDegrees,Ni,N,iScansNegatively,jScansPositively);
   // }
   //
@@ -179,17 +171,20 @@ protected:
   // meta distinctLatitudes latitudes(values,1);
   // meta distinctLongitudes longitudes(values,1);
   //
-  // meta isOctahedral octahedral_gaussian(N, Ni, PLPresent, pl) = 0 :
-  // no_copy,dump;
+  // meta isOctahedral octahedral_gaussian(N, Ni, PLPresent, pl) = 0 : no_copy,dump;
+  //
+  // meta gaussianGridName gaussian_grid_name(N, Ni, isOctahedral);
+  // alias gridName=gaussianGridName;
+  //
   //
   // # Rotation parameters
-  // include  "grid_rotation.def"
+  // include "grid_rotation.def"
 
   RotationSettings mRotation;
 
   //
   // # Stretching parameters
-  // include  "grid_stretching.def"
+  // include "grid_stretching.def"
 
   GridStretchingSettings mGridStretching;
 };

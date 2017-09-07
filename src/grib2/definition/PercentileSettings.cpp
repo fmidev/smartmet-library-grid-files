@@ -8,10 +8,10 @@
 
 #include "grib2/definition/PercentileSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ PercentileSettings::~PercentileSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void PercentileSettings::read(MemoryReader &memoryReader) {
@@ -55,8 +53,7 @@ void PercentileSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void PercentileSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void PercentileSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPercentileSettings.PercentileValue", prefix.c_str());
@@ -66,21 +63,17 @@ void PercentileSettings::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PercentileSettings::print(std::ostream &stream, uint level,
-                               uint optionFlags) const {
+void PercentileSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "PercentileSettings\n";
-    stream << space(level)
-           << "- PercentileValue = " << toString(mPercentileValue) << "\n";
+    stream << space(level) << "- PercentileValue = " << toString(mPercentileValue) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -99,12 +92,19 @@ T::Hash PercentileSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mPercentileValue}
- * attribute. */
+/*! \brief The method returns the value of the {@link mPercentileValue} attribute. */
 
 const T::UInt8_opt &PercentileSettings::getPercentileValue() const {
   try {
     return mPercentileValue;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PercentileSettings::setPercentileValue(T::UInt8_opt percentileValue) {
+  try {
+    mPercentileValue = percentileValue;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

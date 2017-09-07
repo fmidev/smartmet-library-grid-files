@@ -8,10 +8,10 @@
 
 #include "grib1/definition/Gaussian.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -38,11 +38,9 @@ Gaussian::~Gaussian() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void Gaussian::read(MemoryReader &memoryReader) {
@@ -64,8 +62,7 @@ void Gaussian::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void Gaussian::getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const {
+void Gaussian::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sGaussian.Ni", prefix.c_str());
@@ -85,12 +82,10 @@ void Gaussian::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
@@ -100,9 +95,7 @@ void Gaussian::print(std::ostream &stream, uint level, uint optionFlags) const {
     stream << space(level) << "- Ni = " << toString(mNi) << "\n";
     stream << space(level) << "- Nj = " << toString(mNj) << "\n";
     mGridArea.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- IDirectionIncrement = " << toString(mIDirectionIncrement)
-           << "\n";
+    stream << space(level) << "- IDirectionIncrement = " << toString(mIDirectionIncrement) << "\n";
     stream << space(level) << "- N = " << toString(mN) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
@@ -157,8 +150,7 @@ const GridAreaSettings *Gaussian::getGridArea() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mIDirectionIncrement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mIDirectionIncrement} attribute. */
 
 std::uint16_t Gaussian::getIDirectionIncrement() const {
   try {
@@ -178,12 +170,59 @@ std::uint16_t Gaussian::getN() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *Gaussian::getScanningMode() const {
   try {
     return &mScanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Gaussian::setNi(std::uint16_t ni) {
+  try {
+    mNi = ni;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Gaussian::setNj(std::int16_t nj) {
+  try {
+    mNj = nj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Gaussian::setGridArea(GridAreaSettings gridArea) {
+  try {
+    mGridArea = gridArea;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Gaussian::setIDirectionIncrement(std::uint16_t iDirectionIncrement) {
+  try {
+    mIDirectionIncrement = iDirectionIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Gaussian::setN(std::uint16_t n) {
+  try {
+    mN = n;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Gaussian::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

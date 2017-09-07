@@ -8,10 +8,10 @@
 
 #include "grib2/definition/AzimuthRange.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ AzimuthRange::~AzimuthRange() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void AzimuthRange::read(MemoryReader &memoryReader) {
@@ -63,12 +61,10 @@ void AzimuthRange::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void AzimuthRange::getAttributeList(std::string prefix,
-                                    T::AttributeList &attributeList) const {
+void AzimuthRange::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sAzimuthRange.NumberOfDataBinsAlongRadials",
-            prefix.c_str());
+    sprintf(name, "%sAzimuthRange.NumberOfDataBinsAlongRadials", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfDataBinsAlongRadials));
     sprintf(name, "%sAzimuthRange.NumberOfRadials", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfRadials));
@@ -78,8 +74,7 @@ void AzimuthRange::getAttributeList(std::string prefix,
     attributeList.addAttribute(name, toString(mLongitudeOfCenterPoint));
     sprintf(name, "%sAzimuthRange.SpacingOfBinsAlongRadials", prefix.c_str());
     attributeList.addAttribute(name, toString(mSpacingOfBinsAlongRadials));
-    sprintf(name, "%sAzimuthRange.OffsetFromOriginToInnerBound",
-            prefix.c_str());
+    sprintf(name, "%sAzimuthRange.OffsetFromOriginToInnerBound", prefix.c_str());
     attributeList.addAttribute(name, toString(mOffsetFromOriginToInnerBound));
     sprintf(name, "%sAzimuthRange.", prefix.c_str());
     mScanningMode.getAttributeList(name, attributeList);
@@ -92,38 +87,25 @@ void AzimuthRange::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void AzimuthRange::print(std::ostream &stream, uint level,
-                         uint optionFlags) const {
+void AzimuthRange::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "AzimuthRange\n";
-    stream << space(level) << "- NumberOfDataBinsAlongRadials = "
-           << toString(mNumberOfDataBinsAlongRadials) << "\n";
-    stream << space(level)
-           << "- NumberOfRadials = " << toString(mNumberOfRadials) << "\n";
-    stream << space(level)
-           << "- LatitudeOfCenterPoint = " << toString(mLatitudeOfCenterPoint)
-           << "\n";
-    stream << space(level)
-           << "- LongitudeOfCenterPoint = " << toString(mLongitudeOfCenterPoint)
-           << "\n";
-    stream << space(level) << "- SpacingOfBinsAlongRadials = "
-           << toString(mSpacingOfBinsAlongRadials) << "\n";
-    stream << space(level) << "- OffsetFromOriginToInnerBound = "
-           << toString(mOffsetFromOriginToInnerBound) << "\n";
+    stream << space(level) << "- NumberOfDataBinsAlongRadials = " << toString(mNumberOfDataBinsAlongRadials) << "\n";
+    stream << space(level) << "- NumberOfRadials = " << toString(mNumberOfRadials) << "\n";
+    stream << space(level) << "- LatitudeOfCenterPoint = " << toString(mLatitudeOfCenterPoint) << "\n";
+    stream << space(level) << "- LongitudeOfCenterPoint = " << toString(mLongitudeOfCenterPoint) << "\n";
+    stream << space(level) << "- SpacingOfBinsAlongRadials = " << toString(mSpacingOfBinsAlongRadials) << "\n";
+    stream << space(level) << "- OffsetFromOriginToInnerBound = " << toString(mOffsetFromOriginToInnerBound) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- StartingAzimuth = " << toString(mStartingAzimuth) << "\n";
-    stream << space(level) << "- AzimuthalWidth = " << toString(mAzimuthalWidth)
-           << "\n";
+    stream << space(level) << "- StartingAzimuth = " << toString(mStartingAzimuth) << "\n";
+    stream << space(level) << "- AzimuthalWidth = " << toString(mAzimuthalWidth) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -157,8 +139,7 @@ T::Hash AzimuthRange::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mNumberOfDataBinsAlongRadials} attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfDataBinsAlongRadials} attribute. */
 
 const T::UInt32_opt &AzimuthRange::getNumberOfDataBinsAlongRadials() const {
   try {
@@ -168,8 +149,7 @@ const T::UInt32_opt &AzimuthRange::getNumberOfDataBinsAlongRadials() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfRadials}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfRadials} attribute. */
 
 const T::UInt32_opt &AzimuthRange::getNumberOfRadials() const {
   try {
@@ -179,8 +159,7 @@ const T::UInt32_opt &AzimuthRange::getNumberOfRadials() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfCenterPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfCenterPoint} attribute. */
 
 const T::Int32_opt &AzimuthRange::getLatitudeOfCenterPoint() const {
   try {
@@ -190,8 +169,7 @@ const T::Int32_opt &AzimuthRange::getLatitudeOfCenterPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfCenterPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfCenterPoint} attribute. */
 
 const T::UInt32_opt &AzimuthRange::getLongitudeOfCenterPoint() const {
   try {
@@ -201,8 +179,7 @@ const T::UInt32_opt &AzimuthRange::getLongitudeOfCenterPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mSpacingOfBinsAlongRadials} attribute. */
+/*! \brief The method returns the value of the {@link mSpacingOfBinsAlongRadials} attribute. */
 
 const T::UInt32_opt &AzimuthRange::getSpacingOfBinsAlongRadials() const {
   try {
@@ -212,8 +189,7 @@ const T::UInt32_opt &AzimuthRange::getSpacingOfBinsAlongRadials() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mOffsetFromOriginToInnerBound} attribute. */
+/*! \brief The method returns the value of the {@link mOffsetFromOriginToInnerBound} attribute. */
 
 const T::UInt32_opt &AzimuthRange::getOffsetFromOriginToInnerBound() const {
   try {
@@ -223,8 +199,7 @@ const T::UInt32_opt &AzimuthRange::getOffsetFromOriginToInnerBound() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *AzimuthRange::getScanningMode() const {
   try {
@@ -234,8 +209,7 @@ const ScanningModeSettings *AzimuthRange::getScanningMode() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mStartingAzimuth}
- * attribute. */
+/*! \brief The method returns the value of the {@link mStartingAzimuth} attribute. */
 
 const T::Int16_opt &AzimuthRange::getStartingAzimuth() const {
   try {
@@ -245,12 +219,83 @@ const T::Int16_opt &AzimuthRange::getStartingAzimuth() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mAzimuthalWidth}
- * attribute. */
+/*! \brief The method returns the value of the {@link mAzimuthalWidth} attribute. */
 
 const T::Int16_opt &AzimuthRange::getAzimuthalWidth() const {
   try {
     return mAzimuthalWidth;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AzimuthRange::setNumberOfDataBinsAlongRadials(T::UInt32_opt numberOfDataBinsAlongRadials) {
+  try {
+    mNumberOfDataBinsAlongRadials = numberOfDataBinsAlongRadials;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AzimuthRange::setNumberOfRadials(T::UInt32_opt numberOfRadials) {
+  try {
+    mNumberOfRadials = numberOfRadials;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AzimuthRange::setLatitudeOfCenterPoint(T::Int32_opt latitudeOfCenterPoint) {
+  try {
+    mLatitudeOfCenterPoint = latitudeOfCenterPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AzimuthRange::setLongitudeOfCenterPoint(T::UInt32_opt longitudeOfCenterPoint) {
+  try {
+    mLongitudeOfCenterPoint = longitudeOfCenterPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AzimuthRange::setSpacingOfBinsAlongRadials(T::UInt32_opt spacingOfBinsAlongRadials) {
+  try {
+    mSpacingOfBinsAlongRadials = spacingOfBinsAlongRadials;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AzimuthRange::setOffsetFromOriginToInnerBound(T::UInt32_opt offsetFromOriginToInnerBound) {
+  try {
+    mOffsetFromOriginToInnerBound = offsetFromOriginToInnerBound;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AzimuthRange::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AzimuthRange::setStartingAzimuth(T::Int16_opt startingAzimuth) {
+  try {
+    mStartingAzimuth = startingAzimuth;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AzimuthRange::setAzimuthalWidth(T::Int16_opt azimuthalWidth) {
+  try {
+    mAzimuthalWidth = azimuthalWidth;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

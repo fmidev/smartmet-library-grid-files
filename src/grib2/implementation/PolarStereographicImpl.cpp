@@ -19,6 +19,7 @@ PolarStereographicImpl::PolarStereographicImpl()
 {
   try
   {
+    mGridProjection = T::GridProjection::PolarStereographic;
     mSr_polarSterographic = NULL;
     mCt_latlon2pst = NULL;
     mCt_pst2latlon = NULL;

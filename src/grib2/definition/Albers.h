@@ -25,39 +25,51 @@ public:
   virtual ~Albers();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings earthShape);
   const T::UInt32_opt &getNx() const;
+  void setNx(T::UInt32_opt nx);
   const T::UInt32_opt &getNy() const;
+  void setNy(T::UInt32_opt ny);
   const T::Int32_opt &getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::UInt32_opt &getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint);
   const ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings resolution);
   const T::Int32_opt &getLaD() const;
+  void setLaD(T::Int32_opt laD);
   const T::UInt32_opt &getLoV() const;
+  void setLoV(T::UInt32_opt loV);
   const T::UInt32_opt &getXDirectionGridLength() const;
+  void setXDirectionGridLength(T::UInt32_opt xDirectionGridLength);
   const T::UInt32_opt &getYDirectionGridLength() const;
+  void setYDirectionGridLength(T::UInt32_opt yDirectionGridLength);
   std::uint8_t getProjectionCentreFlag() const;
+  void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   const T::Int32_opt &getLatin1() const;
+  void setLatin1(T::Int32_opt latin1);
   const T::UInt32_opt &getLatin2() const;
+  void setLatin2(T::UInt32_opt latin2);
   const T::Int32_opt &getLatitudeOfTheSouthernPoleOfProjection() const;
+  void setLatitudeOfTheSouthernPoleOfProjection(T::Int32_opt latitudeOfTheSouthernPoleOfProjection);
   const T::UInt32_opt &getLongitudeOfTheSouthernPoleOfProjection() const;
+  void setLongitudeOfTheSouthernPoleOfProjection(T::UInt32_opt longitudeOfTheSouthernPoleOfProjection);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // # TEMPLATE 3.31, Albers equal area
@@ -108,8 +120,7 @@ protected:
 
   // alias latitudeWhereDxAndDyAreSpecified=LaD ;
   //
-  // #  LoV - Longitude of meridian parallel to Y-axis along which latitude
-  // increases as the Y-coordinate increases
+  // #  LoV - Longitude of meridian parallel to Y-axis along which latitude increases as the Y-coordinate increases
   // unsigned[4] LoV  : dump;
 
   T::UInt32_opt mLoV;
@@ -132,8 +143,7 @@ protected:
   // alias Dy =  yDirectionGridLength;
   //
   // #  Projection centre flag
-  // flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' :
-  // dump;
+  // flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
 
   std::uint8_t mProjectionCentreFlag;
 
@@ -142,23 +152,19 @@ protected:
   ScanningModeSettings mScanningMode;
 
   //
-  // #  Latin 1 - first latitude from the pole at which the secant cone cuts the
-  // sphere
+  // #  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
   // signed[4] Latin1 :edition_specific;
 
   T::Int32_opt mLatin1;
 
-  // meta  geography.Latin1InDegrees
-  // scale(Latin1,one,grib2divider,truncateDegrees) : dump;
+  // meta  geography.Latin1InDegrees scale(Latin1,one,grib2divider,truncateDegrees) : dump;
   //
-  // #  Latin 2 - second latitude from the pole at which the secant cone cuts
-  // the sphere
+  // #  Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
   // unsigned[4] Latin2  : edition_specific;
 
   T::UInt32_opt mLatin2;
 
-  // meta  geography.Latin2InDegrees
-  // scale(Latin2,one,grib2divider,truncateDegrees) : dump;
+  // meta  geography.Latin2InDegrees scale(Latin2,one,grib2divider,truncateDegrees) : dump;
   //
   // #  Latitude of the southern pole of projection
   // signed[4] latitudeOfTheSouthernPoleOfProjection : edition_specific ;
@@ -166,9 +172,7 @@ protected:
   T::Int32_opt mLatitudeOfTheSouthernPoleOfProjection;
 
   // alias latitudeOfSouthernPole=latitudeOfTheSouthernPoleOfProjection;
-  // meta  geography.latitudeOfSouthernPoleInDegrees
-  // scale(latitudeOfTheSouthernPoleOfProjection
-  // ,one,grib2divider,truncateDegrees) : dump;
+  // meta  geography.latitudeOfSouthernPoleInDegrees   scale(latitudeOfTheSouthernPoleOfProjection          ,one,grib2divider,truncateDegrees) : dump;
   //
   //
   // #  Longitude of the southern pole of projection
@@ -177,9 +181,7 @@ protected:
   T::UInt32_opt mLongitudeOfTheSouthernPoleOfProjection;
 
   // alias longitudeOfSouthernPole=longitudeOfTheSouthernPoleOfProjection;
-  // meta  geography.longitudeOfSouthernPoleInDegrees
-  // scale(longitudeOfTheSouthernPoleOfProjection,oneConstant,grib2divider,truncateDegrees)
-  // : dump;
+  // meta  geography.longitudeOfSouthernPoleInDegrees   scale(longitudeOfTheSouthernPoleOfProjection,oneConstant,grib2divider,truncateDegrees) : dump;
   //
 };
 

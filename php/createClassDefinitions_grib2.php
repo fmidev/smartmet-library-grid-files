@@ -169,6 +169,13 @@ $templates = array (
     "7.50002" => "UNUSED"
 );
 
+$nohash = array (
+    "mEarthShape" => "",
+    "mBasicAngleOfTheInitialProductionDomain" => "",
+    "mSubdivisionsOfBasicAngle" => "",
+    "mResolution" => ""
+);
+
 /*
  * Processed lines:
  * - byte[16]
@@ -208,7 +215,7 @@ else
 function process_template($file, $name, $class, $outdir)
 {
   // We need to find class names for includes
-  global $templates, $parents;
+  global $templates, $parents, $nohash;
 
   // Variable replacements. Note that if the row is of the form
   //
@@ -257,6 +264,7 @@ function process_template($file, $name, $class, $outdir)
   $flagtables = array ();
 
   $getters = "";
+  $setters = "";
 
   // ********** generate the header **********
 
@@ -328,8 +336,12 @@ function process_template($file, $name, $class, $outdir)
         $Var = ucfirst ( $var );
 
         $body .= "const $incclass * get$Var() const;";
+
         $getters .= "\n/*! \brief The method returns the pointer to the {@link m${Var}} attribute. */\n\n";        
         $getters .= "const $incclass * ${class}::get$Var() const { try { return &m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}\n}\n\n";
+
+        $body .= "void set$Var($incclass $var);";
+        $setters .= "void ${class}::set$Var($incclass $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}\n}\n\n";
 
         $protected .= "$incclass m$Var;\n";
         $headers ["\"grib2/definition/${incclass}.h\""] = 1;
@@ -361,53 +373,71 @@ function process_template($file, $name, $class, $outdir)
             $protected .= "$cpptype m$Var;\n";
 
             $cpptypes [$Var] = $cpptype;
+    	    $prefix = "";    	    
+    	    if (isset($nohash["m$Var"])) { $prefix = "//"; }
 
             if (substr ( $vartype, 0, 4 ) == "byte")
             {
               $body .= "$realtype get$Var() const;\n";
               $getters .= "\n/*! \brief The method returns the value of the {@link m${Var}} attribute. */\n\n";        
               $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}\n}\n\n";
+
+              $body .= "void set$Var($cpptype $var);\n";
+              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}\n}\n\n";
+
               $headers ["<array>"] = 1;
               $members [$Var] = "normal";
               if (strpos($realtype, "boost::optional") > 0 or strpos($realtype, "_opt") > 0)
-                $hash .= "if (m${Var}) boost::hash_combine(seed,*m${Var});";
+                $hash .= "${prefix} if (m${Var}) boost::hash_combine(seed,*m${Var});\n";
               else
-                $hash .= "boost::hash_combine(seed,m${Var});";
+                $hash .= "${prefix} boost::hash_combine(seed,m${Var});\n";
             } 
             else if (substr ( $vartype, 0, 9 ) == "codetable")
             {
               $body .= "$realtype get$Var() const;\n";
               $getters .= "\n/*! \brief The method returns the value of the {@link m${Var}} attribute. */\n\n";        
               $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}\n}\n\n";
+
+              $body .= "void set$Var($cpptype $var);\n";
+              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}\n}\n\n";
+
               $members [$Var] = "codetable";
               $codetables [$var] = extract_codetable ( $row );
               if (strpos ( $realtype, "boost::optional" ) > 0  or  strpos($realtype, "_opt") > 0)
-                $hash .= "if (m${Var}) boost::hash_combine(seed,*m${Var});";
+                $hash .= "${prefix} if (m${Var}) boost::hash_combine(seed,*m${Var});\n";
               else
-                $hash .= "boost::hash_combine(seed,m${Var});";
+                $hash .= "${prefix} boost::hash_combine(seed,m${Var});\n";
             } 
             else if (substr ( $vartype, 0, 5 ) == "flags")
             {
               $body .= "$realtype get$Var() const;\n";
               $getters .= "\n/*! \brief The method returns the value of the {@link m${Var}} attribute. */\n\n";        
               $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}\n}\n\n";
+
+              $body .= "void set$Var($cpptype $var);\n";
+              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}\n}\n\n";
+
               $members [$Var] = "flagtable";
               $flagtables [$var] = extract_flagtable ( $row );
               if (strpos($realtype,"boost::optional") > 0  or strpos($realtype, "_opt") > 0)              
-                $hash .= "if (m${Var}) boost::hash_combine(seed,*m${Var});";
+                $hash .= "${prefix} if (m${Var}) boost::hash_combine(seed,*m${Var});\n";
               else
-                $hash .= "boost::hash_combine(seed,m${Var});";
+                $hash .= "${prefix} boost::hash_combine(seed,m${Var});\n";
             } 
             else
             {
               $body .= "$realtype get$Var() const;\n";
               $getters .= "\n/*! \brief The method returns the value of the {@link m${Var}} attribute. */\n\n";        
               $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}\n}\n\n";
+
+              $body .= "void set$Var($cpptype $var);\n";
+              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}\n}\n\n";
+
               $members [$Var] = "normal";
               if (strpos ( $realtype, "boost::optional" ) > 0  or strpos($realtype, "_opt") > 0)
-                $hash .= "if (m${Var}) boost::hash_combine(seed,*m${Var});";
+                $hash .= "${prefix} if (m${Var}) boost::hash_combine(seed,*m${Var});\n";
               else
-                $hash .= "boost::hash_combine(seed,m${Var});";
+                $hash .= "${prefix} boost::hash_combine(seed,m${Var});\n";
             }
           }
           break;
@@ -570,7 +600,7 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "*/\n\n";
 
   $cpp .= "void ${class}::print(std::ostream& stream,uint level,uint optionFlags) const { ";
-  $cpp .= "try {";
+  $cpp .= "try {"; 
   $cpp .= "stream << space(level) << \"${class}\\n\";";
 
   foreach ( $members as $member => $type )
@@ -583,11 +613,13 @@ function process_template($file, $name, $class, $outdir)
     if ($type == "class")
     {
       $cpp .= "m${member}.print(stream,level+1,optionFlags);";
-      $hash .= "boost::hash_combine(seed,m${member}.countHash());";
+      $prefix = "";
+      if (isset($nohash["m${member}"])) { $prefix = "//";}
+      $hash .= "${prefix} boost::hash_combine(seed,m${member}.countHash());\n";
     } 
     else
     {
-      $cpp .= "stream << space(level) << \"- $member = \" << toString(m${member}) << \"\\n\";";
+      $cpp .= "stream << space(level) << \"- $member = \" << toString(m${member}) << \"\\n\";\n";
     }
   }
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}}\n\n";
@@ -598,13 +630,19 @@ function process_template($file, $name, $class, $outdir)
 
   $cpp .= "\n/*! \brief The method counts the hash value of the current object. */\n\n";
 
-  $cpp .= "T::Hash ${class}::countHash() { try { std::size_t seed = 0;${hash} return seed;";
+  $cpp .= "T::Hash ${class}::countHash() { try { std::size_t seed = 0;\n${hash} return seed;\n";
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,\"Operation failed!\",NULL);}}\n\n";
 
   
   // ##### Adding the getters.
 
   $cpp .= $getters;
+
+
+  // ##### Adding the setters.
+
+  $cpp .= $setters;
+
 
   // $cpp .= $extracode;
 

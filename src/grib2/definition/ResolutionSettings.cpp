@@ -8,10 +8,10 @@
 
 #include "grib2/definition/ResolutionSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -35,11 +35,9 @@ ResolutionSettings::~ResolutionSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void ResolutionSettings::read(MemoryReader &memoryReader) {
@@ -56,33 +54,27 @@ void ResolutionSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void ResolutionSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void ResolutionSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sResolutionSettings.ResolutionAndComponentFlags",
-            prefix.c_str());
+    sprintf(name, "%sResolutionSettings.ResolutionAndComponentFlags", prefix.c_str());
     attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ResolutionSettings::print(std::ostream &stream, uint level,
-                               uint optionFlags) const {
+void ResolutionSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "ResolutionSettings\n";
-    stream << space(level) << "- ResolutionAndComponentFlags = "
-           << toString(mResolutionAndComponentFlags) << "\n";
+    stream << space(level) << "- ResolutionAndComponentFlags = " << toString(mResolutionAndComponentFlags) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -100,12 +92,19 @@ T::Hash ResolutionSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mResolutionAndComponentFlags} attribute. */
+/*! \brief The method returns the value of the {@link mResolutionAndComponentFlags} attribute. */
 
 std::uint8_t ResolutionSettings::getResolutionAndComponentFlags() const {
   try {
     return mResolutionAndComponentFlags;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ResolutionSettings::setResolutionAndComponentFlags(std::uint8_t resolutionAndComponentFlags) {
+  try {
+    mResolutionAndComponentFlags = resolutionAndComponentFlags;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

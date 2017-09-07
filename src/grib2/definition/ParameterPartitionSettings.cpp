@@ -8,10 +8,10 @@
 
 #include "grib2/definition/ParameterPartitionSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ ParameterPartitionSettings::~ParameterPartitionSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void ParameterPartitionSettings::read(MemoryReader &memoryReader) {
@@ -67,45 +65,32 @@ void ParameterPartitionSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void ParameterPartitionSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void ParameterPartitionSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sParameterPartitionSettings.ParameterCategory",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.ParameterCategory", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sParameterPartitionSettings.ParameterNumber",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.ParameterNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sParameterPartitionSettings.PartitionTable",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.PartitionTable", prefix.c_str());
     attributeList.addAttribute(name, toString(mPartitionTable));
-    sprintf(name, "%sParameterPartitionSettings.NumberOfPartitions",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.NumberOfPartitions", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfPartitions));
-    sprintf(name, "%sParameterPartitionSettings.PartitionItems",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.PartitionItems", prefix.c_str());
     attributeList.addAttribute(name, toString(mPartitionItems));
-    sprintf(name, "%sParameterPartitionSettings.PartitionNumber",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.PartitionNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mPartitionNumber));
-    sprintf(name, "%sParameterPartitionSettings.TypeOfGeneratingProcess",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.TypeOfGeneratingProcess", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sParameterPartitionSettings.BackgroundProcess",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.BackgroundProcess", prefix.c_str());
     attributeList.addAttribute(name, toString(mBackgroundProcess));
-    sprintf(name, "%sParameterPartitionSettings.GeneratingProcessIdentifier",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.GeneratingProcessIdentifier", prefix.c_str());
     attributeList.addAttribute(name, toString(mGeneratingProcessIdentifier));
-    sprintf(name, "%sParameterPartitionSettings.HoursAfterDataCutoff",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.HoursAfterDataCutoff", prefix.c_str());
     attributeList.addAttribute(name, toString(mHoursAfterDataCutoff));
-    sprintf(name, "%sParameterPartitionSettings.MinutesAfterDataCutoff",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.MinutesAfterDataCutoff", prefix.c_str());
     attributeList.addAttribute(name, toString(mMinutesAfterDataCutoff));
-    sprintf(name, "%sParameterPartitionSettings.IndicatorOfUnitOfTimeRange",
-            prefix.c_str());
+    sprintf(name, "%sParameterPartitionSettings.IndicatorOfUnitOfTimeRange", prefix.c_str());
     attributeList.addAttribute(name, toString(mIndicatorOfUnitOfTimeRange));
     sprintf(name, "%sParameterPartitionSettings.ForecastTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastTime));
@@ -114,48 +99,29 @@ void ParameterPartitionSettings::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ParameterPartitionSettings::print(std::ostream &stream, uint level,
-                                       uint optionFlags) const {
+void ParameterPartitionSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "ParameterPartitionSettings\n";
-    stream << space(level)
-           << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
-    stream << space(level)
-           << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
-    stream << space(level) << "- PartitionTable = " << toString(mPartitionTable)
-           << "\n";
-    stream << space(level)
-           << "- NumberOfPartitions = " << toString(mNumberOfPartitions)
-           << "\n";
-    stream << space(level) << "- PartitionItems = " << toString(mPartitionItems)
-           << "\n";
-    stream << space(level)
-           << "- PartitionNumber = " << toString(mPartitionNumber) << "\n";
-    stream << space(level) << "- TypeOfGeneratingProcess = "
-           << toString(mTypeOfGeneratingProcess) << "\n";
-    stream << space(level)
-           << "- BackgroundProcess = " << toString(mBackgroundProcess) << "\n";
-    stream << space(level) << "- GeneratingProcessIdentifier = "
-           << toString(mGeneratingProcessIdentifier) << "\n";
-    stream << space(level)
-           << "- HoursAfterDataCutoff = " << toString(mHoursAfterDataCutoff)
-           << "\n";
-    stream << space(level)
-           << "- MinutesAfterDataCutoff = " << toString(mMinutesAfterDataCutoff)
-           << "\n";
-    stream << space(level) << "- IndicatorOfUnitOfTimeRange = "
-           << toString(mIndicatorOfUnitOfTimeRange) << "\n";
-    stream << space(level) << "- ForecastTime = " << toString(mForecastTime)
-           << "\n";
+    stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
+    stream << space(level) << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
+    stream << space(level) << "- PartitionTable = " << toString(mPartitionTable) << "\n";
+    stream << space(level) << "- NumberOfPartitions = " << toString(mNumberOfPartitions) << "\n";
+    stream << space(level) << "- PartitionItems = " << toString(mPartitionItems) << "\n";
+    stream << space(level) << "- PartitionNumber = " << toString(mPartitionNumber) << "\n";
+    stream << space(level) << "- TypeOfGeneratingProcess = " << toString(mTypeOfGeneratingProcess) << "\n";
+    stream << space(level) << "- BackgroundProcess = " << toString(mBackgroundProcess) << "\n";
+    stream << space(level) << "- GeneratingProcessIdentifier = " << toString(mGeneratingProcessIdentifier) << "\n";
+    stream << space(level) << "- HoursAfterDataCutoff = " << toString(mHoursAfterDataCutoff) << "\n";
+    stream << space(level) << "- MinutesAfterDataCutoff = " << toString(mMinutesAfterDataCutoff) << "\n";
+    stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
+    stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -198,8 +164,7 @@ T::Hash ParameterPartitionSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterCategory}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterCategory} attribute. */
 
 const T::UInt8_opt &ParameterPartitionSettings::getParameterCategory() const {
   try {
@@ -209,8 +174,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getParameterCategory() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterNumber}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterNumber} attribute. */
 
 const T::UInt8_opt &ParameterPartitionSettings::getParameterNumber() const {
   try {
@@ -220,8 +184,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getParameterNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mPartitionTable}
- * attribute. */
+/*! \brief The method returns the value of the {@link mPartitionTable} attribute. */
 
 const T::UInt8_opt &ParameterPartitionSettings::getPartitionTable() const {
   try {
@@ -231,8 +194,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getPartitionTable() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfPartitions}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfPartitions} attribute. */
 
 const T::UInt8_opt &ParameterPartitionSettings::getNumberOfPartitions() const {
   try {
@@ -242,8 +204,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getNumberOfPartitions() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mPartitionItems}
- * attribute. */
+/*! \brief The method returns the value of the {@link mPartitionItems} attribute. */
 
 const T::UInt16_opt &ParameterPartitionSettings::getPartitionItems() const {
   try {
@@ -253,8 +214,7 @@ const T::UInt16_opt &ParameterPartitionSettings::getPartitionItems() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mPartitionNumber}
- * attribute. */
+/*! \brief The method returns the value of the {@link mPartitionNumber} attribute. */
 
 const T::UInt16_opt &ParameterPartitionSettings::getPartitionNumber() const {
   try {
@@ -264,11 +224,9 @@ const T::UInt16_opt &ParameterPartitionSettings::getPartitionNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfGeneratingProcess}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfGeneratingProcess} attribute. */
 
-const T::UInt8_opt &
-ParameterPartitionSettings::getTypeOfGeneratingProcess() const {
+const T::UInt8_opt &ParameterPartitionSettings::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
@@ -276,8 +234,7 @@ ParameterPartitionSettings::getTypeOfGeneratingProcess() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mBackgroundProcess}
- * attribute. */
+/*! \brief The method returns the value of the {@link mBackgroundProcess} attribute. */
 
 const T::UInt8_opt &ParameterPartitionSettings::getBackgroundProcess() const {
   try {
@@ -287,11 +244,9 @@ const T::UInt8_opt &ParameterPartitionSettings::getBackgroundProcess() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mGeneratingProcessIdentifier} attribute. */
+/*! \brief The method returns the value of the {@link mGeneratingProcessIdentifier} attribute. */
 
-const T::UInt8_opt &
-ParameterPartitionSettings::getGeneratingProcessIdentifier() const {
+const T::UInt8_opt &ParameterPartitionSettings::getGeneratingProcessIdentifier() const {
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
@@ -299,11 +254,9 @@ ParameterPartitionSettings::getGeneratingProcessIdentifier() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mHoursAfterDataCutoff}
- * attribute. */
+/*! \brief The method returns the value of the {@link mHoursAfterDataCutoff} attribute. */
 
-const T::UInt16_opt &
-ParameterPartitionSettings::getHoursAfterDataCutoff() const {
+const T::UInt16_opt &ParameterPartitionSettings::getHoursAfterDataCutoff() const {
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
@@ -311,11 +264,9 @@ ParameterPartitionSettings::getHoursAfterDataCutoff() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mMinutesAfterDataCutoff}
- * attribute. */
+/*! \brief The method returns the value of the {@link mMinutesAfterDataCutoff} attribute. */
 
-const T::UInt8_opt &
-ParameterPartitionSettings::getMinutesAfterDataCutoff() const {
+const T::UInt8_opt &ParameterPartitionSettings::getMinutesAfterDataCutoff() const {
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
@@ -323,11 +274,9 @@ ParameterPartitionSettings::getMinutesAfterDataCutoff() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mIndicatorOfUnitOfTimeRange} attribute. */
+/*! \brief The method returns the value of the {@link mIndicatorOfUnitOfTimeRange} attribute. */
 
-const T::UInt8_opt &
-ParameterPartitionSettings::getIndicatorOfUnitOfTimeRange() const {
+const T::UInt8_opt &ParameterPartitionSettings::getIndicatorOfUnitOfTimeRange() const {
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
@@ -335,12 +284,115 @@ ParameterPartitionSettings::getIndicatorOfUnitOfTimeRange() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mForecastTime} attribute.
- */
+/*! \brief The method returns the value of the {@link mForecastTime} attribute. */
 
 const T::UInt32_opt &ParameterPartitionSettings::getForecastTime() const {
   try {
     return mForecastTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setParameterCategory(T::UInt8_opt parameterCategory) {
+  try {
+    mParameterCategory = parameterCategory;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setParameterNumber(T::UInt8_opt parameterNumber) {
+  try {
+    mParameterNumber = parameterNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setPartitionTable(T::UInt8_opt partitionTable) {
+  try {
+    mPartitionTable = partitionTable;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setNumberOfPartitions(T::UInt8_opt numberOfPartitions) {
+  try {
+    mNumberOfPartitions = numberOfPartitions;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setPartitionItems(T::UInt16_opt partitionItems) {
+  try {
+    mPartitionItems = partitionItems;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setPartitionNumber(T::UInt16_opt partitionNumber) {
+  try {
+    mPartitionNumber = partitionNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGeneratingProcess) {
+  try {
+    mTypeOfGeneratingProcess = typeOfGeneratingProcess;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setBackgroundProcess(T::UInt8_opt backgroundProcess) {
+  try {
+    mBackgroundProcess = backgroundProcess;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setGeneratingProcessIdentifier(T::UInt8_opt generatingProcessIdentifier) {
+  try {
+    mGeneratingProcessIdentifier = generatingProcessIdentifier;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfterDataCutoff) {
+  try {
+    mHoursAfterDataCutoff = hoursAfterDataCutoff;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataCutoff) {
+  try {
+    mMinutesAfterDataCutoff = minutesAfterDataCutoff;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUnitOfTimeRange) {
+  try {
+    mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterPartitionSettings::setForecastTime(T::UInt32_opt forecastTime) {
+  try {
+    mForecastTime = forecastTime;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

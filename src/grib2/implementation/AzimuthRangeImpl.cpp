@@ -13,6 +13,7 @@ namespace GRIB2
 
 AzimuthRangeImpl::AzimuthRangeImpl()
 {
+  mGridProjection = T::GridProjection::AzimuthRange;
 }
 
 

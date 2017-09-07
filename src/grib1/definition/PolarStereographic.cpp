@@ -8,10 +8,10 @@
 
 #include "grib1/definition/PolarStereographic.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -42,11 +42,9 @@ PolarStereographic::~PolarStereographic() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void PolarStereographic::read(MemoryReader &memoryReader) {
@@ -72,19 +70,16 @@ void PolarStereographic::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void PolarStereographic::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void PolarStereographic::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPolarStereographic.Nx", prefix.c_str());
     attributeList.addAttribute(name, toString(mNx));
     sprintf(name, "%sPolarStereographic.Ny", prefix.c_str());
     attributeList.addAttribute(name, toString(mNy));
-    sprintf(name, "%sPolarStereographic.LatitudeOfFirstGridPoint",
-            prefix.c_str());
+    sprintf(name, "%sPolarStereographic.LatitudeOfFirstGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
-    sprintf(name, "%sPolarStereographic.LongitudeOfFirstGridPoint",
-            prefix.c_str());
+    sprintf(name, "%sPolarStereographic.LongitudeOfFirstGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
     sprintf(name, "%sPolarStereographic.", prefix.c_str());
     mResolutionFlags.getAttributeList(name, attributeList);
@@ -103,36 +98,25 @@ void PolarStereographic::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void PolarStereographic::print(std::ostream &stream, uint level,
-                               uint optionFlags) const {
+void PolarStereographic::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "PolarStereographic\n";
     stream << space(level) << "- Nx = " << toString(mNx) << "\n";
     stream << space(level) << "- Ny = " << toString(mNy) << "\n";
-    stream << space(level) << "- LatitudeOfFirstGridPoint = "
-           << toString(mLatitudeOfFirstGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfFirstGridPoint = "
-           << toString(mLongitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LatitudeOfFirstGridPoint = " << toString(mLatitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfFirstGridPoint = " << toString(mLongitudeOfFirstGridPoint) << "\n";
     mResolutionFlags.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- OrientationOfTheGrid = " << toString(mOrientationOfTheGrid)
-           << "\n";
-    stream << space(level) << "- DxInMetres = " << toString(mDxInMetres)
-           << "\n";
-    stream << space(level) << "- DyInMetres = " << toString(mDyInMetres)
-           << "\n";
-    stream << space(level)
-           << "- ProjectionCentreFlag = " << toString(mProjectionCentreFlag)
-           << "\n";
+    stream << space(level) << "- OrientationOfTheGrid = " << toString(mOrientationOfTheGrid) << "\n";
+    stream << space(level) << "- DxInMetres = " << toString(mDxInMetres) << "\n";
+    stream << space(level) << "- DyInMetres = " << toString(mDyInMetres) << "\n";
+    stream << space(level) << "- ProjectionCentreFlag = " << toString(mProjectionCentreFlag) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
@@ -152,7 +136,7 @@ T::Hash PolarStereographic::countHash() {
     boost::hash_combine(seed, mDxInMetres);
     boost::hash_combine(seed, mDyInMetres);
     boost::hash_combine(seed, mProjectionCentreFlag);
-    boost::hash_combine(seed, mResolutionFlags.countHash());
+    // boost::hash_combine(seed,mResolutionFlags.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
@@ -180,8 +164,7 @@ std::uint16_t PolarStereographic::getNy() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
 std::int24_t PolarStereographic::getLatitudeOfFirstGridPoint() const {
   try {
@@ -191,8 +174,7 @@ std::int24_t PolarStereographic::getLatitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfFirstGridPoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
 std::int24_t PolarStereographic::getLongitudeOfFirstGridPoint() const {
   try {
@@ -202,8 +184,7 @@ std::int24_t PolarStereographic::getLongitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mResolutionFlags}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mResolutionFlags} attribute. */
 
 const ResolutionFlagsSettings *PolarStereographic::getResolutionFlags() const {
   try {
@@ -213,8 +194,7 @@ const ResolutionFlagsSettings *PolarStereographic::getResolutionFlags() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mOrientationOfTheGrid}
- * attribute. */
+/*! \brief The method returns the value of the {@link mOrientationOfTheGrid} attribute. */
 
 std::int24_t PolarStereographic::getOrientationOfTheGrid() const {
   try {
@@ -244,8 +224,7 @@ std::uint24_t PolarStereographic::getDyInMetres() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mProjectionCentreFlag}
- * attribute. */
+/*! \brief The method returns the value of the {@link mProjectionCentreFlag} attribute. */
 
 std::uint8_t PolarStereographic::getProjectionCentreFlag() const {
   try {
@@ -255,12 +234,91 @@ std::uint8_t PolarStereographic::getProjectionCentreFlag() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *PolarStereographic::getScanningMode() const {
   try {
     return &mScanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PolarStereographic::setNx(std::uint16_t nx) {
+  try {
+    mNx = nx;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PolarStereographic::setNy(std::uint16_t ny) {
+  try {
+    mNy = ny;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PolarStereographic::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint) {
+  try {
+    mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PolarStereographic::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint) {
+  try {
+    mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PolarStereographic::setResolutionFlags(ResolutionFlagsSettings resolutionFlags) {
+  try {
+    mResolutionFlags = resolutionFlags;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PolarStereographic::setOrientationOfTheGrid(std::int24_t orientationOfTheGrid) {
+  try {
+    mOrientationOfTheGrid = orientationOfTheGrid;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PolarStereographic::setDxInMetres(std::uint24_t dxInMetres) {
+  try {
+    mDxInMetres = dxInMetres;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PolarStereographic::setDyInMetres(std::uint24_t dyInMetres) {
+  try {
+    mDyInMetres = dyInMetres;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PolarStereographic::setProjectionCentreFlag(std::uint8_t projectionCentreFlag) {
+  try {
+    mProjectionCentreFlag = projectionCentreFlag;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void PolarStereographic::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

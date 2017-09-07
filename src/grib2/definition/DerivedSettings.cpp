@@ -8,10 +8,10 @@
 
 #include "grib2/definition/DerivedSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ DerivedSettings::~DerivedSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void DerivedSettings::read(MemoryReader &memoryReader) {
@@ -56,37 +54,30 @@ void DerivedSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void DerivedSettings::getAttributeList(std::string prefix,
-                                       T::AttributeList &attributeList) const {
+void DerivedSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sDerivedSettings.DerivedForecast", prefix.c_str());
     attributeList.addAttribute(name, toString(mDerivedForecast));
-    sprintf(name, "%sDerivedSettings.NumberOfForecastsInEnsemble",
-            prefix.c_str());
+    sprintf(name, "%sDerivedSettings.NumberOfForecastsInEnsemble", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void DerivedSettings::print(std::ostream &stream, uint level,
-                            uint optionFlags) const {
+void DerivedSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "DerivedSettings\n";
-    stream << space(level)
-           << "- DerivedForecast = " << toString(mDerivedForecast) << "\n";
-    stream << space(level) << "- NumberOfForecastsInEnsemble = "
-           << toString(mNumberOfForecastsInEnsemble) << "\n";
+    stream << space(level) << "- DerivedForecast = " << toString(mDerivedForecast) << "\n";
+    stream << space(level) << "- NumberOfForecastsInEnsemble = " << toString(mNumberOfForecastsInEnsemble) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -107,8 +98,7 @@ T::Hash DerivedSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mDerivedForecast}
- * attribute. */
+/*! \brief The method returns the value of the {@link mDerivedForecast} attribute. */
 
 const T::UInt8_opt &DerivedSettings::getDerivedForecast() const {
   try {
@@ -118,12 +108,27 @@ const T::UInt8_opt &DerivedSettings::getDerivedForecast() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mNumberOfForecastsInEnsemble} attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfForecastsInEnsemble} attribute. */
 
 const T::UInt8_opt &DerivedSettings::getNumberOfForecastsInEnsemble() const {
   try {
     return mNumberOfForecastsInEnsemble;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DerivedSettings::setDerivedForecast(T::UInt8_opt derivedForecast) {
+  try {
+    mDerivedForecast = derivedForecast;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DerivedSettings::setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForecastsInEnsemble) {
+  try {
+    mNumberOfForecastsInEnsemble = numberOfForecastsInEnsemble;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

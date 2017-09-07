@@ -8,10 +8,10 @@
 
 #include "grib2/definition/DeprecatedSatelliteProduct.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ DeprecatedSatelliteProduct::~DeprecatedSatelliteProduct() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void DeprecatedSatelliteProduct::read(MemoryReader &memoryReader) {
@@ -64,79 +62,54 @@ void DeprecatedSatelliteProduct::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void DeprecatedSatelliteProduct::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void DeprecatedSatelliteProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sDeprecatedSatelliteProduct.ParameterCategory",
-            prefix.c_str());
+    sprintf(name, "%sDeprecatedSatelliteProduct.ParameterCategory", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sDeprecatedSatelliteProduct.ParameterNumber",
-            prefix.c_str());
+    sprintf(name, "%sDeprecatedSatelliteProduct.ParameterNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sDeprecatedSatelliteProduct.TypeOfGeneratingProcess",
-            prefix.c_str());
+    sprintf(name, "%sDeprecatedSatelliteProduct.TypeOfGeneratingProcess", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(
-        name,
-        "%sDeprecatedSatelliteProduct.ObservationGeneratingProcessIdentifier",
-        prefix.c_str());
-    attributeList.addAttribute(
-        name, toString(mObservationGeneratingProcessIdentifier));
+    sprintf(name, "%sDeprecatedSatelliteProduct.ObservationGeneratingProcessIdentifier", prefix.c_str());
+    attributeList.addAttribute(name, toString(mObservationGeneratingProcessIdentifier));
     sprintf(name, "%sDeprecatedSatelliteProduct.NB", prefix.c_str());
     attributeList.addAttribute(name, toString(mNB));
-    sprintf(name, "%sDeprecatedSatelliteProduct.SatelliteSeries",
-            prefix.c_str());
+    sprintf(name, "%sDeprecatedSatelliteProduct.SatelliteSeries", prefix.c_str());
     attributeList.addAttribute(name, toString(mSatelliteSeries));
-    sprintf(name, "%sDeprecatedSatelliteProduct.SatelliteNumber",
-            prefix.c_str());
+    sprintf(name, "%sDeprecatedSatelliteProduct.SatelliteNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mSatelliteNumber));
-    sprintf(name, "%sDeprecatedSatelliteProduct.InstrumentType",
-            prefix.c_str());
+    sprintf(name, "%sDeprecatedSatelliteProduct.InstrumentType", prefix.c_str());
     attributeList.addAttribute(name, toString(mInstrumentType));
-    sprintf(name, "%sDeprecatedSatelliteProduct.ScaleFactorOfCentralWaveNumber",
-            prefix.c_str());
+    sprintf(name, "%sDeprecatedSatelliteProduct.ScaleFactorOfCentralWaveNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfCentralWaveNumber));
-    sprintf(name, "%sDeprecatedSatelliteProduct.ScaledValueOfCentralWaveNumber",
-            prefix.c_str());
+    sprintf(name, "%sDeprecatedSatelliteProduct.ScaledValueOfCentralWaveNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfCentralWaveNumber));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void DeprecatedSatelliteProduct::print(std::ostream &stream, uint level,
-                                       uint optionFlags) const {
+void DeprecatedSatelliteProduct::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "DeprecatedSatelliteProduct\n";
-    stream << space(level)
-           << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
-    stream << space(level)
-           << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
-    stream << space(level) << "- TypeOfGeneratingProcess = "
-           << toString(mTypeOfGeneratingProcess) << "\n";
-    stream << space(level) << "- ObservationGeneratingProcessIdentifier = "
-           << toString(mObservationGeneratingProcessIdentifier) << "\n";
+    stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
+    stream << space(level) << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
+    stream << space(level) << "- TypeOfGeneratingProcess = " << toString(mTypeOfGeneratingProcess) << "\n";
+    stream << space(level) << "- ObservationGeneratingProcessIdentifier = " << toString(mObservationGeneratingProcessIdentifier) << "\n";
     stream << space(level) << "- NB = " << toString(mNB) << "\n";
-    stream << space(level)
-           << "- SatelliteSeries = " << toString(mSatelliteSeries) << "\n";
-    stream << space(level)
-           << "- SatelliteNumber = " << toString(mSatelliteNumber) << "\n";
-    stream << space(level) << "- InstrumentType = " << toString(mInstrumentType)
-           << "\n";
-    stream << space(level) << "- ScaleFactorOfCentralWaveNumber = "
-           << toString(mScaleFactorOfCentralWaveNumber) << "\n";
-    stream << space(level) << "- ScaledValueOfCentralWaveNumber = "
-           << toString(mScaledValueOfCentralWaveNumber) << "\n";
+    stream << space(level) << "- SatelliteSeries = " << toString(mSatelliteSeries) << "\n";
+    stream << space(level) << "- SatelliteNumber = " << toString(mSatelliteNumber) << "\n";
+    stream << space(level) << "- InstrumentType = " << toString(mInstrumentType) << "\n";
+    stream << space(level) << "- ScaleFactorOfCentralWaveNumber = " << toString(mScaleFactorOfCentralWaveNumber) << "\n";
+    stream << space(level) << "- ScaledValueOfCentralWaveNumber = " << toString(mScaledValueOfCentralWaveNumber) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -173,8 +146,7 @@ T::Hash DeprecatedSatelliteProduct::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterCategory}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterCategory} attribute. */
 
 const T::UInt8_opt &DeprecatedSatelliteProduct::getParameterCategory() const {
   try {
@@ -184,8 +156,7 @@ const T::UInt8_opt &DeprecatedSatelliteProduct::getParameterCategory() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterNumber}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterNumber} attribute. */
 
 const T::UInt8_opt &DeprecatedSatelliteProduct::getParameterNumber() const {
   try {
@@ -195,11 +166,9 @@ const T::UInt8_opt &DeprecatedSatelliteProduct::getParameterNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfGeneratingProcess}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfGeneratingProcess} attribute. */
 
-const T::UInt8_opt &
-DeprecatedSatelliteProduct::getTypeOfGeneratingProcess() const {
+const T::UInt8_opt &DeprecatedSatelliteProduct::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
@@ -207,11 +176,9 @@ DeprecatedSatelliteProduct::getTypeOfGeneratingProcess() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mObservationGeneratingProcessIdentifier} attribute. */
+/*! \brief The method returns the value of the {@link mObservationGeneratingProcessIdentifier} attribute. */
 
-const T::UInt8_opt &
-DeprecatedSatelliteProduct::getObservationGeneratingProcessIdentifier() const {
+const T::UInt8_opt &DeprecatedSatelliteProduct::getObservationGeneratingProcessIdentifier() const {
   try {
     return mObservationGeneratingProcessIdentifier;
   } catch (...) {
@@ -229,8 +196,7 @@ const T::UInt8_opt &DeprecatedSatelliteProduct::getNB() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSatelliteSeries}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSatelliteSeries} attribute. */
 
 const T::UInt16_opt &DeprecatedSatelliteProduct::getSatelliteSeries() const {
   try {
@@ -240,8 +206,7 @@ const T::UInt16_opt &DeprecatedSatelliteProduct::getSatelliteSeries() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSatelliteNumber}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSatelliteNumber} attribute. */
 
 const T::UInt16_opt &DeprecatedSatelliteProduct::getSatelliteNumber() const {
   try {
@@ -251,8 +216,7 @@ const T::UInt16_opt &DeprecatedSatelliteProduct::getSatelliteNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mInstrumentType}
- * attribute. */
+/*! \brief The method returns the value of the {@link mInstrumentType} attribute. */
 
 const T::UInt8_opt &DeprecatedSatelliteProduct::getInstrumentType() const {
   try {
@@ -262,11 +226,9 @@ const T::UInt8_opt &DeprecatedSatelliteProduct::getInstrumentType() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaleFactorOfCentralWaveNumber} attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfCentralWaveNumber} attribute. */
 
-const T::UInt8_opt &
-DeprecatedSatelliteProduct::getScaleFactorOfCentralWaveNumber() const {
+const T::UInt8_opt &DeprecatedSatelliteProduct::getScaleFactorOfCentralWaveNumber() const {
   try {
     return mScaleFactorOfCentralWaveNumber;
   } catch (...) {
@@ -274,13 +236,91 @@ DeprecatedSatelliteProduct::getScaleFactorOfCentralWaveNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mScaledValueOfCentralWaveNumber} attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfCentralWaveNumber} attribute. */
 
-const T::UInt32_opt &
-DeprecatedSatelliteProduct::getScaledValueOfCentralWaveNumber() const {
+const T::UInt32_opt &DeprecatedSatelliteProduct::getScaledValueOfCentralWaveNumber() const {
   try {
     return mScaledValueOfCentralWaveNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DeprecatedSatelliteProduct::setParameterCategory(T::UInt8_opt parameterCategory) {
+  try {
+    mParameterCategory = parameterCategory;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DeprecatedSatelliteProduct::setParameterNumber(T::UInt8_opt parameterNumber) {
+  try {
+    mParameterNumber = parameterNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DeprecatedSatelliteProduct::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGeneratingProcess) {
+  try {
+    mTypeOfGeneratingProcess = typeOfGeneratingProcess;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DeprecatedSatelliteProduct::setObservationGeneratingProcessIdentifier(T::UInt8_opt observationGeneratingProcessIdentifier) {
+  try {
+    mObservationGeneratingProcessIdentifier = observationGeneratingProcessIdentifier;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DeprecatedSatelliteProduct::setNB(T::UInt8_opt nB) {
+  try {
+    mNB = nB;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DeprecatedSatelliteProduct::setSatelliteSeries(T::UInt16_opt satelliteSeries) {
+  try {
+    mSatelliteSeries = satelliteSeries;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DeprecatedSatelliteProduct::setSatelliteNumber(T::UInt16_opt satelliteNumber) {
+  try {
+    mSatelliteNumber = satelliteNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DeprecatedSatelliteProduct::setInstrumentType(T::UInt8_opt instrumentType) {
+  try {
+    mInstrumentType = instrumentType;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DeprecatedSatelliteProduct::setScaleFactorOfCentralWaveNumber(T::UInt8_opt scaleFactorOfCentralWaveNumber) {
+  try {
+    mScaleFactorOfCentralWaveNumber = scaleFactorOfCentralWaveNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void DeprecatedSatelliteProduct::setScaledValueOfCentralWaveNumber(T::UInt32_opt scaledValueOfCentralWaveNumber) {
+  try {
+    mScaledValueOfCentralWaveNumber = scaledValueOfCentralWaveNumber;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

@@ -8,10 +8,10 @@
 
 #include "grib2/definition/SpaceView.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ SpaceView::~SpaceView() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void SpaceView::read(MemoryReader &memoryReader) {
@@ -69,8 +67,7 @@ void SpaceView::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void SpaceView::getAttributeList(std::string prefix,
-                                 T::AttributeList &attributeList) const {
+void SpaceView::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sSpaceView.", prefix.c_str());
@@ -108,35 +105,28 @@ void SpaceView::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SpaceView::print(std::ostream &stream, uint level,
-                      uint optionFlags) const {
+void SpaceView::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "SpaceView\n";
     mEarthShape.print(stream, level + 1, optionFlags);
     stream << space(level) << "- Nx = " << toString(mNx) << "\n";
     stream << space(level) << "- Ny = " << toString(mNy) << "\n";
-    stream << space(level) << "- LatitudeOfSubSatellitePoint = "
-           << toString(mLatitudeOfSubSatellitePoint) << "\n";
-    stream << space(level) << "- LongitudeOfSubSatellitePoint = "
-           << toString(mLongitudeOfSubSatellitePoint) << "\n";
+    stream << space(level) << "- LatitudeOfSubSatellitePoint = " << toString(mLatitudeOfSubSatellitePoint) << "\n";
+    stream << space(level) << "- LongitudeOfSubSatellitePoint = " << toString(mLongitudeOfSubSatellitePoint) << "\n";
     mResolution.print(stream, level + 1, optionFlags);
     stream << space(level) << "- Dx = " << toString(mDx) << "\n";
     stream << space(level) << "- Dy = " << toString(mDy) << "\n";
     stream << space(level) << "- Xp = " << toString(mXp) << "\n";
     stream << space(level) << "- Yp = " << toString(mYp) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- OrientationOfTheGrid = " << toString(mOrientationOfTheGrid)
-           << "\n";
+    stream << space(level) << "- OrientationOfTheGrid = " << toString(mOrientationOfTheGrid) << "\n";
     stream << space(level) << "- Nr = " << toString(mNr) << "\n";
     stream << space(level) << "- Xo = " << toString(mXo) << "\n";
     stream << space(level) << "- Yo = " << toString(mYo) << "\n";
@@ -174,8 +164,8 @@ T::Hash SpaceView::countHash() {
       boost::hash_combine(seed, *mXo);
     if (mYo)
       boost::hash_combine(seed, *mYo);
-    boost::hash_combine(seed, mEarthShape.countHash());
-    boost::hash_combine(seed, mResolution.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
+    // boost::hash_combine(seed,mResolution.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
@@ -183,8 +173,7 @@ T::Hash SpaceView::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *SpaceView::getEarthShape() const {
   try {
@@ -214,8 +203,7 @@ const T::UInt32_opt &SpaceView::getNy() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLatitudeOfSubSatellitePoint} attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfSubSatellitePoint} attribute. */
 
 const T::Int32_opt &SpaceView::getLatitudeOfSubSatellitePoint() const {
   try {
@@ -225,8 +213,7 @@ const T::Int32_opt &SpaceView::getLatitudeOfSubSatellitePoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfSubSatellitePoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfSubSatellitePoint} attribute. */
 
 const T::Int32_opt &SpaceView::getLongitudeOfSubSatellitePoint() const {
   try {
@@ -236,8 +223,7 @@ const T::Int32_opt &SpaceView::getLongitudeOfSubSatellitePoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mResolution} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mResolution} attribute. */
 
 const ResolutionSettings *SpaceView::getResolution() const {
   try {
@@ -287,8 +273,7 @@ const T::UInt32_opt &SpaceView::getYp() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *SpaceView::getScanningMode() const {
   try {
@@ -298,8 +283,7 @@ const ScanningModeSettings *SpaceView::getScanningMode() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mOrientationOfTheGrid}
- * attribute. */
+/*! \brief The method returns the value of the {@link mOrientationOfTheGrid} attribute. */
 
 const T::Int32_opt &SpaceView::getOrientationOfTheGrid() const {
   try {
@@ -334,6 +318,126 @@ const T::UInt32_opt &SpaceView::getXo() const {
 const T::UInt32_opt &SpaceView::getYo() const {
   try {
     return mYo;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setNx(T::UInt32_opt nx) {
+  try {
+    mNx = nx;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setNy(T::UInt32_opt ny) {
+  try {
+    mNy = ny;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setLatitudeOfSubSatellitePoint(T::Int32_opt latitudeOfSubSatellitePoint) {
+  try {
+    mLatitudeOfSubSatellitePoint = latitudeOfSubSatellitePoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setLongitudeOfSubSatellitePoint(T::Int32_opt longitudeOfSubSatellitePoint) {
+  try {
+    mLongitudeOfSubSatellitePoint = longitudeOfSubSatellitePoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setResolution(ResolutionSettings resolution) {
+  try {
+    mResolution = resolution;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setDx(T::UInt32_opt dx) {
+  try {
+    mDx = dx;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setDy(T::UInt32_opt dy) {
+  try {
+    mDy = dy;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setXp(T::UInt32_opt xp) {
+  try {
+    mXp = xp;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setYp(T::UInt32_opt yp) {
+  try {
+    mYp = yp;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setOrientationOfTheGrid(T::Int32_opt orientationOfTheGrid) {
+  try {
+    mOrientationOfTheGrid = orientationOfTheGrid;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setNr(T::UInt32_opt nr) {
+  try {
+    mNr = nr;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setXo(T::UInt32_opt xo) {
+  try {
+    mXo = xo;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setYo(T::UInt32_opt yo) {
+  try {
+    mYo = yo;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

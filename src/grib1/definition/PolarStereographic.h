@@ -16,8 +16,7 @@
 
 namespace SmartMet {
 namespace GRIB1 {
-/*! \brief The class is automatically created from the template
- * (grid_definition_5).*/
+/*! \brief The class is automatically created from the template (grid_definition_5).*/
 
 class PolarStereographic : public GridDefinition {
 public:
@@ -25,36 +24,42 @@ public:
   virtual ~PolarStereographic();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   std::uint16_t getNx() const;
+  void setNx(std::uint16_t nx);
   std::uint16_t getNy() const;
+  void setNy(std::uint16_t ny);
   std::int24_t getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint);
   std::int24_t getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint);
   const ResolutionFlagsSettings *getResolutionFlags() const;
+  void setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
   std::int24_t getOrientationOfTheGrid() const;
+  void setOrientationOfTheGrid(std::int24_t orientationOfTheGrid);
   std::uint24_t getDxInMetres() const;
+  void setDxInMetres(std::uint24_t dxInMetres);
   std::uint24_t getDyInMetres() const;
+  void setDyInMetres(std::uint24_t dyInMetres);
   std::uint8_t getProjectionCentreFlag() const;
+  void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # GRID DEFINITION polar stereographic
+  // # GRID DEFINITION Polar stereographic
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 20;
   //
@@ -78,18 +83,14 @@ protected:
 
   std::int24_t mLatitudeOfFirstGridPoint;
 
-  // meta geography.latitudeOfFirstGridPointInDegrees
-  // scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) :
-  // dump;
+  // meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias La1 = latitudeOfFirstGridPoint;
   //
   // signed[3] longitudeOfFirstGridPoint : edition_specific;
 
   std::int24_t mLongitudeOfFirstGridPoint;
 
-  // meta geography.longitudeOfFirstGridPointInDegrees
-  // scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) :
-  // dump;
+  // meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lo1 = longitudeOfFirstGridPoint;
   //
   // include "resolution_flags.def";
@@ -97,15 +98,12 @@ protected:
   ResolutionFlagsSettings mResolutionFlags;
 
   //
-  // #  LoV - orientation of the grid; i.e.  the longitude value of the meridian
-  // which is parallel to the Y-axis
+  // #  LoV - orientation of the grid; i.e.  the longitude value of the meridian which is parallel to the Y-axis
   // signed[3] orientationOfTheGrid  ;
 
   std::int24_t mOrientationOfTheGrid;
 
-  // meta geography.orientationOfTheGridInDegrees
-  // scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) :
-  // dump;
+  // meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias LoV = orientationOfTheGrid ;
   //
   // #  Dx - X-direction grid length
@@ -138,12 +136,10 @@ protected:
   std::uint8_t mProjectionCentreFlag;
 
   // alias projectionCenterFlag=projectionCentreFlag;
-  // # Note our flagbit numbers go from 7 to 0, while WMO convention is from 1
-  // to 8
+  // # Note our flagbit numbers go from 7 to 0, while WMO convention is from 1 to 8
   // # If bit 1 is 0, then the North Pole is on the projection plane
   // # If bit 1 is 1, then the South Pole is on the projection plane
-  // flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump; # WMO
-  // bit 1
+  // flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump; # WMO bit 1
   //
   //
   // # for change_scanning_direction
@@ -159,9 +155,7 @@ protected:
   //
   // meta numberOfDataPoints number_of_points(Nx,Ny,PLPresent,pl) : dump;
   // alias numberOfPoints=numberOfDataPoints;
-  // meta numberOfValues
-  // number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues)
-  // : dump;
+  // meta numberOfValues number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues) : dump;
   // #alias ls.valuesCount=numberOfValues;
   //
   // iterator polar_stereographic(numberOfPoints,missingValue,values,

@@ -23,37 +23,41 @@ public:
   virtual ~AzimuthRange();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::UInt32_opt &getNumberOfDataBinsAlongRadials() const;
+  void setNumberOfDataBinsAlongRadials(T::UInt32_opt numberOfDataBinsAlongRadials);
   const T::UInt32_opt &getNumberOfRadials() const;
+  void setNumberOfRadials(T::UInt32_opt numberOfRadials);
   const T::Int32_opt &getLatitudeOfCenterPoint() const;
+  void setLatitudeOfCenterPoint(T::Int32_opt latitudeOfCenterPoint);
   const T::UInt32_opt &getLongitudeOfCenterPoint() const;
+  void setLongitudeOfCenterPoint(T::UInt32_opt longitudeOfCenterPoint);
   const T::UInt32_opt &getSpacingOfBinsAlongRadials() const;
+  void setSpacingOfBinsAlongRadials(T::UInt32_opt spacingOfBinsAlongRadials);
   const T::UInt32_opt &getOffsetFromOriginToInnerBound() const;
+  void setOffsetFromOriginToInnerBound(T::UInt32_opt offsetFromOriginToInnerBound);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   const T::Int16_opt &getStartingAzimuth() const;
+  void setStartingAzimuth(T::Int16_opt startingAzimuth);
   const T::Int16_opt &getAzimuthalWidth() const;
+  void setAzimuthalWidth(T::Int16_opt azimuthalWidth);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // # TEMPLATE 3.120, Azimuth-range projection
-  // #  Nb - number of data bins along radials (A data bin is a data point
-  // representing the volume centred on it)
+  // #  Nb - number of data bins along radials (A data bin is a data point representing the volume centred on it)
   // unsigned[4] numberOfDataBinsAlongRadials ;
 
   T::UInt32_opt mNumberOfDataBinsAlongRadials;
@@ -74,8 +78,7 @@ protected:
 
   // alias La1 =  latitudeOfCenterPoint;
   // meta  geography.latitudeOfCenterPointInDegrees
-  //         scale(latitudeOfCenterPoint,one,grib2divider,truncateDegrees) :
-  //         dump;
+  //         scale(latitudeOfCenterPoint,one,grib2divider,truncateDegrees) : dump;
   // alias La1InDegrees=latitudeOfCenterPointInDegrees;
   //
   // #  Lo1 - longitude of centre point
@@ -85,8 +88,7 @@ protected:
 
   // alias Lo1 =  longitudeOfCenterPoint;
   // meta  geography.longitudeOfCenterPointInDegrees
-  //         scale(longitudeOfCenterPoint,one,grib2divider,truncateDegrees) :
-  //         dump;
+  //         scale(longitudeOfCenterPoint,one,grib2divider,truncateDegrees) : dump;
   // alias Lo1InDegrees=longitudeOfCenterPointInDegrees;
   //
   // #  Dx - spacing of bins along radials
@@ -116,8 +118,7 @@ protected:
   T::Int16_opt mStartingAzimuth;
 
   //   alias Azi = startingAzimuth;
-  //   # Adelta - azimuthal width, degrees x 100 (+ clockwise, -
-  //   counterclockwise)
+  //   # Adelta - azimuthal width, degrees x 100 (+ clockwise, - counterclockwise)
   //   signed[2] azimuthalWidth;
 
   T::Int16_opt mAzimuthalWidth;

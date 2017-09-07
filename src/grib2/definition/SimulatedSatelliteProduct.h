@@ -24,42 +24,43 @@ public:
   virtual ~SimulatedSatelliteProduct();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const ParameterSettings *getParameter() const;
+  void setParameter(ParameterSettings parameter);
   const PointInTimeSettings *getPointInTime() const;
+  void setPointInTime(PointInTimeSettings pointInTime);
   const T::UInt8_opt &getNB() const;
+  void setNB(T::UInt8_opt nB);
   const T::UInt16_opt &getSatelliteSeries() const;
+  void setSatelliteSeries(T::UInt16_opt satelliteSeries);
   const T::UInt16_opt &getSatelliteNumber() const;
+  void setSatelliteNumber(T::UInt16_opt satelliteNumber);
   const T::UInt16_opt &getInstrumentType() const;
+  void setInstrumentType(T::UInt16_opt instrumentType);
   const T::UInt8_opt &getScaleFactorOfCentralWaveNumber() const;
+  void setScaleFactorOfCentralWaveNumber(T::UInt8_opt scaleFactorOfCentralWaveNumber);
   const T::UInt32_opt &getScaledValueOfCentralWaveNumber() const;
+  void setScaledValueOfCentralWaveNumber(T::UInt32_opt scaledValueOfCentralWaveNumber);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // # For grib2 to grib1 convertion
   // constant dataRepresentationType = 90;
   //
   //
-  // # START template.4.32
-  // ----------------------------------------------------------------------
-  // # TEMPLATE 4.32, analysis or forecast at a horizontal level or in a
-  // horizontal layer at a point in time for simulated (synthetic) satellite
-  // data
+  // # START template.4.32 ----------------------------------------------------------------------
+  // # TEMPLATE 4.32, analysis or forecast at a horizontal level or in a horizontal layer at a point in time for simulated (synthetic) satellite data
   //
   // include "template.4.parameter.def"
 
@@ -70,8 +71,7 @@ protected:
   PointInTimeSettings mPointInTime;
 
   //
-  // # Required for interpolation and MARS. The level type is used to decide
-  // whether to apply the Land Sea Mask
+  // # Required for interpolation and MARS. The level type is used to decide whether to apply the Land Sea Mask
   // constant typeOfLevel="surface";
   // constant levelType="surface";
   // constant level=0;
@@ -97,20 +97,17 @@ protected:
 
   T::UInt16_opt mInstrumentType;
 
-  //       unsigned[1] scaleFactorOfCentralWaveNumber = missing() :
-  //       dump,can_be_missing ;
+  //       unsigned[1] scaleFactorOfCentralWaveNumber = missing() : dump,can_be_missing ;
 
   T::UInt8_opt mScaleFactorOfCentralWaveNumber;
 
-  //       unsigned[4] scaledValueOfCentralWaveNumber = missing() :
-  //       dump,can_be_missing ;
+  //       unsigned[4] scaledValueOfCentralWaveNumber = missing() : dump,can_be_missing ;
 
   T::UInt32_opt mScaledValueOfCentralWaveNumber;
 
   // }
   //
-  // # END template.4.32
-  // ----------------------------------------------------------------------
+  // # END template.4.32 ----------------------------------------------------------------------
   //
 };
 

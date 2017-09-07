@@ -12,6 +12,7 @@ namespace GRIB2
 
 AlbersImpl::AlbersImpl()
 {
+  mGridProjection = T::GridProjection::Albers;
 }
 
 

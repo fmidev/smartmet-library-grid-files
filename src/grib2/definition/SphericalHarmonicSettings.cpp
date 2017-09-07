@@ -8,10 +8,10 @@
 
 #include "grib2/definition/SphericalHarmonicSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ SphericalHarmonicSettings::~SphericalHarmonicSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void SphericalHarmonicSettings::read(MemoryReader &memoryReader) {
@@ -59,8 +57,7 @@ void SphericalHarmonicSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void SphericalHarmonicSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void SphericalHarmonicSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sSphericalHarmonicSettings.J", prefix.c_str());
@@ -78,26 +75,21 @@ void SphericalHarmonicSettings::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SphericalHarmonicSettings::print(std::ostream &stream, uint level,
-                                      uint optionFlags) const {
+void SphericalHarmonicSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "SphericalHarmonicSettings\n";
     stream << space(level) << "- J = " << toString(mJ) << "\n";
     stream << space(level) << "- K = " << toString(mK) << "\n";
     stream << space(level) << "- M = " << toString(mM) << "\n";
-    stream << space(level) << "- SpectralType = " << toString(mSpectralType)
-           << "\n";
-    stream << space(level) << "- SpectralMode = " << toString(mSpectralMode)
-           << "\n";
+    stream << space(level) << "- SpectralType = " << toString(mSpectralType) << "\n";
+    stream << space(level) << "- SpectralMode = " << toString(mSpectralMode) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -154,8 +146,7 @@ const T::UInt32_opt &SphericalHarmonicSettings::getM() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSpectralType} attribute.
- */
+/*! \brief The method returns the value of the {@link mSpectralType} attribute. */
 
 const T::UInt8_opt &SphericalHarmonicSettings::getSpectralType() const {
   try {
@@ -165,12 +156,51 @@ const T::UInt8_opt &SphericalHarmonicSettings::getSpectralType() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSpectralMode} attribute.
- */
+/*! \brief The method returns the value of the {@link mSpectralMode} attribute. */
 
 const T::UInt8_opt &SphericalHarmonicSettings::getSpectralMode() const {
   try {
     return mSpectralMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SphericalHarmonicSettings::setJ(T::UInt32_opt j) {
+  try {
+    mJ = j;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SphericalHarmonicSettings::setK(T::UInt32_opt k) {
+  try {
+    mK = k;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SphericalHarmonicSettings::setM(T::UInt32_opt m) {
+  try {
+    mM = m;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SphericalHarmonicSettings::setSpectralType(T::UInt8_opt spectralType) {
+  try {
+    mSpectralType = spectralType;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SphericalHarmonicSettings::setSpectralMode(T::UInt8_opt spectralMode) {
+  try {
+    mSpectralMode = spectralMode;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

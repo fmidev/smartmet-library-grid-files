@@ -8,10 +8,10 @@
 
 #include "grib2/definition/EnsembleDerivedForecast.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ EnsembleDerivedForecast::~EnsembleDerivedForecast() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void EnsembleDerivedForecast::read(MemoryReader &memoryReader) {
@@ -58,8 +56,7 @@ void EnsembleDerivedForecast::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void EnsembleDerivedForecast::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void EnsembleDerivedForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sEnsembleDerivedForecast.", prefix.c_str());
@@ -75,17 +72,14 @@ void EnsembleDerivedForecast::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void EnsembleDerivedForecast::print(std::ostream &stream, uint level,
-                                    uint optionFlags) const {
+void EnsembleDerivedForecast::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "EnsembleDerivedForecast\n";
     mParameter.print(stream, level + 1, optionFlags);
@@ -112,8 +106,7 @@ T::Hash EnsembleDerivedForecast::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mParameter} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
 const ParameterSettings *EnsembleDerivedForecast::getParameter() const {
   try {
@@ -123,8 +116,7 @@ const ParameterSettings *EnsembleDerivedForecast::getParameter() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mPointInTime} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
 
 const PointInTimeSettings *EnsembleDerivedForecast::getPointInTime() const {
   try {
@@ -134,8 +126,7 @@ const PointInTimeSettings *EnsembleDerivedForecast::getPointInTime() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mHorizontal} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
 const HorizontalSettings *EnsembleDerivedForecast::getHorizontal() const {
   try {
@@ -150,6 +141,38 @@ const HorizontalSettings *EnsembleDerivedForecast::getHorizontal() const {
 const DerivedSettings *EnsembleDerivedForecast::getDerived() const {
   try {
     return &mDerived;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EnsembleDerivedForecast::setParameter(ParameterSettings parameter) {
+  try {
+    mParameter = parameter;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EnsembleDerivedForecast::setPointInTime(PointInTimeSettings pointInTime) {
+  try {
+    mPointInTime = pointInTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EnsembleDerivedForecast::setHorizontal(HorizontalSettings horizontal) {
+  try {
+    mHorizontal = horizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void EnsembleDerivedForecast::setDerived(DerivedSettings derived) {
+  try {
+    mDerived = derived;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

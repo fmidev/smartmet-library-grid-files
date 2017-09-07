@@ -16,8 +16,7 @@
 
 namespace SmartMet {
 namespace GRIB1 {
-/*! \brief The class is automatically created from the template
- * (grid_definition_3).*/
+/*! \brief The class is automatically created from the template (grid_definition_3).*/
 
 class LambertConformal : public GridDefinition {
 public:
@@ -25,37 +24,47 @@ public:
   virtual ~LambertConformal();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   std::uint16_t getNx() const;
+  void setNx(std::uint16_t nx);
   std::uint16_t getNy() const;
+  void setNy(std::uint16_t ny);
   std::int24_t getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint);
   std::int24_t getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint);
   const ResolutionFlagsSettings *getResolutionFlags() const;
+  void setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
   std::int24_t getLoV() const;
+  void setLoV(std::int24_t loV);
   std::uint24_t getDxInMetres() const;
+  void setDxInMetres(std::uint24_t dxInMetres);
   std::uint24_t getDyInMetres() const;
+  void setDyInMetres(std::uint24_t dyInMetres);
   std::uint8_t getProjectionCentreFlag() const;
+  void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   std::int24_t getLatin1() const;
+  void setLatin1(std::int24_t latin1);
   std::int24_t getLatin2() const;
+  void setLatin2(std::int24_t latin2);
   std::int24_t getLatitudeOfSouthernPole() const;
+  void setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole);
   std::int24_t getLongitudeOfSouthernPole() const;
+  void setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // # GRID DEFINITION Lambert conformal, secant or tangent, conic or bi-polar
@@ -65,14 +74,11 @@ protected:
   // template commonBlock "grib1/grid_definition_lambert.def";
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // unsigned[2] Nx  : dump;
@@ -97,12 +103,10 @@ protected:
   std::int24_t mLatitudeOfFirstGridPoint;
 
   // meta geography.latitudeOfFirstGridPointInDegrees
-  //       scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees)
-  //       : dump;
+  //       scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias La1 = latitudeOfFirstGridPoint;
   // alias La1InDegrees=latitudeOfFirstGridPointInDegrees;
-  // #meta latitudeOfFirstGridPointInMicrodegrees
-  // times(latitudeOfFirstGridPoint,thousand);
+  // #meta latitudeOfFirstGridPointInMicrodegrees times(latitudeOfFirstGridPoint,thousand);
   //
   //
   // #  Lo1 - longitude of first grid point
@@ -111,12 +115,10 @@ protected:
   std::int24_t mLongitudeOfFirstGridPoint;
 
   // meta geography.longitudeOfFirstGridPointInDegrees
-  //       scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees)
-  //       : dump;
+  //       scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lo1 = longitudeOfFirstGridPoint;
   // alias Lo1InDegrees = longitudeOfFirstGridPointInDegrees;
-  // #meta longitudeOfFirstGridPointInMicrodegrees
-  // times(longitudeOfFirstGridPoint,thousand);
+  // #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,thousand);
   //
   // #  Resolution and component flags
   // include "resolution_flags.def";
@@ -124,8 +126,7 @@ protected:
   ResolutionFlagsSettings mResolutionFlags;
 
   //
-  // #  LoV - orientation of the grid; i.e.  the east longitude value of the
-  // meridian which is parallel to the Y-axis
+  // #  LoV - orientation of the grid; i.e.  the east longitude value of the meridian which is parallel to the Y-axis
   // signed[3] LoV : edition_specific  ;
 
   std::int24_t mLoV;
@@ -173,14 +174,12 @@ protected:
   ScanningModeSettings mScanningMode;
 
   //
-  // #  Latin 1 - first latitude from the pole at which the secant cone cuts the
-  // sphere
+  // #  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
   // signed[3] Latin1 : edition_specific;
 
   std::int24_t mLatin1;
 
-  // meta geography.Latin1InDegrees
-  // scale(Latin1,oneConstant,grib1divider,truncateDegrees) : dump;
+  // meta geography.Latin1InDegrees scale(Latin1,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias firstLatitude=Latin1;
   // alias firstLatitudeInDegrees=Latin1InDegrees;
   //
@@ -188,15 +187,13 @@ protected:
   // constant LaDInDegrees = Latin1InDegrees : dump;
   // alias geography.LaDInDegrees=LaDInDegrees;
   //
-  // #  Latin 2 - second latitude from the pole at which the secant cone cuts
-  // the sphere
+  // #  Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
   // signed[3] Latin2 :edition_specific;
 
   std::int24_t mLatin2;
 
   // alias secondLatitude=Latin2;
-  // meta geography.Latin2InDegrees
-  // scale(Latin2,oneConstant,grib1divider,truncateDegrees) : dump;
+  // meta geography.Latin2InDegrees scale(Latin2,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias secondLatitudeInDegrees=Latin2InDegrees;
   //
   // signed[3] latitudeOfSouthernPole : no_copy;
@@ -204,23 +201,19 @@ protected:
   std::int24_t mLatitudeOfSouthernPole;
 
   // meta  geography.latitudeOfSouthernPoleInDegrees
-  //         scale(latitudeOfSouthernPole,oneConstant,grib1divider,truncateDegrees)
-  //         : dump;
+  //         scale(latitudeOfSouthernPole,oneConstant,grib1divider,truncateDegrees) : dump;
   //
   // signed[3] longitudeOfSouthernPole : no_copy;
 
   std::int24_t mLongitudeOfSouthernPole;
 
   // meta  geography.longitudeOfSouthernPoleInDegrees
-  //         scale(longitudeOfSouthernPole,oneConstant,grib1divider,truncateDegrees)
-  //         : dump;
+  //         scale(longitudeOfSouthernPole,oneConstant,grib1divider,truncateDegrees) : dump;
   //
   // meta numberOfDataPoints number_of_points(Nx,Ny,PLPresent,pl) : dump;
   // alias numberOfPoints=numberOfDataPoints;
-  // meta numberOfValues
-  // number_of_values(values,bitsPerValue,numberOfDataPoints,
-  //                                     bitmapPresent,bitmap,numberOfCodedValues)
-  //                                     : dump;
+  // meta numberOfValues number_of_values(values,bitsPerValue,numberOfDataPoints,
+  //                                     bitmapPresent,bitmap,numberOfCodedValues) : dump;
   // #alias ls.valuesCount=numberOfValues;
   //
   // iterator lambert_conformal(numberOfPoints,missingValue,values,
@@ -246,8 +239,7 @@ protected:
   //
   // pad padding_grid3_1(2);
   //
-  // # END   1/grid_definition.lambert_conformal
-  // ----------------------------------------------------------------------
+  // # END   1/grid_definition.lambert_conformal ----------------------------------------------------------------------
   //
   //
 };

@@ -8,10 +8,10 @@
 
 #include "grib2/definition/MatrixDataRepresentation.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -36,11 +36,9 @@ MatrixDataRepresentation::~MatrixDataRepresentation() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void MatrixDataRepresentation::read(MemoryReader &memoryReader) {
@@ -69,48 +67,31 @@ void MatrixDataRepresentation::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void MatrixDataRepresentation::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void MatrixDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sMatrixDataRepresentation.", prefix.c_str());
     mPacking.getAttributeList(name, attributeList);
-    sprintf(name, "%sMatrixDataRepresentation.MatrixBitmapsPresent",
-            prefix.c_str());
+    sprintf(name, "%sMatrixDataRepresentation.MatrixBitmapsPresent", prefix.c_str());
     attributeList.addAttribute(name, toString(mMatrixBitmapsPresent));
-    sprintf(name, "%sMatrixDataRepresentation.NumberOfCodedValues",
-            prefix.c_str());
+    sprintf(name, "%sMatrixDataRepresentation.NumberOfCodedValues", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfCodedValues));
     sprintf(name, "%sMatrixDataRepresentation.FirstDimension", prefix.c_str());
     attributeList.addAttribute(name, toString(mFirstDimension));
     sprintf(name, "%sMatrixDataRepresentation.SecondDimension", prefix.c_str());
     attributeList.addAttribute(name, toString(mSecondDimension));
-    sprintf(
-        name,
-        "%sMatrixDataRepresentation.FirstDimensionCoordinateValueDefinition",
-        prefix.c_str());
-    attributeList.addAttribute(
-        name, toString(mFirstDimensionCoordinateValueDefinition));
+    sprintf(name, "%sMatrixDataRepresentation.FirstDimensionCoordinateValueDefinition", prefix.c_str());
+    attributeList.addAttribute(name, toString(mFirstDimensionCoordinateValueDefinition));
     sprintf(name, "%sMatrixDataRepresentation.NC1", prefix.c_str());
     attributeList.addAttribute(name, toString(mNC1));
-    sprintf(
-        name,
-        "%sMatrixDataRepresentation.SecondDimensionCoordinateValueDefinition",
-        prefix.c_str());
-    attributeList.addAttribute(
-        name, toString(mSecondDimensionCoordinateValueDefinition));
+    sprintf(name, "%sMatrixDataRepresentation.SecondDimensionCoordinateValueDefinition", prefix.c_str());
+    attributeList.addAttribute(name, toString(mSecondDimensionCoordinateValueDefinition));
     sprintf(name, "%sMatrixDataRepresentation.NC2", prefix.c_str());
     attributeList.addAttribute(name, toString(mNC2));
-    sprintf(name,
-            "%sMatrixDataRepresentation.FirstDimensionPhysicalSignificance",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mFirstDimensionPhysicalSignificance));
-    sprintf(name,
-            "%sMatrixDataRepresentation.SecondDimensionPhysicalSignificance",
-            prefix.c_str());
-    attributeList.addAttribute(name,
-                               toString(mSecondDimensionPhysicalSignificance));
+    sprintf(name, "%sMatrixDataRepresentation.FirstDimensionPhysicalSignificance", prefix.c_str());
+    attributeList.addAttribute(name, toString(mFirstDimensionPhysicalSignificance));
+    sprintf(name, "%sMatrixDataRepresentation.SecondDimensionPhysicalSignificance", prefix.c_str());
+    attributeList.addAttribute(name, toString(mSecondDimensionPhysicalSignificance));
     sprintf(name, "%sMatrixDataRepresentation.CoefsFirst", prefix.c_str());
     attributeList.addAttribute(name, toString(mCoefsFirst));
     sprintf(name, "%sMatrixDataRepresentation.CoefsSecond", prefix.c_str());
@@ -120,44 +101,29 @@ void MatrixDataRepresentation::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void MatrixDataRepresentation::print(std::ostream &stream, uint level,
-                                     uint optionFlags) const {
+void MatrixDataRepresentation::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "MatrixDataRepresentation\n";
     mPacking.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- MatrixBitmapsPresent = " << toString(mMatrixBitmapsPresent)
-           << "\n";
-    stream << space(level)
-           << "- NumberOfCodedValues = " << toString(mNumberOfCodedValues)
-           << "\n";
-    stream << space(level) << "- FirstDimension = " << toString(mFirstDimension)
-           << "\n";
-    stream << space(level)
-           << "- SecondDimension = " << toString(mSecondDimension) << "\n";
-    stream << space(level) << "- FirstDimensionCoordinateValueDefinition = "
-           << toString(mFirstDimensionCoordinateValueDefinition) << "\n";
+    stream << space(level) << "- MatrixBitmapsPresent = " << toString(mMatrixBitmapsPresent) << "\n";
+    stream << space(level) << "- NumberOfCodedValues = " << toString(mNumberOfCodedValues) << "\n";
+    stream << space(level) << "- FirstDimension = " << toString(mFirstDimension) << "\n";
+    stream << space(level) << "- SecondDimension = " << toString(mSecondDimension) << "\n";
+    stream << space(level) << "- FirstDimensionCoordinateValueDefinition = " << toString(mFirstDimensionCoordinateValueDefinition) << "\n";
     stream << space(level) << "- NC1 = " << toString(mNC1) << "\n";
-    stream << space(level) << "- SecondDimensionCoordinateValueDefinition = "
-           << toString(mSecondDimensionCoordinateValueDefinition) << "\n";
+    stream << space(level) << "- SecondDimensionCoordinateValueDefinition = " << toString(mSecondDimensionCoordinateValueDefinition) << "\n";
     stream << space(level) << "- NC2 = " << toString(mNC2) << "\n";
-    stream << space(level) << "- FirstDimensionPhysicalSignificance = "
-           << toString(mFirstDimensionPhysicalSignificance) << "\n";
-    stream << space(level) << "- SecondDimensionPhysicalSignificance = "
-           << toString(mSecondDimensionPhysicalSignificance) << "\n";
-    stream << space(level) << "- CoefsFirst = " << toString(mCoefsFirst)
-           << "\n";
-    stream << space(level) << "- CoefsSecond = " << toString(mCoefsSecond)
-           << "\n";
+    stream << space(level) << "- FirstDimensionPhysicalSignificance = " << toString(mFirstDimensionPhysicalSignificance) << "\n";
+    stream << space(level) << "- SecondDimensionPhysicalSignificance = " << toString(mSecondDimensionPhysicalSignificance) << "\n";
+    stream << space(level) << "- CoefsFirst = " << toString(mCoefsFirst) << "\n";
+    stream << space(level) << "- CoefsSecond = " << toString(mCoefsSecond) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -207,8 +173,7 @@ const PackingSettings *MatrixDataRepresentation::getPacking() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mMatrixBitmapsPresent}
- * attribute. */
+/*! \brief The method returns the value of the {@link mMatrixBitmapsPresent} attribute. */
 
 const T::UInt8_opt &MatrixDataRepresentation::getMatrixBitmapsPresent() const {
   try {
@@ -218,8 +183,7 @@ const T::UInt8_opt &MatrixDataRepresentation::getMatrixBitmapsPresent() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfCodedValues}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfCodedValues} attribute. */
 
 const T::UInt32_opt &MatrixDataRepresentation::getNumberOfCodedValues() const {
   try {
@@ -229,8 +193,7 @@ const T::UInt32_opt &MatrixDataRepresentation::getNumberOfCodedValues() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mFirstDimension}
- * attribute. */
+/*! \brief The method returns the value of the {@link mFirstDimension} attribute. */
 
 const T::UInt16_opt &MatrixDataRepresentation::getFirstDimension() const {
   try {
@@ -240,8 +203,7 @@ const T::UInt16_opt &MatrixDataRepresentation::getFirstDimension() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSecondDimension}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSecondDimension} attribute. */
 
 const T::UInt16_opt &MatrixDataRepresentation::getSecondDimension() const {
   try {
@@ -251,11 +213,9 @@ const T::UInt16_opt &MatrixDataRepresentation::getSecondDimension() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mFirstDimensionCoordinateValueDefinition} attribute. */
+/*! \brief The method returns the value of the {@link mFirstDimensionCoordinateValueDefinition} attribute. */
 
-const T::UInt8_opt &
-MatrixDataRepresentation::getFirstDimensionCoordinateValueDefinition() const {
+const T::UInt8_opt &MatrixDataRepresentation::getFirstDimensionCoordinateValueDefinition() const {
   try {
     return mFirstDimensionCoordinateValueDefinition;
   } catch (...) {
@@ -273,11 +233,9 @@ const T::UInt8_opt &MatrixDataRepresentation::getNC1() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mSecondDimensionCoordinateValueDefinition} attribute. */
+/*! \brief The method returns the value of the {@link mSecondDimensionCoordinateValueDefinition} attribute. */
 
-const T::UInt8_opt &
-MatrixDataRepresentation::getSecondDimensionCoordinateValueDefinition() const {
+const T::UInt8_opt &MatrixDataRepresentation::getSecondDimensionCoordinateValueDefinition() const {
   try {
     return mSecondDimensionCoordinateValueDefinition;
   } catch (...) {
@@ -295,11 +253,9 @@ const T::UInt8_opt &MatrixDataRepresentation::getNC2() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mFirstDimensionPhysicalSignificance} attribute. */
+/*! \brief The method returns the value of the {@link mFirstDimensionPhysicalSignificance} attribute. */
 
-const T::UInt8_opt &
-MatrixDataRepresentation::getFirstDimensionPhysicalSignificance() const {
+const T::UInt8_opt &MatrixDataRepresentation::getFirstDimensionPhysicalSignificance() const {
   try {
     return mFirstDimensionPhysicalSignificance;
   } catch (...) {
@@ -307,11 +263,9 @@ MatrixDataRepresentation::getFirstDimensionPhysicalSignificance() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mSecondDimensionPhysicalSignificance} attribute. */
+/*! \brief The method returns the value of the {@link mSecondDimensionPhysicalSignificance} attribute. */
 
-const T::UInt8_opt &
-MatrixDataRepresentation::getSecondDimensionPhysicalSignificance() const {
+const T::UInt8_opt &MatrixDataRepresentation::getSecondDimensionPhysicalSignificance() const {
   try {
     return mSecondDimensionPhysicalSignificance;
   } catch (...) {
@@ -329,12 +283,115 @@ float MatrixDataRepresentation::getCoefsFirst() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mCoefsSecond} attribute.
- */
+/*! \brief The method returns the value of the {@link mCoefsSecond} attribute. */
 
 float MatrixDataRepresentation::getCoefsSecond() const {
   try {
     return mCoefsSecond;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setPacking(PackingSettings packing) {
+  try {
+    mPacking = packing;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setMatrixBitmapsPresent(T::UInt8_opt matrixBitmapsPresent) {
+  try {
+    mMatrixBitmapsPresent = matrixBitmapsPresent;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setNumberOfCodedValues(T::UInt32_opt numberOfCodedValues) {
+  try {
+    mNumberOfCodedValues = numberOfCodedValues;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setFirstDimension(T::UInt16_opt firstDimension) {
+  try {
+    mFirstDimension = firstDimension;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setSecondDimension(T::UInt16_opt secondDimension) {
+  try {
+    mSecondDimension = secondDimension;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setFirstDimensionCoordinateValueDefinition(T::UInt8_opt firstDimensionCoordinateValueDefinition) {
+  try {
+    mFirstDimensionCoordinateValueDefinition = firstDimensionCoordinateValueDefinition;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setNC1(T::UInt8_opt nC1) {
+  try {
+    mNC1 = nC1;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setSecondDimensionCoordinateValueDefinition(T::UInt8_opt secondDimensionCoordinateValueDefinition) {
+  try {
+    mSecondDimensionCoordinateValueDefinition = secondDimensionCoordinateValueDefinition;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setNC2(T::UInt8_opt nC2) {
+  try {
+    mNC2 = nC2;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setFirstDimensionPhysicalSignificance(T::UInt8_opt firstDimensionPhysicalSignificance) {
+  try {
+    mFirstDimensionPhysicalSignificance = firstDimensionPhysicalSignificance;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setSecondDimensionPhysicalSignificance(T::UInt8_opt secondDimensionPhysicalSignificance) {
+  try {
+    mSecondDimensionPhysicalSignificance = secondDimensionPhysicalSignificance;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setCoefsFirst(float coefsFirst) {
+  try {
+    mCoefsFirst = coefsFirst;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void MatrixDataRepresentation::setCoefsSecond(float coefsSecond) {
+  try {
+    mCoefsSecond = coefsSecond;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

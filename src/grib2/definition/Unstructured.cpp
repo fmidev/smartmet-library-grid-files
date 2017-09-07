@@ -8,10 +8,10 @@
 
 #include "grib2/definition/Unstructured.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -35,11 +35,9 @@ Unstructured::~Unstructured() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void Unstructured::read(MemoryReader &memoryReader) {
@@ -58,8 +56,7 @@ void Unstructured::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void Unstructured::getAttributeList(std::string prefix,
-                                    T::AttributeList &attributeList) const {
+void Unstructured::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sUnstructured.ShapeOfTheEarth", prefix.c_str());
@@ -73,25 +70,19 @@ void Unstructured::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void Unstructured::print(std::ostream &stream, uint level,
-                         uint optionFlags) const {
+void Unstructured::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "Unstructured\n";
-    stream << space(level)
-           << "- ShapeOfTheEarth = " << toString(mShapeOfTheEarth) << "\n";
-    stream << space(level) << "- NumberOfGridInReference = "
-           << toString(mNumberOfGridInReference) << "\n";
-    stream << space(level) << "- UuidOfHGrid = " << toString(mUuidOfHGrid)
-           << "\n";
+    stream << space(level) << "- ShapeOfTheEarth = " << toString(mShapeOfTheEarth) << "\n";
+    stream << space(level) << "- NumberOfGridInReference = " << toString(mNumberOfGridInReference) << "\n";
+    stream << space(level) << "- UuidOfHGrid = " << toString(mUuidOfHGrid) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -113,8 +104,7 @@ T::Hash Unstructured::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mShapeOfTheEarth}
- * attribute. */
+/*! \brief The method returns the value of the {@link mShapeOfTheEarth} attribute. */
 
 const T::UInt8_opt &Unstructured::getShapeOfTheEarth() const {
   try {
@@ -124,8 +114,7 @@ const T::UInt8_opt &Unstructured::getShapeOfTheEarth() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfGridInReference}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfGridInReference} attribute. */
 
 const T::UInt8_opt &Unstructured::getNumberOfGridInReference() const {
   try {
@@ -135,12 +124,35 @@ const T::UInt8_opt &Unstructured::getNumberOfGridInReference() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mUuidOfHGrid} attribute.
- */
+/*! \brief The method returns the value of the {@link mUuidOfHGrid} attribute. */
 
 const std::array<char, 16> &Unstructured::getUuidOfHGrid() const {
   try {
     return mUuidOfHGrid;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Unstructured::setShapeOfTheEarth(T::UInt8_opt shapeOfTheEarth) {
+  try {
+    mShapeOfTheEarth = shapeOfTheEarth;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Unstructured::setNumberOfGridInReference(T::UInt8_opt numberOfGridInReference) {
+  try {
+    mNumberOfGridInReference = numberOfGridInReference;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Unstructured::setUuidOfHGrid(std::array<char, 16> uuidOfHGrid) {
+  try {
+    mUuidOfHGrid = uuidOfHGrid;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

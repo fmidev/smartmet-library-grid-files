@@ -44,7 +44,6 @@ GridSection::GridSection(Message *message)
   {
     mMessage = message;
     mFilePosition = 0;
-    mGridProjection = T::GridProjection::Unknown;
     mNumberOfPoints = 0;
   }
   catch (...)
@@ -166,7 +165,7 @@ void GridSection::read(MemoryReader& memoryReader)
 
     // Initializing the hash.
 
-    getHash();
+    getGridHash();
   }
   catch (...)
   {
@@ -546,6 +545,42 @@ void GridSection::getGridOriginalAreaCoordinates(double& x1,double& y1,double& x
 
 
 
+uint GridSection::getGridGeometryId() const
+{
+  try
+  {
+    if (mGridDefinition != NULL)
+      return mGridDefinition->getGridGeometryId();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
+void GridSection::setGridGeometryId(uint geometryId)
+{
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->setGridGeometryId(geometryId);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns all grid coordinates as a coordinate vector.
     Notice that if the grid layout is "irregular" (i.e. its row lengths vary) then
     grid width is the same as the length of the longest grid row. I.e. the coordinates
@@ -573,14 +608,14 @@ T::Coordinate_vec GridSection::getGridCoordinates() const
 
 
 
-T::Hash GridSection::getHash() const
+T::Hash GridSection::getGridHash() const
 {
   try
   {
     if (!mGridDefinition)
       throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
 
-    return mGridDefinition->getHash();
+    return mGridDefinition->getGridHash();
   }
   catch (...)
   {
@@ -628,7 +663,10 @@ T::GridProjection GridSection::getGridProjection() const
 {
   try
   {
-    return mGridProjection;
+    if (mGridDefinition == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+
+    return mGridDefinition->getGridProjection();
   }
   catch (...)
   {
@@ -695,91 +733,69 @@ GridDefinition* GridSection::createGridDefinition(std::uint8_t  dataRepresentati
     switch (dataRepresentationType)
     {
       case 0: // Latitude/longitude grid - equidistant cylindrical or Plate Carrée projection
-  	    mGridProjection = T::GridProjection::LatLon;
         return new LatLonImpl();
 
       case 1: // Mercator projection
-  	    mGridProjection = T::GridProjection::Mercator;
         return new MercatorImpl();
 
       case 2: // Gnomonic projection
-    	 mGridProjection = T::GridProjection::GnomonicProjection;
         throw SmartMet::Spine::Exception(BCP,"'Gnomonic projection' not implemented!");
 
       case 3: // Lambert conformal, secant or tangent, conic or bi-polar, projection
-  	    mGridProjection = T::GridProjection::LambertConformal;
         return new LambertConformalImpl();
 
       case 4: // Gaussian latitude/longitude grid
-   	    mGridProjection = T::GridProjection::Gaussian;
         return new GaussianImpl();
 
       case 5: // Polar stereographic projection
-   	    mGridProjection = T::GridProjection::PolarStereographic;
         return new PolarStereographicImpl();
 
       case 6: // Fmi Transverse Mercator (UTM) projection
-   	    mGridProjection = T::GridProjection::TransverseMercator;
         throw SmartMet::Spine::Exception(BCP,"'Fmi Transverse Mercator' not implemented!");
 
       case 7: // Simple polyconic projection
-        mGridProjection = T::GridProjection::SimplePolyconicProjection;
         throw SmartMet::Spine::Exception(BCP,"'Simple polyconic' not implemented!");
 
       case 8: // Albers equal-area, secant or tangent, conic or bi-polar, projection
-      	mGridProjection = T::GridProjection::Albers;
         return new AlbersImpl();
 
       case 9: // Miller's cylindrical projection
-        mGridProjection = T::GridProjection::MillersCylindricalProjection;
         throw SmartMet::Spine::Exception(BCP,"'Miller's cylindrical' Not implemented!");
 
       case 10: // Rotated latitude/longitude grid
-        mGridProjection = T::GridProjection::RotatedLatLon;
         return new RotatedLatLonImpl();
 
       case 13: // Oblique Lambert conformal, secant or tangent, conic or bi-polar, projection
-        mGridProjection = T::GridProjection::ObliqueLambertConformal;
         return new ObliqueLambertConformalImpl();
 
       case 14: // Rotated Gaussian latitude/longitude grid
-        mGridProjection = T::GridProjection::RotatedGaussian;
         return new RotatedGaussianImpl();
 
       case 20: // Stretched latitude/longitude grid
-        mGridProjection = T::GridProjection::StretchedLatLon;
         return new StretchedLatLonImpl();
 
       case 24: // Stretched Gaussian latitude/longitude grid
-        mGridProjection = T::GridProjection::StretchedGaussian;
         return new StretchedGaussianImpl();
 
       case 30: // Stretched and rotated latitude/longitude grids
-        mGridProjection = T::GridProjection::StretchedRotatedLatLon;
         return new StretchedRotatedLatLonImpl();
 
       case 34: // Stretched and rotated Gaussian latitude/longitude grids
-        mGridProjection = T::GridProjection::StretchedRotatedGaussian;
         return new StretchedRotatedGaussianImpl();
 
       case 50: // Spherical harmonic coefficients
-        mGridProjection = T::GridProjection::SphericalHarmonic;
         return new SphericalHarmonicImpl();
 
       case 60: // Rotated spherical harmonic coefficients
-        mGridProjection = T::GridProjection::RotatedSphericalHarmonic;
         return new RotatedSphericalHarmonicImpl();
 
       case 70: // Stretched spherical harmonics
-        mGridProjection = T::GridProjection::StretchedSphericalHarmonic;
         return new StretchedSphericalHarmonicImpl();
 
       case 80: // Stretched and rotated spherical harmonic coefficients
-        mGridProjection = T::GridProjection::StretchedRotatedSphericalHarmonic;
         return new StretchedRotatedSphericalHarmonicImpl();
 
       case 90: // Space view, perspective orthographic
-        mGridProjection = T::GridProjection::SpaceView;
         return new SpaceViewImpl();
 
       default:

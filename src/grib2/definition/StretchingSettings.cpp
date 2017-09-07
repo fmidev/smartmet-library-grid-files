@@ -8,10 +8,10 @@
 
 #include "grib2/definition/StretchingSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ StretchingSettings::~StretchingSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void StretchingSettings::read(MemoryReader &memoryReader) {
@@ -57,44 +55,33 @@ void StretchingSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void StretchingSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void StretchingSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sStretchingSettings.LatitudeOfThePoleOfStretching",
-            prefix.c_str());
+    sprintf(name, "%sStretchingSettings.LatitudeOfThePoleOfStretching", prefix.c_str());
     attributeList.addAttribute(name, toString(mLatitudeOfThePoleOfStretching));
-    sprintf(name, "%sStretchingSettings.LongitudeOfThePoleOfStretching",
-            prefix.c_str());
+    sprintf(name, "%sStretchingSettings.LongitudeOfThePoleOfStretching", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfThePoleOfStretching));
-    sprintf(name, "%sStretchingSettings.StretchingFactorScaled",
-            prefix.c_str());
+    sprintf(name, "%sStretchingSettings.StretchingFactorScaled", prefix.c_str());
     attributeList.addAttribute(name, toString(mStretchingFactorScaled));
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void StretchingSettings::print(std::ostream &stream, uint level,
-                               uint optionFlags) const {
+void StretchingSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "StretchingSettings\n";
-    stream << space(level) << "- LatitudeOfThePoleOfStretching = "
-           << toString(mLatitudeOfThePoleOfStretching) << "\n";
-    stream << space(level) << "- LongitudeOfThePoleOfStretching = "
-           << toString(mLongitudeOfThePoleOfStretching) << "\n";
-    stream << space(level)
-           << "- StretchingFactorScaled = " << toString(mStretchingFactorScaled)
-           << "\n";
+    stream << space(level) << "- LatitudeOfThePoleOfStretching = " << toString(mLatitudeOfThePoleOfStretching) << "\n";
+    stream << space(level) << "- LongitudeOfThePoleOfStretching = " << toString(mLongitudeOfThePoleOfStretching) << "\n";
+    stream << space(level) << "- StretchingFactorScaled = " << toString(mStretchingFactorScaled) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -117,11 +104,9 @@ T::Hash StretchingSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLatitudeOfThePoleOfStretching} attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfThePoleOfStretching} attribute. */
 
-const T::Int32_opt &
-StretchingSettings::getLatitudeOfThePoleOfStretching() const {
+const T::Int32_opt &StretchingSettings::getLatitudeOfThePoleOfStretching() const {
   try {
     return mLatitudeOfThePoleOfStretching;
   } catch (...) {
@@ -129,11 +114,9 @@ StretchingSettings::getLatitudeOfThePoleOfStretching() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfThePoleOfStretching} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfThePoleOfStretching} attribute. */
 
-const T::Int32_opt &
-StretchingSettings::getLongitudeOfThePoleOfStretching() const {
+const T::Int32_opt &StretchingSettings::getLongitudeOfThePoleOfStretching() const {
   try {
     return mLongitudeOfThePoleOfStretching;
   } catch (...) {
@@ -141,12 +124,35 @@ StretchingSettings::getLongitudeOfThePoleOfStretching() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mStretchingFactorScaled}
- * attribute. */
+/*! \brief The method returns the value of the {@link mStretchingFactorScaled} attribute. */
 
 const T::UInt32_opt &StretchingSettings::getStretchingFactorScaled() const {
   try {
     return mStretchingFactorScaled;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchingSettings::setLatitudeOfThePoleOfStretching(T::Int32_opt latitudeOfThePoleOfStretching) {
+  try {
+    mLatitudeOfThePoleOfStretching = latitudeOfThePoleOfStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchingSettings::setLongitudeOfThePoleOfStretching(T::Int32_opt longitudeOfThePoleOfStretching) {
+  try {
+    mLongitudeOfThePoleOfStretching = longitudeOfThePoleOfStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchingSettings::setStretchingFactorScaled(T::UInt32_opt stretchingFactorScaled) {
+  try {
+    mStretchingFactorScaled = stretchingFactorScaled;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

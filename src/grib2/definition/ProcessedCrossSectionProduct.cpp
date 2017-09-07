@@ -8,10 +8,10 @@
 
 #include "grib2/definition/ProcessedCrossSectionProduct.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ ProcessedCrossSectionProduct::~ProcessedCrossSectionProduct() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void ProcessedCrossSectionProduct::read(MemoryReader &memoryReader) {
@@ -56,8 +54,7 @@ void ProcessedCrossSectionProduct::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void ProcessedCrossSectionProduct::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void ProcessedCrossSectionProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sProcessedCrossSectionProduct.", prefix.c_str());
@@ -69,17 +66,14 @@ void ProcessedCrossSectionProduct::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ProcessedCrossSectionProduct::print(std::ostream &stream, uint level,
-                                         uint optionFlags) const {
+void ProcessedCrossSectionProduct::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "ProcessedCrossSectionProduct\n";
     mParameter.print(stream, level + 1, optionFlags);
@@ -102,8 +96,7 @@ T::Hash ProcessedCrossSectionProduct::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mParameter} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
 const ParameterSettings *ProcessedCrossSectionProduct::getParameter() const {
   try {
@@ -113,13 +106,27 @@ const ParameterSettings *ProcessedCrossSectionProduct::getParameter() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mStatistical} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mStatistical} attribute. */
 
-const StatisticalSettings *
-ProcessedCrossSectionProduct::getStatistical() const {
+const StatisticalSettings *ProcessedCrossSectionProduct::getStatistical() const {
   try {
     return &mStatistical;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ProcessedCrossSectionProduct::setParameter(ParameterSettings parameter) {
+  try {
+    mParameter = parameter;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ProcessedCrossSectionProduct::setStatistical(StatisticalSettings statistical) {
+  try {
+    mStatistical = statistical;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

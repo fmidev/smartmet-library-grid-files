@@ -8,10 +8,10 @@
 
 #include "grib1/definition/SpaceView.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -46,11 +46,9 @@ SpaceView::~SpaceView() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void SpaceView::read(MemoryReader &memoryReader) {
@@ -80,8 +78,7 @@ void SpaceView::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void SpaceView::getAttributeList(std::string prefix,
-                                 T::AttributeList &attributeList) const {
+void SpaceView::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sSpaceView.Nx", prefix.c_str());
@@ -117,38 +114,28 @@ void SpaceView::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SpaceView::print(std::ostream &stream, uint level,
-                      uint optionFlags) const {
+void SpaceView::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "SpaceView\n";
     stream << space(level) << "- Nx = " << toString(mNx) << "\n";
     stream << space(level) << "- Ny = " << toString(mNy) << "\n";
-    stream << space(level) << "- LatitudeOfSubSatellitePoint = "
-           << toString(mLatitudeOfSubSatellitePoint) << "\n";
-    stream << space(level) << "- LongitudeOfSubSatellitePoint = "
-           << toString(mLongitudeOfSubSatellitePoint) << "\n";
+    stream << space(level) << "- LatitudeOfSubSatellitePoint = " << toString(mLatitudeOfSubSatellitePoint) << "\n";
+    stream << space(level) << "- LongitudeOfSubSatellitePoint = " << toString(mLongitudeOfSubSatellitePoint) << "\n";
     mResolutionFlags.print(stream, level + 1, optionFlags);
     stream << space(level) << "- Dx = " << toString(mDx) << "\n";
     stream << space(level) << "- Dy = " << toString(mDy) << "\n";
-    stream << space(level)
-           << "- XpInGridLengths = " << toString(mXpInGridLengths) << "\n";
-    stream << space(level)
-           << "- YpInGridLengths = " << toString(mYpInGridLengths) << "\n";
+    stream << space(level) << "- XpInGridLengths = " << toString(mXpInGridLengths) << "\n";
+    stream << space(level) << "- YpInGridLengths = " << toString(mYpInGridLengths) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- OrientationOfTheGrid = " << toString(mOrientationOfTheGrid)
-           << "\n";
-    stream << space(level)
-           << "- NrInRadiusOfEarth = " << toString(mNrInRadiusOfEarth) << "\n";
+    stream << space(level) << "- OrientationOfTheGrid = " << toString(mOrientationOfTheGrid) << "\n";
+    stream << space(level) << "- NrInRadiusOfEarth = " << toString(mNrInRadiusOfEarth) << "\n";
     stream << space(level) << "- Xo = " << toString(mXo) << "\n";
     stream << space(level) << "- Yo = " << toString(mYo) << "\n";
   } catch (...) {
@@ -173,7 +160,7 @@ T::Hash SpaceView::countHash() {
     boost::hash_combine(seed, mNrInRadiusOfEarth);
     boost::hash_combine(seed, mXo);
     boost::hash_combine(seed, mYo);
-    boost::hash_combine(seed, mResolutionFlags.countHash());
+    // boost::hash_combine(seed,mResolutionFlags.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
@@ -201,8 +188,7 @@ std::uint16_t SpaceView::getNy() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLatitudeOfSubSatellitePoint} attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfSubSatellitePoint} attribute. */
 
 std::int24_t SpaceView::getLatitudeOfSubSatellitePoint() const {
   try {
@@ -212,8 +198,7 @@ std::int24_t SpaceView::getLatitudeOfSubSatellitePoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfSubSatellitePoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfSubSatellitePoint} attribute. */
 
 std::int24_t SpaceView::getLongitudeOfSubSatellitePoint() const {
   try {
@@ -223,8 +208,7 @@ std::int24_t SpaceView::getLongitudeOfSubSatellitePoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mResolutionFlags}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mResolutionFlags} attribute. */
 
 const ResolutionFlagsSettings *SpaceView::getResolutionFlags() const {
   try {
@@ -254,8 +238,7 @@ std::uint24_t SpaceView::getDy() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mXpInGridLengths}
- * attribute. */
+/*! \brief The method returns the value of the {@link mXpInGridLengths} attribute. */
 
 std::uint16_t SpaceView::getXpInGridLengths() const {
   try {
@@ -265,8 +248,7 @@ std::uint16_t SpaceView::getXpInGridLengths() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mYpInGridLengths}
- * attribute. */
+/*! \brief The method returns the value of the {@link mYpInGridLengths} attribute. */
 
 std::uint16_t SpaceView::getYpInGridLengths() const {
   try {
@@ -276,8 +258,7 @@ std::uint16_t SpaceView::getYpInGridLengths() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *SpaceView::getScanningMode() const {
   try {
@@ -287,8 +268,7 @@ const ScanningModeSettings *SpaceView::getScanningMode() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mOrientationOfTheGrid}
- * attribute. */
+/*! \brief The method returns the value of the {@link mOrientationOfTheGrid} attribute. */
 
 std::uint24_t SpaceView::getOrientationOfTheGrid() const {
   try {
@@ -298,8 +278,7 @@ std::uint24_t SpaceView::getOrientationOfTheGrid() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNrInRadiusOfEarth}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNrInRadiusOfEarth} attribute. */
 
 std::uint24_t SpaceView::getNrInRadiusOfEarth() const {
   try {
@@ -324,6 +303,118 @@ std::uint16_t SpaceView::getXo() const {
 std::uint16_t SpaceView::getYo() const {
   try {
     return mYo;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setNx(std::uint16_t nx) {
+  try {
+    mNx = nx;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setNy(std::uint16_t ny) {
+  try {
+    mNy = ny;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setLatitudeOfSubSatellitePoint(std::int24_t latitudeOfSubSatellitePoint) {
+  try {
+    mLatitudeOfSubSatellitePoint = latitudeOfSubSatellitePoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setLongitudeOfSubSatellitePoint(std::int24_t longitudeOfSubSatellitePoint) {
+  try {
+    mLongitudeOfSubSatellitePoint = longitudeOfSubSatellitePoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setResolutionFlags(ResolutionFlagsSettings resolutionFlags) {
+  try {
+    mResolutionFlags = resolutionFlags;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setDx(std::uint24_t dx) {
+  try {
+    mDx = dx;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setDy(std::uint24_t dy) {
+  try {
+    mDy = dy;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setXpInGridLengths(std::uint16_t xpInGridLengths) {
+  try {
+    mXpInGridLengths = xpInGridLengths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setYpInGridLengths(std::uint16_t ypInGridLengths) {
+  try {
+    mYpInGridLengths = ypInGridLengths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setOrientationOfTheGrid(std::uint24_t orientationOfTheGrid) {
+  try {
+    mOrientationOfTheGrid = orientationOfTheGrid;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setNrInRadiusOfEarth(std::uint24_t nrInRadiusOfEarth) {
+  try {
+    mNrInRadiusOfEarth = nrInRadiusOfEarth;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setXo(std::uint16_t xo) {
+  try {
+    mXo = xo;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpaceView::setYo(std::uint16_t yo) {
+  try {
+    mYo = yo;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

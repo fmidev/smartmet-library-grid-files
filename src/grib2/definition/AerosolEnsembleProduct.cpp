@@ -8,10 +8,10 @@
 
 #include "grib2/definition/AerosolEnsembleProduct.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ AerosolEnsembleProduct::~AerosolEnsembleProduct() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void AerosolEnsembleProduct::read(MemoryReader &memoryReader) {
@@ -58,8 +56,7 @@ void AerosolEnsembleProduct::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void AerosolEnsembleProduct::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void AerosolEnsembleProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sAerosolEnsembleProduct.", prefix.c_str());
@@ -75,17 +72,14 @@ void AerosolEnsembleProduct::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void AerosolEnsembleProduct::print(std::ostream &stream, uint level,
-                                   uint optionFlags) const {
+void AerosolEnsembleProduct::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "AerosolEnsembleProduct\n";
     mParameterAerosol.print(stream, level + 1, optionFlags);
@@ -112,11 +106,9 @@ T::Hash AerosolEnsembleProduct::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mParameterAerosol}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mParameterAerosol} attribute. */
 
-const ParameterAerosolSettings *
-AerosolEnsembleProduct::getParameterAerosol() const {
+const ParameterAerosolSettings *AerosolEnsembleProduct::getParameterAerosol() const {
   try {
     return &mParameterAerosol;
   } catch (...) {
@@ -124,8 +116,7 @@ AerosolEnsembleProduct::getParameterAerosol() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mPointInTime} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
 
 const PointInTimeSettings *AerosolEnsembleProduct::getPointInTime() const {
   try {
@@ -135,8 +126,7 @@ const PointInTimeSettings *AerosolEnsembleProduct::getPointInTime() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mHorizontal} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
 const HorizontalSettings *AerosolEnsembleProduct::getHorizontal() const {
   try {
@@ -151,6 +141,38 @@ const HorizontalSettings *AerosolEnsembleProduct::getHorizontal() const {
 const EpsSettings *AerosolEnsembleProduct::getEps() const {
   try {
     return &mEps;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSettings parameterAerosol) {
+  try {
+    mParameterAerosol = parameterAerosol;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AerosolEnsembleProduct::setPointInTime(PointInTimeSettings pointInTime) {
+  try {
+    mPointInTime = pointInTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AerosolEnsembleProduct::setHorizontal(HorizontalSettings horizontal) {
+  try {
+    mHorizontal = horizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void AerosolEnsembleProduct::setEps(EpsSettings eps) {
+  try {
+    mEps = eps;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

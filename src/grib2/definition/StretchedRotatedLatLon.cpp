@@ -8,10 +8,10 @@
 
 #include "grib2/definition/StretchedRotatedLatLon.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ StretchedRotatedLatLon::~StretchedRotatedLatLon() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void StretchedRotatedLatLon::read(MemoryReader &memoryReader) {
@@ -58,8 +56,7 @@ void StretchedRotatedLatLon::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void StretchedRotatedLatLon::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void StretchedRotatedLatLon::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
@@ -75,17 +72,14 @@ void StretchedRotatedLatLon::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void StretchedRotatedLatLon::print(std::ostream &stream, uint level,
-                                   uint optionFlags) const {
+void StretchedRotatedLatLon::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "StretchedRotatedLatLon\n";
     mEarthShape.print(stream, level + 1, optionFlags);
@@ -102,7 +96,7 @@ void StretchedRotatedLatLon::print(std::ostream &stream, uint level,
 T::Hash StretchedRotatedLatLon::countHash() {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mEarthShape.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
     boost::hash_combine(seed, mLatLon.countHash());
     boost::hash_combine(seed, mRotation.countHash());
     boost::hash_combine(seed, mStretching.countHash());
@@ -112,8 +106,7 @@ T::Hash StretchedRotatedLatLon::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *StretchedRotatedLatLon::getEarthShape() const {
   try {
@@ -143,12 +136,43 @@ const RotationSettings *StretchedRotatedLatLon::getRotation() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mStretching} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mStretching} attribute. */
 
 const StretchingSettings *StretchedRotatedLatLon::getStretching() const {
   try {
     return &mStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setLatLon(LatLonSettings latLon) {
+  try {
+    mLatLon = latLon;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setRotation(RotationSettings rotation) {
+  try {
+    mRotation = rotation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setStretching(StretchingSettings stretching) {
+  try {
+    mStretching = stretching;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

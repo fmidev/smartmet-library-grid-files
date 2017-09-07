@@ -8,10 +8,10 @@
 
 #include "grib2/definition/StretchedGaussian.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ StretchedGaussian::~StretchedGaussian() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void StretchedGaussian::read(MemoryReader &memoryReader) {
@@ -57,8 +55,7 @@ void StretchedGaussian::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void StretchedGaussian::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void StretchedGaussian::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sStretchedGaussian.", prefix.c_str());
@@ -72,17 +69,14 @@ void StretchedGaussian::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void StretchedGaussian::print(std::ostream &stream, uint level,
-                              uint optionFlags) const {
+void StretchedGaussian::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "StretchedGaussian\n";
     mEarthShape.print(stream, level + 1, optionFlags);
@@ -98,7 +92,7 @@ void StretchedGaussian::print(std::ostream &stream, uint level,
 T::Hash StretchedGaussian::countHash() {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mEarthShape.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
     boost::hash_combine(seed, mGaussian.countHash());
     boost::hash_combine(seed, mStretching.countHash());
     return seed;
@@ -107,8 +101,7 @@ T::Hash StretchedGaussian::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *StretchedGaussian::getEarthShape() const {
   try {
@@ -128,12 +121,35 @@ const GaussianSettings *StretchedGaussian::getGaussian() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mStretching} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mStretching} attribute. */
 
 const StretchingSettings *StretchedGaussian::getStretching() const {
   try {
     return &mStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedGaussian::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedGaussian::setGaussian(GaussianSettings gaussian) {
+  try {
+    mGaussian = gaussian;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedGaussian::setStretching(StretchingSettings stretching) {
+  try {
+    mStretching = stretching;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

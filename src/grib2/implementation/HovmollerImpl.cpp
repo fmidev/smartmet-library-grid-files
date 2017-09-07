@@ -11,6 +11,7 @@ namespace GRIB2
 
 HovmollerImpl::HovmollerImpl()
 {
+  mGridProjection = T::GridProjection::Hovmoller;
 }
 
 

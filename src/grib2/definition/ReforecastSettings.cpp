@@ -8,10 +8,10 @@
 
 #include "grib2/definition/ReforecastSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ ReforecastSettings::~ReforecastSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void ReforecastSettings::read(MemoryReader &memoryReader) {
@@ -60,8 +58,7 @@ void ReforecastSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void ReforecastSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void ReforecastSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sReforecastSettings.YearOfModelVersion", prefix.c_str());
@@ -81,36 +78,22 @@ void ReforecastSettings::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ReforecastSettings::print(std::ostream &stream, uint level,
-                               uint optionFlags) const {
+void ReforecastSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "ReforecastSettings\n";
-    stream << space(level)
-           << "- YearOfModelVersion = " << toString(mYearOfModelVersion)
-           << "\n";
-    stream << space(level)
-           << "- MonthOfModelVersion = " << toString(mMonthOfModelVersion)
-           << "\n";
-    stream << space(level)
-           << "- DayOfModelVersion = " << toString(mDayOfModelVersion) << "\n";
-    stream << space(level)
-           << "- HourOfModelVersion = " << toString(mHourOfModelVersion)
-           << "\n";
-    stream << space(level)
-           << "- MinuteOfModelVersion = " << toString(mMinuteOfModelVersion)
-           << "\n";
-    stream << space(level)
-           << "- SecondOfModelVersion = " << toString(mSecondOfModelVersion)
-           << "\n";
+    stream << space(level) << "- YearOfModelVersion = " << toString(mYearOfModelVersion) << "\n";
+    stream << space(level) << "- MonthOfModelVersion = " << toString(mMonthOfModelVersion) << "\n";
+    stream << space(level) << "- DayOfModelVersion = " << toString(mDayOfModelVersion) << "\n";
+    stream << space(level) << "- HourOfModelVersion = " << toString(mHourOfModelVersion) << "\n";
+    stream << space(level) << "- MinuteOfModelVersion = " << toString(mMinuteOfModelVersion) << "\n";
+    stream << space(level) << "- SecondOfModelVersion = " << toString(mSecondOfModelVersion) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -139,8 +122,7 @@ T::Hash ReforecastSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mYearOfModelVersion}
- * attribute. */
+/*! \brief The method returns the value of the {@link mYearOfModelVersion} attribute. */
 
 const T::UInt16_opt &ReforecastSettings::getYearOfModelVersion() const {
   try {
@@ -150,8 +132,7 @@ const T::UInt16_opt &ReforecastSettings::getYearOfModelVersion() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mMonthOfModelVersion}
- * attribute. */
+/*! \brief The method returns the value of the {@link mMonthOfModelVersion} attribute. */
 
 const T::UInt8_opt &ReforecastSettings::getMonthOfModelVersion() const {
   try {
@@ -161,8 +142,7 @@ const T::UInt8_opt &ReforecastSettings::getMonthOfModelVersion() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mDayOfModelVersion}
- * attribute. */
+/*! \brief The method returns the value of the {@link mDayOfModelVersion} attribute. */
 
 const T::UInt8_opt &ReforecastSettings::getDayOfModelVersion() const {
   try {
@@ -172,8 +152,7 @@ const T::UInt8_opt &ReforecastSettings::getDayOfModelVersion() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mHourOfModelVersion}
- * attribute. */
+/*! \brief The method returns the value of the {@link mHourOfModelVersion} attribute. */
 
 const T::UInt8_opt &ReforecastSettings::getHourOfModelVersion() const {
   try {
@@ -183,8 +162,7 @@ const T::UInt8_opt &ReforecastSettings::getHourOfModelVersion() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mMinuteOfModelVersion}
- * attribute. */
+/*! \brief The method returns the value of the {@link mMinuteOfModelVersion} attribute. */
 
 const T::UInt8_opt &ReforecastSettings::getMinuteOfModelVersion() const {
   try {
@@ -194,12 +172,59 @@ const T::UInt8_opt &ReforecastSettings::getMinuteOfModelVersion() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSecondOfModelVersion}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSecondOfModelVersion} attribute. */
 
 const T::UInt8_opt &ReforecastSettings::getSecondOfModelVersion() const {
   try {
     return mSecondOfModelVersion;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ReforecastSettings::setYearOfModelVersion(T::UInt16_opt yearOfModelVersion) {
+  try {
+    mYearOfModelVersion = yearOfModelVersion;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ReforecastSettings::setMonthOfModelVersion(T::UInt8_opt monthOfModelVersion) {
+  try {
+    mMonthOfModelVersion = monthOfModelVersion;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ReforecastSettings::setDayOfModelVersion(T::UInt8_opt dayOfModelVersion) {
+  try {
+    mDayOfModelVersion = dayOfModelVersion;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ReforecastSettings::setHourOfModelVersion(T::UInt8_opt hourOfModelVersion) {
+  try {
+    mHourOfModelVersion = hourOfModelVersion;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ReforecastSettings::setMinuteOfModelVersion(T::UInt8_opt minuteOfModelVersion) {
+  try {
+    mMinuteOfModelVersion = minuteOfModelVersion;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ReforecastSettings::setSecondOfModelVersion(T::UInt8_opt secondOfModelVersion) {
+  try {
+    mSecondOfModelVersion = secondOfModelVersion;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

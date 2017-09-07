@@ -8,10 +8,10 @@
 
 #include "grib1/definition/Mercator.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -39,11 +39,9 @@ Mercator::~Mercator() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void Mercator::read(MemoryReader &memoryReader) {
@@ -66,8 +64,7 @@ void Mercator::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void Mercator::getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const {
+void Mercator::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sMercator.Ni", prefix.c_str());
@@ -89,12 +86,10 @@ void Mercator::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
@@ -106,10 +101,8 @@ void Mercator::print(std::ostream &stream, uint level, uint optionFlags) const {
     mGridArea.print(stream, level + 1, optionFlags);
     stream << space(level) << "- Latin = " << toString(mLatin) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- DiInMetres = " << toString(mDiInMetres)
-           << "\n";
-    stream << space(level) << "- DjInMetres = " << toString(mDjInMetres)
-           << "\n";
+    stream << space(level) << "- DiInMetres = " << toString(mDiInMetres) << "\n";
+    stream << space(level) << "- DjInMetres = " << toString(mDjInMetres) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -173,8 +166,7 @@ std::int24_t Mercator::getLatin() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *Mercator::getScanningMode() const {
   try {
@@ -199,6 +191,62 @@ std::int24_t Mercator::getDiInMetres() const {
 std::int24_t Mercator::getDjInMetres() const {
   try {
     return mDjInMetres;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setNi(std::int16_t ni) {
+  try {
+    mNi = ni;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setNj(std::int16_t nj) {
+  try {
+    mNj = nj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setGridArea(GridAreaSettings gridArea) {
+  try {
+    mGridArea = gridArea;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setLatin(std::int24_t latin) {
+  try {
+    mLatin = latin;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setDiInMetres(std::int24_t diInMetres) {
+  try {
+    mDiInMetres = diInMetres;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Mercator::setDjInMetres(std::int24_t djInMetres) {
+  try {
+    mDjInMetres = djInMetres;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

@@ -22,38 +22,44 @@ public:
   virtual ~Triangular();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::UInt8_opt &getN2() const;
+  void setN2(T::UInt8_opt n2);
   const T::UInt8_opt &getN3() const;
+  void setN3(T::UInt8_opt n3);
   const T::UInt16_opt &getNi() const;
+  void setNi(T::UInt16_opt ni);
   const T::UInt8_opt &getNd() const;
+  void setNd(T::UInt8_opt nd);
   const T::Int32_opt &getLatitudeOfThePolePoint() const;
+  void setLatitudeOfThePolePoint(T::Int32_opt latitudeOfThePolePoint);
   const T::UInt32_opt &getLongitudeOfThePolePoint() const;
+  void setLongitudeOfThePolePoint(T::UInt32_opt longitudeOfThePolePoint);
   const T::UInt32_opt &getLongitudeOfFirstDiamondCenterLine() const;
+  void setLongitudeOfFirstDiamondCenterLine(T::UInt32_opt longitudeOfFirstDiamondCenterLine);
   const T::UInt8_opt &getGridPointPosition() const;
+  void setGridPointPosition(T::UInt8_opt gridPointPosition);
   std::uint8_t getNumberingOrderOfDiamonds() const;
+  void setNumberingOrderOfDiamonds(std::uint8_t numberingOrderOfDiamonds);
   std::uint8_t getScanningModeForOneDiamond() const;
+  void setScanningModeForOneDiamond(std::uint8_t scanningModeForOneDiamond);
   const T::UInt32_opt &getTotalNumberOfGridPoints() const;
+  void setTotalNumberOfGridPoints(T::UInt32_opt totalNumberOfGridPoints);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # TEMPLATE 3.100, Triangular grid based on an icosahedron (see Attachment
-  // I.2-GRIB-Att.)
+  // # TEMPLATE 3.100, Triangular grid based on an icosahedron (see Attachment I.2-GRIB-Att.)
   //
   // #  n2 - exponent of 2 for the number of intervals on main triangle sides
   // unsigned[1] n2  : dump ;
@@ -85,25 +91,21 @@ protected:
 
   T::Int32_opt mLatitudeOfThePolePoint;
 
-  // meta geography.latitudeOfThePolePointInDegrees
-  // scale(latitudeOfThePolePoint,one,grib2divider,truncateDegrees) : dump;
+  // meta geography.latitudeOfThePolePointInDegrees scale(latitudeOfThePolePoint,one,grib2divider,truncateDegrees) : dump;
   //
   // #  Longitude of the pole point of the icosahedron on the sphere
   // unsigned[4] longitudeOfThePolePoint  : dump ;
 
   T::UInt32_opt mLongitudeOfThePolePoint;
 
-  // meta geography.longitudeOfThePolePointInDegrees
-  // g2lon(longitudeOfThePolePoint);
+  // meta geography.longitudeOfThePolePointInDegrees g2lon(longitudeOfThePolePoint);
   //
-  // #  Longitude of the centre line of the first diamond of the icosahedron on
-  // the sphere
+  // #  Longitude of the centre line of the first diamond of the icosahedron on the sphere
   // unsigned[4] longitudeOfFirstDiamondCenterLine  : dump ;
 
   T::UInt32_opt mLongitudeOfFirstDiamondCenterLine;
 
-  // meta geography.longitudeOfFirstDiamondCenterLineInDegrees
-  // g2lon(longitudeOfFirstDiamondCenterLine);
+  // meta geography.longitudeOfFirstDiamondCenterLineInDegrees g2lon(longitudeOfFirstDiamondCenterLine);
   //
   // #  Grid point position
   // codetable[1] gridPointPosition ('3.8.table',masterDir,localDir);
@@ -118,8 +120,7 @@ protected:
 
   //
   // #  Scanning mode for one diamond
-  // flags[1] scanningModeForOneDiamond
-  // 'grib2/tables/[tablesVersion]/3.10.table';
+  // flags[1] scanningModeForOneDiamond 'grib2/tables/[tablesVersion]/3.10.table';
 
   std::uint8_t mScanningModeForOneDiamond;
 

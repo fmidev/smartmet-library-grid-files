@@ -11,6 +11,7 @@ namespace GRIB2
 
 TimeSectionImpl::TimeSectionImpl()
 {
+  mGridProjection = T::GridProjection::TimeSection;
 }
 
 

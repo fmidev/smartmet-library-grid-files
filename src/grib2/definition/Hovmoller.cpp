@@ -8,10 +8,10 @@
 
 #include "grib2/definition/Hovmoller.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ Hovmoller::~Hovmoller() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void Hovmoller::read(MemoryReader &memoryReader) {
@@ -75,16 +73,13 @@ void Hovmoller::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void Hovmoller::getAttributeList(std::string prefix,
-                                 T::AttributeList &attributeList) const {
+void Hovmoller::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sHovmoller.", prefix.c_str());
     mEarthShape.getAttributeList(name, attributeList);
-    sprintf(name, "%sHovmoller.BasicAngleOfTheInitialProductionDomain",
-            prefix.c_str());
-    attributeList.addAttribute(
-        name, toString(mBasicAngleOfTheInitialProductionDomain));
+    sprintf(name, "%sHovmoller.BasicAngleOfTheInitialProductionDomain", prefix.c_str());
+    attributeList.addAttribute(name, toString(mBasicAngleOfTheInitialProductionDomain));
     sprintf(name, "%sHovmoller.SubdivisionsOfBasicAngle", prefix.c_str());
     attributeList.addAttribute(name, toString(mSubdivisionsOfBasicAngle));
     sprintf(name, "%sHovmoller.LatitudeOfFirstGridPoint", prefix.c_str());
@@ -128,50 +123,31 @@ void Hovmoller::getAttributeList(std::string prefix,
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void Hovmoller::print(std::ostream &stream, uint level,
-                      uint optionFlags) const {
+void Hovmoller::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "Hovmoller\n";
     mEarthShape.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- BasicAngleOfTheInitialProductionDomain = "
-           << toString(mBasicAngleOfTheInitialProductionDomain) << "\n";
-    stream << space(level) << "- SubdivisionsOfBasicAngle = "
-           << toString(mSubdivisionsOfBasicAngle) << "\n";
-    stream << space(level) << "- LatitudeOfFirstGridPoint = "
-           << toString(mLatitudeOfFirstGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfFirstGridPoint = "
-           << toString(mLongitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- BasicAngleOfTheInitialProductionDomain = " << toString(mBasicAngleOfTheInitialProductionDomain) << "\n";
+    stream << space(level) << "- SubdivisionsOfBasicAngle = " << toString(mSubdivisionsOfBasicAngle) << "\n";
+    stream << space(level) << "- LatitudeOfFirstGridPoint = " << toString(mLatitudeOfFirstGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfFirstGridPoint = " << toString(mLongitudeOfFirstGridPoint) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- LatitudeOfLastGridPoint = "
-           << toString(mLatitudeOfLastGridPoint) << "\n";
-    stream << space(level) << "- LongitudeOfLastGridPoint = "
-           << toString(mLongitudeOfLastGridPoint) << "\n";
-    stream << space(level)
-           << "- TypeOfHorizontalLine = " << toString(mTypeOfHorizontalLine)
-           << "\n";
-    stream << space(level)
-           << "- NumberOfTimeSteps = " << toString(mNumberOfTimeSteps) << "\n";
-    stream << space(level) << "- UnitOfOffsetFromReferenceTime = "
-           << toString(mUnitOfOffsetFromReferenceTime) << "\n";
-    stream << space(level) << "- OffsetFromReferenceOfFirstTime = "
-           << toString(mOffsetFromReferenceOfFirstTime) << "\n";
-    stream << space(level)
-           << "- TypeOfTimeIncrement = " << toString(mTypeOfTimeIncrement)
-           << "\n";
-    stream << space(level)
-           << "- UnitOfTimeIncrement = " << toString(mUnitOfTimeIncrement)
-           << "\n";
-    stream << space(level) << "- TimeIncrement = " << toString(mTimeIncrement)
-           << "\n";
+    stream << space(level) << "- LatitudeOfLastGridPoint = " << toString(mLatitudeOfLastGridPoint) << "\n";
+    stream << space(level) << "- LongitudeOfLastGridPoint = " << toString(mLongitudeOfLastGridPoint) << "\n";
+    stream << space(level) << "- TypeOfHorizontalLine = " << toString(mTypeOfHorizontalLine) << "\n";
+    stream << space(level) << "- NumberOfTimeSteps = " << toString(mNumberOfTimeSteps) << "\n";
+    stream << space(level) << "- UnitOfOffsetFromReferenceTime = " << toString(mUnitOfOffsetFromReferenceTime) << "\n";
+    stream << space(level) << "- OffsetFromReferenceOfFirstTime = " << toString(mOffsetFromReferenceOfFirstTime) << "\n";
+    stream << space(level) << "- TypeOfTimeIncrement = " << toString(mTypeOfTimeIncrement) << "\n";
+    stream << space(level) << "- UnitOfTimeIncrement = " << toString(mUnitOfTimeIncrement) << "\n";
+    stream << space(level) << "- TimeIncrement = " << toString(mTimeIncrement) << "\n";
     stream << space(level) << "- Year = " << toString(mYear) << "\n";
     stream << space(level) << "- Month = " << toString(mMonth) << "\n";
     stream << space(level) << "- Day = " << toString(mDay) << "\n";
@@ -188,10 +164,8 @@ void Hovmoller::print(std::ostream &stream, uint level,
 T::Hash Hovmoller::countHash() {
   try {
     std::size_t seed = 0;
-    if (mBasicAngleOfTheInitialProductionDomain)
-      boost::hash_combine(seed, *mBasicAngleOfTheInitialProductionDomain);
-    if (mSubdivisionsOfBasicAngle)
-      boost::hash_combine(seed, *mSubdivisionsOfBasicAngle);
+    // if (mBasicAngleOfTheInitialProductionDomain) boost::hash_combine(seed,*mBasicAngleOfTheInitialProductionDomain);
+    // if (mSubdivisionsOfBasicAngle) boost::hash_combine(seed,*mSubdivisionsOfBasicAngle);
     if (mLatitudeOfFirstGridPoint)
       boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
@@ -226,7 +200,7 @@ T::Hash Hovmoller::countHash() {
       boost::hash_combine(seed, *mMinute);
     if (mSecond)
       boost::hash_combine(seed, *mSecond);
-    boost::hash_combine(seed, mEarthShape.countHash());
+    // boost::hash_combine(seed,mEarthShape.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
@@ -234,8 +208,7 @@ T::Hash Hovmoller::countHash() {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mEarthShape} attribute.
- */
+/*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
 const EarthShapeSettings *Hovmoller::getEarthShape() const {
   try {
@@ -245,11 +218,9 @@ const EarthShapeSettings *Hovmoller::getEarthShape() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mBasicAngleOfTheInitialProductionDomain} attribute. */
+/*! \brief The method returns the value of the {@link mBasicAngleOfTheInitialProductionDomain} attribute. */
 
-const T::UInt32_opt &
-Hovmoller::getBasicAngleOfTheInitialProductionDomain() const {
+const T::UInt32_opt &Hovmoller::getBasicAngleOfTheInitialProductionDomain() const {
   try {
     return mBasicAngleOfTheInitialProductionDomain;
   } catch (...) {
@@ -257,8 +228,7 @@ Hovmoller::getBasicAngleOfTheInitialProductionDomain() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSubdivisionsOfBasicAngle}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSubdivisionsOfBasicAngle} attribute. */
 
 const T::UInt32_opt &Hovmoller::getSubdivisionsOfBasicAngle() const {
   try {
@@ -268,8 +238,7 @@ const T::UInt32_opt &Hovmoller::getSubdivisionsOfBasicAngle() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfFirstGridPoint} attribute. */
 
 const T::Int32_opt &Hovmoller::getLatitudeOfFirstGridPoint() const {
   try {
@@ -279,8 +248,7 @@ const T::Int32_opt &Hovmoller::getLatitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mLongitudeOfFirstGridPoint} attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfFirstGridPoint} attribute. */
 
 const T::UInt32_opt &Hovmoller::getLongitudeOfFirstGridPoint() const {
   try {
@@ -290,8 +258,7 @@ const T::UInt32_opt &Hovmoller::getLongitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *Hovmoller::getScanningMode() const {
   try {
@@ -301,8 +268,7 @@ const ScanningModeSettings *Hovmoller::getScanningMode() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLatitudeOfLastGridPoint} attribute. */
 
 const T::Int32_opt &Hovmoller::getLatitudeOfLastGridPoint() const {
   try {
@@ -312,8 +278,7 @@ const T::Int32_opt &Hovmoller::getLatitudeOfLastGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint}
- * attribute. */
+/*! \brief The method returns the value of the {@link mLongitudeOfLastGridPoint} attribute. */
 
 const T::UInt32_opt &Hovmoller::getLongitudeOfLastGridPoint() const {
   try {
@@ -323,8 +288,7 @@ const T::UInt32_opt &Hovmoller::getLongitudeOfLastGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfHorizontalLine}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfHorizontalLine} attribute. */
 
 const T::UInt8_opt &Hovmoller::getTypeOfHorizontalLine() const {
   try {
@@ -334,8 +298,7 @@ const T::UInt8_opt &Hovmoller::getTypeOfHorizontalLine() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfTimeSteps}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfTimeSteps} attribute. */
 
 const T::UInt32_opt &Hovmoller::getNumberOfTimeSteps() const {
   try {
@@ -345,8 +308,7 @@ const T::UInt32_opt &Hovmoller::getNumberOfTimeSteps() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mUnitOfOffsetFromReferenceTime} attribute. */
+/*! \brief The method returns the value of the {@link mUnitOfOffsetFromReferenceTime} attribute. */
 
 const T::UInt8_opt &Hovmoller::getUnitOfOffsetFromReferenceTime() const {
   try {
@@ -356,8 +318,7 @@ const T::UInt8_opt &Hovmoller::getUnitOfOffsetFromReferenceTime() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mOffsetFromReferenceOfFirstTime} attribute. */
+/*! \brief The method returns the value of the {@link mOffsetFromReferenceOfFirstTime} attribute. */
 
 const T::UInt32_opt &Hovmoller::getOffsetFromReferenceOfFirstTime() const {
   try {
@@ -367,8 +328,7 @@ const T::UInt32_opt &Hovmoller::getOffsetFromReferenceOfFirstTime() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfTimeIncrement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfTimeIncrement} attribute. */
 
 const T::UInt8_opt &Hovmoller::getTypeOfTimeIncrement() const {
   try {
@@ -378,8 +338,7 @@ const T::UInt8_opt &Hovmoller::getTypeOfTimeIncrement() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mUnitOfTimeIncrement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mUnitOfTimeIncrement} attribute. */
 
 const T::UInt8_opt &Hovmoller::getUnitOfTimeIncrement() const {
   try {
@@ -389,8 +348,7 @@ const T::UInt8_opt &Hovmoller::getUnitOfTimeIncrement() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTimeIncrement} attribute.
- */
+/*! \brief The method returns the value of the {@link mTimeIncrement} attribute. */
 
 const T::UInt32_opt &Hovmoller::getTimeIncrement() const {
   try {
@@ -455,6 +413,174 @@ const T::UInt8_opt &Hovmoller::getMinute() const {
 const T::UInt8_opt &Hovmoller::getSecond() const {
   try {
     return mSecond;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setEarthShape(EarthShapeSettings earthShape) {
+  try {
+    mEarthShape = earthShape;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAngleOfTheInitialProductionDomain) {
+  try {
+    mBasicAngleOfTheInitialProductionDomain = basicAngleOfTheInitialProductionDomain;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasicAngle) {
+  try {
+    mSubdivisionsOfBasicAngle = subdivisionsOfBasicAngle;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint) {
+  try {
+    mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint) {
+  try {
+    mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint) {
+  try {
+    mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setLongitudeOfLastGridPoint(T::UInt32_opt longitudeOfLastGridPoint) {
+  try {
+    mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setTypeOfHorizontalLine(T::UInt8_opt typeOfHorizontalLine) {
+  try {
+    mTypeOfHorizontalLine = typeOfHorizontalLine;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setNumberOfTimeSteps(T::UInt32_opt numberOfTimeSteps) {
+  try {
+    mNumberOfTimeSteps = numberOfTimeSteps;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setUnitOfOffsetFromReferenceTime(T::UInt8_opt unitOfOffsetFromReferenceTime) {
+  try {
+    mUnitOfOffsetFromReferenceTime = unitOfOffsetFromReferenceTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setOffsetFromReferenceOfFirstTime(T::UInt32_opt offsetFromReferenceOfFirstTime) {
+  try {
+    mOffsetFromReferenceOfFirstTime = offsetFromReferenceOfFirstTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setTypeOfTimeIncrement(T::UInt8_opt typeOfTimeIncrement) {
+  try {
+    mTypeOfTimeIncrement = typeOfTimeIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setUnitOfTimeIncrement(T::UInt8_opt unitOfTimeIncrement) {
+  try {
+    mUnitOfTimeIncrement = unitOfTimeIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setTimeIncrement(T::UInt32_opt timeIncrement) {
+  try {
+    mTimeIncrement = timeIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setYear(T::UInt16_opt year) {
+  try {
+    mYear = year;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setMonth(T::UInt8_opt month) {
+  try {
+    mMonth = month;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setDay(T::UInt8_opt day) {
+  try {
+    mDay = day;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setHour(T::UInt8_opt hour) {
+  try {
+    mHour = hour;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setMinute(T::UInt8_opt minute) {
+  try {
+    mMinute = minute;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void Hovmoller::setSecond(T::UInt8_opt second) {
+  try {
+    mSecond = second;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

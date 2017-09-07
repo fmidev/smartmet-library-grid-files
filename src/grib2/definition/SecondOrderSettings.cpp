@@ -8,10 +8,10 @@
 
 #include "grib2/definition/SecondOrderSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ SecondOrderSettings::~SecondOrderSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void SecondOrderSettings::read(MemoryReader &memoryReader) {
@@ -65,19 +63,16 @@ void SecondOrderSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void SecondOrderSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void SecondOrderSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sSecondOrderSettings.GroupSplitting", prefix.c_str());
     attributeList.addAttribute(name, toString(mGroupSplitting));
-    sprintf(name, "%sSecondOrderSettings.MissingValueManagement",
-            prefix.c_str());
+    sprintf(name, "%sSecondOrderSettings.MissingValueManagement", prefix.c_str());
     attributeList.addAttribute(name, toString(mMissingValueManagement));
     sprintf(name, "%sSecondOrderSettings.PrimaryMissingValue", prefix.c_str());
     attributeList.addAttribute(name, toString(mPrimaryMissingValue));
-    sprintf(name, "%sSecondOrderSettings.SecondaryMissingValue",
-            prefix.c_str());
+    sprintf(name, "%sSecondOrderSettings.SecondaryMissingValue", prefix.c_str());
     attributeList.addAttribute(name, toString(mSecondaryMissingValue));
     sprintf(name, "%sSecondOrderSettings.NumberOfGroups", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfGroups));
@@ -89,8 +84,7 @@ void SecondOrderSettings::getAttributeList(
     attributeList.addAttribute(name, toString(mReferenceOfLengths));
     sprintf(name, "%sSecondOrderSettings.IncrementOfLengths", prefix.c_str());
     attributeList.addAttribute(name, toString(mIncrementOfLengths));
-    sprintf(name, "%sSecondOrderSettings.TrueLengthOfLastGroup",
-            prefix.c_str());
+    sprintf(name, "%sSecondOrderSettings.TrueLengthOfLastGroup", prefix.c_str());
     attributeList.addAttribute(name, toString(mTrueLengthOfLastGroup));
     sprintf(name, "%sSecondOrderSettings.WidthOfLengths", prefix.c_str());
     attributeList.addAttribute(name, toString(mWidthOfLengths));
@@ -99,47 +93,27 @@ void SecondOrderSettings::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SecondOrderSettings::print(std::ostream &stream, uint level,
-                                uint optionFlags) const {
+void SecondOrderSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "SecondOrderSettings\n";
-    stream << space(level) << "- GroupSplitting = " << toString(mGroupSplitting)
-           << "\n";
-    stream << space(level)
-           << "- MissingValueManagement = " << toString(mMissingValueManagement)
-           << "\n";
-    stream << space(level)
-           << "- PrimaryMissingValue = " << toString(mPrimaryMissingValue)
-           << "\n";
-    stream << space(level)
-           << "- SecondaryMissingValue = " << toString(mSecondaryMissingValue)
-           << "\n";
-    stream << space(level) << "- NumberOfGroups = " << toString(mNumberOfGroups)
-           << "\n";
-    stream << space(level)
-           << "- ReferenceOfWidths = " << toString(mReferenceOfWidths) << "\n";
-    stream << space(level) << "- WidthOfWidths = " << toString(mWidthOfWidths)
-           << "\n";
-    stream << space(level)
-           << "- ReferenceOfLengths = " << toString(mReferenceOfLengths)
-           << "\n";
-    stream << space(level)
-           << "- IncrementOfLengths = " << toString(mIncrementOfLengths)
-           << "\n";
-    stream << space(level)
-           << "- TrueLengthOfLastGroup = " << toString(mTrueLengthOfLastGroup)
-           << "\n";
-    stream << space(level) << "- WidthOfLengths = " << toString(mWidthOfLengths)
-           << "\n";
+    stream << space(level) << "- GroupSplitting = " << toString(mGroupSplitting) << "\n";
+    stream << space(level) << "- MissingValueManagement = " << toString(mMissingValueManagement) << "\n";
+    stream << space(level) << "- PrimaryMissingValue = " << toString(mPrimaryMissingValue) << "\n";
+    stream << space(level) << "- SecondaryMissingValue = " << toString(mSecondaryMissingValue) << "\n";
+    stream << space(level) << "- NumberOfGroups = " << toString(mNumberOfGroups) << "\n";
+    stream << space(level) << "- ReferenceOfWidths = " << toString(mReferenceOfWidths) << "\n";
+    stream << space(level) << "- WidthOfWidths = " << toString(mWidthOfWidths) << "\n";
+    stream << space(level) << "- ReferenceOfLengths = " << toString(mReferenceOfLengths) << "\n";
+    stream << space(level) << "- IncrementOfLengths = " << toString(mIncrementOfLengths) << "\n";
+    stream << space(level) << "- TrueLengthOfLastGroup = " << toString(mTrueLengthOfLastGroup) << "\n";
+    stream << space(level) << "- WidthOfLengths = " << toString(mWidthOfLengths) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -178,8 +152,7 @@ T::Hash SecondOrderSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mGroupSplitting}
- * attribute. */
+/*! \brief The method returns the value of the {@link mGroupSplitting} attribute. */
 
 const T::UInt8_opt &SecondOrderSettings::getGroupSplitting() const {
   try {
@@ -189,8 +162,7 @@ const T::UInt8_opt &SecondOrderSettings::getGroupSplitting() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mMissingValueManagement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mMissingValueManagement} attribute. */
 
 const T::UInt8_opt &SecondOrderSettings::getMissingValueManagement() const {
   try {
@@ -200,8 +172,7 @@ const T::UInt8_opt &SecondOrderSettings::getMissingValueManagement() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mPrimaryMissingValue}
- * attribute. */
+/*! \brief The method returns the value of the {@link mPrimaryMissingValue} attribute. */
 
 const T::UInt32_opt &SecondOrderSettings::getPrimaryMissingValue() const {
   try {
@@ -211,8 +182,7 @@ const T::UInt32_opt &SecondOrderSettings::getPrimaryMissingValue() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mSecondaryMissingValue}
- * attribute. */
+/*! \brief The method returns the value of the {@link mSecondaryMissingValue} attribute. */
 
 const T::UInt32_opt &SecondOrderSettings::getSecondaryMissingValue() const {
   try {
@@ -222,8 +192,7 @@ const T::UInt32_opt &SecondOrderSettings::getSecondaryMissingValue() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mNumberOfGroups}
- * attribute. */
+/*! \brief The method returns the value of the {@link mNumberOfGroups} attribute. */
 
 const T::UInt32_opt &SecondOrderSettings::getNumberOfGroups() const {
   try {
@@ -233,8 +202,7 @@ const T::UInt32_opt &SecondOrderSettings::getNumberOfGroups() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mReferenceOfWidths}
- * attribute. */
+/*! \brief The method returns the value of the {@link mReferenceOfWidths} attribute. */
 
 const T::UInt8_opt &SecondOrderSettings::getReferenceOfWidths() const {
   try {
@@ -244,8 +212,7 @@ const T::UInt8_opt &SecondOrderSettings::getReferenceOfWidths() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mWidthOfWidths} attribute.
- */
+/*! \brief The method returns the value of the {@link mWidthOfWidths} attribute. */
 
 const T::UInt8_opt &SecondOrderSettings::getWidthOfWidths() const {
   try {
@@ -255,8 +222,7 @@ const T::UInt8_opt &SecondOrderSettings::getWidthOfWidths() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mReferenceOfLengths}
- * attribute. */
+/*! \brief The method returns the value of the {@link mReferenceOfLengths} attribute. */
 
 const T::UInt32_opt &SecondOrderSettings::getReferenceOfLengths() const {
   try {
@@ -266,8 +232,7 @@ const T::UInt32_opt &SecondOrderSettings::getReferenceOfLengths() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mIncrementOfLengths}
- * attribute. */
+/*! \brief The method returns the value of the {@link mIncrementOfLengths} attribute. */
 
 const T::UInt8_opt &SecondOrderSettings::getIncrementOfLengths() const {
   try {
@@ -277,8 +242,7 @@ const T::UInt8_opt &SecondOrderSettings::getIncrementOfLengths() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTrueLengthOfLastGroup}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTrueLengthOfLastGroup} attribute. */
 
 const T::UInt32_opt &SecondOrderSettings::getTrueLengthOfLastGroup() const {
   try {
@@ -288,12 +252,99 @@ const T::UInt32_opt &SecondOrderSettings::getTrueLengthOfLastGroup() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mWidthOfLengths}
- * attribute. */
+/*! \brief The method returns the value of the {@link mWidthOfLengths} attribute. */
 
 const T::UInt8_opt &SecondOrderSettings::getWidthOfLengths() const {
   try {
     return mWidthOfLengths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setGroupSplitting(T::UInt8_opt groupSplitting) {
+  try {
+    mGroupSplitting = groupSplitting;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setMissingValueManagement(T::UInt8_opt missingValueManagement) {
+  try {
+    mMissingValueManagement = missingValueManagement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setPrimaryMissingValue(T::UInt32_opt primaryMissingValue) {
+  try {
+    mPrimaryMissingValue = primaryMissingValue;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setSecondaryMissingValue(T::UInt32_opt secondaryMissingValue) {
+  try {
+    mSecondaryMissingValue = secondaryMissingValue;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setNumberOfGroups(T::UInt32_opt numberOfGroups) {
+  try {
+    mNumberOfGroups = numberOfGroups;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setReferenceOfWidths(T::UInt8_opt referenceOfWidths) {
+  try {
+    mReferenceOfWidths = referenceOfWidths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setWidthOfWidths(T::UInt8_opt widthOfWidths) {
+  try {
+    mWidthOfWidths = widthOfWidths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setReferenceOfLengths(T::UInt32_opt referenceOfLengths) {
+  try {
+    mReferenceOfLengths = referenceOfLengths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setIncrementOfLengths(T::UInt8_opt incrementOfLengths) {
+  try {
+    mIncrementOfLengths = incrementOfLengths;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setTrueLengthOfLastGroup(T::UInt32_opt trueLengthOfLastGroup) {
+  try {
+    mTrueLengthOfLastGroup = trueLengthOfLastGroup;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SecondOrderSettings::setWidthOfLengths(T::UInt8_opt widthOfLengths) {
+  try {
+    mWidthOfLengths = widthOfLengths;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

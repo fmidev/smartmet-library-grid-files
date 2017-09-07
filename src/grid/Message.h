@@ -62,8 +62,10 @@ class Message
     virtual std::string           getNewbaseParameterId() const;
     virtual std::string           getNewbaseParameterName() const;
 
+    virtual uint                  getGridGeometryId() const;
     virtual T::Coordinate_vec     getGridCoordinates() const;
     virtual T::Dimensions_opt     getGridDimensions() const;
+    virtual T::Hash               getGridHash() const;
     virtual void                  getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     virtual T::GridLayout         getGridLayout() const;
     virtual std::size_t           getGridOriginalColumnCount(std::size_t row) const;
@@ -98,6 +100,7 @@ class Message
     virtual T::UInt8_opt          getPerturbationNumber() const;
     virtual bool                  isGridGlobal() const;
     virtual void                  print(std::ostream& stream,uint level,uint optionFlags) const;
+    virtual void                  setGridGeometryId(uint geometryId);
 
 protected:
 

@@ -13,8 +13,7 @@
 
 namespace SmartMet {
 namespace GRIB2 {
-/*! \brief The class is automatically created from the template
- * (5.original_values).*/
+/*! \brief The class is automatically created from the template (5.original_values).*/
 
 class OriginalValuesSettings {
 public:
@@ -22,29 +21,25 @@ public:
   virtual ~OriginalValuesSettings();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const T::UInt8_opt &getTypeOfOriginalFieldValues() const;
+  void setTypeOfOriginalFieldValues(T::UInt8_opt typeOfOriginalFieldValues);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   // #  Type of original field values
-  // codetable[1] typeOfOriginalFieldValues ('5.1.table',masterDir,localDir) =
-  // 0; # Default set to floating
+  // codetable[1] typeOfOriginalFieldValues ('5.1.table',masterDir,localDir) = 0; # Default set to floating
 
   T::UInt8_opt mTypeOfOriginalFieldValues;
 };

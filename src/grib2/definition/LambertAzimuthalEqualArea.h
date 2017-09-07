@@ -24,39 +24,45 @@ public:
   virtual ~LambertAzimuthalEqualArea();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   const EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings earthShape);
   const T::UInt32_opt &getNumberOfPointsAlongXAxis() const;
+  void setNumberOfPointsAlongXAxis(T::UInt32_opt numberOfPointsAlongXAxis);
   const T::UInt32_opt &getNumberOfPointsAlongYAxis() const;
+  void setNumberOfPointsAlongYAxis(T::UInt32_opt numberOfPointsAlongYAxis);
   const T::Int32_opt &getLatitudeOfFirstGridPoint() const;
+  void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::Int32_opt &getLongitudeOfFirstGridPoint() const;
+  void setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint);
   const T::Int32_opt &getStandardParallelInMicrodegrees() const;
+  void setStandardParallelInMicrodegrees(T::Int32_opt standardParallelInMicrodegrees);
   const T::Int32_opt &getCentralLongitudeInMicrodegrees() const;
+  void setCentralLongitudeInMicrodegrees(T::Int32_opt centralLongitudeInMicrodegrees);
   std::uint8_t getResolutionAndComponentFlag() const;
+  void setResolutionAndComponentFlag(std::uint8_t resolutionAndComponentFlag);
   const T::UInt32_opt &getXDirectionGridLengthInMillimetres() const;
+  void setXDirectionGridLengthInMillimetres(T::UInt32_opt xDirectionGridLengthInMillimetres);
   const T::UInt32_opt &getYDirectionGridLengthInMillimetres() const;
+  void setYDirectionGridLengthInMillimetres(T::UInt32_opt yDirectionGridLengthInMillimetres);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
   //
-  // # START 2/template.3.140
-  // ----------------------------------------------------------------------
+  // # START 2/template.3.140 ----------------------------------------------------------------------
   // # TEMPLATE 3.140, Lambert azimuthal equal area projection
   // include "template.3.shape_of_the_earth.def";
 
@@ -83,12 +89,9 @@ protected:
   T::Int32_opt mLatitudeOfFirstGridPoint;
 
   // alias La1 =  latitudeOfFirstGridPoint;
-  // meta  geography.latitudeOfFirstGridPointInDegrees
-  // scale(latitudeOfFirstGridPoint
-  //                                                  ,one,grib2divider,truncateDegrees)
-  //                                                  : dump;
-  // #meta latitudeOfFirstGridPointInMicrodegrees
-  // times(latitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor): no_copy;
+  // meta  geography.latitudeOfFirstGridPointInDegrees   scale(latitudeOfFirstGridPoint
+  //                                                  ,one,grib2divider,truncateDegrees) : dump;
+  // #meta latitudeOfFirstGridPointInMicrodegrees times(latitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor): no_copy;
   //
   // #  Lo1 - longitude of first grid point
   // signed[4] longitudeOfFirstGridPoint: edition_specific ;
@@ -96,12 +99,9 @@ protected:
   T::Int32_opt mLongitudeOfFirstGridPoint;
 
   // alias La1 =  longitudeOfFirstGridPoint;
-  // meta  geography.longitudeOfFirstGridPointInDegrees
-  // scale(longitudeOfFirstGridPoint
-  //                                                  ,one,grib2divider,truncateDegrees)
-  //                                                  : dump;
-  // #meta longitudeOfFirstGridPointInMicrodegrees
-  // times(longitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
+  // meta  geography.longitudeOfFirstGridPointInDegrees   scale(longitudeOfFirstGridPoint
+  //                                                  ,one,grib2divider,truncateDegrees) : dump;
+  // #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
   //
   // signed[4] standardParallelInMicrodegrees  : dump;
 
@@ -116,8 +116,7 @@ protected:
   // alias centralLongitude=centralLongitudeInMicrodegrees;
   //
   // #  Resolution and component flag
-  // flags[1] resolutionAndComponentFlag
-  // 'grib2/tables/[tablesVersion]/3.3.table' : dump ;
+  // flags[1] resolutionAndComponentFlag 'grib2/tables/[tablesVersion]/3.3.table' : dump ;
 
   std::uint8_t mResolutionAndComponentFlag;
 
@@ -156,8 +155,7 @@ protected:
   // meta latitudes latitudes(values,0);
   // meta longitudes longitudes(values,0);
   //
-  // # END   2/template.3.140
-  // ----------------------------------------------------------------------
+  // # END   2/template.3.140 ----------------------------------------------------------------------
 };
 
 } // namespace GRIB2

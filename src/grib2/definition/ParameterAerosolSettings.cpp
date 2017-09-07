@@ -8,10 +8,10 @@
 
 #include "grib2/definition/ParameterAerosolSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ ParameterAerosolSettings::~ParameterAerosolSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void ParameterAerosolSettings::read(MemoryReader &memoryReader) {
@@ -69,49 +67,36 @@ void ParameterAerosolSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void ParameterAerosolSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void ParameterAerosolSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sParameterAerosolSettings.ParameterCategory",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.ParameterCategory", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterCategory));
     sprintf(name, "%sParameterAerosolSettings.ParameterNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterNumber));
     sprintf(name, "%sParameterAerosolSettings.AerosolType", prefix.c_str());
     attributeList.addAttribute(name, toString(mAerosolType));
-    sprintf(name, "%sParameterAerosolSettings.TypeOfSizeInterval",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.TypeOfSizeInterval", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfSizeInterval));
-    sprintf(name, "%sParameterAerosolSettings.ScaleFactorOfFirstSize",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.ScaleFactorOfFirstSize", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfFirstSize));
-    sprintf(name, "%sParameterAerosolSettings.ScaledValueOfFirstSize",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.ScaledValueOfFirstSize", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfFirstSize));
-    sprintf(name, "%sParameterAerosolSettings.ScaleFactorOfSecondSize",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.ScaleFactorOfSecondSize", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaleFactorOfSecondSize));
-    sprintf(name, "%sParameterAerosolSettings.ScaledValueOfSecondSize",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.ScaledValueOfSecondSize", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfSecondSize));
-    sprintf(name, "%sParameterAerosolSettings.TypeOfGeneratingProcess",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.TypeOfGeneratingProcess", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sParameterAerosolSettings.BackgroundProcess",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.BackgroundProcess", prefix.c_str());
     attributeList.addAttribute(name, toString(mBackgroundProcess));
-    sprintf(name, "%sParameterAerosolSettings.GeneratingProcessIdentifier",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.GeneratingProcessIdentifier", prefix.c_str());
     attributeList.addAttribute(name, toString(mGeneratingProcessIdentifier));
-    sprintf(name, "%sParameterAerosolSettings.HoursAfterDataCutoff",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.HoursAfterDataCutoff", prefix.c_str());
     attributeList.addAttribute(name, toString(mHoursAfterDataCutoff));
-    sprintf(name, "%sParameterAerosolSettings.MinutesAfterDataCutoff",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.MinutesAfterDataCutoff", prefix.c_str());
     attributeList.addAttribute(name, toString(mMinutesAfterDataCutoff));
-    sprintf(name, "%sParameterAerosolSettings.IndicatorOfUnitOfTimeRange",
-            prefix.c_str());
+    sprintf(name, "%sParameterAerosolSettings.IndicatorOfUnitOfTimeRange", prefix.c_str());
     attributeList.addAttribute(name, toString(mIndicatorOfUnitOfTimeRange));
     sprintf(name, "%sParameterAerosolSettings.ForecastTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastTime));
@@ -120,54 +105,31 @@ void ParameterAerosolSettings::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ParameterAerosolSettings::print(std::ostream &stream, uint level,
-                                     uint optionFlags) const {
+void ParameterAerosolSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "ParameterAerosolSettings\n";
-    stream << space(level)
-           << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
-    stream << space(level)
-           << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
-    stream << space(level) << "- AerosolType = " << toString(mAerosolType)
-           << "\n";
-    stream << space(level)
-           << "- TypeOfSizeInterval = " << toString(mTypeOfSizeInterval)
-           << "\n";
-    stream << space(level)
-           << "- ScaleFactorOfFirstSize = " << toString(mScaleFactorOfFirstSize)
-           << "\n";
-    stream << space(level)
-           << "- ScaledValueOfFirstSize = " << toString(mScaledValueOfFirstSize)
-           << "\n";
-    stream << space(level) << "- ScaleFactorOfSecondSize = "
-           << toString(mScaleFactorOfSecondSize) << "\n";
-    stream << space(level) << "- ScaledValueOfSecondSize = "
-           << toString(mScaledValueOfSecondSize) << "\n";
-    stream << space(level) << "- TypeOfGeneratingProcess = "
-           << toString(mTypeOfGeneratingProcess) << "\n";
-    stream << space(level)
-           << "- BackgroundProcess = " << toString(mBackgroundProcess) << "\n";
-    stream << space(level) << "- GeneratingProcessIdentifier = "
-           << toString(mGeneratingProcessIdentifier) << "\n";
-    stream << space(level)
-           << "- HoursAfterDataCutoff = " << toString(mHoursAfterDataCutoff)
-           << "\n";
-    stream << space(level)
-           << "- MinutesAfterDataCutoff = " << toString(mMinutesAfterDataCutoff)
-           << "\n";
-    stream << space(level) << "- IndicatorOfUnitOfTimeRange = "
-           << toString(mIndicatorOfUnitOfTimeRange) << "\n";
-    stream << space(level) << "- ForecastTime = " << toString(mForecastTime)
-           << "\n";
+    stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
+    stream << space(level) << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
+    stream << space(level) << "- AerosolType = " << toString(mAerosolType) << "\n";
+    stream << space(level) << "- TypeOfSizeInterval = " << toString(mTypeOfSizeInterval) << "\n";
+    stream << space(level) << "- ScaleFactorOfFirstSize = " << toString(mScaleFactorOfFirstSize) << "\n";
+    stream << space(level) << "- ScaledValueOfFirstSize = " << toString(mScaledValueOfFirstSize) << "\n";
+    stream << space(level) << "- ScaleFactorOfSecondSize = " << toString(mScaleFactorOfSecondSize) << "\n";
+    stream << space(level) << "- ScaledValueOfSecondSize = " << toString(mScaledValueOfSecondSize) << "\n";
+    stream << space(level) << "- TypeOfGeneratingProcess = " << toString(mTypeOfGeneratingProcess) << "\n";
+    stream << space(level) << "- BackgroundProcess = " << toString(mBackgroundProcess) << "\n";
+    stream << space(level) << "- GeneratingProcessIdentifier = " << toString(mGeneratingProcessIdentifier) << "\n";
+    stream << space(level) << "- HoursAfterDataCutoff = " << toString(mHoursAfterDataCutoff) << "\n";
+    stream << space(level) << "- MinutesAfterDataCutoff = " << toString(mMinutesAfterDataCutoff) << "\n";
+    stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
+    stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -214,8 +176,7 @@ T::Hash ParameterAerosolSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterCategory}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterCategory} attribute. */
 
 const T::UInt8_opt &ParameterAerosolSettings::getParameterCategory() const {
   try {
@@ -225,8 +186,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getParameterCategory() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterNumber}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterNumber} attribute. */
 
 const T::UInt8_opt &ParameterAerosolSettings::getParameterNumber() const {
   try {
@@ -236,8 +196,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getParameterNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mAerosolType} attribute.
- */
+/*! \brief The method returns the value of the {@link mAerosolType} attribute. */
 
 const T::UInt16_opt &ParameterAerosolSettings::getAerosolType() const {
   try {
@@ -247,8 +206,7 @@ const T::UInt16_opt &ParameterAerosolSettings::getAerosolType() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfSizeInterval}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfSizeInterval} attribute. */
 
 const T::UInt8_opt &ParameterAerosolSettings::getTypeOfSizeInterval() const {
   try {
@@ -258,8 +216,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getTypeOfSizeInterval() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaleFactorOfFirstSize}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfFirstSize} attribute. */
 
 const T::Int8_opt &ParameterAerosolSettings::getScaleFactorOfFirstSize() const {
   try {
@@ -269,11 +226,9 @@ const T::Int8_opt &ParameterAerosolSettings::getScaleFactorOfFirstSize() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaledValueOfFirstSize}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfFirstSize} attribute. */
 
-const T::Int32_opt &
-ParameterAerosolSettings::getScaledValueOfFirstSize() const {
+const T::Int32_opt &ParameterAerosolSettings::getScaledValueOfFirstSize() const {
   try {
     return mScaledValueOfFirstSize;
   } catch (...) {
@@ -281,11 +236,9 @@ ParameterAerosolSettings::getScaledValueOfFirstSize() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaleFactorOfSecondSize}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaleFactorOfSecondSize} attribute. */
 
-const T::Int8_opt &
-ParameterAerosolSettings::getScaleFactorOfSecondSize() const {
+const T::Int8_opt &ParameterAerosolSettings::getScaleFactorOfSecondSize() const {
   try {
     return mScaleFactorOfSecondSize;
   } catch (...) {
@@ -293,11 +246,9 @@ ParameterAerosolSettings::getScaleFactorOfSecondSize() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mScaledValueOfSecondSize}
- * attribute. */
+/*! \brief The method returns the value of the {@link mScaledValueOfSecondSize} attribute. */
 
-const T::Int32_opt &
-ParameterAerosolSettings::getScaledValueOfSecondSize() const {
+const T::Int32_opt &ParameterAerosolSettings::getScaledValueOfSecondSize() const {
   try {
     return mScaledValueOfSecondSize;
   } catch (...) {
@@ -305,11 +256,9 @@ ParameterAerosolSettings::getScaledValueOfSecondSize() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfGeneratingProcess}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfGeneratingProcess} attribute. */
 
-const T::UInt8_opt &
-ParameterAerosolSettings::getTypeOfGeneratingProcess() const {
+const T::UInt8_opt &ParameterAerosolSettings::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
@@ -317,8 +266,7 @@ ParameterAerosolSettings::getTypeOfGeneratingProcess() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mBackgroundProcess}
- * attribute. */
+/*! \brief The method returns the value of the {@link mBackgroundProcess} attribute. */
 
 const T::UInt8_opt &ParameterAerosolSettings::getBackgroundProcess() const {
   try {
@@ -328,11 +276,9 @@ const T::UInt8_opt &ParameterAerosolSettings::getBackgroundProcess() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mGeneratingProcessIdentifier} attribute. */
+/*! \brief The method returns the value of the {@link mGeneratingProcessIdentifier} attribute. */
 
-const T::UInt8_opt &
-ParameterAerosolSettings::getGeneratingProcessIdentifier() const {
+const T::UInt8_opt &ParameterAerosolSettings::getGeneratingProcessIdentifier() const {
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
@@ -340,8 +286,7 @@ ParameterAerosolSettings::getGeneratingProcessIdentifier() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mHoursAfterDataCutoff}
- * attribute. */
+/*! \brief The method returns the value of the {@link mHoursAfterDataCutoff} attribute. */
 
 const T::UInt16_opt &ParameterAerosolSettings::getHoursAfterDataCutoff() const {
   try {
@@ -351,11 +296,9 @@ const T::UInt16_opt &ParameterAerosolSettings::getHoursAfterDataCutoff() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mMinutesAfterDataCutoff}
- * attribute. */
+/*! \brief The method returns the value of the {@link mMinutesAfterDataCutoff} attribute. */
 
-const T::UInt8_opt &
-ParameterAerosolSettings::getMinutesAfterDataCutoff() const {
+const T::UInt8_opt &ParameterAerosolSettings::getMinutesAfterDataCutoff() const {
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
@@ -363,11 +306,9 @@ ParameterAerosolSettings::getMinutesAfterDataCutoff() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mIndicatorOfUnitOfTimeRange} attribute. */
+/*! \brief The method returns the value of the {@link mIndicatorOfUnitOfTimeRange} attribute. */
 
-const T::UInt8_opt &
-ParameterAerosolSettings::getIndicatorOfUnitOfTimeRange() const {
+const T::UInt8_opt &ParameterAerosolSettings::getIndicatorOfUnitOfTimeRange() const {
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
@@ -375,12 +316,131 @@ ParameterAerosolSettings::getIndicatorOfUnitOfTimeRange() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mForecastTime} attribute.
- */
+/*! \brief The method returns the value of the {@link mForecastTime} attribute. */
 
 const T::UInt32_opt &ParameterAerosolSettings::getForecastTime() const {
   try {
     return mForecastTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setParameterCategory(T::UInt8_opt parameterCategory) {
+  try {
+    mParameterCategory = parameterCategory;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setParameterNumber(T::UInt8_opt parameterNumber) {
+  try {
+    mParameterNumber = parameterNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setAerosolType(T::UInt16_opt aerosolType) {
+  try {
+    mAerosolType = aerosolType;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setTypeOfSizeInterval(T::UInt8_opt typeOfSizeInterval) {
+  try {
+    mTypeOfSizeInterval = typeOfSizeInterval;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setScaleFactorOfFirstSize(T::Int8_opt scaleFactorOfFirstSize) {
+  try {
+    mScaleFactorOfFirstSize = scaleFactorOfFirstSize;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setScaledValueOfFirstSize(T::Int32_opt scaledValueOfFirstSize) {
+  try {
+    mScaledValueOfFirstSize = scaledValueOfFirstSize;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setScaleFactorOfSecondSize(T::Int8_opt scaleFactorOfSecondSize) {
+  try {
+    mScaleFactorOfSecondSize = scaleFactorOfSecondSize;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setScaledValueOfSecondSize(T::Int32_opt scaledValueOfSecondSize) {
+  try {
+    mScaledValueOfSecondSize = scaledValueOfSecondSize;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGeneratingProcess) {
+  try {
+    mTypeOfGeneratingProcess = typeOfGeneratingProcess;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setBackgroundProcess(T::UInt8_opt backgroundProcess) {
+  try {
+    mBackgroundProcess = backgroundProcess;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setGeneratingProcessIdentifier(T::UInt8_opt generatingProcessIdentifier) {
+  try {
+    mGeneratingProcessIdentifier = generatingProcessIdentifier;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfterDataCutoff) {
+  try {
+    mHoursAfterDataCutoff = hoursAfterDataCutoff;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataCutoff) {
+  try {
+    mMinutesAfterDataCutoff = minutesAfterDataCutoff;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUnitOfTimeRange) {
+  try {
+    mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterAerosolSettings::setForecastTime(T::UInt32_opt forecastTime) {
+  try {
+    mForecastTime = forecastTime;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

@@ -72,6 +72,7 @@ class GridSection : public GRID::MessageSection
 
     // ### Section specific methods
 
+    uint                  getGridGeometryId() const;
     T::GridProjection     getGridProjection() const;
     std::string           getGridProjectionString() const;
     T::Coordinate_vec     getGridCoordinates() const;
@@ -86,10 +87,11 @@ class GridSection : public GRID::MessageSection
     void                  getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     void                  getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const;
     T::GridLayout         getGridLayout() const;
-    T::Hash               getHash() const;
+    T::Hash               getGridHash() const;
     T::SpatialReference*  getSpatialReference() const;
     bool                  isGridGlobal() const;
     void                  read(MemoryReader& memoryReader);
+    void                  setGridGeometryId(uint geometryId);
 
   private:
 
@@ -115,9 +117,6 @@ class GridSection : public GRID::MessageSection
 
     /*! \brief The pointer to the GridDefinition object. */
     GridDefinition_uptr   mGridDefinition;
-
-    /*! \brief The type of the grid. */
-    T::GridProjection     mGridProjection;
 
     /*! \brief The number of the grid point (calculated when the grid is irregular). */
     std::uint32_t         mNumberOfPoints;

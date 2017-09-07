@@ -8,10 +8,10 @@
 
 #include "grib2/definition/ParameterChemicalSettings.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,11 +34,9 @@ ParameterChemicalSettings::~ParameterChemicalSettings() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void ParameterChemicalSettings::read(MemoryReader &memoryReader) {
@@ -64,36 +62,26 @@ void ParameterChemicalSettings::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void ParameterChemicalSettings::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void ParameterChemicalSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
-    sprintf(name, "%sParameterChemicalSettings.ParameterCategory",
-            prefix.c_str());
+    sprintf(name, "%sParameterChemicalSettings.ParameterCategory", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterCategory));
-    sprintf(name, "%sParameterChemicalSettings.ParameterNumber",
-            prefix.c_str());
+    sprintf(name, "%sParameterChemicalSettings.ParameterNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mParameterNumber));
-    sprintf(name, "%sParameterChemicalSettings.ConstituentType",
-            prefix.c_str());
+    sprintf(name, "%sParameterChemicalSettings.ConstituentType", prefix.c_str());
     attributeList.addAttribute(name, toString(mConstituentType));
-    sprintf(name, "%sParameterChemicalSettings.TypeOfGeneratingProcess",
-            prefix.c_str());
+    sprintf(name, "%sParameterChemicalSettings.TypeOfGeneratingProcess", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfGeneratingProcess));
-    sprintf(name, "%sParameterChemicalSettings.BackgroundProcess",
-            prefix.c_str());
+    sprintf(name, "%sParameterChemicalSettings.BackgroundProcess", prefix.c_str());
     attributeList.addAttribute(name, toString(mBackgroundProcess));
-    sprintf(name, "%sParameterChemicalSettings.GeneratingProcessIdentifier",
-            prefix.c_str());
+    sprintf(name, "%sParameterChemicalSettings.GeneratingProcessIdentifier", prefix.c_str());
     attributeList.addAttribute(name, toString(mGeneratingProcessIdentifier));
-    sprintf(name, "%sParameterChemicalSettings.HoursAfterDataCutoff",
-            prefix.c_str());
+    sprintf(name, "%sParameterChemicalSettings.HoursAfterDataCutoff", prefix.c_str());
     attributeList.addAttribute(name, toString(mHoursAfterDataCutoff));
-    sprintf(name, "%sParameterChemicalSettings.MinutesAfterDataCutoff",
-            prefix.c_str());
+    sprintf(name, "%sParameterChemicalSettings.MinutesAfterDataCutoff", prefix.c_str());
     attributeList.addAttribute(name, toString(mMinutesAfterDataCutoff));
-    sprintf(name, "%sParameterChemicalSettings.IndicatorOfUnitOfTimeRange",
-            prefix.c_str());
+    sprintf(name, "%sParameterChemicalSettings.IndicatorOfUnitOfTimeRange", prefix.c_str());
     attributeList.addAttribute(name, toString(mIndicatorOfUnitOfTimeRange));
     sprintf(name, "%sParameterChemicalSettings.StartStep", prefix.c_str());
     attributeList.addAttribute(name, toString(mStartStep));
@@ -102,39 +90,25 @@ void ParameterChemicalSettings::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void ParameterChemicalSettings::print(std::ostream &stream, uint level,
-                                      uint optionFlags) const {
+void ParameterChemicalSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "ParameterChemicalSettings\n";
-    stream << space(level)
-           << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
-    stream << space(level)
-           << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
-    stream << space(level)
-           << "- ConstituentType = " << toString(mConstituentType) << "\n";
-    stream << space(level) << "- TypeOfGeneratingProcess = "
-           << toString(mTypeOfGeneratingProcess) << "\n";
-    stream << space(level)
-           << "- BackgroundProcess = " << toString(mBackgroundProcess) << "\n";
-    stream << space(level) << "- GeneratingProcessIdentifier = "
-           << toString(mGeneratingProcessIdentifier) << "\n";
-    stream << space(level)
-           << "- HoursAfterDataCutoff = " << toString(mHoursAfterDataCutoff)
-           << "\n";
-    stream << space(level)
-           << "- MinutesAfterDataCutoff = " << toString(mMinutesAfterDataCutoff)
-           << "\n";
-    stream << space(level) << "- IndicatorOfUnitOfTimeRange = "
-           << toString(mIndicatorOfUnitOfTimeRange) << "\n";
+    stream << space(level) << "- ParameterCategory = " << toString(mParameterCategory) << "\n";
+    stream << space(level) << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
+    stream << space(level) << "- ConstituentType = " << toString(mConstituentType) << "\n";
+    stream << space(level) << "- TypeOfGeneratingProcess = " << toString(mTypeOfGeneratingProcess) << "\n";
+    stream << space(level) << "- BackgroundProcess = " << toString(mBackgroundProcess) << "\n";
+    stream << space(level) << "- GeneratingProcessIdentifier = " << toString(mGeneratingProcessIdentifier) << "\n";
+    stream << space(level) << "- HoursAfterDataCutoff = " << toString(mHoursAfterDataCutoff) << "\n";
+    stream << space(level) << "- MinutesAfterDataCutoff = " << toString(mMinutesAfterDataCutoff) << "\n";
+    stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
     stream << space(level) << "- StartStep = " << toString(mStartStep) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
@@ -172,8 +146,7 @@ T::Hash ParameterChemicalSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterCategory}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterCategory} attribute. */
 
 const T::UInt8_opt &ParameterChemicalSettings::getParameterCategory() const {
   try {
@@ -183,8 +156,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getParameterCategory() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mParameterNumber}
- * attribute. */
+/*! \brief The method returns the value of the {@link mParameterNumber} attribute. */
 
 const T::UInt8_opt &ParameterChemicalSettings::getParameterNumber() const {
   try {
@@ -194,8 +166,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getParameterNumber() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mConstituentType}
- * attribute. */
+/*! \brief The method returns the value of the {@link mConstituentType} attribute. */
 
 const T::UInt16_opt &ParameterChemicalSettings::getConstituentType() const {
   try {
@@ -205,11 +176,9 @@ const T::UInt16_opt &ParameterChemicalSettings::getConstituentType() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfGeneratingProcess}
- * attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfGeneratingProcess} attribute. */
 
-const T::UInt8_opt &
-ParameterChemicalSettings::getTypeOfGeneratingProcess() const {
+const T::UInt8_opt &ParameterChemicalSettings::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
@@ -217,8 +186,7 @@ ParameterChemicalSettings::getTypeOfGeneratingProcess() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mBackgroundProcess}
- * attribute. */
+/*! \brief The method returns the value of the {@link mBackgroundProcess} attribute. */
 
 const T::UInt8_opt &ParameterChemicalSettings::getBackgroundProcess() const {
   try {
@@ -228,11 +196,9 @@ const T::UInt8_opt &ParameterChemicalSettings::getBackgroundProcess() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mGeneratingProcessIdentifier} attribute. */
+/*! \brief The method returns the value of the {@link mGeneratingProcessIdentifier} attribute. */
 
-const T::UInt8_opt &
-ParameterChemicalSettings::getGeneratingProcessIdentifier() const {
+const T::UInt8_opt &ParameterChemicalSettings::getGeneratingProcessIdentifier() const {
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
@@ -240,11 +206,9 @@ ParameterChemicalSettings::getGeneratingProcessIdentifier() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mHoursAfterDataCutoff}
- * attribute. */
+/*! \brief The method returns the value of the {@link mHoursAfterDataCutoff} attribute. */
 
-const T::UInt16_opt &
-ParameterChemicalSettings::getHoursAfterDataCutoff() const {
+const T::UInt16_opt &ParameterChemicalSettings::getHoursAfterDataCutoff() const {
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
@@ -252,11 +216,9 @@ ParameterChemicalSettings::getHoursAfterDataCutoff() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mMinutesAfterDataCutoff}
- * attribute. */
+/*! \brief The method returns the value of the {@link mMinutesAfterDataCutoff} attribute. */
 
-const T::UInt8_opt &
-ParameterChemicalSettings::getMinutesAfterDataCutoff() const {
+const T::UInt8_opt &ParameterChemicalSettings::getMinutesAfterDataCutoff() const {
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
@@ -264,11 +226,9 @@ ParameterChemicalSettings::getMinutesAfterDataCutoff() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link
- * mIndicatorOfUnitOfTimeRange} attribute. */
+/*! \brief The method returns the value of the {@link mIndicatorOfUnitOfTimeRange} attribute. */
 
-const T::UInt8_opt &
-ParameterChemicalSettings::getIndicatorOfUnitOfTimeRange() const {
+const T::UInt8_opt &ParameterChemicalSettings::getIndicatorOfUnitOfTimeRange() const {
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
@@ -281,6 +241,86 @@ ParameterChemicalSettings::getIndicatorOfUnitOfTimeRange() const {
 const T::UInt32_opt &ParameterChemicalSettings::getStartStep() const {
   try {
     return mStartStep;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterChemicalSettings::setParameterCategory(T::UInt8_opt parameterCategory) {
+  try {
+    mParameterCategory = parameterCategory;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterChemicalSettings::setParameterNumber(T::UInt8_opt parameterNumber) {
+  try {
+    mParameterNumber = parameterNumber;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterChemicalSettings::setConstituentType(T::UInt16_opt constituentType) {
+  try {
+    mConstituentType = constituentType;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterChemicalSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGeneratingProcess) {
+  try {
+    mTypeOfGeneratingProcess = typeOfGeneratingProcess;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterChemicalSettings::setBackgroundProcess(T::UInt8_opt backgroundProcess) {
+  try {
+    mBackgroundProcess = backgroundProcess;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterChemicalSettings::setGeneratingProcessIdentifier(T::UInt8_opt generatingProcessIdentifier) {
+  try {
+    mGeneratingProcessIdentifier = generatingProcessIdentifier;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterChemicalSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfterDataCutoff) {
+  try {
+    mHoursAfterDataCutoff = hoursAfterDataCutoff;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterChemicalSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataCutoff) {
+  try {
+    mMinutesAfterDataCutoff = minutesAfterDataCutoff;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterChemicalSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUnitOfTimeRange) {
+  try {
+    mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void ParameterChemicalSettings::setStartStep(T::UInt32_opt startStep) {
+  try {
+    mStartStep = startStep;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

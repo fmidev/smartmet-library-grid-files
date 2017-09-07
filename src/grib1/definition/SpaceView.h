@@ -16,8 +16,7 @@
 
 namespace SmartMet {
 namespace GRIB1 {
-/*! \brief The class is automatically created from the template
- * (grid_definition_90).*/
+/*! \brief The class is automatically created from the template (grid_definition_90).*/
 
 class SpaceView : public GridDefinition {
 public:
@@ -25,40 +24,50 @@ public:
   virtual ~SpaceView();
 
   virtual void read(MemoryReader &memoryReader);
-  virtual void getAttributeList(std::string prefix,
-                                T::AttributeList &attributeList) const;
+  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
   std::uint16_t getNx() const;
+  void setNx(std::uint16_t nx);
   std::uint16_t getNy() const;
+  void setNy(std::uint16_t ny);
   std::int24_t getLatitudeOfSubSatellitePoint() const;
+  void setLatitudeOfSubSatellitePoint(std::int24_t latitudeOfSubSatellitePoint);
   std::int24_t getLongitudeOfSubSatellitePoint() const;
+  void setLongitudeOfSubSatellitePoint(std::int24_t longitudeOfSubSatellitePoint);
   const ResolutionFlagsSettings *getResolutionFlags() const;
+  void setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
   std::uint24_t getDx() const;
+  void setDx(std::uint24_t dx);
   std::uint24_t getDy() const;
+  void setDy(std::uint24_t dy);
   std::uint16_t getXpInGridLengths() const;
+  void setXpInGridLengths(std::uint16_t xpInGridLengths);
   std::uint16_t getYpInGridLengths() const;
+  void setYpInGridLengths(std::uint16_t ypInGridLengths);
   const ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings scanningMode);
   std::uint24_t getOrientationOfTheGrid() const;
+  void setOrientationOfTheGrid(std::uint24_t orientationOfTheGrid);
   std::uint24_t getNrInRadiusOfEarth() const;
+  void setNrInRadiusOfEarth(std::uint24_t nrInRadiusOfEarth);
   std::uint16_t getXo() const;
+  void setXo(std::uint16_t xo);
   std::uint16_t getYo() const;
+  void setYo(std::uint16_t yo);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
   // #
-  // # This software is licensed under the terms of the Apache Licence Version
-  // 2.0
+  // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
   // #
-  // # In applying this licence, ECMWF does not waive the privileges and
-  // immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it
-  // submit to any jurisdiction.
+  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # GRID DEFINITION Space view perspective or orthographic
+  // # GRID DEFINITION Space view, perspective or orthographic
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 90;
   //
@@ -82,18 +91,14 @@ protected:
 
   std::int24_t mLatitudeOfSubSatellitePoint;
 
-  // meta geography.latitudeOfSubSatellitePointInDegrees
-  // scale(latitudeOfSubSatellitePoint,oneConstant,grib1divider,truncateDegrees)
-  // : dump;
+  // meta geography.latitudeOfSubSatellitePointInDegrees  scale(latitudeOfSubSatellitePoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lap=latitudeOfSubSatellitePoint;
   //
   // signed[3] longitudeOfSubSatellitePoint ;
 
   std::int24_t mLongitudeOfSubSatellitePoint;
 
-  // meta geography.longitudeOfSubSatellitePointInDegrees
-  // scale(longitudeOfSubSatellitePoint,oneConstant,grib1divider,truncateDegrees)
-  // : dump;
+  // meta geography.longitudeOfSubSatellitePointInDegrees  scale(longitudeOfSubSatellitePoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lap=longitudeOfSubSatellitePoint;
   //
   // include "resolution_flags.def";
@@ -135,16 +140,13 @@ protected:
 
   std::uint24_t mOrientationOfTheGrid;
 
-  // meta geography.orientationOfTheGridInDegrees
-  // scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) :
-  // dump;
+  // meta geography.orientationOfTheGridInDegrees  scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
   //
   // unsigned[3] NrInRadiusOfEarth : edition_specific,no_copy;
 
   std::uint24_t mNrInRadiusOfEarth;
 
-  // alias altitudeOfTheCameraFromTheEarthSCenterMeasuredInUnitsOfTheEarth =
-  // NrInRadiusOfEarth;
+  // alias altitudeOfTheCameraFromTheEarthSCenterMeasuredInUnitsOfTheEarth = NrInRadiusOfEarth;
   //
   // unsigned[2]  Xo : dump;
 
@@ -171,9 +173,7 @@ protected:
   //
   // meta numberOfDataPoints number_of_points(Ni,Nj,PLPresent,pl) : dump;
   // alias numberOfPoints=numberOfDataPoints;
-  // meta numberOfValues
-  // number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues)
-  // : dump;
+  // meta numberOfValues number_of_values(values,bitsPerValue,numberOfDataPoints,bitmapPresent,bitmap,numberOfCodedValues) : dump;
   // #alias ls.valuesCount=numberOfValues;
   //
 };

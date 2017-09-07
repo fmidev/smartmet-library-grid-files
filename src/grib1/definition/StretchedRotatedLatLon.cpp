@@ -8,10 +8,10 @@
 
 #include "grib1/definition/StretchedRotatedLatLon.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -39,11 +39,9 @@ StretchedRotatedLatLon::~StretchedRotatedLatLon() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   section object.
+/*! \brief The method reads and initializes all data related to the current section object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void StretchedRotatedLatLon::read(MemoryReader &memoryReader) {
@@ -68,8 +66,7 @@ void StretchedRotatedLatLon::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void StretchedRotatedLatLon::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void StretchedRotatedLatLon::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sStretchedRotatedLatLon.Ni", prefix.c_str());
@@ -78,11 +75,9 @@ void StretchedRotatedLatLon::getAttributeList(
     attributeList.addAttribute(name, toString(mNj));
     sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
     mGridArea.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedRotatedLatLon.IDirectionIncrement",
-            prefix.c_str());
+    sprintf(name, "%sStretchedRotatedLatLon.IDirectionIncrement", prefix.c_str());
     attributeList.addAttribute(name, toString(mIDirectionIncrement));
-    sprintf(name, "%sStretchedRotatedLatLon.JDirectionIncrement",
-            prefix.c_str());
+    sprintf(name, "%sStretchedRotatedLatLon.JDirectionIncrement", prefix.c_str());
     attributeList.addAttribute(name, toString(mJDirectionIncrement));
     sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
     mScanningMode.getAttributeList(name, attributeList);
@@ -97,28 +92,21 @@ void StretchedRotatedLatLon::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void StretchedRotatedLatLon::print(std::ostream &stream, uint level,
-                                   uint optionFlags) const {
+void StretchedRotatedLatLon::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "StretchedRotatedLatLon\n";
     stream << space(level) << "- Ni = " << toString(mNi) << "\n";
     stream << space(level) << "- Nj = " << toString(mNj) << "\n";
     mGridArea.print(stream, level + 1, optionFlags);
-    stream << space(level)
-           << "- IDirectionIncrement = " << toString(mIDirectionIncrement)
-           << "\n";
-    stream << space(level)
-           << "- JDirectionIncrement = " << toString(mJDirectionIncrement)
-           << "\n";
+    stream << space(level) << "- IDirectionIncrement = " << toString(mIDirectionIncrement) << "\n";
+    stream << space(level) << "- JDirectionIncrement = " << toString(mJDirectionIncrement) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
     stream << space(level) << "- Zero = " << toString(mZero) << "\n";
     mRotation.print(stream, level + 1, optionFlags);
@@ -137,7 +125,7 @@ T::Hash StretchedRotatedLatLon::countHash() {
     boost::hash_combine(seed, mNj);
     boost::hash_combine(seed, mIDirectionIncrement);
     boost::hash_combine(seed, mJDirectionIncrement);
-    boost::hash_combine(seed, mZero);
+    // boost::hash_combine(seed,mZero);
     boost::hash_combine(seed, mGridArea.countHash());
     boost::hash_combine(seed, mScanningMode.countHash());
     boost::hash_combine(seed, mRotation.countHash());
@@ -178,8 +166,7 @@ const GridAreaSettings *StretchedRotatedLatLon::getGridArea() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mIDirectionIncrement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mIDirectionIncrement} attribute. */
 
 std::uint16_t StretchedRotatedLatLon::getIDirectionIncrement() const {
   try {
@@ -189,8 +176,7 @@ std::uint16_t StretchedRotatedLatLon::getIDirectionIncrement() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mJDirectionIncrement}
- * attribute. */
+/*! \brief The method returns the value of the {@link mJDirectionIncrement} attribute. */
 
 std::uint16_t StretchedRotatedLatLon::getJDirectionIncrement() const {
   try {
@@ -200,8 +186,7 @@ std::uint16_t StretchedRotatedLatLon::getJDirectionIncrement() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mScanningMode}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
 const ScanningModeSettings *StretchedRotatedLatLon::getScanningMode() const {
   try {
@@ -231,13 +216,83 @@ const RotationSettings *StretchedRotatedLatLon::getRotation() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mGridStretching}
- * attribute. */
+/*! \brief The method returns the pointer to the {@link mGridStretching} attribute. */
 
-const GridStretchingSettings *
-StretchedRotatedLatLon::getGridStretching() const {
+const GridStretchingSettings *StretchedRotatedLatLon::getGridStretching() const {
   try {
     return &mGridStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setNi(std::uint16_t ni) {
+  try {
+    mNi = ni;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setNj(std::uint16_t nj) {
+  try {
+    mNj = nj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setGridArea(GridAreaSettings gridArea) {
+  try {
+    mGridArea = gridArea;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setIDirectionIncrement(std::uint16_t iDirectionIncrement) {
+  try {
+    mIDirectionIncrement = iDirectionIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setJDirectionIncrement(std::uint16_t jDirectionIncrement) {
+  try {
+    mJDirectionIncrement = jDirectionIncrement;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setScanningMode(ScanningModeSettings scanningMode) {
+  try {
+    mScanningMode = scanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setZero(std::uint32_t zero) {
+  try {
+    mZero = zero;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setRotation(RotationSettings rotation) {
+  try {
+    mRotation = rotation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void StretchedRotatedLatLon::setGridStretching(GridStretchingSettings gridStretching) {
+  try {
+    mGridStretching = gridStretching;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

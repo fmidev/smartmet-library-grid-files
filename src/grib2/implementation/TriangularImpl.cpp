@@ -11,6 +11,7 @@ namespace GRIB2
 
 TriangularImpl::TriangularImpl()
 {
+  mGridProjection = T::GridProjection::Triangular;
 }
 
 

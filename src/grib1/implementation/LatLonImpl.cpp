@@ -14,6 +14,7 @@ namespace GRIB1
 
 LatLonImpl::LatLonImpl()
 {
+  mGridProjection = T::GridProjection::LatLon;
 }
 
 

@@ -183,6 +183,20 @@ T::TimeString Message::getForecastEndTime() const
 
 
 
+/*! \brief The method returns the hash of the grid.
+
+        \return   The hash of the grid.
+*/
+
+T::Hash Message::getGridHash() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
 /*! \brief The method returns the type of the grid.
 
         \return   The type of the grid (expressed as an enum value).
@@ -348,6 +362,24 @@ int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 */
 
 bool Message::isGridGlobal() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+uint Message::getGridGeometryId() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+void Message::setGridGeometryId(uint geometryId)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }

@@ -8,10 +8,10 @@
 
 #include "grib2/definition/SpectralDataRepresentation.h"
 #include "common/Exception.h"
-#include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include <iostream>
+#include "common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
+#include <iostream>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -35,11 +35,9 @@ SpectralDataRepresentation::~SpectralDataRepresentation() {
   }
 }
 
-/*! \brief The method reads and initializes all data related to the current
-   object.
+/*! \brief The method reads and initializes all data related to the current object.
 
-        \param memoryReader  This object controls the access to the memory
-   mapped file.
+        \param memoryReader  This object controls the access to the memory mapped file.
 */
 
 void SpectralDataRepresentation::read(MemoryReader &memoryReader) {
@@ -57,8 +55,7 @@ void SpectralDataRepresentation::read(MemoryReader &memoryReader) {
     \param attributeList  The attributeList storage.
 */
 
-void SpectralDataRepresentation::getAttributeList(
-    std::string prefix, T::AttributeList &attributeList) const {
+void SpectralDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sSpectralDataRepresentation.", prefix.c_str());
@@ -70,22 +67,18 @@ void SpectralDataRepresentation::getAttributeList(
   }
 }
 
-/*! \brief The method prints the content of the current object into the given
-   stream.
+/*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
-    \param level        The print level (used when printing multi-level
-   structures).
+    \param level        The print level (used when printing multi-level structures).
     \param optionFlags  The printing options expressed in flag-bits.
 */
 
-void SpectralDataRepresentation::print(std::ostream &stream, uint level,
-                                       uint optionFlags) const {
+void SpectralDataRepresentation::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "SpectralDataRepresentation\n";
     mPacking.print(stream, level + 1, optionFlags);
-    stream << space(level) << "- RealPartOf00 = " << toString(mRealPartOf00)
-           << "\n";
+    stream << space(level) << "- RealPartOf00 = " << toString(mRealPartOf00) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -114,12 +107,27 @@ const PackingSettings *SpectralDataRepresentation::getPacking() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mRealPartOf00} attribute.
- */
+/*! \brief The method returns the value of the {@link mRealPartOf00} attribute. */
 
 float SpectralDataRepresentation::getRealPartOf00() const {
   try {
     return mRealPartOf00;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpectralDataRepresentation::setPacking(PackingSettings packing) {
+  try {
+    mPacking = packing;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+void SpectralDataRepresentation::setRealPartOf00(float realPartOf00) {
+  try {
+    mRealPartOf00 = realPartOf00;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
