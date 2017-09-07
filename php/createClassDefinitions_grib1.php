@@ -60,7 +60,9 @@ $templates = array (
 
 $nohash = array (
     "mResolutionFlags" => "",
-    "mZero" => ""
+    "mZero" => "",
+    "mLongitudeOfLastGridPoint" => "",
+    "mLatitudeOfLastGridPoint" => ""
 );
 
 

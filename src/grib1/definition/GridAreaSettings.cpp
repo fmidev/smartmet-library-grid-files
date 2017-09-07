@@ -106,8 +106,8 @@ T::Hash GridAreaSettings::countHash() {
     std::size_t seed = 0;
     boost::hash_combine(seed, mLatitudeOfFirstGridPoint);
     boost::hash_combine(seed, mLongitudeOfFirstGridPoint);
-    boost::hash_combine(seed, mLatitudeOfLastGridPoint);
-    boost::hash_combine(seed, mLongitudeOfLastGridPoint);
+    // boost::hash_combine(seed,mLatitudeOfLastGridPoint);
+    // boost::hash_combine(seed,mLongitudeOfLastGridPoint);
     // boost::hash_combine(seed,mResolutionFlags.countHash());
     return seed;
   } catch (...) {

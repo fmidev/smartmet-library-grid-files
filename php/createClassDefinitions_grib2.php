@@ -173,7 +173,9 @@ $nohash = array (
     "mEarthShape" => "",
     "mBasicAngleOfTheInitialProductionDomain" => "",
     "mSubdivisionsOfBasicAngle" => "",
-    "mResolution" => ""
+    "mResolution" => "",
+    "mLongitudeOfLastGridPoint" => "",
+    "mLatitudeOfLastGridPoint" => ""
 );
 
 /*

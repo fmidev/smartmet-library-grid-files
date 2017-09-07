@@ -1449,9 +1449,9 @@ void GribDef::loadGeometryDefinitions()
               def1->setGridGeometryId(geometryId);
               def1->setGridGeometryName(geometryName);
 
-              //def1->print(std::cout,0,0);
-              //hash = def1->getGridHash();
-              //printf("HASH %llu\n",(unsigned long long)hash);
+              def1->print(std::cout,0,0);
+              T::Hash hash = def1->getGridHash();
+              printf("HASH %llu\n",(unsigned long long)hash);
 
               mGridDefinitions1.push_back(def1);
             }

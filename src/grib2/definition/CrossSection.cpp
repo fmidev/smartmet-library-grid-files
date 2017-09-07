@@ -144,10 +144,8 @@ T::Hash CrossSection::countHash() {
       boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
       boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
-    if (mLatitudeOfLastGridPoint)
-      boost::hash_combine(seed, *mLatitudeOfLastGridPoint);
-    if (mLongitudeOfLastGridPoint)
-      boost::hash_combine(seed, *mLongitudeOfLastGridPoint);
+    // if (mLatitudeOfLastGridPoint) boost::hash_combine(seed,*mLatitudeOfLastGridPoint);
+    // if (mLongitudeOfLastGridPoint) boost::hash_combine(seed,*mLongitudeOfLastGridPoint);
     if (mTypeOfHorizontalLine)
       boost::hash_combine(seed, *mTypeOfHorizontalLine);
     if (mNumberOfVerticalPoints)

@@ -142,10 +142,8 @@ T::Hash Mercator::countHash() {
       boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
     if (mLaD)
       boost::hash_combine(seed, *mLaD);
-    if (mLatitudeOfLastGridPoint)
-      boost::hash_combine(seed, *mLatitudeOfLastGridPoint);
-    if (mLongitudeOfLastGridPoint)
-      boost::hash_combine(seed, *mLongitudeOfLastGridPoint);
+    // if (mLatitudeOfLastGridPoint) boost::hash_combine(seed,*mLatitudeOfLastGridPoint);
+    // if (mLongitudeOfLastGridPoint) boost::hash_combine(seed,*mLongitudeOfLastGridPoint);
     if (mOrientationOfTheGrid)
       boost::hash_combine(seed, *mOrientationOfTheGrid);
     if (mDi)
