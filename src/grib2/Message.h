@@ -37,8 +37,9 @@ class Message : public GRID::Message
     void                  getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     uint                  getFileId() const;
     T::FilePosition       getFilePosition() const;
-    T::TimeString         getForecastStartTime() const;
-    T::TimeString         getForecastEndTime() const;
+    T::TimeString         getForecastTime() const;
+    short                 getForecastType() const;
+    short                 getForecastNumber() const;
     GribFile*             getGribFile() const;
 
     uint                  getGridGeometryId() const;
@@ -68,8 +69,6 @@ class Message : public GRID::Message
     T::TimeString         getReferenceTime() const;
     T::SpatialReference*  getSpatialReference() const;
     std::uint8_t          getTablesVersion() const;
-    T::UInt8_opt          getTypeOfEnsembleForecast() const;
-    T::UInt8_opt          getPerturbationNumber() const;
 
     std::string           getWKT() const;
     bool                  isGridGlobal() const;

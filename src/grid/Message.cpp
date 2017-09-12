@@ -159,22 +159,7 @@ T::TimeString Message::getReferenceTime() const
         \return   The forecast start time of the current message.
 */
 
-T::TimeString Message::getForecastStartTime() const
-{
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
-}
-
-
-
-
-
-/*! \brief The method returns the forecast end time. This is calculated from the reference
-    time and other time parameters (=> NormalProduct->parameter()).
-
-        \return   The forecast end time of the current message.
-*/
-
-T::TimeString Message::getForecastEndTime() const
+T::TimeString Message::getForecastTime() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -913,7 +898,7 @@ std::string Message::getWKT() const
 
 
 
-T::UInt8_opt Message::getTypeOfEnsembleForecast() const
+short Message::getForecastType() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -922,7 +907,7 @@ T::UInt8_opt Message::getTypeOfEnsembleForecast() const
 
 
 
-T::UInt8_opt Message::getPerturbationNumber() const
+short Message::getForecastNumber() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1014,7 +999,7 @@ void Message::getParameterValuesByGridArea(uint grid_i_start,uint grid_j_start,u
 {
   try
   {
-    T::TimeString tm = getForecastStartTime();
+    T::TimeString tm = getForecastTime();
 
     for (uint j=grid_j_start; j<= grid_j_end; j++)
     {
@@ -1048,7 +1033,7 @@ void Message::getParameterValuesByGridArea(uint grid_i_start,uint grid_j_start,u
 {
   try
   {
-    T::TimeString tm = getForecastStartTime();
+    T::TimeString tm = getForecastTime();
 
     for (uint j=grid_j_start; j<= grid_j_end; j++)
     {

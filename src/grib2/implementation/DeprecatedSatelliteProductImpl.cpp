@@ -60,24 +60,7 @@ void DeprecatedSatelliteProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString DeprecatedSatelliteProductImpl::getForecastStartTime(T::TimeString referenceTime) const
-{
-  return referenceTime;
-  //throw SmartMet::Spine::Exception(BCP, "Not implemented!");
-}
-
-
-
-
-
-/*! \brief The method returns the end time of the current forecast data. In some cases
-    the reference time is needed for calculating the actual forecast time.
-
-        \param referenceTime  The possible reference time.
-        \return               The forecast time.
-*/
-
-T::TimeString DeprecatedSatelliteProductImpl::getForecastEndTime(T::TimeString referenceTime) const
+T::TimeString DeprecatedSatelliteProductImpl::getForecastTime(T::TimeString referenceTime) const
 {
   return referenceTime;
   //throw SmartMet::Spine::Exception(BCP, "Not implemented!");

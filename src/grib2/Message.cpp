@@ -180,10 +180,7 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
     attributeList.addAttribute(name,getParameterLevelIdString());
 
     sprintf(name,"%smessage[%u].foracastStartTime",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,getForecastStartTime());
-
-    sprintf(name,"%smessage[%u].foracastEndTime",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,getForecastEndTime());
+    attributeList.addAttribute(name,getForecastTime());
 
     sprintf(name,"%smessage[%u].referenceTime",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,getReferenceTime());
@@ -1230,14 +1227,14 @@ T::ParamLevelId Message::getParameterLevelId() const
 
 
 
-T::UInt8_opt Message::getTypeOfEnsembleForecast() const
+short Message::getForecastType() const
 {
   try
   {
     if (mProductSection == NULL)
       throw SmartMet::Spine::Exception(BCP,"The 'mProductSection' attribute points to NULL!");
 
-    return mProductSection->getTypeOfEnsembleForecast();
+    return mProductSection->getForecastType();
   }
   catch (...)
   {
@@ -1251,14 +1248,14 @@ T::UInt8_opt Message::getTypeOfEnsembleForecast() const
 
 
 
-T::UInt8_opt Message::getPerturbationNumber() const
+short Message::getForecastNumber() const
 {
   try
   {
     if (mProductSection == NULL)
       throw SmartMet::Spine::Exception(BCP,"The 'mProductSection' attribute points to NULL!");
 
-    return mProductSection->getPerturbationNumber();
+    return mProductSection->getForecastNumber();
   }
   catch (...)
   {
@@ -1317,7 +1314,7 @@ T::TimeString Message::getReferenceTime() const
 
 
 
-T::TimeString Message::getForecastStartTime() const
+T::TimeString Message::getForecastTime() const
 {
   try
   {
@@ -1327,31 +1324,7 @@ T::TimeString Message::getForecastStartTime() const
     if (mProductSection == NULL)
       throw SmartMet::Spine::Exception(BCP,"The 'mProductSection' attribute points to NULL!");
 
-    return mProductSection->getForecastStartTime(mIdentificationSection->getReferenceTime());
-  }
-  catch (...)
-  {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
-    exception.addParameter("Message index",std::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
-T::TimeString Message::getForecastEndTime() const
-{
-  try
-  {
-    if (mIdentificationSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mIdentificationSection' attribute points to NULL!");
-
-    if (mProductSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductSection' attribute points to NULL!");
-
-    return mProductSection->getForecastEndTime(mIdentificationSection->getReferenceTime());
+    return mProductSection->getForecastTime(mIdentificationSection->getReferenceTime());
   }
   catch (...)
   {
@@ -1933,8 +1906,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- newbaseParameterId       = " << mNewbaseParameterId << "\n";
     stream << space(level) << "- newbaseParameterName     = " << mNewbaseParameterName << "\n";
     stream << space(level) << "- referenceTime            = " << getReferenceTime() << "\n";
-    stream << space(level) << "- startTime                = " << getForecastStartTime() << "\n";
-    stream << space(level) << "- endTime                  = " << getForecastEndTime() << "\n";
+    stream << space(level) << "- startTime                = " << getForecastTime() << "\n";
     stream << space(level) << "- gridGeometryId           = " << getGridGeometryId() << "\n";
     stream << space(level) << "- gridHash                 = " << getGridHash() << "\n";
     stream << space(level) << "- gridProjection           = " << T::get_gridProjectionString(getGridProjection()) << "\n";

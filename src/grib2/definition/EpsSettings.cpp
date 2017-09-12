@@ -41,8 +41,8 @@ EpsSettings::~EpsSettings() {
 
 void EpsSettings::read(MemoryReader &memoryReader) {
   try {
-    mTypeOfEnsembleForecast = memoryReader.read_UInt8_opt();
-    mPerturbationNumber = memoryReader.read_UInt8_opt();
+    mForecastType = memoryReader.read_UInt8_opt();
+    mForecastPerturbationNumber = memoryReader.read_UInt8_opt();
     mNumberOfForecastsInEnsemble = memoryReader.read_UInt8_opt();
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
@@ -59,9 +59,9 @@ void EpsSettings::getAttributeList(std::string prefix, T::AttributeList &attribu
   try {
     char name[300];
     sprintf(name, "%sEpsSettings.TypeOfEnsembleForecast", prefix.c_str());
-    attributeList.addAttribute(name, toString(mTypeOfEnsembleForecast));
+    attributeList.addAttribute(name, toString(mForecastType));
     sprintf(name, "%sEpsSettings.PerturbationNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mPerturbationNumber));
+    attributeList.addAttribute(name, toString(mForecastPerturbationNumber));
     sprintf(name, "%sEpsSettings.NumberOfForecastsInEnsemble", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
@@ -79,8 +79,8 @@ void EpsSettings::getAttributeList(std::string prefix, T::AttributeList &attribu
 void EpsSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "EpsSettings\n";
-    stream << space(level) << "- TypeOfEnsembleForecast = " << toString(mTypeOfEnsembleForecast) << "\n";
-    stream << space(level) << "- PerturbationNumber = " << toString(mPerturbationNumber) << "\n";
+    stream << space(level) << "- TypeOfEnsembleForecast = " << toString(mForecastType) << "\n";
+    stream << space(level) << "- PerturbationNumber = " << toString(mForecastPerturbationNumber) << "\n";
     stream << space(level) << "- NumberOfForecastsInEnsemble = " << toString(mNumberOfForecastsInEnsemble) << "\n";
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
@@ -92,10 +92,10 @@ void EpsSettings::print(std::ostream &stream, uint level, uint optionFlags) cons
 T::Hash EpsSettings::countHash() {
   try {
     std::size_t seed = 0;
-    if (mTypeOfEnsembleForecast)
-      boost::hash_combine(seed, *mTypeOfEnsembleForecast);
-    if (mPerturbationNumber)
-      boost::hash_combine(seed, *mPerturbationNumber);
+    if (mForecastType)
+      boost::hash_combine(seed, *mForecastType);
+    if (mForecastPerturbationNumber)
+      boost::hash_combine(seed, *mForecastPerturbationNumber);
     if (mNumberOfForecastsInEnsemble)
       boost::hash_combine(seed, *mNumberOfForecastsInEnsemble);
     return seed;
@@ -104,21 +104,21 @@ T::Hash EpsSettings::countHash() {
   }
 }
 
-/*! \brief The method returns the value of the {@link mTypeOfEnsembleForecast} attribute. */
+/*! \brief The method returns the value of the {@link mForecastType} attribute. */
 
 const T::UInt8_opt &EpsSettings::getTypeOfEnsembleForecast() const {
   try {
-    return mTypeOfEnsembleForecast;
+    return mForecastType;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-/*! \brief The method returns the value of the {@link mPerturbationNumber} attribute. */
+/*! \brief The method returns the value of the {@link mForecastPerturbationNumber} attribute. */
 
 const T::UInt8_opt &EpsSettings::getPerturbationNumber() const {
   try {
-    return mPerturbationNumber;
+    return mForecastPerturbationNumber;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
@@ -134,17 +134,17 @@ const T::UInt8_opt &EpsSettings::getNumberOfForecastsInEnsemble() const {
   }
 }
 
-void EpsSettings::setTypeOfEnsembleForecast(T::UInt8_opt typeOfEnsembleForecast) {
+void EpsSettings::setTypeOfEnsembleForecast(T::UInt8_opt forecastType) {
   try {
-    mTypeOfEnsembleForecast = typeOfEnsembleForecast;
+    mForecastType = forecastType;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 
-void EpsSettings::setPerturbationNumber(T::UInt8_opt perturbationNumber) {
+void EpsSettings::setPerturbationNumber(T::UInt8_opt forecastPerturbationNumber) {
   try {
-    mPerturbationNumber = perturbationNumber;
+    mForecastPerturbationNumber = forecastPerturbationNumber;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
   }

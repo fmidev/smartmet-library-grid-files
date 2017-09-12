@@ -61,23 +61,7 @@ void ProcessedCrossSectionProductImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString ProcessedCrossSectionProductImpl::getForecastStartTime(T::TimeString referenceTime) const
-{
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
-}
-
-
-
-
-
-/*! \brief The method returns the end time of the current forecast data. In some cases
-    the reference time is needed for calculating the actual forecast time.
-
-        \param referenceTime  The possible reference time.
-        \return               The forecast time.
-*/
-
-T::TimeString ProcessedCrossSectionProductImpl::getForecastEndTime(T::TimeString referenceTime) const
+T::TimeString ProcessedCrossSectionProductImpl::getForecastTime(T::TimeString referenceTime) const
 {
   throw SmartMet::Spine::Exception(BCP, "Not implemented!");
 }

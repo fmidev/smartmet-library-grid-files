@@ -182,10 +182,7 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
     attributeList.addAttribute(name,getParameterLevelIdString());
 
     sprintf(name,"%smessage[%u].foracastStartTime",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,getForecastStartTime());
-
-    sprintf(name,"%smessage[%u].foracastEndTime",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,getForecastEndTime());
+    attributeList.addAttribute(name,getForecastTime());
 
     //sprintf(name,"%smessage[%u].referenceTime",prefix.c_str(),(uint)mMessageIndex);
     //attributeList.addAttribute(name,getReferenceTime());
@@ -422,35 +419,11 @@ T::TimeString Message::getReferenceTime() const
         \return   The forecast start time of the current message.
 */
 
-T::TimeString Message::getForecastStartTime() const
+T::TimeString Message::getForecastTime() const
 {
   try
   {
-    return mProductSection->getForecastStartTime();
-  }
-  catch (...)
-  {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
-    exception.addParameter("Message index",std::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the forecast end time. This is calculated from the reference
-    time and other time parameters (=> NormalProduct->parameter()).
-
-        \return   The forecast end time of the current message.
-*/
-
-T::TimeString Message::getForecastEndTime() const
-{
-  try
-  {
-    return mProductSection->getForecastEndTime();
+    return mProductSection->getForecastTime();
   }
   catch (...)
   {
@@ -1612,13 +1585,12 @@ std::string Message::getWKT() const
 
 
 
-T::UInt8_opt Message::getTypeOfEnsembleForecast() const
+short Message::getForecastType() const
 {
   try
   {
     // *** Should be implemented.
-    T::UInt8_opt val(0);
-    return val;
+    return 0;
   }
   catch (...)
   {
@@ -1632,13 +1604,13 @@ T::UInt8_opt Message::getTypeOfEnsembleForecast() const
 
 
 
-T::UInt8_opt Message::getPerturbationNumber() const
+short Message::getForecastNumber() const
 {
   try
   {
     // *** Should be implemented.
     T::UInt8_opt val(0);
-    return val;
+    return -1;
   }
   catch (...)
   {
@@ -1944,8 +1916,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- newbaseParameterId      = " << mNewbaseParameterId << "\n";
     stream << space(level) << "- newbaseParameterName    = " << mNewbaseParameterName << "\n";
     stream << space(level) << "- referenceTime           = " << getReferenceTime() << "\n";
-    stream << space(level) << "- startTime               = " << getForecastStartTime() << "\n";
-    stream << space(level) << "- endTime                 = " << getForecastEndTime() << "\n";
+    stream << space(level) << "- startTime               = " << getForecastTime() << "\n";
     stream << space(level) << "- gridGeometryId          = " << getGridGeometryId() << "\n";
     stream << space(level) << "- gridHash                = " << getGridHash() << "\n";
     stream << space(level) << "- gridProjection          = " << T::get_gridProjectionString(getGridProjection()) << "\n";

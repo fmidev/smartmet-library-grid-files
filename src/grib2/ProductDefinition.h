@@ -23,8 +23,7 @@ class ProductDefinition
     virtual                             ~ProductDefinition();
 
     virtual void                        getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
-    virtual T::TimeString               getForecastStartTime(T::TimeString referenceTime) const;
-    virtual T::TimeString               getForecastEndTime(T::TimeString referenceTime) const;
+    virtual T::TimeString               getForecastTime(T::TimeString referenceTime) const;
     virtual T::ParamLevel               getGribParameterLevel() const;
     virtual T::ParamLevelId             getGribParameterLevelId() const;
     virtual const T::UInt8_opt          getGribParameterCategory() const;

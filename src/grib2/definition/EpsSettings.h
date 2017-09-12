@@ -26,9 +26,9 @@ public:
   virtual T::Hash countHash();
 
   const T::UInt8_opt &getTypeOfEnsembleForecast() const;
-  void setTypeOfEnsembleForecast(T::UInt8_opt typeOfEnsembleForecast);
+  void setTypeOfEnsembleForecast(T::UInt8_opt forecastType);
   const T::UInt8_opt &getPerturbationNumber() const;
-  void setPerturbationNumber(T::UInt8_opt perturbationNumber);
+  void setPerturbationNumber(T::UInt8_opt forecastPerturbationNumber);
   const T::UInt8_opt &getNumberOfForecastsInEnsemble() const;
   void setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForecastsInEnsemble);
 
@@ -45,17 +45,17 @@ protected:
   // label "EPS information";
   //
   // #  Type of ensemble forecast
-  // codetable[1] typeOfEnsembleForecast ('4.6.table',masterDir,localDir) = 255 : dump;
+  // codetable[1] forecastType ('4.6.table',masterDir,localDir) = 255 : dump;
 
-  T::UInt8_opt mTypeOfEnsembleForecast;
+  T::UInt8_opt mForecastType;
 
   //
   // #  Perturbation number
-  // unsigned[1] perturbationNumber  : dump;
+  // unsigned[1] forecastPerturbationNumber  : dump;
 
-  T::UInt8_opt mPerturbationNumber;
+  T::UInt8_opt mForecastPerturbationNumber;
 
-  // alias number=perturbationNumber;
+  // alias number=forecastPerturbationNumber;
   //
   // #  Number of forecasts in ensemble
   // unsigned[1] numberOfForecastsInEnsemble  : dump;
@@ -70,7 +70,7 @@ protected:
   //     productionStatusOfProcessedData == 6 ||
   //     productionStatusOfProcessedData == 7)
   // {
-  //     alias mars.number=perturbationNumber;
+  //     alias mars.number=forecastPerturbationNumber;
   // }
 };
 

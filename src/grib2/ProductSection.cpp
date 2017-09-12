@@ -330,14 +330,14 @@ std::uint16_t ProductSection::getProductDefinitionTemplateNumber() const
         \return               The forecast time.
 */
 
-T::TimeString ProductSection::getForecastStartTime(T::TimeString referenceTime) const
+T::TimeString ProductSection::getForecastTime(T::TimeString referenceTime) const
 {
   try
   {
     if (mProductDefinition == NULL)
       throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
 
-    return mProductDefinition->getForecastStartTime(referenceTime);
+    return mProductDefinition->getForecastTime(referenceTime);
   }
   catch (...)
   {
@@ -347,32 +347,6 @@ T::TimeString ProductSection::getForecastStartTime(T::TimeString referenceTime) 
   }
 }
 
-
-
-
-/*! \brief The method returns the time of the current forecast data. In some cases
-    the reference time is needed for calculating the actual forecast time.
-
-        \param referenceTime  The possible reference time.
-        \return               The forecast time.
-*/
-
-T::TimeString ProductSection::getForecastEndTime(T::TimeString referenceTime) const
-{
-  try
-  {
-    if (mProductDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
-
-    return mProductDefinition->getForecastEndTime(referenceTime);
-  }
-  catch (...)
-  {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
-    exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
-    throw exception;
-  }
-}
 
 
 
@@ -470,19 +444,22 @@ T::ParamLevel ProductSection::getGribParameterLevel() const
 
 
 
-T::UInt8_opt ProductSection::getTypeOfEnsembleForecast() const
+short ProductSection::getForecastType() const
 {
   try
   {
     if (mProductDefinition == NULL)
       throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
 
-    T::UInt8_opt val(0);
     const EpsSettings *eps = mProductDefinition->getEps();
     if (eps != NULL)
-      val = eps->getTypeOfEnsembleForecast();
+    {
+      T::UInt8_opt val = eps->getTypeOfEnsembleForecast();
+      if (val)
+        return *val;
+    }
 
-    return val;
+    return 0;
   }
   catch (...)
   {
@@ -496,19 +473,22 @@ T::UInt8_opt ProductSection::getTypeOfEnsembleForecast() const
 
 
 
-T::UInt8_opt ProductSection::getPerturbationNumber() const
+short ProductSection::getForecastNumber() const
 {
   try
   {
     if (mProductDefinition == NULL)
       throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
 
-    T::UInt8_opt val(0);
     const EpsSettings *eps = mProductDefinition->getEps();
     if (eps != NULL)
-      val = eps->getPerturbationNumber();
+    {
+      T::UInt8_opt val = eps->getPerturbationNumber();
+      if (val)
+        return *val;
+    }
 
-    return val;
+    return -1;
   }
   catch (...)
   {

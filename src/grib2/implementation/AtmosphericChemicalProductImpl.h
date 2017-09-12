@@ -15,8 +15,7 @@ class AtmosphericChemicalProductImpl : public AtmosphericChemicalProduct
                       AtmosphericChemicalProductImpl();
     virtual           ~AtmosphericChemicalProductImpl();
 
-    T::TimeString     getForecastStartTime(T::TimeString referenceTime) const;
-    T::TimeString     getForecastEndTime(T::TimeString referenceTime) const;
+    T::TimeString     getForecastTime(T::TimeString referenceTime) const;
     T::ParamLevel     getGribParameterLevel() const;
     T::ParamLevelId   getGribParameterLevelId() const;
     void              read(MemoryReader& memoryReader);

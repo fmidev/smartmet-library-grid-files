@@ -711,7 +711,7 @@ T::TimeString ProductSection::getReferenceTime() const
 
 /*! \brief The method returns the forecast start time. */
 
-T::TimeString ProductSection::getForecastStartTime() const
+T::TimeString ProductSection::getForecastTime() const
 {
   try
   {
@@ -845,7 +845,7 @@ T::TimeString ProductSection::getForecastStartTime() const
 
 
 
-
+#if 0
 /*! \brief The method returns the forecast end time. */
 
 T::TimeString ProductSection::getForecastEndTime() const
@@ -979,7 +979,7 @@ T::TimeString ProductSection::getForecastEndTime() const
     throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
   }
 }
-
+#endif
 
 
 

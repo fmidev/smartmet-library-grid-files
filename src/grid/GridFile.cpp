@@ -675,7 +675,7 @@ void GridFile::getTimeRangeByParameterIdAndLevel(
       auto message = getMessageByIndex(t);
       if (message != NULL  &&  message->getGribParameterId() == parameterId  &&  message->getParameterLevel() == level)
       {
-        auto forecastTime = message->getForecastStartTime();
+        auto forecastTime = message->getForecastTime();
         if (messages == 0)
         {
           startTime = forecastTime;
@@ -991,7 +991,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByGridArea(
       const Message *message = getMessageByIndex(t);
       if (message->getGribParameterId() == parameterId)
       {
-        auto forecastTime = message->getForecastStartTime();
+        auto forecastTime = message->getForecastTime();
         if (forecastTime >= startTime  &&  forecastTime <= endTime)
         {
           if (prevMessage != NULL  &&  gridPointValues.size() == 0)
@@ -1083,7 +1083,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
       const Message *message = getMessageByIndex(t);
       if (message->getGribParameterId() == parameterId)
       {
-        auto forecastTime = message->getForecastStartTime();
+        auto forecastTime = message->getForecastTime();
         if (forecastTime >= startTime  &&  forecastTime <= endTime)
         {
           if (prevMessage != NULL  &&  gridPointValues.size() == 0)
@@ -1097,7 +1097,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
             point.mMessageIndex = t;
             point.mX = lon;
             point.mY = lat;
-            point.mTime = prevMessage->getForecastStartTime();
+            point.mTime = prevMessage->getForecastTime();
             point.mValue = prevMessage->getParameterValueByLatLon(lat,lon,interpolationMethod);
             gridPointValues.push_back(point);
           }
@@ -1124,7 +1124,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
           point.mMessageIndex = t;
           point.mX = lon;
           point.mY = lat;
-          point.mTime = message->getForecastStartTime();
+          point.mTime = message->getForecastTime();
           point.mValue = message->getParameterValueByLatLon(lat,lon,interpolationMethod);
           gridPointValues.push_back(point);
 
@@ -1179,7 +1179,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
       const Message *message = getMessageByIndex(t);
       if (message->getGribParameterId() == parameterId  &&  message->getParameterLevel() == level)
       {
-        auto forecastTime = message->getForecastStartTime();
+        auto forecastTime = message->getForecastTime();
         if (forecastTime >= startTime  &&  forecastTime <= endTime)
         {
           if (prevMessage != NULL &&  gridPointValues.size() == 0)
@@ -1193,7 +1193,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
             point.mMessageIndex = t;
             point.mX = lon;
             point.mY = lat;
-            point.mTime = prevMessage->getForecastStartTime();
+            point.mTime = prevMessage->getForecastTime();
             point.mValue = prevMessage->getParameterValueByLatLon(lat,lon,interpolationMethod);
             gridPointValues.push_back(point);
           }
@@ -1220,7 +1220,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
           point.mMessageIndex = t;
           point.mX = lon;
           point.mY = lat;
-          point.mTime = message->getForecastStartTime();
+          point.mTime = message->getForecastTime();
           point.mValue = message->getParameterValueByLatLon(lat,lon,interpolationMethod);
           gridPointValues.push_back(point);
 

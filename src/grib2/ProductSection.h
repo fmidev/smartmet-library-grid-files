@@ -55,8 +55,7 @@ class ProductSection : public GRID::MessageSection
 
     void                  getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     T::FilePosition       getFilePosition() const;
-    T::TimeString         getForecastStartTime(T::TimeString referenceTime) const;
-    T::TimeString         getForecastEndTime(T::TimeString referenceTime) const;
+    T::TimeString         getForecastTime(T::TimeString referenceTime) const;
     std::uint32_t         getSectionLength() const;
     std::string           getSectionName() const;
     std::uint8_t          getSectionNumber() const;
@@ -70,8 +69,8 @@ class ProductSection : public GRID::MessageSection
     const T::UInt8_opt    getGribParameterCategory() const;
     const T::UInt8_opt    getGribParameterNumber() const;
     T::UInt8_opt          getGeneratingProcessIdentifier() const;
-    T::UInt8_opt          getTypeOfEnsembleForecast() const;
-    T::UInt8_opt          getPerturbationNumber() const;
+    short                 getForecastType() const;
+    short                 getForecastNumber() const;
     std::uint8_t          getNumberOfSection() const;
     T::UInt16_opt         getNV() const;
     std::uint16_t         getProductDefinitionTemplateNumber() const;

@@ -96,8 +96,8 @@ class GribDef
     TimeRangeDef_vec            mTimeRangeDefs_grib2;
     Parameter_grib1_vec         mParameters_grib1;
     Parameter_grib2_vec         mParameters_grib2;
-    GRIB1::GridDefinition_pvec  mGridDefinitions1;
-    GRIB2::GridDefinition_pvec  mGridDefinitions2;
+    GRIB1::GridDefinition_pmap  mGridDefinitions1;
+    GRIB2::GridDefinition_pmap  mGridDefinitions2;
 
   protected:
 

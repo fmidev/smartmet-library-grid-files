@@ -7,6 +7,7 @@
 #include "common/AttributeList.h"
 
 #include <gdal/ogr_spatialref.h>
+#include <map>
 
 
 namespace SmartMet
@@ -96,6 +97,7 @@ class GridDefinition
 typedef GridDefinition* GridDefinition_ptr;
 typedef std::unique_ptr<GridDefinition> GridDefinition_uptr;
 typedef std::vector<GridDefinition_ptr> GridDefinition_pvec;
+typedef std::map<uint,GridDefinition_ptr> GridDefinition_pmap;
 
 
 }  // namespace GRID

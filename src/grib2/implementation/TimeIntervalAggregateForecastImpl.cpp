@@ -61,30 +61,7 @@ void TimeIntervalAggregateForecastImpl::read(MemoryReader& memoryReader)
         \return               The forecast time.
 */
 
-T::TimeString TimeIntervalAggregateForecastImpl::getForecastStartTime(T::TimeString referenceTime) const
-{
-  try
-  {
-    return countForecastStartTime(referenceTime,mParameter);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the end time of the current forecast data. In some cases
-    the reference time is needed for calculating the actual forecast time.
-
-        \param referenceTime  The possible reference time.
-        \return               The forecast time.
-*/
-
-T::TimeString TimeIntervalAggregateForecastImpl::getForecastEndTime(T::TimeString referenceTime) const
+T::TimeString TimeIntervalAggregateForecastImpl::getForecastTime(T::TimeString referenceTime) const
 {
   try
   {

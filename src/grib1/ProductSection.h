@@ -106,8 +106,7 @@ class ProductSection : public GRID::MessageSection
     std::uint8_t    getSubCentre() const;
     std::uint16_t   getDecimalScaleFactor() const;
     T::TimeString   getReferenceTime() const;
-    T::TimeString   getForecastStartTime() const;
-    T::TimeString   getForecastEndTime() const;
+    T::TimeString   getForecastTime() const;
     void            read(MemoryReader& memoryReader);
 
   private:

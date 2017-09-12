@@ -103,7 +103,7 @@ T::UInt8_opt ProductDefinition::getGeneratingProcessIdentifier() const
         \return               The forecast time.
 */
 
-T::TimeString ProductDefinition::getForecastStartTime(T::TimeString referenceTime) const
+T::TimeString ProductDefinition::getForecastTime(T::TimeString referenceTime) const
 {
   try
   {
@@ -122,7 +122,7 @@ T::TimeString ProductDefinition::getForecastStartTime(T::TimeString referenceTim
 
 
 
-
+#if 0
 /*! \brief The method returns the end time of the current forecast data. In some cases
     the reference time is needed for calculating the actual forecast time.
 
@@ -139,7 +139,7 @@ T::TimeString ProductDefinition::getForecastEndTime(T::TimeString referenceTime)
     if (s != NULL)
       return countForecastEndTime(*s);
 
-    return getForecastStartTime(referenceTime);
+    return getForecastTime(referenceTime);
   }
   catch (...)
   {
@@ -150,7 +150,7 @@ T::TimeString ProductDefinition::getForecastEndTime(T::TimeString referenceTime)
 
 
 
-#if 0
+
 /*! \brief This method returns the parameter identified defined in the "paramId.def" file. */
 
 std::uint64_t ProductDefinition::getParameterId(std::uint8_t discipline) const
