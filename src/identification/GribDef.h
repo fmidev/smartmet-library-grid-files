@@ -11,6 +11,7 @@
 #include "MessageIdentifier_grib2.h"
 #include "LevelDef.h"
 #include "TimeRangeDef.h"
+#include <set>
 
 
 
@@ -47,10 +48,10 @@ namespace Identification
 class GribDef
 {
   public:
-                              GribDef();
-    virtual                   ~GribDef();
+                                GribDef();
+    virtual                     ~GribDef();
 
-    void                      init(const char* configDir);
+    void                        init(const char* configDir);
 
     std::string                 getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,std::uint32_t number);
     std::string                 getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt8_opt number);
@@ -80,6 +81,8 @@ class GribDef
 
     GRIB2::GridDefinition_ptr   getGridDefinition2ByGeometryId(uint geometryId);
     GRIB2::GridDefinition_ptr   getGridDefinition2ByHash(T::Hash hash);
+
+    void                        getGeometryIdListByLatLon(double lat,double lon,std::set<uint>& geometryIdList);
 
     MessageIdentifier_cdm       mMessageIdentifier_cdm;
     MessageIdentifier_fmi       mMessageIdentifier_fmi;

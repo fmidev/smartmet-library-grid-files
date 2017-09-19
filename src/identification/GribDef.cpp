@@ -1311,6 +1311,46 @@ GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByHash(T::Hash hash)
 
 
 
+void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<uint>& geometryIdList)
+{
+  try
+  {
+    for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
+    {
+      double grid_i = 0;
+      double grid_j = 0;
+
+      if (it->second->getGridPointByLatLon(lat,lon,grid_i,grid_j))
+      {
+        uint geometryId = it->second->getGridGeometryId();
+        if (geometryIdList.find(geometryId) == geometryIdList.end())
+          geometryIdList.insert(geometryId);
+      }
+    }
+
+    for (auto it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
+    {
+      double grid_i = 0;
+      double grid_j = 0;
+
+      if (it->second->getGridPointByLatLon(lat,lon,grid_i,grid_j))
+      {
+        uint geometryId = it->second->getGridGeometryId();
+        if (geometryIdList.find(geometryId) == geometryIdList.end())
+          geometryIdList.insert(geometryId);
+      }
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+  }
+}
+
+
+
+
+
 void GribDef::loadGeometryDefinitions()
 {
   try
@@ -1428,6 +1468,7 @@ void GribDef::loadGeometryDefinitions()
 
               def2->setGridGeometryId(geometryId);
               def2->setGridGeometryName(geometryName);
+              def2->initSpatialReference();
 
               //def2->print(std::cout,0,0);
               //T::Hash hash = def2->getGridHash();
@@ -1472,6 +1513,7 @@ void GribDef::loadGeometryDefinitions()
 
               def1->setGridGeometryId(geometryId);
               def1->setGridGeometryName(geometryName);
+              def1->initSpatialReference();
 
               //def1->print(std::cout,0,0);
               //T::Hash hash = def1->getGridHash();
@@ -1555,6 +1597,7 @@ void GribDef::loadGeometryDefinitions()
 
               def2->setGridGeometryId(geometryId);
               def2->setGridGeometryName(geometryName);
+              def2->initSpatialReference();
 
               //def2->print(std::cout,0,0);
               //T::Hash hash = def2->getGridHash();
@@ -1601,6 +1644,7 @@ void GribDef::loadGeometryDefinitions()
 
               def1->setGridGeometryId(geometryId);
               def1->setGridGeometryName(geometryName);
+              def1->initSpatialReference();
 
               // def1->print(std::cout,0,0);
               // T::Hash hash = def1->getGridHash();
@@ -1642,7 +1686,7 @@ void GribDef::loadGeometryDefinitions()
               int iInc = (int)(atof(field[7]) * 1000000);
               int jInc = (int)(atof(field[8]) * 1000000);
               char *scanningMode = field[9];
-              //int orientation = (int)atoll(field[10]);
+              int orientation = (int)(atof(field[10])*1000000);
               int latin1 = (int)(atof(field[11])*1000000);
               int latin2 = (int)(atof(field[12])*1000000);
               int longitudeOfSouthernPole = (int)(atof(field[13])*1000000);
@@ -1672,8 +1716,8 @@ void GribDef::loadGeometryDefinitions()
               def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
               def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
 
-              //def2->setLaD(T::Int32_opt laD);
-              //def2->setLoV(T::UInt32_opt loV);
+              def2->setLaD(latin1);
+              def2->setLoV(orientation);
               def2->setDx(T::UInt32_opt(iInc));
               def2->setDy(T::UInt32_opt(jInc));
               //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
@@ -1684,6 +1728,7 @@ void GribDef::loadGeometryDefinitions()
 
               def2->setGridGeometryId(geometryId);
               def2->setGridGeometryName(geometryName);
+              def2->initSpatialReference();
 
               //def2->print(std::cout,0,0);
               //T::Hash hash = def2->getGridHash();
@@ -1715,7 +1760,7 @@ void GribDef::loadGeometryDefinitions()
               def1->setLatitudeOfFirstGridPoint((std::int24_t)(latitude/1000));
               def1->setLongitudeOfFirstGridPoint((std::int24_t)(longitude/1000));
               //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
-              //def1->setLoV(std::int24_t loV);
+              def1->setLoV(orientation/1000);
               def1->setDxInMetres((std::uint24_t)iInc);
               def1->setDyInMetres((std::uint24_t)jInc);
               //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
@@ -1726,13 +1771,13 @@ void GribDef::loadGeometryDefinitions()
 
               def1->setGridGeometryId(geometryId);
               def1->setGridGeometryName(geometryName);
+              def1->initSpatialReference();
 
               //def1->print(std::cout,0,0);
               //hash = def1->getGridHash();
               //printf("HASH %llu\n",(unsigned long long)hash);
 
-              mGridDefinitions2.insert(std::pair<uint,GRIB2::GridDefinition_ptr>(geometryId,def2));
-
+              mGridDefinitions1.insert(std::pair<uint,GRIB1::GridDefinition_ptr>(geometryId,def1));
             }
             break;
 
