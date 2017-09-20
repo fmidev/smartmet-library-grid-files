@@ -509,8 +509,8 @@ void Message::initParameterInfo()
         if (def != NULL)
           setGridGeometryId(def->getGridGeometryId());
         else
-          printf("Geometry not found %llu\n",(unsigned long long)hash);
-      }
+          printf("** Geometry not found %llu (file = %s)\n",(unsigned long long)hash,mGribFile->getFileName().c_str());
+ }
       else
       {
         printf("Hash is zero!\n");
