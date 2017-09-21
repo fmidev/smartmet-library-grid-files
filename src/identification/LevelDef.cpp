@@ -17,7 +17,7 @@ LevelDef::LevelDef()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -35,7 +35,7 @@ LevelDef::LevelDef(const LevelDef& levelDef)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -50,7 +50,7 @@ LevelDef::~LevelDef()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -69,7 +69,7 @@ void LevelDef::print(std::ostream& stream,uint level,uint optionFlags) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

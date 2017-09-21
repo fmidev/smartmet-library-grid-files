@@ -57,7 +57,7 @@ void TriangularImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -98,7 +98,7 @@ T::Dimensions_opt TriangularImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -127,7 +127,7 @@ bool TriangularImpl::getGridPointByLatLon(double lat,double lon,double& grid_i,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -150,7 +150,7 @@ void TriangularImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

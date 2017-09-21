@@ -21,7 +21,7 @@ namespace GRIB2 {
 EnsembleForecast::EnsembleForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ EnsembleForecast::EnsembleForecast() {
 EnsembleForecast::~EnsembleForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -46,7 +46,7 @@ void EnsembleForecast::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mEps.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void EnsembleForecast::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sEnsembleForecast.", prefix.c_str());
     mEps.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -87,7 +87,7 @@ void EnsembleForecast::print(std::ostream &stream, uint level, uint optionFlags)
     mHorizontal.print(stream, level + 1, optionFlags);
     mEps.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -102,7 +102,7 @@ T::Hash EnsembleForecast::countHash() {
     boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ const ParameterSettings *EnsembleForecast::getParameter() const {
   try {
     return &mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -122,7 +122,7 @@ const PointInTimeSettings *EnsembleForecast::getPointInTime() const {
   try {
     return &mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,7 +132,7 @@ const HorizontalSettings *EnsembleForecast::getHorizontal() const {
   try {
     return &mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,7 +142,7 @@ const EpsSettings *EnsembleForecast::getEps() const {
   try {
     return &mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -150,7 +150,7 @@ void EnsembleForecast::setParameter(ParameterSettings parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -158,7 +158,7 @@ void EnsembleForecast::setPointInTime(PointInTimeSettings pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -166,7 +166,7 @@ void EnsembleForecast::setHorizontal(HorizontalSettings horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -174,7 +174,7 @@ void EnsembleForecast::setEps(EpsSettings eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

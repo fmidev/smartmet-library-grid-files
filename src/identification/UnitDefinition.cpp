@@ -20,7 +20,7 @@ UnitDefinition::UnitDefinition()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -40,7 +40,7 @@ UnitDefinition::UnitDefinition(const UnitDefinition& unitDefinition)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -57,7 +57,7 @@ UnitDefinition::~UnitDefinition()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void UnitDefinition::print(std::ostream& stream,uint level,uint optionFlags) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

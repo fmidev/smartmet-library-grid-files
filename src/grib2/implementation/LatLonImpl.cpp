@@ -64,7 +64,7 @@ void LatLonImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -91,7 +91,7 @@ void LatLonImpl::getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -152,7 +152,7 @@ T::Coordinate_vec LatLonImpl::getGridCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -179,7 +179,7 @@ T::Dimensions_opt LatLonImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -207,7 +207,7 @@ void LatLonImpl::getOriginalCoordinatesByLatLon(double lat,double lon,double& x,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -234,7 +234,7 @@ void LatLonImpl::getLatLonByOriginalCoordinates(double x,double y,double& lat,do
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -260,7 +260,7 @@ bool LatLonImpl::getGridPointByLatLon(double lat,double lon,double& grid_i,doubl
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -329,7 +329,7 @@ bool LatLonImpl::getGridPointByOriginalCoordinates(double x,double y,double& gri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -417,7 +417,7 @@ void LatLonImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -470,7 +470,7 @@ void LatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

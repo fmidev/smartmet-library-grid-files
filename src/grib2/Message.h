@@ -44,6 +44,7 @@ class Message : public GRID::Message
 
     uint                  getGridGeometryId() const;
     T::Coordinate_vec     getGridCoordinates() const;
+    T::Coordinate_vec     getGridLatLonCoordinates() const;
     T::Dimensions_opt     getGridDimensions() const;
     T::Hash               getGridHash() const;
     void                  getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;

@@ -23,7 +23,7 @@ Parameter_grib2_fmi::Parameter_grib2_fmi()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -49,7 +49,7 @@ Parameter_grib2_fmi::Parameter_grib2_fmi(const Parameter_grib2_fmi& parameter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -64,7 +64,7 @@ Parameter_grib2_fmi::~Parameter_grib2_fmi()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -91,7 +91,7 @@ void Parameter_grib2_fmi::print(std::ostream& stream,uint level,uint optionFlags
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

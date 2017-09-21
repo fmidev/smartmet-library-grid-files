@@ -57,7 +57,7 @@ void VariableResolutionLatLonImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -100,7 +100,7 @@ T::Dimensions_opt VariableResolutionLatLonImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -129,7 +129,7 @@ bool VariableResolutionLatLonImpl::getGridPointByLatLon(double lat,double lon,do
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -152,7 +152,7 @@ void VariableResolutionLatLonImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

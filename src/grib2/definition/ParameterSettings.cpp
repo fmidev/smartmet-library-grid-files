@@ -21,7 +21,7 @@ namespace GRIB2 {
 ParameterSettings::ParameterSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ ParameterSettings::ParameterSettings() {
 ParameterSettings::~ParameterSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -51,7 +51,7 @@ void ParameterSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
     mForecastTime = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void ParameterSettings::getAttributeList(std::string prefix, T::AttributeList &a
     sprintf(name, "%sParameterSettings.ForecastTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastTime));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -107,7 +107,7 @@ void ParameterSettings::print(std::ostream &stream, uint level, uint optionFlags
     stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
     stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -136,7 +136,7 @@ T::Hash ParameterSettings::countHash() {
       boost::hash_combine(seed, *mForecastTime);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -146,7 +146,7 @@ const T::UInt8_opt &ParameterSettings::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -156,7 +156,7 @@ const T::UInt8_opt &ParameterSettings::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -166,7 +166,7 @@ const T::UInt8_opt &ParameterSettings::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -176,7 +176,7 @@ const T::UInt8_opt &ParameterSettings::getBackgroundProcess() const {
   try {
     return mBackgroundProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -186,7 +186,7 @@ const T::UInt8_opt &ParameterSettings::getGeneratingProcessIdentifier() const {
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -196,7 +196,7 @@ const T::UInt16_opt &ParameterSettings::getHoursAfterDataCutoff() const {
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -206,7 +206,7 @@ const T::UInt8_opt &ParameterSettings::getMinutesAfterDataCutoff() const {
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -216,7 +216,7 @@ const T::UInt8_opt &ParameterSettings::getIndicatorOfUnitOfTimeRange() const {
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -226,7 +226,7 @@ const T::UInt32_opt &ParameterSettings::getForecastTime() const {
   try {
     return mForecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -234,7 +234,7 @@ void ParameterSettings::setParameterCategory(T::UInt8_opt parameterCategory) {
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -242,7 +242,7 @@ void ParameterSettings::setParameterNumber(T::UInt8_opt parameterNumber) {
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -250,7 +250,7 @@ void ParameterSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGenerating
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -258,7 +258,7 @@ void ParameterSettings::setBackgroundProcess(T::UInt8_opt backgroundProcess) {
   try {
     mBackgroundProcess = backgroundProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -266,7 +266,7 @@ void ParameterSettings::setGeneratingProcessIdentifier(T::UInt8_opt generatingPr
   try {
     mGeneratingProcessIdentifier = generatingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -274,7 +274,7 @@ void ParameterSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfterDataCuto
   try {
     mHoursAfterDataCutoff = hoursAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -282,7 +282,7 @@ void ParameterSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataC
   try {
     mMinutesAfterDataCutoff = minutesAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -290,7 +290,7 @@ void ParameterSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUn
   try {
     mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -298,7 +298,7 @@ void ParameterSettings::setForecastTime(T::UInt32_opt forecastTime) {
   try {
     mForecastTime = forecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

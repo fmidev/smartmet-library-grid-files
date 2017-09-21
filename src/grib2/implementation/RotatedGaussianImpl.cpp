@@ -57,7 +57,7 @@ void RotatedGaussianImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -101,7 +101,7 @@ T::Dimensions_opt RotatedGaussianImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -130,7 +130,7 @@ bool RotatedGaussianImpl::getGridPointByLatLon(double lat,double lon,double& gri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -153,7 +153,7 @@ void RotatedGaussianImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

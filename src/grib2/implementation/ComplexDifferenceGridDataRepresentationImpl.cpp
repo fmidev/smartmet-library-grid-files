@@ -60,7 +60,7 @@ void ComplexDifferenceGridDataRepresentationImpl::read(MemoryReader& memoryReade
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -453,7 +453,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

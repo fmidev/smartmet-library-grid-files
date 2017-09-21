@@ -85,6 +85,7 @@ class GridSection : public GRID::MessageSection
     int                   getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
     void                  getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const;
     T::Coordinate_vec     getGridCoordinates() const;
+    T::Coordinate_vec     getGridLatLonCoordinates() const;
     T::Dimensions_opt     getGridDimensions() const;
     bool                  getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const;
     bool                  getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;

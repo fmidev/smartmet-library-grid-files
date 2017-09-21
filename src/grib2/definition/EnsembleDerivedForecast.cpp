@@ -21,7 +21,7 @@ namespace GRIB2 {
 EnsembleDerivedForecast::EnsembleDerivedForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ EnsembleDerivedForecast::EnsembleDerivedForecast() {
 EnsembleDerivedForecast::~EnsembleDerivedForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -46,7 +46,7 @@ void EnsembleDerivedForecast::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mDerived.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void EnsembleDerivedForecast::getAttributeList(std::string prefix, T::AttributeL
     sprintf(name, "%sEnsembleDerivedForecast.", prefix.c_str());
     mDerived.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -87,7 +87,7 @@ void EnsembleDerivedForecast::print(std::ostream &stream, uint level, uint optio
     mHorizontal.print(stream, level + 1, optionFlags);
     mDerived.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -102,7 +102,7 @@ T::Hash EnsembleDerivedForecast::countHash() {
     boost::hash_combine(seed, mDerived.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ const ParameterSettings *EnsembleDerivedForecast::getParameter() const {
   try {
     return &mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -122,7 +122,7 @@ const PointInTimeSettings *EnsembleDerivedForecast::getPointInTime() const {
   try {
     return &mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,7 +132,7 @@ const HorizontalSettings *EnsembleDerivedForecast::getHorizontal() const {
   try {
     return &mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,7 +142,7 @@ const DerivedSettings *EnsembleDerivedForecast::getDerived() const {
   try {
     return &mDerived;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -150,7 +150,7 @@ void EnsembleDerivedForecast::setParameter(ParameterSettings parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -158,7 +158,7 @@ void EnsembleDerivedForecast::setPointInTime(PointInTimeSettings pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -166,7 +166,7 @@ void EnsembleDerivedForecast::setHorizontal(HorizontalSettings horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -174,7 +174,7 @@ void EnsembleDerivedForecast::setDerived(DerivedSettings derived) {
   try {
     mDerived = derived;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

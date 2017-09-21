@@ -22,7 +22,7 @@ PreprocessedGridDataRepresentation::PreprocessedGridDataRepresentation() {
   try {
     mPreProcessingParameter = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -31,7 +31,7 @@ PreprocessedGridDataRepresentation::PreprocessedGridDataRepresentation() {
 PreprocessedGridDataRepresentation::~PreprocessedGridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -46,7 +46,7 @@ void PreprocessedGridDataRepresentation::read(MemoryReader &memoryReader) {
     mTypeOfPreProcessing = memoryReader.read_UInt8_opt();
     mPreProcessingParameter = memoryReader.read_float();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -66,7 +66,7 @@ void PreprocessedGridDataRepresentation::getAttributeList(std::string prefix, T:
     sprintf(name, "%sPreprocessedGridDataRepresentation.PreProcessingParameter", prefix.c_str());
     attributeList.addAttribute(name, toString(mPreProcessingParameter));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -84,7 +84,7 @@ void PreprocessedGridDataRepresentation::print(std::ostream &stream, uint level,
     stream << space(level) << "- TypeOfPreProcessing = " << toString(mTypeOfPreProcessing) << "\n";
     stream << space(level) << "- PreProcessingParameter = " << toString(mPreProcessingParameter) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -99,7 +99,7 @@ T::Hash PreprocessedGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -109,7 +109,7 @@ const PackingSettings *PreprocessedGridDataRepresentation::getPacking() const {
   try {
     return &mPacking;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -119,7 +119,7 @@ const T::UInt8_opt &PreprocessedGridDataRepresentation::getTypeOfPreProcessing()
   try {
     return mTypeOfPreProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -129,7 +129,7 @@ float PreprocessedGridDataRepresentation::getPreProcessingParameter() const {
   try {
     return mPreProcessingParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -137,7 +137,7 @@ void PreprocessedGridDataRepresentation::setPacking(PackingSettings packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -145,7 +145,7 @@ void PreprocessedGridDataRepresentation::setTypeOfPreProcessing(T::UInt8_opt typ
   try {
     mTypeOfPreProcessing = typeOfPreProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -153,7 +153,7 @@ void PreprocessedGridDataRepresentation::setPreProcessingParameter(float preProc
   try {
     mPreProcessingParameter = preProcessingParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

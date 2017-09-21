@@ -57,7 +57,7 @@ void StretchedRotatedLatLonImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -84,7 +84,7 @@ void StretchedRotatedLatLonImpl::getGridLatlonAreaCoordinates(double& firstLat,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -145,7 +145,7 @@ T::Coordinate_vec StretchedRotatedLatLonImpl::getGridCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -172,7 +172,7 @@ T::Dimensions_opt StretchedRotatedLatLonImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -198,7 +198,7 @@ bool StretchedRotatedLatLonImpl::getGridPointByLatLon(double lat,double lon,doub
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -266,7 +266,7 @@ bool StretchedRotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,doub
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -348,7 +348,7 @@ void StretchedRotatedLatLonImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

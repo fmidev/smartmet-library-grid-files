@@ -22,7 +22,7 @@ PackingSettings::PackingSettings() {
   try {
     mReferenceValue = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -31,7 +31,7 @@ PackingSettings::PackingSettings() {
 PackingSettings::~PackingSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -47,7 +47,7 @@ void PackingSettings::read(MemoryReader &memoryReader) {
     mDecimalScaleFactor = memoryReader.read_Int16_opt();
     mBitsPerValue = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -69,7 +69,7 @@ void PackingSettings::getAttributeList(std::string prefix, T::AttributeList &att
     sprintf(name, "%sPackingSettings.BitsPerValue", prefix.c_str());
     attributeList.addAttribute(name, toString(mBitsPerValue));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -88,7 +88,7 @@ void PackingSettings::print(std::ostream &stream, uint level, uint optionFlags) 
     stream << space(level) << "- DecimalScaleFactor = " << toString(mDecimalScaleFactor) << "\n";
     stream << space(level) << "- BitsPerValue = " << toString(mBitsPerValue) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -106,7 +106,7 @@ T::Hash PackingSettings::countHash() {
       boost::hash_combine(seed, *mBitsPerValue);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -116,7 +116,7 @@ float PackingSettings::getReferenceValue() const {
   try {
     return mReferenceValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -126,7 +126,7 @@ const T::Int16_opt &PackingSettings::getBinaryScaleFactor() const {
   try {
     return mBinaryScaleFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -136,7 +136,7 @@ const T::Int16_opt &PackingSettings::getDecimalScaleFactor() const {
   try {
     return mDecimalScaleFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -146,7 +146,7 @@ const T::UInt8_opt &PackingSettings::getBitsPerValue() const {
   try {
     return mBitsPerValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -154,7 +154,7 @@ void PackingSettings::setReferenceValue(float referenceValue) {
   try {
     mReferenceValue = referenceValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -162,7 +162,7 @@ void PackingSettings::setBinaryScaleFactor(T::Int16_opt binaryScaleFactor) {
   try {
     mBinaryScaleFactor = binaryScaleFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -170,7 +170,7 @@ void PackingSettings::setDecimalScaleFactor(T::Int16_opt decimalScaleFactor) {
   try {
     mDecimalScaleFactor = decimalScaleFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -178,7 +178,7 @@ void PackingSettings::setBitsPerValue(T::UInt8_opt bitsPerValue) {
   try {
     mBitsPerValue = bitsPerValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

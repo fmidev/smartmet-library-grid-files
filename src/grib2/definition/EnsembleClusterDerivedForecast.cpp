@@ -21,7 +21,7 @@ namespace GRIB2 {
 EnsembleClusterDerivedForecast::EnsembleClusterDerivedForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ EnsembleClusterDerivedForecast::EnsembleClusterDerivedForecast() {
 EnsembleClusterDerivedForecast::~EnsembleClusterDerivedForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -48,7 +48,7 @@ void EnsembleClusterDerivedForecast::read(MemoryReader &memoryReader) {
     mRectangularCluster.read(memoryReader);
     mEnsembleForecastNumbers = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -74,7 +74,7 @@ void EnsembleClusterDerivedForecast::getAttributeList(std::string prefix, T::Att
     sprintf(name, "%sEnsembleClusterDerivedForecast.EnsembleForecastNumbers", prefix.c_str());
     attributeList.addAttribute(name, toString(mEnsembleForecastNumbers));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -95,7 +95,7 @@ void EnsembleClusterDerivedForecast::print(std::ostream &stream, uint level, uin
     mRectangularCluster.print(stream, level + 1, optionFlags);
     stream << space(level) << "- EnsembleForecastNumbers = " << toString(mEnsembleForecastNumbers) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -113,7 +113,7 @@ T::Hash EnsembleClusterDerivedForecast::countHash() {
     boost::hash_combine(seed, mRectangularCluster.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -123,7 +123,7 @@ const ParameterSettings *EnsembleClusterDerivedForecast::getParameter() const {
   try {
     return &mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -133,7 +133,7 @@ const PointInTimeSettings *EnsembleClusterDerivedForecast::getPointInTime() cons
   try {
     return &mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -143,7 +143,7 @@ const HorizontalSettings *EnsembleClusterDerivedForecast::getHorizontal() const 
   try {
     return &mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -153,7 +153,7 @@ const DerivedSettings *EnsembleClusterDerivedForecast::getDerived() const {
   try {
     return &mDerived;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -163,7 +163,7 @@ const RectangularClusterSettings *EnsembleClusterDerivedForecast::getRectangular
   try {
     return &mRectangularCluster;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -173,7 +173,7 @@ const T::UInt8_opt &EnsembleClusterDerivedForecast::getEnsembleForecastNumbers()
   try {
     return mEnsembleForecastNumbers;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -181,7 +181,7 @@ void EnsembleClusterDerivedForecast::setParameter(ParameterSettings parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -189,7 +189,7 @@ void EnsembleClusterDerivedForecast::setPointInTime(PointInTimeSettings pointInT
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -197,7 +197,7 @@ void EnsembleClusterDerivedForecast::setHorizontal(HorizontalSettings horizontal
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -205,7 +205,7 @@ void EnsembleClusterDerivedForecast::setDerived(DerivedSettings derived) {
   try {
     mDerived = derived;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -213,7 +213,7 @@ void EnsembleClusterDerivedForecast::setRectangularCluster(RectangularClusterSet
   try {
     mRectangularCluster = rectangularCluster;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -221,7 +221,7 @@ void EnsembleClusterDerivedForecast::setEnsembleForecastNumbers(T::UInt8_opt ens
   try {
     mEnsembleForecastNumbers = ensembleForecastNumbers;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

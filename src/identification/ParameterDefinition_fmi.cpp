@@ -19,7 +19,7 @@ ParameterDefinition_fmi::ParameterDefinition_fmi()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -41,7 +41,7 @@ ParameterDefinition_fmi::ParameterDefinition_fmi(const ParameterDefinition_fmi& 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -56,7 +56,7 @@ ParameterDefinition_fmi::~ParameterDefinition_fmi()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -79,7 +79,7 @@ void ParameterDefinition_fmi::print(std::ostream& stream,uint level,uint optionF
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

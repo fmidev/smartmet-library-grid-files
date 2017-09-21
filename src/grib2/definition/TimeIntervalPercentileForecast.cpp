@@ -21,7 +21,7 @@ namespace GRIB2 {
 TimeIntervalPercentileForecast::TimeIntervalPercentileForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ TimeIntervalPercentileForecast::TimeIntervalPercentileForecast() {
 TimeIntervalPercentileForecast::~TimeIntervalPercentileForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -46,7 +46,7 @@ void TimeIntervalPercentileForecast::read(MemoryReader &memoryReader) {
     mPercentile.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void TimeIntervalPercentileForecast::getAttributeList(std::string prefix, T::Att
     sprintf(name, "%sTimeIntervalPercentileForecast.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -87,7 +87,7 @@ void TimeIntervalPercentileForecast::print(std::ostream &stream, uint level, uin
     mPercentile.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -102,7 +102,7 @@ T::Hash TimeIntervalPercentileForecast::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ const ParameterSettings *TimeIntervalPercentileForecast::getParameter() const {
   try {
     return &mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -122,7 +122,7 @@ const HorizontalSettings *TimeIntervalPercentileForecast::getHorizontal() const 
   try {
     return &mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,7 +132,7 @@ const PercentileSettings *TimeIntervalPercentileForecast::getPercentile() const 
   try {
     return &mPercentile;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,7 +142,7 @@ const StatisticalSettings *TimeIntervalPercentileForecast::getStatistical() cons
   try {
     return &mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -150,7 +150,7 @@ void TimeIntervalPercentileForecast::setParameter(ParameterSettings parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -158,7 +158,7 @@ void TimeIntervalPercentileForecast::setHorizontal(HorizontalSettings horizontal
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -166,7 +166,7 @@ void TimeIntervalPercentileForecast::setPercentile(PercentileSettings percentile
   try {
     mPercentile = percentile;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -174,7 +174,7 @@ void TimeIntervalPercentileForecast::setStatistical(StatisticalSettings statisti
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

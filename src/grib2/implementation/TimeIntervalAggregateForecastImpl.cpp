@@ -46,7 +46,7 @@ void TimeIntervalAggregateForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -69,7 +69,7 @@ T::TimeString TimeIntervalAggregateForecastImpl::getForecastTime(T::TimeString r
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -93,7 +93,7 @@ T::ParamLevel TimeIntervalAggregateForecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -117,7 +117,7 @@ T::ParamLevelId TimeIntervalAggregateForecastImpl::getGribParameterLevelId() con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

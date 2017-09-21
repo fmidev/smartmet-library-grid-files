@@ -8,6 +8,11 @@
 
 #define CODE_LOCATION std::string(__FILE__) + ":" + std::to_string(__LINE__) + ":" + std::string(__PRETTY_FUNCTION__)
 
+extern const char *exception_implementation_required;
+extern const char *exception_operation_failed;
+
+
+
 
 #if 0
 #include <string>

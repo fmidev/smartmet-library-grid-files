@@ -25,7 +25,7 @@ GridAreaSettings::GridAreaSettings() {
     mLatitudeOfLastGridPoint = 0;
     mLongitudeOfLastGridPoint = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -34,7 +34,7 @@ GridAreaSettings::GridAreaSettings() {
 GridAreaSettings::~GridAreaSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -51,7 +51,7 @@ void GridAreaSettings::read(MemoryReader &memoryReader) {
     mLatitudeOfLastGridPoint = memoryReader.read_int24();
     mLongitudeOfLastGridPoint = memoryReader.read_int24();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -75,7 +75,7 @@ void GridAreaSettings::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sGridAreaSettings.LongitudeOfLastGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfLastGridPoint));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -95,7 +95,7 @@ void GridAreaSettings::print(std::ostream &stream, uint level, uint optionFlags)
     stream << space(level) << "- LatitudeOfLastGridPoint = " << toString(mLatitudeOfLastGridPoint) << "\n";
     stream << space(level) << "- LongitudeOfLastGridPoint = " << toString(mLongitudeOfLastGridPoint) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -111,7 +111,7 @@ T::Hash GridAreaSettings::countHash() {
     // boost::hash_combine(seed,mResolutionFlags.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -121,7 +121,7 @@ std::int24_t GridAreaSettings::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -131,7 +131,7 @@ std::int24_t GridAreaSettings::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -141,7 +141,7 @@ const ResolutionFlagsSettings *GridAreaSettings::getResolutionFlags() const {
   try {
     return &mResolutionFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -151,7 +151,7 @@ std::int24_t GridAreaSettings::getLatitudeOfLastGridPoint() const {
   try {
     return mLatitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -161,7 +161,7 @@ std::int24_t GridAreaSettings::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -169,7 +169,7 @@ void GridAreaSettings::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstG
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -177,7 +177,7 @@ void GridAreaSettings::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirs
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -185,7 +185,7 @@ void GridAreaSettings::setResolutionFlags(ResolutionFlagsSettings resolutionFlag
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -193,7 +193,7 @@ void GridAreaSettings::setLatitudeOfLastGridPoint(std::int24_t latitudeOfLastGri
   try {
     mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -201,7 +201,7 @@ void GridAreaSettings::setLongitudeOfLastGridPoint(std::int24_t longitudeOfLastG
   try {
     mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

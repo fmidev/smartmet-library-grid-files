@@ -21,7 +21,7 @@ namespace GRIB2 {
 NormalProduct::NormalProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ NormalProduct::NormalProduct() {
 NormalProduct::~NormalProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -45,7 +45,7 @@ void NormalProduct::read(MemoryReader &memoryReader) {
     mPointInTime.read(memoryReader);
     mHorizontal.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -65,7 +65,7 @@ void NormalProduct::getAttributeList(std::string prefix, T::AttributeList &attri
     sprintf(name, "%sNormalProduct.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void NormalProduct::print(std::ostream &stream, uint level, uint optionFlags) co
     mPointInTime.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -97,7 +97,7 @@ T::Hash NormalProduct::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -107,7 +107,7 @@ const ParameterSettings *NormalProduct::getParameter() const {
   try {
     return &mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -117,7 +117,7 @@ const PointInTimeSettings *NormalProduct::getPointInTime() const {
   try {
     return &mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -127,7 +127,7 @@ const HorizontalSettings *NormalProduct::getHorizontal() const {
   try {
     return &mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -135,7 +135,7 @@ void NormalProduct::setParameter(ParameterSettings parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -143,7 +143,7 @@ void NormalProduct::setPointInTime(PointInTimeSettings pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -151,7 +151,7 @@ void NormalProduct::setHorizontal(HorizontalSettings horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

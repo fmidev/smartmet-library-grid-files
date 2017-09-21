@@ -25,7 +25,7 @@ RotatedGaussian::RotatedGaussian() {
     mIDirectionIncrement = 0;
     mN = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -34,7 +34,7 @@ RotatedGaussian::RotatedGaussian() {
 RotatedGaussian::~RotatedGaussian() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -53,7 +53,7 @@ void RotatedGaussian::read(MemoryReader &memoryReader) {
     mScanningMode.read(memoryReader);
     mRotation.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -81,7 +81,7 @@ void RotatedGaussian::getAttributeList(std::string prefix, T::AttributeList &att
     sprintf(name, "%sRotatedGaussian.", prefix.c_str());
     mRotation.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -103,7 +103,7 @@ void RotatedGaussian::print(std::ostream &stream, uint level, uint optionFlags) 
     mScanningMode.print(stream, level + 1, optionFlags);
     mRotation.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -121,7 +121,7 @@ T::Hash RotatedGaussian::countHash() {
     boost::hash_combine(seed, mRotation.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -131,7 +131,7 @@ std::uint16_t RotatedGaussian::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -141,7 +141,7 @@ std::int16_t RotatedGaussian::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -151,7 +151,7 @@ const GridAreaSettings *RotatedGaussian::getGridArea() const {
   try {
     return &mGridArea;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -161,7 +161,7 @@ std::uint16_t RotatedGaussian::getIDirectionIncrement() const {
   try {
     return mIDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -171,7 +171,7 @@ std::uint16_t RotatedGaussian::getN() const {
   try {
     return mN;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -181,7 +181,7 @@ const ScanningModeSettings *RotatedGaussian::getScanningMode() const {
   try {
     return &mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -191,7 +191,7 @@ const RotationSettings *RotatedGaussian::getRotation() const {
   try {
     return &mRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -199,7 +199,7 @@ void RotatedGaussian::setNi(std::uint16_t ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -207,7 +207,7 @@ void RotatedGaussian::setNj(std::int16_t nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -215,7 +215,7 @@ void RotatedGaussian::setGridArea(GridAreaSettings gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -223,7 +223,7 @@ void RotatedGaussian::setIDirectionIncrement(std::uint16_t iDirectionIncrement) 
   try {
     mIDirectionIncrement = iDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -231,7 +231,7 @@ void RotatedGaussian::setN(std::uint16_t n) {
   try {
     mN = n;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -239,7 +239,7 @@ void RotatedGaussian::setScanningMode(ScanningModeSettings scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -247,7 +247,7 @@ void RotatedGaussian::setRotation(RotationSettings rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

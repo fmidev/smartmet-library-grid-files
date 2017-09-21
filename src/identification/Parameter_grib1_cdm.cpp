@@ -17,7 +17,7 @@ Parameter_grib1_cdm::Parameter_grib1_cdm()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -36,7 +36,7 @@ Parameter_grib1_cdm::Parameter_grib1_cdm(const Parameter_grib1_cdm& parameter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -51,7 +51,7 @@ Parameter_grib1_cdm::~Parameter_grib1_cdm()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -71,7 +71,7 @@ void Parameter_grib1_cdm::print(std::ostream& stream,uint level,uint optionFlags
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

@@ -21,7 +21,7 @@ namespace GRIB2 {
 SpectralGridDataRepresentation::SpectralGridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ SpectralGridDataRepresentation::SpectralGridDataRepresentation() {
 SpectralGridDataRepresentation::~SpectralGridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -47,7 +47,7 @@ void SpectralGridDataRepresentation::read(MemoryReader &memoryReader) {
     mCcsdsBlockSize = memoryReader.read_UInt8_opt();
     mCcsdsRsi = memoryReader.read_UInt16_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -71,7 +71,7 @@ void SpectralGridDataRepresentation::getAttributeList(std::string prefix, T::Att
     sprintf(name, "%sSpectralGridDataRepresentation.CcsdsRsi", prefix.c_str());
     attributeList.addAttribute(name, toString(mCcsdsRsi));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -91,7 +91,7 @@ void SpectralGridDataRepresentation::print(std::ostream &stream, uint level, uin
     stream << space(level) << "- CcsdsBlockSize = " << toString(mCcsdsBlockSize) << "\n";
     stream << space(level) << "- CcsdsRsi = " << toString(mCcsdsRsi) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -110,7 +110,7 @@ T::Hash SpectralGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -120,7 +120,7 @@ const PackingSettings *SpectralGridDataRepresentation::getPacking() const {
   try {
     return &mPacking;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -130,7 +130,7 @@ const OriginalValuesSettings *SpectralGridDataRepresentation::getOriginalValues(
   try {
     return &mOriginalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -140,7 +140,7 @@ const T::UInt8_opt &SpectralGridDataRepresentation::getCcsdsFlags() const {
   try {
     return mCcsdsFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -150,7 +150,7 @@ const T::UInt8_opt &SpectralGridDataRepresentation::getCcsdsBlockSize() const {
   try {
     return mCcsdsBlockSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -160,7 +160,7 @@ const T::UInt16_opt &SpectralGridDataRepresentation::getCcsdsRsi() const {
   try {
     return mCcsdsRsi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -168,7 +168,7 @@ void SpectralGridDataRepresentation::setPacking(PackingSettings packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -176,7 +176,7 @@ void SpectralGridDataRepresentation::setOriginalValues(OriginalValuesSettings or
   try {
     mOriginalValues = originalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -184,7 +184,7 @@ void SpectralGridDataRepresentation::setCcsdsFlags(T::UInt8_opt ccsdsFlags) {
   try {
     mCcsdsFlags = ccsdsFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -192,7 +192,7 @@ void SpectralGridDataRepresentation::setCcsdsBlockSize(T::UInt8_opt ccsdsBlockSi
   try {
     mCcsdsBlockSize = ccsdsBlockSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -200,7 +200,7 @@ void SpectralGridDataRepresentation::setCcsdsRsi(T::UInt16_opt ccsdsRsi) {
   try {
     mCcsdsRsi = ccsdsRsi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

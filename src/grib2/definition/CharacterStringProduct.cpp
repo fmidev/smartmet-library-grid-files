@@ -21,7 +21,7 @@ namespace GRIB2 {
 CharacterStringProduct::CharacterStringProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ CharacterStringProduct::CharacterStringProduct() {
 CharacterStringProduct::~CharacterStringProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -45,7 +45,7 @@ void CharacterStringProduct::read(MemoryReader &memoryReader) {
     mParameterNumber = memoryReader.read_UInt8_opt();
     mNumberOfCharacters = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -65,7 +65,7 @@ void CharacterStringProduct::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sCharacterStringProduct.NumberOfCharacters", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfCharacters));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void CharacterStringProduct::print(std::ostream &stream, uint level, uint option
     stream << space(level) << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
     stream << space(level) << "- NumberOfCharacters = " << toString(mNumberOfCharacters) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -100,7 +100,7 @@ T::Hash CharacterStringProduct::countHash() {
       boost::hash_combine(seed, *mNumberOfCharacters);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -110,7 +110,7 @@ const T::UInt8_opt &CharacterStringProduct::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -120,7 +120,7 @@ const T::UInt8_opt &CharacterStringProduct::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -130,7 +130,7 @@ const T::UInt32_opt &CharacterStringProduct::getNumberOfCharacters() const {
   try {
     return mNumberOfCharacters;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -138,7 +138,7 @@ void CharacterStringProduct::setParameterCategory(T::UInt8_opt parameterCategory
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -146,7 +146,7 @@ void CharacterStringProduct::setParameterNumber(T::UInt8_opt parameterNumber) {
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -154,7 +154,7 @@ void CharacterStringProduct::setNumberOfCharacters(T::UInt32_opt numberOfCharact
   try {
     mNumberOfCharacters = numberOfCharacters;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

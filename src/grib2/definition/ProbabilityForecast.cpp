@@ -21,7 +21,7 @@ namespace GRIB2 {
 ProbabilityForecast::ProbabilityForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ ProbabilityForecast::ProbabilityForecast() {
 ProbabilityForecast::~ProbabilityForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -46,7 +46,7 @@ void ProbabilityForecast::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mProbability.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void ProbabilityForecast::getAttributeList(std::string prefix, T::AttributeList 
     sprintf(name, "%sProbabilityForecast.", prefix.c_str());
     mProbability.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -87,7 +87,7 @@ void ProbabilityForecast::print(std::ostream &stream, uint level, uint optionFla
     mHorizontal.print(stream, level + 1, optionFlags);
     mProbability.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -102,7 +102,7 @@ T::Hash ProbabilityForecast::countHash() {
     boost::hash_combine(seed, mProbability.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ const ParameterSettings *ProbabilityForecast::getParameter() const {
   try {
     return &mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -122,7 +122,7 @@ const PointInTimeSettings *ProbabilityForecast::getPointInTime() const {
   try {
     return &mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,7 +132,7 @@ const HorizontalSettings *ProbabilityForecast::getHorizontal() const {
   try {
     return &mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,7 +142,7 @@ const ProbabilitySettings *ProbabilityForecast::getProbability() const {
   try {
     return &mProbability;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -150,7 +150,7 @@ void ProbabilityForecast::setParameter(ParameterSettings parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -158,7 +158,7 @@ void ProbabilityForecast::setPointInTime(PointInTimeSettings pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -166,7 +166,7 @@ void ProbabilityForecast::setHorizontal(HorizontalSettings horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -174,7 +174,7 @@ void ProbabilityForecast::setProbability(ProbabilitySettings probability) {
   try {
     mProbability = probability;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

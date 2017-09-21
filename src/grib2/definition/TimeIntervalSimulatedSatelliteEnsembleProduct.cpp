@@ -21,7 +21,7 @@ namespace GRIB2 {
 TimeIntervalSimulatedSatelliteEnsembleProduct::TimeIntervalSimulatedSatelliteEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ TimeIntervalSimulatedSatelliteEnsembleProduct::TimeIntervalSimulatedSatelliteEns
 TimeIntervalSimulatedSatelliteEnsembleProduct::~TimeIntervalSimulatedSatelliteEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -45,7 +45,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::read(MemoryReader &memoryRea
     mEps.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -65,7 +65,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::getAttributeList(std::string
     sprintf(name, "%sTimeIntervalSimulatedSatelliteEnsembleProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::print(std::ostream &stream, 
     mEps.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -97,7 +97,7 @@ T::Hash TimeIntervalSimulatedSatelliteEnsembleProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -107,7 +107,7 @@ const SimulatedSatelliteProduct *TimeIntervalSimulatedSatelliteEnsembleProduct::
   try {
     return &mSimulatedSatelliteProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -117,7 +117,7 @@ const EpsSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getEps() const
   try {
     return &mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -127,7 +127,7 @@ const StatisticalSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getSta
   try {
     return &mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -135,7 +135,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct
   try {
     mSimulatedSatelliteProduct = simulatedSatelliteProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -143,7 +143,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::setEps(EpsSettings eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -151,7 +151,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::setStatistical(StatisticalSe
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

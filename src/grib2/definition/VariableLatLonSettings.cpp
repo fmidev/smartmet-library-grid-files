@@ -21,7 +21,7 @@ namespace GRIB2 {
 VariableLatLonSettings::VariableLatLonSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ VariableLatLonSettings::VariableLatLonSettings() {
 VariableLatLonSettings::~VariableLatLonSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -50,7 +50,7 @@ void VariableLatLonSettings::read(MemoryReader &memoryReader) {
     mLongitudes = memoryReader.read_UInt32_opt();
     mLatitudes = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -80,7 +80,7 @@ void VariableLatLonSettings::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sVariableLatLonSettings.Latitudes", prefix.c_str());
     attributeList.addAttribute(name, toString(mLatitudes));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -103,7 +103,7 @@ void VariableLatLonSettings::print(std::ostream &stream, uint level, uint option
     stream << space(level) << "- Longitudes = " << toString(mLongitudes) << "\n";
     stream << space(level) << "- Latitudes = " << toString(mLatitudes) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -126,7 +126,7 @@ T::Hash VariableLatLonSettings::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -136,7 +136,7 @@ const T::UInt32_opt &VariableLatLonSettings::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -146,7 +146,7 @@ const T::UInt32_opt &VariableLatLonSettings::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -156,7 +156,7 @@ const T::UInt32_opt &VariableLatLonSettings::getBasicAngleOfTheInitialProduction
   try {
     return mBasicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -166,7 +166,7 @@ const T::UInt32_opt &VariableLatLonSettings::getSubdivisionsOfBasicAngle() const
   try {
     return mSubdivisionsOfBasicAngle;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -176,7 +176,7 @@ const ResolutionSettings *VariableLatLonSettings::getResolution() const {
   try {
     return &mResolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -186,7 +186,7 @@ const ScanningModeSettings *VariableLatLonSettings::getScanningMode() const {
   try {
     return &mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -196,7 +196,7 @@ const T::UInt32_opt &VariableLatLonSettings::getLongitudes() const {
   try {
     return mLongitudes;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -206,7 +206,7 @@ const T::Int32_opt &VariableLatLonSettings::getLatitudes() const {
   try {
     return mLatitudes;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -214,7 +214,7 @@ void VariableLatLonSettings::setNi(T::UInt32_opt ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -222,7 +222,7 @@ void VariableLatLonSettings::setNj(T::UInt32_opt nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -230,7 +230,7 @@ void VariableLatLonSettings::setBasicAngleOfTheInitialProductionDomain(T::UInt32
   try {
     mBasicAngleOfTheInitialProductionDomain = basicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -238,7 +238,7 @@ void VariableLatLonSettings::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisi
   try {
     mSubdivisionsOfBasicAngle = subdivisionsOfBasicAngle;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -246,7 +246,7 @@ void VariableLatLonSettings::setResolution(ResolutionSettings resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -254,7 +254,7 @@ void VariableLatLonSettings::setScanningMode(ScanningModeSettings scanningMode) 
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -262,7 +262,7 @@ void VariableLatLonSettings::setLongitudes(T::UInt32_opt longitudes) {
   try {
     mLongitudes = longitudes;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -270,7 +270,7 @@ void VariableLatLonSettings::setLatitudes(T::Int32_opt latitudes) {
   try {
     mLatitudes = latitudes;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

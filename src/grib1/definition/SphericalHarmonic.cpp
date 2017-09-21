@@ -26,7 +26,7 @@ SphericalHarmonic::SphericalHarmonic() {
     mRepresentationType = 0;
     mRepresentationMode = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -35,7 +35,7 @@ SphericalHarmonic::SphericalHarmonic() {
 SphericalHarmonic::~SphericalHarmonic() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -52,7 +52,7 @@ void SphericalHarmonic::read(MemoryReader &memoryReader) {
     mRepresentationType = memoryReader.read_uint8();
     mRepresentationMode = memoryReader.read_uint8();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -76,7 +76,7 @@ void SphericalHarmonic::getAttributeList(std::string prefix, T::AttributeList &a
     sprintf(name, "%sSphericalHarmonic.RepresentationMode", prefix.c_str());
     attributeList.addAttribute(name, toString(mRepresentationMode));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -96,7 +96,7 @@ void SphericalHarmonic::print(std::ostream &stream, uint level, uint optionFlags
     stream << space(level) << "- RepresentationType = " << toString(mRepresentationType) << "\n";
     stream << space(level) << "- RepresentationMode = " << toString(mRepresentationMode) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ T::Hash SphericalHarmonic::countHash() {
     boost::hash_combine(seed, mRepresentationMode);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -122,7 +122,7 @@ std::uint16_t SphericalHarmonic::getJ() const {
   try {
     return mJ;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,7 +132,7 @@ std::uint16_t SphericalHarmonic::getK() const {
   try {
     return mK;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,7 +142,7 @@ std::uint16_t SphericalHarmonic::getM() const {
   try {
     return mM;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -152,7 +152,7 @@ std::uint8_t SphericalHarmonic::getRepresentationType() const {
   try {
     return mRepresentationType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -162,7 +162,7 @@ std::uint8_t SphericalHarmonic::getRepresentationMode() const {
   try {
     return mRepresentationMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -170,7 +170,7 @@ void SphericalHarmonic::setJ(std::uint16_t j) {
   try {
     mJ = j;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -178,7 +178,7 @@ void SphericalHarmonic::setK(std::uint16_t k) {
   try {
     mK = k;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -186,7 +186,7 @@ void SphericalHarmonic::setM(std::uint16_t m) {
   try {
     mM = m;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -194,7 +194,7 @@ void SphericalHarmonic::setRepresentationType(std::uint8_t representationType) {
   try {
     mRepresentationType = representationType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -202,7 +202,7 @@ void SphericalHarmonic::setRepresentationMode(std::uint8_t representationMode) {
   try {
     mRepresentationMode = representationMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

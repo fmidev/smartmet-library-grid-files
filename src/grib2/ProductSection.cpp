@@ -107,7 +107,7 @@ void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -189,7 +189,7 @@ T::FilePosition ProductSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -210,7 +210,7 @@ std::uint32_t ProductSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -228,7 +228,7 @@ std::string ProductSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -246,7 +246,7 @@ std::uint8_t ProductSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -266,7 +266,7 @@ std::uint8_t ProductSection::getNumberOfSection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -282,7 +282,7 @@ T::UInt16_opt ProductSection::getNV() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -299,7 +299,7 @@ std::string ProductSection::getProductDefinitionString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -315,7 +315,7 @@ std::uint16_t ProductSection::getProductDefinitionTemplateNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -341,7 +341,7 @@ T::TimeString ProductSection::getForecastTime(T::TimeString referenceTime) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -362,7 +362,7 @@ const T::UInt8_opt ProductSection::getGribParameterCategory() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -382,7 +382,7 @@ const T::UInt8_opt ProductSection::getGribParameterNumber() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -408,7 +408,7 @@ std::uint8_t ProductSection::getGribParameterLevelId() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -434,7 +434,7 @@ T::ParamLevel ProductSection::getGribParameterLevel() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -463,7 +463,7 @@ short ProductSection::getForecastType() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -492,7 +492,7 @@ short ProductSection::getForecastNumber() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -651,7 +651,7 @@ T::UInt8_opt ProductSection::getGeneratingProcessIdentifier() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -687,7 +687,7 @@ void ProductSection::print(std::ostream& stream,uint level,uint optionFlags) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

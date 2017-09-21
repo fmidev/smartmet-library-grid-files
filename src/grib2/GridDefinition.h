@@ -30,6 +30,7 @@ class GridDefinition
     virtual void                getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     virtual void                getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const;
     virtual T::Coordinate_vec   getGridCoordinates() const;
+    virtual T::Coordinate_vec   getGridLatLonCoordinates() const;
     virtual T::Dimensions_opt   getGridDimensions() const;
     virtual bool                getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;

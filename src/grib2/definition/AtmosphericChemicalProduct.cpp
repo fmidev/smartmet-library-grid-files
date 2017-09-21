@@ -21,7 +21,7 @@ namespace GRIB2 {
 AtmosphericChemicalProduct::AtmosphericChemicalProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ AtmosphericChemicalProduct::AtmosphericChemicalProduct() {
 AtmosphericChemicalProduct::~AtmosphericChemicalProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -45,7 +45,7 @@ void AtmosphericChemicalProduct::read(MemoryReader &memoryReader) {
     mPointInTime.read(memoryReader);
     mHorizontal.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -65,7 +65,7 @@ void AtmosphericChemicalProduct::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sAtmosphericChemicalProduct.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void AtmosphericChemicalProduct::print(std::ostream &stream, uint level, uint op
     mPointInTime.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -97,7 +97,7 @@ T::Hash AtmosphericChemicalProduct::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -107,7 +107,7 @@ const ParameterChemicalSettings *AtmosphericChemicalProduct::getParameterChemica
   try {
     return &mParameterChemical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -117,7 +117,7 @@ const PointInTimeSettings *AtmosphericChemicalProduct::getPointInTime() const {
   try {
     return &mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -127,7 +127,7 @@ const HorizontalSettings *AtmosphericChemicalProduct::getHorizontal() const {
   try {
     return &mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -135,7 +135,7 @@ void AtmosphericChemicalProduct::setParameterChemical(ParameterChemicalSettings 
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -143,7 +143,7 @@ void AtmosphericChemicalProduct::setPointInTime(PointInTimeSettings pointInTime)
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -151,7 +151,7 @@ void AtmosphericChemicalProduct::setHorizontal(HorizontalSettings horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

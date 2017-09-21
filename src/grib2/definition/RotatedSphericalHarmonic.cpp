@@ -21,7 +21,7 @@ namespace GRIB2 {
 RotatedSphericalHarmonic::RotatedSphericalHarmonic() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ RotatedSphericalHarmonic::RotatedSphericalHarmonic() {
 RotatedSphericalHarmonic::~RotatedSphericalHarmonic() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -44,7 +44,7 @@ void RotatedSphericalHarmonic::read(MemoryReader &memoryReader) {
     mSphericalHarmonic.read(memoryReader);
     mRotation.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -62,7 +62,7 @@ void RotatedSphericalHarmonic::getAttributeList(std::string prefix, T::Attribute
     sprintf(name, "%sRotatedSphericalHarmonic.", prefix.c_str());
     mRotation.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -79,7 +79,7 @@ void RotatedSphericalHarmonic::print(std::ostream &stream, uint level, uint opti
     mSphericalHarmonic.print(stream, level + 1, optionFlags);
     mRotation.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -92,7 +92,7 @@ T::Hash RotatedSphericalHarmonic::countHash() {
     boost::hash_combine(seed, mRotation.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -102,7 +102,7 @@ const SphericalHarmonicSettings *RotatedSphericalHarmonic::getSphericalHarmonic(
   try {
     return &mSphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ const RotationSettings *RotatedSphericalHarmonic::getRotation() const {
   try {
     return &mRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -120,7 +120,7 @@ void RotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings sp
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -128,7 +128,7 @@ void RotatedSphericalHarmonic::setRotation(RotationSettings rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

@@ -18,7 +18,7 @@ MessageIdentifier_grib1::MessageIdentifier_grib1()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -33,7 +33,7 @@ MessageIdentifier_grib1::~MessageIdentifier_grib1()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -102,7 +102,7 @@ T::ParamId MessageIdentifier_grib1::getParamId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -118,7 +118,7 @@ T::ParamId MessageIdentifier_grib1::getParamId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -134,7 +134,7 @@ T::ParamLevelId MessageIdentifier_grib1::getParamLevelId(GRIB1::Message& message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -151,7 +151,7 @@ T::ParamLevelId MessageIdentifier_grib1::getParamLevelId(GRIB2::Message& message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -171,7 +171,7 @@ std::string MessageIdentifier_grib1::getParamName(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -191,7 +191,7 @@ std::string MessageIdentifier_grib1::getParamName(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -211,7 +211,7 @@ std::string MessageIdentifier_grib1::getParamDescription(GRIB1::Message& message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -231,7 +231,7 @@ std::string MessageIdentifier_grib1::getParamDescription(GRIB2::Message& message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -251,7 +251,7 @@ std::string MessageIdentifier_grib1::getParamUnits(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -271,7 +271,7 @@ std::string MessageIdentifier_grib1::getParamUnits(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -291,7 +291,7 @@ T::ParamId MessageIdentifier_grib1::getParamIdByName(std::string gribParamName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -311,7 +311,7 @@ T::InterpolationMethod MessageIdentifier_grib1::getParamInterpolationMethod(GRIB
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -331,7 +331,7 @@ T::InterpolationMethod MessageIdentifier_grib1::getParamInterpolationMethod(GRIB
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

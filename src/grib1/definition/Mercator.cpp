@@ -26,7 +26,7 @@ Mercator::Mercator() {
     mDiInMetres = 0;
     mDjInMetres = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -35,7 +35,7 @@ Mercator::Mercator() {
 Mercator::~Mercator() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -54,7 +54,7 @@ void Mercator::read(MemoryReader &memoryReader) {
     mDiInMetres = memoryReader.read_int24();
     mDjInMetres = memoryReader.read_int24();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -82,7 +82,7 @@ void Mercator::getAttributeList(std::string prefix, T::AttributeList &attributeL
     sprintf(name, "%sMercator.DjInMetres", prefix.c_str());
     attributeList.addAttribute(name, toString(mDjInMetres));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -104,7 +104,7 @@ void Mercator::print(std::ostream &stream, uint level, uint optionFlags) const {
     stream << space(level) << "- DiInMetres = " << toString(mDiInMetres) << "\n";
     stream << space(level) << "- DjInMetres = " << toString(mDjInMetres) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -122,7 +122,7 @@ T::Hash Mercator::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,7 +132,7 @@ std::int16_t Mercator::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,7 +142,7 @@ std::int16_t Mercator::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -152,7 +152,7 @@ const GridAreaSettings *Mercator::getGridArea() const {
   try {
     return &mGridArea;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -162,7 +162,7 @@ std::int24_t Mercator::getLatin() const {
   try {
     return mLatin;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -172,7 +172,7 @@ const ScanningModeSettings *Mercator::getScanningMode() const {
   try {
     return &mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -182,7 +182,7 @@ std::int24_t Mercator::getDiInMetres() const {
   try {
     return mDiInMetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -192,7 +192,7 @@ std::int24_t Mercator::getDjInMetres() const {
   try {
     return mDjInMetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -200,7 +200,7 @@ void Mercator::setNi(std::int16_t ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -208,7 +208,7 @@ void Mercator::setNj(std::int16_t nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -216,7 +216,7 @@ void Mercator::setGridArea(GridAreaSettings gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -224,7 +224,7 @@ void Mercator::setLatin(std::int24_t latin) {
   try {
     mLatin = latin;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -232,7 +232,7 @@ void Mercator::setScanningMode(ScanningModeSettings scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -240,7 +240,7 @@ void Mercator::setDiInMetres(std::int24_t diInMetres) {
   try {
     mDiInMetres = diInMetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -248,7 +248,7 @@ void Mercator::setDjInMetres(std::int24_t djInMetres) {
   try {
     mDjInMetres = djInMetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

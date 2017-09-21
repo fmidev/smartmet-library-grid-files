@@ -22,7 +22,7 @@ LogarithmicGridDataRepresentation::LogarithmicGridDataRepresentation() {
   try {
     mPreProcessingParameter = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -31,7 +31,7 @@ LogarithmicGridDataRepresentation::LogarithmicGridDataRepresentation() {
 LogarithmicGridDataRepresentation::~LogarithmicGridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -45,7 +45,7 @@ void LogarithmicGridDataRepresentation::read(MemoryReader &memoryReader) {
     mPacking.read(memoryReader);
     mPreProcessingParameter = memoryReader.read_float();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -63,7 +63,7 @@ void LogarithmicGridDataRepresentation::getAttributeList(std::string prefix, T::
     sprintf(name, "%sLogarithmicGridDataRepresentation.PreProcessingParameter", prefix.c_str());
     attributeList.addAttribute(name, toString(mPreProcessingParameter));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -80,7 +80,7 @@ void LogarithmicGridDataRepresentation::print(std::ostream &stream, uint level, 
     mPacking.print(stream, level + 1, optionFlags);
     stream << space(level) << "- PreProcessingParameter = " << toString(mPreProcessingParameter) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -93,7 +93,7 @@ T::Hash LogarithmicGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -103,7 +103,7 @@ const PackingSettings *LogarithmicGridDataRepresentation::getPacking() const {
   try {
     return &mPacking;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -113,7 +113,7 @@ float LogarithmicGridDataRepresentation::getPreProcessingParameter() const {
   try {
     return mPreProcessingParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -121,7 +121,7 @@ void LogarithmicGridDataRepresentation::setPacking(PackingSettings packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -129,7 +129,7 @@ void LogarithmicGridDataRepresentation::setPreProcessingParameter(float preProce
   try {
     mPreProcessingParameter = preProcessingParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

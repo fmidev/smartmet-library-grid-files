@@ -21,7 +21,7 @@ namespace GRIB2 {
 SpectralData::SpectralData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ SpectralData::SpectralData() {
 SpectralData::~SpectralData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -42,7 +42,7 @@ SpectralData::~SpectralData() {
 void SpectralData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -55,7 +55,7 @@ void SpectralData::read(MemoryReader &memoryReader) {
 void SpectralData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -70,7 +70,7 @@ void SpectralData::print(std::ostream &stream, uint level, uint optionFlags) con
   try {
     stream << space(level) << "SpectralData\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -81,7 +81,7 @@ T::Hash SpectralData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

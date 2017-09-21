@@ -21,7 +21,7 @@ namespace GRIB2 {
 EpsSettings::EpsSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ EpsSettings::EpsSettings() {
 EpsSettings::~EpsSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -45,7 +45,7 @@ void EpsSettings::read(MemoryReader &memoryReader) {
     mForecastPerturbationNumber = memoryReader.read_UInt8_opt();
     mNumberOfForecastsInEnsemble = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -65,7 +65,7 @@ void EpsSettings::getAttributeList(std::string prefix, T::AttributeList &attribu
     sprintf(name, "%sEpsSettings.NumberOfForecastsInEnsemble", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void EpsSettings::print(std::ostream &stream, uint level, uint optionFlags) cons
     stream << space(level) << "- PerturbationNumber = " << toString(mForecastPerturbationNumber) << "\n";
     stream << space(level) << "- NumberOfForecastsInEnsemble = " << toString(mNumberOfForecastsInEnsemble) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -100,7 +100,7 @@ T::Hash EpsSettings::countHash() {
       boost::hash_combine(seed, *mNumberOfForecastsInEnsemble);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -110,7 +110,7 @@ const T::UInt8_opt &EpsSettings::getTypeOfEnsembleForecast() const {
   try {
     return mForecastType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -120,7 +120,7 @@ const T::UInt8_opt &EpsSettings::getPerturbationNumber() const {
   try {
     return mForecastPerturbationNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -130,7 +130,7 @@ const T::UInt8_opt &EpsSettings::getNumberOfForecastsInEnsemble() const {
   try {
     return mNumberOfForecastsInEnsemble;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -138,7 +138,7 @@ void EpsSettings::setTypeOfEnsembleForecast(T::UInt8_opt forecastType) {
   try {
     mForecastType = forecastType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -146,7 +146,7 @@ void EpsSettings::setPerturbationNumber(T::UInt8_opt forecastPerturbationNumber)
   try {
     mForecastPerturbationNumber = forecastPerturbationNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -154,7 +154,7 @@ void EpsSettings::setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForecastsI
   try {
     mNumberOfForecastsInEnsemble = numberOfForecastsInEnsemble;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

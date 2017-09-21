@@ -21,7 +21,7 @@ namespace GRIB2 {
 TimeIntervalAerosolEnsembleProduct::TimeIntervalAerosolEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ TimeIntervalAerosolEnsembleProduct::TimeIntervalAerosolEnsembleProduct() {
 TimeIntervalAerosolEnsembleProduct::~TimeIntervalAerosolEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -46,7 +46,7 @@ void TimeIntervalAerosolEnsembleProduct::read(MemoryReader &memoryReader) {
     mEps.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void TimeIntervalAerosolEnsembleProduct::getAttributeList(std::string prefix, T:
     sprintf(name, "%sTimeIntervalAerosolEnsembleProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -87,7 +87,7 @@ void TimeIntervalAerosolEnsembleProduct::print(std::ostream &stream, uint level,
     mEps.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -102,7 +102,7 @@ T::Hash TimeIntervalAerosolEnsembleProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ const ParameterAerosolSettings *TimeIntervalAerosolEnsembleProduct::getParameter
   try {
     return &mParameterAerosol;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -122,7 +122,7 @@ const HorizontalSettings *TimeIntervalAerosolEnsembleProduct::getHorizontal() co
   try {
     return &mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,7 +132,7 @@ const EpsSettings *TimeIntervalAerosolEnsembleProduct::getEps() const {
   try {
     return &mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,7 +142,7 @@ const StatisticalSettings *TimeIntervalAerosolEnsembleProduct::getStatistical() 
   try {
     return &mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -150,7 +150,7 @@ void TimeIntervalAerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSet
   try {
     mParameterAerosol = parameterAerosol;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -158,7 +158,7 @@ void TimeIntervalAerosolEnsembleProduct::setHorizontal(HorizontalSettings horizo
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -166,7 +166,7 @@ void TimeIntervalAerosolEnsembleProduct::setEps(EpsSettings eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -174,7 +174,7 @@ void TimeIntervalAerosolEnsembleProduct::setStatistical(StatisticalSettings stat
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

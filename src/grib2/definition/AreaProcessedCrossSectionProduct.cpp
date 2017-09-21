@@ -21,7 +21,7 @@ namespace GRIB2 {
 AreaProcessedCrossSectionProduct::AreaProcessedCrossSectionProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ AreaProcessedCrossSectionProduct::AreaProcessedCrossSectionProduct() {
 AreaProcessedCrossSectionProduct::~AreaProcessedCrossSectionProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -49,7 +49,7 @@ void AreaProcessedCrossSectionProduct::read(MemoryReader &memoryReader) {
     mEndOfRange = memoryReader.read_UInt32_opt();
     mNumberOfDataValues = memoryReader.read_UInt16_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -77,7 +77,7 @@ void AreaProcessedCrossSectionProduct::getAttributeList(std::string prefix, T::A
     sprintf(name, "%sAreaProcessedCrossSectionProduct.NumberOfDataValues", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfDataValues));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -99,7 +99,7 @@ void AreaProcessedCrossSectionProduct::print(std::ostream &stream, uint level, u
     stream << space(level) << "- EndOfRange = " << toString(mEndOfRange) << "\n";
     stream << space(level) << "- NumberOfDataValues = " << toString(mNumberOfDataValues) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -123,7 +123,7 @@ T::Hash AreaProcessedCrossSectionProduct::countHash() {
     boost::hash_combine(seed, mParameter.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -133,7 +133,7 @@ const ParameterSettings *AreaProcessedCrossSectionProduct::getParameter() const 
   try {
     return &mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -143,7 +143,7 @@ const T::UInt8_opt &AreaProcessedCrossSectionProduct::getHorizontalDimensionProc
   try {
     return mHorizontalDimensionProcessed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -153,7 +153,7 @@ const T::UInt8_opt &AreaProcessedCrossSectionProduct::getTreatmentOfMissingData(
   try {
     return mTreatmentOfMissingData;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -163,7 +163,7 @@ const T::UInt8_opt &AreaProcessedCrossSectionProduct::getTypeOfStatisticalProces
   try {
     return mTypeOfStatisticalProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -173,7 +173,7 @@ const T::UInt32_opt &AreaProcessedCrossSectionProduct::getStartOfRange() const {
   try {
     return mStartOfRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -183,7 +183,7 @@ const T::UInt32_opt &AreaProcessedCrossSectionProduct::getEndOfRange() const {
   try {
     return mEndOfRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -193,7 +193,7 @@ const T::UInt16_opt &AreaProcessedCrossSectionProduct::getNumberOfDataValues() c
   try {
     return mNumberOfDataValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -201,7 +201,7 @@ void AreaProcessedCrossSectionProduct::setParameter(ParameterSettings parameter)
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -209,7 +209,7 @@ void AreaProcessedCrossSectionProduct::setHorizontalDimensionProcessed(T::UInt8_
   try {
     mHorizontalDimensionProcessed = horizontalDimensionProcessed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -217,7 +217,7 @@ void AreaProcessedCrossSectionProduct::setTreatmentOfMissingData(T::UInt8_opt tr
   try {
     mTreatmentOfMissingData = treatmentOfMissingData;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -225,7 +225,7 @@ void AreaProcessedCrossSectionProduct::setTypeOfStatisticalProcessing(T::UInt8_o
   try {
     mTypeOfStatisticalProcessing = typeOfStatisticalProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -233,7 +233,7 @@ void AreaProcessedCrossSectionProduct::setStartOfRange(T::UInt32_opt startOfRang
   try {
     mStartOfRange = startOfRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -241,7 +241,7 @@ void AreaProcessedCrossSectionProduct::setEndOfRange(T::UInt32_opt endOfRange) {
   try {
     mEndOfRange = endOfRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -249,7 +249,7 @@ void AreaProcessedCrossSectionProduct::setNumberOfDataValues(T::UInt16_opt numbe
   try {
     mNumberOfDataValues = numberOfDataValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

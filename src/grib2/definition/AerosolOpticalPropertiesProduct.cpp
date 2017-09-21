@@ -21,7 +21,7 @@ namespace GRIB2 {
 AerosolOpticalPropertiesProduct::AerosolOpticalPropertiesProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ AerosolOpticalPropertiesProduct::AerosolOpticalPropertiesProduct() {
 AerosolOpticalPropertiesProduct::~AerosolOpticalPropertiesProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -45,7 +45,7 @@ void AerosolOpticalPropertiesProduct::read(MemoryReader &memoryReader) {
     mPointInTime.read(memoryReader);
     mHorizontal.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -65,7 +65,7 @@ void AerosolOpticalPropertiesProduct::getAttributeList(std::string prefix, T::At
     sprintf(name, "%sAerosolOpticalPropertiesProduct.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void AerosolOpticalPropertiesProduct::print(std::ostream &stream, uint level, ui
     mPointInTime.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -97,7 +97,7 @@ T::Hash AerosolOpticalPropertiesProduct::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -107,7 +107,7 @@ const ParameterAerosolOpticalSettings *AerosolOpticalPropertiesProduct::getParam
   try {
     return &mParameterAerosolOptical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -117,7 +117,7 @@ const PointInTimeSettings *AerosolOpticalPropertiesProduct::getPointInTime() con
   try {
     return &mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -127,7 +127,7 @@ const HorizontalSettings *AerosolOpticalPropertiesProduct::getHorizontal() const
   try {
     return &mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -135,7 +135,7 @@ void AerosolOpticalPropertiesProduct::setParameterAerosolOptical(ParameterAeroso
   try {
     mParameterAerosolOptical = parameterAerosolOptical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -143,7 +143,7 @@ void AerosolOpticalPropertiesProduct::setPointInTime(PointInTimeSettings pointIn
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -151,7 +151,7 @@ void AerosolOpticalPropertiesProduct::setHorizontal(HorizontalSettings horizonta
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

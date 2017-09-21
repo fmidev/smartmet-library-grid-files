@@ -21,7 +21,7 @@ namespace GRIB2 {
 StretchedRotatedGaussian::StretchedRotatedGaussian() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ StretchedRotatedGaussian::StretchedRotatedGaussian() {
 StretchedRotatedGaussian::~StretchedRotatedGaussian() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -46,7 +46,7 @@ void StretchedRotatedGaussian::read(MemoryReader &memoryReader) {
     mRotation.read(memoryReader);
     mStretching.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void StretchedRotatedGaussian::getAttributeList(std::string prefix, T::Attribute
     sprintf(name, "%sStretchedRotatedGaussian.", prefix.c_str());
     mStretching.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -87,7 +87,7 @@ void StretchedRotatedGaussian::print(std::ostream &stream, uint level, uint opti
     mRotation.print(stream, level + 1, optionFlags);
     mStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -102,7 +102,7 @@ T::Hash StretchedRotatedGaussian::countHash() {
     boost::hash_combine(seed, mStretching.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ const EarthShapeSettings *StretchedRotatedGaussian::getEarthShape() const {
   try {
     return &mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -122,7 +122,7 @@ const GaussianSettings *StretchedRotatedGaussian::getGaussian() const {
   try {
     return &mGaussian;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,7 +132,7 @@ const RotationSettings *StretchedRotatedGaussian::getRotation() const {
   try {
     return &mRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,7 +142,7 @@ const StretchingSettings *StretchedRotatedGaussian::getStretching() const {
   try {
     return &mStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -150,7 +150,7 @@ void StretchedRotatedGaussian::setEarthShape(EarthShapeSettings earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -158,7 +158,7 @@ void StretchedRotatedGaussian::setGaussian(GaussianSettings gaussian) {
   try {
     mGaussian = gaussian;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -166,7 +166,7 @@ void StretchedRotatedGaussian::setRotation(RotationSettings rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -174,7 +174,7 @@ void StretchedRotatedGaussian::setStretching(StretchingSettings stretching) {
   try {
     mStretching = stretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

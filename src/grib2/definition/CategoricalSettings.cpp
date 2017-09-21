@@ -21,7 +21,7 @@ namespace GRIB2 {
 CategoricalSettings::CategoricalSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ CategoricalSettings::CategoricalSettings() {
 CategoricalSettings::~CategoricalSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -49,7 +49,7 @@ void CategoricalSettings::read(MemoryReader &memoryReader) {
     mScaleFactorOfUpperLimit = memoryReader.read_UInt8_opt();
     mScaledValueOfUpperLimit = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -77,7 +77,7 @@ void CategoricalSettings::getAttributeList(std::string prefix, T::AttributeList 
     sprintf(name, "%sCategoricalSettings.ScaledValueOfUpperLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfUpperLimit));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -99,7 +99,7 @@ void CategoricalSettings::print(std::ostream &stream, uint level, uint optionFla
     stream << space(level) << "- ScaleFactorOfUpperLimit = " << toString(mScaleFactorOfUpperLimit) << "\n";
     stream << space(level) << "- ScaledValueOfUpperLimit = " << toString(mScaledValueOfUpperLimit) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -124,7 +124,7 @@ T::Hash CategoricalSettings::countHash() {
       boost::hash_combine(seed, *mScaledValueOfUpperLimit);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -134,7 +134,7 @@ const T::UInt8_opt &CategoricalSettings::getNumberOfCategories() const {
   try {
     return mNumberOfCategories;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -144,7 +144,7 @@ const T::UInt8_opt &CategoricalSettings::getCategoryType() const {
   try {
     return mCategoryType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -154,7 +154,7 @@ const T::UInt8_opt &CategoricalSettings::getCodeFigure() const {
   try {
     return mCodeFigure;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -164,7 +164,7 @@ const T::UInt8_opt &CategoricalSettings::getScaleFactorOfLowerLimit() const {
   try {
     return mScaleFactorOfLowerLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -174,7 +174,7 @@ const T::UInt32_opt &CategoricalSettings::getScaledValueOfLowerLimit() const {
   try {
     return mScaledValueOfLowerLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -184,7 +184,7 @@ const T::UInt8_opt &CategoricalSettings::getScaleFactorOfUpperLimit() const {
   try {
     return mScaleFactorOfUpperLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -194,7 +194,7 @@ const T::UInt32_opt &CategoricalSettings::getScaledValueOfUpperLimit() const {
   try {
     return mScaledValueOfUpperLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -202,7 +202,7 @@ void CategoricalSettings::setNumberOfCategories(T::UInt8_opt numberOfCategories)
   try {
     mNumberOfCategories = numberOfCategories;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -210,7 +210,7 @@ void CategoricalSettings::setCategoryType(T::UInt8_opt categoryType) {
   try {
     mCategoryType = categoryType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -218,7 +218,7 @@ void CategoricalSettings::setCodeFigure(T::UInt8_opt codeFigure) {
   try {
     mCodeFigure = codeFigure;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -226,7 +226,7 @@ void CategoricalSettings::setScaleFactorOfLowerLimit(T::UInt8_opt scaleFactorOfL
   try {
     mScaleFactorOfLowerLimit = scaleFactorOfLowerLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -234,7 +234,7 @@ void CategoricalSettings::setScaledValueOfLowerLimit(T::UInt32_opt scaledValueOf
   try {
     mScaledValueOfLowerLimit = scaledValueOfLowerLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -242,7 +242,7 @@ void CategoricalSettings::setScaleFactorOfUpperLimit(T::UInt8_opt scaleFactorOfU
   try {
     mScaleFactorOfUpperLimit = scaleFactorOfUpperLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -250,7 +250,7 @@ void CategoricalSettings::setScaledValueOfUpperLimit(T::UInt32_opt scaledValueOf
   try {
     mScaledValueOfUpperLimit = scaledValueOfUpperLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

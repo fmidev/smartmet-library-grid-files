@@ -33,7 +33,7 @@ ObliqueLambertConformal::ObliqueLambertConformal() {
     mLatitudeOfSouthernPole = 0;
     mLongitudeOfSouthernPole = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -42,7 +42,7 @@ ObliqueLambertConformal::ObliqueLambertConformal() {
 ObliqueLambertConformal::~ObliqueLambertConformal() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void ObliqueLambertConformal::read(MemoryReader &memoryReader) {
     mLatitudeOfSouthernPole = memoryReader.read_int24();
     mLongitudeOfSouthernPole = memoryReader.read_int24();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -110,7 +110,7 @@ void ObliqueLambertConformal::getAttributeList(std::string prefix, T::AttributeL
     sprintf(name, "%sObliqueLambertConformal.LongitudeOfSouthernPole", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -139,7 +139,7 @@ void ObliqueLambertConformal::print(std::ostream &stream, uint level, uint optio
     stream << space(level) << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole) << "\n";
     stream << space(level) << "- LongitudeOfSouthernPole = " << toString(mLongitudeOfSouthernPole) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -164,7 +164,7 @@ T::Hash ObliqueLambertConformal::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -174,7 +174,7 @@ std::uint16_t ObliqueLambertConformal::getNx() const {
   try {
     return mNx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -184,7 +184,7 @@ std::uint16_t ObliqueLambertConformal::getNy() const {
   try {
     return mNy;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -194,7 +194,7 @@ std::int24_t ObliqueLambertConformal::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -204,7 +204,7 @@ std::int24_t ObliqueLambertConformal::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -214,7 +214,7 @@ const ResolutionFlagsSettings *ObliqueLambertConformal::getResolutionFlags() con
   try {
     return &mResolutionFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -224,7 +224,7 @@ std::int24_t ObliqueLambertConformal::getLoV() const {
   try {
     return mLoV;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -234,7 +234,7 @@ std::uint24_t ObliqueLambertConformal::getDxInMetres() const {
   try {
     return mDxInMetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -244,7 +244,7 @@ std::uint24_t ObliqueLambertConformal::getDyInMetres() const {
   try {
     return mDyInMetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -254,7 +254,7 @@ std::uint8_t ObliqueLambertConformal::getProjectionCentreFlag() const {
   try {
     return mProjectionCentreFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -264,7 +264,7 @@ const ScanningModeSettings *ObliqueLambertConformal::getScanningMode() const {
   try {
     return &mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -274,7 +274,7 @@ std::int24_t ObliqueLambertConformal::getLatin1() const {
   try {
     return mLatin1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -284,7 +284,7 @@ std::int24_t ObliqueLambertConformal::getLatin2() const {
   try {
     return mLatin2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -294,7 +294,7 @@ std::int24_t ObliqueLambertConformal::getLatitudeOfSouthernPole() const {
   try {
     return mLatitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -304,7 +304,7 @@ std::int24_t ObliqueLambertConformal::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -312,7 +312,7 @@ void ObliqueLambertConformal::setNx(std::uint16_t nx) {
   try {
     mNx = nx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -320,7 +320,7 @@ void ObliqueLambertConformal::setNy(std::uint16_t ny) {
   try {
     mNy = ny;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -328,7 +328,7 @@ void ObliqueLambertConformal::setLatitudeOfFirstGridPoint(std::int24_t latitudeO
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -336,7 +336,7 @@ void ObliqueLambertConformal::setLongitudeOfFirstGridPoint(std::int24_t longitud
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -344,7 +344,7 @@ void ObliqueLambertConformal::setResolutionFlags(ResolutionFlagsSettings resolut
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -352,7 +352,7 @@ void ObliqueLambertConformal::setLoV(std::int24_t loV) {
   try {
     mLoV = loV;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -360,7 +360,7 @@ void ObliqueLambertConformal::setDxInMetres(std::uint24_t dxInMetres) {
   try {
     mDxInMetres = dxInMetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -368,7 +368,7 @@ void ObliqueLambertConformal::setDyInMetres(std::uint24_t dyInMetres) {
   try {
     mDyInMetres = dyInMetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -376,7 +376,7 @@ void ObliqueLambertConformal::setProjectionCentreFlag(std::uint8_t projectionCen
   try {
     mProjectionCentreFlag = projectionCentreFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -384,7 +384,7 @@ void ObliqueLambertConformal::setScanningMode(ScanningModeSettings scanningMode)
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -392,7 +392,7 @@ void ObliqueLambertConformal::setLatin1(std::int24_t latin1) {
   try {
     mLatin1 = latin1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -400,7 +400,7 @@ void ObliqueLambertConformal::setLatin2(std::int24_t latin2) {
   try {
     mLatin2 = latin2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -408,7 +408,7 @@ void ObliqueLambertConformal::setLatitudeOfSouthernPole(std::int24_t latitudeOfS
   try {
     mLatitudeOfSouthernPole = latitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -416,7 +416,7 @@ void ObliqueLambertConformal::setLongitudeOfSouthernPole(std::int24_t longitudeO
   try {
     mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

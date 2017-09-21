@@ -21,7 +21,7 @@ namespace GRIB2 {
 LatLonSettings::LatLonSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ LatLonSettings::LatLonSettings() {
 LatLonSettings::~LatLonSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -46,7 +46,7 @@ void LatLonSettings::read(MemoryReader &memoryReader) {
     mJDirectionIncrement = memoryReader.read_UInt32_opt();
     mScanningMode.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void LatLonSettings::getAttributeList(std::string prefix, T::AttributeList &attr
     sprintf(name, "%sLatLonSettings.", prefix.c_str());
     mScanningMode.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -87,7 +87,7 @@ void LatLonSettings::print(std::ostream &stream, uint level, uint optionFlags) c
     stream << space(level) << "- JDirectionIncrement = " << toString(mJDirectionIncrement) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -104,7 +104,7 @@ T::Hash LatLonSettings::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -114,7 +114,7 @@ const GridSettings *LatLonSettings::getGrid() const {
   try {
     return &mGrid;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -124,7 +124,7 @@ const T::UInt32_opt &LatLonSettings::getIDirectionIncrement() const {
   try {
     return mIDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -134,7 +134,7 @@ const T::UInt32_opt &LatLonSettings::getJDirectionIncrement() const {
   try {
     return mJDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -144,7 +144,7 @@ const ScanningModeSettings *LatLonSettings::getScanningMode() const {
   try {
     return &mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -152,7 +152,7 @@ void LatLonSettings::setGrid(GridSettings grid) {
   try {
     mGrid = grid;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -160,7 +160,7 @@ void LatLonSettings::setIDirectionIncrement(T::UInt32_opt iDirectionIncrement) {
   try {
     mIDirectionIncrement = iDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -168,7 +168,7 @@ void LatLonSettings::setJDirectionIncrement(T::UInt32_opt jDirectionIncrement) {
   try {
     mJDirectionIncrement = jDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -176,7 +176,7 @@ void LatLonSettings::setScanningMode(ScanningModeSettings scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

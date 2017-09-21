@@ -21,7 +21,7 @@ namespace GRIB2 {
 ComplexGridDataRepresentation::ComplexGridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ ComplexGridDataRepresentation::ComplexGridDataRepresentation() {
 ComplexGridDataRepresentation::~ComplexGridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -55,7 +55,7 @@ void ComplexGridDataRepresentation::read(MemoryReader &memoryReader) {
     mTrueLengthOfLastGroup = memoryReader.read_UInt32_opt();
     mNumberOfBitsForScaledGroupLengths = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -95,7 +95,7 @@ void ComplexGridDataRepresentation::getAttributeList(std::string prefix, T::Attr
     sprintf(name, "%sComplexGridDataRepresentation.NumberOfBitsForScaledGroupLengths", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfBitsForScaledGroupLengths));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -123,7 +123,7 @@ void ComplexGridDataRepresentation::print(std::ostream &stream, uint level, uint
     stream << space(level) << "- TrueLengthOfLastGroup = " << toString(mTrueLengthOfLastGroup) << "\n";
     stream << space(level) << "- NumberOfBitsForScaledGroupLengths = " << toString(mNumberOfBitsForScaledGroupLengths) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -158,7 +158,7 @@ T::Hash ComplexGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -168,7 +168,7 @@ const PackingSettings *ComplexGridDataRepresentation::getPacking() const {
   try {
     return &mPacking;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -178,7 +178,7 @@ const OriginalValuesSettings *ComplexGridDataRepresentation::getOriginalValues()
   try {
     return &mOriginalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -188,7 +188,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getGroupSplittingMethodUsed()
   try {
     return mGroupSplittingMethodUsed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -198,7 +198,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getMissingValueManagementUsed
   try {
     return mMissingValueManagementUsed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -208,7 +208,7 @@ const T::UInt32_opt &ComplexGridDataRepresentation::getPrimaryMissingValueSubsti
   try {
     return mPrimaryMissingValueSubstitute;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -218,7 +218,7 @@ const T::UInt32_opt &ComplexGridDataRepresentation::getSecondaryMissingValueSubs
   try {
     return mSecondaryMissingValueSubstitute;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -228,7 +228,7 @@ const T::UInt32_opt &ComplexGridDataRepresentation::getNumberOfGroupsOfDataValue
   try {
     return mNumberOfGroupsOfDataValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -238,7 +238,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getReferenceForGroupWidths() 
   try {
     return mReferenceForGroupWidths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -248,7 +248,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getNumberOfBitsUsedForTheGrou
   try {
     return mNumberOfBitsUsedForTheGroupWidths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -258,7 +258,7 @@ const T::UInt32_opt &ComplexGridDataRepresentation::getReferenceForGroupLengths(
   try {
     return mReferenceForGroupLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -268,7 +268,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getLengthIncrementForTheGroup
   try {
     return mLengthIncrementForTheGroupLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -278,7 +278,7 @@ const T::UInt32_opt &ComplexGridDataRepresentation::getTrueLengthOfLastGroup() c
   try {
     return mTrueLengthOfLastGroup;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -288,7 +288,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getNumberOfBitsForScaledGroup
   try {
     return mNumberOfBitsForScaledGroupLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -296,7 +296,7 @@ void ComplexGridDataRepresentation::setPacking(PackingSettings packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -304,7 +304,7 @@ void ComplexGridDataRepresentation::setOriginalValues(OriginalValuesSettings ori
   try {
     mOriginalValues = originalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -312,7 +312,7 @@ void ComplexGridDataRepresentation::setGroupSplittingMethodUsed(T::UInt8_opt gro
   try {
     mGroupSplittingMethodUsed = groupSplittingMethodUsed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -320,7 +320,7 @@ void ComplexGridDataRepresentation::setMissingValueManagementUsed(T::UInt8_opt m
   try {
     mMissingValueManagementUsed = missingValueManagementUsed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -328,7 +328,7 @@ void ComplexGridDataRepresentation::setPrimaryMissingValueSubstitute(T::UInt32_o
   try {
     mPrimaryMissingValueSubstitute = primaryMissingValueSubstitute;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -336,7 +336,7 @@ void ComplexGridDataRepresentation::setSecondaryMissingValueSubstitute(T::UInt32
   try {
     mSecondaryMissingValueSubstitute = secondaryMissingValueSubstitute;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -344,7 +344,7 @@ void ComplexGridDataRepresentation::setNumberOfGroupsOfDataValues(T::UInt32_opt 
   try {
     mNumberOfGroupsOfDataValues = numberOfGroupsOfDataValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -352,7 +352,7 @@ void ComplexGridDataRepresentation::setReferenceForGroupWidths(T::UInt8_opt refe
   try {
     mReferenceForGroupWidths = referenceForGroupWidths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -360,7 +360,7 @@ void ComplexGridDataRepresentation::setNumberOfBitsUsedForTheGroupWidths(T::UInt
   try {
     mNumberOfBitsUsedForTheGroupWidths = numberOfBitsUsedForTheGroupWidths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -368,7 +368,7 @@ void ComplexGridDataRepresentation::setReferenceForGroupLengths(T::UInt32_opt re
   try {
     mReferenceForGroupLengths = referenceForGroupLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -376,7 +376,7 @@ void ComplexGridDataRepresentation::setLengthIncrementForTheGroupLengths(T::UInt
   try {
     mLengthIncrementForTheGroupLengths = lengthIncrementForTheGroupLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -384,7 +384,7 @@ void ComplexGridDataRepresentation::setTrueLengthOfLastGroup(T::UInt32_opt trueL
   try {
     mTrueLengthOfLastGroup = trueLengthOfLastGroup;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -392,7 +392,7 @@ void ComplexGridDataRepresentation::setNumberOfBitsForScaledGroupLengths(T::UInt
   try {
     mNumberOfBitsForScaledGroupLengths = numberOfBitsForScaledGroupLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

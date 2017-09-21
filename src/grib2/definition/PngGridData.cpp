@@ -21,7 +21,7 @@ namespace GRIB2 {
 PngGridData::PngGridData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ PngGridData::PngGridData() {
 PngGridData::~PngGridData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -42,7 +42,7 @@ PngGridData::~PngGridData() {
 void PngGridData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -55,7 +55,7 @@ void PngGridData::read(MemoryReader &memoryReader) {
 void PngGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -70,7 +70,7 @@ void PngGridData::print(std::ostream &stream, uint level, uint optionFlags) cons
   try {
     stream << space(level) << "PngGridData\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -81,7 +81,7 @@ T::Hash PngGridData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

@@ -21,7 +21,7 @@ namespace GRIB2 {
 IrregularLatLon::IrregularLatLon() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ IrregularLatLon::IrregularLatLon() {
 IrregularLatLon::~IrregularLatLon() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -45,7 +45,7 @@ void IrregularLatLon::read(MemoryReader &memoryReader) {
     mLatitude = memoryReader.read_Int32_opt();
     mLongitude = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -65,7 +65,7 @@ void IrregularLatLon::getAttributeList(std::string prefix, T::AttributeList &att
     sprintf(name, "%sIrregularLatLon.Longitude", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitude));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void IrregularLatLon::print(std::ostream &stream, uint level, uint optionFlags) 
     stream << space(level) << "- Latitude = " << toString(mLatitude) << "\n";
     stream << space(level) << "- Longitude = " << toString(mLongitude) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -99,7 +99,7 @@ T::Hash IrregularLatLon::countHash() {
     // boost::hash_combine(seed,mEarthShape.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -109,7 +109,7 @@ const EarthShapeSettings *IrregularLatLon::getEarthShape() const {
   try {
     return &mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -119,7 +119,7 @@ const T::Int32_opt &IrregularLatLon::getLatitude() const {
   try {
     return mLatitude;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -129,7 +129,7 @@ const T::Int32_opt &IrregularLatLon::getLongitude() const {
   try {
     return mLongitude;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -137,7 +137,7 @@ void IrregularLatLon::setEarthShape(EarthShapeSettings earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -145,7 +145,7 @@ void IrregularLatLon::setLatitude(T::Int32_opt latitude) {
   try {
     mLatitude = latitude;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -153,7 +153,7 @@ void IrregularLatLon::setLongitude(T::Int32_opt longitude) {
   try {
     mLongitude = longitude;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

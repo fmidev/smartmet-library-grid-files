@@ -23,7 +23,7 @@ RotationSettings::RotationSettings() {
     mLatitudeOfSouthernPole = 0;
     mLongitudeOfSouthernPole = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -32,7 +32,7 @@ RotationSettings::RotationSettings() {
 RotationSettings::~RotationSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -47,7 +47,7 @@ void RotationSettings::read(MemoryReader &memoryReader) {
     mLongitudeOfSouthernPole = memoryReader.read_int24();
     mGeography_angleOfRotationInDegrees = memoryReader.read_ibmFloat();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -67,7 +67,7 @@ void RotationSettings::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sRotationSettings.Geography_angleOfRotationInDegrees", prefix.c_str());
     attributeList.addAttribute(name, toString(mGeography_angleOfRotationInDegrees));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -85,7 +85,7 @@ void RotationSettings::print(std::ostream &stream, uint level, uint optionFlags)
     stream << space(level) << "- LongitudeOfSouthernPole = " << toString(mLongitudeOfSouthernPole) << "\n";
     stream << space(level) << "- Geography_angleOfRotationInDegrees = " << toString(mGeography_angleOfRotationInDegrees) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -99,7 +99,7 @@ T::Hash RotationSettings::countHash() {
     boost::hash_combine(seed, mGeography_angleOfRotationInDegrees);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -109,7 +109,7 @@ std::int24_t RotationSettings::getLatitudeOfSouthernPole() const {
   try {
     return mLatitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -119,7 +119,7 @@ std::int24_t RotationSettings::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -129,7 +129,7 @@ ibmfloat RotationSettings::getGeography_angleOfRotationInDegrees() const {
   try {
     return mGeography_angleOfRotationInDegrees;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -137,7 +137,7 @@ void RotationSettings::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthern
   try {
     mLatitudeOfSouthernPole = latitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -145,7 +145,7 @@ void RotationSettings::setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthe
   try {
     mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -153,7 +153,7 @@ void RotationSettings::setGeography_angleOfRotationInDegrees(ibmfloat geography_
   try {
     mGeography_angleOfRotationInDegrees = geography_angleOfRotationInDegrees;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

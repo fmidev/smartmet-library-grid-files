@@ -71,7 +71,7 @@ GribDef::GribDef()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -97,7 +97,7 @@ GribDef::~GribDef()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -131,7 +131,7 @@ void GribDef::init(const char* configDir)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -154,7 +154,7 @@ std::string GribDef::getTableValue(std::uint8_t gribVersion,std::uint8_t tableVe
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -173,7 +173,7 @@ std::string GribDef::getTableValue(std::uint8_t gribVersion,std::uint8_t tableVe
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -192,7 +192,7 @@ std::string GribDef::getTableValue(std::uint8_t gribVersion,std::uint8_t tableVe
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -214,7 +214,7 @@ Parameter_grib1_cptr GribDef::getParameterDefById_grib1(T::ParamId gribParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -236,7 +236,7 @@ Parameter_grib1_cptr GribDef::getParameterDefByName_grib1(std::string gribParamN
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -258,7 +258,7 @@ Parameter_grib1_cptr GribDef::getParameterDef_grib1(uint tableVersion,uint indic
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -279,7 +279,7 @@ Parameter_grib2_cptr GribDef::getParameterDefById_grib2(T::ParamId gribParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -301,7 +301,7 @@ Parameter_grib2_cptr GribDef::getParameterDefByName_grib2(std::string gribParamN
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -384,7 +384,7 @@ void GribDef::loadTableValues()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -463,7 +463,7 @@ void GribDef::loadParameterDefinitions()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -483,7 +483,7 @@ ParameterDefinition_cptr GribDef::getGribParamDefById(T::ParamId gribParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -505,7 +505,7 @@ ParameterDefinition_cptr GribDef::getGribParamDefByName(std::string gribParamNam
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -527,7 +527,7 @@ ParameterDefinition_cptr GribDef::getGribParamDef(uint discipline,uint category,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -549,7 +549,7 @@ LevelDef_cptr GribDef::getLevelDef_grib1(uint levelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -571,7 +571,7 @@ LevelDef_cptr GribDef::getLevelDef_grib2(uint levelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -593,7 +593,7 @@ TimeRangeDef_cptr GribDef::getTimeRangeDef_grib1(uint timeRangeId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -614,7 +614,7 @@ TimeRangeDef_cptr GribDef::getTimeRangeDef_grib2(uint timeRangeId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -681,7 +681,7 @@ void GribDef::loadUnitDefinitions()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -754,7 +754,7 @@ void GribDef::loadLevelDefinitions_grib1()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -827,7 +827,7 @@ void GribDef::loadLevelDefinitions_grib2()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -900,7 +900,7 @@ void GribDef::loadTimeRangeDefinitions_grib1()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -974,7 +974,7 @@ void GribDef::loadTimeRangeDefinitions_grib2()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1066,7 +1066,7 @@ void GribDef::loadParameterDefinitions_grib1()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1207,7 +1207,7 @@ void GribDef::loadParameterDefinitions_grib2()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1234,7 +1234,7 @@ GRIB1::GridDefinition_ptr GribDef::getGridDefinition1ByGeometryId(uint geometryI
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1255,7 +1255,7 @@ GRIB1::GridDefinition_ptr GribDef::getGridDefinition1ByHash(T::Hash hash)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1282,7 +1282,7 @@ GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByGeometryId(uint geometryI
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1303,7 +1303,7 @@ GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByHash(T::Hash hash)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1343,7 +1343,7 @@ void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<uint>& ge
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1857,7 +1857,7 @@ void GribDef::loadGeometryDefinitions()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1881,7 +1881,7 @@ T::InterpolationMethod GribDef::getPreferredInterpolationMethodByUnits(std::stri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1904,7 +1904,7 @@ std::string GribDef::getPreferredUnits(std::string originalUnits)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

@@ -21,7 +21,7 @@ namespace GRIB2 {
 DerivedSettings::DerivedSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ DerivedSettings::DerivedSettings() {
 DerivedSettings::~DerivedSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -44,7 +44,7 @@ void DerivedSettings::read(MemoryReader &memoryReader) {
     mDerivedForecast = memoryReader.read_UInt8_opt();
     mNumberOfForecastsInEnsemble = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -62,7 +62,7 @@ void DerivedSettings::getAttributeList(std::string prefix, T::AttributeList &att
     sprintf(name, "%sDerivedSettings.NumberOfForecastsInEnsemble", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -79,7 +79,7 @@ void DerivedSettings::print(std::ostream &stream, uint level, uint optionFlags) 
     stream << space(level) << "- DerivedForecast = " << toString(mDerivedForecast) << "\n";
     stream << space(level) << "- NumberOfForecastsInEnsemble = " << toString(mNumberOfForecastsInEnsemble) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -94,7 +94,7 @@ T::Hash DerivedSettings::countHash() {
       boost::hash_combine(seed, *mNumberOfForecastsInEnsemble);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -104,7 +104,7 @@ const T::UInt8_opt &DerivedSettings::getDerivedForecast() const {
   try {
     return mDerivedForecast;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -114,7 +114,7 @@ const T::UInt8_opt &DerivedSettings::getNumberOfForecastsInEnsemble() const {
   try {
     return mNumberOfForecastsInEnsemble;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -122,7 +122,7 @@ void DerivedSettings::setDerivedForecast(T::UInt8_opt derivedForecast) {
   try {
     mDerivedForecast = derivedForecast;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -130,7 +130,7 @@ void DerivedSettings::setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForeca
   try {
     mNumberOfForecastsInEnsemble = numberOfForecastsInEnsemble;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

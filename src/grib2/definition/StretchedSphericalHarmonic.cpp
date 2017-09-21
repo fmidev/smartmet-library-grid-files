@@ -21,7 +21,7 @@ namespace GRIB2 {
 StretchedSphericalHarmonic::StretchedSphericalHarmonic() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ StretchedSphericalHarmonic::StretchedSphericalHarmonic() {
 StretchedSphericalHarmonic::~StretchedSphericalHarmonic() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -44,7 +44,7 @@ void StretchedSphericalHarmonic::read(MemoryReader &memoryReader) {
     mSphericalHarmonic.read(memoryReader);
     mStretching.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -62,7 +62,7 @@ void StretchedSphericalHarmonic::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sStretchedSphericalHarmonic.", prefix.c_str());
     mStretching.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -79,7 +79,7 @@ void StretchedSphericalHarmonic::print(std::ostream &stream, uint level, uint op
     mSphericalHarmonic.print(stream, level + 1, optionFlags);
     mStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -92,7 +92,7 @@ T::Hash StretchedSphericalHarmonic::countHash() {
     boost::hash_combine(seed, mStretching.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -102,7 +102,7 @@ const SphericalHarmonicSettings *StretchedSphericalHarmonic::getSphericalHarmoni
   try {
     return &mSphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ const StretchingSettings *StretchedSphericalHarmonic::getStretching() const {
   try {
     return &mStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -120,7 +120,7 @@ void StretchedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings 
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -128,7 +128,7 @@ void StretchedSphericalHarmonic::setStretching(StretchingSettings stretching) {
   try {
     mStretching = stretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

@@ -29,6 +29,7 @@ class GridDefinition
     virtual uint                getGridGeometryId() const;
     virtual std::string         getGridGeometryName();
     virtual T::Coordinate_vec   getGridCoordinates() const;
+    virtual T::Coordinate_vec   getGridLatLonCoordinates() const;
     virtual T::Dimensions_opt   getGridDimensions() const;
     virtual void                getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     virtual bool                getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const;

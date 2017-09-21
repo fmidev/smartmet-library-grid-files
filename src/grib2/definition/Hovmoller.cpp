@@ -21,7 +21,7 @@ namespace GRIB2 {
 Hovmoller::Hovmoller() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ Hovmoller::Hovmoller() {
 Hovmoller::~Hovmoller() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -63,7 +63,7 @@ void Hovmoller::read(MemoryReader &memoryReader) {
     mMinute = memoryReader.read_UInt8_opt();
     mSecond = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -119,7 +119,7 @@ void Hovmoller::getAttributeList(std::string prefix, T::AttributeList &attribute
     sprintf(name, "%sHovmoller.Second", prefix.c_str());
     attributeList.addAttribute(name, toString(mSecond));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -155,7 +155,7 @@ void Hovmoller::print(std::ostream &stream, uint level, uint optionFlags) const 
     stream << space(level) << "- Minute = " << toString(mMinute) << "\n";
     stream << space(level) << "- Second = " << toString(mSecond) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -202,7 +202,7 @@ T::Hash Hovmoller::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -212,7 +212,7 @@ const EarthShapeSettings *Hovmoller::getEarthShape() const {
   try {
     return &mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -222,7 +222,7 @@ const T::UInt32_opt &Hovmoller::getBasicAngleOfTheInitialProductionDomain() cons
   try {
     return mBasicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -232,7 +232,7 @@ const T::UInt32_opt &Hovmoller::getSubdivisionsOfBasicAngle() const {
   try {
     return mSubdivisionsOfBasicAngle;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -242,7 +242,7 @@ const T::Int32_opt &Hovmoller::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -252,7 +252,7 @@ const T::UInt32_opt &Hovmoller::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -262,7 +262,7 @@ const ScanningModeSettings *Hovmoller::getScanningMode() const {
   try {
     return &mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -272,7 +272,7 @@ const T::Int32_opt &Hovmoller::getLatitudeOfLastGridPoint() const {
   try {
     return mLatitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -282,7 +282,7 @@ const T::UInt32_opt &Hovmoller::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -292,7 +292,7 @@ const T::UInt8_opt &Hovmoller::getTypeOfHorizontalLine() const {
   try {
     return mTypeOfHorizontalLine;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -302,7 +302,7 @@ const T::UInt32_opt &Hovmoller::getNumberOfTimeSteps() const {
   try {
     return mNumberOfTimeSteps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -312,7 +312,7 @@ const T::UInt8_opt &Hovmoller::getUnitOfOffsetFromReferenceTime() const {
   try {
     return mUnitOfOffsetFromReferenceTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -322,7 +322,7 @@ const T::UInt32_opt &Hovmoller::getOffsetFromReferenceOfFirstTime() const {
   try {
     return mOffsetFromReferenceOfFirstTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -332,7 +332,7 @@ const T::UInt8_opt &Hovmoller::getTypeOfTimeIncrement() const {
   try {
     return mTypeOfTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -342,7 +342,7 @@ const T::UInt8_opt &Hovmoller::getUnitOfTimeIncrement() const {
   try {
     return mUnitOfTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -352,7 +352,7 @@ const T::UInt32_opt &Hovmoller::getTimeIncrement() const {
   try {
     return mTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -362,7 +362,7 @@ const T::UInt16_opt &Hovmoller::getYear() const {
   try {
     return mYear;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -372,7 +372,7 @@ const T::UInt8_opt &Hovmoller::getMonth() const {
   try {
     return mMonth;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -382,7 +382,7 @@ const T::UInt8_opt &Hovmoller::getDay() const {
   try {
     return mDay;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -392,7 +392,7 @@ const T::UInt8_opt &Hovmoller::getHour() const {
   try {
     return mHour;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -402,7 +402,7 @@ const T::UInt8_opt &Hovmoller::getMinute() const {
   try {
     return mMinute;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -412,7 +412,7 @@ const T::UInt8_opt &Hovmoller::getSecond() const {
   try {
     return mSecond;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -420,7 +420,7 @@ void Hovmoller::setEarthShape(EarthShapeSettings earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -428,7 +428,7 @@ void Hovmoller::setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAng
   try {
     mBasicAngleOfTheInitialProductionDomain = basicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -436,7 +436,7 @@ void Hovmoller::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasicAng
   try {
     mSubdivisionsOfBasicAngle = subdivisionsOfBasicAngle;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -444,7 +444,7 @@ void Hovmoller::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoin
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -452,7 +452,7 @@ void Hovmoller::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridP
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -460,7 +460,7 @@ void Hovmoller::setScanningMode(ScanningModeSettings scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -468,7 +468,7 @@ void Hovmoller::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint)
   try {
     mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -476,7 +476,7 @@ void Hovmoller::setLongitudeOfLastGridPoint(T::UInt32_opt longitudeOfLastGridPoi
   try {
     mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -484,7 +484,7 @@ void Hovmoller::setTypeOfHorizontalLine(T::UInt8_opt typeOfHorizontalLine) {
   try {
     mTypeOfHorizontalLine = typeOfHorizontalLine;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -492,7 +492,7 @@ void Hovmoller::setNumberOfTimeSteps(T::UInt32_opt numberOfTimeSteps) {
   try {
     mNumberOfTimeSteps = numberOfTimeSteps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -500,7 +500,7 @@ void Hovmoller::setUnitOfOffsetFromReferenceTime(T::UInt8_opt unitOfOffsetFromRe
   try {
     mUnitOfOffsetFromReferenceTime = unitOfOffsetFromReferenceTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -508,7 +508,7 @@ void Hovmoller::setOffsetFromReferenceOfFirstTime(T::UInt32_opt offsetFromRefere
   try {
     mOffsetFromReferenceOfFirstTime = offsetFromReferenceOfFirstTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -516,7 +516,7 @@ void Hovmoller::setTypeOfTimeIncrement(T::UInt8_opt typeOfTimeIncrement) {
   try {
     mTypeOfTimeIncrement = typeOfTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -524,7 +524,7 @@ void Hovmoller::setUnitOfTimeIncrement(T::UInt8_opt unitOfTimeIncrement) {
   try {
     mUnitOfTimeIncrement = unitOfTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -532,7 +532,7 @@ void Hovmoller::setTimeIncrement(T::UInt32_opt timeIncrement) {
   try {
     mTimeIncrement = timeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -540,7 +540,7 @@ void Hovmoller::setYear(T::UInt16_opt year) {
   try {
     mYear = year;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -548,7 +548,7 @@ void Hovmoller::setMonth(T::UInt8_opt month) {
   try {
     mMonth = month;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -556,7 +556,7 @@ void Hovmoller::setDay(T::UInt8_opt day) {
   try {
     mDay = day;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -564,7 +564,7 @@ void Hovmoller::setHour(T::UInt8_opt hour) {
   try {
     mHour = hour;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -572,7 +572,7 @@ void Hovmoller::setMinute(T::UInt8_opt minute) {
   try {
     mMinute = minute;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -580,7 +580,7 @@ void Hovmoller::setSecond(T::UInt8_opt second) {
   try {
     mSecond = second;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

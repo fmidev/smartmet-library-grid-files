@@ -21,7 +21,7 @@ namespace GRIB2 {
 LogarithmicGridData::LogarithmicGridData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ LogarithmicGridData::LogarithmicGridData() {
 LogarithmicGridData::~LogarithmicGridData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -42,7 +42,7 @@ LogarithmicGridData::~LogarithmicGridData() {
 void LogarithmicGridData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -55,7 +55,7 @@ void LogarithmicGridData::read(MemoryReader &memoryReader) {
 void LogarithmicGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -70,7 +70,7 @@ void LogarithmicGridData::print(std::ostream &stream, uint level, uint optionFla
   try {
     stream << space(level) << "LogarithmicGridData\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -81,7 +81,7 @@ T::Hash LogarithmicGridData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

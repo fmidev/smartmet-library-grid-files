@@ -41,7 +41,7 @@ PackingMethod SimplePacking::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -95,7 +95,7 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -230,7 +230,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -253,7 +253,7 @@ void SimplePacking::print(std::ostream& stream,uint level,uint optionFlags) cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

@@ -21,7 +21,7 @@ namespace GRIB2 {
 ComplexGridData::ComplexGridData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ ComplexGridData::ComplexGridData() {
 ComplexGridData::~ComplexGridData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -42,7 +42,7 @@ ComplexGridData::~ComplexGridData() {
 void ComplexGridData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -55,7 +55,7 @@ void ComplexGridData::read(MemoryReader &memoryReader) {
 void ComplexGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -70,7 +70,7 @@ void ComplexGridData::print(std::ostream &stream, uint level, uint optionFlags) 
   try {
     stream << space(level) << "ComplexGridData\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -81,7 +81,7 @@ T::Hash ComplexGridData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

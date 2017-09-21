@@ -65,6 +65,7 @@ class Message
 
     virtual uint                  getGridGeometryId() const;
     virtual T::Coordinate_vec     getGridCoordinates() const;
+    virtual T::Coordinate_vec     getGridLatLonCoordinates() const;
     virtual T::Dimensions_opt     getGridDimensions() const;
     virtual T::Hash               getGridHash() const;
     virtual void                  getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;

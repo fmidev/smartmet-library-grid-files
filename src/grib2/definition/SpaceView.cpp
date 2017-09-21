@@ -21,7 +21,7 @@ namespace GRIB2 {
 SpaceView::SpaceView() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ SpaceView::SpaceView() {
 SpaceView::~SpaceView() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -57,7 +57,7 @@ void SpaceView::read(MemoryReader &memoryReader) {
     mXo = memoryReader.read_UInt32_opt();
     mYo = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -101,7 +101,7 @@ void SpaceView::getAttributeList(std::string prefix, T::AttributeList &attribute
     sprintf(name, "%sSpaceView.Yo", prefix.c_str());
     attributeList.addAttribute(name, toString(mYo));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -131,7 +131,7 @@ void SpaceView::print(std::ostream &stream, uint level, uint optionFlags) const 
     stream << space(level) << "- Xo = " << toString(mXo) << "\n";
     stream << space(level) << "- Yo = " << toString(mYo) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -169,7 +169,7 @@ T::Hash SpaceView::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -179,7 +179,7 @@ const EarthShapeSettings *SpaceView::getEarthShape() const {
   try {
     return &mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -189,7 +189,7 @@ const T::UInt32_opt &SpaceView::getNx() const {
   try {
     return mNx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -199,7 +199,7 @@ const T::UInt32_opt &SpaceView::getNy() const {
   try {
     return mNy;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -209,7 +209,7 @@ const T::Int32_opt &SpaceView::getLatitudeOfSubSatellitePoint() const {
   try {
     return mLatitudeOfSubSatellitePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -219,7 +219,7 @@ const T::Int32_opt &SpaceView::getLongitudeOfSubSatellitePoint() const {
   try {
     return mLongitudeOfSubSatellitePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -229,7 +229,7 @@ const ResolutionSettings *SpaceView::getResolution() const {
   try {
     return &mResolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -239,7 +239,7 @@ const T::UInt32_opt &SpaceView::getDx() const {
   try {
     return mDx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -249,7 +249,7 @@ const T::UInt32_opt &SpaceView::getDy() const {
   try {
     return mDy;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -259,7 +259,7 @@ const T::UInt32_opt &SpaceView::getXp() const {
   try {
     return mXp;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -269,7 +269,7 @@ const T::UInt32_opt &SpaceView::getYp() const {
   try {
     return mYp;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -279,7 +279,7 @@ const ScanningModeSettings *SpaceView::getScanningMode() const {
   try {
     return &mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -289,7 +289,7 @@ const T::Int32_opt &SpaceView::getOrientationOfTheGrid() const {
   try {
     return mOrientationOfTheGrid;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -299,7 +299,7 @@ const T::UInt32_opt &SpaceView::getNr() const {
   try {
     return mNr;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -309,7 +309,7 @@ const T::UInt32_opt &SpaceView::getXo() const {
   try {
     return mXo;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -319,7 +319,7 @@ const T::UInt32_opt &SpaceView::getYo() const {
   try {
     return mYo;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -327,7 +327,7 @@ void SpaceView::setEarthShape(EarthShapeSettings earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -335,7 +335,7 @@ void SpaceView::setNx(T::UInt32_opt nx) {
   try {
     mNx = nx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -343,7 +343,7 @@ void SpaceView::setNy(T::UInt32_opt ny) {
   try {
     mNy = ny;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -351,7 +351,7 @@ void SpaceView::setLatitudeOfSubSatellitePoint(T::Int32_opt latitudeOfSubSatelli
   try {
     mLatitudeOfSubSatellitePoint = latitudeOfSubSatellitePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -359,7 +359,7 @@ void SpaceView::setLongitudeOfSubSatellitePoint(T::Int32_opt longitudeOfSubSatel
   try {
     mLongitudeOfSubSatellitePoint = longitudeOfSubSatellitePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -367,7 +367,7 @@ void SpaceView::setResolution(ResolutionSettings resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -375,7 +375,7 @@ void SpaceView::setDx(T::UInt32_opt dx) {
   try {
     mDx = dx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -383,7 +383,7 @@ void SpaceView::setDy(T::UInt32_opt dy) {
   try {
     mDy = dy;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -391,7 +391,7 @@ void SpaceView::setXp(T::UInt32_opt xp) {
   try {
     mXp = xp;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -399,7 +399,7 @@ void SpaceView::setYp(T::UInt32_opt yp) {
   try {
     mYp = yp;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -407,7 +407,7 @@ void SpaceView::setScanningMode(ScanningModeSettings scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -415,7 +415,7 @@ void SpaceView::setOrientationOfTheGrid(T::Int32_opt orientationOfTheGrid) {
   try {
     mOrientationOfTheGrid = orientationOfTheGrid;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -423,7 +423,7 @@ void SpaceView::setNr(T::UInt32_opt nr) {
   try {
     mNr = nr;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -431,7 +431,7 @@ void SpaceView::setXo(T::UInt32_opt xo) {
   try {
     mXo = xo;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -439,7 +439,7 @@ void SpaceView::setYo(T::UInt32_opt yo) {
   try {
     mYo = yo;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

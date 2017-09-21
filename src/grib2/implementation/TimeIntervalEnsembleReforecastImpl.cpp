@@ -46,7 +46,7 @@ void TimeIntervalEnsembleReforecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -70,7 +70,7 @@ T::ParamLevel TimeIntervalEnsembleReforecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -94,7 +94,7 @@ T::ParamLevelId TimeIntervalEnsembleReforecastImpl::getGribParameterLevelId() co
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

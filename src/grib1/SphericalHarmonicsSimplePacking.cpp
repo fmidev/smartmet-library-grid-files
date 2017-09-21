@@ -37,7 +37,7 @@ PackingMethod SphericalHarmonicsSimplePacking::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -52,7 +52,7 @@ void SphericalHarmonicsSimplePacking::decodeValues(Message *message,T::ParamValu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -75,7 +75,7 @@ void SphericalHarmonicsSimplePacking::print(std::ostream& stream,uint level,uint
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

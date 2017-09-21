@@ -22,7 +22,7 @@ ResolutionSettings::ResolutionSettings() {
   try {
     mResolutionAndComponentFlags = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -31,7 +31,7 @@ ResolutionSettings::ResolutionSettings() {
 ResolutionSettings::~ResolutionSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -44,7 +44,7 @@ void ResolutionSettings::read(MemoryReader &memoryReader) {
   try {
     mResolutionAndComponentFlags = memoryReader.read_uint8();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -60,7 +60,7 @@ void ResolutionSettings::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sResolutionSettings.ResolutionAndComponentFlags", prefix.c_str());
     attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -76,7 +76,7 @@ void ResolutionSettings::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "ResolutionSettings\n";
     stream << space(level) << "- ResolutionAndComponentFlags = " << toString(mResolutionAndComponentFlags) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -88,7 +88,7 @@ T::Hash ResolutionSettings::countHash() {
     boost::hash_combine(seed, mResolutionAndComponentFlags);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -98,7 +98,7 @@ std::uint8_t ResolutionSettings::getResolutionAndComponentFlags() const {
   try {
     return mResolutionAndComponentFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -106,7 +106,7 @@ void ResolutionSettings::setResolutionAndComponentFlags(std::uint8_t resolutionA
   try {
     mResolutionAndComponentFlags = resolutionAndComponentFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

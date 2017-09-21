@@ -76,6 +76,7 @@ class GridSection : public GRID::MessageSection
     T::GridProjection     getGridProjection() const;
     std::string           getGridProjectionString() const;
     T::Coordinate_vec     getGridCoordinates() const;
+    T::Coordinate_vec     getGridLatLonCoordinates() const;
     T::Dimensions_opt     getGridDimensions() const;
     std::size_t           getGridOriginalRowCount() const;
     std::size_t           getGridOriginalColumnCount(std::size_t row) const;

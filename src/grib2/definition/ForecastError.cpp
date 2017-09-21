@@ -21,7 +21,7 @@ namespace GRIB2 {
 ForecastError::ForecastError() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ ForecastError::ForecastError() {
 ForecastError::~ForecastError() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -43,7 +43,7 @@ void ForecastError::read(MemoryReader &memoryReader) {
   try {
     mNormalProduct.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -59,7 +59,7 @@ void ForecastError::getAttributeList(std::string prefix, T::AttributeList &attri
     sprintf(name, "%sForecastError.", prefix.c_str());
     mNormalProduct.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -75,7 +75,7 @@ void ForecastError::print(std::ostream &stream, uint level, uint optionFlags) co
     stream << space(level) << "ForecastError\n";
     mNormalProduct.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -87,7 +87,7 @@ T::Hash ForecastError::countHash() {
     boost::hash_combine(seed, mNormalProduct.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -97,7 +97,7 @@ const NormalProduct *ForecastError::getNormalProduct() const {
   try {
     return &mNormalProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -105,7 +105,7 @@ void ForecastError::setNormalProduct(NormalProduct normalProduct) {
   try {
     mNormalProduct = normalProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

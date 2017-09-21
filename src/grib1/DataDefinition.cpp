@@ -47,7 +47,7 @@ PackingMethod DataDefinition::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -62,7 +62,7 @@ bool DataDefinition::getValueByIndex(Message *message,uint index,T::ParamValue& 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -106,7 +106,7 @@ void DataDefinition::print(std::ostream& stream,uint level,uint optionFlags) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

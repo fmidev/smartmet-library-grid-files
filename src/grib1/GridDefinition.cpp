@@ -79,7 +79,7 @@ uint GridDefinition::getGridGeometryId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -95,7 +95,7 @@ void GridDefinition::setGridGeometryId(uint geometryId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -111,7 +111,7 @@ std::string  GridDefinition::getGridGeometryName()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -127,7 +127,7 @@ void GridDefinition::setGridGeometryName(std::string geometryName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -157,7 +157,7 @@ void GridDefinition::getGridLatlonAreaCoordinates(double& firstLat,double& first
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -201,7 +201,7 @@ void GridDefinition::getGridOriginalAreaCoordinates(double& x1,double& y1,double
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -221,6 +221,49 @@ void GridDefinition::getGridOriginalAreaCoordinates(double& x1,double& y1,double
 T::Coordinate_vec GridDefinition::getGridCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+}
+
+
+
+
+
+T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
+{
+  {
+    try
+    {
+      if (mCoordinateTranformation_orig2latlon == NULL)
+      {
+        OGRSpatialReference sr_latlon;
+        sr_latlon.importFromEPSG(4326);
+
+        if (mOrigSpatialReference == NULL)
+          mOrigSpatialReference = mSpatialReference.Clone();
+
+        mCoordinateTranformation_orig2latlon = OGRCreateCoordinateTransformation(mOrigSpatialReference,&sr_latlon);
+        if (mCoordinateTranformation_orig2latlon == NULL)
+          throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+      }
+
+      T::Coordinate_vec originalCoordinates = getGridCoordinates();
+      T::Coordinate_vec latLonCoordinates;
+
+      for (auto it = originalCoordinates.begin(); it != originalCoordinates.end(); ++it)
+      {
+        double lat = it->y();
+        double lon = it->x();
+
+        mCoordinateTranformation_orig2latlon->Transform(1,&lon,&lat);
+
+        latLonCoordinates.push_back(T::Coordinate(lon,lat));
+      }
+      return latLonCoordinates;
+    }
+    catch (...)
+    {
+      throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    }
+  }
 }
 
 
@@ -280,7 +323,7 @@ void GridDefinition::getOriginalCoordinatesByLatLon(double lat,double lon,double
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -323,7 +366,7 @@ void GridDefinition::getLatLonByOriginalCoordinates(double x,double y,double& la
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -346,7 +389,7 @@ bool GridDefinition::isGridGlobal() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -384,7 +427,7 @@ void GridDefinition::initRowPositions(std::vector<std::uint32_t>& rowPositions)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -400,7 +443,7 @@ T::SpatialReference* GridDefinition::getSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -416,7 +459,7 @@ T::GridProjection GridDefinition::getGridProjection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -437,7 +480,7 @@ T::GridLayout GridDefinition::getGridLayout()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -456,7 +499,7 @@ T::Hash GridDefinition::getGridHash()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -495,7 +538,7 @@ std::uint32_t GridDefinition::getGridOriginalValueCount() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -523,7 +566,7 @@ std::size_t GridDefinition::getGridOriginalRowCount() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -557,7 +600,7 @@ std::size_t GridDefinition::getGridOriginalColumnCount(std::size_t row) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -596,7 +639,7 @@ std::size_t GridDefinition::getGridOriginalColumnCount() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -649,7 +692,7 @@ int GridDefinition::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -680,7 +723,7 @@ bool GridDefinition::getGridPointByLatLon(double lat,double lon,double& grid_i,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -723,7 +766,7 @@ void GridDefinition::print(std::ostream& stream,uint level,uint optionFlags) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

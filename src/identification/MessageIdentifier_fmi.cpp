@@ -17,7 +17,7 @@ MessageIdentifier_fmi::MessageIdentifier_fmi()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -32,7 +32,7 @@ MessageIdentifier_fmi::~MessageIdentifier_fmi()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -55,7 +55,7 @@ void MessageIdentifier_fmi::init(const char* configDir)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -130,7 +130,7 @@ T::ParamId MessageIdentifier_fmi::getParamId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -177,7 +177,7 @@ T::ParamId MessageIdentifier_fmi::getParamId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -278,7 +278,7 @@ uint MessageIdentifier_fmi::countParameterMatchPoints(GRIB2::Message& message,co
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -320,7 +320,7 @@ T::ParamLevelId MessageIdentifier_fmi::getParamLevelId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -340,7 +340,7 @@ T::ParamId MessageIdentifier_fmi::getParamIdByName(std::string fmiParamName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -387,7 +387,7 @@ T::ParamLevelId MessageIdentifier_fmi::getParamLevelId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -407,7 +407,7 @@ std::string MessageIdentifier_fmi::getParamName(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -426,7 +426,7 @@ std::string MessageIdentifier_fmi::getParamName(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -446,7 +446,7 @@ T::ParamId MessageIdentifier_fmi::getNewbaseParamId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -466,7 +466,7 @@ T::ParamId MessageIdentifier_fmi::getNewbaseParamId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -490,7 +490,7 @@ std::string MessageIdentifier_fmi::getNewbaseParamName(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -513,7 +513,7 @@ std::string MessageIdentifier_fmi::getNewbaseParamName(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -533,7 +533,7 @@ std::string MessageIdentifier_fmi::getParamDescription(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -552,7 +552,7 @@ std::string MessageIdentifier_fmi::getParamDescription(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -571,7 +571,7 @@ std::string MessageIdentifier_fmi::getParamUnits(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -590,7 +590,7 @@ std::string MessageIdentifier_fmi::getParamUnits(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -609,7 +609,7 @@ T::InterpolationMethod MessageIdentifier_fmi::getParamInterpolationMethod(GRIB1:
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -628,7 +628,7 @@ T::InterpolationMethod MessageIdentifier_fmi::getParamInterpolationMethod(GRIB2:
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -650,7 +650,7 @@ ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefById(T::Param
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -672,7 +672,7 @@ ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByName(std::s
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -693,7 +693,7 @@ ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByNewbaseId(T
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -719,7 +719,7 @@ ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByNewbaseName
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -741,7 +741,7 @@ Parameter_newbase_cptr MessageIdentifier_fmi::getParameter_newbaseId(T::ParamId 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -762,7 +762,7 @@ Parameter_newbase_cptr MessageIdentifier_fmi::getParameter_newbaseName(std::stri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -784,7 +784,7 @@ Parameter_grib1_fmi_cptr MessageIdentifier_fmi::getParameter_grib1(T::ParamId fm
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -806,7 +806,7 @@ Parameter_grib2_fmi_cptr MessageIdentifier_fmi::getParameter_grib2(T::ParamId fm
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -903,7 +903,7 @@ void MessageIdentifier_fmi::loadParameterDefinitions_grib1()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1000,7 +1000,7 @@ void MessageIdentifier_fmi::loadParameterDefinitions_grib2()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1085,7 +1085,7 @@ void MessageIdentifier_fmi::loadParameterDefinitions()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1163,7 +1163,7 @@ void MessageIdentifier_fmi::loadLevelDefinitions_grib1()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1243,7 +1243,7 @@ void MessageIdentifier_fmi::loadLevelDefinitions_grib2()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1312,7 +1312,7 @@ void MessageIdentifier_fmi::loadParameterDefinitions_newbase()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

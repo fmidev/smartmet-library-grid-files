@@ -17,7 +17,7 @@ MessageIdentifier_cdm::MessageIdentifier_cdm()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -32,7 +32,7 @@ MessageIdentifier_cdm::~MessageIdentifier_cdm()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -47,7 +47,7 @@ T::ParamId MessageIdentifier_cdm::getParamIdByName(std::string paramName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -63,7 +63,7 @@ T::ParamLevelId MessageIdentifier_cdm::getParamLevelId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -79,7 +79,7 @@ T::ParamLevelId MessageIdentifier_cdm::getParamLevelId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -119,7 +119,7 @@ std::string MessageIdentifier_cdm::getParamId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -172,7 +172,7 @@ std::string MessageIdentifier_cdm::getParamId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -222,7 +222,7 @@ std::string MessageIdentifier_cdm::getParamName(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -283,7 +283,7 @@ std::string MessageIdentifier_cdm::getParamName(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -307,7 +307,7 @@ std::string MessageIdentifier_cdm::getParamDescription(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -331,7 +331,7 @@ std::string MessageIdentifier_cdm::getParamDescription(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -355,7 +355,7 @@ std::string MessageIdentifier_cdm::getParamUnits(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -378,7 +378,7 @@ std::string MessageIdentifier_cdm::getParamUnits(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -401,7 +401,7 @@ T::InterpolationMethod MessageIdentifier_cdm::getParamInterpolationMethod(GRIB1:
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -424,7 +424,7 @@ T::InterpolationMethod MessageIdentifier_cdm::getParamInterpolationMethod(GRIB2:
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 

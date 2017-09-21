@@ -21,7 +21,7 @@ namespace GRIB2 {
 RectangularClusterSettings::RectangularClusterSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ RectangularClusterSettings::RectangularClusterSettings() {
 RectangularClusterSettings::~RectangularClusterSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -56,7 +56,7 @@ void RectangularClusterSettings::read(MemoryReader &memoryReader) {
     mScaleFactorOfDistanceFromEnsembleMean = memoryReader.read_UInt8_opt();
     mScaledValueOfDistanceFromEnsembleMean = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -98,7 +98,7 @@ void RectangularClusterSettings::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sRectangularClusterSettings.ScaledValueOfDistanceFromEnsembleMean", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfDistanceFromEnsembleMean));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -127,7 +127,7 @@ void RectangularClusterSettings::print(std::ostream &stream, uint level, uint op
     stream << space(level) << "- ScaleFactorOfDistanceFromEnsembleMean = " << toString(mScaleFactorOfDistanceFromEnsembleMean) << "\n";
     stream << space(level) << "- ScaledValueOfDistanceFromEnsembleMean = " << toString(mScaledValueOfDistanceFromEnsembleMean) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -166,7 +166,7 @@ T::Hash RectangularClusterSettings::countHash() {
       boost::hash_combine(seed, *mScaledValueOfDistanceFromEnsembleMean);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -176,7 +176,7 @@ const T::UInt8_opt &RectangularClusterSettings::getClusterIdentifier() const {
   try {
     return mClusterIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -186,7 +186,7 @@ const T::UInt8_opt &RectangularClusterSettings::getNH() const {
   try {
     return mNH;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -196,7 +196,7 @@ const T::UInt8_opt &RectangularClusterSettings::getNL() const {
   try {
     return mNL;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -206,7 +206,7 @@ const T::UInt8_opt &RectangularClusterSettings::getTotalNumberOfClusters() const
   try {
     return mTotalNumberOfClusters;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -216,7 +216,7 @@ const T::UInt8_opt &RectangularClusterSettings::getClusteringMethod() const {
   try {
     return mClusteringMethod;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -226,7 +226,7 @@ const T::UInt32_opt &RectangularClusterSettings::getNorthernLatitudeOfClusterDom
   try {
     return mNorthernLatitudeOfClusterDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -236,7 +236,7 @@ const T::UInt32_opt &RectangularClusterSettings::getSouthernLatitudeOfClusterDom
   try {
     return mSouthernLatitudeOfClusterDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -246,7 +246,7 @@ const T::UInt32_opt &RectangularClusterSettings::getEasternLongitudeOfClusterDom
   try {
     return mEasternLongitudeOfClusterDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -256,7 +256,7 @@ const T::UInt32_opt &RectangularClusterSettings::getWesternLongitudeOfClusterDom
   try {
     return mWesternLongitudeOfClusterDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -266,7 +266,7 @@ const T::UInt8_opt &RectangularClusterSettings::getNumberOfForecastsInTheCluster
   try {
     return mNumberOfForecastsInTheCluster;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -276,7 +276,7 @@ const T::UInt8_opt &RectangularClusterSettings::getScaleFactorOfStandardDeviatio
   try {
     return mScaleFactorOfStandardDeviation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -286,7 +286,7 @@ const T::UInt32_opt &RectangularClusterSettings::getScaledValueOfStandardDeviati
   try {
     return mScaledValueOfStandardDeviation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -296,7 +296,7 @@ const T::UInt8_opt &RectangularClusterSettings::getScaleFactorOfDistanceFromEnse
   try {
     return mScaleFactorOfDistanceFromEnsembleMean;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -306,7 +306,7 @@ const T::UInt32_opt &RectangularClusterSettings::getScaledValueOfDistanceFromEns
   try {
     return mScaledValueOfDistanceFromEnsembleMean;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -314,7 +314,7 @@ void RectangularClusterSettings::setClusterIdentifier(T::UInt8_opt clusterIdenti
   try {
     mClusterIdentifier = clusterIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -322,7 +322,7 @@ void RectangularClusterSettings::setNH(T::UInt8_opt nH) {
   try {
     mNH = nH;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -330,7 +330,7 @@ void RectangularClusterSettings::setNL(T::UInt8_opt nL) {
   try {
     mNL = nL;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -338,7 +338,7 @@ void RectangularClusterSettings::setTotalNumberOfClusters(T::UInt8_opt totalNumb
   try {
     mTotalNumberOfClusters = totalNumberOfClusters;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -346,7 +346,7 @@ void RectangularClusterSettings::setClusteringMethod(T::UInt8_opt clusteringMeth
   try {
     mClusteringMethod = clusteringMethod;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -354,7 +354,7 @@ void RectangularClusterSettings::setNorthernLatitudeOfClusterDomain(T::UInt32_op
   try {
     mNorthernLatitudeOfClusterDomain = northernLatitudeOfClusterDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -362,7 +362,7 @@ void RectangularClusterSettings::setSouthernLatitudeOfClusterDomain(T::UInt32_op
   try {
     mSouthernLatitudeOfClusterDomain = southernLatitudeOfClusterDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -370,7 +370,7 @@ void RectangularClusterSettings::setEasternLongitudeOfClusterDomain(T::UInt32_op
   try {
     mEasternLongitudeOfClusterDomain = easternLongitudeOfClusterDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -378,7 +378,7 @@ void RectangularClusterSettings::setWesternLongitudeOfClusterDomain(T::UInt32_op
   try {
     mWesternLongitudeOfClusterDomain = westernLongitudeOfClusterDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -386,7 +386,7 @@ void RectangularClusterSettings::setNumberOfForecastsInTheCluster(T::UInt8_opt n
   try {
     mNumberOfForecastsInTheCluster = numberOfForecastsInTheCluster;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -394,7 +394,7 @@ void RectangularClusterSettings::setScaleFactorOfStandardDeviation(T::UInt8_opt 
   try {
     mScaleFactorOfStandardDeviation = scaleFactorOfStandardDeviation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -402,7 +402,7 @@ void RectangularClusterSettings::setScaledValueOfStandardDeviation(T::UInt32_opt
   try {
     mScaledValueOfStandardDeviation = scaledValueOfStandardDeviation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -410,7 +410,7 @@ void RectangularClusterSettings::setScaleFactorOfDistanceFromEnsembleMean(T::UIn
   try {
     mScaleFactorOfDistanceFromEnsembleMean = scaleFactorOfDistanceFromEnsembleMean;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -418,7 +418,7 @@ void RectangularClusterSettings::setScaledValueOfDistanceFromEnsembleMean(T::UIn
   try {
     mScaledValueOfDistanceFromEnsembleMean = scaledValueOfDistanceFromEnsembleMean;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

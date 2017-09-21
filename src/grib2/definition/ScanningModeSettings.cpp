@@ -22,7 +22,7 @@ ScanningModeSettings::ScanningModeSettings() {
   try {
     mScanningMode = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -31,7 +31,7 @@ ScanningModeSettings::ScanningModeSettings() {
 ScanningModeSettings::~ScanningModeSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -44,7 +44,7 @@ void ScanningModeSettings::read(MemoryReader &memoryReader) {
   try {
     mScanningMode = memoryReader.read_uint8();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -60,7 +60,7 @@ void ScanningModeSettings::getAttributeList(std::string prefix, T::AttributeList
     sprintf(name, "%sScanningModeSettings.ScanningMode", prefix.c_str());
     attributeList.addAttribute(name, toString(mScanningMode));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -76,7 +76,7 @@ void ScanningModeSettings::print(std::ostream &stream, uint level, uint optionFl
     stream << space(level) << "ScanningModeSettings\n";
     stream << space(level) << "- ScanningMode = " << toString(mScanningMode) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -88,7 +88,7 @@ T::Hash ScanningModeSettings::countHash() {
     boost::hash_combine(seed, mScanningMode);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -98,7 +98,7 @@ std::uint8_t ScanningModeSettings::getScanningMode() const {
   try {
     return mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -106,7 +106,7 @@ void ScanningModeSettings::setScanningMode(std::uint8_t scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

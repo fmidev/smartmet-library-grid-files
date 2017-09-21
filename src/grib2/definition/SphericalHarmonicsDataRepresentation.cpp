@@ -21,7 +21,7 @@ namespace GRIB2 {
 SphericalHarmonicsDataRepresentation::SphericalHarmonicsDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -30,7 +30,7 @@ SphericalHarmonicsDataRepresentation::SphericalHarmonicsDataRepresentation() {
 SphericalHarmonicsDataRepresentation::~SphericalHarmonicsDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -49,7 +49,7 @@ void SphericalHarmonicsDataRepresentation::read(MemoryReader &memoryReader) {
     mTS = memoryReader.read_UInt32_opt();
     mUnpackedSubsetPrecision = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -77,7 +77,7 @@ void SphericalHarmonicsDataRepresentation::getAttributeList(std::string prefix, 
     sprintf(name, "%sSphericalHarmonicsDataRepresentation.UnpackedSubsetPrecision", prefix.c_str());
     attributeList.addAttribute(name, toString(mUnpackedSubsetPrecision));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -99,7 +99,7 @@ void SphericalHarmonicsDataRepresentation::print(std::ostream &stream, uint leve
     stream << space(level) << "- TS = " << toString(mTS) << "\n";
     stream << space(level) << "- UnpackedSubsetPrecision = " << toString(mUnpackedSubsetPrecision) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -123,7 +123,7 @@ T::Hash SphericalHarmonicsDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -133,7 +133,7 @@ const PackingSettings *SphericalHarmonicsDataRepresentation::getPacking() const 
   try {
     return &mPacking;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -143,7 +143,7 @@ const T::Int32_opt &SphericalHarmonicsDataRepresentation::getLaplacianScalingFac
   try {
     return mLaplacianScalingFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -153,7 +153,7 @@ const T::UInt16_opt &SphericalHarmonicsDataRepresentation::getJS() const {
   try {
     return mJS;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -163,7 +163,7 @@ const T::UInt16_opt &SphericalHarmonicsDataRepresentation::getKS() const {
   try {
     return mKS;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -173,7 +173,7 @@ const T::UInt16_opt &SphericalHarmonicsDataRepresentation::getMS() const {
   try {
     return mMS;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -183,7 +183,7 @@ const T::UInt32_opt &SphericalHarmonicsDataRepresentation::getTS() const {
   try {
     return mTS;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -193,7 +193,7 @@ const T::UInt8_opt &SphericalHarmonicsDataRepresentation::getUnpackedSubsetPreci
   try {
     return mUnpackedSubsetPrecision;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -201,7 +201,7 @@ void SphericalHarmonicsDataRepresentation::setPacking(PackingSettings packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -209,7 +209,7 @@ void SphericalHarmonicsDataRepresentation::setLaplacianScalingFactor(T::Int32_op
   try {
     mLaplacianScalingFactor = laplacianScalingFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -217,7 +217,7 @@ void SphericalHarmonicsDataRepresentation::setJS(T::UInt16_opt jS) {
   try {
     mJS = jS;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -225,7 +225,7 @@ void SphericalHarmonicsDataRepresentation::setKS(T::UInt16_opt kS) {
   try {
     mKS = kS;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -233,7 +233,7 @@ void SphericalHarmonicsDataRepresentation::setMS(T::UInt16_opt mS) {
   try {
     mMS = mS;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -241,7 +241,7 @@ void SphericalHarmonicsDataRepresentation::setTS(T::UInt32_opt tS) {
   try {
     mTS = tS;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -249,7 +249,7 @@ void SphericalHarmonicsDataRepresentation::setUnpackedSubsetPrecision(T::UInt8_o
   try {
     mUnpackedSubsetPrecision = unpackedSubsetPrecision;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

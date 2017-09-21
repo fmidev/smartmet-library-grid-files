@@ -1,5 +1,11 @@
 #include "Exception.h"
 
+const char *exception_implementation_required = "The method should be implemented in its implementation class!";
+const char *exception_operation_failed = "Operation failed!";
+
+
+
+
 #if 0
 
 #include "GeneralFunctions.h"
