@@ -1320,7 +1320,7 @@ void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<uint>& ge
       double grid_i = 0;
       double grid_j = 0;
 
-      if (it->second->getGridPointByLatLon(lat,lon,grid_i,grid_j))
+      if (it->second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       {
         uint geometryId = it->second->getGridGeometryId();
         if (geometryIdList.find(geometryId) == geometryIdList.end())
@@ -1333,7 +1333,7 @@ void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<uint>& ge
       double grid_i = 0;
       double grid_j = 0;
 
-      if (it->second->getGridPointByLatLon(lat,lon,grid_i,grid_j))
+      if (it->second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       {
         uint geometryId = it->second->getGridGeometryId();
         if (geometryIdList.find(geometryId) == geometryIdList.end())

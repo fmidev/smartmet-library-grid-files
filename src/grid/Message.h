@@ -1,8 +1,8 @@
 #pragma once
 
 #include "common/AttributeList.h"
-#include "Coordinate.h"
-#include "Dimensions.h"
+#include "common/Coordinate.h"
+#include "common/Dimensions.h"
 #include "MessageSection.h"
 #include "Typedefs.h"
 #include "GridPointValue.h"
@@ -68,15 +68,17 @@ class Message
     virtual T::Coordinate_vec     getGridLatLonCoordinates() const;
     virtual T::Dimensions_opt     getGridDimensions() const;
     virtual T::Hash               getGridHash() const;
-    virtual void                  getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
+    virtual bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    virtual bool                  getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
+    virtual bool                  getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    virtual bool                  getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     virtual T::GridLayout         getGridLayout() const;
     virtual std::size_t           getGridOriginalColumnCount(std::size_t row) const;
     virtual std::size_t           getGridOriginalColumnCount() const;
     virtual std::size_t           getGridOriginalRowCount() const;
     virtual std::size_t           getGridOriginalValueCount() const;
     virtual int                   getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
-    virtual void                  getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const;
-    virtual bool                  getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const;
+    virtual bool                  getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                  getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     virtual T::GridProjection     getGridProjection() const;
     virtual void                  getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;

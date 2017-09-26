@@ -2,8 +2,8 @@
 
 #include "common/MemoryReader.h"
 #include "grid/MessageSection.h"
-#include "grid/Dimensions.h"
-#include "grid/Coordinate.h"
+#include "common/Dimensions.h"
+#include "common/Coordinate.h"
 #include "GridDefinition.h"
 
 #include <boost/optional.hpp>
@@ -74,25 +74,29 @@ class GridSection : public GRID::MessageSection
     std::uint32_t         getNumberOfGridPoints() const;
     std::uint8_t          getNumberOfOctetsForNumberOfPoints() const;
     std::uint8_t          getInterpretationOfNumberOfPoints() const;
-    uint                  getGridGeometryId() const;
+
+    T::Coordinate_vec     getGridCoordinates() const;
+    T::Dimensions_opt     getGridDimensions() const;
     T::UInt16_opt         getGridDefinitionTemplateNumber() const;
-    std::string           getGridProjectionString() const;
-    void                  getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
+    uint                  getGridGeometryId() const;
+    T::Hash               getGridHash() const;
+    T::Coordinate_vec     getGridLatLonCoordinates() const;
+    bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    bool                  getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
+    bool                  getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    bool                  getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     std::size_t           getGridOriginalRowCount() const;
     std::size_t           getGridOriginalColumnCount() const;
     std::size_t           getGridOriginalColumnCount(std::size_t row) const;
     std::size_t           getGridOriginalValueCount() const;
     int                   getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
-    void                  getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const;
-    T::Coordinate_vec     getGridCoordinates() const;
-    T::Coordinate_vec     getGridLatLonCoordinates() const;
-    T::Dimensions_opt     getGridDimensions() const;
-    bool                  getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const;
+    bool                  getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     bool                  getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     T::GridLayout         getGridLayout() const;
     T::GridProjection     getGridProjection() const;
-    T::Hash               getGridHash() const;
+    std::string           getGridProjectionString() const;
     T::SpatialReference*  getSpatialReference() const;
+
     bool                  isGridGlobal() const;
     void                  read(MemoryReader& memoryReader);
     void                  setGridGeometryId(uint geometryId);

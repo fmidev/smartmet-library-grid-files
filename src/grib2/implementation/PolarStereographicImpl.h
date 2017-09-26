@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grid/Dimensions.h"
+#include "common/Dimensions.h"
 #include "grib2/definition/PolarStereographic.h"
 #include <boost/optional.hpp>
 

@@ -1,8 +1,8 @@
 #include "GaussianImpl.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
+#include "common/Dimensions.h"
 #include "grid/PrintOptions.h"
-#include "grid/Dimensions.h"
 #include "grid/GaussianLatitudeCache.h"
 
 #include <iostream>
@@ -62,33 +62,6 @@ void GaussianImpl::read(MemoryReader& memoryReader)
   try
   {
     Gaussian::read(memoryReader);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the first and the last latlon coordinates used in the grid.
-
-        \param firstLat   The returned latitude of the top-left corner.
-        \param firstLon   The returned longitude of the top-left corner.
-        \param lastLat    The returned latitude of the bottom-right corner.
-        \param lastLon    The returned longitude of the bottom-right corner.
-*/
-
-void GaussianImpl::getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const
-{
-  try
-  {
-    firstLat = (double)(*mGaussian.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
-    firstLon = (double)(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
-    lastLat = (double)(*mGaussian.getGrid()->getLatitudeOfLastGridPoint()) / 1000000;
-    lastLon = (double)(*mGaussian.getGrid()->getLongitudeOfLastGridPoint()) / 1000000;
   }
   catch (...)
   {
@@ -200,7 +173,7 @@ T::Dimensions_opt GaussianImpl::getGridDimensions() const
         \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool GaussianImpl::getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const
+bool GaussianImpl::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
   try
   {

@@ -2,7 +2,7 @@
 
 #include "ProductDefinition.h"
 #include "grid/MessageSection.h"
-#include "grid/Coordinate.h"
+#include "common/Coordinate.h"
 #include "common/MemoryReader.h"
 #include <memory>
 #include <vector>

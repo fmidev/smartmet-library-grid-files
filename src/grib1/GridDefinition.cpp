@@ -135,25 +135,23 @@ void GridDefinition::setGridGeometryName(std::string geometryName)
 
 
 
-/*! \brief The method returns the first and the last latlon coordinates used in the grid.
-    This method could be overridden in the child classes in order to make
-    the implementation faster.
-
-      \param firstLat   The returned latitude of the top-left corner.
-      \param firstLon   The returned longitude of the top-left corner.
-      \param lastLat    The returned latitude of the bottom-right corner.
-      \param lastLon    The returned longitude of the bottom-right corner.
-*/
-
-void GridDefinition::getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const
+bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
   try
   {
-    double x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-    getGridOriginalAreaCoordinates(x1,y1,x2,y2);
+    T::Dimensions_opt d = getGridDimensions();
+    if (!d  || grid_i >= d->nx() || grid_j >= d->ny())
+      return false;
 
-    getLatLonByOriginalCoordinates(x1,y1,firstLat,firstLon);
-    getLatLonByOriginalCoordinates(x2,y2,lastLat,lastLon);
+    T::Coordinate_vec coordinates = getGridLatLonCoordinates();
+    uint c = grid_j*d->nx() + grid_i;
+    if (c < coordinates.size())
+    {
+      lon = coordinates[c].x();
+      lat = coordinates[c].y();
+      return true;
+    }
+    return false;
   }
   catch (...)
   {
@@ -164,40 +162,23 @@ void GridDefinition::getGridLatlonAreaCoordinates(double& firstLat,double& first
 
 
 
-
-/*! \brief The method returns the first and the last original coordinates used in the grid.
-    This method could be overridden in the child classes in order to make
-    the implementation faster.
-
-      \param x1    The returned x-coordinate of the top-left corner.
-      \param y1    The returned y-coordinate of the top-left corner.
-      \param x2    The returned x-coordinate of the bottom-right corner.
-      \param y2    The returned y-coordinate of the bottom-right corner.
-*/
-
-void GridDefinition::getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const
+bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
   try
   {
-    // This can be implemented faster in child classes (if needed). I.e. now we are fetching
-    // all coordinates, but need only the first and the last coordinates.
+    T::Dimensions_opt d = getGridDimensions();
+    if (!d  || grid_i >= d->nx() || grid_j >= d->ny())
+      return false;
 
-    T::Coordinate_vec coordinates = getGridCoordinates();
-    std::size_t s = coordinates.size();
-    if (s > 0)
-    {
-      x1 = coordinates[0].x();
-      y1 = coordinates[0].y();
-      x2 = coordinates[s-1].x();
-      y2 = coordinates[s-1].y();
-    }
-    else
-    {
-      x1 = 0;
-      y1 = 0;
-      x2 = 0;
-      y2 = 0;
-    }
+    T::Coordinate_vec originalCoordinates = getGridCoordinates();
+    uint c = grid_j * d->nx() + grid_i;
+    if (c >= (uint)originalCoordinates.size())
+      return false;
+
+    x = originalCoordinates[c].x();
+    y = originalCoordinates[c].y();
+
+    return true;
   }
   catch (...)
   {
@@ -229,40 +210,38 @@ T::Coordinate_vec GridDefinition::getGridCoordinates() const
 
 T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 {
+  try
   {
-    try
+    if (mCoordinateTranformation_orig2latlon == NULL)
     {
+      OGRSpatialReference sr_latlon;
+      sr_latlon.importFromEPSG(4326);
+
+      if (mOrigSpatialReference == NULL)
+        mOrigSpatialReference = mSpatialReference.Clone();
+
+      mCoordinateTranformation_orig2latlon = OGRCreateCoordinateTransformation(mOrigSpatialReference,&sr_latlon);
       if (mCoordinateTranformation_orig2latlon == NULL)
-      {
-        OGRSpatialReference sr_latlon;
-        sr_latlon.importFromEPSG(4326);
-
-        if (mOrigSpatialReference == NULL)
-          mOrigSpatialReference = mSpatialReference.Clone();
-
-        mCoordinateTranformation_orig2latlon = OGRCreateCoordinateTransformation(mOrigSpatialReference,&sr_latlon);
-        if (mCoordinateTranformation_orig2latlon == NULL)
-          throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
-      }
-
-      T::Coordinate_vec originalCoordinates = getGridCoordinates();
-      T::Coordinate_vec latLonCoordinates;
-
-      for (auto it = originalCoordinates.begin(); it != originalCoordinates.end(); ++it)
-      {
-        double lat = it->y();
-        double lon = it->x();
-
-        mCoordinateTranformation_orig2latlon->Transform(1,&lon,&lat);
-
-        latLonCoordinates.push_back(T::Coordinate(lon,lat));
-      }
-      return latLonCoordinates;
+        throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
     }
-    catch (...)
+
+    T::Coordinate_vec originalCoordinates = getGridCoordinates();
+    T::Coordinate_vec latLonCoordinates;
+
+    for (auto it = originalCoordinates.begin(); it != originalCoordinates.end(); ++it)
     {
-      throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+      double lat = it->y();
+      double lon = it->x();
+
+      mCoordinateTranformation_orig2latlon->Transform(1,&lon,&lat);
+
+      latLonCoordinates.push_back(T::Coordinate(lon,lat));
     }
+    return latLonCoordinates;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -299,7 +278,7 @@ T::Dimensions_opt GridDefinition::getGridDimensions() const
         \param y       The y-coordinate of the original coordinates.
 */
 
-void GridDefinition::getOriginalCoordinatesByLatLon(double lat,double lon,double& x,double& y) const
+bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
   try
   {
@@ -320,6 +299,7 @@ void GridDefinition::getOriginalCoordinatesByLatLon(double lat,double lon,double
     y = lat;
 
     mCoordinateTranformation_latlon2orig->Transform(1,&x,&y);
+    return true;
   }
   catch (...)
   {
@@ -342,7 +322,7 @@ void GridDefinition::getOriginalCoordinatesByLatLon(double lat,double lon,double
         \param lon     The returned longitude value.
 */
 
-void GridDefinition::getLatLonByOriginalCoordinates(double x,double y,double& lat,double& lon) const
+bool GridDefinition::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
   try
   {
@@ -363,6 +343,8 @@ void GridDefinition::getLatLonByOriginalCoordinates(double x,double y,double& la
     lat = y;
 
     mCoordinateTranformation_orig2latlon->Transform(1,&lon,&lat);
+
+    return true;
   }
   catch (...)
   {
@@ -712,12 +694,12 @@ int GridDefinition::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
         \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool GridDefinition::getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const
+bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
   try
   {
     double x = 0, y = 0;
-    getOriginalCoordinatesByLatLon(lat,lon,x,y);
+    getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
 
     return getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
   }

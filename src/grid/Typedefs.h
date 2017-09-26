@@ -8,8 +8,8 @@
 #include <float.h>
 #include <string>
 
-#include "Coordinate.h"
-#include "Dimensions.h"
+#include "common/Coordinate.h"
+#include "common/Dimensions.h"
 
 
 namespace SmartMet

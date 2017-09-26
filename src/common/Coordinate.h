@@ -10,10 +10,12 @@ namespace T
 class Coordinate
 {
   public:
-    Coordinate(double X, double Y) : mX(X), mY(Y){};
+    Coordinate(double x, double y) : mX(x), mY(y) {};
 
     double x() const { return mX; }
     double y() const { return mY; }
+
+    void set(double x, double y) {mX = x;  mY = y;}
 
   private:
     double mX;

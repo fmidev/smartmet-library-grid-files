@@ -1,7 +1,7 @@
 #pragma once
 
-#include "grid/Coordinate.h"
-#include "grid/Dimensions.h"
+#include "common/Coordinate.h"
+#include "common/Dimensions.h"
 #include "grid/Typedefs.h"
 #include "common/MemoryReader.h"
 #include "common/AttributeList.h"
@@ -27,19 +27,20 @@ class GridDefinition
     virtual void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     virtual uint                getGridGeometryId() const;
     virtual std::string         getGridGeometryName();
-    virtual void                getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
-    virtual void                getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const;
     virtual T::Coordinate_vec   getGridCoordinates() const;
-    virtual T::Coordinate_vec   getGridLatLonCoordinates() const;
     virtual T::Dimensions_opt   getGridDimensions() const;
-    virtual bool                getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const;
-    virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
-    virtual void                getOriginalCoordinatesByLatLon(double lat,double lon,double& x,double& y) const;
-    virtual void                getLatLonByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
-    T::SpatialReference*        getSpatialReference();
-    T::GridLayout               getGridLayout();
-    T::GridProjection           getGridProjection();
     T::Hash                     getGridHash();
+    virtual T::Coordinate_vec   getGridLatLonCoordinates() const;
+    virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    virtual bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
+    T::GridLayout               getGridLayout();
+    virtual bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
+    virtual bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
+    virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
+    T::GridProjection           getGridProjection();
+
+    T::SpatialReference*        getSpatialReference();
     virtual void                initSpatialReference();
     bool                        isGridGlobal() const;
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;

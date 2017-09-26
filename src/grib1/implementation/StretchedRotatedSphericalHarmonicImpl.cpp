@@ -116,14 +116,14 @@ T::Dimensions_opt StretchedRotatedSphericalHarmonicImpl::getGridDimensions() con
         \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool StretchedRotatedSphericalHarmonicImpl::getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const
+bool StretchedRotatedSphericalHarmonicImpl::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
   try
   {
     // TODO: We should probably do our own implementation instead of using the parent implementation,
     // which might be slow or does not even work if the spatial reference is not correctly initialized.
 
-    return GridDefinition::getGridPointByLatLon(lat,lon,grid_i,grid_j);
+    return GridDefinition::getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
   }
   catch (...)
   {

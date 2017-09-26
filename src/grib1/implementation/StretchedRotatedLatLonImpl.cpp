@@ -70,33 +70,6 @@ void StretchedRotatedLatLonImpl::read(MemoryReader& memoryReader)
 
 
 
-/*! \brief The method returns the first and the last latlon coordinates used in the grid.
-
-        \param firstLat   The returned latitude of the top-left corner.
-        \param firstLon   The returned longitude of the top-left corner.
-        \param lastLat    The returned latitude of the bottom-right corner.
-        \param lastLon    The returned longitude of the bottom-right corner.
-*/
-
-void StretchedRotatedLatLonImpl::getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const
-{
-  try
-  {
-    firstLat = (double)mGridArea.getLatitudeOfFirstGridPoint() / 1000;
-    firstLon = (double)mGridArea.getLongitudeOfFirstGridPoint() / 1000;
-    lastLat = (double)mGridArea.getLatitudeOfLastGridPoint() / 1000;
-    lastLon = (double)mGridArea.getLongitudeOfLastGridPoint() / 1000;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
 /*! \brief The method returns all grid coordinates as a coordinate vector.
     Notice that if the grid layout is "irregular" (i.e. its row lengths vary) then
     grid width is the same as the length of the longest grid row. I.e. the coordinates
@@ -192,7 +165,7 @@ T::Dimensions_opt StretchedRotatedLatLonImpl::getGridDimensions() const
         \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool StretchedRotatedLatLonImpl::getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const
+bool StretchedRotatedLatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
   try
   {

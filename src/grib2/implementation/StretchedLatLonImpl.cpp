@@ -1,6 +1,6 @@
 #include "StretchedLatLonImpl.h"
 #include "common/Exception.h"
-#include "grid/Dimensions.h"
+#include "common/Dimensions.h"
 
 namespace SmartMet
 {
@@ -55,33 +55,6 @@ void StretchedLatLonImpl::read(MemoryReader& memoryReader)
   try
   {
     StretchedLatLon::read(memoryReader);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the first and the last latlon coordinates used in the grid.
-
-        \param firstLat   The returned latitude of the top-left corner.
-        \param firstLon   The returned longitude of the top-left corner.
-        \param lastLat    The returned latitude of the bottom-right corner.
-        \param lastLon    The returned longitude of the bottom-right corner.
-*/
-
-void StretchedLatLonImpl::getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const
-{
-  try
-  {
-    firstLat = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
-    firstLon = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
-    lastLat = (double)(*mLatLon.getGrid()->getLatitudeOfLastGridPoint()) / 1000000;
-    lastLon = (double)(*mLatLon.getGrid()->getLongitudeOfLastGridPoint()) / 1000000;
   }
   catch (...)
   {
@@ -191,7 +164,7 @@ T::Dimensions_opt StretchedLatLonImpl::getGridDimensions() const
         \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool StretchedLatLonImpl::getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const
+bool StretchedLatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
   try
   {

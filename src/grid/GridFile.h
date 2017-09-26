@@ -66,7 +66,6 @@ class GridFile
     virtual void                setSourceId(uint sourceId);
 
     std::shared_ptr<GridFile>   getGridFile();
-    void                        getGridLatlonAreaCoordinatesByParameterIdAndLevel(T::ParamId parameterId,T::ParamLevel level,double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     T::ParamLevel_vec           getLevelsByParameterId(T::ParamId parameterId) const;
     virtual Message*            getMessageByIndex(std::size_t index) const;
     T::Index_vec                getMessagesIndexListByParameterId(T::ParamId parameterId) const;

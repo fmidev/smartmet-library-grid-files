@@ -174,7 +174,7 @@ T::Dimensions_opt GaussianImpl::getGridDimensions() const
         \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool GaussianImpl::getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const
+bool GaussianImpl::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
   try
   {

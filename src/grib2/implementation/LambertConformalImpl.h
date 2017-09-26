@@ -16,7 +16,6 @@ class LambertConformalImpl : public LambertConformal
                       LambertConformalImpl(const LambertConformalImpl& other);
     virtual           ~LambertConformalImpl();
 
-    void              getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     T::Coordinate_vec getGridCoordinates() const;
     T::Dimensions_opt getGridDimensions() const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;

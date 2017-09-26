@@ -2,7 +2,7 @@
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include "grid/Dimensions.h"
+#include "common/Dimensions.h"
 #include "grid/PrintOptions.h"
 
 #include <iostream>
@@ -61,33 +61,6 @@ void LatLonImpl::read(MemoryReader& memoryReader)
   try
   {
     LatLon::read(memoryReader);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the first and the last latlon coordinates used in the grid.
-
-        \param firstLat   The returned latitude of the top-left corner.
-        \param firstLon   The returned longitude of the top-left corner.
-        \param lastLat    The returned latitude of the bottom-right corner.
-        \param lastLon    The returned longitude of the bottom-right corner.
-*/
-
-void LatLonImpl::getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const
-{
-  try
-  {
-    firstLat = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
-    firstLon = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
-    lastLat = (double)(*mLatLon.getGrid()->getLatitudeOfLastGridPoint()) / 1000000;
-    lastLon = (double)(*mLatLon.getGrid()->getLongitudeOfLastGridPoint()) / 1000000;
   }
   catch (...)
   {
@@ -160,6 +133,21 @@ T::Coordinate_vec LatLonImpl::getGridCoordinates() const
 
 
 
+T::Coordinate_vec LatLonImpl::getGridLatLonCoordinates() const
+{
+  try
+  {
+    return getGridCoordinates();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
 /*! \brief The method returns the grid dimensions (i.e. the width and the height).
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each
@@ -198,12 +186,14 @@ T::Dimensions_opt LatLonImpl::getGridDimensions() const
         \param y       The y-coordinate of the original coordinates.
 */
 
-void LatLonImpl::getOriginalCoordinatesByLatLon(double lat,double lon,double& x,double& y) const
+bool LatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
   try
   {
     x = lon;
     y = lat;
+
+    return true;
   }
   catch (...)
   {
@@ -225,12 +215,14 @@ void LatLonImpl::getOriginalCoordinatesByLatLon(double lat,double lon,double& x,
         \param lon     The returned longitude value.
 */
 
-void LatLonImpl::getLatLonByOriginalCoordinates(double x,double y,double& lat,double& lon) const
+bool LatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
   try
   {
     lat = x;
     lon = y;
+
+    return true;
   }
   catch (...)
   {
@@ -238,6 +230,76 @@ void LatLonImpl::getLatLonByOriginalCoordinates(double x,double y,double& lat,do
   }
 }
 
+
+
+
+
+/*! \brief This method return the latlon coordinates of the give grid point.
+
+        \param grid_i  The grid i-position.
+        \param grid_j  The grid j-position.
+        \param lat     The returned latitude value.
+        \param lon     The returned longitude value.
+*/
+
+bool LatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
+{
+  try
+  {
+    uint ni = (uint)(*mLatLon.getGrid()->getNi());
+    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+
+    if ((double)grid_i > (double)ni)
+      return false;
+
+    if ((double)grid_j > (double)nj)
+      return false;
+
+    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+
+    if ((scanningMode & 0x80) != 0)
+      iDirectionIncrement = -iDirectionIncrement;
+
+    if ((scanningMode & 0x40) == 0)
+      jDirectionIncrement = -jDirectionIncrement;
+
+    double y = latitudeOfFirstGridPoint + grid_j * jDirectionIncrement;
+    double x = longitudeOfFirstGridPoint + grid_i * iDirectionIncrement;
+
+    if (longitudeOfFirstGridPoint >= 180000000)
+      x = longitudeOfFirstGridPoint - 360000000 + grid_i * iDirectionIncrement;
+
+    lon = x/1000000;
+    lat = y/1000000;
+
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool LatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
+{
+  try
+  {
+    return getGridLatLonCoordinatesByGridPoint(grid_i,grid_j,y,x);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
 
 
 
@@ -252,7 +314,7 @@ void LatLonImpl::getLatLonByOriginalCoordinates(double x,double y,double& lat,do
         \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool LatLonImpl::getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const
+bool LatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
   try
   {

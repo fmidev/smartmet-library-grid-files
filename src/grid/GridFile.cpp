@@ -596,56 +596,6 @@ T::Index_vec GridFile::getMessagesIndexListByParameterIdAndLevel(T::ParamId para
 
 
 
-/*! \brief The method tries to find out which latlon area is used by the grid which parameterId and
-    level match the given parameterId and the level.
-
-       \param parameterId   The parameter identifier
-       \param level         The requested level.
-       \param firstLat      The first latitude used by the grid.
-       \param firstLon      The first longitude used by the grid.
-       \param lastLat       The last latitude used by the grid.
-       \param lastLon       The last longitude used by the grid.
-*/
-
-void GridFile::getGridLatlonAreaCoordinatesByParameterIdAndLevel(
-    T::ParamId parameterId,
-    T::ParamLevel level,
-    double& firstLat,
-    double& firstLon,
-    double& lastLat,
-    double& lastLon) const
-{
-  try
-  {
-    if (!mGridFile)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridFile' attribute points to NULL!");
-
-    std::size_t messageCount = getNumberOfMessages();
-    for (std::size_t t=0; t<messageCount; t++)
-    {
-      auto message = getMessageByIndex(t);
-      if (message != NULL  &&  message->getGribParameterId() == parameterId  &&  message->getParameterLevel() == level)
-      {
-        message->getGridLatlonAreaCoordinates(firstLat,firstLon,lastLat,lastLon);
-        return;
-      }
-    }
-
-    firstLat = 0;
-    firstLon = 0;
-    lastLat = 0;
-    lastLon = 0;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
 /*! \brief The method searches messages which parameterId and level match the given parameterId
     and the level, and returns the first and the last forecast time of these messages.
 

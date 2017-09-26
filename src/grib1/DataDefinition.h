@@ -1,7 +1,7 @@
 #pragma once
 
 #include "grid/Typedefs.h"
-#include "grid/Dimensions.h"
+#include "common/Dimensions.h"
 #include "common/MemoryReader.h"
 #include "common/AttributeList.h"
 

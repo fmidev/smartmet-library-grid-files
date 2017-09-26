@@ -15,10 +15,9 @@ class GaussianImpl : public Gaussian
                       GaussianImpl(const GaussianImpl& other);
     virtual           ~GaussianImpl();
 
-    void              getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
     T::Coordinate_vec getGridCoordinates() const;
     T::Dimensions_opt getGridDimensions() const;
-    bool              getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const;
+    bool              getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     void              initSpatialReference();
     void              print(std::ostream& stream,uint level,uint optionFlags) const;

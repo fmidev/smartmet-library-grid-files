@@ -11,8 +11,8 @@
 #include "IndicatorSection.h"
 #include "IdentificationSection.h"
 #include "RepresentationSection.h"
-#include "grid/Coordinate.h"
-#include "grid/Dimensions.h"
+#include "common/Coordinate.h"
+#include "common/Dimensions.h"
 #include "grid/ValueCache.h"
 
 
@@ -47,15 +47,17 @@ class Message : public GRID::Message
     T::Coordinate_vec     getGridLatLonCoordinates() const;
     T::Dimensions_opt     getGridDimensions() const;
     T::Hash               getGridHash() const;
-    void                  getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const;
+    bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    bool                  getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
+    bool                  getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    bool                  getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     T::GridLayout         getGridLayout() const;
-    void                  getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const;
     std::size_t           getGridOriginalColumnCount() const;
     std::size_t           getGridOriginalColumnCount(std::size_t row) const;
     std::size_t           getGridOriginalRowCount() const;
     std::size_t           getGridOriginalValueCount() const;
     int                   getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
-    bool                  getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const;
+    bool                  getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     bool                  getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     T::GridProjection     getGridProjection() const;
     void                  getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;

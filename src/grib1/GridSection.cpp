@@ -1,7 +1,7 @@
 #include "GridSection.h"
 #include "Message.h"
-#include "grid/Dimensions.h"
 #include "identification/GribDef.h"
+#include "common/Dimensions.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
@@ -281,14 +281,14 @@ std::string GridSection::getGridProjectionString() const
         \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-bool GridSection::getGridPointByLatLon(double lat,double lon,double& grid_i,double& grid_j) const
+bool GridSection::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
   try
   {
     if (!mGridDefinition)
       throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
 
-    return mGridDefinition->getGridPointByLatLon(lat,lon,grid_i,grid_j);
+    return mGridDefinition->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
   }
   catch (...)
   {
@@ -491,22 +491,14 @@ int GridSection::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 
 
 
-/*! \brief The method returns the first and the last latlon coordinates used in the grid.
-
-        \param firstLat   The returned latitude of the top-left corner.
-        \param firstLon   The returned longitude of the top-left corner.
-        \param lastLat    The returned latitude of the bottom-right corner.
-        \param lastLon    The returned longitude of the bottom-right corner.
-*/
-
-void GridSection::getGridLatlonAreaCoordinates(double& firstLat,double& firstLon,double& lastLat,double& lastLon) const
+bool GridSection::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
   try
   {
     if (!mGridDefinition)
       throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
 
-    return mGridDefinition->getGridLatlonAreaCoordinates(firstLat,firstLon,lastLat,lastLon);
+    return mGridDefinition->getGridLatLonCoordinatesByGridPoint(grid_i,grid_j,lat,lon);
   }
   catch (...)
   {
@@ -518,22 +510,52 @@ void GridSection::getGridLatlonAreaCoordinates(double& firstLat,double& firstLon
 
 
 
-/*! \brief The method returns the first and the last original coordinates used in the grid.
-
-        \param x1    The returned x-coordinate of the top-left corner.
-        \param y1    The returned y-coordinate of the top-left corner.
-        \param x2    The returned x-coordinate of the bottom-right corner.
-        \param y2    The returned y-coordinate of the bottom-right corner.
-*/
-
-void GridSection::getGridOriginalAreaCoordinates(double& x1,double& y1,double& x2,double& y2) const
+bool GridSection::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
   try
   {
     if (!mGridDefinition)
       throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
 
-    return mGridDefinition->getGridOriginalAreaCoordinates(x1,y1,x2,y2);
+    return mGridDefinition->getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GridSection::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
+{
+  try
+  {
+    if (!mGridDefinition)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+
+    return mGridDefinition->getGridOriginalCoordinatesByGridPoint(grid_i,grid_j,x,y);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GridSection::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
+{
+  try
+  {
+    if (!mGridDefinition)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+
+    return mGridDefinition->getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
   }
   catch (...)
   {
