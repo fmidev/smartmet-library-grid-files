@@ -149,8 +149,8 @@ uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value
 
 static int compare_points(const void *p1, const void *p2)
 {
-  double *v1 = (double*)p1;
-  double *v2 = (double*)p2;
+  const double *v1 = (const double*)p1;
+  const double *v2 = (const double*)p2;
 
   if (*v1 < *v2)
     return -1;
