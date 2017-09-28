@@ -7,6 +7,7 @@
 #include "Typedefs.h"
 #include "GridPointValue.h"
 #include "GridPointValueList.h"
+#include "GridValueList.h"
 
 #include <vector>
 #include <string>
@@ -83,23 +84,31 @@ class Message
     virtual T::GridProjection     getGridProjection() const;
     virtual void                  getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;
     virtual std::string           getGridProjectionString() const;
-    virtual T::ParamLevel         getParameterLevel() const;
-    virtual T::ParamLevelId       getParameterLevelId() const;
-    virtual std::string           getParameterLevelIdString() const;
-    virtual void                  getParameterMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
-    virtual void                  getParameterOriginalValues(T::ParamValue_vec& values) const;
-    virtual T::ParamValue         getParameterValueByGridPoint(uint grid_i,uint grid_j) const;
-    virtual T::ParamValue         getParameterValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
-    virtual void                  getParameterValues(T::ParamValue_vec& values) const;
-    T::ParamValue                 getParameterValueByGridPosition(double grid_i,double grid_j,T::InterpolationMethod interpolationMethod) const;
-    T::ParamValue                 getParameterValueByGridPosition_nearest(double grid_i,double grid_j) const;
-    T::ParamValue                 getParameterValueByGridPosition_linearInterpolation(double grid_i,double grid_j) const;
-    T::ParamValue                 getParameterValueByLatLon(double lat,double lon,T::InterpolationMethod interpolationMethod) const;
-    virtual void                  getParameterValuesByGridArea(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValue_vec& gridPointValues) const;
-    virtual void                  getParameterValuesByGridArea(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValueList& gridPointValues) const;
+
+    virtual void                  getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,T::InterpolationMethod interpolationMethod,T::ParamValue& value);
+    virtual void                  getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList);
+    virtual void                  getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList);
+    virtual void                  getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,T::GridValueList& valueList);
+    virtual void                  getGridValueVector(T::ParamValue_vec& values) const;
+    virtual void                  getGridOriginalValueVector(T::ParamValue_vec& values) const;
+    virtual T::ParamLevel         getGridParameterLevel() const;
+    virtual T::ParamLevelId       getGridParameterLevelId() const;
+    virtual std::string           getGridParameterLevelIdString() const;
+    virtual void                  getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
+
+    virtual T::ParamValue         getGridValueByGridPoint(uint grid_i,uint grid_j) const;
+    virtual T::ParamValue         getGridValueByGridPoint(double grid_i,double grid_j,T::InterpolationMethod interpolationMethod) const;
+    virtual T::ParamValue         getGridValueByGridPoint_nearest(double grid_i,double grid_j) const;
+    virtual T::ParamValue         getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j) const;
+    virtual T::ParamValue         getGridValueByLatLonCoordinate(double lat,double lon,T::InterpolationMethod interpolationMethod) const;
+    virtual T::ParamValue         getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
+
+    virtual void                  getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValue_vec& gridPointValues) const;
+    virtual void                  getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValueList& gridPointValues) const;
     virtual T::TimeString         getReferenceTime() const;
     virtual T::SpatialReference*  getSpatialReference() const;
     virtual std::string           getWKT() const;
+
     virtual bool                  isGridGlobal() const;
     virtual void                  print(std::ostream& stream,uint level,uint optionFlags) const;
     virtual void                  setGridGeometryId(uint geometryId);

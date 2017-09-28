@@ -59,7 +59,7 @@ T::ParamLevelId MessageIdentifier_cdm::getParamLevelId(GRIB1::Message& message)
 {
   try
   {
-    return message.getParameterLevelId();
+    return message.getGridParameterLevelId();
   }
   catch (...)
   {
@@ -75,7 +75,7 @@ T::ParamLevelId MessageIdentifier_cdm::getParamLevelId(GRIB2::Message& message)
 {
   try
   {
-    return message.getParameterLevelId();
+    return message.getGridParameterLevelId();
   }
   catch (...)
   {
@@ -148,11 +148,11 @@ std::string MessageIdentifier_cdm::getParamId(GRIB2::Message& message)
         *productSection->getGribParameterCategory(),
         *productSection->getGribParameterNumber());
 
-    LevelDef_cptr levelDef = gribDef.getLevelDef_grib2(message.getParameterLevelId());
+    LevelDef_cptr levelDef = gribDef.getLevelDef_grib2(message.getGridParameterLevelId());
     if (levelDef != NULL /* &&  levelDef->mName.length() > 0*/)
     {
-      p += sprintf(p,"_L%u",message.getParameterLevelId());
-      // p += sprintf(p,"_%u",message.getParameterLevel());
+      p += sprintf(p,"_L%u",message.getGridParameterLevelId());
+      // p += sprintf(p,"_%u",message.getGridParameterLevel());
     }
 
 
@@ -260,11 +260,11 @@ std::string MessageIdentifier_cdm::getParamName(GRIB2::Message& message)
           *productSection->getGribParameterNumber());
     }
 
-    LevelDef_cptr levelDef = gribDef.getLevelDef_grib2(message.getParameterLevelId());
+    LevelDef_cptr levelDef = gribDef.getLevelDef_grib2(message.getGridParameterLevelId());
     if (levelDef != NULL  &&  levelDef->mName.length() > 0)
     {
       p += sprintf(p,"_%s",levelDef->mName.c_str());
-      //p += sprintf(p,"_%u",message.getParameterLevel());
+      //p += sprintf(p,"_%u",message.getGridParameterLevel());
     }
 
     GRIB2::ProductDefinition *productDef = productSection->getProductDefinition();

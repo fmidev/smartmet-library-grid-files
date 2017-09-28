@@ -171,13 +171,13 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
     attributeList.addAttribute(name,mCdmParameterName);
 
     sprintf(name,"%smessage[%u].parameterLevel",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,toString(getParameterLevel()));
+    attributeList.addAttribute(name,toString(getGridParameterLevel()));
 
     sprintf(name,"%smessage[%u].parameterLevelId",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,toString(getParameterLevelId()));
+    attributeList.addAttribute(name,toString(getGridParameterLevelId()));
 
     sprintf(name,"%smessage[%u].parameterLevelIdString",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,getParameterLevelIdString());
+    attributeList.addAttribute(name,getGridParameterLevelIdString());
 
     sprintf(name,"%smessage[%u].foracastStartTime",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,getForecastTime());
@@ -1035,17 +1035,17 @@ DataSection_cptr Message::getDataSection() const
         \param maxValue   The returned maximum parameter value in the grid.
 */
 
-void Message::getParameterMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const
+void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const
 {
   try
   {
     T::ParamValue_vec values;
     if (mCacheKey == 0)
-      getParameterValues(values);
+      getGridValueVector(values);
 
     if (!GRID::valueCache.getMinAndMaxValues(mCacheKey,minValue,maxValue))
     {
-      getParameterValues(values);
+      getGridValueVector(values);
       GRID::valueCache.getMinAndMaxValues(mCacheKey,minValue,maxValue);
     }
   }
@@ -1070,7 +1070,7 @@ void Message::getParameterMinAndMaxValues(T::ParamValue& minValue,T::ParamValue&
         \param values   The returned grid values.
 */
 
-void Message::getParameterValues(T::ParamValue_vec& values) const
+void Message::getGridValueVector(T::ParamValue_vec& values) const
 {
   try
   {
@@ -1119,7 +1119,7 @@ void Message::getParameterValues(T::ParamValue_vec& values) const
 
 /*! \brief The method returns the original grid data values.
 
-   If the grid is regular then the 'getParameterValues()' method returns the same
+   If the grid is regular then the 'getGridValueVector()' method returns the same
     result as this method. However, if the grid is irregular then the grid rows
     might contain different number of columns. In this case the data should be
     processed row-by-row and the 'getGridOriginalColumnCount()' method should be
@@ -1130,7 +1130,7 @@ void Message::getParameterValues(T::ParamValue_vec& values) const
         \param values   The returned grid values (original).
 */
 
-void Message::getParameterOriginalValues(T::ParamValue_vec& values) const
+void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 {
   try
   {
@@ -1227,7 +1227,7 @@ std::string Message::getWKT() const
         \return   The parameter level.
 */
 
-T::ParamLevel Message::getParameterLevel() const
+T::ParamLevel Message::getGridParameterLevel() const
 {
   try
   {
@@ -1253,7 +1253,7 @@ T::ParamLevel Message::getParameterLevel() const
         \return   The parameter level id (expressed as a number).
 */
 
-T::ParamLevelId Message::getParameterLevelId() const
+T::ParamLevelId Message::getGridParameterLevelId() const
 {
   try
   {
@@ -1321,12 +1321,12 @@ short Message::getForecastNumber() const
         \return   The parameter level type (expressed in a string).
 */
 
-std::string Message::getParameterLevelIdString() const
+std::string Message::getGridParameterLevelIdString() const
 {
   try
   {
     std::uint8_t tablesVersion = getTablesVersion();
-    return Identification::gribDef.getTableValue(2,tablesVersion,"4.5",getParameterLevelId());
+    return Identification::gribDef.getTableValue(2,tablesVersion,"4.5",getGridParameterLevelId());
   }
   catch (...)
   {
@@ -1392,7 +1392,7 @@ T::TimeString Message::getForecastTime() const
         \return         The parameter value of the given grid point.
 */
 
-T::ParamValue Message::getParameterValueByGridPoint(uint grid_i,uint grid_j) const
+T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 {
   try
   {
@@ -1492,7 +1492,7 @@ T::ParamValue Message::getParameterValueByGridPoint(uint grid_i,uint grid_j) con
 
 
     T::ParamValue_vec values;
-    getParameterValues(values);
+    getGridValueVector(values);
     if (idx >= values.size())
       return ParamValueMissing;
 
@@ -1939,9 +1939,9 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- gribParameterName        = " << mGribParameterName << "\n";
     stream << space(level) << "- gribParameterDescription = " << mGribParameterDescription << "\n";
     stream << space(level) << "- gribParameterUnits       = " << mGribParameterUnits << "\n";
-    stream << space(level) << "- parameterLevel           = " << toString(getParameterLevel()) << "\n";
-    stream << space(level) << "- parameterLevelId         = " << toString(getParameterLevelId()) << "\n";
-    stream << space(level) << "- parameterLevelIdString   = " << getParameterLevelIdString() << "\n";
+    stream << space(level) << "- parameterLevel           = " << toString(getGridParameterLevel()) << "\n";
+    stream << space(level) << "- parameterLevelId         = " << toString(getGridParameterLevelId()) << "\n";
+    stream << space(level) << "- parameterLevelIdString   = " << getGridParameterLevelIdString() << "\n";
     stream << space(level) << "- fmiParameterId           = " << toString(mFmiParameterId) << "\n";
     stream << space(level) << "- fmiParameterLevelId      = " << toString((uint)mFmiParameterLevelId) << "\n";
     stream << space(level) << "- fmiParameterName         = " << mFmiParameterName << "\n";

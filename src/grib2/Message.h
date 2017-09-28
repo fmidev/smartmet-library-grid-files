@@ -62,17 +62,16 @@ class Message : public GRID::Message
     T::GridProjection     getGridProjection() const;
     void                  getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;
     std::string           getGridProjectionString() const;
-    T::ParamLevel         getParameterLevel() const;
-    T::ParamLevelId       getParameterLevelId() const;
-    std::string           getParameterLevelIdString() const;
-    void                  getParameterMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
-    void                  getParameterOriginalValues(T::ParamValue_vec& values) const;
-    T::ParamValue         getParameterValueByGridPoint(uint grid_i,uint grid_j) const;
-    void                  getParameterValues(T::ParamValue_vec& values) const;
+    T::ParamLevel         getGridParameterLevel() const;
+    T::ParamLevelId       getGridParameterLevelId() const;
+    std::string           getGridParameterLevelIdString() const;
+    void                  getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
+    void                  getGridOriginalValueVector(T::ParamValue_vec& values) const;
+    T::ParamValue         getGridValueByGridPoint(uint grid_i,uint grid_j) const;
+    void                  getGridValueVector(T::ParamValue_vec& values) const;
     T::TimeString         getReferenceTime() const;
-    T::SpatialReference*  getSpatialReference() const;
-    std::uint8_t          getTablesVersion() const;
 
+    T::SpatialReference*  getSpatialReference() const;
     std::string           getWKT() const;
     bool                  isGridGlobal() const;
     void                  print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -88,6 +87,7 @@ class Message : public GRID::Message
     ProductSection_cptr   getProductSection() const;
     DataSection_cptr      getDataSection() const;
     BitmapSection_sptr    getPreviousBitmapSection() const;
+    std::uint8_t          getTablesVersion() const;
 
     bool                  hasRequiredSections() const;
     void                  copyMissingSections(const Message& other);

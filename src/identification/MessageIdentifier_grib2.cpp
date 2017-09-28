@@ -142,7 +142,7 @@ T::ParamLevelId MessageIdentifier_grib2::getParamLevelId(GRIB2::Message& message
 {
   try
   {
-    return message.getParameterLevelId();
+    return message.getGridParameterLevelId();
   }
   catch (...)
   {

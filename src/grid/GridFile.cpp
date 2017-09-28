@@ -507,7 +507,7 @@ std::size_t GridFile::getNumberOfMessagesByParameterIdAndLevel(
     for (std::size_t t=0; t<messageCount; t++)
     {
       auto message = getMessageByIndex(t);
-      if (message != NULL  &&  message->getGribParameterId() == parameterId  &&  message->getParameterLevel() == level)
+      if (message != NULL  &&  message->getGribParameterId() == parameterId  &&  message->getGridParameterLevel() == level)
         count++;
     }
     return count;
@@ -580,7 +580,7 @@ T::Index_vec GridFile::getMessagesIndexListByParameterIdAndLevel(T::ParamId para
     for (std::size_t t=0; t<messageCount; t++)
     {
       auto message = getMessageByIndex(t);
-      if (message != NULL  &&  message->getGribParameterId() == parameterId  &&  message->getParameterLevel() == level)
+      if (message != NULL  &&  message->getGribParameterId() == parameterId  &&  message->getGridParameterLevel() == level)
       {
         indexList.push_back(t);
       }
@@ -623,7 +623,7 @@ void GridFile::getTimeRangeByParameterIdAndLevel(
     for (std::size_t t=0; t<messageCount; t++)
     {
       auto message = getMessageByIndex(t);
-      if (message != NULL  &&  message->getGribParameterId() == parameterId  &&  message->getParameterLevel() == level)
+      if (message != NULL  &&  message->getGribParameterId() == parameterId  &&  message->getGridParameterLevel() == level)
       {
         auto forecastTime = message->getForecastTime();
         if (messages == 0)
@@ -718,7 +718,7 @@ T::ParamLevel_vec GridFile::getLevelsByParameterId(T::ParamId parameterId) const
       auto message = getMessageByIndex(t);
       if (message != NULL  &&  message->getGribParameterId() == parameterId)
       {
-        auto level = message->getParameterLevel();
+        auto level = message->getGridParameterLevel();
         auto levelCount = levelList.size();
         bool levelExists = false;
         for (std::size_t l=0; l<levelCount && !levelExists; l++)
@@ -750,7 +750,7 @@ T::ParamLevel_vec GridFile::getLevelsByParameterId(T::ParamId parameterId) const
         \param maxValue     The returned maximum parameter value.
 */
 
-void GridFile::getParameterMinAndMaxValues(T::ParamId parameterId,T::ParamValue& minValue,T::ParamValue& maxValue) const
+void GridFile::getGridMinAndMaxValues(T::ParamId parameterId,T::ParamValue& minValue,T::ParamValue& maxValue) const
 {
   try
   {
@@ -765,7 +765,7 @@ void GridFile::getParameterMinAndMaxValues(T::ParamId parameterId,T::ParamValue&
       {
         T::ParamValue min = 1000000000;
         T::ParamValue max = -1000000000;
-        message->getParameterMinAndMaxValues(min,max);
+        message->getGridMinAndMaxValues(min,max);
 
         if (min != 1000000000  &&  max != -1000000000)
         {
@@ -906,101 +906,6 @@ T::FileType GridFile::getFileType(MemoryReader& memoryReader)
 
 
 
-#if 0
-/*! \brief  The method returns (exact) grid point values in the given area in
-    the given time interval.
-
-        \param parameterId   The parameter identifier
-        \param startTime     The start time of the time interval.
-        \param endTime       The end time of the time interval.
-        \param grid_i_start  The start i-coordinate of the grid.
-        \param grid_j_start  The start j-coordinate of the grid.
-        \param grid_i_end    The end i-coordinate of the grid.
-        \param grid_j_end    The end j-coordinate of the grid.
-        \return              The grid values as a vector of objects.
-*/
-
-T::GridPointValue_vec GridFile::getParameterValuesByGridArea(
-    T::ParamId parameterId,
-    T::TimeString startTime,
-    T::TimeString endTime,
-    uint grid_i_start,
-    uint grid_j_start,
-    uint grid_i_end,
-    uint grid_j_end) const
-{
-  try
-  {
-    std::vector<T::GridPointValue> gridPointValues;
-
-    std::size_t messageCount = getNumberOfMessages();
-    const Message *prevMessage = NULL;
-
-    for (std::size_t t=0; t<messageCount; t++)
-    {
-      const Message *message = getMessageByIndex(t);
-      if (message->getGribParameterId() == parameterId)
-      {
-        auto forecastTime = message->getForecastTime();
-        if (forecastTime >= startTime  &&  forecastTime <= endTime)
-        {
-          if (prevMessage != NULL  &&  gridPointValues.size() == 0)
-          {
-            // Adding the previous values before the actual start time. This
-            // helps the interpolation over time. The assumption is that
-            // messages are ordered by the forecast time.
-
-            T::GridPointValue_vec points;
-            points = prevMessage->getParameterValuesByGridArea(grid_i_start,grid_j_start,grid_i_end,grid_j_end);
-            std::size_t pointCount = points.size();
-            for (std::size_t p=0; p<pointCount; p++)
-            {
-              gridPointValues.push_back(points[p]);
-            }
-          }
-
-          T::GridPointValue_vec points;
-          points = message->getParameterValuesByGridArea(grid_i_start,grid_j_start,grid_i_end,grid_j_end);
-          std::size_t pointCount = points.size();
-          for (std::size_t p=0; p<pointCount; p++)
-          {
-            gridPointValues.push_back(points[p]);
-          }
-          prevMessage = message;
-        }
-
-        if (forecastTime > endTime)
-        {
-          // Adding the next values after the actual end time. This
-          // helps the interpolation over time. The assumption is that
-          // messages are ordered by the forecast time.
-
-          T::GridPointValue_vec points;
-          points = message->getParameterValuesByGridArea(grid_i_start,grid_j_start,grid_i_end,grid_j_end);
-          std::size_t pointCount = points.size();
-          for (std::size_t p=0; p<pointCount; p++)
-          {
-            gridPointValues.push_back(points[p]);
-          }
-
-          // We can end the search.
-          return gridPointValues;
-        }
-
-      }
-    }
-    return gridPointValues;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,"Message addition failed!",NULL);
-  }
-}
-#endif
-
-
-
-
 /*! \brief  The method returns values in the given latlon point in the given time interval.
     The level value is not specified, so all levels are accepted.
 
@@ -1048,7 +953,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
             point.mX = lon;
             point.mY = lat;
             point.mTime = prevMessage->getForecastTime();
-            point.mValue = prevMessage->getParameterValueByLatLon(lat,lon,interpolationMethod);
+            point.mValue = prevMessage->getGridValueByLatLonCoordinate(lat,lon,interpolationMethod);
             gridPointValues.push_back(point);
           }
 
@@ -1058,7 +963,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
           point.mX = lon;
           point.mY = lat;
           point.mTime = forecastTime;
-          point.mValue = message->getParameterValueByLatLon(lat,lon,interpolationMethod);
+          point.mValue = message->getGridValueByLatLonCoordinate(lat,lon,interpolationMethod);
           gridPointValues.push_back(point);
         }
         prevMessage = message;
@@ -1075,7 +980,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
           point.mX = lon;
           point.mY = lat;
           point.mTime = message->getForecastTime();
-          point.mValue = message->getParameterValueByLatLon(lat,lon,interpolationMethod);
+          point.mValue = message->getGridValueByLatLonCoordinate(lat,lon,interpolationMethod);
           gridPointValues.push_back(point);
 
           // We can end the search.
@@ -1127,7 +1032,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
     for (uint t=0; t<messageCount; t++)
     {
       const Message *message = getMessageByIndex(t);
-      if (message->getGribParameterId() == parameterId  &&  message->getParameterLevel() == level)
+      if (message->getGribParameterId() == parameterId  &&  message->getGridParameterLevel() == level)
       {
         auto forecastTime = message->getForecastTime();
         if (forecastTime >= startTime  &&  forecastTime <= endTime)
@@ -1144,7 +1049,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
             point.mX = lon;
             point.mY = lat;
             point.mTime = prevMessage->getForecastTime();
-            point.mValue = prevMessage->getParameterValueByLatLon(lat,lon,interpolationMethod);
+            point.mValue = prevMessage->getGridValueByLatLonCoordinate(lat,lon,interpolationMethod);
             gridPointValues.push_back(point);
           }
 
@@ -1154,7 +1059,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
           point.mX = lon;
           point.mY = lat;
           point.mTime = forecastTime;
-          point.mValue = message->getParameterValueByLatLon(lat,lon,interpolationMethod);
+          point.mValue = message->getGridValueByLatLonCoordinate(lat,lon,interpolationMethod);
           gridPointValues.push_back(point);
         }
         prevMessage = message;
@@ -1171,7 +1076,7 @@ T::GridPointValue_vec GridFile::getParameterValuesByLatLon(
           point.mX = lon;
           point.mY = lat;
           point.mTime = message->getForecastTime();
-          point.mValue = message->getParameterValueByLatLon(lat,lon,interpolationMethod);
+          point.mValue = message->getGridValueByLatLonCoordinate(lat,lon,interpolationMethod);
           gridPointValues.push_back(point);
 
           // We can end the search.

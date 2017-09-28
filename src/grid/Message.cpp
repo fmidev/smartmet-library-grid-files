@@ -1,7 +1,10 @@
 #include "Message.h"
+#include "common/CoordinateConversions.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
+#include "common/ImageFunctions.h"
+#include "common/Point.h"
 #include "identification/GribDef.h"
 
 
@@ -764,7 +767,7 @@ std::string Message::getNewbaseParameterName() const
          \return   The parameter level.
 */
 
-T::ParamLevel Message::getParameterLevel() const
+T::ParamLevel Message::getGridParameterLevel() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -779,7 +782,7 @@ T::ParamLevel Message::getParameterLevel() const
 */
 
 
-T::ParamLevelId Message::getParameterLevelId() const
+T::ParamLevelId Message::getGridParameterLevelId() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -793,7 +796,7 @@ T::ParamLevelId Message::getParameterLevelId() const
         \return   The parameter level type (expressed in a string).
 */
 
-std::string Message::getParameterLevelIdString() const
+std::string Message::getGridParameterLevelIdString() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -810,7 +813,7 @@ std::string Message::getParameterLevelIdString() const
         \return         The parameter value of the given grid point.
 */
 
-T::ParamValue Message::getParameterValueByGridPoint(uint grid_i,uint grid_j) const
+T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -827,7 +830,7 @@ T::ParamValue Message::getParameterValueByGridPoint(uint grid_i,uint grid_j) con
         \return         The parameter value of the given grid point.
 */
 
-T::ParamValue Message::getParameterValueByOriginalGridPoint(uint grid_i,uint grid_j) const
+T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -843,7 +846,7 @@ T::ParamValue Message::getParameterValueByOriginalGridPoint(uint grid_i,uint gri
         \param maxValue   The returned maximum parameter value in the grid.
 */
 
-void Message::getParameterMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const
+void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -857,7 +860,7 @@ void Message::getParameterMinAndMaxValues(T::ParamValue& minValue,T::ParamValue&
         \param values   The returned grid values.
 */
 
-void Message::getParameterValues(T::ParamValue_vec& values) const
+void Message::getGridValueVector(T::ParamValue_vec& values) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -867,7 +870,7 @@ void Message::getParameterValues(T::ParamValue_vec& values) const
 
 
 /*! \brief The method returns the original grid data values.
-    If the grid is regular then the 'getParameterValues()' method returns the same
+    If the grid is regular then the 'getGridValueVector()' method returns the same
     result as this method. However, if the grid is irregular then the grid rows
     might contain different number of columns. In this case the data should be
     processed row-by-row and the 'getGridOriginalColumnCount()' method should be
@@ -878,7 +881,7 @@ void Message::getParameterValues(T::ParamValue_vec& values) const
         \param values   The returned grid values (original).
 */
 
-void Message::getParameterOriginalValues(T::ParamValue_vec& values) const
+void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -927,6 +930,343 @@ short Message::getForecastNumber() const
 
 
 
+
+void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,T::InterpolationMethod interpolationMethod,T::ParamValue& value)
+{
+  try
+  {
+    value = ParamValueMissing;
+    switch (coordinateType)
+    {
+      case T::CoordinateType::UNKNOWN:
+      case T::CoordinateType::LATLON_COORDINATES:
+         value = getGridValueByLatLonCoordinate(y,x,interpolationMethod);
+         break;
+
+      case T::CoordinateType::GRID_COORDINATES:
+        value = getGridValueByGridPoint(x,y,interpolationMethod);
+        break;
+
+      case T::CoordinateType::ORIGINAL_COORDINATES:
+         // TODO: Implementation required
+         break;
+
+      default:
+      {
+        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",NULL);
+        exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
+        throw exception;
+      }
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList)
+{
+  try
+  {
+    T::Dimensions_opt d = getGridDimensions();
+    uint cols = d->nx();
+    uint rows = d->ny();
+
+    switch (coordinateType)
+    {
+      case T::CoordinateType::UNKNOWN:
+      case T::CoordinateType::LATLON_COORDINATES:
+      {
+        double x1 = origoX;
+        double dist = 0;
+        while (dist < radius)
+        {
+          dist = latlon_distance(origoY,origoX,origoY,x1);
+          x1 = x1 - 0.01;
+        }
+
+        double x2 = origoX;
+        dist = 0;
+        while (dist < radius)
+        {
+          dist = latlon_distance(origoY,origoX,origoY,x2);
+          x2 = x2 + 0.01;
+        }
+
+        double y1 = origoY;
+        dist = 0;
+        while (dist < radius)
+        {
+          dist = latlon_distance(origoY,origoX,y1,origoX);
+          y1 = y1 - 0.01;
+        }
+
+        double y2 = origoY;
+        dist = 0;
+        while (dist < radius)
+        {
+          dist = latlon_distance(origoY,origoX,y2,origoX);
+          y2 = y2 + 0.01;
+        }
+
+        //printf("%f,%f  ...  %f,%f\n",x1,y1,x2,y2);
+        std::vector<T::Coordinate> polygonPoints;
+        polygonPoints.push_back(T::Coordinate(x1,y1));
+        polygonPoints.push_back(T::Coordinate(x2,y1));
+        polygonPoints.push_back(T::Coordinate(x2,y2));
+        polygonPoints.push_back(T::Coordinate(x1,y2));
+
+        T::GridValueList tmpValueList;
+        getGridValueListByPolygon(coordinateType,polygonPoints,tmpValueList);
+
+        uint len = tmpValueList.getLength();
+        for (uint t=0; t<len; t++)
+        {
+          T::GridValue *rec = tmpValueList.getGridValueByIndex(t);
+          if (latlon_distance(origoY,origoX,rec->mY,rec->mX) <= radius)
+            valueList.addGridValue(new T::GridValue(*rec));
+        }
+      }
+      return;
+
+
+      case T::CoordinateType::GRID_COORDINATES:
+      {
+        std::vector<T::Point> gridPoints;
+
+        getPointsInsideCircle(cols,rows,origoX,origoY,radius,gridPoints);
+        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        {
+          T::GridValue *rec = new T::GridValue();
+
+          rec->mX = it->x();
+          rec->mY = it->y();
+          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          valueList.addGridValue(rec);
+        }
+      }
+      return;
+
+
+      case T::CoordinateType::ORIGINAL_COORDINATES:
+      {
+        double newOrigoX = 0;
+        double newOrigoY = 0;
+
+        getGridLatLonCoordinatesByOriginalCoordinates(origoX,origoY,newOrigoY,newOrigoX);
+
+        double x1 = newOrigoX;
+        double dist = 0;
+        while (dist < radius)
+        {
+          dist = latlon_distance(newOrigoY,newOrigoX,newOrigoY,x1);
+          x1 = x1 - 0.01;
+        }
+
+        double x2 = newOrigoX;
+        dist = 0;
+        while (dist < radius)
+        {
+          dist = latlon_distance(newOrigoY,newOrigoX,newOrigoY,x2);
+          x2 = x2 + 0.01;
+        }
+
+        double y1 = newOrigoY;
+        dist = 0;
+        while (dist < radius)
+        {
+          dist = latlon_distance(newOrigoY,newOrigoX,y1,newOrigoX);
+          y1 = y1 - 0.01;
+        }
+
+        double y2 = newOrigoY;
+        dist = 0;
+        while (dist < radius)
+        {
+          dist = latlon_distance(newOrigoY,newOrigoX,y2,newOrigoX);
+          y2 = y2 + 0.01;
+        }
+
+        double xx1 = 0;
+        double yy1 = 0;
+        double xx2 = 0;
+        double yy2 = 0;
+
+        getGridOriginalCoordinatesByLatLonCoordinates(y1,x1,xx1,yy1);
+        getGridOriginalCoordinatesByLatLonCoordinates(y2,x2,xx2,yy2);
+
+        //printf("%f,%f  ...  %f,%f\n",x1,y1,x2,y2);
+        std::vector<T::Coordinate> polygonPoints;
+        polygonPoints.push_back(T::Coordinate(xx1,yy1));
+        polygonPoints.push_back(T::Coordinate(xx2,yy1));
+        polygonPoints.push_back(T::Coordinate(xx2,yy2));
+        polygonPoints.push_back(T::Coordinate(xx1,yy2));
+
+        T::GridValueList tmpValueList;
+        getGridValueListByPolygon(coordinateType,polygonPoints,tmpValueList);
+
+        uint len = tmpValueList.getLength();
+        for (uint t=0; t<len; t++)
+        {
+          T::GridValue *rec = tmpValueList.getGridValueByIndex(t);
+
+          double lat = 0;
+          double lon = 0;
+          getGridLatLonCoordinatesByOriginalCoordinates(rec->mY,rec->mX,lat,lon);
+
+          if (latlon_distance(origoY,origoX,lat,lon) <= radius)
+            valueList.addGridValue(new T::GridValue(*rec));
+        }
+      }
+      return;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList)
+{
+  try
+  {
+    T::Dimensions_opt d = getGridDimensions();
+    uint cols = d->nx();
+    uint rows = d->ny();
+
+    switch (coordinateType)
+    {
+      case T::CoordinateType::UNKNOWN:
+      case T::CoordinateType::LATLON_COORDINATES:
+      {
+        std::vector<T::Coordinate> newPolygonPoints;
+
+        for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
+        {
+          double grid_i = 0;
+          double grid_j = 0;
+          getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j);
+          newPolygonPoints.push_back(T::Coordinate(grid_i,grid_j));
+        }
+
+        std::vector<T::Point> gridPoints;
+
+        getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
+        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        {
+          T::GridValue *rec = new T::GridValue();
+
+          double lat = 0;
+          double lon = 0;
+          if (getGridLatLonCoordinatesByGridPoint(it->x(),it->y(),lat,lon))
+          {
+            rec->mX = lon;
+            rec->mY = lat;
+              //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
+          }
+
+          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          valueList.addGridValue(rec);
+        }
+      }
+      return;
+
+
+      case T::CoordinateType::GRID_COORDINATES:
+      {
+        std::vector<T::Point> gridPoints;
+
+        getPointsInsidePolygon(cols,rows,polygonPoints,gridPoints);
+        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        {
+          T::GridValue *rec = new T::GridValue();
+
+          rec->mX = it->x();
+          rec->mY = it->y();
+          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          valueList.addGridValue(rec);
+        }
+      }
+      return;
+
+
+      case T::CoordinateType::ORIGINAL_COORDINATES:
+      {
+        std::vector<T::Coordinate> newPolygonPoints;
+
+        for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
+        {
+          double grid_i = 0;
+          double grid_j = 0;
+          getGridPointByOriginalCoordinates(it->x(),it->y(),grid_i,grid_j);
+          newPolygonPoints.push_back(T::Coordinate(grid_i,grid_j));
+        }
+
+        std::vector<T::Point> gridPoints;
+
+        getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
+        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        {
+          T::GridValue *rec = new T::GridValue();
+
+          double x = 0;
+          double y = 0;
+          if (getGridOriginalCoordinatesByGridPoint(it->x(),it->y(),x,y))
+          {
+            rec->mX = x;
+            rec->mY = y;
+              //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
+          }
+
+          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          valueList.addGridValue(rec);
+        }
+      }
+      return;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,T::GridValueList& valueList)
+{
+  try
+  {
+    std::vector<T::Coordinate> polygonPoints;
+    polygonPoints.push_back(T::Coordinate(x1,y1));
+    polygonPoints.push_back(T::Coordinate(x2,y1));
+    polygonPoints.push_back(T::Coordinate(x2,y2));
+    polygonPoints.push_back(T::Coordinate(x1,y2));
+
+    getGridValueListByPolygon(coordinateType,polygonPoints,valueList);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the closest or the interpolated value in the given grid position.
     The basic idea is that the given position is inside the rectangular area which
     opposite corners are (floor(grid_i),floor(grid_j)) and (floor(grid_i)+1,floor(grid_j)+1).
@@ -938,17 +1278,17 @@ short Message::getForecastNumber() const
         \param interpolationMethod    The interpolation method.
 */
 
-T::ParamValue Message::getParameterValueByGridPosition(double grid_i,double grid_j,T::InterpolationMethod interpolationMethod) const
+T::ParamValue Message::getGridValueByGridPoint(double grid_i,double grid_j,T::InterpolationMethod interpolationMethod) const
 {
   try
   {
     switch (interpolationMethod)
     {
       case T::InterpolationMethod::Nearest:
-        return getParameterValueByGridPosition_nearest(grid_i,grid_j);
+        return getGridValueByGridPoint_nearest(grid_i,grid_j);
 
       case T::InterpolationMethod::Linear:
-        return getParameterValueByGridPosition_linearInterpolation(grid_i,grid_j);
+        return getGridValueByGridPoint_linearInterpolation(grid_i,grid_j);
 
       default:
         throw SmartMet::Spine::Exception(BCP,"Unknown 'interpolationMethod' parameter value!");
@@ -974,7 +1314,7 @@ T::ParamValue Message::getParameterValueByGridPosition(double grid_i,double grid
                                       in the given latlon coordinates.
 */
 
-T::ParamValue Message::getParameterValueByLatLon(double lat,double lon,T::InterpolationMethod interpolationMethod) const
+T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,T::InterpolationMethod interpolationMethod) const
 {
   try
   {
@@ -982,7 +1322,7 @@ T::ParamValue Message::getParameterValueByLatLon(double lat,double lon,T::Interp
     double grid_j = 0;
     if (getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
     {
-      return getParameterValueByGridPosition(grid_i,grid_j,interpolationMethod);
+      return getGridValueByGridPoint(grid_i,grid_j,interpolationMethod);
     }
 
     return ParamValueMissing;
@@ -1006,7 +1346,7 @@ T::ParamValue Message::getParameterValueByLatLon(double lat,double lon,T::Interp
         \return              The parameter values in the given grid area.
 */
 
-void Message::getParameterValuesByGridArea(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValue_vec& gridPointValues) const
+void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValue_vec& gridPointValues) const
 {
   try
   {
@@ -1016,8 +1356,8 @@ void Message::getParameterValuesByGridArea(uint grid_i_start,uint grid_j_start,u
     {
       for (uint i=grid_i_start; i<= grid_i_end; i++)
       {
-        auto val = getParameterValueByGridPoint(i,j);
-        gridPointValues.push_back(T::GridPointValue(getFileId(),getMessageIndex(),i,j,getParameterLevel(),tm,val));
+        auto val = getGridValueByGridPoint(i,j);
+        gridPointValues.push_back(T::GridPointValue(getFileId(),getMessageIndex(),i,j,getGridParameterLevel(),tm,val));
       }
     }
   }
@@ -1040,7 +1380,7 @@ void Message::getParameterValuesByGridArea(uint grid_i_start,uint grid_j_start,u
         \return              The parameter values in the given grid area.
 */
 
-void Message::getParameterValuesByGridArea(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValueList& gridPointValues) const
+void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValueList& gridPointValues) const
 {
   try
   {
@@ -1050,8 +1390,8 @@ void Message::getParameterValuesByGridArea(uint grid_i_start,uint grid_j_start,u
     {
       for (uint i=grid_i_start; i<= grid_i_end; i++)
       {
-        T::ParamValue val = getParameterValueByGridPoint(i,j);
-        gridPointValues.addGridPointValue(new T::GridPointValue(getFileId(),getMessageIndex(),i,j,getParameterLevel(),tm,val));
+        T::ParamValue val = getGridValueByGridPoint(i,j);
+        gridPointValues.addGridPointValue(new T::GridPointValue(getFileId(),getMessageIndex(),i,j,getGridParameterLevel(),tm,val));
       }
     }
   }
@@ -1072,7 +1412,7 @@ void Message::getParameterValuesByGridArea(uint grid_i_start,uint grid_j_start,u
         \return         The closest value of the given grid position.
 */
 
-T::ParamValue Message::getParameterValueByGridPosition_nearest(double grid_i,double grid_j) const
+T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid_j) const
 {
   try
   {
@@ -1090,7 +1430,7 @@ T::ParamValue Message::getParameterValueByGridPosition_nearest(double grid_i,dou
     double dist_y2 = y2-y;
 
     if (dist_x1 == 0  &&  dist_y1 == 0)
-      return getParameterValueByGridPoint((uint)grid_i,(uint)grid_j);
+      return getGridValueByGridPoint((uint)grid_i,(uint)grid_j);
 
     double dist_q11 = (dist_x1)*(dist_x1) + (dist_y1)*(dist_y1);
     double dist_q21 = (dist_x2)*(dist_x2) + (dist_y1)*(dist_y1);
@@ -1098,15 +1438,15 @@ T::ParamValue Message::getParameterValueByGridPosition_nearest(double grid_i,dou
     double dist_q22 = (dist_x2)*(dist_x2) + (dist_y2)*(dist_y2);
 
     if (dist_q11 < dist_q21  &&  dist_q11 <= dist_q12 && dist_q11 <= dist_q22)
-      return getParameterValueByGridPoint((uint)x1,(uint)y1);
+      return getGridValueByGridPoint((uint)x1,(uint)y1);
 
     if (dist_q21 < dist_q11  &&  dist_q21 <= dist_q12 && dist_q21 <= dist_q22)
-      return getParameterValueByGridPoint((uint)x2,(uint)y1);
+      return getGridValueByGridPoint((uint)x2,(uint)y1);
 
     if (dist_q12 < dist_q11  &&  dist_q12 <= dist_q21   &&  dist_q12 <= dist_q22)
-      return getParameterValueByGridPoint((uint)x1,(uint)y2);
+      return getGridValueByGridPoint((uint)x1,(uint)y2);
 
-    return getParameterValueByGridPoint((uint)x2,(uint)y2);
+    return getGridValueByGridPoint((uint)x2,(uint)y2);
   }
   catch (...)
   {
@@ -1125,7 +1465,7 @@ T::ParamValue Message::getParameterValueByGridPosition_nearest(double grid_i,dou
         \return         The interpolated value of the given grid position.
 */
 
-T::ParamValue Message::getParameterValueByGridPosition_linearInterpolation(double grid_i,double grid_j) const
+T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j) const
 {
   try
   {
@@ -1150,24 +1490,24 @@ T::ParamValue Message::getParameterValueByGridPosition_linearInterpolation(doubl
     double closeDist = 0.1;
 
     if (dist_x1 <= closeDist  &&  dist_y1 <= closeDist)
-      return getParameterValueByGridPoint((uint)x1,(uint)y1);
+      return getGridValueByGridPoint((uint)x1,(uint)y1);
 
     if (dist_x1 <= closeDist  &&  dist_y2 <= closeDist)
-      return getParameterValueByGridPoint((uint)x1,(uint)y2);
+      return getGridValueByGridPoint((uint)x1,(uint)y2);
 
     if (dist_x2 <= closeDist  &&  dist_y1 <= closeDist)
-      return getParameterValueByGridPoint((uint)x2,(uint)y1);
+      return getGridValueByGridPoint((uint)x2,(uint)y1);
 
     if (dist_x2 <= closeDist  &&  dist_y2 <= closeDist)
-      return getParameterValueByGridPoint((uint)x2,(uint)y2);
+      return getGridValueByGridPoint((uint)x2,(uint)y2);
 
 
     // Reading values of the corner grid points
 
-    auto val_q11 = getParameterValueByGridPoint((uint)x1,(uint)y1);
-    auto val_q21 = getParameterValueByGridPoint((uint)x2,(uint)y1);
-    auto val_q12 = getParameterValueByGridPoint((uint)x1,(uint)y2);
-    auto val_q22 = getParameterValueByGridPoint((uint)x2,(uint)y2);
+    auto val_q11 = getGridValueByGridPoint((uint)x1,(uint)y1);
+    auto val_q21 = getGridValueByGridPoint((uint)x2,(uint)y1);
+    auto val_q12 = getGridValueByGridPoint((uint)x1,(uint)y2);
+    auto val_q22 = getGridValueByGridPoint((uint)x2,(uint)y2);
 
     // If the given point is on the border then we can do simple
     // linear interpolation.

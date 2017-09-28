@@ -377,7 +377,7 @@ T::ParamLevelId MessageIdentifier_fmi::getParamLevelId(GRIB2::Message& message)
       LevelDef_fmi rec =  mLevelDefs_grib2[t];
       if (rec.mGeneratingProcessIdentifier == *productSection->getGeneratingProcessIdentifier() &&
           rec.mCentre == identificationSection->getCentre() &&
-          rec.mGribLevelId == message.getParameterLevelId())
+          rec.mGribLevelId == message.getGridParameterLevelId())
       {
         return (T::ParamLevelId)rec.mFmiLevelId;
       }

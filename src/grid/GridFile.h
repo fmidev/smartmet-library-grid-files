@@ -73,8 +73,8 @@ class GridFile
     virtual std::size_t         getNumberOfMessages() const;
     std::size_t                 getNumberOfMessagesByParameterIdAndLevel(T::ParamId parameterId,T::ParamLevel level) const;
     T::ParamId_vec              getParameterIdentifiers() const;
-    void                        getParameterMinAndMaxValues(T::ParamId parameterId,T::ParamValue& minValue,T::ParamValue& maxValue) const;
-    // T::GridPointValue_vec       getParameterValuesByGridArea(T::ParamId parameterId,T::TimeString startTime,T::TimeString endTime,uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end) const;
+    void                        getGridMinAndMaxValues(T::ParamId parameterId,T::ParamValue& minValue,T::ParamValue& maxValue) const;
+    // T::GridPointValue_vec       getGridValueVectorByRectangle(T::ParamId parameterId,T::TimeString startTime,T::TimeString endTime,uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end) const;
     T::GridPointValue_vec       getParameterValuesByLatLon(T::ParamId parameterId,T::TimeString startTime,T::TimeString endTime,double lat,double lon,T::InterpolationMethod interpolationMethod) const;
     T::GridPointValue_vec       getParameterValuesByLatLon(T::ParamId parameterId,T::TimeString startTime,T::TimeString endTime,double lat,double lon) const;
     T::GridPointValue_vec       getParameterValuesByLatLon(T::ParamId parameterId,T::ParamLevel level,T::TimeString startTime,T::TimeString endTime,double lat,double lon,T::InterpolationMethod interpolationMethod) const;

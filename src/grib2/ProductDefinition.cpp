@@ -122,77 +122,6 @@ T::TimeString ProductDefinition::getForecastTime(T::TimeString referenceTime) co
 
 
 
-#if 0
-/*! \brief The method returns the end time of the current forecast data. In some cases
-    the reference time is needed for calculating the actual forecast time.
-
-        \param referenceTime  The possible reference time.
-        \return               The forecast time.
-*/
-
-T::TimeString ProductDefinition::getForecastEndTime(T::TimeString referenceTime) const
-{
-  try
-  {
-    const StatisticalSettings *s = getStatistical();
-
-    if (s != NULL)
-      return countForecastEndTime(*s);
-
-    return getForecastTime(referenceTime);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
-}
-
-
-
-
-
-/*! \brief This method returns the parameter identified defined in the "paramId.def" file. */
-
-std::uint64_t ProductDefinition::getParameterId(std::uint8_t discipline) const
-{
-  try
-  {
-    std::size_t parameterCount = Identification::gribDef.getGrib2ParameterCount();
-    if (parameterCount == 0)
-      return 0;
-
-    std::uint64_t paramId = 0;
-
-    // We have to go through all parameters and try to find the best match.
-
-    uint maxMatchPoints = 0;
-
-    for (std::size_t t=0; t<parameterCount; t++)
-    {
-      const Parameter *p = Identification::gribDef.getGrib2ParameterByIndex(t);
-      if (p != NULL  &&  p->discipline == discipline)
-      {
-         uint matchPoints = getParameterMatchPoints(*p);
-         if (matchPoints > maxMatchPoints)
-         {
-           maxMatchPoints = matchPoints;
-           paramId = p->parameterId;
-         }
-      }
-    }
-
-    return paramId;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
-}
-#endif
-
-
-
-
 /*! \brief The method returns the parameter level.
 
          \return   The parameter level.
@@ -221,23 +150,6 @@ T::ParamLevelId ProductDefinition::getGribParameterLevelId() const
 
 
 
-#if 0
-
-/*! \brief This is a helper method needed for the identification of the current data (=> parameterId).
-    The method counts how many of the attributes in the given parameter definition
-    match to the attributes of the current data. This information helps the parameter
-    identification method to select the closest parameter definition and this way
-    it might find the correct parameterId for the current data.
-
-         \return   The number of matching attributes.
-*/
-
-uint ProductDefinition::getParameterMatchPoints(const GRIB2::Parameter& p) const
-{
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
-}
-
-#endif
 
 
 T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const
