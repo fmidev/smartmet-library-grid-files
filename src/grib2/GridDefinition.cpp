@@ -70,7 +70,7 @@ void GridDefinition::getAttributeList(std::string prefix,T::AttributeList& attri
 
 
 
-uint GridDefinition::getGridGeometryId() const
+T::GeometryId GridDefinition::getGridGeometryId() const
 {
   try
   {
@@ -104,7 +104,7 @@ T::GridProjection GridDefinition::getGridProjection()
 
 
 
-void GridDefinition::setGridGeometryId(uint geometryId)
+void GridDefinition::setGridGeometryId(T::GeometryId geometryId)
 {
   try
   {

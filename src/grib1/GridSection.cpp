@@ -567,7 +567,7 @@ bool GridSection::getGridOriginalCoordinatesByLatLonCoordinates(double lat,doubl
 
 
 
-uint GridSection::getGridGeometryId() const
+T::GeometryId GridSection::getGridGeometryId() const
 {
   try
   {
@@ -586,7 +586,7 @@ uint GridSection::getGridGeometryId() const
 
 
 
-void GridSection::setGridGeometryId(uint geometryId)
+void GridSection::setGridGeometryId(T::GeometryId geometryId)
 {
   try
   {

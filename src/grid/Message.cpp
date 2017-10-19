@@ -367,7 +367,7 @@ bool Message::isGridGlobal() const
 
 
 
-uint Message::getGridGeometryId() const
+T::GeometryId Message::getGridGeometryId() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -376,7 +376,7 @@ uint Message::getGridGeometryId() const
 
 
 
-void Message::setGridGeometryId(uint geometryId)
+void Message::setGridGeometryId(T::GeometryId geometryId)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1124,6 +1124,29 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         }
       }
       return;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,T::InterpolationMethod interpolationMethod,T::GridValueList& valueList)
+{
+  try
+  {
+    for (auto it = pointList.begin(); it != pointList.end(); ++it)
+    {
+      T::GridValue *rec = new T::GridValue();
+      rec->mX = it->x();
+      rec->mY = it->y();
+      getGridValueByPoint(coordinateType,it->x(),it->y(),interpolationMethod,rec->mValue);
+      valueList.addGridValue(rec);
     }
   }
   catch (...)

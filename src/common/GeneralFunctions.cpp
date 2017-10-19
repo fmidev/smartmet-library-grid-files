@@ -726,5 +726,44 @@ int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompr
 }
 
 
+
+
+void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordinate>& coordinates)
+{
+  char st[10000];
+  strcpy(st,latLonCoordinates.c_str());
+  char *field[1000];
+  uint c = 1;
+  field[0] = st;
+  char *p = st;
+  while (*p != '\0'  &&  c < 1000)
+  {
+    if (*p == ';' ||  *p == ',')
+    {
+      *p = '\0';
+      p++;
+      field[c] = p;
+      c++;
+    }
+    else
+    {
+      p++;
+    }
+  }
+
+  if ((c % 2) == 0)
+  {
+    for (uint t = 0; t<c; t = t + 2)
+    {
+      coordinates.push_back(T::Coordinate(atof(field[t+1]),atof(field[t])));
+    }
+  }
 }
+
+
+
+
+}
+
+
 

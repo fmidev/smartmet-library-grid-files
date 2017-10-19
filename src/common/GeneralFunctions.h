@@ -4,6 +4,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "grid/Typedefs.h"
+#include "Coordinate.h"
 
 
 namespace SmartMet
@@ -56,5 +57,7 @@ std::string toString(boost::posix_time::ptime time);
 
 int compressData(void *_data,uint _dataSize,void *_compressedData,uint& _compressedDataSize);
 int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompressedData,uint& _decompressedDataSize);
+
+void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordinate>& coordinates);
 
 }

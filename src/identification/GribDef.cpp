@@ -1311,7 +1311,7 @@ GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByHash(T::Hash hash)
 
 
 
-void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<uint>& geometryIdList)
+void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList)
 {
   try
   {
@@ -1322,7 +1322,7 @@ void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<uint>& ge
 
       if (it->second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       {
-        uint geometryId = it->second->getGridGeometryId();
+        T::GeometryId geometryId = it->second->getGridGeometryId();
         if (geometryIdList.find(geometryId) == geometryIdList.end())
           geometryIdList.insert(geometryId);
       }
@@ -1335,7 +1335,7 @@ void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<uint>& ge
 
       if (it->second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       {
-        uint geometryId = it->second->getGridGeometryId();
+        T::GeometryId geometryId = it->second->getGridGeometryId();
         if (geometryIdList.find(geometryId) == geometryIdList.end())
           geometryIdList.insert(geometryId);
       }

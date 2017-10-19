@@ -12,6 +12,9 @@
 1;25;EGRR432325;432;325;0;-90;0.833;0.555;+x+y;Seasonal global forecast model of UK Met-office.;
 1;26;GFS0250;1440;721;0;90;0.25;0.25;+x-y;Washington global 0.25 degree resolution;
 1;33;MES141241;140;240;19;59;0.1;0.05;+x+y;Suomi 5x5 km;
+1;52;ENFUSORHKI;1577;1253;24.636;60.33;0.00032;0.00016;+x-y;Enfusor Hki metropolitan area;
+1;53;ENFUSORTAM;1491;834;23.597;61.535;0.00022;0.00011;+x-y;Enfusor Tampere area;
+1;54;ENFUSORTUR;1605;1010;22.06;60.5;0.00022;0.00011;+x-y;Enfusor Turku area;
 1;112;EC0730175000;73;17;180;90;5;5;+x-y;ECM 73x17_5000;
 1;123;EPSORG12144;121;44;-90;90;1.5;1.5;+x-y;ECMWF original EPS-fields;
 1;124;EPS121441500;121;44;-90;25.5;1.5;1.5;+x+y;ECMWF EPS-fields;
@@ -127,3 +130,5 @@
 9;1067;LAPSSCANLARGE;685;765;5.94086;51.0579;3000.0;3000.0;+x+y;20.0;LAPS Scandinavia extended domain;
 9;1071;PEPSSCAND;735;795;7.7;52.81;2465;2473;+x+y;20;PEPS Scandinavia;
 9;1073;SMARTMET7500;270;300;6;51.3;7466.63;7454.24;+x+y;20.0;SmartMet Scandinavian area 7500km resolution;
+9;1079;IASI_L2;171;191;5.985607;51.104713;12017;12015;+x+y;20.0;IASI L2 satellite area over Europe;
+9;1080;KALMANSCAN3000;685;765;5.941;51.058;3000;3000;+x+y;20.0;Kalman filtered data with LAPS gridding over Scandinavia;

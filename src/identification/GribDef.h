@@ -82,7 +82,7 @@ class GribDef
     GRIB2::GridDefinition_ptr   getGridDefinition2ByGeometryId(uint geometryId);
     GRIB2::GridDefinition_ptr   getGridDefinition2ByHash(T::Hash hash);
 
-    void                        getGeometryIdListByLatLon(double lat,double lon,std::set<uint>& geometryIdList);
+    void                        getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList);
 
     MessageIdentifier_cdm       mMessageIdentifier_cdm;
     MessageIdentifier_fmi       mMessageIdentifier_fmi;

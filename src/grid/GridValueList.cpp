@@ -23,7 +23,7 @@ GridValueList::GridValueList()
 
 
 
-GridValueList::GridValueList(GridValueList& gridValueList)
+GridValueList::GridValueList(const GridValueList& gridValueList)
 {
   try
   {
@@ -61,7 +61,7 @@ GridValueList::~GridValueList()
 
 
 
-void GridValueList::operator=(GridValueList& gridValueList)
+void GridValueList::operator=(const GridValueList& gridValueList)
 {
   try
   {
@@ -123,7 +123,7 @@ void GridValueList::clear()
 
 
 
-GridValue* GridValueList::getGridValueByIndex(uint index)
+GridValue* GridValueList::getGridValueByIndex(uint index) const
 {
   try
   {
@@ -141,7 +141,7 @@ GridValue* GridValueList::getGridValueByIndex(uint index)
 
 
 
-uint GridValueList::getLength()
+uint GridValueList::getLength() const
 {
   try
   {
@@ -157,7 +157,7 @@ uint GridValueList::getLength()
 
 
 
-T::ParamValue GridValueList::getMaxValue()
+T::ParamValue GridValueList::getMaxValue() const
 {
   try
   {
@@ -180,7 +180,7 @@ T::ParamValue GridValueList::getMaxValue()
 
 
 
-T::ParamValue GridValueList::getMinValue()
+T::ParamValue GridValueList::getMinValue() const
 {
   try
   {
@@ -203,7 +203,7 @@ T::ParamValue GridValueList::getMinValue()
 
 
 
-T::ParamValue GridValueList::getAverageValue()
+T::ParamValue GridValueList::getAverageValue() const
 {
   try
   {
@@ -234,7 +234,7 @@ T::ParamValue GridValueList::getAverageValue()
 
 
 
-uint GridValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamValue maxValue)
+uint GridValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamValue maxValue) const
 {
   try
   {
@@ -256,7 +256,7 @@ uint GridValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamVa
 
 
 
-void GridValueList::print(std::ostream& stream,uint level,uint optionFlags)
+void GridValueList::print(std::ostream& stream,uint level,uint optionFlags) const
 {
   try
   {

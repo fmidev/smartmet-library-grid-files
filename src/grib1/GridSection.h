@@ -74,7 +74,7 @@ class GridSection : public GRID::MessageSection
 
     T::Coordinate_vec     getGridCoordinates() const;
     T::Dimensions_opt     getGridDimensions() const;
-    uint                  getGridGeometryId() const;
+    T::GeometryId         getGridGeometryId() const;
     T::Hash               getGridHash() const;
     T::Coordinate_vec     getGridLatLonCoordinates() const;
     bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
@@ -95,7 +95,7 @@ class GridSection : public GRID::MessageSection
 
     bool                  isGridGlobal() const;
     void                  read(MemoryReader& memoryReader);
-    void                  setGridGeometryId(uint geometryId);
+    void                  setGridGeometryId(T::GeometryId geometryId);
 
   private:
 

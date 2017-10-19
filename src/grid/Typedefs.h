@@ -12,6 +12,7 @@
 #include "common/Dimensions.h"
 
 
+
 namespace SmartMet
 {
 
@@ -79,15 +80,21 @@ typedef std::vector<int> IndexVector;
 
 typedef unsigned long long SessionId;
 
+typedef short ForecastType;
+typedef short ForecastNumber;
+typedef int   GeometryId;
+
+
 enum class ParamKeyType
 {
-   FMI_ID       = 0,
-   FMI_NAME     = 1,
-   GRIB_ID      = 2,
-   NEWBASE_ID   = 3,
-   NEWBASE_NAME = 4,
-   CDM_ID       = 5,
-   CDM_NAME     = 6
+   UNKNOWN      = 0,
+   FMI_ID       = 1,
+   FMI_NAME     = 2,
+   GRIB_ID      = 3,
+   NEWBASE_ID   = 4,
+   NEWBASE_NAME = 5,
+   CDM_ID       = 6,
+   CDM_NAME     = 7
 };
 
 enum class ParamLevelIdType

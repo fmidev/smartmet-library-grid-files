@@ -34,7 +34,7 @@ class GridPointValue
                     GridPointValue(uint fileId,uint messageIndex,double x,double y,T::ParamLevel level,T::TimeString valueTime,T::ParamValue value);
     virtual         ~GridPointValue();
 
-    void            operator=(GridPointValue& gridPointValue);
+    void            operator=(const GridPointValue& gridPointValue);
     int             compare(ComparisonMethod comparisonMethod,GridPointValue *gridPointValue);
     GridPointValue* duplicate();
 

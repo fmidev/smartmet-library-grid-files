@@ -64,7 +64,7 @@ class Message
     virtual std::string           getNewbaseParameterId() const;
     virtual std::string           getNewbaseParameterName() const;
 
-    virtual uint                  getGridGeometryId() const;
+    virtual T::GeometryId         getGridGeometryId() const;
     virtual T::Coordinate_vec     getGridCoordinates() const;
     virtual T::Coordinate_vec     getGridLatLonCoordinates() const;
     virtual T::Dimensions_opt     getGridDimensions() const;
@@ -87,6 +87,7 @@ class Message
 
     virtual void                  getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,T::InterpolationMethod interpolationMethod,T::ParamValue& value);
     virtual void                  getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList);
+    virtual void                  getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,T::InterpolationMethod interpolationMethod,T::GridValueList& valueList);
     virtual void                  getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList);
     virtual void                  getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,T::GridValueList& valueList);
     virtual void                  getGridValueVector(T::ParamValue_vec& values) const;
@@ -111,7 +112,7 @@ class Message
 
     virtual bool                  isGridGlobal() const;
     virtual void                  print(std::ostream& stream,uint level,uint optionFlags) const;
-    virtual void                  setGridGeometryId(uint geometryId);
+    virtual void                  setGridGeometryId(T::GeometryId geometryId);
 
 protected:
 

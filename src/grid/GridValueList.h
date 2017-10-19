@@ -14,20 +14,20 @@ class GridValueList
 {
   public:
                       GridValueList();
-                      GridValueList(GridValueList& gridValueList);
+                      GridValueList(const GridValueList& gridValueList);
      virtual          ~GridValueList();
 
-     void             operator=(GridValueList& gridValueList);
+     void             operator=(const GridValueList& gridValueList);
 
      void             addGridValue(GridValue *gridValue);
      void             clear();
-     GridValue*       getGridValueByIndex(uint index);
-     uint             getLength();
-     T::ParamValue    getMaxValue();
-     T::ParamValue    getMinValue();
-     T::ParamValue    getAverageValue();
-     uint             getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamValue maxValue);
-     void             print(std::ostream& stream,uint level,uint optionFlags);
+     GridValue*       getGridValueByIndex(uint index) const;
+     uint             getLength() const;
+     T::ParamValue    getMaxValue() const;
+     T::ParamValue    getMinValue() const;
+     T::ParamValue    getAverageValue() const;
+     uint             getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamValue maxValue) const;
+     void             print(std::ostream& stream,uint level,uint optionFlags) const;
 
   protected:
 

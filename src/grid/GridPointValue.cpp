@@ -93,7 +93,7 @@ GridPointValue::~GridPointValue()
 
 
 
-void GridPointValue::operator=(GridPointValue& gridPointValue)
+void GridPointValue::operator=(const GridPointValue& gridPointValue)
 {
   try
   {

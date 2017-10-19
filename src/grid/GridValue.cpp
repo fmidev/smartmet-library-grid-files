@@ -27,7 +27,7 @@ GridValue::GridValue()
 
 
 
-GridValue::GridValue(GridValue& gridValue)
+GridValue::GridValue(const GridValue& gridValue)
 {
   try
   {

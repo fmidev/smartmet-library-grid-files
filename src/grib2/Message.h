@@ -42,7 +42,7 @@ class Message : public GRID::Message
     short                 getForecastNumber() const;
     GribFile*             getGribFile() const;
 
-    uint                  getGridGeometryId() const;
+    T::GeometryId         getGridGeometryId() const;
     T::Coordinate_vec     getGridCoordinates() const;
     T::Coordinate_vec     getGridLatLonCoordinates() const;
     T::Dimensions_opt     getGridDimensions() const;
@@ -95,7 +95,7 @@ class Message : public GRID::Message
     void                  setPreviousBitmapSection(boost::shared_ptr<BitmapSection> previousBitmapSection);
 
     void                  read(MemoryReader& memoryReader);
-    void                  setGridGeometryId(uint geometryId);
+    void                  setGridGeometryId(T::GeometryId geometryId);
 
     // Fast access to substructures
 

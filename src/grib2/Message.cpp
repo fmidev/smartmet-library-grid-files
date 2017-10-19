@@ -186,7 +186,7 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
     attributeList.addAttribute(name,getReferenceTime());
 
     sprintf(name,"%smessage[%u].gridGeometryId",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,toString((uint)getGridGeometryId()));
+    attributeList.addAttribute(name,toString(getGridGeometryId()));
 
     sprintf(name,"%smessage[%u].gridType",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,toString((uint)getGridProjection()));
@@ -601,7 +601,7 @@ T::Hash Message::getGridHash() const
 
 
 
-uint Message::getGridGeometryId() const
+T::GeometryId Message::getGridGeometryId() const
 {
   try
   {
@@ -622,7 +622,7 @@ uint Message::getGridGeometryId() const
 
 
 
-void Message::setGridGeometryId(uint geometryId)
+void Message::setGridGeometryId(T::GeometryId geometryId)
 {
   try
   {
