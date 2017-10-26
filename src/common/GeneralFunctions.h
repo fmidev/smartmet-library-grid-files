@@ -23,6 +23,13 @@ void time_usleep(int _sec,int _usec);
 uint stringToId(const char *str,uint len);
 
 
+time_t      localTimeToTimeT(std::string localTime,const char *tzone);
+time_t      utcTimeToTimeT(std::string utcTime);
+std::string localTimeFromTimeT(time_t t,const char *tzone);
+std::string utcTimeFromTimeT(time_t t);
+std::string localTimeToUtcTime(std::string localTime,const char *tzone);
+std::string utcTimeToLocalTime(std::string utcTime,const char *tzone);
+
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
 
 time_t toTimeT(boost::posix_time::ptime tim);

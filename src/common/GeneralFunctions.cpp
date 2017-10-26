@@ -291,6 +291,207 @@ uint stringToId(const char *str,uint len)
 
 
 
+int getInt(const char *str,uint startIdx,uint len)
+{
+  char buf[100];
+  strncpy(buf,str+startIdx,len);
+  buf[len] = '\0';
+  return atoi(buf);
+}
+
+
+
+
+
+time_t mktime_tz(struct tm *tm,const char *tzone)
+{
+  time_t ret;
+  char *tz;
+  tz = getenv("TZ");
+  if (tz)
+    tz = strdup(tz);
+  setenv("TZ", tzone, 1);
+  tzset();
+  ret = mktime(tm);
+  if (tz)
+  {
+    setenv("TZ", tz, 1);
+    free(tz);
+  }
+  else
+    unsetenv("TZ");
+  tzset();
+  return ret;
+}
+
+
+
+
+
+struct tm* localtime_tz(time_t t,struct tm *tt,const char *tzone)
+{
+  char *tz;
+  tz = getenv("TZ");
+  if (tz)
+    tz = strdup(tz);
+  setenv("TZ", tzone, 1);
+  tzset();
+
+  localtime_r(&t,tt);
+
+  if (tz)
+  {
+    setenv("TZ", tz, 1);
+    free(tz);
+  }
+  else
+    unsetenv("TZ");
+  tzset();
+
+  return tt;
+}
+
+
+
+
+
+time_t localTimeToTimeT(std::string localTime,const char *tzone)
+{
+  try
+  {
+    if (localTime.length() != 15)
+      throw SmartMet::Spine::Exception(BCP,"Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+
+    const char *str = localTime.c_str();
+
+    struct tm tt;
+    tt.tm_year = getInt(str,0,4) - 1900;   /* Year - 1900 */
+    tt.tm_mon = getInt(str,4,2) - 1;    /* Month (0-11) */
+    tt.tm_mday = getInt(str,6,2);   /* Day of the month (1-31) */
+    tt.tm_hour = getInt(str,9,2);;   /* Hours (0-23) */
+    tt.tm_min = getInt(str,11,2);;    /* Minutes (0-59) */
+    tt.tm_sec = getInt(str,13,2);;    /* Seconds (0-60) */
+    tt.tm_isdst = -1;  /* Daylight saving time */
+
+    return mktime_tz(&tt,tzone);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+time_t utcTimeToTimeT(std::string utcTime)
+{
+  try
+  {
+    if (utcTime.length() != 15)
+      throw SmartMet::Spine::Exception(BCP,"Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+
+    const char *str = utcTime.c_str();
+
+    struct tm tt;
+    tt.tm_year = getInt(str,0,4) - 1900;   /* Year - 1900 */
+    tt.tm_mon = getInt(str,4,2) - 1;    /* Month (0-11) */
+    tt.tm_mday = getInt(str,6,2);   /* Day of the month (1-31) */
+    tt.tm_hour = getInt(str,9,2);;   /* Hours (0-23) */
+    tt.tm_min = getInt(str,11,2);;    /* Minutes (0-59) */
+    tt.tm_sec = getInt(str,13,2);;    /* Seconds (0-60) */
+    tt.tm_isdst = -1;  /* Daylight saving time */
+
+    return mktime_tz(&tt,"");
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+std::string localTimeFromTimeT(time_t t,const char *tzone)
+{
+  try
+  {
+    struct tm tt;
+    localtime_tz(t,&tt,tzone);
+
+    char buf[30];
+    sprintf(buf,"%04d%02d%02dT%02d%02d%02d",tt.tm_year+1900,tt.tm_mon+1,tt.tm_mday,tt.tm_hour,tt.tm_min,tt.tm_sec);
+    std::string str = buf;
+    return str;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+std::string utcTimeFromTimeT(time_t t)
+{
+  try
+  {
+    struct tm tt;
+    gmtime_r(&t,&tt);
+
+    char buf[30];
+    sprintf(buf,"%04d%02d%02dT%02d%02d%02d",tt.tm_year+1900,tt.tm_mon+1,tt.tm_mday,tt.tm_hour,tt.tm_min,tt.tm_sec);
+    std::string str = buf;
+    return str;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+std::string localTimeToUtcTime(std::string localTime,const char *tzone)
+{
+  try
+  {
+    time_t t = localTimeToTimeT(localTime,tzone);
+    return utcTimeFromTimeT(t);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+std::string utcTimeToLocalTime(std::string utcTime,const char *tzone)
+{
+  try
+  {
+    time_t t = utcTimeToTimeT(utcTime);
+    return localTimeFromTimeT(t,tzone);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
 
 time_t toTimeT(boost::posix_time::ptime tim)
 {

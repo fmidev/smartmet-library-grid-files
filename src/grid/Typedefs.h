@@ -94,7 +94,8 @@ enum class ParamKeyType
    NEWBASE_ID   = 4,
    NEWBASE_NAME = 5,
    CDM_ID       = 6,
-   CDM_NAME     = 7
+   CDM_NAME     = 7,
+   BUILD_IN     = 100
 };
 
 enum class ParamLevelIdType

@@ -845,7 +845,7 @@ void MessageIdentifier_fmi::loadParameterDefinitions_grib1()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -942,7 +942,7 @@ void MessageIdentifier_fmi::loadParameterDefinitions_grib2()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -1039,7 +1039,7 @@ void MessageIdentifier_fmi::loadParameterDefinitions()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -1123,7 +1123,7 @@ void MessageIdentifier_fmi::loadLevelDefinitions_grib1()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -1203,7 +1203,7 @@ void MessageIdentifier_fmi::loadLevelDefinitions_grib2()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -1281,7 +1281,7 @@ void MessageIdentifier_fmi::loadParameterDefinitions_newbase()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;

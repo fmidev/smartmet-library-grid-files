@@ -3,7 +3,7 @@
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include "common/ImageFunctions.h"
+#include "common/GraphFunctions.h"
 #include "common/Point.h"
 #include "identification/GribDef.h"
 
@@ -1238,6 +1238,127 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
         std::vector<T::Point> gridPoints;
 
         getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
+        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        {
+          T::GridValue *rec = new T::GridValue();
+
+          double x = 0;
+          double y = 0;
+          if (getGridOriginalCoordinatesByGridPoint(it->x(),it->y(),x,y))
+          {
+            rec->mX = x;
+            rec->mY = y;
+              //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
+          }
+
+          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          valueList.addGridValue(rec);
+        }
+      }
+      return;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,T::GridValueList& valueList)
+{
+  try
+  {
+    T::Dimensions_opt d = getGridDimensions();
+    uint cols = d->nx();
+    uint rows = d->ny();
+
+    switch (coordinateType)
+    {
+      case T::CoordinateType::UNKNOWN:
+      case T::CoordinateType::LATLON_COORDINATES:
+      {
+        std::vector<std::vector<T::Coordinate>> newPolygonPath;
+
+        for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+        {
+          std::vector<T::Coordinate> newPolygonPoints;
+
+          for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
+          {
+            double grid_i = 0;
+            double grid_j = 0;
+            getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j);
+            newPolygonPoints.push_back(T::Coordinate(grid_i,grid_j));
+          }
+          newPolygonPath.push_back(newPolygonPoints);
+        }
+
+        std::vector<T::Point> gridPoints;
+
+        getPointsInsidePolygonPath(cols,rows,newPolygonPath,gridPoints);
+        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        {
+          T::GridValue *rec = new T::GridValue();
+
+          double lat = 0;
+          double lon = 0;
+          if (getGridLatLonCoordinatesByGridPoint(it->x(),it->y(),lat,lon))
+          {
+            rec->mX = lon;
+            rec->mY = lat;
+              //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
+          }
+
+          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          valueList.addGridValue(rec);
+        }
+      }
+      return;
+
+
+      case T::CoordinateType::GRID_COORDINATES:
+      {
+        std::vector<T::Point> gridPoints;
+
+        getPointsInsidePolygonPath(cols,rows,polygonPath,gridPoints);
+        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        {
+          T::GridValue *rec = new T::GridValue();
+
+          rec->mX = it->x();
+          rec->mY = it->y();
+          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          valueList.addGridValue(rec);
+        }
+      }
+      return;
+
+
+      case T::CoordinateType::ORIGINAL_COORDINATES:
+      {
+        std::vector<std::vector<T::Coordinate>> newPolygonPath;
+
+        for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+        {
+          std::vector<T::Coordinate> newPolygonPoints;
+
+          for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
+          {
+            double grid_i = 0;
+            double grid_j = 0;
+            getGridPointByOriginalCoordinates(it->x(),it->y(),grid_i,grid_j);
+            newPolygonPoints.push_back(T::Coordinate(grid_i,grid_j));
+          }
+          newPolygonPath.push_back(newPolygonPoints);
+        }
+
+        std::vector<T::Point> gridPoints;
+
+        getPointsInsidePolygonPath(cols,rows,newPolygonPath,gridPoints);
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
           T::GridValue *rec = new T::GridValue();

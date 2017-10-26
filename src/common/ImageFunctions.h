@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Exception.h"
-#include "Point.h"
-#include "Coordinate.h"
 
 
 namespace SmartMet
@@ -28,10 +26,6 @@ uint rgb(uint red, uint green, uint blue);
 // HSV component should have value that is in the range 0..255.
 
 uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value);
-
-
-void getPointsInsideCircle(int gridWidth,int gridHeight,double origoX,double origoY,double radius,std::vector<T::Point>& gridPoints);
-void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordinate>& polygonPoints,std::vector<T::Point>& gridPoints);
 
 }
 

@@ -340,7 +340,7 @@ void GribDef::loadTableValues()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -423,7 +423,7 @@ void GribDef::loadParameterDefinitions()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -652,7 +652,7 @@ void GribDef::loadUnitDefinitions()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -720,7 +720,7 @@ void GribDef::loadLevelDefinitions_grib1()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -793,7 +793,7 @@ void GribDef::loadLevelDefinitions_grib2()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -866,7 +866,7 @@ void GribDef::loadTimeRangeDefinitions_grib1()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -940,7 +940,7 @@ void GribDef::loadTimeRangeDefinitions_grib2()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -1014,7 +1014,7 @@ void GribDef::loadParameterDefinitions_grib1()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -1106,7 +1106,7 @@ void GribDef::loadParameterDefinitions_grib2()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
@@ -1382,7 +1382,7 @@ void GribDef::loadGeometryDefinitions()
           if (*p == '"')
             ind = !ind;
 
-          if ((*p == ','  ||  *p == ';'  || *p == '\n') && !ind)
+          if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
             p++;
