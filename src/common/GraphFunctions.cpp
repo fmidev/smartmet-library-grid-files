@@ -479,8 +479,12 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,std::vector<std::vector<T:
         case NFmiSvgPath::kElementClosePath:
           if (polygonPoints.size() > 0)
           {
-            polygonPoints.push_back(polygonPoints[0]);
+            int t = (int)polygonPoints.size() -1;
+            if (t > 0  &&  (polygonPoints[0].x() != polygonPoints[t].x() || polygonPoints[0].y() != polygonPoints[t].y()))
+              polygonPoints.push_back(polygonPoints[0]);
+
             polygonPath.push_back(polygonPoints);
+            polygonPoints.clear();
           }
 
           polygonPoints.clear();

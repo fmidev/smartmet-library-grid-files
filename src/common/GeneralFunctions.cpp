@@ -875,6 +875,30 @@ std::string toString(boost::posix_time::ptime time)
 
 
 
+std::string toLowerString(std::string sourceString)
+{
+  try
+  {
+    std::string destinationString;
+
+     // Allocate the destination space
+     destinationString.resize(sourceString.size());
+
+     // Convert the source string to lower case storing the result in destination string
+     std::transform(sourceString.begin(),sourceString.end(), destinationString.begin(),::tolower);
+
+     return destinationString;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
 {
   try
