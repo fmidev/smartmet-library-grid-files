@@ -1673,7 +1673,107 @@ void GribDef::loadGeometryDefinitions()
               break;
 
             case T::GridProjection::PolarStereographic:
-              break;
+            {
+              uint geometryId = (uint)atoll(field[1]);
+              char *geometryName = field[2];
+              int ni = atoll(field[3]);
+              int nj = atoll(field[4]);
+              int longitude = (int)(atof(field[5])*1000000);
+              int latitude = (int)(atof(field[6])*1000000);
+              int iInc = (int)(atoll(field[7]));
+              int jInc = (int)(atoll(field[8]));
+              char *scanningMode = field[9];
+              int orientation = (int)(atof(field[10])*1000000);
+
+              // ******* GRIB 2 ********
+#if 0
+              GRIB2::PolarStereographicImpl *def2 = new GRIB2::PolarStereographicImpl();
+              GRIB2::ScanningModeSettings scanningMode2;
+
+              if (strcasecmp(scanningMode,"+x+y") == 0)
+                scanningMode2.setScanningMode(0x40);
+              else
+              if (strcasecmp(scanningMode,"-x+y") == 0)
+                scanningMode2.setScanningMode(0x80+0x40);
+              else
+              if (strcasecmp(scanningMode,"+x-y") == 0)
+                scanningMode2.setScanningMode(0);
+              else
+              if (strcasecmp(scanningMode,"-x-y") == 0)
+                scanningMode2.setScanningMode(0x80);
+
+              def2->setScanningMode(scanningMode2);
+
+              def2->setNx(T::UInt32_opt(ni));
+              def2->setNy(T::UInt32_opt(nj));
+              def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+              def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
+
+              def2->setLaD(latin1);
+              def2->setOrientationOfTheGrid(orientation);
+              def2->setDx(T::UInt32_opt(iInc));
+              def2->setDy(T::UInt32_opt(jInc));
+              //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
+              //def2->setLatin1(T::Int32_opt(latin1));
+              //def2->setLatin2(T::Int32_opt(latin2));
+              ////def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
+              //def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
+
+              def2->setGridGeometryId(geometryId);
+              def2->setGridGeometryName(geometryName);
+              def2->initSpatialReference();
+
+              //def2->print(std::cout,0,0);
+              //T::Hash hash = def2->getGridHash();
+              //printf("HASH %llu\n",(unsigned long long)hash);
+
+              mGridDefinitions2.insert(std::pair<uint,GRIB2::GridDefinition_ptr>(geometryId,def2));
+#endif
+
+              // ******* GRIB 1 ********
+
+              GRIB1::PolarStereographicImpl *def1 = new GRIB1::PolarStereographicImpl();
+              GRIB1::ScanningModeSettings scanningMode1;
+
+              if (strcasecmp(scanningMode,"+x+y") == 0)
+                scanningMode1.setScanningMode(0x40);
+              else
+              if (strcasecmp(scanningMode,"-x+y") == 0)
+                scanningMode1.setScanningMode(0x80+0x40);
+              else
+              if (strcasecmp(scanningMode,"+x-y") == 0)
+                scanningMode1.setScanningMode(0);
+              else
+              if (strcasecmp(scanningMode,"-x-y") == 0)
+                scanningMode1.setScanningMode(0x80);
+
+              def1->setScanningMode(scanningMode1);
+
+              def1->setNx(std::uint16_t(ni));
+              def1->setNy(std::uint16_t(nj));
+              def1->setLatitudeOfFirstGridPoint((std::int24_t)(latitude/1000));
+              def1->setLongitudeOfFirstGridPoint((std::int24_t)(longitude/1000));
+              //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
+              //def1->setLoV(orientation/1000);
+              def1->setDxInMetres((std::uint24_t)iInc);
+              def1->setDyInMetres((std::uint24_t)jInc);
+              //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
+              //def1->setLatin1((std::int24_t)latin1/1000);
+              //def1->setLatin2((std::int24_t)latin2/1000);
+              //def1->setLatitudeOfSouthernPole((std::int24_t)latitudeOfSouthernPole/1000);
+              //def1->setLongitudeOfSouthernPole((std::int24_t)longitudeOfSouthernPole/1000);
+
+              def1->setGridGeometryId(geometryId);
+              def1->setGridGeometryName(geometryName);
+              def1->initSpatialReference();
+
+              //def1->print(std::cout,0,0);
+              //std::size_t hash = def1->getGridHash();
+              //printf("HASH %llu\n",(unsigned long long)hash);
+
+              mGridDefinitions1.insert(std::pair<uint,GRIB1::GridDefinition_ptr>(geometryId,def1));
+            }
+            break;
 
             case T::GridProjection::LambertConformal:
             {
