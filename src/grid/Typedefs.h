@@ -31,10 +31,11 @@ namespace T
 typedef std::size_t Hash;
 typedef std::uint64_t FilePosition;
 typedef std::string ParamId;
-typedef std::uint32_t ParamLevel;
+typedef std::int32_t ParamLevel;
 typedef std::uint8_t ParamLevelId;
 typedef float ParamValue;
-#define ParamValueMissing FLT_MAX
+//#define ParamValueMissing FLT_MAX
+#define ParamValueMissing -16777216
 //std::numeric_limits<double>::quiet_NaN()
 
 //typedef std::uint32_t FmiParamId;

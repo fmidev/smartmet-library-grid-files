@@ -1683,7 +1683,7 @@ void GribDef::loadGeometryDefinitions()
               int iInc = (int)(atoll(field[7]));
               int jInc = (int)(atoll(field[8]));
               char *scanningMode = field[9];
-              int orientation = (int)(atof(field[10])*1000000);
+              //int orientation = (int)(atof(field[10])*1000000);
 
               // ******* GRIB 2 ********
 #if 0
