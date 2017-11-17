@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <set>
 #include <boost/optional.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <gdal/ogr_spatialref.h>
@@ -10,19 +11,12 @@
 
 #include "common/Coordinate.h"
 #include "common/Dimensions.h"
+#include "common/Typedefs.h"
 
 
 
 namespace SmartMet
 {
-
-
-template <typename A>
-bool missing(const A& obj)
-{
-  return !obj;
-}
-
 
 
 namespace T

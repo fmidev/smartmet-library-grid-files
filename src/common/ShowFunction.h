@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "Typedefs.h"
 
 namespace SmartMet
 {
@@ -12,13 +12,12 @@ class ShowFunction
                  ShowFunction(const char *_file,uint _line,const char *_function);
     virtual      ~ShowFunction();
 
-
   protected:
 
     std::string   function;
     std::string   filename;
     uint          line;
-    unsigned long long startTime;
+    ulonglong     startTime;
 
 };
 
