@@ -291,6 +291,27 @@ uint stringToId(const char *str,uint len)
 
 
 
+
+
+uint stringToId(const char *str)
+{
+  try
+  {
+    if (str == NULL)
+      return 0;
+
+    uint len = strlen(str);
+    return stringToId(str,len);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
 int getInt(const char *str,uint startIdx,uint len)
 {
   char buf[100];
@@ -988,7 +1009,63 @@ void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordin
 
 
 
+
+void splitString(const char *str,char separator,std::vector<std::string>& partList)
+{
+  try
+  {
+    char buf[10000];
+    uint c = 0;
+    char *p = (char*)str;
+
+    bool ind = false;
+    while (*p != '\0'  &&  *p != '\n'  &&  c < 10000)
+    {
+      if (*p == '"')
+        ind = !ind;
+
+      if (*p == separator  &&  !ind)
+      {
+        buf[c] = '\0';
+        partList.push_back(std::string(buf));
+        c = 0;
+      }
+      else
+      {
+        buf[c] = *p;
+        c++;
+      }
+      p++;
+    }
+    if (c > 0)
+    {
+      buf[c] = '\0';
+      partList.push_back(std::string(buf));
+    }
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
 }
 
+
+
+
+void splitString(std::string str,char separator,std::vector<std::string>& partList)
+{
+  try
+  {
+    splitString(str.c_str(),separator,partList);
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+
+
+} // Namespace SmartMet
 
 

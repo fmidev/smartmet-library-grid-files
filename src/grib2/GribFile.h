@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grid/GridFile.h"
+#include "grid/PhysicalGridFile.h"
 #include "Message.h"
 
 
@@ -9,7 +9,7 @@ namespace SmartMet
 namespace GRIB2
 {
 
-class GribFile : public GRID::GridFile
+class GribFile : public GRID::PhysicalGridFile
 {
   public:
 
@@ -17,7 +17,7 @@ class GribFile : public GRID::GridFile
     virtual             ~GribFile();
 
     // ### Common methods for all file types
-
+/*
     uint                getFileId() const;
     uint                getGroupFlags() const;
     uint                getProducerId() const;
@@ -31,13 +31,13 @@ class GribFile : public GRID::GridFile
     void                setGenerationId(uint generationId);
     void                setFileName(std::string  fileName);
     void                setCheckTime(time_t checkTime);
-
+*/
     T::FileType         getFileType() const;
     std::string         getFileTypeString() const;
-    GRID::Message*      getMessageByIndex(std::size_t index) const;
-    std::size_t         getNumberOfMessages() const;
+    GRID::Message*      getMessageByIndex(std::size_t index);
+    std::size_t         getNumberOfMessages();
     void                print(std::ostream& stream,uint level,uint optionFlags) const;
-    void                read(const bf::path& path);
+    void                read(std::string filename);
     void                read(MemoryReader& memoryReader);
 
   private:

@@ -48,7 +48,7 @@ GribFile::~GribFile()
 
 
 
-
+#if 0
 uint GribFile::getFileId() const
 {
   try
@@ -239,7 +239,7 @@ void GribFile::setFileName(std::string fileName)
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
-
+#endif
 
 
 
@@ -247,26 +247,21 @@ void GribFile::setFileName(std::string fileName)
 /*! \brief The method memory maps the given file and reads its content
     into the current object.
 
-       \param path  The grib filename with a possible directory path.
+       \param filename  The grib filename with a possible directory path.
 */
 
-void GribFile::read(const bf::path& path)
+void GribFile::read(std::string filename)
 {
   try
   {
-    // Safety checks
-    if (!bf::exists(path))
-      throw SmartMet::Spine::Exception(BCP,"The file '" + path.string() + "' does not exist!");
+    auto fsize = getFileSize(filename.c_str());
+    if (fsize < 0)
+      throw SmartMet::Spine::Exception(BCP,"The file '" + filename + "' does not exist!");
 
-    if (!bf::is_regular(path))
-      throw SmartMet::Spine::Exception(BCP,"The file '" + path.string() + "' is not regular!");
-
-    auto fsize = bf::file_size(path);
-    mPath = path;
-    setFileName(mPath.string());
+    setFileName(filename);
 
     // Map the entire file
-    MappedFileParams params(path.c_str());
+    MappedFileParams params(filename);
     params.flags = boost::iostreams::mapped_file::readonly;
     params.length = fsize;
     mMappedFile.reset(new MappedFile(params));
@@ -284,7 +279,7 @@ void GribFile::read(const bf::path& path)
   catch (...)
   {
     SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
-    exception.addParameter("File name ",path.string());
+    exception.addParameter("File name ",filename);
     throw exception;
   }
 }
@@ -384,10 +379,13 @@ std::string GribFile::getFileTypeString() const
        \return  The number of the messages in the current file.
 */
 
-std::size_t GribFile::getNumberOfMessages() const
+std::size_t GribFile::getNumberOfMessages()
 {
   try
   {
+    if (!isMemoryMapped())
+      mapToMemory();
+
     return mMessages.size();
   }
   catch (...)
@@ -407,10 +405,13 @@ std::size_t GribFile::getNumberOfMessages() const
         \param index  The message index (0..N).
 */
 
-GRID::Message* GribFile::getMessageByIndex(std::size_t index) const
+GRID::Message* GribFile::getMessageByIndex(std::size_t index)
 {
   try
   {
+    if (!isMemoryMapped())
+      mapToMemory();
+
     if (index >= mMessages.size())
       return NULL;
     /*

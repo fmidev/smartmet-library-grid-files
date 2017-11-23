@@ -614,6 +614,7 @@ T::ParamLevelId Message::getGrib2ParameterLevelId() const
 
 
 
+
 T::ParamId Message::getFmiParameterId() const
 {
   try
@@ -926,6 +927,245 @@ short Message::getForecastNumber() const
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
 
+
+
+
+
+void Message::setFmiParameterId(T::ParamId fmiParameterId)
+{
+  try
+  {
+    mFmiParameterId = fmiParameterId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId)
+{
+  try
+  {
+    mFmiParameterLevelId = fmiParameterLevelId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setFmiParameterName(std::string fmiParameterName)
+{
+  try
+  {
+    mFmiParameterName = fmiParameterName;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setFmiParameterDescription(std::string fmiParameterDescr)
+{
+  try
+  {
+    mFmiParameterDescription = fmiParameterDescr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setFmiParameterUnits(std::string fmiParameterUnits)
+{
+  try
+  {
+    mFmiParameterUnits = fmiParameterUnits;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setGribParameterId(T::ParamId gribParameterId)
+{
+  try
+  {
+    mGribParameterId = gribParameterId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setGribParameterName(std::string gribParameterName)
+{
+  try
+  {
+    mGribParameterName = gribParameterName;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setGribParameterDescription(std::string gribParameterDescr)
+{
+  try
+  {
+    mGribParameterDescription = gribParameterDescr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setGribParameterUnits(std::string gribParameterUnits)
+{
+  try
+  {
+    mGribParameterUnits = gribParameterUnits;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setGrib1ParameterLevelId(T::ParamLevelId grib1ParameterLevelId)
+{
+  try
+  {
+    mGrib1ParameterLevelId = grib1ParameterLevelId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId)
+{
+  try
+  {
+    mGrib2ParameterLevelId = grib2ParameterLevelId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setCdmParameterId(std::string cdmParameterId)
+{
+  try
+  {
+    mCdmParameterId = cdmParameterId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setCdmParameterName(std::string cdmParameterName)
+{
+  try
+  {
+    mCdmParameterName = cdmParameterName;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setNewbaseParameterId(std::string newbaseParameterId)
+{
+  try
+  {
+    mNewbaseParameterId = newbaseParameterId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::setNewbaseParameterName(std::string newbaseParameterName)
+{
+  try
+  {
+    mNewbaseParameterName = newbaseParameterName;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
 
 
 

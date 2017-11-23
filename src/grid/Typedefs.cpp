@@ -22,6 +22,9 @@ std::string get_fileTypeString(FileType fileType)
 
       case FileType::Grib2:
         return "GRIB 2";
+
+      case FileType::Virtual:
+        return "Virtual";
     }
     return "Undefined";
   }

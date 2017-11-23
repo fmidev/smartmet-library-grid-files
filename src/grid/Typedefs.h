@@ -107,7 +107,8 @@ enum class FileType
 {
   Unknown = 0,
   Grib1   = 1,
-  Grib2   = 2
+  Grib2   = 2,
+  Virtual = 3
 };
 
 

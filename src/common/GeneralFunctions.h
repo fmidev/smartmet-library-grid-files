@@ -21,6 +21,7 @@ int double_compare(double v1,double v2);
 int time_compare(time_t v1,time_t v2);
 void time_usleep(int _sec,int _usec);
 uint stringToId(const char *str,uint len);
+uint stringToId(const char *str);
 
 
 time_t      localTimeToTimeT(std::string localTime,const char *tzone);
@@ -68,5 +69,7 @@ int compressData(void *_data,uint _dataSize,void *_compressedData,uint& _compres
 int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompressedData,uint& _decompressedDataSize);
 
 void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordinate>& coordinates);
+void splitString(const char *str,char separator,std::vector<std::string>& partList);
+void splitString(std::string str,char separator,std::vector<std::string>& partList);
 
 }

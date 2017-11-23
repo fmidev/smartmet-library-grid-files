@@ -46,6 +46,7 @@ class Message
     virtual T::TimeString         getForecastTime() const;
     virtual short                 getForecastType() const;
     virtual short                 getForecastNumber() const;
+    virtual T::GeometryId         getGridGeometryId() const;
     virtual void                  setMessageIndex(uint index);
 
     virtual T::ParamId            getFmiParameterId() const;
@@ -64,7 +65,23 @@ class Message
     virtual std::string           getNewbaseParameterId() const;
     virtual std::string           getNewbaseParameterName() const;
 
-    virtual T::GeometryId         getGridGeometryId() const;
+    virtual void                  setFmiParameterId(T::ParamId fmiParameterId);
+    virtual void                  setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId);
+    virtual void                  setFmiParameterName(std::string fmiParameterName);
+    virtual void                  setFmiParameterDescription(std::string fmiParameterDescr);
+    virtual void                  setFmiParameterUnits(std::string fmiParameterUnits);
+    virtual void                  setGribParameterId(T::ParamId gribParameterId);
+    virtual void                  setGribParameterName(std::string gribParameterName);
+    virtual void                  setGribParameterDescription(std::string gribParameterDescr);
+    virtual void                  setGribParameterUnits(std::string gribParameterUnits);
+    virtual void                  setGrib1ParameterLevelId(T::ParamLevelId grib1ParameterLevelId);
+    virtual void                  setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId);
+    virtual void                  setCdmParameterId(std::string cdmParameterId);
+    virtual void                  setCdmParameterName(std::string cdmParameterName);
+    virtual void                  setNewbaseParameterId(std::string newbaseParameterId);
+    virtual void                  setNewbaseParameterName(std::string newbaseParameterName);
+    virtual void                  setGridGeometryId(T::GeometryId geometryId);
+
     virtual T::Coordinate_vec     getGridCoordinates() const;
     virtual T::Coordinate_vec     getGridLatLonCoordinates() const;
     virtual T::Dimensions_opt     getGridDimensions() const;
@@ -104,7 +121,6 @@ class Message
     virtual T::ParamValue         getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j) const;
     virtual T::ParamValue         getGridValueByLatLonCoordinate(double lat,double lon,T::InterpolationMethod interpolationMethod) const;
     virtual T::ParamValue         getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
-
     virtual void                  getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValue_vec& gridPointValues) const;
     virtual void                  getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValueList& gridPointValues) const;
     virtual T::TimeString         getReferenceTime() const;
@@ -112,8 +128,8 @@ class Message
     virtual std::string           getWKT() const;
 
     virtual bool                  isGridGlobal() const;
+
     virtual void                  print(std::ostream& stream,uint level,uint optionFlags) const;
-    virtual void                  setGridGeometryId(T::GeometryId geometryId);
 
 protected:
 
@@ -165,6 +181,11 @@ protected:
     /*! \brief  The newbase parameter name. */
     std::string           mNewbaseParameterName;
 };
+
+
+typedef Message* MessagePtr;
+typedef std::vector<MessagePtr> MessagePtr_vec;
+
 
 }  // namespace GRID
 }  // namespace SmartMet
