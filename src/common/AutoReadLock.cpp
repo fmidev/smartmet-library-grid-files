@@ -22,6 +22,29 @@ AutoReadLock::AutoReadLock(ModificationLock *modificationLock)
 }
 
 
+
+
+
+AutoReadLock::AutoReadLock(ModificationLock *modificationLock,const char *filename,uint line)
+{
+  try
+  {
+    if (modificationLock == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'modificationLock' parameter points to NULL!");
+
+    mModificationLock = modificationLock;
+    mModificationLock->readLock(filename,line);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 AutoReadLock::~AutoReadLock()
 {
   try

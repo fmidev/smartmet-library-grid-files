@@ -57,11 +57,35 @@ void ModificationLock::readLock()
 
 
 
+void ModificationLock::readLock(const char *filename,uint line)
+{
+  try
+  {
+    mThreadLock.lock();
+    mLine = line;
+    mFilename = filename;
+    mReadCounter++;
+    mThreadLock.unlock();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
 void ModificationLock::readUnlock()
 {
   try
   {
     mThreadLock.lock();
+    if (mLine > 0)
+    {
+      mFilename = "";
+      mLine = 0;
+    }
     mReadCounter--;
     mThreadLock.unlock();
   }
@@ -131,8 +155,11 @@ void ModificationLock::writeUnlock()
 {
   try
   {
-    mFilename = "";
-    mLine = 0;
+    if (mLine > 0)
+    {
+      mFilename = "";
+      mLine = 0;
+    }
     mThreadLock.unlock();
   }
   catch (...)

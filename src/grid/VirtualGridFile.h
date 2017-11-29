@@ -22,11 +22,13 @@ class VirtualGridFile : public GridFile
                         VirtualGridFile(VirtualGridFile *gridFile);
     virtual             ~VirtualGridFile();
 
-    virtual void        addPhysicalGridFile(GRID::GridFile_sptr physicalGridFile);
+    void                addPhysicalGridFile(GRID::GridFile_sptr physicalGridFile);
+    std::size_t         getNumberOfPhysicalGridFiles();
+    GRID::GridFile_sptr getPhysicalGridFileByIndex(std::size_t index);
 
-    virtual void        addMessage(Message *message);
-    virtual Message*    getMessageByIndex(std::size_t index);
-    virtual std::size_t getNumberOfMessages();
+    void                addMessage(Message *message);
+    Message*            getMessageByIndex(std::size_t index);
+    std::size_t         getNumberOfMessages();
 
     virtual T::FileType getFileType() const;
     virtual std::string getFileTypeString() const;
@@ -46,6 +48,7 @@ class VirtualGridFile : public GridFile
 };
 
 
+typedef VirtualGridFile* VirtualGridFilePtr;
 
 }  // namespace GRID
 }  // namespace SmartMet

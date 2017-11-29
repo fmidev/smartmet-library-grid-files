@@ -71,6 +71,38 @@ void VirtualGridFile::addPhysicalGridFile(GRID::GridFile_sptr physicalGridFile)
 
 
 
+std::size_t VirtualGridFile::getNumberOfPhysicalGridFiles()
+{
+  try
+  {
+    return mPhysicalGridFileList.size();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+GRID::GridFile_sptr VirtualGridFile::getPhysicalGridFileByIndex(std::size_t index)
+{
+  try
+  {
+    return mPhysicalGridFileList[index];
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool VirtualGridFile::isMemoryMapped() const
 {
   try

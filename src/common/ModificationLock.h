@@ -14,6 +14,7 @@ class ModificationLock
     virtual         ~ModificationLock();
 
     void            readLock();
+    void            readLock(const char *filename,uint line);
     void            readUnlock();
     void            writeLock();
     void            writeLock(const char *filename,uint line);
