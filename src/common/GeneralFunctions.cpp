@@ -1066,6 +1066,61 @@ void splitString(std::string str,char separator,std::vector<std::string>& partLi
 
 
 
+
+
+void splitString(const char *str,char separator,std::set<std::string>& partList)
+{
+  try
+  {
+    char buf[10000];
+    uint c = 0;
+    char *p = (char*)str;
+
+    bool ind = false;
+    while (*p != '\0'  &&  *p != '\n'  &&  c < 10000)
+    {
+      if (*p == '"')
+        ind = !ind;
+
+      if (*p == separator  &&  !ind)
+      {
+        buf[c] = '\0';
+        partList.insert(std::string(buf));
+        c = 0;
+      }
+      else
+      {
+        buf[c] = *p;
+        c++;
+      }
+      p++;
+    }
+    if (c > 0)
+    {
+      buf[c] = '\0';
+      partList.insert(std::string(buf));
+    }
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+
+
+
+void splitString(std::string str,char separator,std::set<std::string>& partList)
+{
+  try
+  {
+    splitString(str.c_str(),separator,partList);
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
 } // Namespace SmartMet
 
 

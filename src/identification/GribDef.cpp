@@ -87,12 +87,12 @@ GribDef::~GribDef()
   {
     for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
     {
-      delete (it->second);
+      delete (*it);
     }
 
     for (auto it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
     {
-      delete (it->second);
+      delete (*it);
     }
   }
   catch (...)
@@ -1215,21 +1215,22 @@ void GribDef::loadParameterDefinitions_grib2()
 
 
 
-GRIB1::GridDefinition_ptr GribDef::getGridDefinition1ByGeometryId(uint geometryId)
+GRIB1::GridDefinition_ptr GribDef::getGridDefinition1ByGeometryId(int geometryId)
 {
   try
   {
+    /*
     std::map<uint,GRIB1::GridDefinition_ptr>::iterator it = mGridDefinitions1.find(geometryId);
     if (it != mGridDefinitions1.end())
       return it->second;
-/*
+*/
     std::vector<GRIB1::GridDefinition_ptr>::iterator it;
     for (it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
     {
       if ((*it)->getGridGeometryId() == geometryId)
         return *it;
     }
-  */
+
     return NULL;
   }
   catch (...)
@@ -1246,10 +1247,15 @@ GRIB1::GridDefinition_ptr GribDef::getGridDefinition1ByHash(T::Hash hash)
 {
   try
   {
+    /*
+    auto it = mHashAlternatives.find(hash);
+    if (it != mHashAlternatives.end())
+      hash = it->second;
+*/
     for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
     {
-      if (it->second->getGridHash() == hash)
-        return it->second;
+      if ((*it)->getGridHash() == hash)
+        return (*it);
     }
     return NULL;
   }
@@ -1263,21 +1269,21 @@ GRIB1::GridDefinition_ptr GribDef::getGridDefinition1ByHash(T::Hash hash)
 
 
 
-GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByGeometryId(uint geometryId)
+GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByGeometryId(int geometryId)
 {
   try
   {
+    /*
     std::map<uint,GRIB2::GridDefinition_ptr>::iterator it = mGridDefinitions2.find(geometryId);
     if (it != mGridDefinitions2.end())
       return it->second;
-/*
+*/
     std::vector<GRIB2::GridDefinition_ptr>::iterator it;
     for (it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
     {
       if ((*it)->getGridGeometryId() == geometryId)
         return *it;
     }
-    */
     return NULL;
   }
   catch (...)
@@ -1294,10 +1300,15 @@ GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByHash(T::Hash hash)
 {
   try
   {
+    /*
+    auto it = mHashAlternatives.find(hash);
+    if (it != mHashAlternatives.end())
+      hash = it->second;
+*/
     for (auto it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
     {
-      if (it->second->getGridHash() == hash)
-        return it->second;
+      if ((*it)->getGridHash() == hash)
+        return *it;
     }
     return NULL;
   }
@@ -1320,9 +1331,9 @@ void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
       double grid_i = 0;
       double grid_j = 0;
 
-      if (it->second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
+      if ((*it)->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       {
-        T::GeometryId geometryId = it->second->getGridGeometryId();
+        T::GeometryId geometryId = (*it)->getGridGeometryId();
         if (geometryIdList.find(geometryId) == geometryIdList.end())
           geometryIdList.insert(geometryId);
       }
@@ -1333,9 +1344,9 @@ void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
       double grid_i = 0;
       double grid_j = 0;
 
-      if (it->second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
+      if ((*it)->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       {
-        T::GeometryId geometryId = it->second->getGridGeometryId();
+        T::GeometryId geometryId = (*it)->getGridGeometryId();
         if (geometryIdList.find(geometryId) == geometryIdList.end())
           geometryIdList.insert(geometryId);
       }
@@ -1471,10 +1482,45 @@ void GribDef::loadGeometryDefinitions()
               def2->initSpatialReference();
 
               //def2->print(std::cout,0,0);
-              //T::Hash hash = def2->getGridHash();
+              //T::Hash hash = def2->countHash();
               //printf("HASH %llu\n",(unsigned long long)hash);
+/*
+              T::Hash hash1 = def2->countHash();
 
-              mGridDefinitions2.insert(std::pair<uint,GRIB2::GridDefinition_ptr>(geometryId,def2));
+              if (longitude < 0 || lastLongitude < 0)
+              {
+                GRIB2::GridSettings gridx;
+
+                gridx.setNi(T::UInt32_opt(ni));
+                gridx.setNj(T::UInt32_opt(nj));
+
+                if (longitude < 0)
+                  gridx.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude+360000000));
+                else
+                  gridx.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
+
+                gridx.setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+                gridx.setLongitudeOfLastGridPoint(T::Int32_opt(lastLongitude));
+
+                if (lastLongitude < 0)
+                  gridx.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude+360000000));
+                else
+                  gridx.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude));
+
+                latLon.setGrid(gridx);
+                def2->setLatLon(latLon);
+
+                T::Hash hash2 = def2->countHash();
+                def2->print(std::cout,0,0);
+                printf("** ALT %llu => %llu\n",(unsigned long long)hash2,(unsigned long long)hash1);
+
+                mHashAlternatives.insert(std::pair<T::Hash,T::Hash>(hash2,hash1));
+
+                latLon.setGrid(grid);
+                def2->setLatLon(latLon);
+              }
+*/
+              mGridDefinitions2.push_back(def2);
 
               // ******* GRIB 1 ********
 
@@ -1519,7 +1565,7 @@ void GribDef::loadGeometryDefinitions()
               //T::Hash hash = def1->getGridHash();
               //printf("HASH %llu\n",(unsigned long long)hash);
 
-              mGridDefinitions1.insert(std::pair<uint,GRIB1::GridDefinition_ptr>(geometryId,def1));
+              mGridDefinitions1.push_back(def1);
             }
             break;
 
@@ -1603,7 +1649,7 @@ void GribDef::loadGeometryDefinitions()
               //T::Hash hash = def2->getGridHash();
               //printf("HASH %llu\n",(unsigned long long)hash);
 
-              mGridDefinitions2.insert(std::pair<uint,GRIB2::GridDefinition_ptr>(geometryId,def2));
+              mGridDefinitions2.push_back(def2);
 
               // ******* GRIB 1 ********
 
@@ -1650,7 +1696,7 @@ void GribDef::loadGeometryDefinitions()
               // T::Hash hash = def1->getGridHash();
               // printf("HASH %llu\n",(unsigned long long)hash);
 
-              mGridDefinitions1.insert(std::pair<uint,GRIB1::GridDefinition_ptr>(geometryId,def1));
+              mGridDefinitions1.push_back(def1);
             }
             break;
 
@@ -1771,7 +1817,7 @@ void GribDef::loadGeometryDefinitions()
               //std::size_t hash = def1->getGridHash();
               //printf("HASH %llu\n",(unsigned long long)hash);
 
-              mGridDefinitions1.insert(std::pair<uint,GRIB1::GridDefinition_ptr>(geometryId,def1));
+              mGridDefinitions1.push_back(def1);
             }
             break;
 
@@ -1834,7 +1880,7 @@ void GribDef::loadGeometryDefinitions()
               //T::Hash hash = def2->getGridHash();
               //printf("HASH %llu\n",(unsigned long long)hash);
 
-              mGridDefinitions2.insert(std::pair<uint,GRIB2::GridDefinition_ptr>(geometryId,def2));
+              mGridDefinitions2.push_back(def2);
 
               // ******* GRIB 1 ********
 
@@ -1877,7 +1923,7 @@ void GribDef::loadGeometryDefinitions()
               //std::size_t hash = def1->getGridHash();
               //printf("HASH %llu\n",(unsigned long long)hash);
 
-              mGridDefinitions1.insert(std::pair<uint,GRIB1::GridDefinition_ptr>(geometryId,def1));
+              mGridDefinitions1.push_back(def1);
             }
             break;
 

@@ -12,9 +12,9 @@
 1;25;EGRR432325;432;325;0;-90;0.833;0.555;+x+y;Seasonal global forecast model of UK Met-office.;
 1;26;GFS0250;1440;721;0;90;0.25;0.25;+x-y;Washington global 0.25 degree resolution;
 1;33;MES141241;140;240;19;59;0.1;0.05;+x+y;Suomi 5x5 km;
-1;52;ENFUSORHKI;1577;1253;24.636;60.33;0.00032;0.00016;+x-y;Enfusor Hki metropolitan area;
-1;53;ENFUSORTAM;1491;834;23.597;61.535;0.00022;0.00011;+x-y;Enfusor Tampere area;
-1;54;ENFUSORTUR;1605;1010;22.06;60.5;0.00022;0.00011;+x-y;Enfusor Turku area;
+1;52;ENFUSORHKI;1893;1483;24.636;60.33;0.000272751;0.000137329;+x-y;Enfusor Hki metropolitan area;
+1;53;ENFUSORTAM;1491;834;23.597;61.535;0.000225067;0.000106812;+x-y;Enfusor Tampere area;
+1;54;ENFUSORTUR;1605;1010;22.06;60.5;0.000219345;0.000106812;+x-y;Enfusor Turku area;
 1;112;EC0730175000;73;17;180;90;5;5;+x-y;ECM 73x17_5000;
 1;123;EPSORG12144;121;44;-90;90;1.5;1.5;+x-y;ECMWF original EPS-fields;
 1;124;EPS121441500;121;44;-90;25.5;1.5;1.5;+x+y;ECMWF EPS-fields;
@@ -46,7 +46,7 @@
 1;606;WAM109123;166;196;9;53;0.133;0.067;+x+y;Area of MTL Wave model data;
 1;607;OAAS315363;315;363;9.45;53.8;0.067;0.033;+x+y;Area of MTL OAAS-model;
 1;608;HBM;256;258;9.04167;53.025;0.083333;0.0499992;+x+y;HIROMB BOOS (HBM) circulation model for Baltic Sea;
-1;609;HELMI;415;556;16.716;56.741;0.033;0.016;+x+y;Area of Helmi ice model;
+1;609;HELMI;415;556;16.7168;56.7416;0.03333;0.016669;+x+y;Area of Helmi ice model;
 1;1005;ICON125;2880;1441;180;-90;0.125;0.125;+x+y;DWD ICON GDS global;
 1;1006;COPERNICUS;4320;2041;-180;-80;0.0833282;0.0833359;+x+y;Copernicus, global ocean;
 1;1007;ECGLO0100;3600;1801;0;90;0.1;0.1;+x-y; ECMWF global 0.1 degrees;
@@ -60,6 +60,9 @@
 1;1064;ECGSEA025;265;203;-26;80.5;0.25;0.25;+x-y;ECMWF sea model europe area;
 1;1065;MOSKRIGING2;1126;461;-40;73.5;0.0999985;0.0999985;+x-y;MOS Kriging area over Europe;
 1;1074;ECGLO0200;1800;901;0;90;0.2;0.2;+x-y;ECMWF global 0.2 degrees;
+1;1081;BLEND0025;4501;1841;-40;73.5;0.025;0.025;+x-y;Blend 0.025 degrees;
+1;1081;BLEND0025;4501;1841;320;73.5;0.025;0.025;+x-y;Blend 0.025 degrees;
+1;1082;ICONEUR00625;1097;657;336.5;29.5;0.0625;0.0625;+x+y;DWD ICON GDS europe nesting;
 2;14;SMHIMESAN;246;268;-0.4;-11.5;0.1;0.1;+x+y;-0.01;-0.03;SMHI mesoanalysis area;
 2;51;ANAL1210200;121;121;-3;-7.8;0.2;0.2;+x+y;0;-30;Mesoanalyysi Fennoskandia;
 2;100;EUR194140200;194;140;-9;-11.4;0.2;0.2;+x+y;0;-30;Mesohirlam, EUR;

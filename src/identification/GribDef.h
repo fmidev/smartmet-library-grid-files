@@ -76,10 +76,10 @@ class GribDef
     ParameterDefinition_cptr    getGribParamDefByName(std::string gribParamName);
     ParameterDefinition_cptr    getGribParamDef(uint discipline,uint category,uint number);
 
-    GRIB1::GridDefinition_ptr   getGridDefinition1ByGeometryId(uint geometryId);
+    GRIB1::GridDefinition_ptr   getGridDefinition1ByGeometryId(int geometryId);
     GRIB1::GridDefinition_ptr   getGridDefinition1ByHash(T::Hash hash);
 
-    GRIB2::GridDefinition_ptr   getGridDefinition2ByGeometryId(uint geometryId);
+    GRIB2::GridDefinition_ptr   getGridDefinition2ByGeometryId(int geometryId);
     GRIB2::GridDefinition_ptr   getGridDefinition2ByHash(T::Hash hash);
 
     void                        getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList);
@@ -99,8 +99,8 @@ class GribDef
     TimeRangeDef_vec            mTimeRangeDefs_grib2;
     Parameter_grib1_vec         mParameters_grib1;
     Parameter_grib2_vec         mParameters_grib2;
-    GRIB1::GridDefinition_pmap  mGridDefinitions1;
-    GRIB2::GridDefinition_pmap  mGridDefinitions2;
+    GRIB1::GridDefinition_pvec  mGridDefinitions1;
+    GRIB2::GridDefinition_pvec  mGridDefinitions2;
 
   protected:
 

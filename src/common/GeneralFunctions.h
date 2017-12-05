@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <set>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "grid/Typedefs.h"
@@ -71,5 +72,7 @@ int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompr
 void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordinate>& coordinates);
 void splitString(const char *str,char separator,std::vector<std::string>& partList);
 void splitString(std::string str,char separator,std::vector<std::string>& partList);
+void splitString(const char *str,char separator,std::set<std::string>& partList);
+void splitString(std::string str,char separator,std::set<std::string>& partList);
 
 }
