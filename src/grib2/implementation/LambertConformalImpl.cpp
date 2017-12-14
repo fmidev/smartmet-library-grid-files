@@ -191,6 +191,48 @@ T::Dimensions_opt LambertConformalImpl::getGridDimensions() const
 
 
 
+bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  try
+  {
+    if (mCt_latlon2lambert == NULL  ||  mCt_lambert2latlon == NULL)
+      return false;
+
+    uint nx = (uint)(*mNx);
+    uint ny = (uint)(*mNy);
+
+    if (grid_i < 0  ||  grid_j < 0  ||  grid_i >= nx  ||  grid_j >= ny)
+      return false;
+
+    double latitudeOfFirstGridPoint = (double)(*mLatitudeOfFirstGridPoint) / 1000000;
+    double longitudeOfFirstGridPoint = (double)(*mLongitudeOfFirstGridPoint) / 1000000;
+
+    double dx = (double)(*mDx) / 1000;
+    double dy = (double)(*mDy) / 1000;
+
+    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+    if ((scanningMode & 0x80) != 0)
+      dx = -dx;
+
+    if ((scanningMode & 0x40) == 0)
+      dy = -dy;
+
+    mCt_latlon2lambert->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
+
+    y = latitudeOfFirstGridPoint + grid_j * dy;
+    x = longitudeOfFirstGridPoint = grid_i * dx;
+
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
 /*! \brief This method calculates the estimated grid position by using the original coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.
 
@@ -252,6 +294,47 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
   }
 }
 
+
+
+
+
+bool LambertConformalImpl::reverseXDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)(mScanningMode.getScanningMode());
+
+    if ((scanMode & 0x80) != 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool LambertConformalImpl::reverseYDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)(mScanningMode.getScanningMode());
+
+    if ((scanMode & 0x40) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
 
 
 

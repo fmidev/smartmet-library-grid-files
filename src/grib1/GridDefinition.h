@@ -33,9 +33,11 @@ class GridDefinition
     T::Hash                     getGridHash();
     virtual T::Coordinate_vec   getGridLatLonCoordinates() const;
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    virtual bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
     T::GridLayout               getGridLayout();
     virtual bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    virtual bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     virtual std::size_t         getGridOriginalColumnCount(std::size_t row) const;
     virtual std::size_t         getGridOriginalColumnCount() const;
@@ -46,6 +48,8 @@ class GridDefinition
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     virtual T::GridProjection   getGridProjection() const;
 
+    virtual bool                reverseXDirection() const;
+    virtual bool                reverseYDirection() const;
     virtual void                initSpatialReference();
     virtual void                initRowPositions(std::vector<std::uint32_t>& rowPositions);
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;

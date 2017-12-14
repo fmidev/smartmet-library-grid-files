@@ -116,6 +116,8 @@ T::Coordinate_vec LambertConformalImpl::getGridCoordinates() const
     uint nx = (uint)mNx;
     uint ny = (uint)mNy;
 
+    coordinateList.reserve(nx*ny);
+
     double latitudeOfFirstGridPoint = (double)mLatitudeOfFirstGridPoint / 1000;
     double longitudeOfFirstGridPoint = (double)mLongitudeOfFirstGridPoint / 1000;
 
@@ -170,6 +172,46 @@ T::Dimensions_opt LambertConformalImpl::getGridDimensions() const
   try
   {
     return T::Dimensions{mNx, mNy};
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  try
+  {
+    uint nx = (uint)mNx;
+    uint ny = (uint)mNy;
+
+    if (grid_i < 0  ||  grid_j < 0  ||  grid_i >= nx  ||  grid_j >= ny)
+      return false;
+
+    double latitudeOfFirstGridPoint = (double)mLatitudeOfFirstGridPoint / 1000;
+    double longitudeOfFirstGridPoint = (double)mLongitudeOfFirstGridPoint / 1000;
+
+    double dx = (double)mDxInMetres;
+    double dy = (double)mDyInMetres;
+
+    unsigned char scanningMode = (unsigned char)mScanningMode.getScanningMode();
+    if ((scanningMode & 0x80) != 0)
+      dx = -dx;
+
+    if ((scanningMode & 0x40) == 0)
+      dy = -dy;
+
+    mCt_latlon2lambert->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
+
+    y = latitudeOfFirstGridPoint + grid_j * dy;
+    x = longitudeOfFirstGridPoint + grid_i * dx;
+
+    return true;
   }
   catch (...)
   {
@@ -238,6 +280,46 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
   }
 }
 
+
+
+
+bool LambertConformalImpl::reverseXDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)mScanningMode.getScanningMode();
+
+    if ((scanMode & 0x80) != 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool LambertConformalImpl::reverseYDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)mScanningMode.getScanningMode();
+
+    if ((scanMode & 0x40) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
 
 
 

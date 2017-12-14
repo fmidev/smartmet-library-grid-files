@@ -13,6 +13,12 @@ namespace SmartMet
 namespace GRID
 {
 
+typedef std::vector<float> AngleList;
+typedef std::map<int,AngleList> AngleCache;
+
+AngleCache gridAngleCache;
+
+
 
 /*! \brief The constructor of the class. */
 
@@ -394,6 +400,15 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
 
 
 
+bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
 bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -404,6 +419,15 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,do
 
 
 bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -434,6 +458,194 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j)  const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,double y) const
+{
+  try
+  {
+    switch (coordinateType)
+    {
+      case T::CoordinateType::UNKNOWN:
+      case T::CoordinateType::LATLON_COORDINATES:
+        return getGridPointAngleByLatLonCoordinates(y,x);
+
+      case T::CoordinateType::GRID_COORDINATES:
+      {
+        double lat = 0, lon = 0;
+        getGridLatLonCoordinatesByGridPosition(x,y,lat,lon);
+        return getGridPointAngleByLatLonCoordinates(lat,lon);
+      }
+      break;
+
+      case T::CoordinateType::ORIGINAL_COORDINATES:
+      {
+        double lat = 0, lon = 0;
+        getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
+        return getGridPointAngleByLatLonCoordinates(lat,lon);
+      }
+      break;
+
+      default:
+      {
+        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",NULL);
+        exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
+        throw exception;
+      }
+    }
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  const
+{
+  try
+  {
+    double PI = 3.1415926536;
+    T::Dimensions_opt d = getGridDimensions();
+    if (!d)
+      return 0;
+
+    double grid_i1 = 0;
+    double grid_j1 = 0;
+    double grid_i2 = 0;
+    double grid_j2 = 0;
+
+    if (getGridPointByLatLonCoordinates(lat,lon,grid_i1,grid_j1)  &&  getGridPointByLatLonCoordinates(lat+0.0001,lon,grid_i2,grid_j2))
+    {
+      double di = grid_i2-grid_i1;
+      double dj = grid_j2-grid_j1;
+      double angle = 0;
+      double a = atan(fabs(dj)/fabs(di));
+/*
+      if (reverseYDirection())
+        dj = -dj;
+
+      if (reverseXDirection())
+        di = -di;
+*/
+      if (dj >= 0  &&  di >= 0)
+      {
+        angle = -(PI/2 - a);
+      }
+
+      if (dj >= 0  &&  di < 0)
+      {
+        angle = PI/2 - a;
+      }
+
+      if (dj < 0  &&  di >= 0)
+      {
+        angle = -(PI/2 - a) + PI;
+      }
+
+      if (dj < 0  &&  di < 0)
+      {
+        angle = PI/2 - a + PI;
+      }
+
+      //printf("%f,%f ANGLE %f\n",di,dj,angle);
+      return angle;
+    }
+
+    if (getGridPointByLatLonCoordinates(lat-0.0001,lon,grid_i1,grid_j1)  &&  getGridPointByLatLonCoordinates(lat,lon,grid_i2,grid_j2))
+    {
+      double di = grid_i2-grid_i1;
+      double dj = grid_j2-grid_j1;
+      double angle = 0;
+      double a = atan(fabs(dj)/fabs(di));
+/*
+      if (reverseYDirection())
+        dj = -dj;
+
+      if (reverseXDirection())
+        di = -di;
+*/
+      if (dj >= 0  &&  di >= 0)
+      {
+        angle = -(PI/2 - a);
+      }
+
+      if (dj >= 0  &&  di < 0)
+      {
+        angle = PI/2 - a;
+      }
+
+      if (dj < 0  &&  di >= 0)
+      {
+        angle = -(PI/2 - a) + PI;
+      }
+
+      if (dj < 0  &&  di < 0)
+      {
+        angle = PI/2 - a + PI;
+      }
+
+      //printf("* ANGLE %f\n",angle);
+      return angle;
+    }
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::getGridPointAngles(std::vector<float>& angles) const
+{
+  try
+  {
+    T::Dimensions_opt d = getGridDimensions();
+    if (!d)
+      return;
+
+    int geometryId = getGridGeometryId();
+    if (geometryId > 0)
+    {
+      auto it = gridAngleCache.find(geometryId);
+      if (it != gridAngleCache.end())
+      {
+        angles = it->second;
+        return;
+      }
+    }
+
+    angles.clear();
+    angles.reserve(d->ny() * d->nx());
+    for (uint y=0; y < d->ny(); y++)
+    {
+      for (uint x=0; x < d->nx(); x++)
+      {
+        float angle = getGridPointAngle(T::CoordinateType::GRID_COORDINATES,x,y);
+        angles.push_back(angle);
+      }
+    }
+
+    if (geometryId > 0)
+      gridAngleCache.insert(std::pair<int,AngleList>(geometryId,angles));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
 }
 
 
@@ -909,6 +1121,25 @@ std::string Message::getWKT() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
+
+
+
+
+
+bool Message::reverseXDirection() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+bool Message::reverseYDirection() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
 
 
 

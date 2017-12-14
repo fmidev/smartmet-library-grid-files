@@ -601,6 +601,27 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
 
 
 
+bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+{
+  try
+  {
+    if (mGridSection == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+
+    return mGridSection->getGridLatLonCoordinatesByGridPosition(grid_i,grid_j,lat,lon);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
   try
@@ -638,6 +659,28 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,doub
     throw exception;
   }
 }
+
+
+
+
+
+bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  try
+  {
+    if (mGridSection == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+
+    return mGridSection->getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
 
 
 
@@ -1685,6 +1728,47 @@ bool Message::isGridGlobal() const
       throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
 
     return mGridSection->isGridGlobal();
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+bool Message::reverseXDirection() const
+{
+  try
+  {
+    if (mGridSection == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+
+    return mGridSection->reverseXDirection();
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::reverseYDirection() const
+{
+  try
+  {
+    if (mGridSection == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+
+    return mGridSection->reverseYDirection();
   }
   catch (...)
   {

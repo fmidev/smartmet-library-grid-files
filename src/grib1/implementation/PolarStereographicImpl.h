@@ -18,6 +18,9 @@ class PolarStereographicImpl : public PolarStereographic
     T::Coordinate_vec getGridCoordinates() const;
     T::Dimensions_opt getGridDimensions() const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
+    bool              reverseXDirection() const;
+    bool              reverseYDirection() const;
+
     void              initSpatialReference();
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
     void              read(MemoryReader& memoryReader);

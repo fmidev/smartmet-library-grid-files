@@ -102,6 +102,8 @@ T::Coordinate_vec RotatedLatLonImpl::getGridCoordinates() const
     if ((scanningMode & 0x40) == 0)
       jDirectionIncrement = -jDirectionIncrement;
 
+    coordinateList.reserve(ni*nj);
+
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < nj; j++)
     {
@@ -252,6 +254,58 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
 
 
 
+bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+{
+  try
+  {
+    uint ni = (uint)(*mLatLon.getGrid()->getNi());
+    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+
+    if ((double)grid_i > (double)ni)
+      return false;
+
+    if ((double)grid_j > (double)nj)
+      return false;
+
+    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+
+    if ((scanningMode & 0x80) != 0)
+      iDirectionIncrement = -iDirectionIncrement;
+
+    if ((scanningMode & 0x40) == 0)
+      jDirectionIncrement = -jDirectionIncrement;
+
+    double y = latitudeOfFirstGridPoint + grid_j * jDirectionIncrement;
+    double x = longitudeOfFirstGridPoint + grid_i * iDirectionIncrement;
+
+    if (longitudeOfFirstGridPoint >= 180000000)
+      x = longitudeOfFirstGridPoint - 360000000 + grid_i * iDirectionIncrement;
+
+    double rotated_lon = x/1000000;
+    double rotated_lat = y/1000000;
+
+    double southPoleLat = (double)(*mRotation.getLatitudeOfSouthernPole()/1000000);
+    double southPoleLon = (double)(*mRotation.getLongitudeOfSouthernPole()/1000000);
+
+    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
+
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
   try
@@ -294,6 +348,55 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
+
+
+
+
+
+bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  try
+  {
+    uint ni = (uint)(*mLatLon.getGrid()->getNi());
+    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+
+    if ((double)grid_i > (double)ni)
+      return false;
+
+    if ((double)grid_j > (double)nj)
+      return false;
+
+    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+
+    if ((scanningMode & 0x80) != 0)
+      iDirectionIncrement = -iDirectionIncrement;
+
+    if ((scanningMode & 0x40) == 0)
+      jDirectionIncrement = -jDirectionIncrement;
+
+    double yy = latitudeOfFirstGridPoint + grid_j * jDirectionIncrement;
+    double xx = longitudeOfFirstGridPoint + grid_i * iDirectionIncrement;
+
+    if (longitudeOfFirstGridPoint >= 180000000)
+      xx = longitudeOfFirstGridPoint - 360000000 + grid_i * iDirectionIncrement;
+
+    x = xx/1000000;
+    y = yy/1000000;
+
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
 
 
 
@@ -444,6 +547,47 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
   }
 }
 
+
+
+
+
+bool RotatedLatLonImpl::reverseXDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+
+    if ((scanMode & 0x80) != 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool RotatedLatLonImpl::reverseYDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+
+    if ((scanMode & 0x40) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
 
 
 

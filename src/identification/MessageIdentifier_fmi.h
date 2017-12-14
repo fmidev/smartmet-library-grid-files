@@ -66,6 +66,7 @@ class MessageIdentifier_fmi : public MessageIdentifier
   protected:
 
     virtual void                  loadParameterDefinitions();
+    virtual void                  loadExtendedParameterDefinitions();
     virtual void                  loadParameterDefinitions_grib1();
     virtual void                  loadParameterDefinitions_grib2();
     virtual void                  loadParameterDefinitions_newbase();

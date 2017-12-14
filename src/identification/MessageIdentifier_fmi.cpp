@@ -47,6 +47,7 @@ void MessageIdentifier_fmi::init(const char* configDir)
     mConfigDir = configDir;
 
     loadParameterDefinitions();
+    loadExtendedParameterDefinitions();
     loadParameterDefinitions_grib1();
     loadParameterDefinitions_grib2();
     loadParameterDefinitions_newbase();
@@ -1088,6 +1089,94 @@ void MessageIdentifier_fmi::loadParameterDefinitions()
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
+
+
+
+
+
+void MessageIdentifier_fmi::loadExtendedParameterDefinitions()
+{
+  try
+  {
+    char filename[200];
+    sprintf(filename,"%s/parameterDef_fmi_ext.csv",mConfigDir.c_str());
+
+
+    FILE *file = fopen(filename,"r");
+    if (file == NULL)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file) != NULL  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 6)
+        {
+          ParameterDefinition_fmi rec;
+
+          if (field[0][0] != '\0')
+            rec.mFmiParameterId = field[0];
+
+          if (field[1][0] != '\0')
+            rec.mVersion = (uint)atoll(field[1]);
+
+          if (field[2][0] != '\0')
+            rec.mParameterName = field[2];
+
+          if (field[3][0] != '\0')
+            rec.mParameterUnits = field[3];
+
+          if (field[4][0] != '\0')
+            rec.mParameterDescription = field[4];
+
+          if (field[5][0] != '\0')
+            rec.mInterpolationMethod = (T::InterpolationMethod)atoll(field[5]);
+
+          if (field[6][0] != '\0')
+            rec.mNewbaseId = field[6];
+
+          mParameterDefs.push_back(rec);
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
 
 
 

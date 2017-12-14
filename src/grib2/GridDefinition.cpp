@@ -239,6 +239,37 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
 
 
 
+bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in a child class!");
+}
+
+
+
+
+
+bool GridDefinition::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+{
+  try
+  {
+    double x = 0, y = 0;
+
+    if (getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y))
+    {
+      return getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid dimensions (i.e. the width and the height).
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each
@@ -265,6 +296,24 @@ T::Dimensions_opt GridDefinition::getGridDimensions() const
 void GridDefinition::initSpatialReference()
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in a child class!");
+}
+
+
+
+
+
+bool GridDefinition::reverseXDirection() const
+{
+  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+}
+
+
+
+
+
+bool GridDefinition::reverseYDirection() const
+{
+  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 
 

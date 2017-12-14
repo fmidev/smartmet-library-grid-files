@@ -162,6 +162,29 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
 
 
 
+
+bool GridDefinition::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+{
+  try
+  {
+    double x = 0, y = 0;
+
+    if (getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y))
+    {
+      return getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
   try
@@ -184,6 +207,15 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
   {
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
+}
+
+
+
+
+
+bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 
 
@@ -350,6 +382,24 @@ bool GridDefinition::getGridLatLonCoordinatesByOriginalCoordinates(double x,doub
   {
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
+}
+
+
+
+
+
+bool GridDefinition::reverseXDirection() const
+{
+  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+}
+
+
+
+
+
+bool GridDefinition::reverseYDirection() const
+{
+  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 
 

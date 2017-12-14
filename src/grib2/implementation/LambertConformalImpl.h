@@ -18,8 +18,11 @@ class LambertConformalImpl : public LambertConformal
 
     T::Coordinate_vec getGridCoordinates() const;
     T::Dimensions_opt getGridDimensions() const;
+    bool              getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     void              initSpatialReference();
+    bool              reverseXDirection() const;
+    bool              reverseYDirection() const;
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
     void              read(MemoryReader& memoryReader);
 

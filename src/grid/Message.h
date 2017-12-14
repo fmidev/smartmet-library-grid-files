@@ -87,8 +87,10 @@ class Message
     virtual T::Dimensions_opt     getGridDimensions() const;
     virtual T::Hash               getGridHash() const;
     virtual bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    virtual bool                  getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     virtual bool                  getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
     virtual bool                  getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    virtual bool                  getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                  getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     virtual T::GridLayout         getGridLayout() const;
     virtual std::size_t           getGridOriginalColumnCount(std::size_t row) const;
@@ -96,6 +98,9 @@ class Message
     virtual std::size_t           getGridOriginalRowCount() const;
     virtual std::size_t           getGridOriginalValueCount() const;
     virtual int                   getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
+    virtual float                 getGridPointAngleByLatLonCoordinates(double lat,double lon) const;
+    virtual float                 getGridPointAngle(T::CoordinateType coordinateType,double x,double y) const;
+    virtual void                  getGridPointAngles(std::vector<float>& angles) const;
     virtual bool                  getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                  getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     virtual T::GridProjection     getGridProjection() const;
@@ -126,9 +131,9 @@ class Message
     virtual T::TimeString         getReferenceTime() const;
     virtual T::SpatialReference*  getSpatialReference() const;
     virtual std::string           getWKT() const;
-
     virtual bool                  isGridGlobal() const;
-
+    virtual bool                  reverseXDirection() const;
+    virtual bool                  reverseYDirection() const;
     virtual void                  print(std::ostream& stream,uint level,uint optionFlags) const;
 
 protected:

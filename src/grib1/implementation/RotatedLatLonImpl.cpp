@@ -153,6 +153,8 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
     if ((scanningMode & 0x40) == 0)
       jDirectionIncrement = -jDirectionIncrement;
 
+    coordinateList.reserve(ni*nj);
+
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < nj; j++)
     {
@@ -260,7 +262,137 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
 
 
 
+/*! \brief This method return the latlon coordinates of the give grid point.
+
+        \param grid_i  The grid i-position.
+        \param grid_j  The grid j-position.
+        \param lat     The returned latitude value.
+        \param lon     The returned longitude value.
+*/
+
+bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+{
+  try
+  {
+    uint ni = (uint)mNi;
+    uint nj = (uint)mNj;
+
+    if (ni == 0)
+      ni = (uint)getGridOriginalColumnCount();
+
+    if ((double)grid_i > (double)ni)
+      return false;
+
+    if ((double)grid_j > (double)nj)
+      return false;
+
+    double latitudeOfFirstGridPoint = (double)mGridArea.getLatitudeOfFirstGridPoint();
+    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint();
+    double latitudeOfLastGridPoint = (double)mGridArea.getLatitudeOfLastGridPoint();
+    double longitudeOfLastGridPoint = (double)mGridArea.getLongitudeOfLastGridPoint();
+
+    double iDirectionIncrement = (double)mIDirectionIncrement;
+    double jDirectionIncrement = (double)mJDirectionIncrement;
+
+    unsigned char scanMode = (unsigned char)mScanningMode.getScanningMode();
+
+    if ((scanMode & 0x80) != 0)
+      iDirectionIncrement = -iDirectionIncrement;
+
+    if ((scanMode & 0x40) == 0)
+      jDirectionIncrement = -jDirectionIncrement;
+
+    if (iDirectionIncrement == 0  &&  (longitudeOfLastGridPoint-longitudeOfFirstGridPoint) != 0  && ni > 0)
+      iDirectionIncrement = (longitudeOfLastGridPoint-longitudeOfFirstGridPoint)/ni;
+
+    if (jDirectionIncrement == 0  &&  (latitudeOfLastGridPoint-latitudeOfFirstGridPoint) != 0  && ni > 0)
+      jDirectionIncrement = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/nj;
+
+    double y = latitudeOfFirstGridPoint + grid_j * jDirectionIncrement;
+    double x = longitudeOfFirstGridPoint + grid_i * iDirectionIncrement;
+
+    if (longitudeOfFirstGridPoint >= 180000)
+      x = longitudeOfFirstGridPoint - 360000 + grid_i * iDirectionIncrement;
+
+    double rotated_lon = x/1000;
+    double rotated_lat = y/1000;
+
+    double southPoleLat = (double)(mRotation.getLatitudeOfSouthernPole()/1000);
+    double southPoleLon = (double)(mRotation.getLongitudeOfSouthernPole()/1000);
+
+    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
+
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
+{
+  try
+  {
+    uint ni = (uint)mNi;
+    uint nj = (uint)mNj;
+
+    if (ni == 0)
+      ni = (uint)getGridOriginalColumnCount();
+
+    if ((double)grid_i > (double)ni)
+      return false;
+
+    if ((double)grid_j > (double)nj)
+      return false;
+
+    double latitudeOfFirstGridPoint = (double)mGridArea.getLatitudeOfFirstGridPoint();
+    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint();
+    double latitudeOfLastGridPoint = (double)mGridArea.getLatitudeOfLastGridPoint();
+    double longitudeOfLastGridPoint = (double)mGridArea.getLongitudeOfLastGridPoint();
+
+    double iDirectionIncrement = (double)mIDirectionIncrement;
+    double jDirectionIncrement = (double)mJDirectionIncrement;
+
+    unsigned char scanMode = (unsigned char)mScanningMode.getScanningMode();
+
+    if ((scanMode & 0x80) != 0)
+      iDirectionIncrement = -iDirectionIncrement;
+
+    if ((scanMode & 0x40) == 0)
+      jDirectionIncrement = -jDirectionIncrement;
+
+    if (iDirectionIncrement == 0  &&  (longitudeOfLastGridPoint-longitudeOfFirstGridPoint) != 0  && ni > 0)
+      iDirectionIncrement = (longitudeOfLastGridPoint-longitudeOfFirstGridPoint)/ni;
+
+    if (jDirectionIncrement == 0  &&  (latitudeOfLastGridPoint-latitudeOfFirstGridPoint) != 0  && ni > 0)
+      jDirectionIncrement = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/nj;
+
+    double yy = latitudeOfFirstGridPoint + grid_j * jDirectionIncrement;
+    double xx = longitudeOfFirstGridPoint + grid_i * iDirectionIncrement;
+
+    if (longitudeOfFirstGridPoint >= 180000)
+      xx = longitudeOfFirstGridPoint - 360000 + grid_i * iDirectionIncrement;
+
+    x = xx/1000;
+    y = yy/1000;
+
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
   try
   {
@@ -463,6 +595,47 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
   }
 }
 
+
+
+
+
+bool RotatedLatLonImpl::reverseXDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)mScanningMode.getScanningMode();
+
+    if ((scanMode & 0x80) != 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool RotatedLatLonImpl::reverseYDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)mScanningMode.getScanningMode();
+
+    if ((scanMode & 0x40) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
 
 
 

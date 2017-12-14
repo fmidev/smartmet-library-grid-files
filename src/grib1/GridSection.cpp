@@ -548,6 +548,44 @@ bool GridSection::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,
 
 
 
+bool GridSection::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  try
+  {
+    if (!mGridDefinition)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+
+    return mGridDefinition->getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GridSection::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+{
+  try
+  {
+    if (!mGridDefinition)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+
+    return mGridDefinition->getGridLatLonCoordinatesByGridPosition(grid_i,grid_j,lat,lon);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool GridSection::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
   try
@@ -757,6 +795,44 @@ T::SpatialReference* GridSection::getSpatialReference() const
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
+
+
+
+bool GridSection::reverseXDirection() const
+{
+  try
+  {
+    if (mGridDefinition != NULL)
+      return mGridDefinition->reverseXDirection();
+
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GridSection::reverseYDirection() const
+{
+  try
+  {
+    if (mGridDefinition != NULL)
+      return mGridDefinition->reverseYDirection();
+
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
 
 
 

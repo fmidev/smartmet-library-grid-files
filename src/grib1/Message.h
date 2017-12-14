@@ -62,8 +62,10 @@ class Message : public GRID::Message
     T::Dimensions_opt     getGridDimensions() const;
     T::Hash               getGridHash() const;
     bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    bool                  getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     bool                  getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
     bool                  getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    bool                  getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                  getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     T::GridLayout         getGridLayout() const;
     std::size_t           getGridOriginalColumnCount() const;
@@ -88,6 +90,8 @@ class Message : public GRID::Message
     T::SpatialReference*  getSpatialReference() const;
     std::string           getWKT() const;
     bool                  isGridGlobal() const;
+    bool                  reverseXDirection() const;
+    bool                  reverseYDirection() const;
     void                  print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Message/file type specific methods

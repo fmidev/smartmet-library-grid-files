@@ -103,6 +103,8 @@ T::Coordinate_vec LatLonImpl::getGridCoordinates() const
       jDirectionIncrement = -jDirectionIncrement;
 
 
+    coordinateList.reserve(ni*nj);
+
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < nj; j++)
     {
@@ -289,11 +291,74 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,dou
 
 
 
+bool LatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
+{
+  try
+  {
+    uint ni = (uint)(*mLatLon.getGrid()->getNi());
+    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+
+    if ((double)grid_i > (double)ni)
+      return false;
+
+    if ((double)grid_j > (double)nj)
+      return false;
+
+    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+
+    if ((scanningMode & 0x80) != 0)
+      iDirectionIncrement = -iDirectionIncrement;
+
+    if ((scanningMode & 0x40) == 0)
+      jDirectionIncrement = -jDirectionIncrement;
+
+    double y = latitudeOfFirstGridPoint + grid_j * jDirectionIncrement;
+    double x = longitudeOfFirstGridPoint + grid_i * iDirectionIncrement;
+
+    if (longitudeOfFirstGridPoint >= 180000000)
+      x = longitudeOfFirstGridPoint - 360000000 + grid_i * iDirectionIncrement;
+
+    lon = x/1000000;
+    lat = y/1000000;
+
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool LatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
   try
   {
     return getGridLatLonCoordinatesByGridPoint(grid_i,grid_j,y,x);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool LatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  try
+  {
+    return getGridLatLonCoordinatesByGridPosition(grid_i,grid_j,y,x);
   }
   catch (...)
   {
@@ -395,6 +460,47 @@ bool LatLonImpl::getGridPointByOriginalCoordinates(double x,double y,double& gri
   }
 }
 
+
+
+
+
+bool LatLonImpl::reverseXDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+
+    if ((scanMode & 0x80) != 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool LatLonImpl::reverseYDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+
+    if ((scanMode & 0x40) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
 
 
 

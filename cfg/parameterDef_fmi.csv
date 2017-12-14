@@ -1132,4 +1132,4 @@
 1168;1;PROB-SN6-6;%;Probability of snowfall reaching some threshold value in 6 h;1;0;
 1169;1;PROB-LVP-1;%;Probability of Low Visibility Procedures;1;1362;
 1170;1;PM25-UGM3;ug m-3;PM25 concentration;1;0;
-2000;1;T-F;F;Temperature in Fahrenheits;1;4;
+

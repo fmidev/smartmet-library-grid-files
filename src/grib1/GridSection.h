@@ -78,9 +78,11 @@ class GridSection : public GRID::MessageSection
     T::Hash               getGridHash() const;
     T::Coordinate_vec     getGridLatLonCoordinates() const;
     bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    bool                  getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     bool                  getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
     T::GridLayout         getGridLayout() const;
     bool                  getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    bool                  getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                  getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     std::size_t           getGridOriginalRowCount() const;
     std::size_t           getGridOriginalColumnCount(std::size_t row) const;
@@ -92,6 +94,8 @@ class GridSection : public GRID::MessageSection
     T::GridProjection     getGridProjection() const;
     std::string           getGridProjectionString() const;
     T::SpatialReference*  getSpatialReference() const;
+    bool                  reverseXDirection() const;
+    bool                  reverseYDirection() const;
 
     bool                  isGridGlobal() const;
     void                  read(MemoryReader& memoryReader);
