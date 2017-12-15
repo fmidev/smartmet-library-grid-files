@@ -331,6 +331,32 @@ void GribFile::read(MemoryReader& memoryReader)
 
 
 
+void GribFile::deleteUsers()
+{
+  try
+  {
+    mUserList.clear();
+
+    // Removing virtual message information from physical messages.
+
+    std::size_t len = getNumberOfMessages();
+    for (std::size_t t = 0; t<len; t++)
+    {
+      auto msg = getMessageByIndex(t);
+      if (msg != NULL)
+        msg->setVirtualMessage(0,0);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief This method can be used for finding out the type of the file.
 
         \return   The type of the file (expressed as an enum value).

@@ -57,6 +57,7 @@ class GridFile
     virtual bool                hasDependence(uint fileId);
 
     virtual void                addUser(uint fileId);
+    virtual void                deleteUsers();
     virtual void                getUsers(std::set<uint>& userList);
 
     virtual void                setGridFile(GridFile *gridFile);

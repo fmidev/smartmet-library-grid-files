@@ -48,6 +48,7 @@ class Message
     virtual short                 getForecastNumber() const;
     virtual T::GeometryId         getGridGeometryId() const;
     virtual void                  setMessageIndex(uint index);
+    virtual void                  setVirtualMessage(uint fileId,uint messageIndex);
 
     virtual T::ParamId            getFmiParameterId() const;
     virtual T::ParamLevelId       getFmiParameterLevelId() const;
@@ -64,6 +65,7 @@ class Message
     virtual std::string           getCdmParameterName() const;
     virtual std::string           getNewbaseParameterId() const;
     virtual std::string           getNewbaseParameterName() const;
+    virtual void                  getVirtualMessage(uint& fileId,uint& messageIndex);
 
     virtual void                  setFmiParameterId(T::ParamId fmiParameterId);
     virtual void                  setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId);
@@ -185,6 +187,14 @@ protected:
 
     /*! \brief  The newbase parameter name. */
     std::string           mNewbaseParameterName;
+
+    /*! \brief  The virtual file id. If the value is bigger that zero, then the virtual message should be used
+     * instead of this message
+     * */
+    uint                  mVirtualFileId;
+
+    /*! \brief  The virtual message index. */
+    uint                  mVirtualMessageIndex;
 };
 
 

@@ -32,6 +32,7 @@ class GribFile : public GRID::PhysicalGridFile
     void                setFileName(std::string  fileName);
     void                setCheckTime(time_t checkTime);
 */
+    void                deleteUsers();
     T::FileType         getFileType() const;
     std::string         getFileTypeString() const;
     GRID::Message*      getMessageByIndex(std::size_t index);

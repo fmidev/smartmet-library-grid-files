@@ -270,10 +270,35 @@ void GridFile::addUser(uint fileId)
   try
   {
     if (mGridFile)
+    {
       mGridFile->addUser(fileId);
+      return;
+    }
 
     if (mUserList.find(fileId) == mUserList.end())
       mUserList.insert(fileId);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void GridFile::deleteUsers()
+{
+  try
+  {
+    if (mGridFile)
+    {
+      mGridFile->deleteUsers();
+      return;
+    }
+
+    mUserList.clear();
   }
   catch (...)
   {
@@ -289,6 +314,12 @@ void GridFile::getUsers(std::set<uint>& userList)
 {
   try
   {
+    if (mGridFile)
+    {
+      mGridFile->getUsers(userList);
+      return;
+    }
+
     userList = mUserList;
   }
   catch (...)
