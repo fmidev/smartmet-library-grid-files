@@ -2407,7 +2407,7 @@ void GribDef::loadGeometryDefinitions(const char *filename)
               int iInc = (int)(atoll(field[7]));
               int jInc = (int)(atoll(field[8]));
               char *scanningMode = field[9];
-              //int orientation = (int)(atof(field[10])*1000000);
+              int orientation = (int)(atof(field[10])*1000000);
 
               // ******* GRIB 2 ********
 #if 0
@@ -2479,6 +2479,7 @@ void GribDef::loadGeometryDefinitions(const char *filename)
               def1->setLongitudeOfFirstGridPoint((std::int24_t)(longitude/1000));
               //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
               //def1->setLoV(orientation/1000);
+              def1->setOrientationOfTheGrid(orientation/1000);
               def1->setDxInMetres((std::uint24_t)iInc);
               def1->setDyInMetres((std::uint24_t)jInc);
               //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
@@ -2491,6 +2492,7 @@ void GribDef::loadGeometryDefinitions(const char *filename)
               def1->setGridGeometryName(geometryName);
               def1->initSpatialReference();
 
+              //printf("*** GEOMETRY : %d\n",geometryId);
               //def1->print(std::cout,0,0);
               //std::size_t hash = def1->getGridHash();
               //printf("HASH %llu\n",(unsigned long long)hash);
