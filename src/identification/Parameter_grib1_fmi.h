@@ -31,8 +31,8 @@ class Parameter_grib1_fmi
 };
 
 
-typedef std::vector<Parameter_grib1_fmi> Parameter_grib1_fmi_vec;
-typedef const Parameter_grib1_fmi* Parameter_grib1_fmi_cptr;
+typedef std::vector<Parameter_grib1_fmi> Param_grib1_fmi_vec;
+typedef const Parameter_grib1_fmi* Param_grib1_fmi_cptr;
 
 
 }

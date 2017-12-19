@@ -1,6 +1,7 @@
 #include "GribDef.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
+#include "common/ShowFunction.h"
 
 #include "grib1/implementation/LatLonImpl.h"
 #include "grib1/implementation/MercatorImpl.h"
@@ -52,12 +53,19 @@
 #include "grib2/implementation/TimeSectionImpl.h"                        //  "3.1200"
 
 
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
+
+
+
 namespace SmartMet
 {
 namespace Identification
 {
 
+// This is a global object that contains global configuration information.
+
 GribDef gribDef;
+
 
 
 
@@ -65,9 +73,22 @@ GribDef gribDef;
 
 GribDef::GribDef()
 {
+  FUNCTION_TRACE
   try
   {
     mInitialized = false;
+    mLastCheckTime = 0;
+    mTableValues_modificationTime = 0;
+    mParameterDefs_modificationTime = 0;
+    mUnitDefs_modificationTime = 0;
+    mLevelDefs_grib1_modificationTime = 0;
+    mLevelDefs_grib2_modificationTime = 0;
+    mTimeRangeDefs_grib1_modificationTime = 0;
+    mTimeRangeDefs_grib2_modificationTime = 0;
+    mParameters_grib1_modificationTime = 0;
+    mParameters_grib2_modificationTime = 0;
+    mGridDefinitions_modificationTime = 0;
+    mGridDefinitionsExt_modificationTime = 0;
   }
   catch (...)
   {
@@ -83,6 +104,7 @@ GribDef::GribDef()
 
 GribDef::~GribDef()
 {
+  FUNCTION_TRACE
   try
   {
     for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
@@ -107,27 +129,139 @@ GribDef::~GribDef()
 
 void GribDef::init(const char* configDir)
 {
+  FUNCTION_TRACE
   try
   {
     if (mInitialized)
       return;
 
-    mConfigDir = configDir;
-
-    loadUnitDefinitions();
-    loadTableValues();
-    loadParameterDefinitions();
-    loadParameterDefinitions_grib1();
-    loadParameterDefinitions_grib2();
-    loadLevelDefinitions_grib1();
-    loadLevelDefinitions_grib2();
-    loadTimeRangeDefinitions_grib1();
-    loadTimeRangeDefinitions_grib2();
-    loadGeometryDefinitions();
-
-    mMessageIdentifier_fmi.init(configDir);
-
     mInitialized = true;
+    mConfigDir = configDir;
+    updateCheck();
+    mMessageIdentifier_fmi.init(configDir);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void GribDef::updateCheck()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mInitialized)
+      throw SmartMet::Spine::Exception(BCP,"The 'GridDef' object is not initialized! Call init() first!");
+
+    if ((mLastCheckTime + 30) < time(0))
+    {
+      AutoThreadLock lock(&mThreadLock);
+
+      mLastCheckTime = time(0);
+
+      char filename[200];
+      char filename2[200];
+
+      sprintf(filename,"%s/units.csv",mConfigDir.c_str());
+      time_t tt = getFileModificationTime(filename);
+      if (mUnitDefs_modificationTime != tt)
+      {
+        mUnitDefs.clear();
+        loadUnitDefinitions(filename);
+        mUnitDefs_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/tables.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mTableValues_modificationTime != tt)
+      {
+        mTableValues.clear();
+        loadTableValues(filename);
+        mTableValues_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/parameterDef.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mParameterDefs_modificationTime != tt)
+      {
+        mParameterDefs.clear();
+        loadParameterDefinitions(filename);
+        mParameterDefs_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/parameterDef_grib1.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mParameters_grib1_modificationTime != tt)
+      {
+        mParameters_grib1.clear();
+        loadGrib1ParameterDefinitions(filename);
+        mParameters_grib1_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/parameterDef_grib2.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mParameters_grib2_modificationTime != tt)
+      {
+        mParameters_grib2.clear();
+        loadGrib2ParameterDefinitions(filename);
+        mParameters_grib2_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/levelDef_grib1.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mLevelDefs_grib1_modificationTime != tt)
+      {
+        mLevelDefs_grib1.clear();
+        loadGrib1LevelDefinitions(filename);
+        mLevelDefs_grib1_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/levelDef_grib2.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mLevelDefs_grib2_modificationTime != tt)
+      {
+        mLevelDefs_grib2.clear();
+        loadGrib2LevelDefinitions(filename);
+        mLevelDefs_grib2_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/timeRangeDef_grib1.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mTimeRangeDefs_grib1_modificationTime != tt)
+      {
+        mTimeRangeDefs_grib1.clear();
+        loadGrib1TimeRangeDefinitions(filename);
+        mTimeRangeDefs_grib1_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/timeRangeDef_grib2.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mTimeRangeDefs_grib2_modificationTime != tt)
+      {
+        mTimeRangeDefs_grib2.clear();
+        loadGrib2TimeRangeDefinitions(filename);
+        mTimeRangeDefs_grib2_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/geometryDef.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      sprintf(filename2,"%s/geometryDef_ext.csv",mConfigDir.c_str());
+      time_t tt2 = getFileModificationTime(filename2);
+      if (mGridDefinitions_modificationTime != tt ||  mGridDefinitionsExt_modificationTime != tt2)
+      {
+        mGridDefinitions1.clear();
+        mGridDefinitions2.clear();
+        loadGeometryDefinitions(filename);
+        loadGeometryDefinitions(filename2);
+        mGridDefinitions_modificationTime = tt;
+        mGridDefinitionsExt_modificationTime = tt2;
+      }
+    }
   }
   catch (...)
   {
@@ -141,14 +275,16 @@ void GribDef::init(const char* configDir)
 
 std::string GribDef::getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,std::uint32_t number)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t valueCount = mTableValues.size();
-    for (std::size_t t = 0; t<valueCount; t++)
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    for (auto it = mTableValues.begin(); it != mTableValues.end(); ++it)
     {
-      auto rec = mTableValues[t];
-      if (rec.mGribVersion == gribVersion  &&  rec.mTableVersion == tableVersion  &&  rec.mTable == table  &&  rec.mNumber == number)
-        return rec.mValue;
+      if (it->mGribVersion == gribVersion  &&  it->mTableVersion == tableVersion  &&  it->mTable == table  &&  it->mNumber == number)
+        return it->mValue;
     }
     return std::to_string(number);
   }
@@ -164,6 +300,7 @@ std::string GribDef::getTableValue(std::uint8_t gribVersion,std::uint8_t tableVe
 
 std::string GribDef::getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt8_opt number)
 {
+  FUNCTION_TRACE
   try
   {
     if (number)
@@ -183,6 +320,7 @@ std::string GribDef::getTableValue(std::uint8_t gribVersion,std::uint8_t tableVe
 
 std::string GribDef::getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt16_opt number)
 {
+  FUNCTION_TRACE
   try
   {
     if (number)
@@ -200,15 +338,134 @@ std::string GribDef::getTableValue(std::uint8_t gribVersion,std::uint8_t tableVe
 
 
 
-Parameter_grib1_cptr GribDef::getParameterDefById_grib1(T::ParamId gribParamId)
+uint GribDef::getGrib1ParameterDefCount()
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mParameters_grib1.size();
-    for (std::size_t t=0; t<sz; t++)
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    return (uint)mParameters_grib1.size();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGrib1ParameterDefById(T::ParamId gribParamId,Parameter_grib1& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib1ParameterDefById(gribParamId);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGrib1ParameterDefByIndex(uint index,Parameter_grib1& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    if (index >= (uint)mParameters_grib1.size())
+      return false;
+
+    paramDef = mParameters_grib1[index];
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGrib1ParameterDefByName(std::string gribParamName,Parameter_grib1& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib1ParameterDefByName(gribParamName);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfParameter,Parameter_grib1& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib1ParameterDefByTable(tableVersion,indicatorOfParameter);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+Parameter_grib1_cptr GribDef::getGrib1ParameterDefById(T::ParamId gribParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mParameters_grib1.begin(); it != mParameters_grib1.end(); ++it)
     {
-      if (strcasecmp(mParameters_grib1[t].mGribParameterId.c_str(),gribParamId.c_str()) == 0)
-        return &mParameters_grib1[t];
+      if (strcasecmp(it->mGribParameterId.c_str(),gribParamId.c_str()) == 0)
+        return &(*it);
     }
     return NULL;
   }
@@ -222,15 +479,15 @@ Parameter_grib1_cptr GribDef::getParameterDefById_grib1(T::ParamId gribParamId)
 
 
 
-Parameter_grib1_cptr GribDef::getParameterDefByName_grib1(std::string gribParamName)
+Parameter_grib1_cptr GribDef::getGrib1ParameterDefByName(std::string gribParamName)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mParameters_grib1.size();
-    for (std::size_t t=0; t<sz; t++)
+    for (auto it = mParameters_grib1.begin(); it != mParameters_grib1.end(); ++it)
     {
-      if (strcasecmp(mParameters_grib1[t].mParameterName.c_str(),gribParamName.c_str()) == 0)
-        return &mParameters_grib1[t];
+      if (strcasecmp(it->mParameterName.c_str(),gribParamName.c_str()) == 0)
+        return &(*it);
     }
     return NULL;
   }
@@ -244,36 +501,15 @@ Parameter_grib1_cptr GribDef::getParameterDefByName_grib1(std::string gribParamN
 
 
 
-Parameter_grib1_cptr GribDef::getParameterDef_grib1(uint tableVersion,uint indicatorOfParameter)
+Parameter_grib1_cptr GribDef::getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfParameter)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mParameters_grib1.size();
-    for (std::size_t t=0; t<sz; t++)
+    for (auto it = mParameters_grib1.begin(); it != mParameters_grib1.end(); ++it)
     {
-      if (mParameters_grib1[t].mTable2Version == tableVersion  &&  mParameters_grib1[t].mIndicatorOfParameter == indicatorOfParameter)
-        return &mParameters_grib1[t];
-    }
-    return NULL;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-Parameter_grib2_cptr GribDef::getParameterDefById_grib2(T::ParamId gribParamId)
-{
-  try
-  {
-    std::size_t sz = mParameters_grib2.size();
-    for (std::size_t t=0; t<sz; t++)
-    {
-      if (strcasecmp(mParameters_grib2[t].mGribParameterId.c_str(),gribParamId.c_str()) == 0)
-        return &mParameters_grib2[t];
+      if (it->mTable2Version == tableVersion  &&  it->mIndicatorOfParameter == indicatorOfParameter)
+        return &(*it);
     }
     return NULL;
   }
@@ -287,15 +523,109 @@ Parameter_grib2_cptr GribDef::getParameterDefById_grib2(T::ParamId gribParamId)
 
 
 
-Parameter_grib2_cptr GribDef::getParameterDefByName_grib2(std::string gribParamName)
+uint GribDef::getGrib2ParameterDefCount()
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mParameters_grib2.size();
-    for (std::size_t t=0; t<sz; t++)
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    return (uint)mParameters_grib2.size();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGrib2ParameterDefById(T::ParamId gribParamId,Parameter_grib2& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib2ParameterDefById(gribParamId);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGrib2ParameterDefByIndex(uint index,Parameter_grib2& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    if (index >= (uint)mParameters_grib2.size())
+      return false;
+
+    paramDef = mParameters_grib2[index];
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGrib2ParameterDefByName(std::string gribParamName,Parameter_grib2& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib2ParameterDefByName(gribParamName);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+Parameter_grib2_cptr GribDef::getGrib2ParameterDefById(T::ParamId gribParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mParameters_grib2.begin(); it != mParameters_grib2.end(); ++it)
     {
-      if (strcasecmp(mParameters_grib2[t].mParameterName.c_str(),gribParamName.c_str()) == 0)
-        return &mParameters_grib2[t];
+      if (strcasecmp(it->mGribParameterId.c_str(),gribParamId.c_str()) == 0)
+        return &(*it);
     }
     return NULL;
   }
@@ -309,13 +639,33 @@ Parameter_grib2_cptr GribDef::getParameterDefByName_grib2(std::string gribParamN
 
 
 
-void GribDef::loadTableValues()
+Parameter_grib2_cptr GribDef::getGrib2ParameterDefByName(std::string gribParamName)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/tables.csv",mConfigDir.c_str());
+    for (auto it = mParameters_grib2.begin(); it != mParameters_grib2.end(); ++it)
+    {
+      if (strcasecmp(it->mParameterName.c_str(),gribParamName.c_str()) == 0)
+        return &(*it);
+    }
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
 
+
+
+
+
+void GribDef::loadTableValues(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -392,13 +742,11 @@ void GribDef::loadTableValues()
 
 
 
-void GribDef::loadParameterDefinitions()
+void GribDef::loadParameterDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/parameterDef.csv",mConfigDir.c_str());
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -469,15 +817,92 @@ void GribDef::loadParameterDefinitions()
 
 
 
-ParameterDefinition_cptr GribDef::getGribParamDefById(T::ParamId gribParamId)
+
+
+bool GribDef::getGribParamDefById(T::ParamId gribParamId,ParameterDefinition&  paramDef)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t paramDefCount = mParameterDefs.size();
-    for (std::size_t t=0; t<paramDefCount; t++)
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGribParamDefById(gribParamId);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGribParamDefByName(std::string gribParamName,ParameterDefinition&  paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGribParamDefByName(gribParamName);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGribParamDef(uint discipline,uint category,uint number,ParameterDefinition&  paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGribParamDef(discipline,category,number);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+ParamDef_cptr GribDef::getGribParamDefById(T::ParamId gribParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mParameterDefs.begin(); it != mParameterDefs.end(); ++it)
     {
-      if (strcasecmp(mParameterDefs[t].mGribParameterId.c_str(),gribParamId.c_str()) == 0)
-        return &mParameterDefs[t];
+      if (strcasecmp(it->mGribParameterId.c_str(),gribParamId.c_str()) == 0)
+        return &(*it);
     }
     return NULL;
   }
@@ -491,15 +916,15 @@ ParameterDefinition_cptr GribDef::getGribParamDefById(T::ParamId gribParamId)
 
 
 
-ParameterDefinition_cptr GribDef::getGribParamDefByName(std::string gribParamName)
+ParamDef_cptr GribDef::getGribParamDefByName(std::string gribParamName)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t paramDefCount = mParameterDefs.size();
-    for (std::size_t t=0; t<paramDefCount; t++)
+    for (auto it = mParameterDefs.begin(); it != mParameterDefs.end(); ++it)
     {
-      if (strcasecmp(mParameterDefs[t].mParameterName.c_str(),gribParamName.c_str()) == 0)
-        return &mParameterDefs[t];
+      if (strcasecmp(it->mParameterName.c_str(),gribParamName.c_str()) == 0)
+        return &(*it);
     }
     return NULL;
   }
@@ -513,15 +938,15 @@ ParameterDefinition_cptr GribDef::getGribParamDefByName(std::string gribParamNam
 
 
 
-ParameterDefinition_cptr GribDef::getGribParamDef(uint discipline,uint category,uint number)
+ParamDef_cptr GribDef::getGribParamDef(uint discipline,uint category,uint number)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t paramDefCount = mParameterDefs.size();
-    for (std::size_t t=0; t<paramDefCount; t++)
+    for (auto it = mParameterDefs.begin(); it != mParameterDefs.end(); ++it)
     {
-      if (mParameterDefs[t].mDiscipline == discipline &&  mParameterDefs[t].mParameterCategory == category && mParameterDefs[t].mParameterNumber == number)
-        return &mParameterDefs[t];
+      if (it->mDiscipline == discipline &&  it->mParameterCategory == category && it->mParameterNumber == number)
+        return &(*it);
     }
     return NULL;
   }
@@ -535,15 +960,65 @@ ParameterDefinition_cptr GribDef::getGribParamDef(uint discipline,uint category,
 
 
 
-LevelDef_cptr GribDef::getLevelDef_grib1(uint levelId)
+bool GribDef::getGrib1LevelDef(uint levelId,LevelDef& levelDef)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mLevelDefs_grib1.size();
-    for (std::size_t t=0; t<sz; t++)
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib1LevelDef(levelId);
+    if (def == NULL)
+      return false;
+
+    levelDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGrib2LevelDef(uint levelId,LevelDef& levelDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib2LevelDef(levelId);
+    if (def == NULL)
+      return false;
+
+    levelDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+LevelDef_cptr GribDef::getGrib1LevelDef(uint levelId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mLevelDefs_grib1.begin(); it != mLevelDefs_grib1.end(); ++it)
     {
-      if (mLevelDefs_grib1[t].mLevelId == levelId)
-        return &mLevelDefs_grib1[t];
+      if (it->mLevelId == levelId)
+        return &(*it);
     }
     return NULL;
   }
@@ -557,15 +1032,15 @@ LevelDef_cptr GribDef::getLevelDef_grib1(uint levelId)
 
 
 
-LevelDef_cptr GribDef::getLevelDef_grib2(uint levelId)
+LevelDef_cptr GribDef::getGrib2LevelDef(uint levelId)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mLevelDefs_grib2.size();
-    for (std::size_t t=0; t<sz; t++)
+    for (auto it = mLevelDefs_grib2.begin(); it != mLevelDefs_grib2.end(); ++it)
     {
-      if (mLevelDefs_grib2[t].mLevelId == levelId)
-        return &mLevelDefs_grib1[t];
+      if (it->mLevelId == levelId)
+        return &(*it);
     }
     return NULL;
   }
@@ -579,15 +1054,65 @@ LevelDef_cptr GribDef::getLevelDef_grib2(uint levelId)
 
 
 
-TimeRangeDef_cptr GribDef::getTimeRangeDef_grib1(uint timeRangeId)
+bool GribDef::getGrib1TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mTimeRangeDefs_grib1.size();
-    for (std::size_t t=0; t<sz; t++)
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib1TimeRangeDef(timeRangeId);
+    if (def == NULL)
+      return false;
+
+    timeRangeDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGrib2TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib2TimeRangeDef(timeRangeId);
+    if (def == NULL)
+      return false;
+
+    timeRangeDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+TimeRangeDef_cptr GribDef::getGrib1TimeRangeDef(uint timeRangeId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mTimeRangeDefs_grib1.begin(); it != mTimeRangeDefs_grib1.end(); ++it)
     {
-      if (mTimeRangeDefs_grib1[t].mTimeRangeId == timeRangeId)
-        return &mTimeRangeDefs_grib1[t];
+      if (it->mTimeRangeId == timeRangeId)
+        return &(*it);
     }
     return NULL;
   }
@@ -600,15 +1125,16 @@ TimeRangeDef_cptr GribDef::getTimeRangeDef_grib1(uint timeRangeId)
 
 
 
-TimeRangeDef_cptr GribDef::getTimeRangeDef_grib2(uint timeRangeId)
+
+TimeRangeDef_cptr GribDef::getGrib2TimeRangeDef(uint timeRangeId)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mTimeRangeDefs_grib2.size();
-    for (std::size_t t=0; t<sz; t++)
+    for (auto it = mTimeRangeDefs_grib2.begin(); it != mTimeRangeDefs_grib2.end(); ++it)
     {
-      if (mTimeRangeDefs_grib2[t].mTimeRangeId == timeRangeId)
-        return &mTimeRangeDefs_grib2[t];
+      if (it->mTimeRangeId == timeRangeId)
+        return &(*it);
     }
     return NULL;
   }
@@ -621,13 +1147,12 @@ TimeRangeDef_cptr GribDef::getTimeRangeDef_grib2(uint timeRangeId)
 
 
 
-void GribDef::loadUnitDefinitions()
+
+void GribDef::loadUnitDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/units.csv",mConfigDir.c_str());
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -688,14 +1213,12 @@ void GribDef::loadUnitDefinitions()
 
 
 
-void GribDef::loadLevelDefinitions_grib1()
+
+void GribDef::loadGrib1LevelDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/levelDef_grib1.csv",mConfigDir.c_str());
-
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -761,14 +1284,12 @@ void GribDef::loadLevelDefinitions_grib1()
 
 
 
-void GribDef::loadLevelDefinitions_grib2()
+
+void GribDef::loadGrib2LevelDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/levelDef_grib2.csv",mConfigDir.c_str());
-
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -834,14 +1355,12 @@ void GribDef::loadLevelDefinitions_grib2()
 
 
 
-void GribDef::loadTimeRangeDefinitions_grib1()
+
+void GribDef::loadGrib1TimeRangeDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/timeRangeDef_grib1.csv",mConfigDir.c_str());
-
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -908,14 +1427,11 @@ void GribDef::loadTimeRangeDefinitions_grib1()
 
 
 
-void GribDef::loadTimeRangeDefinitions_grib2()
+void GribDef::loadGrib2TimeRangeDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/timeRangeDef_grib2.csv",mConfigDir.c_str());
-
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -982,14 +1498,11 @@ void GribDef::loadTimeRangeDefinitions_grib2()
 
 
 
-void GribDef::loadParameterDefinitions_grib1()
+void GribDef::loadGrib1ParameterDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/parameterDef_grib1.csv",mConfigDir.c_str());
-
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -1075,13 +1588,11 @@ void GribDef::loadParameterDefinitions_grib1()
 
 
 
-void GribDef::loadParameterDefinitions_grib2()
+void GribDef::loadGrib2ParameterDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/parameterDef_grib2.csv",mConfigDir.c_str());
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -1215,16 +1726,17 @@ void GribDef::loadParameterDefinitions_grib2()
 
 
 
-GRIB1::GridDefinition_ptr GribDef::getGridDefinition1ByGeometryId(int geometryId)
+GRIB1::GridDef_ptr GribDef::getGrib1DefinitionByGeometryId(int geometryId)
 {
+  FUNCTION_TRACE
   try
   {
     /*
-    std::map<uint,GRIB1::GridDefinition_ptr>::iterator it = mGridDefinitions1.find(geometryId);
+    std::map<uint,GRIB1::GridDef_ptr>::iterator it = mGridDefinitions1.find(geometryId);
     if (it != mGridDefinitions1.end())
       return it->second;
 */
-    std::vector<GRIB1::GridDefinition_ptr>::iterator it;
+    std::vector<GRIB1::GridDef_ptr>::iterator it;
     for (it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
     {
       if ((*it)->getGridGeometryId() == geometryId)
@@ -1243,8 +1755,9 @@ GRIB1::GridDefinition_ptr GribDef::getGridDefinition1ByGeometryId(int geometryId
 
 
 
-GRIB1::GridDefinition_ptr GribDef::getGridDefinition1ByHash(T::Hash hash)
+GRIB1::GridDef_ptr GribDef::getGrib1DefinitionByHash(T::Hash hash)
 {
+  FUNCTION_TRACE
   try
   {
     /*
@@ -1269,16 +1782,17 @@ GRIB1::GridDefinition_ptr GribDef::getGridDefinition1ByHash(T::Hash hash)
 
 
 
-GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByGeometryId(int geometryId)
+GRIB2::GridDef_ptr GribDef::getGrib2DefinitionByGeometryId(int geometryId)
 {
+  FUNCTION_TRACE
   try
   {
     /*
-    std::map<uint,GRIB2::GridDefinition_ptr>::iterator it = mGridDefinitions2.find(geometryId);
+    std::map<uint,GRIB2::GridDef_ptr>::iterator it = mGridDefinitions2.find(geometryId);
     if (it != mGridDefinitions2.end())
       return it->second;
 */
-    std::vector<GRIB2::GridDefinition_ptr>::iterator it;
+    std::vector<GRIB2::GridDef_ptr>::iterator it;
     for (it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
     {
       if ((*it)->getGridGeometryId() == geometryId)
@@ -1296,8 +1810,58 @@ GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByGeometryId(int geometryId
 
 
 
-GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByHash(T::Hash hash)
+int GribDef::getGrib1GeometryIdByHash(T::Hash hash)
 {
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib1DefinitionByHash(hash);
+    if (def == NULL)
+      return 0;
+
+    return def->getGridGeometryId();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+
+int GribDef::getGrib2GeometryIdByHash(T::Hash hash)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getGrib2DefinitionByHash(hash);
+    if (def == NULL)
+      return 0;
+
+    return def->getGridGeometryId();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+GRIB2::GridDef_ptr GribDef::getGrib2DefinitionByHash(T::Hash hash)
+{
+  FUNCTION_TRACE
   try
   {
     /*
@@ -1322,10 +1886,126 @@ GRIB2::GridDefinition_ptr GribDef::getGridDefinition2ByHash(T::Hash hash)
 
 
 
-void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList)
+bool GribDef::getGeometryNameById(T::GeometryId geometryId,std::string& name)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+    {
+      name = def1->getGridGeometryName();
+      return true;
+    }
+
+    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    if (def2)
+    {
+      name = def2->getGridGeometryName();
+      return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols,uint& rows)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+    {
+      T::Dimensions_opt dim = def1->getGridDimensions();
+      if (dim)
+      {
+        cols = dim->nx();
+        rows = dim->ny();
+        return true;
+      }
+    }
+
+    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    if (def2)
+    {
+      T::Dimensions_opt dim = def2->getGridDimensions();
+      if (dim)
+      {
+        cols = dim->nx();
+        rows = dim->ny();
+        return true;
+      }
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GribDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_vec& coordinates)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+    {
+      coordinates = def1->getGridLatLonCoordinates();
+      return true;
+    }
+
+    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    if (def2)
+    {
+      coordinates = def2->getGridLatLonCoordinates();
+      return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
     {
       double grid_i = 0;
@@ -1362,13 +2042,11 @@ void GribDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
 
 
 
-void GribDef::loadGeometryDefinitions()
+void GribDef::loadGeometryDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/geometryDef.csv",mConfigDir.c_str());
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -1773,7 +2451,7 @@ void GribDef::loadGeometryDefinitions()
               //T::Hash hash = def2->getGridHash();
               //printf("HASH %llu\n",(unsigned long long)hash);
 
-              mGridDefinitions2.insert(std::pair<uint,GRIB2::GridDefinition_ptr>(geometryId,def2));
+              mGridDefinitions2.insert(std::pair<uint,GRIB2::GridDef_ptr>(geometryId,def2));
 #endif
 
               // ******* GRIB 1 ********
@@ -2014,13 +2692,16 @@ void GribDef::loadGeometryDefinitions()
 
 T::InterpolationMethod GribDef::getPreferredInterpolationMethodByUnits(std::string originalUnits)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t unitCount = mUnitDefs.size();
-    for (std::size_t t = 0; t<unitCount; t++)
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    for (auto it = mUnitDefs.begin(); it != mUnitDefs.end(); ++it)
     {
-      if (mUnitDefs[t].mOriginalUnits == originalUnits)
-        return mUnitDefs[t].mPreferredInterpolationMethod;
+      if (it->mOriginalUnits == originalUnits)
+        return it->mPreferredInterpolationMethod;
     }
 
     return T::InterpolationMethod::Linear;
@@ -2037,13 +2718,16 @@ T::InterpolationMethod GribDef::getPreferredInterpolationMethodByUnits(std::stri
 
 std::string GribDef::getPreferredUnits(std::string originalUnits)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t unitCount = mUnitDefs.size();
-    for (std::size_t t = 0; t<unitCount; t++)
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    for (auto it = mUnitDefs.begin(); it != mUnitDefs.end(); ++it)
     {
-      if (mUnitDefs[t].mOriginalUnits == originalUnits)
-        return mUnitDefs[t].mPreferredUnits;
+      if (it->mOriginalUnits == originalUnits)
+        return it->mPreferredUnits;
     }
 
     return originalUnits;

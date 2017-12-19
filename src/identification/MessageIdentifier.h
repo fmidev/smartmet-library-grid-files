@@ -33,18 +33,20 @@ class MessageIdentifier
                                     MessageIdentifier();
     virtual                         ~MessageIdentifier();
 
-    virtual T::ParamId              getParamId(GRIB1::Message& message);
-    virtual T::ParamId              getParamId(GRIB2::Message& message);
     virtual T::ParamId              getParamIdByName(std::string paramName);
+
+    virtual T::ParamId              getParamId(GRIB1::Message& message);
     virtual T::ParamLevelId         getParamLevelId(GRIB1::Message& message);
-    virtual T::ParamLevelId         getParamLevelId(GRIB2::Message& message);
     virtual std::string             getParamName(GRIB1::Message& message);
-    virtual std::string             getParamName(GRIB2::Message& message);
     virtual std::string             getParamDescription(GRIB1::Message& message);
-    virtual std::string             getParamDescription(GRIB2::Message& message);
     virtual std::string             getParamUnits(GRIB1::Message& message);
-    virtual std::string             getParamUnits(GRIB2::Message& message);
     virtual T::InterpolationMethod  getParamInterpolationMethod(GRIB1::Message& message);
+
+    virtual T::ParamId              getParamId(GRIB2::Message& message);
+    virtual T::ParamLevelId         getParamLevelId(GRIB2::Message& message);
+    virtual std::string             getParamName(GRIB2::Message& message);
+    virtual std::string             getParamDescription(GRIB2::Message& message);
+    virtual std::string             getParamUnits(GRIB2::Message& message);
     virtual T::InterpolationMethod  getParamInterpolationMethod(GRIB2::Message& message);
 };
 

@@ -2,6 +2,10 @@
 #include "MessageIdentifier_grib1.h"
 #include "GribDef.h"
 #include "common/Exception.h"
+#include "common/ShowFunction.h"
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
 namespace SmartMet
@@ -12,6 +16,7 @@ namespace Identification
 
 MessageIdentifier_grib2::MessageIdentifier_grib2()
 {
+  FUNCTION_TRACE
   try
   {
   }
@@ -27,6 +32,7 @@ MessageIdentifier_grib2::MessageIdentifier_grib2()
 
 MessageIdentifier_grib2::~MessageIdentifier_grib2()
 {
+  FUNCTION_TRACE
   try
   {
   }
@@ -42,6 +48,7 @@ MessageIdentifier_grib2::~MessageIdentifier_grib2()
 
 T::ParamId MessageIdentifier_grib2::getParamId(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     return gribDef.mMessageIdentifier_grib1.getParamId(message);
@@ -58,6 +65,7 @@ T::ParamId MessageIdentifier_grib2::getParamId(GRIB1::Message& message)
 
 T::ParamId MessageIdentifier_grib2::getParamId(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamId paramId;
@@ -66,18 +74,18 @@ T::ParamId MessageIdentifier_grib2::getParamId(GRIB2::Message& message)
     if (!indicatorSection)
       return paramId;
 
-    std::size_t parameterCount = gribDef.mParameters_grib2.size();
+    uint parameterCount = gribDef.getGrib2ParameterDefCount();
     if (parameterCount == 0)
       return paramId;
-
 
     // We have to go through all parameters and try to find the best match.
 
     uint maxMatchPoints = 0;
 
-    for (std::size_t t=0; t<parameterCount; t++)
+    for (uint t=0; t<parameterCount; t++)
     {
-      Parameter_grib2 p = gribDef.mParameters_grib2[t];
+      Parameter_grib2 p;
+      gribDef.getGrib2ParameterDefByIndex(t,p);
       if (p.mDiscipline == indicatorSection->getDiscipline())
       {
          uint matchPoints = countParameterMatchPoints(message,p);
@@ -103,13 +111,14 @@ T::ParamId MessageIdentifier_grib2::getParamId(GRIB2::Message& message)
 
 T::ParamId MessageIdentifier_grib2::getParamIdByName(std::string gribParamName)
 {
+  FUNCTION_TRACE
   try
   {
-    const Parameter_grib2 *p = gribDef.getParameterDefByName_grib2(gribParamName);
-    if (p == NULL)
-      return std::string("");
+    Parameter_grib2 param;
+    if (gribDef.getGrib2ParameterDefByName(gribParamName,param))
+      return param.mGribParameterId;
 
-    return p->mGribParameterId;
+    return std::string("");
   }
   catch (...)
   {
@@ -123,6 +132,7 @@ T::ParamId MessageIdentifier_grib2::getParamIdByName(std::string gribParamName)
 
 T::ParamLevelId MessageIdentifier_grib2::getParamLevelId(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     // ToDo: Convert GRIB 1 parameter levels to GRIB 2 parameter levels.
@@ -140,6 +150,7 @@ T::ParamLevelId MessageIdentifier_grib2::getParamLevelId(GRIB1::Message& message
 
 T::ParamLevelId MessageIdentifier_grib2::getParamLevelId(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     return message.getGridParameterLevelId();
@@ -156,6 +167,7 @@ T::ParamLevelId MessageIdentifier_grib2::getParamLevelId(GRIB2::Message& message
 
 uint MessageIdentifier_grib2::countParameterMatchPoints(GRIB2::Message& message,const Parameter_grib2& p)
 {
+  FUNCTION_TRACE
   try
   {
     GRIB2::ProductSection_cptr productSection = message.getProductSection();
@@ -327,15 +339,17 @@ uint MessageIdentifier_grib2::countParameterMatchPoints(GRIB2::Message& message,
 
 
 
+
 std::string MessageIdentifier_grib2::getParamName(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
-    const Parameter_grib2 *p = gribDef.getParameterDefById_grib2(message.getGribParameterId());
-    if (p == NULL)
-      return std::string("");
+    Parameter_grib2 param;
+    if (gribDef.getGrib2ParameterDefById(message.getGribParameterId(),param))
+      return param.mParameterName;
 
-    return p->mParameterName;
+    return std::string("");
   }
   catch (...)
   {
@@ -349,13 +363,14 @@ std::string MessageIdentifier_grib2::getParamName(GRIB1::Message& message)
 
 std::string MessageIdentifier_grib2::getParamName(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
-    const Parameter_grib2 *p = gribDef.getParameterDefById_grib2(message.getGribParameterId());
-    if (p == NULL)
-      return std::string("");
+    Parameter_grib2 param;
+    if (gribDef.getGrib2ParameterDefById(message.getGribParameterId(),param))
+      return param.mParameterName;
 
-    return p->mParameterName;
+    return std::string("");
   }
   catch (...)
   {
@@ -369,13 +384,14 @@ std::string MessageIdentifier_grib2::getParamName(GRIB2::Message& message)
 
 std::string MessageIdentifier_grib2::getParamDescription(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
-    const Parameter_grib2 *p = gribDef.getParameterDefById_grib2(message.getGribParameterId());
-    if (p == NULL)
-      return std::string("");
+    Parameter_grib2 param;
+    if (gribDef.getGrib2ParameterDefById(message.getGribParameterId(),param))
+      return param.mParameterDescription;
 
-    return p->mParameterDescription;
+    return std::string("");
   }
   catch (...)
   {
@@ -389,13 +405,14 @@ std::string MessageIdentifier_grib2::getParamDescription(GRIB1::Message& message
 
 std::string MessageIdentifier_grib2::getParamDescription(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
-    const Parameter_grib2 *p = gribDef.getParameterDefById_grib2(message.getGribParameterId());
-    if (p == NULL)
-      return std::string("");
+    Parameter_grib2 param;
+    if (gribDef.getGrib2ParameterDefById(message.getGribParameterId(),param))
+      return param.mParameterDescription;
 
-    return p->mParameterDescription;
+    return std::string("");
   }
   catch (...)
   {
@@ -409,13 +426,14 @@ std::string MessageIdentifier_grib2::getParamDescription(GRIB2::Message& message
 
 std::string MessageIdentifier_grib2::getParamUnits(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
-    const Parameter_grib2 *p = gribDef.getParameterDefById_grib2(message.getGribParameterId());
-    if (p == NULL)
-      return std::string("");
+    Parameter_grib2 param;
+    if (gribDef.getGrib2ParameterDefById(message.getGribParameterId(),param))
+      return param.mParameterUnits;
 
-    return p->mParameterUnits;
+    return std::string("");
   }
   catch (...)
   {
@@ -429,13 +447,14 @@ std::string MessageIdentifier_grib2::getParamUnits(GRIB1::Message& message)
 
 std::string MessageIdentifier_grib2::getParamUnits(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
-    const Parameter_grib2 *p = gribDef.getParameterDefById_grib2(message.getGribParameterId());
-    if (p == NULL)
-      return std::string("");
+    Parameter_grib2 param;
+    if (gribDef.getGrib2ParameterDefById(message.getGribParameterId(),param))
+      return param.mParameterUnits;
 
-    return p->mParameterUnits;
+    return std::string("");
   }
   catch (...)
   {
@@ -449,11 +468,12 @@ std::string MessageIdentifier_grib2::getParamUnits(GRIB2::Message& message)
 
 T::InterpolationMethod MessageIdentifier_grib2::getParamInterpolationMethod(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
-    const Parameter_grib2 *p = gribDef.getParameterDefById_grib2(message.getGribParameterId());
-    if (p != NULL)
-      return gribDef.getPreferredInterpolationMethodByUnits(p->mParameterUnits);
+    Parameter_grib2 param;
+    if (gribDef.getGrib2ParameterDefById(message.getGribParameterId(),param))
+      return gribDef.getPreferredInterpolationMethodByUnits(param.mParameterUnits);
 
     return T::InterpolationMethod::Linear;
   }
@@ -468,11 +488,12 @@ T::InterpolationMethod MessageIdentifier_grib2::getParamInterpolationMethod(GRIB
 
 T::InterpolationMethod MessageIdentifier_grib2::getParamInterpolationMethod(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
-    const Parameter_grib2 *p = gribDef.getParameterDefById_grib2(message.getGribParameterId());
-    if (p != NULL)
-      return gribDef.getPreferredInterpolationMethodByUnits(p->mParameterUnits);
+    Parameter_grib2 param;
+    if (gribDef.getGrib2ParameterDefById(message.getGribParameterId(),param))
+      return gribDef.getPreferredInterpolationMethodByUnits(param.mParameterUnits);
 
     return T::InterpolationMethod::Linear;
   }

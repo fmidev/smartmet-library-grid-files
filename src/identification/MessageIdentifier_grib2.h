@@ -29,18 +29,20 @@ class MessageIdentifier_grib2 : public MessageIdentifier
                             MessageIdentifier_grib2();
     virtual                 ~MessageIdentifier_grib2();
 
-    T::ParamId              getParamId(GRIB1::Message& message);
-    T::ParamId              getParamId(GRIB2::Message& message);
     T::ParamId              getParamIdByName(std::string gribParamName);
+
+    T::ParamId              getParamId(GRIB1::Message& message);
     T::ParamLevelId         getParamLevelId(GRIB1::Message& message);
-    T::ParamLevelId         getParamLevelId(GRIB2::Message& message);
     std::string             getParamName(GRIB1::Message& message);
-    std::string             getParamName(GRIB2::Message& message);
     std::string             getParamDescription(GRIB1::Message& message);
-    std::string             getParamDescription(GRIB2::Message& message);
     std::string             getParamUnits(GRIB1::Message& message);
-    std::string             getParamUnits(GRIB2::Message& message);
     T::InterpolationMethod  getParamInterpolationMethod(GRIB1::Message& message);
+
+    T::ParamId              getParamId(GRIB2::Message& message);
+    T::ParamLevelId         getParamLevelId(GRIB2::Message& message);
+    std::string             getParamName(GRIB2::Message& message);
+    std::string             getParamDescription(GRIB2::Message& message);
+    std::string             getParamUnits(GRIB2::Message& message);
     T::InterpolationMethod  getParamInterpolationMethod(GRIB2::Message& message);
 
   protected:

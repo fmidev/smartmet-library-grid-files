@@ -34,8 +34,8 @@ class ParameterDefinition
     std::string   mParameterUnits;
 };
 
-typedef std::vector<ParameterDefinition> ParameterDefinition_vec;
-typedef const ParameterDefinition* ParameterDefinition_cptr;
+typedef std::vector<ParameterDefinition> ParamDef_vec;
+typedef const ParameterDefinition* ParamDef_cptr;
 
 }
 }

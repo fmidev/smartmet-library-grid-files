@@ -17,21 +17,7 @@ class GribFile : public GRID::PhysicalGridFile
     virtual             ~GribFile();
 
     // ### Common methods for all file types
-/*
-    uint                getFileId() const;
-    uint                getGroupFlags() const;
-    uint                getProducerId() const;
-    uint                getGenerationId() const;
-    std::string         getFileName() const;
-    time_t              getCheckTime() const;
 
-    void                setFileId(uint fileId);
-    void                setGroupFlags(uint groupFlags);
-    void                setProducerId(uint producerId);
-    void                setGenerationId(uint generationId);
-    void                setFileName(std::string  fileName);
-    void                setCheckTime(time_t checkTime);
-*/
     void                deleteUsers();
     T::FileType         getFileType() const;
     std::string         getFileTypeString() const;

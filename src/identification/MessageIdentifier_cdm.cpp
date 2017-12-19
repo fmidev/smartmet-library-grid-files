@@ -1,6 +1,10 @@
 #include "MessageIdentifier_cdm.h"
-#include "common/Exception.h"
 #include "GribDef.h"
+#include "common/Exception.h"
+#include "common/ShowFunction.h"
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
 namespace SmartMet
@@ -12,6 +16,7 @@ namespace Identification
 
 MessageIdentifier_cdm::MessageIdentifier_cdm()
 {
+  FUNCTION_TRACE
   try
   {
   }
@@ -27,6 +32,7 @@ MessageIdentifier_cdm::MessageIdentifier_cdm()
 
 MessageIdentifier_cdm::~MessageIdentifier_cdm()
 {
+  FUNCTION_TRACE
   try
   {
   }
@@ -39,8 +45,10 @@ MessageIdentifier_cdm::~MessageIdentifier_cdm()
 
 
 
+
 T::ParamId MessageIdentifier_cdm::getParamIdByName(std::string paramName)
 {
+  FUNCTION_TRACE
   try
   {
     return std::string("");
@@ -57,6 +65,7 @@ T::ParamId MessageIdentifier_cdm::getParamIdByName(std::string paramName)
 
 T::ParamLevelId MessageIdentifier_cdm::getParamLevelId(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     return message.getGridParameterLevelId();
@@ -73,6 +82,7 @@ T::ParamLevelId MessageIdentifier_cdm::getParamLevelId(GRIB1::Message& message)
 
 T::ParamLevelId MessageIdentifier_cdm::getParamLevelId(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     return message.getGridParameterLevelId();
@@ -89,6 +99,7 @@ T::ParamLevelId MessageIdentifier_cdm::getParamLevelId(GRIB2::Message& message)
 
 std::string MessageIdentifier_cdm::getParamId(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     const GRIB1::ProductSection *productSection =  message.getProductSection();
@@ -111,9 +122,12 @@ std::string MessageIdentifier_cdm::getParamId(GRIB1::Message& message)
       //p += sprintf(p,"_%u",productSection->getLevel());
     }
 
-    TimeRangeDef_cptr timeRangeDef = gribDef.getTimeRangeDef_grib1(productSection->getUnitOfTimeRange());
-    if (timeRangeDef != NULL  &&  timeRangeDef->mName.length() > 0)
-      p += sprintf(p,"_I%s",timeRangeDef->mName.c_str());
+    TimeRangeDef timeRangeDef;
+    if (gribDef.getGrib1TimeRangeDef(productSection->getUnitOfTimeRange(),timeRangeDef))
+    {
+      if (timeRangeDef.mName.length() > 0)
+        p += sprintf(p,"_I%s",timeRangeDef.mName.c_str());
+    }
 
     return std::string(tmp);
   }
@@ -129,6 +143,7 @@ std::string MessageIdentifier_cdm::getParamId(GRIB1::Message& message)
 
 std::string MessageIdentifier_cdm::getParamId(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     const GRIB2::ProductSection *productSection =  message.getProductSection();
@@ -148,8 +163,8 @@ std::string MessageIdentifier_cdm::getParamId(GRIB2::Message& message)
         *productSection->getGribParameterCategory(),
         *productSection->getGribParameterNumber());
 
-    LevelDef_cptr levelDef = gribDef.getLevelDef_grib2(message.getGridParameterLevelId());
-    if (levelDef != NULL /* &&  levelDef->mName.length() > 0*/)
+    LevelDef levelDef;
+    if (gribDef.getGrib2LevelDef(message.getGridParameterLevelId(),levelDef))
     {
       p += sprintf(p,"_L%u",message.getGridParameterLevelId());
       // p += sprintf(p,"_%u",message.getGridParameterLevel());
@@ -162,9 +177,12 @@ std::string MessageIdentifier_cdm::getParamId(GRIB2::Message& message)
       const GRIB2::StatisticalSettings *stat = productDef->getStatistical();
       if (stat != NULL)
       {
-        TimeRangeDef_cptr timeRangeDef = gribDef.getTimeRangeDef_grib2(*stat->getIndicatorOfUnitForTimeRange());
-        if (timeRangeDef != NULL  &&  timeRangeDef->mName.length() > 0)
-          p += sprintf(p,"_I%s",timeRangeDef->mName.c_str());
+        TimeRangeDef timeRangeDef;
+        if (gribDef.getGrib2TimeRangeDef(*stat->getIndicatorOfUnitForTimeRange(),timeRangeDef))
+        {
+          if (timeRangeDef.mName.length() > 0)
+            p += sprintf(p,"_I%s",timeRangeDef.mName.c_str());
+        }
       }
     }
 
@@ -182,6 +200,7 @@ std::string MessageIdentifier_cdm::getParamId(GRIB2::Message& message)
 
 std::string MessageIdentifier_cdm::getParamName(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     const GRIB1::ProductSection *productSection =  message.getProductSection();
@@ -192,31 +211,39 @@ std::string MessageIdentifier_cdm::getParamName(GRIB1::Message& message)
     tmp[0] = '\0';
     char *p = (char*)tmp;
 
-    Parameter_grib1_cptr param = gribDef.getParameterDef_grib1(productSection->getTableVersion(),productSection->getIndicatorOfParameter());
-
-    if (productSection->getTableVersion() < 128  &&  (param != NULL  &&  param->mParameterName.length() > 0))
+    Parameter_grib1 param;
+    if (gribDef.getGrib1ParameterDefByTable(productSection->getTableVersion(),productSection->getIndicatorOfParameter(),param))
     {
-      p += sprintf(p,"%s",param->mParameterName.c_str());
-    }
-    else
-    {
-      p += sprintf(p,"VAR_%u-%u-%u-%u",
-              productSection->getCentre(),
-              productSection->getSubCentre(),
-              productSection->getTableVersion(),
-              productSection->getIndicatorOfParameter());
-    }
+      if (productSection->getTableVersion() < 128  &&  param.mParameterName.length() > 0)
+      {
+        p += sprintf(p,"%s",param.mParameterName.c_str());
+      }
+      else
+      {
+        p += sprintf(p,"VAR_%u-%u-%u-%u",
+                productSection->getCentre(),
+                productSection->getSubCentre(),
+                productSection->getTableVersion(),
+                productSection->getIndicatorOfParameter());
+      }
 
-    LevelDef_cptr levelDef = gribDef.getLevelDef_grib1(productSection->getIndicatorOfTypeOfLevel());
-    if (levelDef != NULL  &&  levelDef->mName.length() > 0)
-    {
-      p += sprintf(p,"_%s",levelDef->mName.c_str());
-      //p += sprintf(p,"_%u",productSection->getLevel());
-    }
+      LevelDef levelDef;
+      if (gribDef.getGrib1LevelDef(productSection->getIndicatorOfTypeOfLevel(),levelDef))
+      {
+        if (levelDef.mName.length() > 0)
+        {
+          p += sprintf(p,"_%s",levelDef.mName.c_str());
+          //p += sprintf(p,"_%u",productSection->getLevel());
+        }
+      }
 
-    TimeRangeDef_cptr timeRangeDef = gribDef.getTimeRangeDef_grib1(productSection->getUnitOfTimeRange());
-    if (timeRangeDef != NULL  &&  timeRangeDef->mName.length() > 0)
-      p += sprintf(p,"_%s",timeRangeDef->mName.c_str());
+      TimeRangeDef timeRangeDef;
+      if (gribDef.getGrib1TimeRangeDef(productSection->getUnitOfTimeRange(),timeRangeDef))
+      {
+        if (timeRangeDef.mName.length() > 0)
+          p += sprintf(p,"_%s",timeRangeDef.mName.c_str());
+      }
+    }
 
     return std::string(tmp);
   }
@@ -232,6 +259,7 @@ std::string MessageIdentifier_cdm::getParamName(GRIB1::Message& message)
 
 std::string MessageIdentifier_cdm::getParamName(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     const GRIB2::ProductSection *productSection =  message.getProductSection();
@@ -246,11 +274,11 @@ std::string MessageIdentifier_cdm::getParamName(GRIB2::Message& message)
     tmp[0] = '\0';
     char *p = (char*)tmp;
 
-    ParameterDefinition_cptr def = gribDef.getGribParamDef(indicatorSection->getDiscipline(),*productSection->getGribParameterCategory(),*productSection->getGribParameterNumber());
-
-    if (def != NULL  &&  def->mParameterName.length() > 0)
+    ParameterDefinition def;
+    if (gribDef.getGribParamDef(indicatorSection->getDiscipline(),*productSection->getGribParameterCategory(),*productSection->getGribParameterNumber(),def)
+      &&  def.mParameterName.length() > 0)
     {
-      p += sprintf(p,"%s",def->mParameterName.c_str());
+      p += sprintf(p,"%s",def.mParameterName.c_str());
     }
     else
     {
@@ -260,11 +288,14 @@ std::string MessageIdentifier_cdm::getParamName(GRIB2::Message& message)
           *productSection->getGribParameterNumber());
     }
 
-    LevelDef_cptr levelDef = gribDef.getLevelDef_grib2(message.getGridParameterLevelId());
-    if (levelDef != NULL  &&  levelDef->mName.length() > 0)
+    LevelDef levelDef;
+    if (gribDef.getGrib2LevelDef(message.getGridParameterLevelId(),levelDef))
     {
-      p += sprintf(p,"_%s",levelDef->mName.c_str());
-      //p += sprintf(p,"_%u",message.getGridParameterLevel());
+      if (levelDef.mName.length() > 0)
+      {
+        p += sprintf(p,"_%s",levelDef.mName.c_str());
+        //p += sprintf(p,"_%u",message.getGridParameterLevel());
+      }
     }
 
     GRIB2::ProductDefinition *productDef = productSection->getProductDefinition();
@@ -273,9 +304,12 @@ std::string MessageIdentifier_cdm::getParamName(GRIB2::Message& message)
       const GRIB2::StatisticalSettings *stat = productDef->getStatistical();
       if (stat != NULL)
       {
-        TimeRangeDef_cptr timeRangeDef = gribDef.getTimeRangeDef_grib2(*stat->getIndicatorOfUnitForTimeRange());
-        if (timeRangeDef != NULL  &&  timeRangeDef->mName.length() > 0)
-          p += sprintf(p,"_I%s",timeRangeDef->mName.c_str());
+        TimeRangeDef timeRangeDef;
+        if (gribDef.getGrib2TimeRangeDef(*stat->getIndicatorOfUnitForTimeRange(),timeRangeDef))
+        {
+          if (timeRangeDef.mName.length() > 0)
+            p += sprintf(p,"_I%s",timeRangeDef.mName.c_str());
+        }
       }
     }
 
@@ -293,6 +327,7 @@ std::string MessageIdentifier_cdm::getParamName(GRIB2::Message& message)
 
 std::string MessageIdentifier_cdm::getParamDescription(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamId paramId = message.getFmiParameterId();
@@ -317,6 +352,7 @@ std::string MessageIdentifier_cdm::getParamDescription(GRIB1::Message& message)
 
 std::string MessageIdentifier_cdm::getParamDescription(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamId paramId = message.getFmiParameterId();
@@ -364,6 +400,7 @@ std::string MessageIdentifier_cdm::getParamUnits(GRIB1::Message& message)
 
 std::string MessageIdentifier_cdm::getParamUnits(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamId paramId = message.getFmiParameterId();
@@ -385,8 +422,10 @@ std::string MessageIdentifier_cdm::getParamUnits(GRIB2::Message& message)
 
 
 
+
 T::InterpolationMethod MessageIdentifier_cdm::getParamInterpolationMethod(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamId paramId = message.getFmiParameterId();
@@ -408,8 +447,10 @@ T::InterpolationMethod MessageIdentifier_cdm::getParamInterpolationMethod(GRIB1:
 
 
 
+
 T::InterpolationMethod MessageIdentifier_cdm::getParamInterpolationMethod(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamId paramId = message.getFmiParameterId();

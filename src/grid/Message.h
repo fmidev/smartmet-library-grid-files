@@ -47,8 +47,6 @@ class Message
     virtual short                 getForecastType() const;
     virtual short                 getForecastNumber() const;
     virtual T::GeometryId         getGridGeometryId() const;
-    virtual void                  setMessageIndex(uint index);
-    virtual void                  setVirtualMessage(uint fileId,uint messageIndex);
 
     virtual T::ParamId            getFmiParameterId() const;
     virtual T::ParamLevelId       getFmiParameterLevelId() const;
@@ -65,7 +63,6 @@ class Message
     virtual std::string           getCdmParameterName() const;
     virtual std::string           getNewbaseParameterId() const;
     virtual std::string           getNewbaseParameterName() const;
-    virtual void                  getVirtualMessage(uint& fileId,uint& messageIndex);
 
     virtual void                  setFmiParameterId(T::ParamId fmiParameterId);
     virtual void                  setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId);
@@ -83,6 +80,7 @@ class Message
     virtual void                  setNewbaseParameterId(std::string newbaseParameterId);
     virtual void                  setNewbaseParameterName(std::string newbaseParameterName);
     virtual void                  setGridGeometryId(T::GeometryId geometryId);
+    virtual void                  setMessageIndex(uint index);
 
     virtual T::Coordinate_vec     getGridCoordinates() const;
     virtual T::Coordinate_vec     getGridLatLonCoordinates() const;
@@ -192,9 +190,6 @@ protected:
      * instead of this message
      * */
     uint                  mVirtualFileId;
-
-    /*! \brief  The virtual message index. */
-    uint                  mVirtualMessageIndex;
 };
 
 

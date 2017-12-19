@@ -30,9 +30,6 @@ Message::Message()
     mGrib1ParameterLevelId = 0;
     mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
-    mVirtualFileId = 0;
-    mVirtualMessageIndex = 0;
-
   }
   catch (...)
   {
@@ -56,8 +53,6 @@ Message::Message(const Message& message)
     mGrib2ParameterLevelId = message.mGrib2ParameterLevelId;
     mFmiParameterId = message.mFmiParameterId;
     mFmiParameterLevelId = message.mFmiParameterLevelId;
-    mVirtualFileId = message.mVirtualFileId;
-    mVirtualMessageIndex = message.mVirtualMessageIndex;
   }
   catch (...)
   {
@@ -142,40 +137,6 @@ void Message::setMessageIndex(uint index)
   try
   {
     mMessageIndex = index;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
-void Message::setVirtualMessage(uint fileId,uint messageIndex)
-{
-  try
-  {
-    mVirtualFileId = fileId;
-    mVirtualMessageIndex = messageIndex;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
-void Message::getVirtualMessage(uint& fileId,uint& messageIndex)
-{
-  try
-  {
-    fileId = mVirtualFileId;
-    messageIndex = mVirtualMessageIndex;
   }
   catch (...)
   {

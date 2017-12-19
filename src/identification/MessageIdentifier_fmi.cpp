@@ -1,5 +1,10 @@
 #include "MessageIdentifier_fmi.h"
 #include "common/Exception.h"
+#include "common/GeneralFunctions.h"
+#include "common/ShowFunction.h"
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
 namespace SmartMet
@@ -12,8 +17,18 @@ namespace Identification
 
 MessageIdentifier_fmi::MessageIdentifier_fmi()
 {
+  FUNCTION_TRACE
   try
   {
+    mInitialized = false;
+    mLastCheckTime = 0;
+    mParameterDefs_modificationTime = 0;
+    mParameterDefsExt_modificationTime = 0;
+    mParameters_newbase_modificationTime = 0;
+    mParameters_grib1_modificationTime = 0;
+    mParameters_grib2_modificationTime = 0;
+    mLevelDefs_grib1_modificationTime = 0;
+    mLevelDefs_grib2_modificationTime = 0;
   }
   catch (...)
   {
@@ -27,6 +42,7 @@ MessageIdentifier_fmi::MessageIdentifier_fmi()
 
 MessageIdentifier_fmi::~MessageIdentifier_fmi()
 {
+  FUNCTION_TRACE
   try
   {
   }
@@ -40,19 +56,105 @@ MessageIdentifier_fmi::~MessageIdentifier_fmi()
 
 
 
-void MessageIdentifier_fmi::init(const char* configDir)
+void MessageIdentifier_fmi::init(const char *configDir)
 {
+  FUNCTION_TRACE
   try
   {
-    mConfigDir = configDir;
+    if (mInitialized)
+      return;
 
-    loadParameterDefinitions();
-    loadExtendedParameterDefinitions();
-    loadParameterDefinitions_grib1();
-    loadParameterDefinitions_grib2();
-    loadParameterDefinitions_newbase();
-    loadLevelDefinitions_grib1();
-    loadLevelDefinitions_grib2();
+    mInitialized = true;
+    mConfigDir = configDir;
+    updateCheck();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void MessageIdentifier_fmi::updateCheck()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mInitialized)
+      throw SmartMet::Spine::Exception(BCP,"The 'MessageIdentifier_fmi' object is not initialized! Call init() first!");
+
+    if ((mLastCheckTime + 30) < time(0))
+    {
+      AutoThreadLock lock(&mThreadLock);
+
+      mLastCheckTime = time(0);
+
+      char filename[200];
+      char filename2[200];
+
+      sprintf(filename,"%s/parameterDef_fmi.csv",mConfigDir.c_str());
+      sprintf(filename2,"%s/parameterDef_fmi_ext.csv",mConfigDir.c_str());
+
+      time_t tt = getFileModificationTime(filename);
+      time_t tt2 = getFileModificationTime(filename2);
+
+      if (mParameterDefs_modificationTime != tt  ||  mParameterDefsExt_modificationTime != tt2)
+      {
+        mParameterDefs.clear();
+        loadParameterDefinitions(filename);
+        loadParameterDefinitions(filename2);
+        mParameterDefs_modificationTime = tt;
+        mParameterDefsExt_modificationTime = tt2;
+      }
+
+      sprintf(filename,"%s/parameterDef_grib1_fmi.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mParameters_grib1_modificationTime != tt)
+      {
+        mParameters_grib1.clear();
+        loadGrib1ParameterDefinitions(filename);
+        mParameters_grib1_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/parameterDef_grib2_fmi.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mParameters_grib2_modificationTime != tt)
+      {
+        mParameters_grib2.clear();
+        loadGrib2ParameterDefinitions(filename);
+        mParameters_grib2_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/parameterDef_newbase.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mParameters_newbase_modificationTime != tt)
+      {
+        mParameters_newbase.clear();
+        loadParameterDefinitions_newbase(filename);
+        mParameters_newbase_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/levelDef_grib1_fmi.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mLevelDefs_grib1_modificationTime != tt)
+      {
+        mLevelDefs_grib1.clear();
+        loadGrib1LevelDefinitions(filename);
+        mLevelDefs_grib1_modificationTime = tt;
+      }
+
+      sprintf(filename,"%s/levelDef_grib2_fmi.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mLevelDefs_grib2_modificationTime != tt)
+      {
+        mLevelDefs_grib1.clear();
+        loadGrib2LevelDefinitions(filename);
+        mLevelDefs_grib2_modificationTime = tt;
+      }
+    }
   }
   catch (...)
   {
@@ -66,8 +168,12 @@ void MessageIdentifier_fmi::init(const char* configDir)
 
 T::ParamId MessageIdentifier_fmi::getParamId(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const GRIB1::ProductSection *productSection =  message.getProductSection();
     if (productSection == NULL)
       return std::string("");
@@ -141,8 +247,12 @@ T::ParamId MessageIdentifier_fmi::getParamId(GRIB1::Message& message)
 
 T::ParamId MessageIdentifier_fmi::getParamId(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     GRIB2::IndicatorSection_sptr indicatorSection = message.getIndicatorSection();
     if (!indicatorSection)
       return std::string("");
@@ -188,6 +298,7 @@ T::ParamId MessageIdentifier_fmi::getParamId(GRIB2::Message& message)
 
 uint MessageIdentifier_fmi::countParameterMatchPoints(GRIB2::Message& message,const Parameter_grib2_fmi& p)
 {
+  FUNCTION_TRACE
   try
   {
     GRIB2::ProductSection_cptr productSection = message.getProductSection();
@@ -288,33 +399,23 @@ uint MessageIdentifier_fmi::countParameterMatchPoints(GRIB2::Message& message,co
 
 T::ParamLevelId MessageIdentifier_fmi::getParamLevelId(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
-    /*
-    T::ParamId fmiParamId = message.getFmiParameterId();
-
-    Parameter_grib1_fmi_cptr p = getParameter_grib1(fmiParamId);
-    if (p != NULL  &&  p->mFmiParameterLevelId)
-    {
-      return (T::ParamLevelId)(*p->mFmiParameterLevelId);
-    }
-
-    return 0;
-    */
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
 
     const GRIB1::ProductSection *productSection =  message.getProductSection();
     if (productSection == NULL)
       return 0;
 
-    uint sz = (uint)mLevelDefs_grib1.size();
-    for (uint t=0; t<sz; t++)
+    for (auto it = mLevelDefs_grib1.begin(); it != mLevelDefs_grib1.end(); ++it)
     {
-      LevelDef_fmi rec =  mLevelDefs_grib1[t];
-      if (rec.mGeneratingProcessIdentifier == productSection->getGeneratingProcessIdentifier() &&
-          rec.mCentre == productSection->getCentre() &&
-          rec.mGribLevelId == productSection->getIndicatorOfTypeOfLevel())
+      if (it->mGeneratingProcessIdentifier == productSection->getGeneratingProcessIdentifier() &&
+          it->mCentre == productSection->getCentre() &&
+          it->mGribLevelId == productSection->getIndicatorOfTypeOfLevel())
       {
-        return (T::ParamLevelId)rec.mFmiLevelId;
+        return (T::ParamLevelId)it->mFmiLevelId;
       }
     }
     return 0;
@@ -331,8 +432,12 @@ T::ParamLevelId MessageIdentifier_fmi::getParamLevelId(GRIB1::Message& message)
 
 T::ParamId MessageIdentifier_fmi::getParamIdByName(std::string fmiParamName)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefByName(fmiParamName);
     if (p != NULL)
       return p->mFmiParameterId;
@@ -348,21 +453,14 @@ T::ParamId MessageIdentifier_fmi::getParamIdByName(std::string fmiParamName)
 
 
 
+
 T::ParamLevelId MessageIdentifier_fmi::getParamLevelId(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
-    /*
-    T::ParamId fmiParamId = message.getFmiParameterId();
-
-    Parameter_grib2_fmi_cptr p = getParameter_grib2(fmiParamId);
-    if (p != NULL  &&  p->mFmiParameterLevelId)
-    {
-      return (T::ParamLevelId)(*p->mFmiParameterLevelId);
-    }
-
-    return 0;
-    */
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
 
     GRIB2::ProductSection_cptr productSection = message.getProductSection();
     if (productSection == NULL)
@@ -372,15 +470,13 @@ T::ParamLevelId MessageIdentifier_fmi::getParamLevelId(GRIB2::Message& message)
     if (identificationSection == NULL)
       return 0;
 
-    uint sz = (uint)mLevelDefs_grib2.size();
-    for (uint t=0; t<sz; t++)
+    for (auto it = mLevelDefs_grib2.begin(); it != mLevelDefs_grib2.end(); ++it)
     {
-      LevelDef_fmi rec =  mLevelDefs_grib2[t];
-      if (rec.mGeneratingProcessIdentifier == *productSection->getGeneratingProcessIdentifier() &&
-          rec.mCentre == identificationSection->getCentre() &&
-          rec.mGribLevelId == message.getGridParameterLevelId())
+      if (it->mGeneratingProcessIdentifier == *productSection->getGeneratingProcessIdentifier() &&
+          it->mCentre == identificationSection->getCentre() &&
+          it->mGribLevelId == message.getGridParameterLevelId())
       {
-        return (T::ParamLevelId)rec.mFmiLevelId;
+        return (T::ParamLevelId)it->mFmiLevelId;
       }
     }
     return 0;
@@ -398,8 +494,12 @@ T::ParamLevelId MessageIdentifier_fmi::getParamLevelId(GRIB2::Message& message)
 
 std::string MessageIdentifier_fmi::getParamName(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return std::string("");
@@ -415,10 +515,15 @@ std::string MessageIdentifier_fmi::getParamName(GRIB1::Message& message)
 
 
 
+
 std::string MessageIdentifier_fmi::getParamName(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return std::string("");
@@ -437,8 +542,12 @@ std::string MessageIdentifier_fmi::getParamName(GRIB2::Message& message)
 
 T::ParamId MessageIdentifier_fmi::getNewbaseParamId(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return std::string("");
@@ -457,8 +566,12 @@ T::ParamId MessageIdentifier_fmi::getNewbaseParamId(GRIB1::Message& message)
 
 T::ParamId MessageIdentifier_fmi::getNewbaseParamId(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return std::string("");
@@ -477,13 +590,17 @@ T::ParamId MessageIdentifier_fmi::getNewbaseParamId(GRIB2::Message& message)
 
 std::string MessageIdentifier_fmi::getNewbaseParamName(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return std::string("");
 
-    Parameter_newbase_cptr n = getParameter_newbaseId(p->mNewbaseId);
+    Param_newbase_cptr n = getParameter_newbaseId(p->mNewbaseId);
     if (n == NULL)
       return std::string("");
 
@@ -498,15 +615,20 @@ std::string MessageIdentifier_fmi::getNewbaseParamName(GRIB1::Message& message)
 
 
 
+
 std::string MessageIdentifier_fmi::getNewbaseParamName(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return std::string("");
 
-    Parameter_newbase_cptr n = getParameter_newbaseId(p->mNewbaseId);
+    Param_newbase_cptr n = getParameter_newbaseId(p->mNewbaseId);
     if (n == NULL)
       return std::string("");
 
@@ -524,8 +646,12 @@ std::string MessageIdentifier_fmi::getNewbaseParamName(GRIB2::Message& message)
 
 std::string MessageIdentifier_fmi::getParamDescription(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return std::string("");
@@ -537,14 +663,19 @@ std::string MessageIdentifier_fmi::getParamDescription(GRIB1::Message& message)
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
+
 
 
 
 
 std::string MessageIdentifier_fmi::getParamDescription(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return std::string("");
@@ -560,10 +691,15 @@ std::string MessageIdentifier_fmi::getParamDescription(GRIB2::Message& message)
 
 
 
+
 std::string MessageIdentifier_fmi::getParamUnits(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return std::string("");
@@ -581,8 +717,12 @@ std::string MessageIdentifier_fmi::getParamUnits(GRIB1::Message& message)
 
 std::string MessageIdentifier_fmi::getParamUnits(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return std::string("");
@@ -598,10 +738,15 @@ std::string MessageIdentifier_fmi::getParamUnits(GRIB2::Message& message)
 
 
 
+
 T::InterpolationMethod MessageIdentifier_fmi::getParamInterpolationMethod(GRIB1::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return T::InterpolationMethod::Unknown;
@@ -613,14 +758,19 @@ T::InterpolationMethod MessageIdentifier_fmi::getParamInterpolationMethod(GRIB1:
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
+
 
 
 
 
 T::InterpolationMethod MessageIdentifier_fmi::getParamInterpolationMethod(GRIB2::Message& message)
 {
+  FUNCTION_TRACE
   try
   {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
     const ParameterDefinition_fmi *p = getParameterDefById(message.getFmiParameterId());
     if (p == NULL)
       return T::InterpolationMethod::Unknown;
@@ -637,15 +787,116 @@ T::InterpolationMethod MessageIdentifier_fmi::getParamInterpolationMethod(GRIB2:
 
 
 
-ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefById(T::ParamId fmiParamId)
+bool MessageIdentifier_fmi::getParameterDefById(T::ParamId fmiParamId,ParameterDefinition_fmi& paramDef)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mParameterDefs.size();
-    for (std::size_t t=0; t<sz; t++)
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getParameterDefById(fmiParamId);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool MessageIdentifier_fmi::getParameterDefByName(std::string fmiParamName,ParameterDefinition_fmi& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getParameterDefByName(fmiParamName);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool MessageIdentifier_fmi::getParameterDefByNewbaseId(T::ParamId newbaseParamId,ParameterDefinition_fmi& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getParameterDefByNewbaseId(newbaseParamId);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool MessageIdentifier_fmi::getParameterDefByNewbaseName(std::string newbaseParamName,ParameterDefinition_fmi& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getParameterDefByNewbaseName(newbaseParamName);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+
+ParamDef_fmi_cptr MessageIdentifier_fmi::getParameterDefById(T::ParamId fmiParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mParameterDefs.begin(); it != mParameterDefs.end(); ++it)
     {
-      if (strcasecmp(mParameterDefs[t].mFmiParameterId.c_str(),fmiParamId.c_str()) == 0)
-        return &mParameterDefs[t];
+      if (strcasecmp(it->mFmiParameterId.c_str(),fmiParamId.c_str()) == 0)
+        return &(*it);
     }
     return NULL;
   }
@@ -659,36 +910,15 @@ ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefById(T::Param
 
 
 
-ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByName(std::string fmiParamName)
+ParamDef_fmi_cptr MessageIdentifier_fmi::getParameterDefByName(std::string fmiParamName)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mParameterDefs.size();
-    for (std::size_t t=0; t<sz; t++)
+    for (auto it = mParameterDefs.begin(); it != mParameterDefs.end(); ++it)
     {
-      if (strcasecmp(mParameterDefs[t].mParameterName.c_str(),fmiParamName.c_str()) == 0)
-        return &mParameterDefs[t];
-    }
-    return NULL;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByNewbaseId(T::ParamId newbaseParamId)
-{
-  try
-  {
-    std::size_t sz = mParameterDefs.size();
-    for (std::size_t t=0; t<sz; t++)
-    {
-      if (strcasecmp(mParameterDefs[t].mNewbaseId.c_str(),newbaseParamId.c_str()) == 0)
-        return &mParameterDefs[t];
+      if (strcasecmp(it->mParameterName.c_str(),fmiParamName.c_str()) == 0)
+        return &(*it);
     }
     return NULL;
   }
@@ -702,19 +932,41 @@ ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByNewbaseId(T
 
 
 
-ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByNewbaseName(std::string newbaseParamName)
+ParamDef_fmi_cptr MessageIdentifier_fmi::getParameterDefByNewbaseId(T::ParamId newbaseParamId)
 {
+  FUNCTION_TRACE
   try
   {
-    Parameter_newbase_cptr p = getParameter_newbaseName(newbaseParamName);
+    for (auto it = mParameterDefs.begin(); it != mParameterDefs.end(); ++it)
+    {
+      if (strcasecmp(it->mNewbaseId.c_str(),newbaseParamId.c_str()) == 0)
+        return &(*it);
+    }
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+ParamDef_fmi_cptr MessageIdentifier_fmi::getParameterDefByNewbaseName(std::string newbaseParamName)
+{
+  FUNCTION_TRACE
+  try
+  {
+    Param_newbase_cptr p = getParameter_newbaseName(newbaseParamName);
     if (p == NULL)
       return NULL;
 
-    std::size_t sz = mParameterDefs.size();
-    for (std::size_t t=0; t<sz; t++)
+    for (auto it = mParameterDefs.begin(); it != mParameterDefs.end(); ++it)
     {
-      if (strcasecmp(mParameterDefs[t].mNewbaseId.c_str(),p->mNewbaseParameterId.c_str()) == 0)
-        return &mParameterDefs[t];
+      if (strcasecmp(it->mNewbaseId.c_str(),p->mNewbaseParameterId.c_str()) == 0)
+        return &(*it);
     }
     return NULL;
   }
@@ -728,15 +980,115 @@ ParameterDefinition_fmi_cptr MessageIdentifier_fmi::getParameterDefByNewbaseName
 
 
 
-Parameter_newbase_cptr MessageIdentifier_fmi::getParameter_newbaseId(T::ParamId newbaseParamId)
+bool MessageIdentifier_fmi::getParameter_grib1(T::ParamId fmiParamId,Parameter_grib1_fmi& param)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mParameters_newbase.size();
-    for (std::size_t t=0; t<sz; t++)
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto p = getParameter_grib1(fmiParamId);
+    if (p == NULL)
+      return false;
+
+    param = *p;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool MessageIdentifier_fmi::getParameter_grib2(T::ParamId fmiParamId,Parameter_grib2_fmi& param)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto p = getParameter_grib2(fmiParamId);
+    if (p == NULL)
+      return false;
+
+    param = *p;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool MessageIdentifier_fmi::getParameter_newbaseId(T::ParamId newbaseParamId,Parameter_newbase& param)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto p = getParameter_newbaseId(newbaseParamId);
+    if (p == NULL)
+      return false;
+
+    param = *p;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool MessageIdentifier_fmi::getParameter_newbaseName(std::string newbaseParamName,Parameter_newbase& param)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto p = getParameter_newbaseName(newbaseParamName);
+    if (p == NULL)
+      return false;
+
+    param = *p;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+Param_newbase_cptr MessageIdentifier_fmi::getParameter_newbaseId(T::ParamId newbaseParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mParameters_newbase.begin(); it != mParameters_newbase.end(); ++it)
     {
-      if (mParameters_newbase[t].mNewbaseParameterId == newbaseParamId)
-        return &mParameters_newbase[t];
+      if (it->mNewbaseParameterId == newbaseParamId)
+        return &(*it);
     }
     return NULL;
   }
@@ -749,15 +1101,16 @@ Parameter_newbase_cptr MessageIdentifier_fmi::getParameter_newbaseId(T::ParamId 
 
 
 
-Parameter_newbase_cptr MessageIdentifier_fmi::getParameter_newbaseName(std::string newbaseParamName)
+
+Param_newbase_cptr MessageIdentifier_fmi::getParameter_newbaseName(std::string newbaseParamName)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mParameters_newbase.size();
-    for (std::size_t t=0; t<sz; t++)
+    for (auto it = mParameters_newbase.begin(); it != mParameters_newbase.end(); ++it)
     {
-      if (strcasecmp(mParameters_newbase[t].mParameterName.c_str(),newbaseParamName.c_str()) == 0)
-        return &mParameters_newbase[t];
+      if (strcasecmp(it->mParameterName.c_str(),newbaseParamName.c_str()) == 0)
+        return &(*it);
     }
     return NULL;
   }
@@ -771,15 +1124,15 @@ Parameter_newbase_cptr MessageIdentifier_fmi::getParameter_newbaseName(std::stri
 
 
 
-Parameter_grib1_fmi_cptr MessageIdentifier_fmi::getParameter_grib1(T::ParamId fmiParamId)
+Param_grib1_fmi_cptr MessageIdentifier_fmi::getParameter_grib1(T::ParamId fmiParamId)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mParameters_grib1.size();
-    for (std::size_t t=0; t<sz; t++)
+    for (auto it = mParameters_grib1.begin(); it != mParameters_grib1.end(); ++it)
     {
-      if (mParameters_grib1[t].mFmiParameterId == fmiParamId)
-        return &mParameters_grib1[t];
+      if (it->mFmiParameterId == fmiParamId)
+        return &(*it);
     }
     return NULL;
   }
@@ -793,15 +1146,15 @@ Parameter_grib1_fmi_cptr MessageIdentifier_fmi::getParameter_grib1(T::ParamId fm
 
 
 
-Parameter_grib2_fmi_cptr MessageIdentifier_fmi::getParameter_grib2(T::ParamId fmiParamId)
+Param_grib2_fmi_cptr MessageIdentifier_fmi::getParameter_grib2(T::ParamId fmiParamId)
 {
+  FUNCTION_TRACE
   try
   {
-    std::size_t sz = mParameters_grib2.size();
-    for (std::size_t t=0; t<sz; t++)
+    for (auto it = mParameters_grib2.begin(); it != mParameters_grib2.end(); ++it)
     {
-      if (mParameters_grib2[t].mFmiParameterId == fmiParamId)
-        return &mParameters_grib2[t];
+      if (it->mFmiParameterId == fmiParamId)
+        return &(*it);
     }
     return NULL;
   }
@@ -815,13 +1168,11 @@ Parameter_grib2_fmi_cptr MessageIdentifier_fmi::getParameter_grib2(T::ParamId fm
 
 
 
-void MessageIdentifier_fmi::loadParameterDefinitions_grib1()
+void MessageIdentifier_fmi::loadGrib1ParameterDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/parameterDef_grib1_fmi.csv",mConfigDir.c_str());
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -912,13 +1263,11 @@ void MessageIdentifier_fmi::loadParameterDefinitions_grib1()
 
 
 
-void MessageIdentifier_fmi::loadParameterDefinitions_grib2()
+void MessageIdentifier_fmi::loadGrib2ParameterDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/parameterDef_grib2_fmi.csv",mConfigDir.c_str());
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -1008,14 +1357,12 @@ void MessageIdentifier_fmi::loadParameterDefinitions_grib2()
 
 
 
-void MessageIdentifier_fmi::loadParameterDefinitions()
+
+void MessageIdentifier_fmi::loadParameterDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/parameterDef_fmi.csv",mConfigDir.c_str());
-
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -1094,100 +1441,11 @@ void MessageIdentifier_fmi::loadParameterDefinitions()
 
 
 
-void MessageIdentifier_fmi::loadExtendedParameterDefinitions()
+void MessageIdentifier_fmi::loadGrib1LevelDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/parameterDef_fmi_ext.csv",mConfigDir.c_str());
-
-
-    FILE *file = fopen(filename,"r");
-    if (file == NULL)
-    {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
-    }
-
-    char st[1000];
-
-    while (!feof(file))
-    {
-      if (fgets(st,1000,file) != NULL  &&  st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
-
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
-
-        if (c > 6)
-        {
-          ParameterDefinition_fmi rec;
-
-          if (field[0][0] != '\0')
-            rec.mFmiParameterId = field[0];
-
-          if (field[1][0] != '\0')
-            rec.mVersion = (uint)atoll(field[1]);
-
-          if (field[2][0] != '\0')
-            rec.mParameterName = field[2];
-
-          if (field[3][0] != '\0')
-            rec.mParameterUnits = field[3];
-
-          if (field[4][0] != '\0')
-            rec.mParameterDescription = field[4];
-
-          if (field[5][0] != '\0')
-            rec.mInterpolationMethod = (T::InterpolationMethod)atoll(field[5]);
-
-          if (field[6][0] != '\0')
-            rec.mNewbaseId = field[6];
-
-          mParameterDefs.push_back(rec);
-        }
-      }
-    }
-    fclose(file);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
-void MessageIdentifier_fmi::loadLevelDefinitions_grib1()
-{
-  try
-  {
-    char filename[200];
-    sprintf(filename,"%s/levelDef_grib1_fmi.csv",mConfigDir.c_str());
-
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -1260,14 +1518,11 @@ void MessageIdentifier_fmi::loadLevelDefinitions_grib1()
 
 
 
-void MessageIdentifier_fmi::loadLevelDefinitions_grib2()
+void MessageIdentifier_fmi::loadGrib2LevelDefinitions(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/levelDef_grib2_fmi.csv",mConfigDir.c_str());
-
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -1338,14 +1593,13 @@ void MessageIdentifier_fmi::loadLevelDefinitions_grib2()
 
 
 
-void MessageIdentifier_fmi::loadParameterDefinitions_newbase()
+
+
+void MessageIdentifier_fmi::loadParameterDefinitions_newbase(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
-    char filename[200];
-    sprintf(filename,"%s/parameterDef_newbase.csv",mConfigDir.c_str());
-
-
     FILE *file = fopen(filename,"r");
     if (file == NULL)
     {
@@ -1404,7 +1658,6 @@ void MessageIdentifier_fmi::loadParameterDefinitions_newbase()
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
-
 
 
 

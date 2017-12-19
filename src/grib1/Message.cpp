@@ -347,9 +347,9 @@ void Message::read(MemoryReader& memoryReader)
       T::Hash hash = getGridHash();
       if (hash != 0)
       {
-        GRIB1::GridDefinition_ptr def = Identification::gribDef.getGridDefinition1ByHash(hash);
-        if (def != NULL)
-          setGridGeometryId(def->getGridGeometryId());
+        int geometryId = Identification::gribDef.getGrib1GeometryIdByHash(hash);
+        if (geometryId != 0)
+          setGridGeometryId(geometryId);
         else
           printf("** Geometry not found %llu (file = %s)\n",(unsigned long long)hash,mGribFile->getFileName().c_str());
       }

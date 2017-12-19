@@ -22,8 +22,8 @@ class Parameter_newbase
     std::string   mParameterName;
 };
 
-typedef const Parameter_newbase* Parameter_newbase_cptr;
-typedef std::vector<Parameter_newbase> Parameter_newbase_vec;
+typedef const Parameter_newbase* Param_newbase_cptr;
+typedef std::vector<Parameter_newbase> Param_newbase_vec;
 
 
 }

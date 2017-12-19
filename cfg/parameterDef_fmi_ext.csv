@@ -1,6 +1,5 @@
-10000;1;VIRT-T-F;F;Temperature in Fahrenheits;1;4;
+10000;1;VIRT-T-F;F;Temperature in Fahrenheits;1;;
 10100;1;VIRT-WIND-DIR;degrees;Wind direction;1;;
 10101;1;VIRT-WIND-SPEED;m s-1;Wind speed;1;24;
 10102;1;VIRT-WIND-V;m s-1;Wind speed in V-direction;;;
 10103;1;VIRT-WIND-U;m s-1;Wind speed in U-direction;;;
-

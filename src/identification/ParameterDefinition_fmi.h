@@ -26,8 +26,8 @@ class ParameterDefinition_fmi
     T::ParamId              mNewbaseId;
 };
 
-typedef std::vector<ParameterDefinition_fmi> ParameterDefinition_fmi_vec;
-typedef const ParameterDefinition_fmi* ParameterDefinition_fmi_cptr;
+typedef std::vector<ParameterDefinition_fmi> ParamDef_fmi_vec;
+typedef const ParameterDefinition_fmi* ParamDef_fmi_cptr;
 
 }
 }

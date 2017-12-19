@@ -1,7 +1,5 @@
 #pragma once
 
-#include "grid/Typedefs.h"
-#include "grib2/GridDefinition.h"
 #include "ParameterDefinition.h"
 #include "TableValue.h"
 #include "UnitDefinition.h"
@@ -11,6 +9,9 @@
 #include "MessageIdentifier_grib2.h"
 #include "LevelDef.h"
 #include "TimeRangeDef.h"
+#include "common/AutoThreadLock.h"
+#include "grid/Typedefs.h"
+#include "grib2/GridDefinition.h"
 #include <set>
 
 
@@ -48,74 +49,114 @@ namespace Identification
 class GribDef
 {
   public:
-                                GribDef();
-    virtual                     ~GribDef();
+                  GribDef();
+    virtual       ~GribDef();
 
-    void                        init(const char* configDir);
+    void          init(const char* configDir);
 
-    std::string                 getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,std::uint32_t number);
-    std::string                 getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt8_opt number);
-    std::string                 getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt16_opt number);
-    std::string                 getPreferredUnits(std::string originalUnits);
-    T::InterpolationMethod      getPreferredInterpolationMethodByUnits(std::string originalUnits);
+    std::string   getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,std::uint32_t number);
+    std::string   getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt8_opt number);
+    std::string   getTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt16_opt number);
+    std::string   getPreferredUnits(std::string originalUnits);
 
-    Parameter_grib1_cptr        getParameterDefById_grib1(T::ParamId gripParamId);
-    Parameter_grib1_cptr        getParameterDefByName_grib1(std::string gripParamName);
-    Parameter_grib1_cptr        getParameterDef_grib1(uint tableVersion,uint indicatorOfParameter);
+    bool          getGribParamDefById(T::ParamId gribParamId,ParameterDefinition&  paramDef);
+    bool          getGribParamDefByName(std::string gribParamName,ParameterDefinition&  paramDef);
+    bool          getGribParamDef(uint discipline,uint category,uint number,ParameterDefinition&  paramDef);
+    bool          getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_vec& coordinates);
+    bool          getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols,uint& rows);
 
-    Parameter_grib2_cptr        getParameterDefById_grib2(T::ParamId gripParamId);
-    Parameter_grib2_cptr        getParameterDefByName_grib2(std::string gripParamName);
+    int           getGrib1GeometryIdByHash(T::Hash hash);
+    bool          getGrib1LevelDef(uint levelId,LevelDef& levelDef);
+    uint          getGrib1ParameterDefCount();
+    bool          getGrib1ParameterDefById(T::ParamId gribParamId,Parameter_grib1& paramDef);
+    bool          getGrib1ParameterDefByIndex(uint index,Parameter_grib1& paramDef);
+    bool          getGrib1ParameterDefByName(std::string gribParamName,Parameter_grib1& paramDef);
+    bool          getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfParameter,Parameter_grib1& paramDef);
+    bool          getGrib1TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef);
 
-    LevelDef_cptr               getLevelDef_grib1(uint levelId);
-    LevelDef_cptr               getLevelDef_grib2(uint levelId);
+    int           getGrib2GeometryIdByHash(T::Hash hash);
+    bool          getGrib2LevelDef(uint levelId,LevelDef& levelDef);
+    uint          getGrib2ParameterDefCount();
+    bool          getGrib2ParameterDefById(T::ParamId gribParamId,Parameter_grib2& paramDef);
+    bool          getGrib2ParameterDefByIndex(uint index,Parameter_grib2& paramDef);
+    bool          getGrib2ParameterDefByName(std::string gribParamName,Parameter_grib2& paramDef);
+    bool          getGrib2TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef);
 
-    TimeRangeDef_cptr           getTimeRangeDef_grib1(uint timeRangeId);
-    TimeRangeDef_cptr           getTimeRangeDef_grib2(uint timeRangeId);
+    void          getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList);
+    bool          getGeometryNameById(T::GeometryId  geometryId,std::string& name);
 
-    ParameterDefinition_cptr    getGribParamDefById(T::ParamId gribParamId);
-    ParameterDefinition_cptr    getGribParamDefByName(std::string gribParamName);
-    ParameterDefinition_cptr    getGribParamDef(uint discipline,uint category,uint number);
+    T::InterpolationMethod  getPreferredInterpolationMethodByUnits(std::string originalUnits);
 
-    GRIB1::GridDefinition_ptr   getGridDefinition1ByGeometryId(int geometryId);
-    GRIB1::GridDefinition_ptr   getGridDefinition1ByHash(T::Hash hash);
+  public:
 
-    GRIB2::GridDefinition_ptr   getGridDefinition2ByGeometryId(int geometryId);
-    GRIB2::GridDefinition_ptr   getGridDefinition2ByHash(T::Hash hash);
-
-    void                        getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList);
-
-    MessageIdentifier_cdm       mMessageIdentifier_cdm;
-    MessageIdentifier_fmi       mMessageIdentifier_fmi;
-    MessageIdentifier_grib1     mMessageIdentifier_grib1;
-    MessageIdentifier_grib2     mMessageIdentifier_grib2;
-
-    std::string                 mConfigDir;
-    TableValue_vec              mTableValues;
-    ParameterDefinition_vec     mParameterDefs;
-    UnitDefinition_vec          mUnitDefs;
-    LevelDef_vec                mLevelDefs_grib1;
-    LevelDef_vec                mLevelDefs_grib2;
-    TimeRangeDef_vec            mTimeRangeDefs_grib1;
-    TimeRangeDef_vec            mTimeRangeDefs_grib2;
-    Parameter_grib1_vec         mParameters_grib1;
-    Parameter_grib2_vec         mParameters_grib2;
-    GRIB1::GridDefinition_pvec  mGridDefinitions1;
-    GRIB2::GridDefinition_pvec  mGridDefinitions2;
+    MessageIdentifier_cdm   mMessageIdentifier_cdm;
+    MessageIdentifier_fmi   mMessageIdentifier_fmi;
+    MessageIdentifier_grib1 mMessageIdentifier_grib1;
+    MessageIdentifier_grib2 mMessageIdentifier_grib2;
 
   protected:
 
-    void                        loadTableValues();
-    void                        loadParameterDefinitions();
-    void                        loadParameterDefinitions_grib1();
-    void                        loadParameterDefinitions_grib2();
-    void                        loadLevelDefinitions_grib1();
-    void                        loadLevelDefinitions_grib2();
-    void                        loadTimeRangeDefinitions_grib1();
-    void                        loadTimeRangeDefinitions_grib2();
-    void                        loadUnitDefinitions();
-    void                        loadGeometryDefinitions();
+    ParamDef_cptr           getGribParamDefById(T::ParamId gribParamId);
+    ParamDef_cptr           getGribParamDefByName(std::string gribParamName);
+    ParamDef_cptr           getGribParamDef(uint discipline,uint category,uint number);
 
-    bool                        mInitialized;
+    GRIB1::GridDef_ptr      getGrib1DefinitionByGeometryId(int geometryId);
+    GRIB1::GridDef_ptr      getGrib1DefinitionByHash(T::Hash hash);
+    LevelDef_cptr           getGrib1LevelDef(uint levelId);
+    Parameter_grib1_cptr    getGrib1ParameterDefById(T::ParamId gribParamId);
+    Parameter_grib1_cptr    getGrib1ParameterDefByIndex(uint index);
+    Parameter_grib1_cptr    getGrib1ParameterDefByName(std::string gribParamName);
+    Parameter_grib1_cptr    getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfParameter);
+    TimeRangeDef_cptr       getGrib1TimeRangeDef(uint timeRangeId);
+
+    GRIB2::GridDef_ptr      getGrib2DefinitionByGeometryId(int geometryId);
+    GRIB2::GridDef_ptr      getGrib2DefinitionByHash(T::Hash hash);
+    LevelDef_cptr           getGrib2LevelDef(uint levelId);
+    Parameter_grib2_cptr    getGrib2ParameterDefById(T::ParamId gribParamId);
+    Parameter_grib2_cptr    getGrib2ParameterDefByName(std::string gribParamName);
+    TimeRangeDef_cptr       getGrib2TimeRangeDef(uint timeRangeId);
+
+    void                    loadGeometryDefinitions(const char *filename);
+    void                    loadParameterDefinitions(const char *filename);
+    void                    loadTableValues(const char *filename);
+    void                    loadUnitDefinitions(const char *filename);
+
+    void                    loadGrib1LevelDefinitions(const char *filename);
+    void                    loadGrib1ParameterDefinitions(const char *filename);
+    void                    loadGrib1TimeRangeDefinitions(const char *filename);
+
+    void                    loadGrib2ParameterDefinitions(const char *filename);
+    void                    loadGrib2LevelDefinitions(const char *filename);
+    void                    loadGrib2TimeRangeDefinitions(const char *filename);
+
+    void                    updateCheck();
+
+    std::string             mConfigDir;
+    TableValue_vec          mTableValues;
+    ParamDef_vec            mParameterDefs;
+    UnitDefinition_vec      mUnitDefs;
+    LevelDef_vec            mLevelDefs_grib1;
+    LevelDef_vec            mLevelDefs_grib2;
+    TimeRangeDef_vec        mTimeRangeDefs_grib1;
+    TimeRangeDef_vec        mTimeRangeDefs_grib2;
+    Parameter_grib1_vec     mParameters_grib1;
+    Parameter_grib2_vec     mParameters_grib2;
+    GRIB1::GridDef_pvec     mGridDefinitions1;
+    GRIB2::GridDef_pvec     mGridDefinitions2;
+    time_t                  mTableValues_modificationTime;
+    time_t                  mParameterDefs_modificationTime;
+    time_t                  mUnitDefs_modificationTime;
+    time_t                  mLevelDefs_grib1_modificationTime;
+    time_t                  mLevelDefs_grib2_modificationTime;
+    time_t                  mTimeRangeDefs_grib1_modificationTime;
+    time_t                  mTimeRangeDefs_grib2_modificationTime;
+    time_t                  mParameters_grib1_modificationTime;
+    time_t                  mParameters_grib2_modificationTime;
+    time_t                  mGridDefinitions_modificationTime;
+    time_t                  mGridDefinitionsExt_modificationTime;
+    bool                    mInitialized;
+    time_t                  mLastCheckTime;
+    ThreadLock              mThreadLock;
 
 };
 

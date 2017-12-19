@@ -100,10 +100,10 @@ class GridDefinition
      mutable OGRCoordinateTransformation* mCoordinateTranformation_orig2latlon;
 };
 
-typedef GridDefinition* GridDefinition_ptr;
+typedef GridDefinition* GridDef_ptr;
 typedef std::unique_ptr<GridDefinition> GridDefinition_uptr;
-typedef std::vector<GridDefinition_ptr> GridDefinition_pvec;
-typedef std::map<uint,GridDefinition_ptr> GridDefinition_pmap;
+typedef std::vector<GridDef_ptr> GridDef_pvec;
+typedef std::map<uint,GridDef_ptr> GridDefinition_pmap;
 
 
 }  // namespace GRID

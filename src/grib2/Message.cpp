@@ -505,12 +505,12 @@ void Message::initParameterInfo()
       T::Hash hash = getGridHash();
       if (hash != 0)
       {
-        GRIB2::GridDefinition_ptr def = Identification::gribDef.getGridDefinition2ByHash(hash);
-        if (def != NULL)
-          setGridGeometryId(def->getGridGeometryId());
+        int geometryId = Identification::gribDef.getGrib2GeometryIdByHash(hash);
+        if (geometryId != 0)
+          setGridGeometryId(geometryId);
         else
           printf("** Geometry not found %llu (file = %s)\n",(unsigned long long)hash,mGribFile->getFileName().c_str());
- }
+      }
       else
       {
         printf("Hash is zero!\n");
