@@ -29,6 +29,7 @@ MessageIdentifier_fmi::MessageIdentifier_fmi()
     mParameters_grib2_modificationTime = 0;
     mLevelDefs_grib1_modificationTime = 0;
     mLevelDefs_grib2_modificationTime = 0;
+    mProducerDefs_modificationTime = 0;
   }
   catch (...)
   {
@@ -154,6 +155,16 @@ void MessageIdentifier_fmi::updateCheck()
         loadGrib2LevelDefinitions(filename);
         mLevelDefs_grib2_modificationTime = tt;
       }
+
+      sprintf(filename,"%s/producerDef_grib_fmi.csv",mConfigDir.c_str());
+      tt = getFileModificationTime(filename);
+      if (mProducerDefs_modificationTime != tt)
+      {
+        mProducerDefs.clear();
+        loadProducerDefinitions(filename);
+        mProducerDefs_modificationTime = tt;
+      }
+
     }
   }
   catch (...)
@@ -430,6 +441,39 @@ T::ParamLevelId MessageIdentifier_fmi::getParamLevelId(GRIB1::Message& message)
 
 
 
+std::string MessageIdentifier_fmi::getProducerName(GRIB1::Message& message)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    const GRIB1::ProductSection *productSection =  message.getProductSection();
+    if (productSection == NULL)
+      return std::string("");
+
+    uint producerType = 1;
+    short ft = message.getForecastType();
+    if (ft > 1)
+      producerType = 3;
+
+    auto p = getProducer(productSection->getCentre(),productSection->getGeneratingProcessIdentifier(),producerType);
+    if (p == NULL)
+      return std::string("");
+
+    return p->mProducerName;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 T::ParamId MessageIdentifier_fmi::getParamIdByName(std::string fmiParamName)
 {
   FUNCTION_TRACE
@@ -481,6 +525,43 @@ T::ParamLevelId MessageIdentifier_fmi::getParamLevelId(GRIB2::Message& message)
     }
     return 0;
 
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+std::string MessageIdentifier_fmi::getProducerName(GRIB2::Message& message)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    GRIB2::ProductSection_cptr productSection = message.getProductSection();
+    if (productSection == NULL)
+      return std::string("");
+
+    GRIB2::IdentificSection_sptr identificationSection =  message.getIdentificationSection();
+    if (identificationSection == NULL)
+      return std::string("");
+
+    uint producerType = 1;
+    short ft = message.getForecastType();
+    if (ft > 1)
+      producerType = 3;
+
+    auto p = getProducer(identificationSection->getCentre(),*productSection->getGeneratingProcessIdentifier(),producerType);
+    if (p == NULL)
+      return std::string("");
+
+    return p->mProducerName;
   }
   catch (...)
   {
@@ -888,6 +969,31 @@ bool MessageIdentifier_fmi::getParameterDefByNewbaseName(std::string newbasePara
 
 
 
+bool MessageIdentifier_fmi::getProducer(uint centre,uint ident,uint type,ProducerDef_fmi& producer)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto p = getProducer(centre,ident,type);
+    if (p == NULL)
+      return false;
+
+    producer = *p;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 ParamDef_fmi_cptr MessageIdentifier_fmi::getParameterDefById(T::ParamId fmiParamId)
 {
   FUNCTION_TRACE
@@ -1154,6 +1260,28 @@ Param_grib2_fmi_cptr MessageIdentifier_fmi::getParameter_grib2(T::ParamId fmiPar
     for (auto it = mParameters_grib2.begin(); it != mParameters_grib2.end(); ++it)
     {
       if (it->mFmiParameterId == fmiParamId)
+        return &(*it);
+    }
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+ProducerDef_fmi_cptr MessageIdentifier_fmi::getProducer(uint centre,uint ident,uint type)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mProducerDefs.begin(); it != mProducerDefs.end(); ++it)
+    {
+      if (it->mCentre == centre  &&  it->mIdent == ident   &&  it->mType == type)
         return &(*it);
     }
     return NULL;
@@ -1658,6 +1786,90 @@ void MessageIdentifier_fmi::loadParameterDefinitions_newbase(const char *filenam
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
+
+
+
+
+
+void MessageIdentifier_fmi::loadProducerDefinitions(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *file = fopen(filename,"r");
+    if (file == NULL)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file) != NULL  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 5)
+        {
+          ProducerDef_fmi rec;
+
+          if (field[0][0] != '\0')
+            rec.mProducerId = (uint)atoll(field[0]);
+
+          if (field[1][0] != '\0')
+            rec.mType = (uint)atoll(field[1]);
+
+          if (field[2][0] != '\0')
+            rec.mCentre = (uint)atoll(field[2]);
+
+          if (field[3][0] != '\0')
+            rec.mIdent = (uint)atoll(field[3]);
+
+          if (field[4][0] != '\0')
+            rec.mProducerName = field[4];
+
+          if (field[5][0] != '\0')
+            rec.mProducerDescription = field[5];
+
+
+          mProducerDefs.push_back(rec);
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
 
 
 

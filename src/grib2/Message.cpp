@@ -125,6 +125,9 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 
     //const GRID::ParameterDefinition *paramDef = SmartMet::GRID::gribDef.getParameterDefById(getGribParameterId());
 
+    sprintf(name,"%smessage[%u].fmiProducerName",prefix.c_str(),(uint)mMessageIndex);
+    attributeList.addAttribute(name,mFmiProducerName);
+
     sprintf(name,"%smessage[%u].gribParameterId",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,toString(getGribParameterId()));
 
@@ -179,7 +182,7 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
     sprintf(name,"%smessage[%u].parameterLevelIdString",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,getGridParameterLevelIdString());
 
-    sprintf(name,"%smessage[%u].foracastStartTime",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].foracastTime",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,getForecastTime());
 
     sprintf(name,"%smessage[%u].referenceTime",prefix.c_str(),(uint)mMessageIndex);
@@ -487,6 +490,8 @@ void Message::initParameterInfo()
     mGrib2ParameterLevelId = Identification::gribDef.mMessageIdentifier_grib2.getParamLevelId(*this);
 
     mGrib1ParameterLevelId = Identification::gribDef.mMessageIdentifier_grib1.getParamLevelId(*this);
+
+    mFmiProducerName = Identification::gribDef.mMessageIdentifier_fmi.getProducerName(*this);
 
     mFmiParameterId = Identification::gribDef.mMessageIdentifier_fmi.getParamId(*this);
     mFmiParameterName = Identification::gribDef.mMessageIdentifier_fmi.getParamName(*this);
@@ -2025,6 +2030,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- parameterLevel           = " << toString(getGridParameterLevel()) << "\n";
     stream << space(level) << "- parameterLevelId         = " << toString(getGridParameterLevelId()) << "\n";
     stream << space(level) << "- parameterLevelIdString   = " << getGridParameterLevelIdString() << "\n";
+    stream << space(level) << "- fmiProducerName          = " << mFmiProducerName << "\n";
     stream << space(level) << "- fmiParameterId           = " << toString(mFmiParameterId) << "\n";
     stream << space(level) << "- fmiParameterLevelId      = " << toString((uint)mFmiParameterLevelId) << "\n";
     stream << space(level) << "- fmiParameterName         = " << mFmiParameterName << "\n";
@@ -2036,7 +2042,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- newbaseParameterId       = " << mNewbaseParameterId << "\n";
     stream << space(level) << "- newbaseParameterName     = " << mNewbaseParameterName << "\n";
     stream << space(level) << "- referenceTime            = " << getReferenceTime() << "\n";
-    stream << space(level) << "- startTime                = " << getForecastTime() << "\n";
+    stream << space(level) << "- forecastTime             = " << getForecastTime() << "\n";
     stream << space(level) << "- gridGeometryId           = " << getGridGeometryId() << "\n";
     stream << space(level) << "- gridHash                 = " << getGridHash() << "\n";
     stream << space(level) << "- gridProjection           = " << T::get_gridProjectionString(getGridProjection()) << "\n";

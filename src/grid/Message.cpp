@@ -51,6 +51,7 @@ Message::Message(const Message& message)
     mGribParameterId = message.mGribParameterId;
     mGrib1ParameterLevelId = message.mGrib1ParameterLevelId;
     mGrib2ParameterLevelId = message.mGrib2ParameterLevelId;
+    mFmiProducerName = message.mFmiProducerName;
     mFmiParameterId = message.mFmiParameterId;
     mFmiParameterLevelId = message.mFmiParameterLevelId;
   }
@@ -817,6 +818,22 @@ T::ParamLevelId Message::getGrib2ParameterLevelId() const
   try
   {
     return mGrib2ParameterLevelId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+std::string Message::getFmiProducerName() const
+{
+  try
+  {
+    return mFmiProducerName;
   }
   catch (...)
   {

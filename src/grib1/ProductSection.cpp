@@ -46,6 +46,8 @@ ProductSection::ProductSection(Message *message)
     mCenturyOfReferenceTimeOfData = 0;
     mSubCentre = 0;
     mDecimalScaleFactor = 0;
+    mForecastType = 1;
+    mForecastNumber = -1;
   }
   catch (...)
   {
@@ -197,6 +199,18 @@ void ProductSection::read(MemoryReader& memoryReader)
     memoryReader >> mCenturyOfReferenceTimeOfData;
     memoryReader >> mSubCentre;
     memoryReader >> mDecimalScaleFactor;
+
+    if (mSectionLength > 50)
+    {
+      memoryReader.setReadPosition(rPos + 40);
+      if (memoryReader.read_uint8() == 0x1E)
+      {
+        memoryReader.setReadPosition(rPos + 49);
+        mForecastNumber = memoryReader.read_uint8();
+        if (mForecastNumber > 0)
+          mForecastType = 3;
+      }
+    }
 
     memoryReader.setReadPosition(rPos + mSectionLength);
   }
@@ -709,6 +723,38 @@ T::TimeString ProductSection::getReferenceTime() const
 
 
 
+short ProductSection::getForecastType() const
+{
+  try
+  {
+    return mForecastType;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+short ProductSection::getForecastNumber() const
+{
+  try
+  {
+    return mForecastNumber;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the forecast start time. */
 
 T::TimeString ProductSection::getForecastTime() const
@@ -1020,6 +1066,8 @@ void ProductSection::print(std::ostream& stream,uint level,uint optionFlags) con
     stream << space(level) << "- centuryOfReferenceTimeOfData             = " <<  toString(mCenturyOfReferenceTimeOfData) << "\n";
     stream << space(level) << "- subCentre                                = " <<  toString(mSubCentre) << "\n";
     stream << space(level) << "- decimalScaleFactor                       = " <<  toString(mDecimalScaleFactor) << "\n";
+    stream << space(level) << "- mForecastType                            = " <<  toString(mForecastType) << "\n";
+    stream << space(level) << "- mForecastNumber                          = " <<  toString(mForecastNumber) << "\n";
   }
   catch (...)
   {

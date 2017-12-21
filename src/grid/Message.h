@@ -48,6 +48,7 @@ class Message
     virtual short                 getForecastNumber() const;
     virtual T::GeometryId         getGridGeometryId() const;
 
+    virtual std::string           getFmiProducerName() const;
     virtual T::ParamId            getFmiParameterId() const;
     virtual T::ParamLevelId       getFmiParameterLevelId() const;
     virtual std::string           getFmiParameterName() const;
@@ -158,6 +159,9 @@ protected:
 
     /*! \brief  The grib parameter units. */
     std::string           mGribParameterUnits;
+
+    /*! \brief  The fmi producer name. */
+    std::string           mFmiProducerName;
 
     /*! \brief  The fmi parameter identifier.*/
     T::ParamId            mFmiParameterId;

@@ -69,124 +69,129 @@ class Message;
 class ProductSection : public GRID::MessageSection
 {
   public:
-                    ProductSection(Message *message);
-    virtual         ~ProductSection();
+                      ProductSection(Message *message);
+    virtual           ~ProductSection();
 
     // ### Common methods for all message sections
 
-    void            getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
-    T::FilePosition getFilePosition() const;
-    std::uint32_t   getSectionLength() const;
-    std::string     getSectionName() const;
-    std::uint8_t    getSectionNumber() const;
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void              getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    T::FilePosition   getFilePosition() const;
+    std::uint32_t     getSectionLength() const;
+    std::string       getSectionName() const;
+    std::uint8_t      getSectionNumber() const;
+    void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
-    std::uint8_t    getTableVersion() const;
-    std::uint8_t    getCentre() const;
-    std::uint8_t    getGeneratingProcessIdentifier() const;
-    std::uint8_t    getGridDefinitionNumber() const;
-    std::uint8_t    getSectionFlags() const;
-    std::uint8_t    getIndicatorOfParameter() const;
-    std::uint8_t    getIndicatorOfTypeOfLevel() const;
-    std::uint16_t   getLevel() const;
-    std::uint8_t    getYearOfCentury() const;
-    std::uint8_t    getMonth() const;
-    std::uint8_t    getDay() const;
-    std::uint8_t    getHour() const;
-    std::uint8_t    getMinute() const;
-    std::uint8_t    getUnitOfTimeRange() const;
-    std::uint8_t    getP1() const;
-    std::uint8_t    getP2() const;
-    std::uint8_t    getTimeRangeIndicator() const;
-    std::uint16_t   getNumberIncludedInAverage() const;
-    std::uint8_t    getNumberMissingFromAveragesOrAccumulations() const;
-    std::uint8_t    getCenturyOfReferenceTimeOfData() const;
-    std::uint8_t    getSubCentre() const;
-    std::uint16_t   getDecimalScaleFactor() const;
-    T::TimeString   getReferenceTime() const;
-    T::TimeString   getForecastTime() const;
-    void            read(MemoryReader& memoryReader);
+    std::uint8_t      getTableVersion() const;
+    std::uint8_t      getCentre() const;
+    std::uint8_t      getGeneratingProcessIdentifier() const;
+    std::uint8_t      getGridDefinitionNumber() const;
+    std::uint8_t      getSectionFlags() const;
+    std::uint8_t      getIndicatorOfParameter() const;
+    std::uint8_t      getIndicatorOfTypeOfLevel() const;
+    std::uint16_t     getLevel() const;
+    std::uint8_t      getYearOfCentury() const;
+    std::uint8_t      getMonth() const;
+    std::uint8_t      getDay() const;
+    std::uint8_t      getHour() const;
+    std::uint8_t      getMinute() const;
+    std::uint8_t      getUnitOfTimeRange() const;
+    std::uint8_t      getP1() const;
+    std::uint8_t      getP2() const;
+    std::uint8_t      getTimeRangeIndicator() const;
+    std::uint16_t     getNumberIncludedInAverage() const;
+    std::uint8_t      getNumberMissingFromAveragesOrAccumulations() const;
+    std::uint8_t      getCenturyOfReferenceTimeOfData() const;
+    std::uint8_t      getSubCentre() const;
+    std::uint16_t     getDecimalScaleFactor() const;
+    T::TimeString     getReferenceTime() const;
+    T::TimeString     getForecastTime() const;
+    short             getForecastType() const;
+    short             getForecastNumber() const;
+    void              read(MemoryReader& memoryReader);
 
   private:
 
     /*! \brief The pointer to the message object. */
-    Message*        mMessage;
+    Message*          mMessage;
 
     /*! \brief The section start position in the file. */
-    T::FilePosition mFilePosition;
+    T::FilePosition   mFilePosition;
 
     /*! \brief The length of the section. */
-    std::uint32_t   mSectionLength;
+    std::uint32_t     mSectionLength;
 
     /*! \brief The GRIB tables version. */
-    std::uint8_t    mTableVersion;
+    std::uint8_t      mTableVersion;
 
     /*! \brief The identification of originating/generating center (see Code table 0). */
-    std::uint8_t    mCentre;
+    std::uint8_t      mCentre;
 
     /*! \brief The generating process identification number (allocated by originating center). */
-    std::uint8_t    mGeneratingProcessIdentifier;
+    std::uint8_t      mGeneratingProcessIdentifier;
 
     /*! \brief The grid definition. */
-    std::uint8_t    mGridDefinitionNumber;
+    std::uint8_t      mGridDefinitionNumber;
 
     /*! \brief The flags (see Code table 1) */
-    std::uint8_t    mSectionFlags;
+    std::uint8_t      mSectionFlags;
 
     /*! \brief The indicator of the parameter (see Code table 2) */
-    std::uint8_t    mIndicatorOfParameter;
+    std::uint8_t      mIndicatorOfParameter;
 
     /*! \brief The indicator of type of level (see Code table 3) */
-    std::uint8_t    mIndicatorOfTypeOfLevel;
+    std::uint8_t      mIndicatorOfTypeOfLevel;
 
     /*! \brief The level value. */
-    std::uint16_t   mLevel;
+    std::uint16_t     mLevel;
 
     /*! \brief The year of the reference time. */
-    std::uint8_t    mYearOfCentury;
+    std::uint8_t      mYearOfCentury;
 
     /*! \brief The month of the reference time. */
-    std::uint8_t    mMonth;
+    std::uint8_t      mMonth;
 
     /*! \brief The day of the reference time. */
-    std::uint8_t    mDay;
+    std::uint8_t      mDay;
 
     /*! \brief The hour of the reference time. */
-    std::uint8_t    mHour;
+    std::uint8_t      mHour;
 
     /*! \brief The minute of the reference time. */
-    std::uint8_t    mMinute;
+    std::uint8_t      mMinute;
 
     /*! \brief The unit of the time range (see Code table 4) */
-    std::uint8_t    mUnitOfTimeRange;
+    std::uint8_t      mUnitOfTimeRange;
 
     /*! \brief The period of the time (= number of time units) */
-    std::uint8_t    mP1;
+    std::uint8_t      mP1;
 
     /*! \brief The period of time (number of time units); or time interval between successive
         analyses, initialized analyses or forecasts, undergoing averaging or accumulation. */
-    std::uint8_t    mP2;
+    std::uint8_t      mP2;
 
     /*! \brief The time range indicator (see Code table 5). */
-    std::uint8_t    mTimeRangeIndicator;
+    std::uint8_t      mTimeRangeIndicator;
 
     /*! \brief The number included in average, when octet 21 (Code table 5) indicates an average or
          accumulation; otherwise set to zero. */
-    std::uint16_t   mNumberIncludedInAverage;
+    std::uint16_t     mNumberIncludedInAverage;
 
     /*! \brief The number missing from averages or accumulations. */
-    std::uint8_t    mNumberMissingFromAveragesOrAccumulations;
+    std::uint8_t      mNumberMissingFromAveragesOrAccumulations;
 
     /*! \brief The century of reference time of data (see Note 6). */
-    std::uint8_t    mCenturyOfReferenceTimeOfData;
+    std::uint8_t      mCenturyOfReferenceTimeOfData;
 
     /*! \brief The sub-center identification (see Code Table 0). */
-    std::uint8_t    mSubCentre;
+    std::uint8_t      mSubCentre;
 
     /*! \brief The units decimal scale factor. */
-    std::int16_t    mDecimalScaleFactor;
+    std::int16_t      mDecimalScaleFactor;
+
+    short             mForecastType;
+    short             mForecastNumber;
 };
 
 
