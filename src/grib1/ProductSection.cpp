@@ -2,7 +2,7 @@
 #include "Message.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
-#include "identification/GribDef.h"
+#include "identification/GridDef.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 
@@ -86,7 +86,7 @@ void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attri
     attributeList.addAttribute(name,toString(mCentre));
 
     sprintf(name,"%sproduct.centre.name",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gribDef.getTableValue(1,0,"0",mCentre));
+    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(1,0,"0",mCentre));
 
     sprintf(name,"%sproduct.generatingProcessIdentifier",prefix.c_str());
     attributeList.addAttribute(name,toString(mGeneratingProcessIdentifier));
@@ -101,13 +101,13 @@ void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attri
     attributeList.addAttribute(name,toString(mIndicatorOfParameter));
 
     sprintf(name,"%sproduct.indicatorOfParameterString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gribDef.getTableValue(1,0,"2.128",mIndicatorOfParameter));
+    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(1,0,"2.128",mIndicatorOfParameter));
 
     sprintf(name,"%sproduct.indicatorOfTypeOfLevel",prefix.c_str());
     attributeList.addAttribute(name,toString(mIndicatorOfTypeOfLevel));
 
     sprintf(name,"%sproduct.indicatorOfTypeOfLevelString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gribDef.getTableValue(1,0,"3",mIndicatorOfTypeOfLevel));
+    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(1,0,"3",mIndicatorOfTypeOfLevel));
 
     sprintf(name,"%sproduct.level",prefix.c_str());
     attributeList.addAttribute(name,toString(mLevel));
@@ -1045,12 +1045,12 @@ void ProductSection::print(std::ostream& stream,uint level,uint optionFlags) con
     stream << space(level) << "- filePosition                             = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- sectionLength                            = " <<  toString(mSectionLength) << "\n";
     stream << space(level) << "- tableVersion                             = " <<  toString(mTableVersion) << "\n";
-    stream << space(level) << "- centre                                   = " <<  toString(mCentre) << " (" << Identification::gribDef.getTableValue(1,0,"0",mCentre) << ")\n";
+    stream << space(level) << "- centre                                   = " <<  toString(mCentre) << " (" << Identification::gridDef.getGribTableValue(1,0,"0",mCentre) << ")\n";
     stream << space(level) << "- generatingProcessIdentifier              = " <<  toString(mGeneratingProcessIdentifier) << "\n";
     stream << space(level) << "- gridDefinitionNumber                     = " <<  toString(mGridDefinitionNumber) << "\n";
     stream << space(level) << "- sectionFlags                             = " <<  toString(mSectionFlags) << "\n";
-    stream << space(level) << "- indicatorOfParameter                     = " <<  toString(mIndicatorOfParameter)  << " (" << Identification::gribDef.getTableValue(1,0,"2.128",mIndicatorOfParameter) << ")\n";
-    stream << space(level) << "- indicatorOfTypeOfLevel                   = " <<  toString(mIndicatorOfTypeOfLevel) << " (" << Identification::gribDef.getTableValue(1,0,"3",mIndicatorOfTypeOfLevel) << ")\n";
+    stream << space(level) << "- indicatorOfParameter                     = " <<  toString(mIndicatorOfParameter)  << " (" << Identification::gridDef.getGribTableValue(1,0,"2.128",mIndicatorOfParameter) << ")\n";
+    stream << space(level) << "- indicatorOfTypeOfLevel                   = " <<  toString(mIndicatorOfTypeOfLevel) << " (" << Identification::gridDef.getGribTableValue(1,0,"3",mIndicatorOfTypeOfLevel) << ")\n";
     stream << space(level) << "- level                                    = " <<  toString(mLevel) << "\n";
     stream << space(level) << "- yearOfCentury                            = " <<  toString(mYearOfCentury) << "\n";
     stream << space(level) << "- month                                    = " <<  toString(mMonth) << "\n";

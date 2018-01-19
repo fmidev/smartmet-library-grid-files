@@ -1,5 +1,5 @@
 #include "grib2/RepresentationSection.h"
-#include "identification/GribDef.h"
+#include "identification/GridDef.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "Message.h"
@@ -262,7 +262,7 @@ std::string RepresentationSection::getDataRepresentationString() const
   try
   {
     std::uint8_t tablesVersion = mMessage->getTablesVersion();
-    return Identification::gribDef.getTableValue(2,tablesVersion,"5.0",getDataRepresentationTemplateNumber());
+    return Identification::gridDef.getGribTableValue(2,tablesVersion,"5.0",getDataRepresentationTemplateNumber());
   }
   catch (...)
   {

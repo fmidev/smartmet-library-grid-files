@@ -1,5 +1,5 @@
 #include "grib2/IndicatorSection.h"
-#include "identification/GribDef.h"
+#include "identification/GridDef.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "Message.h"
@@ -282,7 +282,7 @@ std::string IndicatorSection::getDisciplineString() const
 {
   try
   {
-    return Identification::gribDef.getTableValue(2,1,"0.0",getDiscipline());
+    return Identification::gridDef.getGribTableValue(2,1,"0.0",getDiscipline());
   }
   catch (...)
   {

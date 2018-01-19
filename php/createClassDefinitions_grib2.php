@@ -174,6 +174,7 @@ $nohash = array (
     "mBasicAngleOfTheInitialProductionDomain" => "",
     "mSubdivisionsOfBasicAngle" => "",
     "mResolution" => "",
+    "mResolutionAndComponentFlag" => "",
     "mLongitudeOfLastGridPoint" => "",
     "mLatitudeOfLastGridPoint" => ""
 );

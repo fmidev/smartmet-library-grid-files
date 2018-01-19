@@ -21,7 +21,7 @@ function createParameterFiles($outputDir)
   $idArray1 = createParameterFiles_grib1("/usr/share/grib_api/definitions/grib1",$outputDir);
   $idArray2 = createParameterFiles_grib2("/usr/share/grib_api/definitions/grib2",$outputDir);
 
-  $outputParamFile = $outputDir . "/" . "parameterDef.csv";
+  $outputParamFile = $outputDir . "/" . "grib_parameters.csv";
   $content = "";
 
   $header = "";
@@ -66,8 +66,8 @@ function createParameterFiles_grib1($dir,$outputDir)
   $shortNameFile_grib1 = $dir . "/shortName.def";
 
   $centre = "";
-  $outputParamFile = $outputDir . "/" . "parameterDef.csv";
-  $outputParamFile_grib1 = $outputDir . "/" . "parameterDef_grib1.csv";
+  $outputParamFile = $outputDir . "/" . "grib_parameter.csv";
+  $outputParamFile_grib1 = $outputDir . "/" . "grib1_parameters.csv";
 
   $idArray = createParameterFile_grib1($idFile_grib1, $unitFile_grib1, $shortNameFile_grib1,$centre,$idArray);
 
@@ -141,8 +141,8 @@ function createParameterFiles_grib2($dir,$outputDir)
   $unitFile_grib2 = $dir . "/units.def";
   $shortNameFile_grib2 = $dir . "/shortName.def";
 
-  $outputParamFile = $outputDir . "/" . "parameterDef.csv";
-  $outputParamFile_grib2 = $outputDir . "/" . "parameterDef_grib2.csv";
+  $outputParamFile = $outputDir . "/" . "grib_parameter.csv";
+  $outputParamFile_grib2 = $outputDir . "/" . "grib1_parameters.csv";
   $centre = "";
 
   $idArray = createParameterFile_grib2($idFile_grib2, $unitFile_grib2, $shortNameFile_grib2,$centre,$idArray);
@@ -665,7 +665,7 @@ function getValueByParameterName($rows, $paramName)
 
 function createTableConfig($outputDir)
 {
-  $tableConfigFile = $outputDir . "/tables.csv";
+  $tableConfigFile = $outputDir . "/grib_tables.csv";
   $content = "";
 
 

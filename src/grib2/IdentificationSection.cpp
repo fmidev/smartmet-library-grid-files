@@ -1,5 +1,5 @@
 #include "grib2/IdentificationSection.h"
-#include "identification/GribDef.h"
+#include "identification/GridDef.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "Message.h"
@@ -62,7 +62,7 @@ void IdentificationSection::getAttributeList(std::string prefix,T::AttributeList
     attributeList.addAttribute(name,toString(mCentre));
 
     sprintf(name,"%sidentification.centre.name",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gribDef.getTableValue(1,0,"0",mCentre));
+    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(1,0,"0",mCentre));
 
     sprintf(name,"%sidentification.subCentre",prefix.c_str());
     attributeList.addAttribute(name,toString(mSubCentre));
@@ -77,7 +77,7 @@ void IdentificationSection::getAttributeList(std::string prefix,T::AttributeList
     attributeList.addAttribute(name,toString(mSignificanceOfReferenceTime));
 
     sprintf(name,"%sidentification.significanceOfReferenceTimeString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gribDef.getTableValue(2,*mTablesVersion,"1.2", mSignificanceOfReferenceTime));
+    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.2", mSignificanceOfReferenceTime));
 
     sprintf(name,"%sidentification.referenceTime.year",prefix.c_str());
     attributeList.addAttribute(name,toString(mYear));
@@ -101,13 +101,13 @@ void IdentificationSection::getAttributeList(std::string prefix,T::AttributeList
     attributeList.addAttribute(name,toString(mProductionStatusOfProcessedData));
 
     sprintf(name,"%sidentification.processedData.productionStatusString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gribDef.getTableValue(2,*mTablesVersion,"1.3", mProductionStatusOfProcessedData));
+    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.3", mProductionStatusOfProcessedData));
 
     sprintf(name,"%sidentification.processedData.type",prefix.c_str());
     attributeList.addAttribute(name,toString(mTypeOfProcessedData));
 
     sprintf(name,"%sidentification.processedData.typeString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gribDef.getTableValue(2,*mTablesVersion,"1.4",mTypeOfProcessedData));
+    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.4",mTypeOfProcessedData));
   }
   catch (...)
   {
@@ -579,19 +579,19 @@ void IdentificationSection::print(std::ostream& stream,uint level,uint optionFla
     stream << space(level) << "- filePosition                    = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- sectionLength                   = " <<  toString(mSectionLength) << "\n";
     stream << space(level) << "- numberOfSection                 = " <<  toString(mNumberOfSection) << "\n";
-    stream << space(level) << "- centre                          = " <<  toString(mCentre) << " (" << Identification::gribDef.getTableValue(1,0,"0",mCentre) << ")\n";
+    stream << space(level) << "- centre                          = " <<  toString(mCentre) << " (" << Identification::gridDef.getGribTableValue(1,0,"0",mCentre) << ")\n";
     stream << space(level) << "- subCentre                       = " <<  toString(mSubCentre) << "\n";
     stream << space(level) << "- tablesVersion                   = " << toString(mTablesVersion) << "\n";
     stream << space(level) << "- localTablesVersion              = " << toString(mLocalTablesVersion) << "\n";  // table 1.1 is local, not dumping "1.1"
-    stream << space(level) << "- significanceOfReferenceTime     = " << toString(mSignificanceOfReferenceTime) << " (" << Identification::gribDef.getTableValue(2,*mTablesVersion,"1.2", mSignificanceOfReferenceTime)<< ")\n";
+    stream << space(level) << "- significanceOfReferenceTime     = " << toString(mSignificanceOfReferenceTime) << " (" << Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.2", mSignificanceOfReferenceTime)<< ")\n";
     stream << space(level) << "- year                            = " << toString(mYear) << "\n";
     stream << space(level) << "- month                           = " << toString(mMonth) << "\n";
     stream << space(level) << "- day                             = " << toString(mDay) << "\n";
     stream << space(level) << "- hour                            = " << toString(mHour) << "\n";
     stream << space(level) << "- minute                          = " << toString(mMinute) << "\n";
     stream << space(level) << "- second                          = " << toString(mSecond) << "\n";
-    stream << space(level) << "- productionStatusOfProcessedData = " << toString(mProductionStatusOfProcessedData) << " (" << Identification::gribDef.getTableValue(2,*mTablesVersion,"1.3", mProductionStatusOfProcessedData) << ")\n";
-    stream << space(level) << "- typeOfProcessedData             = " << toString(mTypeOfProcessedData) << " (" << Identification::gribDef.getTableValue(2,*mTablesVersion,"1.4",mTypeOfProcessedData) << ")\n";
+    stream << space(level) << "- productionStatusOfProcessedData = " << toString(mProductionStatusOfProcessedData) << " (" << Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.3", mProductionStatusOfProcessedData) << ")\n";
+    stream << space(level) << "- typeOfProcessedData             = " << toString(mTypeOfProcessedData) << " (" << Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.4",mTypeOfProcessedData) << ")\n";
 
     // Bytes 22-nn are reserved for future use
     auto length = getSectionLength();

@@ -2,10 +2,7 @@
 #include "common/Exception.h"
 #include "common/GeneralDefinitions.h"
 #include "common/GeneralFunctions.h"
-#include "identification/GribDef.h"
-#include "identification/MessageIdentifier_grib1.h"
-#include "identification/MessageIdentifier_grib2.h"
-#include "identification/MessageIdentifier_fmi.h"
+#include "identification/GridDef.h"
 #include "grib1/GribFile.h"
 #include "grib2/GribFile.h"
 

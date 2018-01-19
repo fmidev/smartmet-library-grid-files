@@ -1,5 +1,5 @@
 #include "grib2/GridSection.h"
-#include "identification/GribDef.h"
+#include "identification/GridDef.h"
 #include "common/Dimensions.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
@@ -90,7 +90,7 @@ void GridSection::getAttributeList(std::string prefix,T::AttributeList& attribut
     attributeList.addAttribute(name,toString(getSourceOfGridDefinition()));
 
     sprintf(name,"%sgrid.sourceStringOfGridDefinition",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gribDef.getTableValue(2,tablesVersion,"3.0",getSourceOfGridDefinition()));
+    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,tablesVersion,"3.0",getSourceOfGridDefinition()));
 
     sprintf(name,"%sgrid.numberOfGridPoints",prefix.c_str());
     attributeList.addAttribute(name,toString(getNumberOfGridPoints()));
@@ -102,7 +102,7 @@ void GridSection::getAttributeList(std::string prefix,T::AttributeList& attribut
     attributeList.addAttribute(name,toString(getInterpretationOfNumberOfPoints()));
 
     sprintf(name,"%sgrid.interpretationStringOfNumberOfPoints",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gribDef.getTableValue(2,tablesVersion,"3.11",getInterpretationOfNumberOfPoints()));
+    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,tablesVersion,"3.11",getInterpretationOfNumberOfPoints()));
 
     sprintf(name,"%sgrid.gridDefinitionTemplateNumber",prefix.c_str());
     attributeList.addAttribute(name,toString(getGridDefinitionTemplateNumber()));
@@ -753,7 +753,7 @@ std::string GridSection::getGridProjectionString() const
   try
   {
     std::uint8_t tablesVersion = mMessage->getTablesVersion();
-    return Identification::gribDef.getTableValue(2,tablesVersion,"3.1",getGridDefinitionTemplateNumber());
+    return Identification::gridDef.getGribTableValue(2,tablesVersion,"3.1",getGridDefinitionTemplateNumber());
   }
   catch (...)
   {
@@ -1147,10 +1147,10 @@ void GridSection::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- filePosition                    = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- sectionLength                   = " << toString(mSectionLength) << "\n";
     stream << space(level) << "- numberOfSection                 = " << toString(mNumberOfSection) << "\n";
-    stream << space(level) << "- sourceOfGridDefinition          = " << Identification::gribDef.getTableValue(2,tablesVersion,"3.0",getSourceOfGridDefinition()) << "\n";
+    stream << space(level) << "- sourceOfGridDefinition          = " << Identification::gridDef.getGribTableValue(2,tablesVersion,"3.0",getSourceOfGridDefinition()) << "\n";
     stream << space(level) << "- numberOfGridPoints              = " << toString(getNumberOfGridPoints()) << "\n";
     stream << space(level) << "- numberOfOctetsForNumberOfPoints = " << toString(getNumberOfOctetsForNumberOfPoints()) << "\n";
-    stream << space(level) << "- interpretationOfNumberOfPoints  = " << Identification::gribDef.getTableValue(2,tablesVersion,"3.11",getInterpretationOfNumberOfPoints()) << "\n";
+    stream << space(level) << "- interpretationOfNumberOfPoints  = " << Identification::gridDef.getGribTableValue(2,tablesVersion,"3.11",getInterpretationOfNumberOfPoints()) << "\n";
     stream << space(level) << "- gridDefinitionTemplateNumber    = " << toString(getGridDefinitionTemplateNumber()) << "\n";
     stream << space(level) << "- gridDefinitionString            = " << getGridProjectionString() << "\n";
 

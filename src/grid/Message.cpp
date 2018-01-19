@@ -5,7 +5,7 @@
 #include "common/GeneralDefinitions.h"
 #include "common/GraphFunctions.h"
 #include "common/Point.h"
-#include "identification/GribDef.h"
+#include "identification/GridDef.h"
 
 
 namespace SmartMet

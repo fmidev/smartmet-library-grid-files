@@ -16,13 +16,9 @@
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
-#include "identification/GribDef.h"
-#include "identification/MessageIdentifier_grib1.h"
-#include "identification/MessageIdentifier_grib2.h"
-#include "identification/MessageIdentifier_fmi.h"
+#include "identification/GridDef.h"
 
 #include <iostream>
-//#include <cpl_conv.h>
 
 
 namespace SmartMet
@@ -123,7 +119,7 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
   {
     char name[300];
 
-    //const GRID::ParameterDefinition *paramDef = SmartMet::GRID::gribDef.getParameterDefById(getGribParameterId());
+    //const GRID::ParameterDefinition *paramDef = SmartMet::GRID::gridDef.getParameterDefById(getGribParameterId());
 
     sprintf(name,"%smessage[%u].fmiProducerName",prefix.c_str(),(uint)mMessageIndex);
     attributeList.addAttribute(name,mFmiProducerName);
@@ -483,34 +479,34 @@ void Message::initParameterInfo()
 {
   try
   {
-    mGribParameterId  = Identification::gribDef.mMessageIdentifier_grib2.getParamId(*this);
-    mGribParameterName  = Identification::gribDef.mMessageIdentifier_grib2.getParamName(*this);
-    mGribParameterDescription  = Identification::gribDef.mMessageIdentifier_grib2.getParamDescription(*this);
-    mGribParameterUnits  = Identification::gribDef.mMessageIdentifier_grib2.getParamUnits(*this);
-    mGrib2ParameterLevelId = Identification::gribDef.mMessageIdentifier_grib2.getParamLevelId(*this);
+    mGribParameterId  = Identification::gridDef.getGribParameterId(*this);
+    mGribParameterName  = Identification::gridDef.getGribParameterName(*this);
+    mGribParameterDescription  = Identification::gridDef.getGribParameterDescription(*this);
+    mGribParameterUnits  = Identification::gridDef.getGribParameterUnits(*this);
+    mGrib2ParameterLevelId = Identification::gridDef.getGrib2LevelId(*this);
 
-    mGrib1ParameterLevelId = Identification::gribDef.mMessageIdentifier_grib1.getParamLevelId(*this);
+    mGrib1ParameterLevelId = Identification::gridDef.getGrib1LevelId(*this);
 
-    mFmiProducerName = Identification::gribDef.mMessageIdentifier_fmi.getProducerName(*this);
+    //mFmiProducerName = Identification::gridDef.getProducerName(*this);
 
-    mFmiParameterId = Identification::gribDef.mMessageIdentifier_fmi.getParamId(*this);
-    mFmiParameterName = Identification::gribDef.mMessageIdentifier_fmi.getParamName(*this);
-    mFmiParameterDescription = Identification::gribDef.mMessageIdentifier_fmi.getParamDescription(*this);
-    mFmiParameterUnits = Identification::gribDef.mMessageIdentifier_fmi.getParamUnits(*this);
-    mFmiParameterLevelId = Identification::gribDef.mMessageIdentifier_fmi.getParamLevelId(*this);
+    mFmiParameterId = Identification::gridDef.getFmiParameterId(*this);
+    mFmiParameterName = Identification::gridDef.getFmiParameterName(*this);
+    mFmiParameterDescription = Identification::gridDef.getFmiParameterDescription(*this);
+    mFmiParameterUnits = Identification::gridDef.getFmiParameterUnits(*this);
+    mFmiParameterLevelId = Identification::gridDef.getFmiLevelId(*this);
 
-    mNewbaseParameterId = Identification::gribDef.mMessageIdentifier_fmi.getNewbaseParamId(*this);
-    mNewbaseParameterName = Identification::gribDef.mMessageIdentifier_fmi.getNewbaseParamName(*this);
+    mNewbaseParameterId = Identification::gridDef.getNewbaseParameterId(*this);
+    mNewbaseParameterName = Identification::gridDef.getNewbaseParameterName(*this);
 
-    mCdmParameterId = Identification::gribDef.mMessageIdentifier_cdm.getParamId(*this);
-    mCdmParameterName = Identification::gribDef.mMessageIdentifier_cdm.getParamName(*this);
+    mCdmParameterId = Identification::gridDef.getCdmParameterId(*this);
+    mCdmParameterName = Identification::gridDef.getCdmParameterName(*this);
 
     if (getGridGeometryId() == 0)
     {
       T::Hash hash = getGridHash();
       if (hash != 0)
       {
-        int geometryId = Identification::gribDef.getGrib2GeometryIdByHash(hash);
+        int geometryId = Identification::gridDef.getGrib2GeometryIdByHash(hash);
         if (geometryId != 0)
           setGridGeometryId(geometryId);
         else
@@ -1373,7 +1369,7 @@ std::string Message::getGridParameterLevelIdString() const
   try
   {
     std::uint8_t tablesVersion = getTablesVersion();
-    return Identification::gribDef.getTableValue(2,tablesVersion,"4.5",getGridParameterLevelId());
+    return Identification::gridDef.getGribTableValue(2,tablesVersion,"4.5",getGridParameterLevelId());
   }
   catch (...)
   {

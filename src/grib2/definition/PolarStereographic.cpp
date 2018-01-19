@@ -138,7 +138,7 @@ T::Hash PolarStereographic::countHash() {
       boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
       boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
-    boost::hash_combine(seed, mResolutionAndComponentFlag);
+    // boost::hash_combine(seed, mResolutionAndComponentFlag);
     if (mLaD)
       boost::hash_combine(seed, *mLaD);
     if (mOrientationOfTheGrid)

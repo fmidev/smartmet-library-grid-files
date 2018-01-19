@@ -1,6 +1,6 @@
 #include "GridSection.h"
 #include "Message.h"
-#include "identification/GribDef.h"
+#include "identification/GridDef.h"
 #include "common/Dimensions.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
@@ -259,7 +259,7 @@ std::string GridSection::getGridProjectionString() const
 {
   try
   {
-    return Identification::gribDef.getTableValue(1,0,"6",mDataRepresentationType);
+    return Identification::gridDef.getGribTableValue(1,0,"6",mDataRepresentationType);
   }
   catch (...)
   {

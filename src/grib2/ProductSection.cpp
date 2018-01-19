@@ -1,5 +1,5 @@
 #include "grib2/ProductSection.h"
-#include "identification/GribDef.h"
+#include "identification/GridDef.h"
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "Message.h"
@@ -295,7 +295,7 @@ std::string ProductSection::getProductDefinitionString() const
   try
   {
     std::uint8_t tablesVersion = mMessage->getTablesVersion();
-    return Identification::gribDef.getTableValue(2,tablesVersion,"4.0", getProductDefinitionTemplateNumber());
+    return Identification::gridDef.getGribTableValue(2,tablesVersion,"4.0", getProductDefinitionTemplateNumber());
   }
   catch (...)
   {
