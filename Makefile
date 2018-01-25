@@ -51,7 +51,6 @@ else
 	-Winline \
 	-Wno-multichar \
 	-Wno-pmf-conversions \
-	-Woverloaded-virtual  \
 	-Wpointer-arith \
 	-Wcast-qual \
 	-Wredundant-decls \
@@ -59,6 +58,7 @@ else
 	-Wno-sign-promo \
 	-Wno-unknown-pragmas \
 	-Wno-inline
+#	-Woverloaded-virtual   TODO
 
  FLAGS_RELEASE = -Wuninitialized
 
@@ -122,7 +122,7 @@ vpath %.cpp src \
 			src/grib2/definition \
 			src/grib2/implementation \
 			src/identification
-			
+
 vpath %.h 	src \
 			src/common \
 			src/grid \
