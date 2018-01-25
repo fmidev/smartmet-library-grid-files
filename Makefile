@@ -65,7 +65,7 @@ else
  INCLUDES = \
 	-I$(includedir) \
 	-I$(includedir)/smartmet \
-	$(pkg-config --cflags icu-i18n) \
+	`pkg-config --cflags libconfig++`
 
 endif
 
@@ -76,20 +76,18 @@ CFLAGS_DEBUG   = $(DEFINES) $(FLAGS) $(FLAGS_DEBUG)   -Werror  -Og -g
 CFLAGS_PROFILE = $(DEFINES) $(FLAGS) $(FLAGS_PROFILE) -DNDEBUG -O2 -g -pg
 
 LIBS = -L$(libdir) \
+	-L/usr/local/lib -lopenjpeg \
+	-lsmartmet-newbase \
+	-lsmartmet-spine \
 	-lboost_date_time \
 	-lboost_filesystem \
+	-lboost_iostreams \
 	-lboost_thread \
-	-lboost_regex \
-	-lboost_system \
-	$(pkg-config --libs icu-i18n) \
-	-lfmt \
-	-lctpp2 \
 	-lgdal \
-	-ljpeg \
+	`pkg-config --libs libconfig++` \
 	-lpng \
-	-lpthread -lrt \
-	-L/usr/local/lib -lopenjpeg
-#	-lopenjpeg \
+	-ljpeg \
+	-lz
 
 # What to install
 
