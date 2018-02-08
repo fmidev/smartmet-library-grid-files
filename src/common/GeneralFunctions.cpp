@@ -1016,7 +1016,7 @@ void splitString(const char *str,char separator,std::vector<std::string>& partLi
   {
     char buf[10000];
     uint c = 0;
-    char *p = (char*)str;
+    char *p = const_cast<char*>(str);
 
     bool ind = false;
     while (*p != '\0'  &&  *p != '\n'  &&  c < 10000)
@@ -1074,7 +1074,7 @@ void splitString(const char *str,char separator,std::set<std::string>& partList)
   {
     char buf[10000];
     uint c = 0;
-    char *p = (char*)str;
+    char *p = const_cast<char*>(str);
 
     bool ind = false;
     while (*p != '\0'  &&  *p != '\n'  &&  c < 10000)
