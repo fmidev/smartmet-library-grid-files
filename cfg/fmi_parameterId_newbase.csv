@@ -1959,7 +1959,7 @@
 633;0;
 
 # HFFG-MS; Hourly maximum wind gust
-634;0;
+634;467;
 
 # HDD-D; Hourly mean wind direction
 635;0;
@@ -2175,10 +2175,10 @@
 701;260;
 
 # POT-PRCNT; Probability of thunderstorms
-701;1218;
+#701;1218;
 
 # POT-PRCNT; Probability of thunderstorms
-701;12100;
+#701;12100;
 
 # TCW-KGM2; Vertically integrated total water (vapour + cloud water + cloud ice)
 702;1210;

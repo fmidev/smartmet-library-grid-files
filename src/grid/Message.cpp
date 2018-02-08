@@ -5,7 +5,11 @@
 #include "common/GeneralDefinitions.h"
 #include "common/GraphFunctions.h"
 #include "common/Point.h"
+#include "common/ShowFunction.h"
 #include "identification/GridDef.h"
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
 namespace SmartMet
@@ -24,6 +28,7 @@ AngleCache gridAngleCache;
 
 Message::Message()
 {
+  FUNCTION_TRACE
   try
   {
     mMessageIndex = 0;
@@ -45,6 +50,7 @@ Message::Message()
 
 Message::Message(const Message& message)
 {
+  FUNCTION_TRACE
   try
   {
     mMessageIndex = message.mMessageIndex;
@@ -119,6 +125,7 @@ T::FilePosition Message::getFilePosition() const
 
 uint Message::getMessageIndex() const
 {
+  FUNCTION_TRACE
   try
   {
     return mMessageIndex;
@@ -135,6 +142,7 @@ uint Message::getMessageIndex() const
 
 void Message::setMessageIndex(uint index)
 {
+  FUNCTION_TRACE
   try
   {
     mMessageIndex = index;
@@ -468,6 +476,7 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
 
 float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,double y) const
 {
+  FUNCTION_TRACE
   try
   {
     switch (coordinateType)
@@ -513,6 +522,7 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
 
 float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  const
 {
+  FUNCTION_TRACE
   try
   {
     double PI = 3.1415926536;
@@ -613,6 +623,7 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
 
 void Message::getGridPointAngles(std::vector<float>& angles) const
 {
+  FUNCTION_TRACE
   try
   {
     T::Dimensions_opt d = getGridDimensions();
@@ -724,6 +735,7 @@ void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& a
 
 T::ParamId Message::getGribParameterId() const
 {
+  FUNCTION_TRACE
   try
   {
     return mGribParameterId;
@@ -740,6 +752,7 @@ T::ParamId Message::getGribParameterId() const
 
 std::string Message::getGribParameterName() const
 {
+  FUNCTION_TRACE
   try
   {
     return mGribParameterName;
@@ -756,6 +769,7 @@ std::string Message::getGribParameterName() const
 
 std::string Message::getGribParameterDescription() const
 {
+  FUNCTION_TRACE
   try
   {
     return mGribParameterDescription;
@@ -772,6 +786,7 @@ std::string Message::getGribParameterDescription() const
 
 std::string Message::getGribParameterUnits() const
 {
+  FUNCTION_TRACE
   try
   {
     return mGribParameterUnits;
@@ -793,6 +808,7 @@ std::string Message::getGribParameterUnits() const
 
 T::ParamLevelId Message::getGrib1ParameterLevelId() const
 {
+  FUNCTION_TRACE
   try
   {
     return mGrib1ParameterLevelId;
@@ -815,6 +831,7 @@ T::ParamLevelId Message::getGrib1ParameterLevelId() const
 
 T::ParamLevelId Message::getGrib2ParameterLevelId() const
 {
+  FUNCTION_TRACE
   try
   {
     return mGrib2ParameterLevelId;
@@ -831,6 +848,7 @@ T::ParamLevelId Message::getGrib2ParameterLevelId() const
 
 std::string Message::getFmiProducerName() const
 {
+  FUNCTION_TRACE
   try
   {
     return mFmiProducerName;
@@ -847,6 +865,7 @@ std::string Message::getFmiProducerName() const
 
 T::ParamId Message::getFmiParameterId() const
 {
+  FUNCTION_TRACE
   try
   {
     return mFmiParameterId;
@@ -863,6 +882,7 @@ T::ParamId Message::getFmiParameterId() const
 
 T::ParamLevelId Message::getFmiParameterLevelId() const
 {
+  FUNCTION_TRACE
   try
   {
     return mFmiParameterLevelId;
@@ -879,6 +899,7 @@ T::ParamLevelId Message::getFmiParameterLevelId() const
 
 std::string Message::getFmiParameterName() const
 {
+  FUNCTION_TRACE
   try
   {
     return mFmiParameterName;
@@ -895,6 +916,7 @@ std::string Message::getFmiParameterName() const
 
 std::string Message::getFmiParameterDescription() const
 {
+  FUNCTION_TRACE
   try
   {
     return mFmiParameterDescription;
@@ -911,6 +933,7 @@ std::string Message::getFmiParameterDescription() const
 
 std::string Message::getFmiParameterUnits() const
 {
+  FUNCTION_TRACE
   try
   {
     return mFmiParameterUnits;
@@ -927,6 +950,7 @@ std::string Message::getFmiParameterUnits() const
 
 std::string Message::getCdmParameterId() const
 {
+  FUNCTION_TRACE
   try
   {
     return mCdmParameterId;
@@ -943,6 +967,7 @@ std::string Message::getCdmParameterId() const
 
 std::string Message::getCdmParameterName() const
 {
+  FUNCTION_TRACE
   try
   {
     return mCdmParameterName;
@@ -959,6 +984,7 @@ std::string Message::getCdmParameterName() const
 
 std::string Message::getNewbaseParameterId() const
 {
+  FUNCTION_TRACE
   try
   {
     return mNewbaseParameterId;
@@ -975,6 +1001,7 @@ std::string Message::getNewbaseParameterId() const
 
 std::string Message::getNewbaseParameterName() const
 {
+  FUNCTION_TRACE
   try
   {
     return mNewbaseParameterName;
@@ -1182,6 +1209,7 @@ short Message::getForecastNumber() const
 
 void Message::setFmiParameterId(T::ParamId fmiParameterId)
 {
+  FUNCTION_TRACE
   try
   {
     mFmiParameterId = fmiParameterId;
@@ -1198,6 +1226,7 @@ void Message::setFmiParameterId(T::ParamId fmiParameterId)
 
 void Message::setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId)
 {
+  FUNCTION_TRACE
   try
   {
     mFmiParameterLevelId = fmiParameterLevelId;
@@ -1214,6 +1243,7 @@ void Message::setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId)
 
 void Message::setFmiParameterName(std::string fmiParameterName)
 {
+  FUNCTION_TRACE
   try
   {
     mFmiParameterName = fmiParameterName;
@@ -1230,6 +1260,7 @@ void Message::setFmiParameterName(std::string fmiParameterName)
 
 void Message::setFmiParameterDescription(std::string fmiParameterDescr)
 {
+  FUNCTION_TRACE
   try
   {
     mFmiParameterDescription = fmiParameterDescr;
@@ -1246,6 +1277,7 @@ void Message::setFmiParameterDescription(std::string fmiParameterDescr)
 
 void Message::setFmiParameterUnits(std::string fmiParameterUnits)
 {
+  FUNCTION_TRACE
   try
   {
     mFmiParameterUnits = fmiParameterUnits;
@@ -1262,6 +1294,7 @@ void Message::setFmiParameterUnits(std::string fmiParameterUnits)
 
 void Message::setGribParameterId(T::ParamId gribParameterId)
 {
+  FUNCTION_TRACE
   try
   {
     mGribParameterId = gribParameterId;
@@ -1278,6 +1311,7 @@ void Message::setGribParameterId(T::ParamId gribParameterId)
 
 void Message::setGribParameterName(std::string gribParameterName)
 {
+  FUNCTION_TRACE
   try
   {
     mGribParameterName = gribParameterName;
@@ -1294,6 +1328,7 @@ void Message::setGribParameterName(std::string gribParameterName)
 
 void Message::setGribParameterDescription(std::string gribParameterDescr)
 {
+  FUNCTION_TRACE
   try
   {
     mGribParameterDescription = gribParameterDescr;
@@ -1310,6 +1345,7 @@ void Message::setGribParameterDescription(std::string gribParameterDescr)
 
 void Message::setGribParameterUnits(std::string gribParameterUnits)
 {
+  FUNCTION_TRACE
   try
   {
     mGribParameterUnits = gribParameterUnits;
@@ -1326,6 +1362,7 @@ void Message::setGribParameterUnits(std::string gribParameterUnits)
 
 void Message::setGrib1ParameterLevelId(T::ParamLevelId grib1ParameterLevelId)
 {
+  FUNCTION_TRACE
   try
   {
     mGrib1ParameterLevelId = grib1ParameterLevelId;
@@ -1342,6 +1379,7 @@ void Message::setGrib1ParameterLevelId(T::ParamLevelId grib1ParameterLevelId)
 
 void Message::setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId)
 {
+  FUNCTION_TRACE
   try
   {
     mGrib2ParameterLevelId = grib2ParameterLevelId;
@@ -1358,6 +1396,7 @@ void Message::setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId)
 
 void Message::setCdmParameterId(std::string cdmParameterId)
 {
+  FUNCTION_TRACE
   try
   {
     mCdmParameterId = cdmParameterId;
@@ -1374,6 +1413,7 @@ void Message::setCdmParameterId(std::string cdmParameterId)
 
 void Message::setCdmParameterName(std::string cdmParameterName)
 {
+  FUNCTION_TRACE
   try
   {
     mCdmParameterName = cdmParameterName;
@@ -1390,6 +1430,7 @@ void Message::setCdmParameterName(std::string cdmParameterName)
 
 void Message::setNewbaseParameterId(std::string newbaseParameterId)
 {
+  FUNCTION_TRACE
   try
   {
     mNewbaseParameterId = newbaseParameterId;
@@ -1406,6 +1447,7 @@ void Message::setNewbaseParameterId(std::string newbaseParameterId)
 
 void Message::setNewbaseParameterName(std::string newbaseParameterName)
 {
+  FUNCTION_TRACE
   try
   {
     mNewbaseParameterName = newbaseParameterName;
@@ -1422,6 +1464,7 @@ void Message::setNewbaseParameterName(std::string newbaseParameterName)
 
 void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,T::InterpolationMethod interpolationMethod,T::ParamValue& value)
 {
+  FUNCTION_TRACE
   try
   {
     value = ParamValueMissing;
@@ -1460,6 +1503,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
 
 void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList)
 {
+  FUNCTION_TRACE
   try
   {
     T::Dimensions_opt d = getGridDimensions();
@@ -1511,7 +1555,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         polygonPoints.push_back(T::Coordinate(x1,y2));
 
         T::GridValueList tmpValueList;
-        getGridValueListByPolygon(coordinateType,polygonPoints,tmpValueList);
+        getGridValueListByPolygon(coordinateType,polygonPoints,0,tmpValueList);
 
         uint len = tmpValueList.getLength();
         for (uint t=0; t<len; t++)
@@ -1597,7 +1641,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         polygonPoints.push_back(T::Coordinate(xx1,yy2));
 
         T::GridValueList tmpValueList;
-        getGridValueListByPolygon(coordinateType,polygonPoints,tmpValueList);
+        getGridValueListByPolygon(coordinateType,polygonPoints,0,tmpValueList);
 
         uint len = tmpValueList.getLength();
         for (uint t=0; t<len; t++)
@@ -1627,6 +1671,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
 void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,T::InterpolationMethod interpolationMethod,T::GridValueList& valueList)
 {
+  FUNCTION_TRACE
   try
   {
     for (auto it = pointList.begin(); it != pointList.end(); ++it)
@@ -1648,13 +1693,31 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
 
 
 
-void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList)
+void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,double areaExtension,T::GridValueList& valueList)
 {
+  FUNCTION_TRACE
   try
   {
     T::Dimensions_opt d = getGridDimensions();
     uint cols = d->nx();
     uint rows = d->ny();
+
+    uint c = cols/2;
+    uint r = rows/2;
+
+    double lat1 = 0;
+    double lon1 = 0;
+    double lat2 = 0;
+    double lon2 = 0;
+
+    getGridLatLonCoordinatesByGridPoint(c,r,lat1,lon1);
+    getGridLatLonCoordinatesByGridPoint(c,r+1,lat2,lon2);
+    double dist = latlon_distance(lat1,lon1,lat2,lon2);
+    double extensionX = areaExtension / dist;
+
+    getGridLatLonCoordinatesByGridPoint(c+1,r,lat2,lon2);
+    dist = latlon_distance(lat1,lon1,lat2,lon2);
+    double extensionY = areaExtension / dist;
 
     switch (coordinateType)
     {
@@ -1673,7 +1736,16 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
         std::vector<T::Point> gridPoints;
 
-        getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
+        if (areaExtension != 0)
+        {
+          std::vector<T::Coordinate> extendedPolygonPoints = getEnlargedPolygon(newPolygonPoints,extensionX,extensionY);
+          getPointsInsidePolygon(cols,rows,extendedPolygonPoints,gridPoints);
+        }
+        else
+        {
+          getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
+        }
+
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
           T::GridValue *rec = new T::GridValue();
@@ -1698,7 +1770,15 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
       {
         std::vector<T::Point> gridPoints;
 
-        getPointsInsidePolygon(cols,rows,polygonPoints,gridPoints);
+        if (areaExtension != 0)
+        {
+          std::vector<T::Coordinate> extendedPolygonPoints = getEnlargedPolygon(polygonPoints,extensionX,extensionY);
+          getPointsInsidePolygon(cols,rows,extendedPolygonPoints,gridPoints);
+        }
+        else
+        {
+          getPointsInsidePolygon(cols,rows,polygonPoints,gridPoints);
+        }
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
           T::GridValue *rec = new T::GridValue();
@@ -1707,6 +1787,11 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
           rec->mY = it->y();
           rec->mValue = getGridValueByGridPoint(it->x(),it->y());
           valueList.addGridValue(rec);
+
+          double lat = 0,lon = 0;
+          getGridLatLonCoordinatesByGridPosition(it->x(),it->y(),lat,lon);
+          printf("%d,%d => %f,%f\n",it->x(),it->y(),lat,lon);
+
         }
       }
       return;
@@ -1725,8 +1810,16 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
         }
 
         std::vector<T::Point> gridPoints;
+        if (areaExtension != 0)
+        {
+          std::vector<T::Coordinate> extendedPolygonPoints = getEnlargedPolygon(newPolygonPoints,extensionX,extensionY);
+          getPointsInsidePolygon(cols,rows,extendedPolygonPoints,gridPoints);
+        }
+        else
+        {
+          getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
+        }
 
-        getPointsInsidePolygon(cols,rows,newPolygonPoints,gridPoints);
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
           T::GridValue *rec = new T::GridValue();
@@ -1757,13 +1850,31 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
 
 
-void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,T::GridValueList& valueList)
+void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,double areaExtension,T::GridValueList& valueList)
 {
+  FUNCTION_TRACE
   try
   {
     T::Dimensions_opt d = getGridDimensions();
     uint cols = d->nx();
     uint rows = d->ny();
+
+    uint c = cols/2;
+    uint r = rows/2;
+
+    double lat1 = 0;
+    double lon1 = 0;
+    double lat2 = 0;
+    double lon2 = 0;
+
+    getGridLatLonCoordinatesByGridPoint(c,r,lat1,lon1);
+    getGridLatLonCoordinatesByGridPoint(c,r+1,lat2,lon2);
+    double dist = latlon_distance(lat1,lon1,lat2,lon2);
+    double extensionX = areaExtension / dist;
+
+    getGridLatLonCoordinatesByGridPoint(c+1,r,lat2,lon2);
+    dist = latlon_distance(lat1,lon1,lat2,lon2);
+    double extensionY = areaExtension / dist;
 
     switch (coordinateType)
     {
@@ -1788,7 +1899,23 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
         std::vector<T::Point> gridPoints;
 
-        getPointsInsidePolygonPath(cols,rows,newPolygonPath,gridPoints);
+        if (areaExtension != 0)
+        {
+          std::vector<std::vector<T::Coordinate>> enlargedPath = getEnlargedPolygonPath(newPolygonPath,extensionX,extensionY);
+/*
+          printf("Vectors %u\n",(uint)enlargedPath.size());
+          for (auto it = enlargedPath.begin(); it != enlargedPath.end(); ++it)
+          {
+            printf(" -- length %u\n",(uint)it->size());
+          }
+          */
+          getPointsInsidePolygonPath(cols,rows,enlargedPath,gridPoints);
+        }
+        else
+        {
+          getPointsInsidePolygonPath(cols,rows,newPolygonPath,gridPoints);
+        }
+
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
           T::GridValue *rec = new T::GridValue();
@@ -1799,7 +1926,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
           {
             rec->mX = lon;
             rec->mY = lat;
-              //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
+            //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
           }
 
           rec->mValue = getGridValueByGridPoint(it->x(),it->y());
@@ -1813,7 +1940,16 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
       {
         std::vector<T::Point> gridPoints;
 
-        getPointsInsidePolygonPath(cols,rows,polygonPath,gridPoints);
+        if (areaExtension != 0)
+        {
+          std::vector<std::vector<T::Coordinate>> enlargedPath = getEnlargedPolygonPath(polygonPath,extensionX,extensionY);
+          getPointsInsidePolygonPath(cols,rows,enlargedPath,gridPoints);
+        }
+        else
+        {
+          getPointsInsidePolygonPath(cols,rows,polygonPath,gridPoints);
+        }
+
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
           T::GridValue *rec = new T::GridValue();
@@ -1847,7 +1983,16 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
         std::vector<T::Point> gridPoints;
 
-        getPointsInsidePolygonPath(cols,rows,newPolygonPath,gridPoints);
+        if (areaExtension != 0)
+        {
+          std::vector<std::vector<T::Coordinate>> enlargedPath = getEnlargedPolygonPath(newPolygonPath,extensionX,extensionY);
+          getPointsInsidePolygonPath(cols,rows,enlargedPath,gridPoints);
+        }
+        else
+        {
+          getPointsInsidePolygonPath(cols,rows,newPolygonPath,gridPoints);
+        }
+
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
           T::GridValue *rec = new T::GridValue();
@@ -1878,17 +2023,101 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
 
 
-void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,T::GridValueList& valueList)
+void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,double radius,bool gridRectangle,T::GridValueList& valueList)
 {
+  FUNCTION_TRACE
   try
   {
-    std::vector<T::Coordinate> polygonPoints;
-    polygonPoints.push_back(T::Coordinate(x1,y1));
-    polygonPoints.push_back(T::Coordinate(x2,y1));
-    polygonPoints.push_back(T::Coordinate(x2,y2));
-    polygonPoints.push_back(T::Coordinate(x1,y2));
+    if (!gridRectangle)
+    {
+      // We can count missing corners directly from the opposite corners. This means
+      // that the requested coordinate rectangle is not necessary a rectangle in the current grid.
 
-    getGridValueListByPolygon(coordinateType,polygonPoints,valueList);
+      std::vector<T::Coordinate> polygonPoints;
+      polygonPoints.push_back(T::Coordinate(x1,y1));
+      polygonPoints.push_back(T::Coordinate(x2,y1));
+      polygonPoints.push_back(T::Coordinate(x2,y2));
+      polygonPoints.push_back(T::Coordinate(x1,y2));
+      polygonPoints.push_back(T::Coordinate(x1,y1));
+
+      getGridValueListByPolygon(coordinateType,polygonPoints,radius,valueList);
+    }
+    else
+    {
+      // We want to get values from the inside of the grid rectangle. This means that we have to
+      // calculate the grid position of the opposite corners first and after that we can define
+      // the missing corners.
+
+      switch (coordinateType)
+      {
+        case T::CoordinateType::UNKNOWN:
+        case T::CoordinateType::LATLON_COORDINATES:
+        {
+          double gx1 = 0;
+          double gy1 = 0;
+          double gx2 = 0;
+          double gy2 = 0;
+          std::vector<T::Coordinate> polygonPoints;
+          getGridPointByLatLonCoordinates(y1,x1,gx1,gy1);
+          getGridPointByLatLonCoordinates(y2,x2,gx2,gy2);
+
+          polygonPoints.push_back(T::Coordinate(gx1,gy1));
+          polygonPoints.push_back(T::Coordinate(gx1,gy2));
+          polygonPoints.push_back(T::Coordinate(gx2,gy2));
+          polygonPoints.push_back(T::Coordinate(gx2,gy1));
+          polygonPoints.push_back(T::Coordinate(gx1,gy1));
+
+          double lat1 = 0,lon1 = 0;
+          double lat2 = 0,lon2 = 0;
+          getGridLatLonCoordinatesByGridPosition(gx1,gy2,lat1,lon1);
+          getGridLatLonCoordinatesByGridPosition(gx2,gy1,lat2,lon2);
+
+          //printf("LATLON AREA %f,%f  %f,%f  %f,%f  %f,%f\n",y1,x1,lat1,lon1,y2,x2,lat2,lon2);
+
+          //printf("GRID AREA %f,%f  %f,%f  %f,%f  %f,%f\n",gx1,gy1,gx1,gy2,gx2,gy2,gx2,gy1);
+
+          getGridValueListByPolygon(T::CoordinateType::GRID_COORDINATES,polygonPoints,radius,valueList);
+        }
+        break;
+
+        case T::CoordinateType::GRID_COORDINATES:
+        {
+          std::vector<T::Coordinate> polygonPoints;
+          polygonPoints.push_back(T::Coordinate(x1,y1));
+          polygonPoints.push_back(T::Coordinate(x1,y2));
+          polygonPoints.push_back(T::Coordinate(x2,y2));
+          polygonPoints.push_back(T::Coordinate(x2,y1));
+          polygonPoints.push_back(T::Coordinate(x1,y1));
+          getGridValueListByPolygon(T::CoordinateType::GRID_COORDINATES,polygonPoints,radius,valueList);
+        }
+        break;
+
+        case T::CoordinateType::ORIGINAL_COORDINATES:
+        {
+          double gx1 = 0;
+          double gy1 = 0;
+          double gx2 = 0;
+          double gy2 = 0;
+          std::vector<T::Coordinate> polygonPoints;
+          getGridPointByOriginalCoordinates(x1,y1,gx1,gy1);
+          getGridPointByOriginalCoordinates(x2,y2,gx2,gy2);
+          polygonPoints.push_back(T::Coordinate(gx1,gy1));
+          polygonPoints.push_back(T::Coordinate(gx1,gy2));
+          polygonPoints.push_back(T::Coordinate(gx2,gy2));
+          polygonPoints.push_back(T::Coordinate(gx2,gy1));
+          polygonPoints.push_back(T::Coordinate(gx1,gy1));
+          getGridValueListByPolygon(T::CoordinateType::GRID_COORDINATES,polygonPoints,radius,valueList);
+        }
+        break;
+
+        default:
+        {
+          SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",NULL);
+          exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
+          throw exception;
+        }
+      }
+    }
   }
   catch (...)
   {
@@ -1913,10 +2142,14 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
 
 T::ParamValue Message::getGridValueByGridPoint(double grid_i,double grid_j,T::InterpolationMethod interpolationMethod) const
 {
+  FUNCTION_TRACE
   try
   {
     switch (interpolationMethod)
     {
+      case T::InterpolationMethod::None:
+        return getGridValueByGridPoint_noInterpolation(grid_i,grid_j);
+
       case T::InterpolationMethod::Nearest:
         return getGridValueByGridPoint_nearest(grid_i,grid_j);
 
@@ -1949,6 +2182,7 @@ T::ParamValue Message::getGridValueByGridPoint(double grid_i,double grid_j,T::In
 
 T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,T::InterpolationMethod interpolationMethod) const
 {
+  FUNCTION_TRACE
   try
   {
     double grid_i = 0;
@@ -1981,6 +2215,7 @@ T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,T::I
 
 void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValue_vec& gridPointValues) const
 {
+  FUNCTION_TRACE
   try
   {
     T::TimeString tm = getForecastTime();
@@ -2015,6 +2250,7 @@ void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,
 
 void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValueList& gridPointValues) const
 {
+  FUNCTION_TRACE
   try
   {
     T::TimeString tm = getForecastTime();
@@ -2038,6 +2274,30 @@ void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,
 
 
 
+/*! \brief The method returns the value of the rounded grid position.
+
+        \param grid_i   The grid i-position.
+        \param grid_j   The grid j-position.
+        \return         The closest value of the given grid position.
+*/
+
+T::ParamValue Message::getGridValueByGridPoint_noInterpolation(double grid_i,double grid_j) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return getGridValueByGridPoint(floor(grid_i),floor(grid_j));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the closest value of the given grid position.
 
         \param grid_i   The grid i-position.
@@ -2047,23 +2307,24 @@ void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,
 
 T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
     double x = grid_i;
     double y = grid_j;
 
-    double x1 = floor(x);
-    double y1 = floor(y);
-    double x2 = x1+1;
-    double y2 = y1+1;
+    uint x1 = (uint)floor(x);
+    uint y1 = (uint)floor(y);
+    uint x2 = x1+1;
+    uint y2 = y1+1;
 
-    double dist_x1 = x-x1;
-    double dist_x2 = x2-x;
-    double dist_y1 = y-y1;
-    double dist_y2 = y2-y;
+    double dist_x1 = x-(double)x1;
+    double dist_x2 = (double)x2-x;
+    double dist_y1 = y-(double)y1;
+    double dist_y2 = (double)y2-y;
 
     if (dist_x1 == 0  &&  dist_y1 == 0)
-      return getGridValueByGridPoint((uint)grid_i,(uint)grid_j);
+      return getGridValueByGridPoint(round(grid_i),round(grid_j));
 
     double dist_q11 = (dist_x1)*(dist_x1) + (dist_y1)*(dist_y1);
     double dist_q21 = (dist_x2)*(dist_x2) + (dist_y1)*(dist_y1);
@@ -2071,15 +2332,15 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
     double dist_q22 = (dist_x2)*(dist_x2) + (dist_y2)*(dist_y2);
 
     if (dist_q11 < dist_q21  &&  dist_q11 <= dist_q12 && dist_q11 <= dist_q22)
-      return getGridValueByGridPoint((uint)x1,(uint)y1);
+      return getGridValueByGridPoint(x1,y1);
 
     if (dist_q21 < dist_q11  &&  dist_q21 <= dist_q12 && dist_q21 <= dist_q22)
-      return getGridValueByGridPoint((uint)x2,(uint)y1);
+      return getGridValueByGridPoint(x2,y1);
 
     if (dist_q12 < dist_q11  &&  dist_q12 <= dist_q21   &&  dist_q12 <= dist_q22)
-      return getGridValueByGridPoint((uint)x1,(uint)y2);
+      return getGridValueByGridPoint(x1,y2);
 
-    return getGridValueByGridPoint((uint)x2,(uint)y2);
+    return getGridValueByGridPoint(x2,y2);
   }
   catch (...)
   {
@@ -2100,6 +2361,7 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
 
 T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
     // https://en.wikipedia.org/wiki/Bilinear_interpolation

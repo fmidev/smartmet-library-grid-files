@@ -71,8 +71,8 @@ std::string get_intepolationMethodString(InterpolationMethod interpolationMethod
   {
     switch (interpolationMethod)
     {
-      case InterpolationMethod::Unknown:
-        return "Unknown";
+      case InterpolationMethod::None:
+        return "None";
 
       case InterpolationMethod::Linear:
         return "Linear";

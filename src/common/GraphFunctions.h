@@ -17,5 +17,8 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
 
 void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,std::vector<std::vector<T::Coordinate>>& polygonPath);
 
+std::vector<T::Coordinate> getEnlargedPolygon(std::vector<T::Coordinate>& oldCoordinates,double areaExtensionX,double areaExtensionY);
+std::vector<std::vector<T::Coordinate>> getEnlargedPolygonPath(std::vector<std::vector<T::Coordinate>>& oldPath,double areaExtensionX,double areaExtensionY);
+
 }
 

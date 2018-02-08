@@ -15,7 +15,7 @@ FmiParameterDef::FmiParameterDef()
   try
   {
     mVersion = 0;
-    mInterpolationMethod = T::InterpolationMethod::Unknown;
+    mInterpolationMethod = T::InterpolationMethod::None;
   }
   catch (...)
   {

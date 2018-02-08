@@ -14,6 +14,8 @@ class GridValue
                   GridValue();
                   GridValue(const GridValue& gridValue);
                   GridValue(double x,double y, T::ParamValue value);
+                  GridValue(double x,double y, std::string valueString);
+                  GridValue(double x,double y, T::ParamValue value, std::string valueString);
     virtual       ~GridValue();
 
     void          print(std::ostream& stream,uint level,uint optionFlags);
@@ -21,6 +23,7 @@ class GridValue
     double        mX;
     double        mY;
     T::ParamValue mValue;
+    std::string   mValueString;
 };
 
 

@@ -17,8 +17,11 @@
 #include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
 #include "identification/GridDef.h"
-
+#include "common/ShowFunction.h"
 #include <iostream>
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
 namespace SmartMet
@@ -33,6 +36,7 @@ namespace GRIB2
 
 Message::Message()
 {
+  FUNCTION_TRACE
   try
   {
     mGribFile = NULL;
@@ -65,6 +69,7 @@ Message::Message()
 
 Message::Message(GribFile *gribFile)
 {
+  FUNCTION_TRACE
   try
   {
     mGribFile = gribFile;
@@ -95,6 +100,7 @@ Message::Message(GribFile *gribFile)
 
 Message::~Message()
 {
+  FUNCTION_TRACE
   try
   {
     delete mPointCacheCoordinate;
@@ -115,6 +121,7 @@ Message::~Message()
 
 void Message::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
 {
+  FUNCTION_TRACE
   try
   {
     char name[300];
@@ -250,6 +257,7 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 
 void Message::read(MemoryReader& memoryReader)
 {
+  FUNCTION_TRACE
   try
   {
     mFilePosition = memoryReader.getGlobalReadPosition();
@@ -405,6 +413,7 @@ void Message::read(MemoryReader& memoryReader)
 
 GribFile* Message::getGribFile() const
 {
+  FUNCTION_TRACE
   try
   {
     return mGribFile;
@@ -423,6 +432,7 @@ GribFile* Message::getGribFile() const
 
 std::uint8_t Message::getTablesVersion() const
 {
+  FUNCTION_TRACE
   try
   {
     std::uint8_t tablesVersion = 0;
@@ -445,6 +455,7 @@ std::uint8_t Message::getTablesVersion() const
 
 void Message::copyMissingSections(const Message &other)
 {
+  FUNCTION_TRACE
   try
   {
     if (!mIndicatorSection)
@@ -477,6 +488,7 @@ void Message::copyMissingSections(const Message &other)
 
 void Message::initParameterInfo()
 {
+  FUNCTION_TRACE
   try
   {
     mGribParameterId  = Identification::gridDef.getGribParameterId(*this);
@@ -534,6 +546,7 @@ void Message::initParameterInfo()
 
 void Message::setPreviousBitmapSection(boost::shared_ptr<BitmapSection> previousBitmapSection)
 {
+  FUNCTION_TRACE
   try
   {
     const int refers_to_earlier_bitmap = 254;
@@ -564,6 +577,7 @@ void Message::setPreviousBitmapSection(boost::shared_ptr<BitmapSection> previous
 
 bool Message::hasRequiredSections() const
 {
+  FUNCTION_TRACE
   try
   {
     // Note: LocalSection can be missing
@@ -583,6 +597,7 @@ bool Message::hasRequiredSections() const
 
 T::Hash Message::getGridHash() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection != NULL)
@@ -604,6 +619,7 @@ T::Hash Message::getGridHash() const
 
 T::GeometryId Message::getGridGeometryId() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection != NULL)
@@ -625,6 +641,7 @@ T::GeometryId Message::getGridGeometryId() const
 
 void Message::setGridGeometryId(T::GeometryId geometryId)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection != NULL)
@@ -652,6 +669,7 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
 
 T::Dimensions_opt Message::getGridDimensions() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -673,6 +691,7 @@ T::Dimensions_opt Message::getGridDimensions() const
 
 bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -694,6 +713,7 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
 
 bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -715,6 +735,7 @@ bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j
 
 bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -736,6 +757,7 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,do
 
 bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -757,6 +779,7 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,doub
 
 bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -786,6 +809,7 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
 
 T::Coordinate_vec Message::getGridCoordinates() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -807,6 +831,7 @@ T::Coordinate_vec Message::getGridCoordinates() const
 
 T::Coordinate_vec Message::getGridLatLonCoordinates() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -828,6 +853,7 @@ T::Coordinate_vec Message::getGridLatLonCoordinates() const
 
 bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -849,6 +875,7 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 
 void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -870,18 +897,17 @@ void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& a
 
 uint Message::getFileId() const
 {
+  FUNCTION_TRACE
+  try
   {
-    try
-    {
-      if (mGribFile != NULL)
-        return mGribFile->getFileId();
+    if (mGribFile != NULL)
+      return mGribFile->getFileId();
 
-      return 0;
-    }
-    catch (...)
-    {
-      throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-    }
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -897,6 +923,7 @@ uint Message::getFileId() const
 
 T::FilePosition Message::getFilePosition() const
 {
+  FUNCTION_TRACE
   try
   {
     return mFilePosition;
@@ -915,6 +942,7 @@ T::FilePosition Message::getFilePosition() const
 
 BitmapSection_sptr Message::getBitmapSection() const
 {
+  // FUNCTION_TRACE
   try
   {
     return mBitmapSection;
@@ -933,6 +961,7 @@ BitmapSection_sptr Message::getBitmapSection() const
 
 BitmapSection_sptr Message::getPreviousBitmapSection() const
 {
+  // FUNCTION_TRACE
   try
   {
     return mPreviousBitmapSection;
@@ -951,6 +980,7 @@ BitmapSection_sptr Message::getPreviousBitmapSection() const
 
 GridSection_sptr Message::getGridSection() const
 {
+  // FUNCTION_TRACE
   try
   {
     return mGridSection;
@@ -969,6 +999,7 @@ GridSection_sptr Message::getGridSection() const
 
 RepresentSection_cptr Message::getRepresentationSection() const
 {
+  // FUNCTION_TRACE
   try
   {
     return mRepresentationSection.get();
@@ -981,10 +1012,12 @@ RepresentSection_cptr Message::getRepresentationSection() const
 
 
 
+
 /*! \brief The method returns a shared pointer to the IdentificationSection object. */
 
 IdentificSection_sptr Message::getIdentificationSection() const
 {
+  // FUNCTION_TRACE
   try
   {
     return mIdentificationSection;
@@ -1003,6 +1036,7 @@ IdentificSection_sptr Message::getIdentificationSection() const
 
 IndicatorSection_sptr Message::getIndicatorSection() const
 {
+  // FUNCTION_TRACE
   try
   {
     return mIndicatorSection;
@@ -1021,6 +1055,7 @@ IndicatorSection_sptr Message::getIndicatorSection() const
 
 LocalSection_sptr Message::getLocalSection() const
 {
+  // FUNCTION_TRACE
   try
   {
     return mLocalSection;
@@ -1039,6 +1074,7 @@ LocalSection_sptr Message::getLocalSection() const
 
 ProductSection_cptr Message::getProductSection() const
 {
+  // FUNCTION_TRACE
   try
   {
     return mProductSection.get();
@@ -1057,6 +1093,7 @@ ProductSection_cptr Message::getProductSection() const
 
 DataSection_cptr Message::getDataSection() const
 {
+  // FUNCTION_TRACE
   try
   {
     return mDataSection.get();
@@ -1080,6 +1117,7 @@ DataSection_cptr Message::getDataSection() const
 
 void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamValue_vec values;
@@ -1115,6 +1153,7 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
 
 void Message::getGridValueVector(T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mRepresentationSection == NULL)
@@ -1175,6 +1214,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
 void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mRepresentationSection == NULL)
@@ -1228,6 +1268,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
 std::string Message::getWKT() const
 {
+  FUNCTION_TRACE
   try
   {
     std::string wkt;
@@ -1272,6 +1313,7 @@ std::string Message::getWKT() const
 
 T::ParamLevel Message::getGridParameterLevel() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mProductSection == NULL)
@@ -1298,6 +1340,7 @@ T::ParamLevel Message::getGridParameterLevel() const
 
 T::ParamLevelId Message::getGridParameterLevelId() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mProductSection == NULL)
@@ -1319,6 +1362,7 @@ T::ParamLevelId Message::getGridParameterLevelId() const
 
 short Message::getForecastType() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mProductSection == NULL)
@@ -1340,6 +1384,7 @@ short Message::getForecastType() const
 
 short Message::getForecastNumber() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mProductSection == NULL)
@@ -1366,6 +1411,7 @@ short Message::getForecastNumber() const
 
 std::string Message::getGridParameterLevelIdString() const
 {
+  FUNCTION_TRACE
   try
   {
     std::uint8_t tablesVersion = getTablesVersion();
@@ -1385,6 +1431,7 @@ std::string Message::getGridParameterLevelIdString() const
 
 T::TimeString Message::getReferenceTime() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mIdentificationSection == NULL)
@@ -1406,6 +1453,7 @@ T::TimeString Message::getReferenceTime() const
 
 T::TimeString Message::getForecastTime() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mIdentificationSection == NULL)
@@ -1437,8 +1485,10 @@ T::TimeString Message::getForecastTime() const
 
 T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
+    printf("GetValue : %u,%u\n",grid_i,grid_j);
     if (mValueDecodingFailed)
     {
       // We have failed to decode parameter values
@@ -1462,7 +1512,10 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     if (mBitmapSection == NULL  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
     {
       if (mRepresentationSection->getValueByIndex(idx,value))
+      {
+        // printf(" ** value %f\n",value);
         return value;
+      }
     }
     else
     {
@@ -1543,6 +1596,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = values[idx];
     mPointCachePosition++;
 
+    // printf("-- value %f\n",values[idx]);
     return values[idx];
   }
   catch (...)
@@ -1559,6 +1613,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
 std::string Message::getGridProjectionString() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1590,6 +1645,7 @@ std::string Message::getGridProjectionString() const
 
 bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1622,6 +1678,7 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
 
 bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1643,6 +1700,7 @@ bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i
 
 T::GridProjection Message::getGridProjection() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1664,6 +1722,7 @@ T::GridProjection Message::getGridProjection() const
 
 T::GridLayout Message::getGridLayout() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1691,6 +1750,7 @@ T::GridLayout Message::getGridLayout() const
 
 std::size_t Message::getGridOriginalRowCount() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1718,6 +1778,7 @@ std::size_t Message::getGridOriginalRowCount() const
 
 std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1745,6 +1806,7 @@ std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
 
 std::size_t Message::getGridOriginalColumnCount() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1771,6 +1833,7 @@ std::size_t Message::getGridOriginalColumnCount() const
 
 std::size_t Message::getGridOriginalValueCount() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1805,6 +1868,7 @@ std::size_t Message::getGridOriginalValueCount() const
 
 int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1826,6 +1890,7 @@ int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 
 T::SpatialReference* Message::getSpatialReference() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection != NULL)
@@ -1854,6 +1919,7 @@ T::SpatialReference* Message::getSpatialReference() const
 
 bool Message::isGridGlobal() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1875,6 +1941,7 @@ bool Message::isGridGlobal() const
 
 bool Message::reverseXDirection() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1896,6 +1963,7 @@ bool Message::reverseXDirection() const
 
 bool Message::reverseYDirection() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridSection == NULL)
@@ -1918,6 +1986,7 @@ bool Message::reverseYDirection() const
 
 T::Data_ptr Message::getBitmapDataPtr() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mBitmapSection)
@@ -1941,6 +2010,7 @@ T::Data_ptr Message::getBitmapDataPtr() const
 
 std::size_t Message::getBitmapDataSizeInBytes() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mBitmapSection)
@@ -1964,6 +2034,7 @@ std::size_t Message::getBitmapDataSizeInBytes() const
 
 T::Data_ptr Message::getDataPtr() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mDataSection)
@@ -1987,6 +2058,7 @@ T::Data_ptr Message::getDataPtr() const
 
 std::size_t Message::getDataSize() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mDataSection)
@@ -2015,6 +2087,7 @@ std::size_t Message::getDataSize() const
 
 void Message::print(std::ostream& stream,uint level,uint optionFlags) const
 {
+  FUNCTION_TRACE
   try
   {
     stream << "\n" << space(level) << "########## MESSAGE [" << mMessageIndex << "] ##########\n\n";

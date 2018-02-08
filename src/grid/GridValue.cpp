@@ -34,6 +34,7 @@ GridValue::GridValue(const GridValue& gridValue)
     mX = gridValue.mX;
     mY = gridValue.mY;
     mValue = gridValue.mValue;
+    mValueString = gridValue.mValueString;
   }
   catch (...)
   {
@@ -52,6 +53,44 @@ GridValue::GridValue(double x,double y, T::ParamValue value)
     mX = x;
     mY = y;
     mValue = value;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+GridValue::GridValue(double x,double y, std::string valueString)
+{
+  try
+  {
+    mX = x;
+    mY = y;
+    mValue = 0;
+    mValueString = valueString;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+GridValue::GridValue(double x,double y, T::ParamValue value, std::string valueString)
+{
+  try
+  {
+    mX = x;
+    mY = y;
+    mValue = value;
+    mValueString = valueString;
   }
   catch (...)
   {
@@ -83,9 +122,10 @@ void GridValue::print(std::ostream& stream,uint level,uint optionFlags)
   try
   {
     stream << space(level) << "GridValue\n";
-    stream << space(level) << "- mX     = " << mX << "\n";
-    stream << space(level) << "- mY     = " << mY << "\n";
-    stream << space(level) << "- mValue = " << mValue << "\n";
+    stream << space(level) << "- mX           = " << mX << "\n";
+    stream << space(level) << "- mY           = " << mY << "\n";
+    stream << space(level) << "- mValue       = " << mValue << "\n";
+    stream << space(level) << "- mValueString = " << mValueString << "\n";
   }
   catch (...)
   {

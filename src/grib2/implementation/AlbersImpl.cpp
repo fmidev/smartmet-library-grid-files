@@ -178,13 +178,14 @@ void AlbersImpl::initSpatialReference()
     const char *pszGeogName = "UNKNOWN";
     const char *pszDatumName = "UNKNOWN";
     const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor = 0.0;
-    double dfInvFlattening = 0.0;
+    double dfSemiMajor = getMajorAxis(mEarthShape);
+    double dfInvFlattening = getFlattening(mEarthShape);
 
     auto radius = mEarthShape.getScaledValueOfRadiusOfSphericalEarth();
 
     if ((!radius) || (*radius == 0))
     {
+
       T::UInt32_opt majorAxis(0);
       majorAxis = mEarthShape.getScaledValueOfEarthMajorAxis();
 
@@ -193,10 +194,9 @@ void AlbersImpl::initSpatialReference()
 
       if (!(majorAxis  &&  minorAxis && *majorAxis > 0 && *minorAxis > 0))
       {
-        // TODO: Use code table 3.2 based values
-        //
-        dfSemiMajor = dfInvFlattening = 0.0;
-        dfSemiMajor = 6371229;
+        // dfSemiMajor = 6371229;
+        dfSemiMajor = getMajorAxis(mEarthShape);
+        dfInvFlattening = 0.0;
       }
       else
       {

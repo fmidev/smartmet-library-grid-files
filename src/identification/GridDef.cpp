@@ -4902,7 +4902,7 @@ T::InterpolationMethod GridDef::getFmiParameterInterpolationMethod(GRIB1::Messag
 
     auto p = getFmiParameterDefById(message.getFmiParameterId());
     if (p == NULL)
-      return T::InterpolationMethod::Unknown;
+      return T::InterpolationMethod::None;
 
     return p->mInterpolationMethod;
   }
@@ -4926,7 +4926,7 @@ T::InterpolationMethod GridDef::getFmiParameterInterpolationMethod(GRIB2::Messag
 
     auto p = getFmiParameterDefById(message.getFmiParameterId());
     if (p == NULL)
-      return T::InterpolationMethod::Unknown;
+      return T::InterpolationMethod::None;
 
     return p->mInterpolationMethod;
   }

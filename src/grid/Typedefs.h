@@ -125,7 +125,7 @@ enum class GridLayout
 
 enum class InterpolationMethod
 {
-  Unknown = 0,
+  None = 0,
   Linear = 1,
   Nearest = 2
 };

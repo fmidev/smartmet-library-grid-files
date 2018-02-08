@@ -618,10 +618,9 @@ void RotatedLatLonImpl::initSpatialReference()
 
       if (!(majorAxis  &&  minorAxis && *majorAxis > 0 && *minorAxis > 0))
       {
-        // TODO: Use code table 3.2 based values
-        //
-        dfSemiMajor = dfInvFlattening = 0.0;
-        dfSemiMajor = 6371229;
+        // dfSemiMajor = 6371229;
+        dfSemiMajor = getMajorAxis(mEarthShape);
+        dfInvFlattening = 0.0;
       }
       else
       {

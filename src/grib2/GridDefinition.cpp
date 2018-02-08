@@ -2,12 +2,17 @@
 #include "common/Exception.h"
 
 #include <iostream>
+#include <map>
 
 
 namespace SmartMet
 {
 namespace GRIB2
 {
+
+
+std::map<uint,T::Coordinate_vec> coordinateCache;
+
 
 
 
@@ -174,6 +179,16 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 {
   try
   {
+    uint geomId = getGridGeometryId();
+    if (geomId != 0)
+    {
+      auto it = coordinateCache.find(geomId);
+      if (it != coordinateCache.end())
+      {
+        return it->second;
+      }
+    }
+
     if (mCoordinateTranformation_orig2latlon == NULL)
     {
       OGRSpatialReference sr_latlon;
@@ -199,6 +214,12 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 
       latLonCoordinates.push_back(T::Coordinate(lon,lat));
     }
+
+    if (geomId != 0)
+    {
+      coordinateCache.insert(std::pair<uint,T::Coordinate_vec>(geomId,latLonCoordinates));
+    }
+
     return latLonCoordinates;
   }
   catch (...)
@@ -572,6 +593,152 @@ T::Hash GridDefinition::countHash()
 {
   //std::cout << "Hash not defined\n";
   return 0;
+}
+
+
+
+
+
+
+double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
+{
+  try
+  {
+    auto shape = earthSettings.getShapeOfTheEarth();
+    if (!shape)
+    {
+      return (double)6371229;
+    }
+
+    switch (*shape)
+    {
+      case 0: // Earth assumed spherical with radius = 6,367,470.0 m
+        return (double)6371220;
+        //return (double)6367470;
+
+      case 1: // Earth assumed spherical with radius specified by data producer
+        return (double)(*earthSettings.getScaledValueOfEarthMajorAxis());
+
+      case 2: // Earth assumed oblate spheroid with size as determined by IAU in 1965 (major axis = 6,378,160.0 m, minor axis = 6,356,775.0 m, f = 1/297.0)
+        return (double)6378160;
+
+      case 3: // Earth assumed oblate spheroid with major and minor axes specified by data producer
+        return (double)(*earthSettings.getScaledValueOfEarthMajorAxis());
+
+      case 4: // Earth assumed oblate spheroid as defined in IAG-GRS80 model (major axis = 6,378,137.0 m, minor axis = 6,356,752.314 m, f = 1/298.257222101)
+        return (double)6378137;
+
+      case 5: // Earth assumed represented by WGS84 (as used by ICAO since 1998)
+        return (double)6378137;
+
+      case 6: // Earth assumed spherical with radius of 6,371,229.0 m
+        return (double)6371229;
+
+      default:
+        return (double)6371229;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+double GridDefinition::getMinorAxis(EarthShapeSettings& earthSettings)
+{
+  try
+  {
+    auto shape = earthSettings.getShapeOfTheEarth();
+    if (!shape)
+    {
+      return 0;
+    }
+
+    switch (*shape)
+    {
+      case 0: // Earth assumed spherical with radius = 6,367,470.0 m
+        return 0;
+
+      case 1: // Earth assumed spherical with radius specified by data producer
+        return (double)(*earthSettings.getScaledValueOfEarthMinorAxis());
+
+      case 2: // Earth assumed oblate spheroid with size as determined by IAU in 1965 (major axis = 6,378,160.0 m, minor axis = 6,356,775.0 m, f = 1/297.0)
+        return (double)6356775;
+
+      case 3: // Earth assumed oblate spheroid with major and minor axes specified by data producer
+        return (double)(*earthSettings.getScaledValueOfEarthMinorAxis());
+
+      case 4: // Earth assumed oblate spheroid as defined in IAG-GRS80 model (major axis = 6,378,137.0 m, minor axis = 6,356,752.314 m, f = 1/298.257222101)
+        return (double)6356752.314;
+
+      case 5: // Earth assumed represented by WGS84 (as used by ICAO since 1998)
+        return 0;
+
+      case 6: // Earth assumed spherical with radius of 6,371,229.0 m
+        return 0;
+
+      default:
+        return 0;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+
+double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
+{
+  try
+  {
+    auto shape = earthSettings.getShapeOfTheEarth();
+    if (!shape)
+    {
+      return 0;
+    }
+
+    switch (*shape)
+    {
+      case 0: // Earth assumed spherical with radius = 6,367,470.0 m
+        return 0;
+
+      case 1: // Earth assumed spherical with radius specified by data producer
+        return (1.0 / (1.0 - (*earthSettings.getScaledValueOfEarthMinorAxis() / (*earthSettings.getScaledValueOfEarthMajorAxis()))));
+
+        return (double)(*earthSettings.getScaledValueOfEarthMinorAxis());
+
+      case 2: // Earth assumed oblate spheroid with size as determined by IAU in 1965 (major axis = 6,378,160.0 m, minor axis = 6,356,775.0 m, f = 1/297.0)
+        return (double)1000000 * 1/297.0;
+
+      case 3: // Earth assumed oblate spheroid with major and minor axes specified by data producer
+        return (1.0 / (1.0 - (*earthSettings.getScaledValueOfEarthMinorAxis() / (*earthSettings.getScaledValueOfEarthMajorAxis()))));
+
+      case 4: // Earth assumed oblate spheroid as defined in IAG-GRS80 model (major axis = 6,378,137.0 m, minor axis = 6,356,752.314 m, f = 1/298.257222101)
+        return (double)6356752.314;
+
+      case 5: // Earth assumed represented by WGS84 (as used by ICAO since 1998)
+        return (1000000 * 1/298.257222101);
+
+      case 6: // Earth assumed spherical with radius of 6,371,229.0 m
+        return 0;
+
+      default:
+        return 0;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
 }
 
 

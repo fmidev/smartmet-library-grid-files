@@ -5,6 +5,7 @@
 #include "grid/Typedefs.h"
 #include "common/MemoryReader.h"
 #include "common/AttributeList.h"
+#include "grib2/definition/EarthShapeSettings.h"
 #include <gdal/ogr_spatialref.h>
 #include <map>
 
@@ -53,6 +54,11 @@ class GridDefinition
     virtual void                read(MemoryReader& memoryReader) {}
 
   protected:
+
+    virtual double              getMajorAxis(EarthShapeSettings& earthSettings);
+    virtual double              getMinorAxis(EarthShapeSettings& earthSettings);
+    virtual double              getFlattening(EarthShapeSettings& earthSettings);
+
 
     /*! \brief The spatial reference. */
     T::SpatialReference         mSpatialReference;

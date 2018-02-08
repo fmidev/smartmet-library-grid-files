@@ -2,6 +2,7 @@
 #include "common/Exception.h"
 #include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
+#include "common/CoordinateConversions.h"
 #include "grid/PrintOptions.h"
 
 #include <iostream>
@@ -251,6 +252,53 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
 
 
 
+bool PolarStereographicImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  try
+  {
+    uint nx = (uint)(*mNx);
+    uint ny = (uint)(*mNy);
+
+    if (grid_i < 0 ||  grid_i >= (double)nx)
+      return false;
+
+    if (grid_j < 0 ||  grid_j >= (double)ny)
+      return false;
+
+    double latitudeOfFirstGridPoint = (double)(*mLatitudeOfFirstGridPoint) / 1000000;
+    double longitudeOfFirstGridPoint = (double)(*mLongitudeOfFirstGridPoint) / 1000000;
+
+    double dx = (double)(*mDx) / 1000;
+    double dy = (double)(*mDy) / 1000;
+
+
+    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+
+    if ((scanningMode & 0x80) != 0)
+      dx = -dx;
+
+    if ((scanningMode & 0x40) == 0)
+      dy = -dy;
+
+    mCt_latlon2pst->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
+
+    x = longitudeOfFirstGridPoint + grid_i * dx;
+    y = latitudeOfFirstGridPoint + grid_j * dy;
+
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+
+
 /*! \brief The method initializes the spatial reference (mSpatialReference) of the grid. */
 
 void PolarStereographicImpl::initSpatialReference()
@@ -273,8 +321,41 @@ void PolarStereographicImpl::initSpatialReference()
     const char *pszGeogName = "UNKNOWN";
     const char *pszDatumName = "UNKNOWN";
     const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor = 6371229.0;
+
+    double dfSemiMajor = 0.0;
     double dfInvFlattening = 0.0;
+
+    auto radius = mEarthShape.getScaledValueOfRadiusOfSphericalEarth();
+
+    if ((!radius) || (*radius == 0))
+    {
+      T::UInt32_opt majorAxis(0);
+      majorAxis = mEarthShape.getScaledValueOfEarthMajorAxis();
+
+      T::UInt32_opt minorAxis(0);
+      minorAxis = mEarthShape.getScaledValueOfEarthMinorAxis();
+
+      if (!(majorAxis  &&  minorAxis && *majorAxis > 0 && *minorAxis > 0))
+      {
+        // dfSemiMajor = 6371229;
+        dfSemiMajor = getMajorAxis(mEarthShape);
+        dfInvFlattening = 0.0;
+      }
+      else
+      {
+        if (majorAxis)
+          dfSemiMajor = *majorAxis;
+
+        if (minorAxis)
+          dfInvFlattening = 1.0 / (1.0 - (*minorAxis / dfSemiMajor));
+      }
+    }
+    else
+    {
+      dfSemiMajor = *radius;
+      dfInvFlattening = 0.0;
+    }
+
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 
