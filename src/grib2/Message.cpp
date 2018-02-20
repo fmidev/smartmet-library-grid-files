@@ -1488,7 +1488,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   FUNCTION_TRACE
   try
   {
-    printf("GetValue : %u,%u\n",grid_i,grid_j);
     if (mValueDecodingFailed)
     {
       // We have failed to decode parameter values

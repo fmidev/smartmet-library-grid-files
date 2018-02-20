@@ -336,9 +336,11 @@
 
 #171;U-MS;m s-1;U wind in m/s
 171;;128;;192;0;23;;;
+171;;128;;192;1;90;;;
 
 #174;V-MS;m s-1;V wind in m/s
 174;;128;;192;0;24;;;
+174;;128;;192;1;91;;;
 
 #175;VV-MMS;mm s-1;Vertical Velocity in mm/s
 175;;128;;192;0;43;;;
@@ -1239,7 +1241,10 @@
 
 #536;MT-C;C;Monthly mean temperature in Celcius
 #537;MRR-KGM2;kg m-2;Monthly precipitation in mm
+
 #538;DSUN-H;h;Daily sunshine hours
+538;;128::192;1;179;;;
+
 #539;DRADG-KJM2;kJ m-2;Daily global radiation in kJ m-2
 #540;DRADD-KJM2;kJ m-2;Daily diffuse radiation in kJ m-2
 #541;DRADR-KJM2;kJ m-2;Daily reflected radiation in kJ m-2

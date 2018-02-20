@@ -134,6 +134,7 @@ class GridDef
     T::InterpolationMethod  getFmiParameterInterpolationMethod(GRIB1::Message& message);
     T::InterpolationMethod  getFmiParameterInterpolationMethod(GRIB2::Message& message);
 
+    bool                    getNewbaseParameterDefById(T::ParamId newbaseParamId,NewbaseParameterDef& paramDef);
     bool                    getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParameterDef& paramDef);
 
     T::ParamId              getCdmParameterId(GRIB1::Message& message);

@@ -3870,6 +3870,18 @@ T::ParamLevelId GridDef::getGrib2LevelId(GRIB1::Message& message)
   FUNCTION_TRACE
   try
   {
+    T::ParamLevelId fmiLevelId = getFmiLevelId(message);
+    if (fmiLevelId != 0)
+    {
+      for (auto it = mFmi_levelsFromGrib2_records.begin(); it != mFmi_levelsFromGrib2_records.end(); ++it)
+      {
+        if (it->mFmiLevelId == fmiLevelId)
+        {
+          return (T::ParamLevelId)it->mGribLevelId;
+        }
+      }
+    }
+
     return 0;
   }
   catch (...)
@@ -3887,6 +3899,18 @@ T::ParamLevelId GridDef::getGrib1LevelId(GRIB2::Message& message)
   FUNCTION_TRACE
   try
   {
+    T::ParamLevelId fmiLevelId = getFmiLevelId(message);
+    if (fmiLevelId != 0)
+    {
+      for (auto it = mFmi_levelsFromGrib1_records.begin(); it != mFmi_levelsFromGrib1_records.end(); ++it)
+      {
+        if (it->mFmiLevelId == fmiLevelId)
+        {
+          return (T::ParamLevelId)it->mGribLevelId;
+        }
+      }
+    }
+
     return 0;
   }
   catch (...)
@@ -4463,6 +4487,14 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
         return (T::ParamLevelId)it->mFmiLevelId;
       }
     }
+
+    for (auto it = mFmi_levelsFromGrib1_records.begin(); it != mFmi_levelsFromGrib1_records.end(); ++it)
+    {
+      if (it->mGribLevelId == productSection->getIndicatorOfTypeOfLevel())
+      {
+        return (T::ParamLevelId)it->mFmiLevelId;
+      }
+    }
     return 0;
   }
   catch (...)
@@ -4496,6 +4528,14 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
       if (it->mGeneratingProcessIdentifier == *productSection->getGeneratingProcessIdentifier() &&
           it->mCentre == identificationSection->getCentre() &&
           it->mGribLevelId == message.getGridParameterLevelId())
+      {
+        return (T::ParamLevelId)it->mFmiLevelId;
+      }
+    }
+
+    for (auto it = mFmi_levelsFromGrib2_records.begin(); it != mFmi_levelsFromGrib2_records.end(); ++it)
+    {
+      if (it->mGribLevelId == message.getGridParameterLevelId())
       {
         return (T::ParamLevelId)it->mFmiLevelId;
       }
@@ -4625,6 +4665,30 @@ bool GridDef::getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParamet
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
+
+
+
+
+
+
+bool GridDef::getNewbaseParameterDefById(T::ParamId newbaseParamId,NewbaseParameterDef& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto n = getNewbaseParameterDefById(newbaseParamId);
+    if (n == NULL)
+      return false;
+
+    paramDef = *n;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
 
 
 

@@ -11,7 +11,7 @@ ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
   function = _function;
   startTime = getTime();
 
-  printf("[%04u] START %s:%s\n",_line,_file,_function);
+  printf("[%04u][        ] START %s:%s\n",_line,_file,_function);
   fflush(stdout);
 }
 
@@ -21,7 +21,7 @@ ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
 ShowFunction::~ShowFunction()
 {
   unsigned long long endTime = getTime();
-  printf("[%04u] END   %s:%s (Time=%.6f)\n",line,filename.c_str(),function.c_str(),(double)(endTime-startTime)/1000000);
+  printf("[%04u][%.06f] END   %s:%s\n",line,(double)(endTime-startTime)/1000000,filename.c_str(),function.c_str());
   fflush(stdout);
 }
 

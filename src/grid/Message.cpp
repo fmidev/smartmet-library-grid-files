@@ -1850,6 +1850,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
 
 
+
 void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,double areaExtension,T::GridValueList& valueList)
 {
   FUNCTION_TRACE
