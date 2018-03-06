@@ -65,20 +65,95 @@ std::string get_gridLayoutString(GridLayout layout)
 }
 
 
-std::string get_intepolationMethodString(InterpolationMethod interpolationMethod)
+
+
+
+std::string get_areaIntepolationMethodString(AreaInterpolationMethod interpolationMethod)
 {
   try
   {
     switch (interpolationMethod)
     {
-      case InterpolationMethod::None:
+      case AreaInterpolationMethod::None:
         return "None";
 
-      case InterpolationMethod::Linear:
+      case AreaInterpolationMethod::Linear:
         return "Linear";
 
-      case InterpolationMethod::Nearest:
+      case AreaInterpolationMethod::Nearest:
         return "Nearest";
+
+      case AreaInterpolationMethod::External:
+        return "External";
+
+      case AreaInterpolationMethod::Undefined:
+        return "Undefined";
+    }
+    return "Undefined";
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+std::string get_timeIntepolationMethodString(TimeInterpolationMethod interpolationMethod)
+{
+  try
+  {
+    switch (interpolationMethod)
+    {
+      case TimeInterpolationMethod::None:
+        return "None";
+
+      case TimeInterpolationMethod::Linear:
+        return "Linear";
+
+      case TimeInterpolationMethod::Nearest:
+        return "Nearest";
+
+      case TimeInterpolationMethod::External:
+        return "External";
+
+      case TimeInterpolationMethod::Undefined:
+        return "Undefined";
+    }
+    return "Undefined";
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+std::string get_levelIntepolationMethodString(LevelInterpolationMethod interpolationMethod)
+{
+  try
+  {
+    switch (interpolationMethod)
+    {
+      case LevelInterpolationMethod::None:
+        return "None";
+
+      case LevelInterpolationMethod::Linear:
+        return "Linear";
+
+      case LevelInterpolationMethod::Nearest:
+        return "Nearest";
+
+      case LevelInterpolationMethod::External:
+        return "External";
+
+      case LevelInterpolationMethod::Undefined:
+        return "Undefined";
     }
     return "Undefined";
   }

@@ -1121,6 +1121,133 @@ void splitString(std::string str,char separator,std::set<std::string>& partList)
     throw Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
+
+
+
+
+
+
+void splitString(const char *str,char separator,std::vector<double>& partList)
+{
+  try
+  {
+    char buf[10000];
+    uint c = 0;
+    char *p = const_cast<char*>(str);
+
+    bool ind = false;
+    while (*p != '\0'  &&  *p != '\n'  &&  c < 10000)
+    {
+      if (*p == '"')
+        ind = !ind;
+
+      if (*p == separator  &&  !ind)
+      {
+        buf[c] = '\0';
+        partList.push_back(atof(buf));
+        c = 0;
+      }
+      else
+      {
+        buf[c] = *p;
+        c++;
+      }
+      p++;
+    }
+    if (c > 0)
+    {
+      buf[c] = '\0';
+      partList.push_back(atof(buf));
+    }
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+
+
+
+
+void splitString(std::string str,char separator,std::vector<double>& partList)
+{
+  try
+  {
+    splitString(str.c_str(),separator,partList);
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+
+
+
+
+void splitString(const char *str,char separator,std::vector<float>& partList)
+{
+  try
+  {
+    char buf[10000];
+    uint c = 0;
+    char *p = const_cast<char*>(str);
+
+    bool ind = false;
+    while (*p != '\0'  &&  *p != '\n'  &&  c < 10000)
+    {
+      if (*p == '"')
+        ind = !ind;
+
+      if (*p == separator  &&  !ind)
+      {
+        buf[c] = '\0';
+        partList.push_back(atof(buf));
+        c = 0;
+      }
+      else
+      {
+        buf[c] = *p;
+        c++;
+      }
+      p++;
+    }
+    if (c > 0)
+    {
+      buf[c] = '\0';
+      partList.push_back(atof(buf));
+    }
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+
+
+
+
+void splitString(std::string str,char separator,std::vector<float>& partList)
+{
+  try
+  {
+    splitString(str.c_str(),separator,partList);
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+
+
+
+
+
 } // Namespace SmartMet
+
+
 
 

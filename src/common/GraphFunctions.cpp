@@ -1,6 +1,7 @@
 #include "GraphFunctions.h"
 #include "Exception.h"
 #include <math.h>
+#include <sstream>
 
 
 namespace SmartMet
@@ -50,7 +51,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
       for (int y=yStart; y<=yEnd; y++)
       {
         //printf("VLinePoint %d,%d\n",(int)x1,y);
-        unsigned long long p = (((unsigned long long)x1) << 32) + y;
+        unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)x1;
         if (cList.find(p) == cList.end())
           cList.insert(p);
       }
@@ -76,7 +77,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
       for (int x=xStart; x<=xEnd; x++)
       {
         //printf("HLinePoint %d,%d\n",x,(int)y1);
-        unsigned long long p = (((unsigned long long)x) << 32) + round(y1);
+        unsigned long long p = (((unsigned long long)round(y1)) << 32) + (unsigned long long)x;
         if (cList.find(p) == cList.end())
           cList.insert(p);
       }
@@ -104,7 +105,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
       if ((xx - (int)xx) == 0)
       {
         //printf("LinePoint %d,%d\n",(int)xx,y);
-        unsigned long long p = (((unsigned long long)xx) << 32) + y;
+        unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)xx;
         if (cList.find(p) == cList.end())
           cList.insert(p);
       }
@@ -219,7 +220,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
 
           for (int x=xStart; x<=xEnd; x++)
           {
-            unsigned long long p = (((unsigned long long)x) << 32) + y;
+            unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)x;
             if (cList.find(p) == cList.end())
               cList.insert(p);
           }
@@ -231,8 +232,8 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
 
     for (auto it = cList.begin(); it != cList.end(); ++it)
     {
-      int x = (int)((*it) >> 32);
-      int y = (int)((*it) & 0xFFFFFFFF);
+      int y = (int)((*it) >> 32);
+      int x = (int)((*it) & 0xFFFFFFFF);
 
       gridPoints.push_back(T::Point(x,y));
     }
@@ -375,7 +376,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
 
           for (int x=xStart; x<=xEnd; x++)
           {
-            unsigned long long p = (((unsigned long long)x) << 32) + y;
+            unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)x;
             if (cList.find(p) == cList.end())
               cList.insert(p);
           }
@@ -387,8 +388,8 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
 
     for (auto it = cList.begin(); it != cList.end(); ++it)
     {
-      int x = (int)((*it) >> 32);
-      int y = (int)((*it) & 0xFFFFFFFF);
+      int y = (int)((*it) >> 32);
+      int x = (int)((*it) & 0xFFFFFFFF);
 
       gridPoints.push_back(T::Point(x,y));
     }
@@ -501,6 +502,72 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,std::vector<std::vector<T:
     }
     if (polygonPoints.size() > 0)
       polygonPath.push_back(polygonPoints);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+std::string convertWktMultiPolygonToSvgString(const std::string& wktString)
+{
+  try
+  {
+    std::string svgString = wktString;
+    boost::algorithm::replace_all(svgString, "MULTIPOLYGON ", "");
+    boost::algorithm::replace_all(svgString, "POLYGON ", "");
+    boost::algorithm::replace_all(svgString, "),(", " Z M ");
+    boost::algorithm::replace_all(svgString, ",", " L ");
+    boost::algorithm::replace_all(svgString, "(", "");
+    boost::algorithm::replace_all(svgString, ")", "");
+    svgString.insert(0, "\"M ");
+    svgString.append(" Z\"\n");
+
+    return svgString;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void convertWktMultipolygonToSvgPath(const std::string& wktString,NFmiSvgPath& svgPath)
+{
+  try
+  {
+    std::string svgString = convertWktMultiPolygonToSvgString(wktString);
+    std::stringstream svgStringStream(svgString);
+
+    svgPath.Read(svgStringStream);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void convertWktMultipolygonToPolygonPath(const std::string& wktString,std::vector<std::vector<T::Coordinate>>& polygonPath)
+{
+  try
+  {
+    std::string svgString = convertWktMultiPolygonToSvgString(wktString);
+    std::stringstream svgStringStream(svgString);
+
+    NFmiSvgPath svgPath;
+    svgPath.Read(svgStringStream);
+    convertSvgPathToPolygonPath(svgPath,polygonPath);
   }
   catch (...)
   {

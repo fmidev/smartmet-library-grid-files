@@ -123,12 +123,35 @@ enum class GridLayout
 
 
 
-enum class InterpolationMethod
+enum class AreaInterpolationMethod
 {
-  None = 0,
+  None = 0,           // Numbers 0 - 9 reserved for build-in interpolation types
   Linear = 1,
-  Nearest = 2
+  Nearest = 2,
+  External = 10,      // Numbers 10 - 254 reserved for external interpolation types
+  Undefined = 255
 };
+
+
+enum class TimeInterpolationMethod
+{
+  None = 0,           // Numbers 0 - 9 reserved for build-in interpolation types
+  Linear = 1,
+  Nearest = 2,
+  External = 10,      // Numbers 10 - 254 reserved for external interpolation types
+  Undefined = 255
+};
+
+
+enum class LevelInterpolationMethod
+{
+  None = 0,           // Numbers 0 - 9 reserved for build-in interpolation types
+  Linear = 1,
+  Nearest = 2,
+  External = 10,      // Numbers 10 - 254 reserved for external interpolation types
+  Undefined = 255
+};
+
 
 
 enum CoordinateType
@@ -183,7 +206,9 @@ enum class GridProjection
 
 std::string get_fileTypeString(FileType fileType);
 std::string get_gridLayoutString(GridLayout layout);
-std::string get_intepolationMethodString(InterpolationMethod interpolationMethod);
+std::string get_areaIntepolationMethodString(AreaInterpolationMethod interpolationMethod);
+std::string get_timeIntepolationMethodString(TimeInterpolationMethod interpolationMethod);
+std::string get_levelIntepolationMethodString(LevelInterpolationMethod interpolationMethod);
 std::string get_gridProjectionString(GridProjection gridType);
 
 

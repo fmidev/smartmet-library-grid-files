@@ -4,6 +4,12 @@
 namespace SmartMet
 {
 
+
+Log *globalTraceLog = NULL;
+int globalTraceLevel = 0;
+
+
+
 ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
 {
   filename = _file;
@@ -11,8 +17,16 @@ ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
   function = _function;
   startTime = getTime();
 
-  printf("[%04u][        ] START %s:%s\n",_line,_file,_function);
-  fflush(stdout);
+  if (globalTraceLog != NULL)
+  {
+    PRINT_DATA(globalTraceLog,"[%04u][        ] %sSTART %s [%s]\n",_line,space(globalTraceLevel).c_str(),_function,_file);
+  }
+  else
+  {
+    printf("[%04u][        ] %sSTART %s [%s]\n",_line,space(globalTraceLevel).c_str(),_function,_file);
+    fflush(stdout);
+  }
+  globalTraceLevel++;
 }
 
 
@@ -21,8 +35,17 @@ ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
 ShowFunction::~ShowFunction()
 {
   unsigned long long endTime = getTime();
-  printf("[%04u][%.06f] END   %s:%s\n",line,(double)(endTime-startTime)/1000000,filename.c_str(),function.c_str());
-  fflush(stdout);
+  globalTraceLevel--;
+
+  if (globalTraceLog != NULL)
+  {
+    PRINT_DATA(globalTraceLog,"[%04u][%.06f] %sEND\n",line,(double)(endTime-startTime)/1000000,space(globalTraceLevel).c_str());
+  }
+  else
+  {
+    printf("[%04u][%.06f] %sEND\n",line,(double)(endTime-startTime)/1000000,space(globalTraceLevel).c_str());
+    fflush(stdout);
+  }
 }
 
 

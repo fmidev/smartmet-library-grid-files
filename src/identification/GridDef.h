@@ -64,88 +64,88 @@ namespace Identification
 class GridDef
 {
   public:
-                  GridDef();
-    virtual       ~GridDef();
+                      GridDef();
+    virtual           ~GridDef();
 
-    void          init(const char* configFile);
+    void              init(const char* configFile);
 
-    std::string   getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,std::uint32_t number);
-    std::string   getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt8_opt number);
-    std::string   getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt16_opt number);
-    std::string   getPreferredUnits(std::string originalUnits);
+    std::string       getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,std::uint32_t number);
+    std::string       getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt8_opt number);
+    std::string       getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt16_opt number);
+    std::string       getPreferredUnits(std::string originalUnits);
 
-    bool          getGribParamDefById(T::ParamId gribParamId,GribParameterDef&  paramDef);
-    bool          getGribParamDefByName(std::string gribParamName,GribParameterDef&  paramDef);
-    bool          getGribParamDef(uint discipline,uint category,uint number,GribParameterDef&  paramDef);
-    bool          getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_vec& coordinates);
-    bool          getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols,uint& rows);
+    bool              getGribParamDefById(T::ParamId gribParamId,GribParameterDef&  paramDef);
+    bool              getGribParamDefByName(std::string gribParamName,GribParameterDef&  paramDef);
+    bool              getGribParamDef(uint discipline,uint category,uint number,GribParameterDef&  paramDef);
+    bool              getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_vec& coordinates);
+    bool              getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols,uint& rows);
 
-    int           getGrib1GeometryIdByHash(T::Hash hash);
-    bool          getGrib1LevelDef(uint levelId,LevelDef& levelDef);
-    uint          getGrib1ParameterDefCount();
-    bool          getGrib1ParameterDefById(T::ParamId gribParamId,Grib1ParameterDef& paramDef);
-    bool          getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef);
-    bool          getGrib1ParameterDefByName(std::string gribParamName,Grib1ParameterDef& paramDef);
-    bool          getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfParameter,Grib1ParameterDef& paramDef);
-    bool          getGrib1TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef);
+    int               getGrib1GeometryIdByHash(T::Hash hash);
+    bool              getGrib1LevelDef(uint levelId,LevelDef& levelDef);
+    uint              getGrib1ParameterDefCount();
+    bool              getGrib1ParameterDefById(T::ParamId gribParamId,Grib1ParameterDef& paramDef);
+    bool              getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef);
+    bool              getGrib1ParameterDefByName(std::string gribParamName,Grib1ParameterDef& paramDef);
+    bool              getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfParameter,Grib1ParameterDef& paramDef);
+    bool              getGrib1TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef);
 
-    int           getGrib2GeometryIdByHash(T::Hash hash);
-    bool          getGrib2LevelDef(uint levelId,LevelDef& levelDef);
-    uint          getGrib2ParameterDefCount();
-    bool          getGrib2ParameterDefById(T::ParamId gribParamId,Grib2ParameterDef& paramDef);
-    bool          getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef);
-    bool          getGrib2ParameterDefByName(std::string gribParamName,Grib2ParameterDef& paramDef);
-    bool          getGrib2TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef);
+    int               getGrib2GeometryIdByHash(T::Hash hash);
+    bool              getGrib2LevelDef(uint levelId,LevelDef& levelDef);
+    uint              getGrib2ParameterDefCount();
+    bool              getGrib2ParameterDefById(T::ParamId gribParamId,Grib2ParameterDef& paramDef);
+    bool              getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef);
+    bool              getGrib2ParameterDefByName(std::string gribParamName,Grib2ParameterDef& paramDef);
+    bool              getGrib2TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef);
 
-    void          getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList);
-    bool          getGeometryNameById(T::GeometryId  geometryId,std::string& name);
+    void              getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList);
+    bool              getGeometryNameById(T::GeometryId  geometryId,std::string& name);
 
-    T::InterpolationMethod  getPreferredInterpolationMethodByUnits(std::string originalUnits);
+    T::ParamId        getGribParameterId(GRIB1::Message& message);
+    T::ParamId        getGribParameterId(GRIB2::Message& message);
+    T::ParamLevelId   getGrib1LevelId(GRIB1::Message& message);
+    T::ParamLevelId   getGrib1LevelId(GRIB2::Message& message);
+    T::ParamLevelId   getGrib2LevelId(GRIB1::Message& message);
+    T::ParamLevelId   getGrib2LevelId(GRIB2::Message& message);
+    std::string       getGribParameterName(GRIB1::Message& message);
+    std::string       getGribParameterName(GRIB2::Message& message);
+    std::string       getGribParameterDescription(GRIB1::Message& message);
+    std::string       getGribParameterDescription(GRIB2::Message& message);
+    std::string       getGribParameterUnits(GRIB1::Message& message);
+    std::string       getGribParameterUnits(GRIB2::Message& message);
 
-    T::ParamId              getGribParameterId(GRIB1::Message& message);
-    T::ParamId              getGribParameterId(GRIB2::Message& message);
-    T::ParamLevelId         getGrib1LevelId(GRIB1::Message& message);
-    T::ParamLevelId         getGrib1LevelId(GRIB2::Message& message);
-    T::ParamLevelId         getGrib2LevelId(GRIB1::Message& message);
-    T::ParamLevelId         getGrib2LevelId(GRIB2::Message& message);
-    std::string             getGribParameterName(GRIB1::Message& message);
-    std::string             getGribParameterName(GRIB2::Message& message);
-    std::string             getGribParameterDescription(GRIB1::Message& message);
-    std::string             getGribParameterDescription(GRIB2::Message& message);
-    std::string             getGribParameterUnits(GRIB1::Message& message);
-    std::string             getGribParameterUnits(GRIB2::Message& message);
+    T::ParamId        getFmiParameterIdByFmiName(std::string fmiParamName);
+    bool              getFmiParameterDefById(T::ParamId fmiParamId,FmiParameterDef& paramDef);
+    bool              getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId,FmiParameterDef& paramDef);
+    bool              getFmiParameterDefByName(std::string fmiParamName,FmiParameterDef& paramDef);
+    bool              getFmiProducerByName(std::string fmiProducerName,FmiProducerId_grib& producer);
 
-    T::ParamId              getFmiParameterIdByFmiName(std::string fmiParamName);
-    bool                    getFmiParameterDefById(T::ParamId fmiParamId,FmiParameterDef& paramDef);
-    bool                    getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId,FmiParameterDef& paramDef);
-    bool                    getFmiParameterDefByName(std::string fmiParamName,FmiParameterDef& paramDef);
-    bool                    getFmiProducerByName(std::string fmiProducerName,FmiProducerId_grib& producer);
+    T::ParamId        getFmiParameterId(GRIB1::Message& message);
+    T::ParamId        getFmiParameterId(GRIB2::Message& message);
+    T::ParamLevelId   getFmiLevelId(GRIB1::Message& message);
+    T::ParamLevelId   getFmiLevelId(GRIB2::Message& message);
+    std::string       getFmiParameterName(GRIB1::Message& message);
+    std::string       getFmiParameterName(GRIB2::Message& message);
+    std::string       getFmiParameterDescription(GRIB1::Message& message);
+    std::string       getFmiParameterDescription(GRIB2::Message& message);
+    std::string       getFmiParameterUnits(GRIB1::Message& message);
+    std::string       getFmiParameterUnits(GRIB2::Message& message);
 
-    T::ParamId              getFmiParameterId(GRIB1::Message& message);
-    T::ParamId              getFmiParameterId(GRIB2::Message& message);
-    T::ParamLevelId         getFmiLevelId(GRIB1::Message& message);
-    T::ParamLevelId         getFmiLevelId(GRIB2::Message& message);
-    std::string             getFmiParameterName(GRIB1::Message& message);
-    std::string             getFmiParameterName(GRIB2::Message& message);
-    std::string             getFmiParameterDescription(GRIB1::Message& message);
-    std::string             getFmiParameterDescription(GRIB2::Message& message);
-    std::string             getFmiParameterUnits(GRIB1::Message& message);
-    std::string             getFmiParameterUnits(GRIB2::Message& message);
-    T::InterpolationMethod  getFmiParameterInterpolationMethod(GRIB1::Message& message);
-    T::InterpolationMethod  getFmiParameterInterpolationMethod(GRIB2::Message& message);
+    bool              getNewbaseParameterDefById(T::ParamId newbaseParamId,NewbaseParameterDef& paramDef);
+    bool              getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParameterDef& paramDef);
 
-    bool                    getNewbaseParameterDefById(T::ParamId newbaseParamId,NewbaseParameterDef& paramDef);
-    bool                    getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParameterDef& paramDef);
+    T::ParamId        getCdmParameterId(GRIB1::Message& message);
+    T::ParamId        getCdmParameterId(GRIB2::Message& message);
+    std::string       getCdmParameterName(GRIB1::Message& message);
+    std::string       getCdmParameterName(GRIB2::Message& message);
 
-    T::ParamId              getCdmParameterId(GRIB1::Message& message);
-    T::ParamId              getCdmParameterId(GRIB2::Message& message);
-    std::string             getCdmParameterName(GRIB1::Message& message);
-    std::string             getCdmParameterName(GRIB2::Message& message);
+    T::ParamId        getNewbaseParameterId(GRIB1::Message& message);
+    T::ParamId        getNewbaseParameterId(GRIB2::Message& message);
+    std::string       getNewbaseParameterName(GRIB1::Message& message);
+    std::string       getNewbaseParameterName(GRIB2::Message& message);
 
-    T::ParamId              getNewbaseParameterId(GRIB1::Message& message);
-    T::ParamId              getNewbaseParameterId(GRIB2::Message& message);
-    std::string             getNewbaseParameterName(GRIB1::Message& message);
-    std::string             getNewbaseParameterName(GRIB2::Message& message);
+    T::AreaInterpolationMethod  getPreferredInterpolationMethodByUnits(std::string originalUnits);
+    T::AreaInterpolationMethod  getFmiParameterInterpolationMethod(GRIB1::Message& message);
+    T::AreaInterpolationMethod  getFmiParameterInterpolationMethod(GRIB2::Message& message);
 
   protected:
 

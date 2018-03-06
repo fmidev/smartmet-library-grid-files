@@ -15,7 +15,9 @@ FmiParameterDef::FmiParameterDef()
   try
   {
     mVersion = 0;
-    mInterpolationMethod = T::InterpolationMethod::None;
+    mAreaInterpolationMethod = T::AreaInterpolationMethod::Undefined;
+    mTimeInterpolationMethod = T::TimeInterpolationMethod::Undefined;
+    mLevelInterpolationMethod = T::LevelInterpolationMethod::Undefined;
   }
   catch (...)
   {
@@ -36,7 +38,9 @@ FmiParameterDef::FmiParameterDef(const FmiParameterDef& parameterDef)
     mParameterName = parameterDef.mParameterName;
     mParameterUnits = parameterDef.mParameterUnits;
     mParameterDescription = parameterDef.mParameterDescription;
-    mInterpolationMethod = parameterDef.mInterpolationMethod;
+    mAreaInterpolationMethod = parameterDef.mAreaInterpolationMethod;
+    mTimeInterpolationMethod = parameterDef.mTimeInterpolationMethod;
+    mLevelInterpolationMethod = parameterDef.mLevelInterpolationMethod;
   }
   catch (...)
   {
@@ -68,12 +72,14 @@ void FmiParameterDef::print(std::ostream& stream,uint level,uint optionFlags) co
   try
   {
     stream << space(level) << "FmiParameterDef\n";
-    stream << space(level) << "- mFmiParameterId       = " << mFmiParameterId << "\n";
-    stream << space(level) << "- mVersion              = " << mVersion << "\n";
-    stream << space(level) << "- mParameterName        = " << mParameterName << "\n";
-    stream << space(level) << "- mParameterUnits       = " << mParameterUnits << "\n";
-    stream << space(level) << "- mParameterDescription = " << mParameterDescription << "\n";
-    stream << space(level) << "- mInterpolationMethod  = " << (uint)mInterpolationMethod << "\n";
+    stream << space(level) << "- mFmiParameterId           = " << mFmiParameterId << "\n";
+    stream << space(level) << "- mVersion                  = " << mVersion << "\n";
+    stream << space(level) << "- mParameterName            = " << mParameterName << "\n";
+    stream << space(level) << "- mParameterUnits           = " << mParameterUnits << "\n";
+    stream << space(level) << "- mParameterDescription     = " << mParameterDescription << "\n";
+    stream << space(level) << "- mAreaInterpolationMethod  = " << (uint)mAreaInterpolationMethod << "\n";
+    stream << space(level) << "- mTimeInterpolationMethod  = " << (uint)mTimeInterpolationMethod << "\n";
+    stream << space(level) << "- mLevelInterpolationMethod = " << (uint)mLevelInterpolationMethod << "\n";
   }
   catch (...)
   {

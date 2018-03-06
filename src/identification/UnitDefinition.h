@@ -36,7 +36,9 @@ class UnitDefinition
     std::string   mOriginalUnits;
     std::string   mPreferredUnits;
 
-    T::InterpolationMethod mPreferredInterpolationMethod;
+    T::AreaInterpolationMethod mPreferredAreaInterpolationMethod;
+    T::TimeInterpolationMethod mPreferredTimeInterpolationMethod;
+    T::LevelInterpolationMethod mPreferredLevelInterpolationMethod;
 };
 
 typedef std::vector<UnitDefinition> UnitDefinition_vec;

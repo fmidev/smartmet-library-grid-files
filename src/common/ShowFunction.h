@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Typedefs.h"
+#include "Log.h"
 
 namespace SmartMet
 {
@@ -20,6 +21,9 @@ class ShowFunction
     ulonglong     startTime;
 
 };
+
+
+extern Log *globalTraceLog;
 
 
 #define FUNCTION_TRACE_ON  ShowFunction sfunc(__FILE__,__LINE__,__FUNCTION__);

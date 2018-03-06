@@ -42,81 +42,81 @@ class GribFile;
 class Message : public GRID::Message
 {
   public:
-                          Message();
-                          Message(GribFile *gribFile);
-    virtual               ~Message();
+                            Message();
+                            Message(GribFile *gribFile);
+    virtual                 ~Message();
 
     // ### Common methods for all message types
 
-    void                  getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
-    uint                  getFileId() const;
-    T::FilePosition       getFilePosition() const;
-    T::TimeString         getForecastTime() const;
-    short                 getForecastType() const;
-    short                 getForecastNumber() const;
-    GribFile*             getGribFile() const;
+    void                    getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    uint                    getFileId() const;
+    T::FilePosition         getFilePosition() const;
+    T::TimeString           getForecastTime() const;
+    short                   getForecastType() const;
+    short                   getForecastNumber() const;
+    GribFile*               getGribFile() const;
 
-    T::GeometryId         getGridGeometryId() const;
-    T::Coordinate_vec     getGridCoordinates() const;
-    T::Coordinate_vec     getGridLatLonCoordinates() const;
-    T::Dimensions_opt     getGridDimensions() const;
-    T::Hash               getGridHash() const;
-    bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
-    bool                  getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
-    bool                  getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
-    bool                  getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
-    bool                  getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
-    bool                  getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
-    T::GridLayout         getGridLayout() const;
-    std::size_t           getGridOriginalColumnCount() const;
-    std::size_t           getGridOriginalColumnCount(std::size_t row) const;
-    std::size_t           getGridOriginalRowCount() const;
-    std::size_t           getGridOriginalValueCount() const;
-    int                   getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
-    bool                  getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
-    bool                  getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
-    T::GridProjection     getGridProjection() const;
-    void                  getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;
-    std::string           getGridProjectionString() const;
-    T::ParamLevel         getGridParameterLevel() const;
-    T::ParamLevelId       getGridParameterLevelId() const;
-    std::string           getGridParameterLevelIdString() const;
-    void                  getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
-    void                  getGridOriginalValueVector(T::ParamValue_vec& values) const;
-    T::ParamValue         getGridValueByGridPoint(uint grid_i,uint grid_j) const;
-    T::ParamValue         getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
-    void                  getGridValueVector(T::ParamValue_vec& values) const;
-    T::TimeString         getReferenceTime() const;
-    T::SpatialReference*  getSpatialReference() const;
-    std::string           getWKT() const;
-    bool                  isGridGlobal() const;
-    bool                  reverseXDirection() const;
-    bool                  reverseYDirection() const;
-    void                  print(std::ostream& stream,uint level,uint optionFlags) const;
+    T::GeometryId           getGridGeometryId() const;
+    T::Coordinate_vec       getGridCoordinates() const;
+    T::Coordinate_vec       getGridLatLonCoordinates() const;
+    T::Dimensions_opt       getGridDimensions() const;
+    T::Hash                 getGridHash() const;
+    bool                    getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
+    bool                    getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
+    bool                    getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
+    bool                    getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
+    bool                    getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
+    bool                    getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
+    T::GridLayout           getGridLayout() const;
+    std::size_t             getGridOriginalColumnCount() const;
+    std::size_t             getGridOriginalColumnCount(std::size_t row) const;
+    std::size_t             getGridOriginalRowCount() const;
+    std::size_t             getGridOriginalValueCount() const;
+    int                     getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
+    bool                    getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
+    bool                    getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
+    T::GridProjection       getGridProjection() const;
+    void                    getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;
+    std::string             getGridProjectionString() const;
+    T::ParamLevel           getGridParameterLevel() const;
+    T::ParamLevelId         getGridParameterLevelId() const;
+    std::string             getGridParameterLevelIdString() const;
+    void                    getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
+    void                    getGridOriginalValueVector(T::ParamValue_vec& values) const;
+    T::ParamValue           getGridValueByGridPoint(uint grid_i,uint grid_j) const;
+    T::ParamValue           getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
+    void                    getGridValueVector(T::ParamValue_vec& values) const;
+    T::TimeString           getReferenceTime() const;
+    T::SpatialReference*    getSpatialReference() const;
+    std::string             getWKT() const;
+    bool                    isGridGlobal() const;
+    bool                    reverseXDirection() const;
+    bool                    reverseYDirection() const;
+    void                    print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Message/file type specific methods
 
-    BitmapSection_sptr    getBitmapSection() const;
-    GridSection_sptr      getGridSection() const;
-    IndicatorSection_sptr getIndicatorSection() const;
-    const ProductSection* getProductSection() const;
-    const DataSection*    getDataSection() const;
+    BitmapSection_sptr      getBitmapSection() const;
+    GridSection_sptr        getGridSection() const;
+    IndicatorSection_sptr   getIndicatorSection() const;
+    const ProductSection*   getProductSection() const;
+    const DataSection*      getDataSection() const;
 
-    void                  read(MemoryReader& memoryReader);
-    void                  setGridGeometryId(T::GeometryId geometryId);
+    void                    read(MemoryReader& memoryReader);
+    void                    setGridGeometryId(T::GeometryId geometryId);
 
     // Fast access to substructures
 
-    T::Data_ptr           getBitmapDataPtr() const;
-    std::size_t           getBitmapDataSizeInBytes() const;
-    std::int16_t          getBinaryScaleFactor() const;
-    std::uint16_t         getDecimalScaleFactor() const;
-    std::float_t          getReferenceValue() const;
-    std::uint8_t          getBitsPerValue() const;
-    std::uint8_t          getFlags() const;
-    T::Data_ptr           getDataPtr() const;
-    std::size_t           getDataSize() const;
-    std::size_t           getDataSizeMax() const;
+    T::Data_ptr             getBitmapDataPtr() const;
+    std::size_t             getBitmapDataSizeInBytes() const;
+    std::int16_t            getBinaryScaleFactor() const;
+    std::uint16_t           getDecimalScaleFactor() const;
+    std::float_t            getReferenceValue() const;
+    std::uint8_t            getBitsPerValue() const;
+    std::uint8_t            getFlags() const;
+    T::Data_ptr             getDataPtr() const;
+    std::size_t             getDataSize() const;
+    std::size_t             getDataSizeMax() const;
 
   private:
 

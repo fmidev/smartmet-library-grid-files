@@ -16,7 +16,9 @@ UnitDefinition::UnitDefinition()
 {
   try
   {
-    mPreferredInterpolationMethod = T::InterpolationMethod::Linear;
+    mPreferredAreaInterpolationMethod = T::AreaInterpolationMethod::Undefined;
+    mPreferredTimeInterpolationMethod = T::TimeInterpolationMethod::Undefined;
+    mPreferredLevelInterpolationMethod = T::LevelInterpolationMethod::Undefined;
   }
   catch (...)
   {
@@ -36,7 +38,9 @@ UnitDefinition::UnitDefinition(const UnitDefinition& unitDefinition)
   {
     mOriginalUnits = unitDefinition.mOriginalUnits;
     mPreferredUnits = unitDefinition.mPreferredUnits;
-    mPreferredInterpolationMethod = unitDefinition.mPreferredInterpolationMethod;
+    mPreferredAreaInterpolationMethod = unitDefinition.mPreferredAreaInterpolationMethod;
+    mPreferredTimeInterpolationMethod = unitDefinition.mPreferredTimeInterpolationMethod;
+    mPreferredLevelInterpolationMethod = unitDefinition.mPreferredLevelInterpolationMethod;
   }
   catch (...)
   {
@@ -77,9 +81,11 @@ void UnitDefinition::print(std::ostream& stream,uint level,uint optionFlags) con
   try
   {
     stream << space(level) << "UnitDefinition\n";
-    stream << space(level) << "- OriginalUnits                = " << mOriginalUnits << "\n";
-    stream << space(level) << "- PreferredUnits               = " << mPreferredUnits << "\n";
-    stream << space(level) << "- PreferredInterpolationMethod = " << toString((int)mPreferredInterpolationMethod) << "\n";
+    stream << space(level) << "- OriginalUnits                     = " << mOriginalUnits << "\n";
+    stream << space(level) << "- PreferredUnits                    = " << mPreferredUnits << "\n";
+    stream << space(level) << "- PreferredAreaInterpolationMethod  = " << toString((int)mPreferredAreaInterpolationMethod) << "\n";
+    stream << space(level) << "- PreferredTimeInterpolationMethod  = " << toString((int)mPreferredTimeInterpolationMethod) << "\n";
+    stream << space(level) << "- PreferredLevelInterpolationMethod = " << toString((int)mPreferredLevelInterpolationMethod) << "\n";
   }
   catch (...)
   {

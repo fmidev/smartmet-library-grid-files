@@ -513,6 +513,8 @@ void Message::initParameterInfo()
     mCdmParameterId = Identification::gridDef.getCdmParameterId(*this);
     mCdmParameterName = Identification::gridDef.getCdmParameterName(*this);
 
+    mDefaultInterpolationMethod = Identification::gridDef.getFmiParameterInterpolationMethod(*this);
+
     if (getGridGeometryId() == 0)
     {
       T::Hash hash = getGridHash();
@@ -1512,7 +1514,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     {
       if (mRepresentationSection->getValueByIndex(idx,value))
       {
-        // printf(" ** value %f\n",value);
+        // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
         return value;
       }
     }
@@ -1528,7 +1530,10 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
           return ParamValueMissing;
 
         if (mRepresentationSection->getValueByIndex(index,value))
+        {
+          // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
           return value;
+        }
       }
       else
       {
@@ -1539,7 +1544,10 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
           return ParamValueMissing;
 
         if (mRepresentationSection->getValueByIndex(indexVector[idx],value))
+        {
+          // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
           return value;
+        }
       }
     }
 
@@ -1553,6 +1561,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = value;
         mPointCachePosition++;
 
+        // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
         return value;
       }
     }
@@ -1581,6 +1590,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = value;
         mPointCachePosition++;
 
+        // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
         return value;
       }
     }
@@ -1595,7 +1605,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = values[idx];
     mPointCachePosition++;
 
-    // printf("-- value %f\n",values[idx]);
+    // printf("Value %u,%u : %f\n",grid_i,grid_j,values[idx]);
     return values[idx];
   }
   catch (...)
@@ -1650,7 +1660,11 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
     if (mGridSection == NULL)
       throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
 
-    return mGridSection->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
+    bool res = mGridSection->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
+    //printf("LATLON %f,%f => %f,%f  => %u,%u\n",lat,lon,grid_i,grid_j,(uint)grid_i,(uint)grid_j);
+
+    //std::cout << getForecastTime() << " VALUE " << getGridValueByGridPoint((uint)grid_i,(uint)grid_j) << "\n";
+    return res;
   }
   catch (...)
   {

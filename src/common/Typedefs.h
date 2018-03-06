@@ -16,6 +16,7 @@ typedef unsigned long long ulonglong;
 
 typedef std::set<std::string> string_set;
 typedef std::vector<std::string> string_vec;
+typedef std::vector<double> double_vec;
 
 
 

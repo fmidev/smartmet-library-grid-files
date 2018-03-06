@@ -353,6 +353,8 @@ void Message::read(MemoryReader& memoryReader)
     mCdmParameterId = Identification::gridDef.getCdmParameterId(*this);
     mCdmParameterName = Identification::gridDef.getCdmParameterName(*this);
 
+    mDefaultInterpolationMethod = Identification::gridDef.getFmiParameterInterpolationMethod(*this);
+
     if (getGridGeometryId() == 0)
     {
       T::Hash hash = getGridHash();
