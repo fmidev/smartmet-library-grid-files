@@ -132,6 +132,7 @@ class GridDef
 
     bool              getNewbaseParameterDefById(T::ParamId newbaseParamId,NewbaseParameterDef& paramDef);
     bool              getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParameterDef& paramDef);
+    bool              getNewbaseParameterMappingByFmiId(T::ParamId fmiParamId,FmiParameterId_newbase& paramMapping);
 
     T::ParamId        getCdmParameterId(GRIB1::Message& message);
     T::ParamId        getCdmParameterId(GRIB2::Message& message);

@@ -2267,7 +2267,7 @@
 
 #979;RADSWA-JM2;J m-2;Short wave radiation accumulation
 #980;T-MEAN-K;K;Mean temperature in Kelvins
-980;;128;;192;2;170;;;
+#980;;128;;192;2;170;;;
 
 #981;P-MEAN-PA;kg m-1 s-2;Mean pressure in Pascals
 #982;T-STDDEV-K;K;Standard deviation of temperature
@@ -2676,3 +2676,6 @@
 1169;;128;;192;5;82;;;
 
 #1170;PM25-UGM3;ug m-3;PM25 concentration
+
+#20000;T-MEAN-C;C;Mean temperature in Celcius
+20000;;128;;192;2;170;;;

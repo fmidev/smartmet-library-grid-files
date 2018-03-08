@@ -2285,7 +2285,7 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
           }
         }
 
-        if (c > 1)
+        if (c > 2)
         {
           FmiParameterId_newbase rec;
 
@@ -2294,6 +2294,9 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
 
           if (field[1][0] != '\0')
             rec.mNewbaseParameterId = field[1];
+
+          if (field[2][0] != '\0')
+            rec.mConversionFunction = field[2];
 
           mFmi_parametersFromNewbase_records.push_back(rec);
         }
@@ -4672,6 +4675,27 @@ bool GridDef::getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParamet
   }
 }
 
+
+
+
+
+bool GridDef::getNewbaseParameterMappingByFmiId(T::ParamId fmiParamId,FmiParameterId_newbase& paramMapping)
+{
+  try
+  {
+    FmiParamId_newbase_cptr p = getNewbaseParameterIdByFmiId(fmiParamId);
+    if (p != NULL)
+    {
+      paramMapping = *p;
+      return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
 
 
 

@@ -30,6 +30,7 @@ FmiParameterId_newbase::FmiParameterId_newbase(const FmiParameterId_newbase& par
   {
     mFmiParameterId = parameter.mFmiParameterId;
     mNewbaseParameterId = parameter.mNewbaseParameterId;
+    mConversionFunction = parameter.mConversionFunction;
   }
   catch (...)
   {
@@ -61,8 +62,9 @@ void FmiParameterId_newbase::print(std::ostream& stream,uint level,uint optionFl
   try
   {
     stream << space(level) << "FmiParameterId_newbase\n";
-    stream << space(level) << "- mFmiParameterId              = " << mFmiParameterId << "\n";
-    stream << space(level) << "- mNewbaseParameterId          = " << mNewbaseParameterId << "\n";
+    stream << space(level) << "- mFmiParameterId      = " << mFmiParameterId << "\n";
+    stream << space(level) << "- mNewbaseParameterId  = " << mNewbaseParameterId << "\n";
+    stream << space(level) << "- mConversionFunction  = " << mConversionFunction << "\n";
   }
   catch (...)
   {
