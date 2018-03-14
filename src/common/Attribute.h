@@ -15,11 +15,11 @@ class Attribute
 {
   public:
                     Attribute();
-                    Attribute(Attribute& attribute);
+                    Attribute(const Attribute& attribute);
                     Attribute(std::string name,std::string value);
      virtual        ~Attribute();
 
-     void           operator=(Attribute& attribute);
+     void           operator=(const Attribute& attribute);
      Attribute*     duplicate();
      void           print(std::ostream& stream,uint level,uint optionFlags);
 

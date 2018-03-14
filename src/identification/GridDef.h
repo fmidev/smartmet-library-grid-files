@@ -16,12 +16,12 @@
 #include "UnitDefinition.h"
 
 #include "common/AutoThreadLock.h"
+#include "common/ConfigurationFile.h"
 #include "grib1/Message.h"
 #include "grib2/Message.h"
 #include "grid/Typedefs.h"
 #include "grib2/GridDefinition.h"
 
-#include <libconfig.h++>
 #include <set>
 
 
@@ -202,7 +202,6 @@ class GridDef
 
     void                    updateCheck();
     time_t                  getModificationTime(string_vec& files);
-    string_vec              getConfigurationStrings(const char *configAttribute);
 
     uint                    countParameterMatchPoints(GRIB2::Message& message,const Grib2ParameterDef& p);
     uint                    countParameterMatchPoints(GRIB2::Message& message,const FmiParameterId_grib2& p);
@@ -219,8 +218,8 @@ class GridDef
 
 
 
-    std::string             mConfigFile;
-    libconfig::Config       mConfig;
+    std::string             mConfigFileName;
+    ConfigurationFile       mConfigurationFile;
 
     std::string             mConfigDirectory;
 

@@ -64,8 +64,7 @@ else
 
  INCLUDES = \
 	-I$(includedir) \
-	-I$(includedir)/smartmet \
-	`pkg-config --cflags libconfig++`
+	-I$(includedir)/smartmet
 
 endif
 
@@ -84,7 +83,6 @@ LIBS = -L$(libdir) \
 	-lboost_iostreams \
 	-lboost_thread \
 	-lgdal \
-	`pkg-config --libs libconfig++` \
 	-lpng \
 	-ljpeg \
 	-lz

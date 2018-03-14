@@ -5,6 +5,7 @@
 #include "common/GeneralDefinitions.h"
 #include "common/GraphFunctions.h"
 #include "common/Point.h"
+#include "common/InterpolationFunctions.h"
 #include "common/ShowFunction.h"
 #include "identification/GridDef.h"
 
@@ -2416,6 +2417,7 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
     double x2 = x1+1;
     double y2 = y1+1;
 
+#if 0
     double dist_x1 = x-x1;
     double dist_x2 = x2-x;
     double dist_y1 = y-y1;
@@ -2437,7 +2439,7 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
 
     if (dist_x2 <= closeDist  &&  dist_y2 <= closeDist)
       return getGridValueByGridPoint((uint)x2,(uint)y2);
-
+#endif
 
     // Reading values of the corner grid points
 
@@ -2446,6 +2448,10 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
     auto val_q12 = getGridValueByGridPoint((uint)x1,(uint)y2);
     auto val_q22 = getGridValueByGridPoint((uint)x2,(uint)y2);
 
+
+    return linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12);
+
+#if 0
     // If the given point is on the border then we can do simple
     // linear interpolation.
 
@@ -2533,6 +2539,7 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
     }
 
     return ParamValueMissing;
+#endif
   }
   catch (...)
   {

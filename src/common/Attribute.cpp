@@ -25,7 +25,7 @@ Attribute::Attribute()
 
 
 
-Attribute::Attribute(Attribute& attribute)
+Attribute::Attribute(const Attribute& attribute)
 {
   try
   {
@@ -72,7 +72,7 @@ Attribute::~Attribute()
 
 
 
-void Attribute::operator=(Attribute& attribute)
+void Attribute::operator=(const Attribute& attribute)
 {
   try
   {

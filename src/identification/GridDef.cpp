@@ -134,46 +134,6 @@ GridDef::~GridDef()
 
 
 
-string_vec GridDef::getConfigurationStrings(const char *configAttribute)
-{
-  try
-  {
-    string_vec stringVec;
-    const libconfig::Setting& strings = mConfig.lookup(configAttribute);
-
-    if (!strings.isArray())
-    {
-      Spine::Exception exception(BCP, "The value of the configuration attribute must be an array!");
-      exception.addParameter("Attribute",configAttribute);
-      throw exception;
-    }
-
-    char tmp[300];
-    for (int i = 0; i < strings.getLength(); ++i)
-    {
-      if (mConfigDirectory.length() > 0)
-      {
-        sprintf(tmp,"%s/%s",mConfigDirectory.c_str(),strings[i].c_str());
-        stringVec.push_back(std::string(tmp));
-      }
-      else
-      {
-        stringVec.push_back(strings[i]);
-      }
-    }
-    return stringVec;
-  }
-  catch (...)
-  {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
-    exception.addParameter("Configuration Attribute",configAttribute);
-    throw exception;
-  }
-}
-
-
-
-
 void GridDef::init(const char* configFile)
 {
   FUNCTION_TRACE
@@ -206,54 +166,42 @@ void GridDef::init(const char* configFile)
     if (mInitialized)
       return;
 
-    mConfigFile = configFile;
+    mConfigFileName = configFile;
 
-    try
-    {
-      mConfig.readFile(configFile);
-    }
-    catch (libconfig::ParseException& e)
-    {
-      SmartMet::Spine::Exception exception(BCP, "Configuration file parsing error!");
-      exception.addParameter("What",e.what());
-      exception.addParameter("Error",e.getError());
-      exception.addParameter("File",mConfigFile);
-      exception.addParameter("Line",std::to_string(e.getLine()));
-      throw exception;
-    }
+    mConfigurationFile.readFile(configFile);
 
     uint t=0;
     while (configAttribute[t] != NULL)
     {
-      if (!mConfig.exists(configAttribute[t]))
+      if (!mConfigurationFile.findAttribute(configAttribute[t]))
       {
         SmartMet::Spine::Exception exception(BCP, "Missing configuration attribute!");
-        exception.addParameter("File",mConfigFile);
+        exception.addParameter("File",mConfigFileName);
         exception.addParameter("Attribute",configAttribute[t]);
       }
       t++;
     }
 
-    mConfig.lookupValue("configDirectory", mConfigDirectory);
+    mConfigurationFile.getAttributeValue("configDirectory", mConfigDirectory);
 
-    mGrib_parameterDef_files = getConfigurationStrings("grib.parameterDef");
-    mGrib_tableDef_files = getConfigurationStrings("grib.tableDef");
-    mGrib_unitDef_files = getConfigurationStrings("grib.unitDef");
-    mGrib1_parameterDef_files = getConfigurationStrings("grib1.parameterDef");
-    mGrib1_levelDef_files = getConfigurationStrings("grib1.levelDef");
-    mGrib1_timeRangeDef_files = getConfigurationStrings("grib1.timeRangeDef");
-    mGrib2_parameterDef_files = getConfigurationStrings("grib2.parameterDef");
-    mGrib2_levelDef_files = getConfigurationStrings("grib2.levelDef");
-    mGrib2_timeRangeDef_files = getConfigurationStrings("grib2.timeRangeDef");
-    mFmi_parameterDef_files = getConfigurationStrings("fmi.parameterDef");
-    mFmi_geometryDef_files = getConfigurationStrings("fmi.geometryDef");
-    mFmi_parametersFromGrib1_files = getConfigurationStrings("fmi.parametersFromGrib1");
-    mFmi_parametersFromGrib2_files = getConfigurationStrings("fmi.parametersFromGrib2");
-    mFmi_parametersFromNewbase_files = getConfigurationStrings("fmi.parametersFromNewbase");
-    mFmi_levelsFromGrib1_files = getConfigurationStrings("fmi.levelsFromGrib1");
-    mFmi_levelsFromGrib2_files = getConfigurationStrings("fmi.levelsFromGrib2");
-    mFmi_producersFromGrib_files = getConfigurationStrings("fmi.producersFromGrib");
-    mNewbase_parameterDef_files = getConfigurationStrings("newbase.parameterDef");
+    mConfigurationFile.getAttributeValue("grib.parameterDef",mGrib_parameterDef_files);
+    mConfigurationFile.getAttributeValue("grib.tableDef",mGrib_tableDef_files);
+    mConfigurationFile.getAttributeValue("grib.unitDef",mGrib_unitDef_files);
+    mConfigurationFile.getAttributeValue("grib1.parameterDef",mGrib1_parameterDef_files);
+    mConfigurationFile.getAttributeValue("grib1.levelDef",mGrib1_levelDef_files);
+    mConfigurationFile.getAttributeValue("grib1.timeRangeDef",mGrib1_timeRangeDef_files);
+    mConfigurationFile.getAttributeValue("grib2.parameterDef",mGrib2_parameterDef_files);
+    mConfigurationFile.getAttributeValue("grib2.levelDef",mGrib2_levelDef_files);
+    mConfigurationFile.getAttributeValue("grib2.timeRangeDef",mGrib2_timeRangeDef_files);
+    mConfigurationFile.getAttributeValue("fmi.parameterDef",mFmi_parameterDef_files);
+    mConfigurationFile.getAttributeValue("fmi.geometryDef",mFmi_geometryDef_files);
+    mConfigurationFile.getAttributeValue("fmi.parametersFromGrib1",mFmi_parametersFromGrib1_files);
+    mConfigurationFile.getAttributeValue("fmi.parametersFromGrib2",mFmi_parametersFromGrib2_files);
+    mConfigurationFile.getAttributeValue("fmi.parametersFromNewbase",mFmi_parametersFromNewbase_files);
+    mConfigurationFile.getAttributeValue("fmi.levelsFromGrib1",mFmi_levelsFromGrib1_files);
+    mConfigurationFile.getAttributeValue("fmi.levelsFromGrib2",mFmi_levelsFromGrib2_files);
+    mConfigurationFile.getAttributeValue("fmi.producersFromGrib",mFmi_producersFromGrib_files);
+    mConfigurationFile.getAttributeValue("newbase.parameterDef",mNewbase_parameterDef_files);
 
     mInitialized = true;
 

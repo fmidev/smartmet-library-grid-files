@@ -149,6 +149,9 @@ std::string get_levelIntepolationMethodString(LevelInterpolationMethod interpola
       case LevelInterpolationMethod::Nearest:
         return "Nearest";
 
+      case LevelInterpolationMethod::Logarithmic:
+        return "Logarithmic";
+
       case LevelInterpolationMethod::External:
         return "External";
 

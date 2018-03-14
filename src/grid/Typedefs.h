@@ -148,6 +148,7 @@ enum class LevelInterpolationMethod
   None = 0,           // Numbers 0 - 9 reserved for build-in interpolation types
   Linear = 1,
   Nearest = 2,
+  Logarithmic = 3,
   External = 10,      // Numbers 10 - 254 reserved for external interpolation types
   Undefined = 255
 };
