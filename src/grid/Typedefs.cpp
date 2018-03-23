@@ -68,7 +68,7 @@ std::string get_gridLayoutString(GridLayout layout)
 
 
 
-std::string get_areaIntepolationMethodString(AreaInterpolationMethod interpolationMethod)
+std::string get_areaInterpolationMethodString(short interpolationMethod)
 {
   try
   {
@@ -101,7 +101,7 @@ std::string get_areaIntepolationMethodString(AreaInterpolationMethod interpolati
 
 
 
-std::string get_timeIntepolationMethodString(TimeInterpolationMethod interpolationMethod)
+std::string get_timeInterpolationMethodString(short interpolationMethod)
 {
   try
   {
@@ -134,7 +134,7 @@ std::string get_timeIntepolationMethodString(TimeInterpolationMethod interpolati
 
 
 
-std::string get_levelIntepolationMethodString(LevelInterpolationMethod interpolationMethod)
+std::string get_levelInterpolationMethodString(short interpolationMethod)
 {
   try
   {

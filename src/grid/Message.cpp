@@ -1174,7 +1174,7 @@ std::string Message::getWKT() const
 
 
 
-T::AreaInterpolationMethod Message::getDefaultInterpolationMethod() const
+short Message::getDefaultInterpolationMethod() const
 {
   FUNCTION_TRACE
   try
@@ -1482,7 +1482,7 @@ void Message::setNewbaseParameterName(std::string newbaseParameterName)
 
 
 
-void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,T::AreaInterpolationMethod interpolationMethod,T::ParamValue& value)
+void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short interpolationMethod,T::ParamValue& value)
 {
   FUNCTION_TRACE
   try
@@ -1573,19 +1573,19 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
 
     switch (vectorType)
     {
-      case 0:
+      case T::AreaInterpolationMethod::None:
         valueVector.push_back(getGridValueByGridPoint(x1,y1));
         break;
 
-      case 1:
+      case T::AreaInterpolationMethod::Linear:
         valueVector.push_back(getGridValueByGridPoint_linearInterpolation(x,y));
         break;
 
-      case 2:
+      case T::AreaInterpolationMethod::Nearest:
         valueVector.push_back(getGridValueByGridPoint_nearest(x,y));
         break;
 
-      case 10:
+      case T::AreaInterpolationMethod::List:
         valueVector.push_back(2);
         valueVector.push_back(x-(double)x1);
         valueVector.push_back(y-(double)y1);
@@ -1616,6 +1616,10 @@ void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint ve
 
     if (getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       getGridValueVectorByGridPoint(grid_i,grid_j,vectorType,valueVector);
+
+    printf("getGridValueVectorByLatLonCoordinate %f,%f => %f,%f\n",lat,lon,grid_i,grid_j);
+    for (auto it = valueVector.begin(); it != valueVector.end(); ++it)
+      std::cout << *it << "\n";
   }
   catch (...)
   {
@@ -1795,7 +1799,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
 
 
-void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,T::AreaInterpolationMethod interpolationMethod,T::GridValueList& valueList)
+void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short interpolationMethod,T::GridValueList& valueList)
 {
   FUNCTION_TRACE
   try
@@ -2174,12 +2178,12 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
         \param interpolationMethod    The interpolation method.
 */
 
-T::ParamValue Message::getGridValueByGridPoint(double grid_i,double grid_j,T::AreaInterpolationMethod interpolationMethod) const
+T::ParamValue Message::getGridValueByGridPoint(double grid_i,double grid_j,short interpolationMethod) const
 {
   FUNCTION_TRACE
   try
   {
-    T::AreaInterpolationMethod ipm = interpolationMethod;
+    short ipm = interpolationMethod;
 
     if (interpolationMethod == T::AreaInterpolationMethod::Undefined)
       ipm = getDefaultInterpolationMethod();
@@ -2223,7 +2227,7 @@ T::ParamValue Message::getGridValueByGridPoint(double grid_i,double grid_j,T::Ar
                                       in the given latlon coordinates.
 */
 
-T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,T::AreaInterpolationMethod interpolationMethod) const
+T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,short interpolationMethod) const
 {
   FUNCTION_TRACE
   try

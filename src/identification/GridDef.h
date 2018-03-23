@@ -144,9 +144,9 @@ class GridDef
     std::string       getNewbaseParameterName(GRIB1::Message& message);
     std::string       getNewbaseParameterName(GRIB2::Message& message);
 
-    T::AreaInterpolationMethod  getPreferredInterpolationMethodByUnits(std::string originalUnits);
-    T::AreaInterpolationMethod  getFmiParameterInterpolationMethod(GRIB1::Message& message);
-    T::AreaInterpolationMethod  getFmiParameterInterpolationMethod(GRIB2::Message& message);
+    short             getPreferredInterpolationMethodByUnits(std::string originalUnits);
+    short             getFmiParameterInterpolationMethod(GRIB1::Message& message);
+    short             getFmiParameterInterpolationMethod(GRIB2::Message& message);
 
   protected:
 

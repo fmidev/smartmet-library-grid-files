@@ -123,34 +123,38 @@ enum class GridLayout
 
 
 
-enum class AreaInterpolationMethod
+class AreaInterpolationMethod
 {
-  None = 0,           // Numbers 0 - 9 reserved for build-in interpolation types
-  Linear = 1,
-  Nearest = 2,
-  External = 10,      // Numbers 10 - 254 reserved for external interpolation types
-  Undefined = 255
+  public:
+    static const short Undefined = -1;
+    static const short None = 0;           // Numbers 0 - 99 reserved for build-in interpolation types
+    static const short Linear = 1;
+    static const short Nearest = 2;
+    static const short List = 500;           // Returns grid corner values
+    static const short External = 1000;      // Numbers 1000 - 65535 reserved for external interpolation types
 };
 
 
-enum class TimeInterpolationMethod
+class TimeInterpolationMethod
 {
-  None = 0,           // Numbers 0 - 9 reserved for build-in interpolation types
-  Linear = 1,
-  Nearest = 2,
-  External = 10,      // Numbers 10 - 254 reserved for external interpolation types
-  Undefined = 255
+  public:
+    static const short Undefined = -1;
+    static const short None = 0;           // Numbers 0 - 999 reserved for build-in interpolation types
+    static const short Linear = 1;
+    static const short Nearest = 2;
+    static const short External = 1000;      // Numbers 1000 - 65535 reserved for external interpolation types
 };
 
 
-enum class LevelInterpolationMethod
+class LevelInterpolationMethod
 {
-  None = 0,           // Numbers 0 - 9 reserved for build-in interpolation types
-  Linear = 1,
-  Nearest = 2,
-  Logarithmic = 3,
-  External = 10,      // Numbers 10 - 254 reserved for external interpolation types
-  Undefined = 255
+  public:
+    static const short Undefined = -1;
+    static const short None = 0;           // Numbers 0 - 999 reserved for build-in interpolation types
+    static const short Linear = 1;
+    static const short Nearest = 2;
+    static const short Logarithmic = 3;
+    static const short External = 1000;      // Numbers 1000 - 65535 reserved for external interpolation types
 };
 
 
@@ -207,9 +211,9 @@ enum class GridProjection
 
 std::string get_fileTypeString(FileType fileType);
 std::string get_gridLayoutString(GridLayout layout);
-std::string get_areaIntepolationMethodString(AreaInterpolationMethod interpolationMethod);
-std::string get_timeIntepolationMethodString(TimeInterpolationMethod interpolationMethod);
-std::string get_levelIntepolationMethodString(LevelInterpolationMethod interpolationMethod);
+std::string get_areaInterpolationMethodString(short interpolationMethod);
+std::string get_timeInterpolationMethodString(short interpolationMethod);
+std::string get_levelInterpolationMethodString(short interpolationMethod);
 std::string get_gridProjectionString(GridProjection gridType);
 
 

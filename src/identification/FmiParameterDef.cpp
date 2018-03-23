@@ -77,9 +77,9 @@ void FmiParameterDef::print(std::ostream& stream,uint level,uint optionFlags) co
     stream << space(level) << "- mParameterName            = " << mParameterName << "\n";
     stream << space(level) << "- mParameterUnits           = " << mParameterUnits << "\n";
     stream << space(level) << "- mParameterDescription     = " << mParameterDescription << "\n";
-    stream << space(level) << "- mAreaInterpolationMethod  = " << (uint)mAreaInterpolationMethod << "\n";
-    stream << space(level) << "- mTimeInterpolationMethod  = " << (uint)mTimeInterpolationMethod << "\n";
-    stream << space(level) << "- mLevelInterpolationMethod = " << (uint)mLevelInterpolationMethod << "\n";
+    stream << space(level) << "- mAreaInterpolationMethod  = " << mAreaInterpolationMethod << "\n";
+    stream << space(level) << "- mTimeInterpolationMethod  = " << mTimeInterpolationMethod << "\n";
+    stream << space(level) << "- mLevelInterpolationMethod = " << mLevelInterpolationMethod << "\n";
   }
   catch (...)
   {

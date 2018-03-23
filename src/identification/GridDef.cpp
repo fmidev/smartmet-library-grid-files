@@ -1476,7 +1476,7 @@ void GridDef::loadGribUnitDefinitions(const char *filename)
           UnitDefinition rec;
           rec.mOriginalUnits = field[0];
           rec.mPreferredUnits = field[1];
-          rec.mPreferredAreaInterpolationMethod = (T::AreaInterpolationMethod)atoi(field[2]);
+          rec.mPreferredAreaInterpolationMethod = (short)atoi(field[2]);
 
           mGrib_unitDef_records.push_back(rec);
         }
@@ -2324,13 +2324,13 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
             rec.mParameterDescription = field[4];
 
           if (field[5][0] != '\0')
-            rec.mAreaInterpolationMethod = (T::AreaInterpolationMethod)atoll(field[5]);
+            rec.mAreaInterpolationMethod = (short)atoll(field[5]);
 
           if (field[6][0] != '\0')
-            rec.mTimeInterpolationMethod = (T::TimeInterpolationMethod)atoll(field[6]);
+            rec.mTimeInterpolationMethod = (short)atoll(field[6]);
 
           if (field[7][0] != '\0')
-            rec.mLevelInterpolationMethod = (T::LevelInterpolationMethod)atoll(field[7]);
+            rec.mLevelInterpolationMethod = (short)atoll(field[7]);
 
           mFmi_parameterDef_records.push_back(rec);
         }
@@ -3619,7 +3619,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
 
 
 
-T::AreaInterpolationMethod GridDef::getPreferredInterpolationMethodByUnits(std::string originalUnits)
+short GridDef::getPreferredInterpolationMethodByUnits(std::string originalUnits)
 {
   FUNCTION_TRACE
   try
@@ -4934,7 +4934,7 @@ std::string GridDef::getFmiParameterUnits(GRIB2::Message& message)
 
 
 
-T::AreaInterpolationMethod GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
+short GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -4958,7 +4958,7 @@ T::AreaInterpolationMethod GridDef::getFmiParameterInterpolationMethod(GRIB1::Me
 
 
 
-T::AreaInterpolationMethod GridDef::getFmiParameterInterpolationMethod(GRIB2::Message& message)
+short GridDef::getFmiParameterInterpolationMethod(GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
