@@ -19,9 +19,9 @@
 1;25;EGRR432325;432;325;0;-90;0.833;0.555;+x+y;Seasonal global forecast model of UK Met-office.;
 1;26;GFS0250;1440;721;0;90;0.25;0.25;+x-y;Washington global 0.25 degree resolution;
 1;33;MES141241;140;240;19;59;0.1;0.05;+x+y;Suomi 5x5 km;
-1;52;ENFUSORHKI;2631;2018;24.58;60.368;0.000236511;0.000118256;+x-y;Enfusor Hki metropolitan area;
-1;53;ENFUSORTAM;1790;1001;23.597;61.535;0.000188828;0.0000915527;+x-y;Enfusor Tampere area;
-1;54;ENFUSORTUR;1926;1212;22.06;60.5;0.000183105;0.0000915527;+x-y;Enfusor Turku area;
+1;52;ENFUSORHKI;2631;2018;24.58;60.368;0.000235652;0.000116947;+x-y;Enfusor Hki metropolitan area;
+1;53;ENFUSORTAM;1790;1001;23.597;61.535;0.000188268;0.0000899086;+x-y;Enfusor Tampere area;
+1;54;ENFUSORTUR;1926;1212;22.06;60.5;0.000182243;0.0000899336;+x-y;Enfusor Turku area;
 1;112;EC0730175000;73;17;180;90;5;5;+x-y;ECM 73x17_5000;
 1;123;EPSORG12144;121;44;-90;90;1.5;1.5;+x-y;ECMWF original EPS-fields;
 1;124;EPS121441500;121;44;-90;25.5;1.5;1.5;+x+y;ECMWF EPS-fields;
@@ -52,25 +52,26 @@
 1;605;ICE261221;221;261;9;53;0.1;0.05;+x+y;Area of Finnish ice observation data;
 1;606;WAM109123;166;196;9;53;0.133;0.067;+x+y;Area of MTL Wave model data;
 1;607;OAAS315363;315;363;9.45;53.8;0.067;0.033;+x+y;Area of MTL OAAS-model;
-1;608;HBM;256;258;9.04167;53.025;0.083333;0.0499992;+x+y;HIROMB BOOS (HBM) circulation model for Baltic Sea;
+1;608;HBM;256;258;9.04167;53.025;0.0833333;0.05;+x+y;HIROMB BOOS (HBM) circulation model for Baltic Sea;
 1;609;HELMI;415;556;16.7168;56.7416;0.03333;0.01667;+x+y;Area of Helmi ice model;
 1;1005;ICON125;2880;1441;180;-90;0.125;0.125;+x+y;DWD ICON GDS global;
-1;1006;COPERNICUS;4320;2041;-180;-80;0.0833282;0.0833359;+x+y;Copernicus, global ocean;
+1;1006;COPERNICUS;4320;2041;-180;-80;0.0833333;0.0833333;+x+y;Copernicus, global ocean;
 1;1007;ECGLO0100;3600;1801;0;90;0.1;0.1;+x-y; ECMWF global 0.1 degrees;
 1;1047;MOSKRIGING;1414;533;-61.66;78.24;0.0999985;0.0999985;+x-y;Mos Kriging area over Europe;
 1;1048;ECERAINTERIM;500;251;0;90;0.72;0.72;+x-y;ERA-Interim Global Analysis 500 x 251 0.72 deg;
 1;1052;EGRR432324;432;324;-89.7222;0.416667;0.833;0.555;+x+y;Seasonal global forecast model of UK Met-office.;
 1;1056;ECEUR075;91;65;-22.5;75;0.75;0.75;+x-y;ECMWF europe 0.75 degrees;
-1;1059;VANADIS;2640;3120;9.00417;53.0021;0.00833321;0.00416565;+x+y;Vanadis (icemap2) geometry from 2016;
+1;1059;VANADIS;2640;3120;9.00417;53.0021;0.00833333;0.00416667;+x+y;Vanadis (icemap2) geometry from 2016;
 1;1060;SILAMAQEUR;700;420;-24.95;30.05;0.1;0.1;+x+y;Silam AQ Europe 0.1;
 1;1061;WAMBALMFC;764;775;9.01389;53.0084;0.0277767;0.0166664;+x+y;Copernicus WAM(BALMFC) area 1 nautical mile resolution;
 1;1064;ECGSEA025;265;203;-26;80.5;0.25;0.25;+x-y;ECMWF sea model europe area;
-1;1065;MOSKRIGING2;1126;461;-40;73.5;0.0999985;0.0999985;+x-y;MOS Kriging area over Europe;
+1;1065;MOSKRIGING2;1126;461;-40;73.5;0.1;0.1;+x-y;MOS Kriging area over Europe;
 1;1074;ECGLO0200;1800;901;0;90;0.2;0.2;+x-y;ECMWF global 0.2 degrees;
 1;1081;BLEND0025;4501;1841;-40;73.5;0.025;0.025;+x-y;Blend 0.025 degrees;
 1;1082;ICONEUR00625;1097;657;336.5;29.5;0.0625;0.0625;+x+y;DWD ICON GDS europe nesting;
 1;1083;TOPLINK;720;696;335;70;0.097357;0.068345;+x-y;Area for Toplink winter products;
 1;1085;ICONGLO0125;2879;1441;180;-90;0.125;0.125;+x+y;DWD ICON GDS global;
+1;1089;ECEURSEASON075;169;94;-45.75;80.25;0.75;0.75;+x-y;ECMWF seasonal forecast for europe;
 
 # ROTATED LATLON : projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,south_pole.x,south_pole.y,angle,description
 2;14;SMHIMESAN;246;268;-0.4;-11.5;0.1;0.1;+x+y;-0.01;-0.03;0;SMHI mesoanalysis area;

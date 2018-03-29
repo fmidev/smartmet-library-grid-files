@@ -70,8 +70,8 @@
 13;649;;
 
 # Loose snow depth in cm
-# LSSN-M100 => NEWBASE-PARAMETER[77]
-14;77;;
+# LSSN-M100 => UNKNOWN
+14;0;;
 
 # Growth period deviation from normal in percent
 # GROWDEV-PCT => GrowthPeriodDeviationInPrcnt
@@ -113,6 +113,10 @@
 # ITHK-CM => IceThickness
 25;385;;
 
+# Ice thickness
+# ITHK-CM => MeanIceThickness
+25;1154;;
+
 # Ice minimum thickness
 # IMINTHK-CM => IceMinThickness
 26;386;;
@@ -124,10 +128,6 @@
 # Ice degree of ridging
 # IRIDGE-PRCNT => IceDegreeOfRidging
 28;388;;
-
-# Ice degree of ridging
-# IRIDGE-PRCNT => IceDegreeOfRidging
-28;388;MUL{$,100.000000}
 
 # Coefficient of drag
 # DRAG-N => UNKNOWN
@@ -159,23 +159,11 @@
 
 # Probability of reaching wind gust speed of 15 m/s in EPS
 # PROB-WG-1 => ProbabilityOfGustLimit1
-36;583;;
-
-# Probability of reaching wind gust speed of 15 m/s in EPS
-# PROB-WG-1 => ProbabilityOfGustLimit1
 36;583;MUL{$,100.000000}
 
 # Probability of reaching wind gust speed of 20 m/s in EPS
 # PROB-WG-2 => ProbabilityOfGustLimit2
-37;584;;
-
-# Probability of reaching wind gust speed of 20 m/s in EPS
-# PROB-WG-2 => ProbabilityOfGustLimit2
 37;584;MUL{$,100.000000}
-
-# Probability of reaching wind gust speed of 25 m/s in EPS
-# PROB-WG-3 => ProbabilityOfGustLimit3
-38;585;;
 
 # Probability of reaching wind gust speed of 25 m/s in EPS
 # PROB-WG-3 => ProbabilityOfGustLimit3
@@ -204,10 +192,6 @@
 # Water equivalent of snow cover in mm
 # SD-KGM2 => WaterEquivalentOfSnow
 44;266;;
-
-# Water equivalent of snow cover in mm
-# SD-KGM2 => RoadSnowCover
-44;636;;
 
 # Seven days¿ precipitation in kgm-2
 # PREC7D-KGM2 => Precipitation7Days
@@ -238,28 +222,24 @@
 51;0;;
 
 # Cloud ice
-# CLDICE-KGKG => NEWBASE-PARAMETER[277]
-52;277;;
-
-# Cloud ice
 # CLDICE-KGKG => CloudIce
 52;1199;;
 
 # Cloud top temperature
-# TCLDTOP-K => UNKNOWN
-53;0;;
+# TCLDTOP-K => air_temperature_at_cloud_top
+53;10018;SUM{$,-273.15};
 
 # Water vapour radiation temperature
-# TWVRAD-K => UNKNOWN
-54;0;;
+# TWVRAD-K => WaterVapourBrightnessTemperature
+54;0;365;
 
 # Water vapour radiation temperature including clouds
-# TWVRCL-K => UNKNOWN
-55;0;;
+# TWVRCL-K => WaterVapourBrightnessTemperatureIncludingCloudCorrection
+55;366;;
 
 # Reflectivity (pseudo visible)
-# REFLTY-N => UNKNOWN
-56;0;;
+# REFLTY-N => Reflectivity
+56;0;1103;
 
 # Maximum wind speed
 # MAXWS-MS => UNKNOWN
@@ -270,12 +250,12 @@
 58;0;;
 
 # Relative humidity, land fraction average
-# RHAVE-PRCNT => UNKNOWN
-59;0;;
+# RHAVE-PRCNT => relative_humidity
+59;0;11502;
 
 # Dew point temperature, land fraction average
-# TDAVE-K => UNKNOWN
-60;0;;
+# TDAVE-K => dew_point_temperature
+60;0;10408;
 
 # Level of neutral buoyancy (lnb)
 # LNB-M => LNB
@@ -330,24 +310,24 @@
 72;0;;
 
 # Percentage of fog in a grid cell
-# FOG-PRCNT => UNKNOWN
-73;0;;
+# FOG-PRCNT => FogPercentage
+73;486;;
 
 # Percentage of land in a grid cell
-# FL-PRCNT => UNKNOWN
-74;0;;
+# FL-PRCNT => LandPercentage
+74;487;;
 
-# Percentage of land in a grid cell
-# FSEA-PRCNT => UNKNOWN
-75;0;;
+# Percentage of sea in a grid cell
+# FSEA-PRCNT => SeaPercentage
+75;488;;
 
 # Percentage of snow in a grid cell
 # FSNO-PRCNT => SnowPercentage
 76;489;;
 
 # Percentage of sun glint in a grid cell
-# FSG-PRCNT => UNKNOWN
-77;0;;
+# FSG-PRCNT => SunGlintPercentage
+77;490;;
 
 #  Temperature in Celsius, height 1
 # T-H1-C => UNKNOWN
@@ -590,10 +570,6 @@
 139;1;MUL{$,0.010000}
 
 # Pressure in Pascals
-# P-PA => Pressure
-139;1;;
-
-# Pressure in Pascals
 # P-PA => PressureAtStationLevel
 139;472;MUL{$,0.010000}
 
@@ -619,10 +595,6 @@
 
 # Ice Cover, 1=ice, 0=no ice
 # IC-0TO1 => IceConcentration
-148;384;;
-
-# Ice Cover, 1=ice, 0=no ice
-# IC-0TO1 => IceConcentration
 148;384;MUL{$,100.000000}
 
 # Ice Cover, 1=ice, 0=no ice
@@ -640,10 +612,6 @@
 # Temperature in Kelvins
 # T-K => Temperature
 153;4;SUM{$,-273.15}
-
-# Temperature in Celsius
-# T-C => Temperature
-154;4;;
 
 # Temperature in Celsius
 # T-C => Temperature
@@ -677,21 +645,9 @@
 # TD-C => DewPoint
 161;10;;
 
-# Dew point Temperature in C
-# TD-C => DewPoint
-161;10;;
-
 # Dew point Temperature in K
 # TD-K => DewPoint
 162;10;SUM{$,-273.15}
-
-# Dew point Temperature in K
-# TD-K => DewPoint
-162;10;SUM{$,-273.15}
-
-# Relative Humidity in percents
-# RH-PRCNT => Humidity
-163;13;;
 
 # Relative Humidity in percents
 # RH-PRCNT => Humidity
@@ -731,19 +687,11 @@
 
 # Vertical Velocity in pa/s
 # VV-PAS => VelocityPotential
-177;39;;
-
-# Vertical Velocity in pa/s
-# VV-PAS => VelocityPotential
 177;39;MUL{$,100.000000}
 
 # Total precipitation
 # RR-MM10 => PrecipitationAmount
 178;50;;
-
-# Total precipitation in kg/m2
-# RR-KGM2 => PrecipitationAmount
-179;50;;
 
 # Total precipitation in kg/m2
 # RR-KGM2 => PrecipitationAmount
@@ -771,10 +719,6 @@
 
 # Large Scale precipitation in kg/m2
 # RRL-KGM2 => PrecipitationLarge
-184;55;;
-
-# Large Scale precipitation in kg/m2
-# RRL-KGM2 => PrecipitationLarge
 184;55;MUL{$,1000.000000}
 
 # Convective precipitation in 10ths of mm
@@ -783,15 +727,7 @@
 
 # Convective precipitation in kg/m2
 # RRC-KGM2 => PrecipitationConv
-186;48;;
-
-# Convective precipitation in kg/m2
-# RRC-KGM2 => PrecipitationConv
 186;48;MUL{$,1000.000000}
-
-# Total Cloud Cover in %
-# N-PRCNT => TotalCloudCover
-187;79;;
 
 # Total Cloud Cover in %
 # N-PRCNT => TotalCloudCover
@@ -827,23 +763,11 @@
 
 # Low Cloud Amount
 # NL-PRCNT => LowCloudCover
-196;273;;
-
-# Low Cloud Amount
-# NL-PRCNT => LowCloudCover
 196;273;MUL{$,100.000000}
 
 # Medium Cloud Amount
 # NM-PRCNT => MediumCloudCover
-197;274;;
-
-# Medium Cloud Amount
-# NM-PRCNT => MediumCloudCover
 197;274;MUL{$,100.000000}
-
-# High Cloud Amount
-# NH-PRCNT => HighCloudCover
-198;275;;
 
 # High Cloud Amount
 # NH-PRCNT => HighCloudCover
@@ -917,21 +841,13 @@
 # TMAX-K => MaximumTemperature2m
 214;360;SUM{$,-273.15}
 
-# Maximum Temperature in Kelvins
+# Minimum Temperature in Kelvins
 # TMIN-K => MinimumTemperature
 215;6;SUM{$,-273.15}
 
-# Maximum Temperature in Kelvins
+# Minimum Temperature in Kelvins
 # TMIN-K => MinimumTemperature2m
 215;361;SUM{$,-273.15}
-
-# Ground Temperature in Kelvins
-# TG-K => WaterEquivalentOfSnow
-216;266;SUM{$,-273.15}
-
-# Ground Temperature in Kelvins
-# TG-K => GroundTemperature
-216;288;SUM{$,-273.15}
 
 # Ground Temperature in Kelvins
 # TG-K => GroundTemperature
@@ -940,10 +856,6 @@
 # Snow Depth in Meters
 # SD-M => SnowDepth
 217;51;;
-
-# Snow Depth in Meters
-# SD-M => WaterEquivalentOfSnow
-217;266;;
 
 # Skin temperature
 # SKT-K => SkinTemperature
@@ -975,15 +887,7 @@
 
 # Probability of reaching wind gust speed of 30 m/s in EPS
 # PROB-WG-4 => ProbabilityOfGustLimit4
-225;586;;
-
-# Probability of reaching wind gust speed of 30 m/s in EPS
-# PROB-WG-4 => ProbabilityOfGustLimit4
 225;586;MUL{$,100.000000}
-
-# Probability of reaching wind gust speed of 35 m/s in EPS
-# PROB-WG-5 => ProbabilityOfGustLimit5
-226;587;;
 
 # Probability of reaching wind gust speed of 35 m/s in EPS
 # PROB-WG-5 => ProbabilityOfGustLimit5
@@ -991,15 +895,7 @@
 
 # Probability of reaching wind speed of 17 m/s in EPS
 # PROB-W-3 => ProbabilityOfWindLimit3
-227;1023;;
-
-# Probability of reaching wind speed of 17 m/s in EPS
-# PROB-W-3 => ProbabilityOfWindLimit3
 227;1023;MUL{$,100.000000}
-
-# Probability of reaching wind speed of 21 m/s in EPS
-# PROB-W-4 => ProbabilityOfWindLimit4
-228;1024;;
 
 # Probability of reaching wind speed of 21 m/s in EPS
 # PROB-W-4 => ProbabilityOfWindLimit4
@@ -1007,15 +903,7 @@
 
 # Probability of reaching wind speed of 25 m/s in EPS
 # PROB-W-5 => ProbabilityOfWindLimit5
-229;1025;;
-
-# Probability of reaching wind speed of 25 m/s in EPS
-# PROB-W-5 => ProbabilityOfWindLimit5
 229;1025;MUL{$,100.000000}
-
-# Probability of reaching wind speed of 30 m/s in EPS
-# PROB-W-6 => ProbabilityOfWindLimit6
-230;1026;;
 
 # Probability of reaching wind speed of 30 m/s in EPS
 # PROB-W-6 => ProbabilityOfWindLimit6
@@ -1023,15 +911,7 @@
 
 # Probability of reaching temperature 25 C in EPS
 # PROB-TW-1 => ProbabilityOfHeatLimit1
-231;1041;;
-
-# Probability of reaching temperature 25 C in EPS
-# PROB-TW-1 => ProbabilityOfHeatLimit1
 231;1041;MUL{$,100.000000}
-
-# Probability of reaching temperature 27 C in EPS
-# PROB-TW-2 => ProbabilityOfHeatLimit2
-232;1042;;
 
 # Probability of reaching temperature 27 C in EPS
 # PROB-TW-2 => ProbabilityOfHeatLimit2
@@ -1039,26 +919,18 @@
 
 # Probability of reaching temperature 30 C in EPS
 # PROB-TW-3 => ProbabilityOfHeatLimit3
-233;1043;;
-
-# Probability of reaching temperature 30 C in EPS
-# PROB-TW-3 => ProbabilityOfHeatLimit3
 233;1043;MUL{$,100.000000}
-
-# Probability of reaching CAPE value 50 in EPS
-# PROB-CAPE-1 => ProbabilityOfCAPE1
-234;1051;;
 
 # Probability of reaching CAPE value 50 in EPS
 # PROB-CAPE-1 => ProbabilityOfCAPE1
 234;1051;MUL{$,100.000000}
 
 # Probability of reaching CAPE value 50 in EPS
-# PROB-CAPE-1 => NEWBASE-PARAMETER[1318]
+# PROB-CAPE-1 => ProbabilityOfMUCAPELimit1
 234;1318;MUL{$,100.000000}
 
 # Probability of reaching CAPE value 50 in EPS
-# PROB-CAPE-1 => NEWBASE-PARAMETER[1325]
+# PROB-CAPE-1 => ProbabilityOfMLCAPELimit1
 234;1325;MUL{$,100.000000}
 
 # Probability of reaching CAPE value 500 in EPS
@@ -1070,11 +942,11 @@
 235;1052;MUL{$,100.000000}
 
 # Probability of reaching CAPE value 500 in EPS
-# PROB-CAPE-2 => NEWBASE-PARAMETER[1319]
+# PROB-CAPE-2 => ProbabilityOfMUCAPELimit2
 235;1319;MUL{$,100.000000}
 
 # Probability of reaching CAPE value 500 in EPS
-# PROB-CAPE-2 => NEWBASE-PARAMETER[1326]
+# PROB-CAPE-2 => ProbabilityOfMLCAPELimit2
 235;1326;MUL{$,100.000000}
 
 # Probability of reaching CAPE value 1000 in EPS
@@ -1086,32 +958,24 @@
 236;1053;MUL{$,100.000000}
 
 # Probability of reaching CAPE value 1000 in EPS
-# PROB-CAPE-3 => NEWBASE-PARAMETER[1320]
+# PROB-CAPE-3 => ProbabilityOfMUCAPELimit3
 236;1320;MUL{$,100.000000}
 
 # Probability of reaching CAPE value 1000 in EPS
-# PROB-CAPE-3 => NEWBASE-PARAMETER[1327]
+# PROB-CAPE-3 => ProbabilityOfMLCAPELimit3
 236;1327;MUL{$,100.000000}
-
-# Probability of reaching CAPE value 1500 in EPS
-# PROB-CAPE-4 => ProbabilityOfCAPE4
-237;1054;;
 
 # Probability of reaching CAPE value 1500 in EPS
 # PROB-CAPE-4 => ProbabilityOfCAPE4
 237;1054;MUL{$,100.000000}
 
 # Probability of reaching CAPE value 1500 in EPS
-# PROB-CAPE-4 => NEWBASE-PARAMETER[1321]
+# PROB-CAPE-4 => ProbabilityOfMUCAPELimit4
 237;1321;MUL{$,100.000000}
 
 # Probability of reaching CAPE value 1500 in EPS
-# PROB-CAPE-4 => NEWBASE-PARAMETER[1328]
+# PROB-CAPE-4 => ProbabilityOfMLCAPELimit4
 237;1328;MUL{$,100.000000}
-
-# Probability of reaching precipitation 30 mm in 24 h in EPS
-# PROB-RR24-1 => ProbabilityOfPr24Limit1
-238;1071;;
 
 # Probability of reaching precipitation 30 mm in 24 h in EPS
 # PROB-RR24-1 => ProbabilityOfPr24Limit1
@@ -1119,15 +983,7 @@
 
 # Probability of reaching precipitation 60 mm in 24 h in EPS
 # PROB-RR24-2 => ProbabilityOfPr24Limit2
-239;1072;;
-
-# Probability of reaching precipitation 60 mm in 24 h in EPS
-# PROB-RR24-2 => ProbabilityOfPr24Limit2
 239;1072;MUL{$,100.000000}
-
-# Probability of reaching precipitation 120 mm in 24 h in EPS
-# PROB-RR24-3 => ProbabilityOfPr24Limit3
-240;1073;;
 
 # Probability of reaching precipitation 120 mm in 24 h in EPS
 # PROB-RR24-3 => ProbabilityOfPr24Limit3
@@ -1135,15 +991,7 @@
 
 # Probability of reaching precipitation 70 mm in 24 h in EPS
 # PROB-RR24-4 => ProbabilityOfPr24Limit4
-241;1074;;
-
-# Probability of reaching precipitation 70 mm in 24 h in EPS
-# PROB-RR24-4 => ProbabilityOfPr24Limit4
 241;1074;MUL{$,100.000000}
-
-# Probability of reaching precipitation 120 mm in 24 h in EPS
-# PROB-RR24-5 => ProbabilityOfPr24Limit5
-242;1075;;
 
 # Probability of reaching precipitation 120 mm in 24 h in EPS
 # PROB-RR24-5 => ProbabilityOfPr24Limit5
@@ -1151,43 +999,27 @@
 
 # Probability of reaching snowfall 1 mm in 6 h in EPS
 # PROB-SN-1 => ProbabilityOfSn6Limit1
-243;1081;;
-
-# Probability of reaching snowfall 1 mm in 6 h in EPS
-# PROB-SN-1 => ProbabilityOfSn6Limit1
 243;1081;MUL{$,100.000000}
 
 # Probability of reaching snowfall 1 mm in 6 h in EPS
-# PROB-SN-1 => NEWBASE-PARAMETER[1363]
+# PROB-SN-1 => ProbabilityOfSnLimit1
 243;1363;MUL{$,100.000000}
-
-# Probability of reaching snowfall 5 mm in 6 h in EPS
-# PROB-SN-2 => ProbabilityOfSn6Limit2
-244;1082;;
 
 # Probability of reaching snowfall 5 mm in 6 h in EPS
 # PROB-SN-2 => ProbabilityOfSn6Limit2
 244;1082;MUL{$,100.000000}
 
 # Probability of reaching snowfall 5 mm in 6 h in EPS
-# PROB-SN-2 => NEWBASE-PARAMETER[1364]
+# PROB-SN-2 => ProbabilityOfSnLimit2
 244;1364;MUL{$,100.000000}
-
-# Probability of reaching snowfall 10 mm in 6 h in EPS
-# PROB-SN-3 => ProbabilityOfSn6Limit3
-245;1083;;
 
 # Probability of reaching snowfall 10 mm in 6 h in EPS
 # PROB-SN-3 => ProbabilityOfSn6Limit3
 245;1083;MUL{$,100.000000}
 
 # Probability of reaching snowfall 10 mm in 6 h in EPS
-# PROB-SN-3 => NEWBASE-PARAMETER[1365]
+# PROB-SN-3 => ProbabilityOfSnLimit3
 245;1365;MUL{$,100.000000}
-
-# Probability of reaching snowfall 15 mm in 6 h in EPS
-# PROB-SN-4 => ProbabilityOfSn6Limit4
-246;1084;;
 
 # Probability of reaching snowfall 15 mm in 6 h in EPS
 # PROB-SN-4 => ProbabilityOfSn6Limit4
@@ -1199,19 +1031,11 @@
 
 # Probability of reaching snowfall 30 mm in 6 h in EPS
 # PROB-SN-5 => ProbabilityOfSn6Limit5
-247;1085;;
-
-# Probability of reaching snowfall 30 mm in 6 h in EPS
-# PROB-SN-5 => ProbabilityOfSn6Limit5
 247;1085;MUL{$,100.000000}
 
 # Probability of reaching snowfall 30 mm in 6 h in EPS
 # PROB-SN-5 => NEWBASE-PARAMETER[1367]
 247;1367;MUL{$,100.000000}
-
-# Probability of reaching snowfall 50 mm in 6 h in EPS
-# PROB-SN-6 => ProbabilityOfSn6Limit6
-248;1086;;
 
 # Probability of reaching snowfall 50 mm in 6 h in EPS
 # PROB-SN-6 => ProbabilityOfSn6Limit6
@@ -1223,15 +1047,7 @@
 
 # Probability of reaching snowfall 1 mm in 24 h in EPS
 # PROB-SN24-1 => ProbabilityOfSn24Limit1
-249;1091;;
-
-# Probability of reaching snowfall 1 mm in 24 h in EPS
-# PROB-SN24-1 => ProbabilityOfSn24Limit1
 249;1091;MUL{$,100.000000}
-
-# Probability of reaching snowfall 5 mm in 24 h in EPS
-# PROB-SN24-2 => ProbabilityOfSn24Limit2
-250;1092;;
 
 # Probability of reaching snowfall 5 mm in 24 h in EPS
 # PROB-SN24-2 => ProbabilityOfSn24Limit2
@@ -1239,15 +1055,7 @@
 
 # Probability of reaching snowfall 10 mm in 24 h in EPS
 # PROB-SN24-3 => ProbabilityOfSn24Limit3
-251;1093;;
-
-# Probability of reaching snowfall 10 mm in 24 h in EPS
-# PROB-SN24-3 => ProbabilityOfSn24Limit3
 251;1093;MUL{$,100.000000}
-
-# Probability of reaching snowfall 15 mm in 24 h in EPS
-# PROB-SN24-4 => ProbabilityOfSn24Limit4
-252;1094;;
 
 # Probability of reaching snowfall 15 mm in 24 h in EPS
 # PROB-SN24-4 => ProbabilityOfSn24Limit4
@@ -1255,15 +1063,7 @@
 
 # Probability of reaching snowfall 30 mm in 24 h in EPS
 # PROB-SN24-5 => ProbabilityOfSn24Limit5
-253;1095;;
-
-# Probability of reaching snowfall 30 mm in 24 h in EPS
-# PROB-SN24-5 => ProbabilityOfSn24Limit5
 253;1095;MUL{$,100.000000}
-
-# Probability of reaching snowfall 50 mm in 24 h in EPS
-# PROB-SN24-6 => ProbabilityOfSn24Limit6
-254;1096;;
 
 # Probability of reaching snowfall 50 mm in 24 h in EPS
 # PROB-SN24-6 => ProbabilityOfSn24Limit6
@@ -1275,10 +1075,6 @@
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-5 => ProbabilityOfPr6Limit5
-255;1065;;
-
-# Probability of reaching some precipitation threshold value
-# PROB-RR-5 => ProbabilityOfPr6Limit5
 255;1065;MUL{$,100.000000}
 
 # Probability of reaching some precipitation threshold value
@@ -1287,15 +1083,7 @@
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-6 => ProbabilityOfPr6Limit6
-256;1066;;
-
-# Probability of reaching some precipitation threshold value
-# PROB-RR-6 => ProbabilityOfPr6Limit6
 256;1066;MUL{$,100.000000}
-
-# Probability of reaching -15 C in EPS
-# PROB-TC-1 => ProbabilityOfColdLimit1
-257;1031;;
 
 # Probability of reaching -15 C in EPS
 # PROB-TC-1 => ProbabilityOfColdLimit1
@@ -1303,23 +1091,11 @@
 
 # Probability of reaching -20 C in EPS
 # PROB-TC-2 => ProbabilityOfColdLimit2
-258;1032;;
-
-# Probability of reaching -20 C in EPS
-# PROB-TC-2 => ProbabilityOfColdLimit2
 258;1032;MUL{$,100.000000}
 
 # Probability of reaching -25 C in EPS
 # PROB-TC-3 => ProbabilityOfColdLimit3
-259;1033;;
-
-# Probability of reaching -25 C in EPS
-# PROB-TC-3 => ProbabilityOfColdLimit3
 259;1033;MUL{$,100.000000}
-
-# Probability of reaching -30 C in EPS
-# PROB-TC-4 => ProbabilityOfColdLimit4
-260;1034;;
 
 # Probability of reaching -30 C in EPS
 # PROB-TC-4 => ProbabilityOfColdLimit4
@@ -1335,15 +1111,7 @@
 
 # Probability of reaching precipitation 1 mm in 24 h in EPS
 # PROB-RR24-6 => NEWBASE-PARAMETER[1076]
-263;1076;;
-
-# Probability of reaching precipitation 1 mm in 24 h in EPS
-# PROB-RR24-6 => NEWBASE-PARAMETER[1076]
 263;1076;MUL{$,100.000000}
-
-# Probability of reaching precipitation 5 mm in 24 h in EPS
-# PROB-RR24-7 => NEWBASE-PARAMETER[1077]
-264;1077;;
 
 # Probability of reaching precipitation 5 mm in 24 h in EPS
 # PROB-RR24-7 => NEWBASE-PARAMETER[1077]
@@ -1351,23 +1119,11 @@
 
 # Probability of reaching precipitation 0.3 mm in 12 h in EPS
 # PROB-RR12-1 => CyanosSumChange
-265;1101;;
-
-# Probability of reaching precipitation 0.3 mm in 12 h in EPS
-# PROB-RR12-1 => CyanosSumChange
 265;1101;MUL{$,100.000000}
 
 # Probability of reaching precipitation 4.5 mm in 12 h in EPS
 # PROB-RR12-2 => CyanosSumChangeP
-266;1102;;
-
-# Probability of reaching precipitation 4.5 mm in 12 h in EPS
-# PROB-RR12-2 => CyanosSumChangeP
 266;1102;MUL{$,100.000000}
-
-# Probability of reaching precipitation 12 mm in 12 h in EPS
-# PROB-RR12-3 => Reflectivity
-267;1103;;
 
 # Probability of reaching precipitation 12 mm in 12 h in EPS
 # PROB-RR12-3 => Reflectivity
@@ -1408,10 +1164,6 @@
 # Cloud base height
 # CLDBASE-M => CloudBase
 276;500;;
-
-# Cloud base height
-# CLDBASE-M => NEWBASE-PARAMETER[10500]
-276;10500;;
 
 # Maximum icing index, 1-4
 # MAXICE-N => MaximumIcingIndex
@@ -1543,15 +1295,7 @@
 
 # Rafted sea ice concentration
 # IRCNCT-PRCNT => RaftIceConcentration
-306;1151;;
-
-# Rafted sea ice concentration
-# IRCNCT-PRCNT => RaftIceConcentration
 306;1151;MUL{$,100.000000}
-
-# Ice concentration of ridging
-# IRIDGC-PRCNT => RidgeIceConcentration
-307;1153;;
 
 # Ice concentration of ridging
 # IRIDGC-PRCNT => RidgeIceConcentration
@@ -1642,8 +1386,8 @@
 324;1171;;
 
 # Solid precipitation (f.ex. snow+graupel)
-# RRS-KGM2 => UNKNOWN
-325;0;;
+# RRS-KGM2 => PrecipitationSolid
+325;1169;;
 
 # Solid precipitation rate (f.ex. snow+graupel)
 # RRRS-KGM2 => PrecipitationRateSolid
@@ -1681,21 +1425,9 @@
 # F0-T-K => TemperatureF0
 334;877;SUM{$,-273.15}
 
-# 0th fractal (ie. minimum) temperature in EPS
-# F0-T-K => TemperatureF0
-334;877;SUM{$,-273.15}
-
 # 10th fractal temperature in EPS
 # F10-T-K => TemperatureF10
 335;876;SUM{$,-273.15}
-
-# 10th fractal temperature in EPS
-# F10-T-K => TemperatureF10
-335;876;SUM{$,-273.15}
-
-# 25th fractal temperature in EPS
-# F25-T-K => TemperatureF25
-336;875;SUM{$,-273.15}
 
 # 25th fractal temperature in EPS
 # F25-T-K => TemperatureF25
@@ -1709,14 +1441,6 @@
 # F50-T-K => TemperatureF50
 337;874;SUM{$,-273.15}
 
-# 50th fractal temperature in EPS
-# F50-T-K => TemperatureF50
-337;874;SUM{$,-273.15}
-
-# 75th fractal temperature in EPS
-# F75-T-K => TemperatureF75
-338;873;SUM{$,-273.15}
-
 # 75th fractal temperature in EPS
 # F75-T-K => TemperatureF75
 338;873;SUM{$,-273.15}
@@ -1724,14 +1448,6 @@
 # 90th fractal temperature in EPS
 # F90-T-K => TemperatureF90
 339;872;SUM{$,-273.15}
-
-# 90th fractal temperature in EPS
-# F90-T-K => TemperatureF90
-339;872;SUM{$,-273.15}
-
-# 100th fractal (ie. maximum) temperature in EPS
-# F100-T-K => TemperatureF100
-340;871;SUM{$,-273.15}
 
 # 100th fractal (ie. maximum) temperature in EPS
 # F100-T-K => TemperatureF100
@@ -1767,10 +1483,6 @@
 
 # 100th fractal cloudiness in EPS
 # F100-N-0TO1 => TotalCloudCoverF100
-348;881;;
-
-# 100th fractal cloudiness in EPS
-# F100-N-0TO1 => TotalCloudCoverF100
 348;881;MUL{$,100.000000}
 
 # 90th fractal cloudiness in EPS
@@ -1796,10 +1508,6 @@
 # 10th fractal cloudiness in EPS
 # F10-N-0TO1 => TotalCloudCoverF10
 353;886;;
-
-# 0th fractal cloudiness in EPS
-# F0-N-0TO1 => TotalCloudCoverF0
-354;887;;
 
 # 0th fractal cloudiness in EPS
 # F0-N-0TO1 => TotalCloudCoverF0
@@ -2013,10 +1721,6 @@
 # P-HPA => Pressure
 412;1;MUL{$,0.010000}
 
-# Pressure in hPa
-# P-HPA => Pressure
-412;1;;
-
 # Dew Point Temperature at 2m in Celsius
 # TD2M-C => UNKNOWN
 414;0;;
@@ -2111,10 +1815,6 @@
 
 # Cloudiness 0...1
 # N-0TO1 => TotalCloudCover
-438;79;;
-
-# Cloudiness 0...1
-# N-0TO1 => TotalCloudCover
 438;79;MUL{$,100.000000}
 
 # Precalculated weather symbol
@@ -2128,10 +1828,6 @@
 # Total Precipitation rate in kg m-2
 # RRR-KGM2 => PrecipitationRate
 441;49;;
-
-# Total Precipitation rate in kg m-2
-# RRR-KGM2 => Precipitation1h
-441;353;;
 
 # Total Precipitation rate in kg m-2
 # RRR-KGM2 => Precipitation1h
@@ -2405,21 +2101,9 @@
 # TMIN-24-C => MinimumTemperature24h
 508;359;;
 
-# Min temperature in Celsius on the preceding 24 hours period of the date-value
-# TMIN-24-C => MinimumTemperature24h
-508;359;;
-
-# Snowfall rate in mm/s or mm/h
-# SNR-KGM2 => SnowfallRate
-509;264;;
-
 # Snowfall rate in mm/s or mm/h
 # SNR-KGM2 => SnowfallRate
 509;264;MUL{$,1000.000000}
-
-# Snowfall accumulation  in mm
-# SNACC-KGM2 => SnowAccumulation
-510;265;;
 
 # Snowfall accumulation  in mm
 # SNACC-KGM2 => SnowAccumulation
@@ -2464,10 +2148,6 @@
 # Vertical Velocity in m/s
 # VV-MS => VerticalVelocityMMS
 523;43;MUL{$,1000.000000}
-
-# Vertical Velocity in m/s
-# VV-MS => VerticalVelocityMS
-523;143;;
 
 # Vertical Velocity in m/s
 # VV-MS => VerticalVelocityMS
@@ -2644,10 +2324,6 @@
 # Probability of precipitation (universal)
 # PROB-RR => UNKNOWN
 564;0;;
-
-# Probability of snow
-# PROBSN-0TO1 => SurfaceWaterPhase
-565;706;;
 
 # Probability of snow
 # PROBSN-0TO1 => SurfaceWaterPhase
@@ -3131,19 +2807,11 @@
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-1 => ProbabilityOfPr6Limit1
-681;1061;;
-
-# Probability of reaching some precipitation threshold value
-# PROB-RR-1 => ProbabilityOfPr6Limit1
 681;1061;MUL{$,100.000000}
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-2 => ProbabilityOfPrecLimit2
 682;572;MUL{$,100.000000}
-
-# Probability of reaching some precipitation threshold value
-# PROB-RR-2 => ProbabilityOfPr6Limit2
-682;1062;;
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-2 => ProbabilityOfPr6Limit2
@@ -3155,15 +2823,7 @@
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-3 => ProbabilityOfPr6Limit3
-683;1063;;
-
-# Probability of reaching some precipitation threshold value
-# PROB-RR-3 => ProbabilityOfPr6Limit3
 683;1063;MUL{$,100.000000}
-
-# Probability of reaching some precipitation threshold value
-# PROB-RR-4 => ProbabilityOfPrecLimit4
-684;574;;
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-4 => ProbabilityOfPrecLimit4
@@ -3171,23 +2831,11 @@
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-4 => ProbabilityOfPr6Limit4
-684;1064;;
-
-# Probability of reaching some precipitation threshold value
-# PROB-RR-4 => ProbabilityOfPr6Limit4
 684;1064;MUL{$,100.000000}
 
 # Probability of reaching wind speed of 10 m/s in EPS
 # PROB-W-1 => ProbabilityOfWindLimit1
-685;581;;
-
-# Probability of reaching wind speed of 10 m/s in EPS
-# PROB-W-1 => ProbabilityOfWindLimit1
 685;581;MUL{$,100.000000}
-
-# Probability of reaching wind speed of 15 m/s in EPS
-# PROB-W-2 => ProbabilityOfWindLimit2
-686;582;;
 
 # Probability of reaching wind speed of 15 m/s in EPS
 # PROB-W-2 => ProbabilityOfWindLimit2
@@ -3435,15 +3083,7 @@
 
 # Probability of precipitation form rain
 # PROB-RAIN => ProbabilityOfPrecFormRain
-782;1220;;
-
-# Probability of precipitation form rain
-# PROB-RAIN => ProbabilityOfPrecFormRain
 782;1220;MUL{$,100.000000}
-
-# Probability of precipitation form snow
-# PROB-SNOW => ProbabilityOfPrecFormSnow
-783;1222;;
 
 # Probability of precipitation form snow
 # PROB-SNOW => ProbabilityOfPrecFormSnow
@@ -3451,15 +3091,7 @@
 
 # Probability of precipitation form sleet
 # PROB-SLEET => ProbabilityOfPrecFormSleet
-784;1221;;
-
-# Probability of precipitation form sleet
-# PROB-SLEET => ProbabilityOfPrecFormSleet
 784;1221;MUL{$,100.000000}
-
-# Probability of precipitation form drizzle
-# PROB-DRIZZLE => ProbabilityOfPrecFormDrizzle
-785;1219;;
 
 # Probability of precipitation form drizzle
 # PROB-DRIZZLE => ProbabilityOfPrecFormDrizzle
@@ -3467,15 +3099,7 @@
 
 # Probability of precipitation form freezing drizzle
 # PROB-FRDRZZL => ProbabilityOfPrecFormFreezingDrizzle
-786;1223;;
-
-# Probability of precipitation form freezing drizzle
-# PROB-FRDRZZL => ProbabilityOfPrecFormFreezingDrizzle
 786;1223;MUL{$,100.000000}
-
-# Probability of precipitation form freezing rain
-# PROB-FRRAIN => ProbabilityOfPrecFormFreezingRain
-787;1224;;
 
 # Probability of precipitation form freezing rain
 # PROB-FRRAIN => ProbabilityOfPrecFormFreezingRain
@@ -4238,7 +3862,7 @@
 978;556;;
 
 # Short wave radiation accumulation
-# RADSWA-JM2 => NEWBASE-PARAMETER[1381]
+# RADSWA-JM2 => RadiationSWAccumulation
 979;1381;;
 
 # Mean temperature in Kelvins
@@ -4438,39 +4062,39 @@
 1035;1227;;
 
 # Height of cloud layer in feet DEVELOPMENT PARAMETER REMOVE LATER
-# CL-DEV-FT => NEWBASE-PARAMETER[12290]
-1036;12290;;
+# CL-DEV-FT => Unknown
+1036;0;;
 
 # 100th fractal sea level height in EPS
 # F100-WATLEV-CM => SeaLevelMaximum
 1037;65;;
 
 # 95th fractal sea level height in EPS
-# F95-WATLEV-CM => NEWBASE-PARAMETER[1309]
+# F95-WATLEV-CM => SeaLevelF95
 1038;1309;;
 
 # 90th fractal sea level height in EPS
-# F90-WATLEV-CM => NEWBASE-PARAMETER[1310]
+# F90-WATLEV-CM => SeaLevelF90
 1039;1310;;
 
 # 75th fractal sea level height in EPS
-# F75-WATLEV-CM => NEWBASE-PARAMETER[1311]
+# F75-WATLEV-CM => SeaLevelF75
 1040;1311;;
 
 # 50th fractal sea level height in EPS
-# F50-WATLEV-CM => NEWBASE-PARAMETER[1312]
+# F50-WATLEV-CM => SeaLevelF50
 1041;1312;;
 
 # 25th fractal sea level height in EPS
-# F25-WATLEV-CM => NEWBASE-PARAMETER[1313]
+# F25-WATLEV-CM => SeaLevelF25
 1042;1313;;
 
 # 10th fractal sea level height in EPS
-# F10-WATLEV-CM => NEWBASE-PARAMETER[1314]
+# F10-WATLEV-CM => SeaLevelF10
 1043;1314;;
 
 # 5th fractal sea level height in EPS
-# F5-WATLEV-CM => NEWBASE-PARAMETER[1315]
+# F5-WATLEV-CM => SeaLevelF5
 1044;1315;;
 
 # 0th fractal sea level height in EPS
@@ -4478,16 +4102,16 @@
 1045;64;;
 
 # Mean sea level height
-# WATLEV-MEAN-CM => NEWBASE-PARAMETER[1317]
+# WATLEV-MEAN-CM => SeaLevelMean
 1046;1317;;
 
 # Standard deviation of sea level height
-# WATLEV-STDDEV-CM => NEWBASE-PARAMETER[1316]
+# WATLEV-STDDEV-CM => SeaLevelDeviation
 1047;1316;;
 
 # Cloud type in synop font code
-# CLDTYPE-N => NEWBASE-PARAMETER[10328]
-1048;10328;;
+# CLDTYPE-N => UNKNOWN
+1048;0;;
 
 # Latent heat flux through evaporation
 # LHE-WM2 => UNKNOWN
@@ -4646,27 +4270,27 @@
 1089;0;;
 
 # Height of last EL in hPa
-# EL-LAST-HPA => NEWBASE-PARAMETER[4776]
+# EL-LAST-HPA => SoundingELPressureLastSurface
 1090;4776;;
 
 # Height of last EL in hPa
-# EL-LAST-HPA => NEWBASE-PARAMETER[4778]
+# EL-LAST-HPA => SoundingELPressureLast500m
 1090;4778;;
 
 # Height of last EL in hPa
-# EL-LAST-HPA => NEWBASE-PARAMETER[4780]
+# EL-LAST-HPA => SoundingELPressureLastMostUnstable
 1090;4780;;
 
 # Height of last EL in meters
-# EL-LAST-M => NEWBASE-PARAMETER[4777]
+# EL-LAST-M => SoundingELHeightLastSurface
 1091;4777;;
 
 # Height of last EL in meters
-# EL-LAST-M => NEWBASE-PARAMETER[4779]
+# EL-LAST-M => SoundingELHeightLast500m
 1091;4779;;
 
 # Height of last EL in meters
-# EL-LAST-M => NEWBASE-PARAMETER[4781]
+# EL-LAST-M => SoundingELHeightLastMostUnstable
 1091;4781;;
 
 # Probability of reaching some precipitation threshold value
@@ -4674,11 +4298,11 @@
 1092;1060;MUL{$,100.000000}
 
 # Energy-Helicity Index
-# EHI-N => NEWBASE-PARAMETER[4787]
+# EHI-N => SoundingEnergyHelicityIndex
 1093;4787;;
 
 # Bulk-Richardson Number
-# BRN-N => NEWBASE-PARAMETER[4786]
+# BRN-N => SoundingBulkRichardsonNumber
 1094;4786;;
 
 # Probability of reaching some precipitation threshold value
@@ -4742,31 +4366,31 @@
 1109;0;;
 
 # Probability of reaching some cape threshold value
-# PROB-CAPE-5 => NEWBASE-PARAMETER[1322]
+# PROB-CAPE-5 => ProbabilityOfMUCAPELimit5
 1119;1322;MUL{$,100.000000}
 
 # Probability of reaching some cape threshold value
-# PROB-CAPE-5 => NEWBASE-PARAMETER[1329]
+# PROB-CAPE-5 => ProbabilityOfMLCAPELimit5
 1119;1329;MUL{$,100.000000}
 
 # Probability of reaching some -10 .. -40 cape threshold value
-# PROB-CAPE1040-1 => NEWBASE-PARAMETER[1332]
+# PROB-CAPE1040-1 => ProbabilityOfMUCAPE1040Limit1
 1120;1332;MUL{$,100.000000}
 
 # Probability of reaching some -10 .. -40 cape threshold value
-# PROB-CAPE1040-2 => NEWBASE-PARAMETER[1333]
+# PROB-CAPE1040-2 => ProbabilityOfMUCAPE1040Limit2
 1121;1333;MUL{$,100.000000}
 
 # Probability of reaching some -10 .. -40 cape threshold value
-# PROB-CAPE1040-3 => NEWBASE-PARAMETER[1334]
+# PROB-CAPE1040-3 => ProbabilityOfMUCAPE1040Limit3
 1122;1334;MUL{$,100.000000}
 
 # Probability of reaching some -10 .. -40 cape threshold value
-# PROB-CAPE1040-4 => NEWBASE-PARAMETER[1335]
+# PROB-CAPE1040-4 => ProbabilityOfMUCAPE1040Limit4
 1123;1335;MUL{$,100.000000}
 
 # Probability of reaching some -10 .. -40 cape threshold value
-# PROB-CAPE1040-5 => NEWBASE-PARAMETER[1336]
+# PROB-CAPE1040-5 => ProbabilityOfMUCAPE1040Limit5
 1124;1336;MUL{$,100.000000}
 
 # Wind shear in m/s
@@ -4778,11 +4402,11 @@
 1125;4771;;
 
 # Wind shear in m/s
-# WSH-MS => NEWBASE-PARAMETER[4784]
+# WSH-MS => SoundingBulkShear3km
 1125;4784;;
 
 # Effective wind shear in m/s
-# EWSH-MS => NEWBASE-PARAMETER[4785]
+# EWSH-MS => SoundingEffectiveBulkShear
 1126;4785;;
 
 # Temperature of LPL (Lifted Parcel Level) in K
@@ -4790,127 +4414,127 @@
 1127;0;;
 
 # Height of LPL (Lifted Parcel Level) in hPa
-# LPL-HPA => NEWBASE-PARAMETER[4782]
+# LPL-HPA => SoundingLPLPressureMostUnstable
 1128;4782;;
 
 # Height of LPL (Lifted Parcel Level) in meters
-# LPL-M => NEWBASE-PARAMETER[4783]
+# LPL-M => SoundingLPLHeightMostUnstable
 1129;4783;;
 
 # Probability of visibility being lower than some threshold value
-# PROB-VV-1 => NEWBASE-PARAMETER[1346]
+# PROB-VV-1 => ProbabilityOfVisibilityLimit1
 1130;1346;MUL{$,100.000000}
 
 # Probability of visibility being lower than some threshold value
-# PROB-VV-2 => NEWBASE-PARAMETER[1347]
+# PROB-VV-2 => ProbabilityOfVisibilityLimit2
 1131;1347;MUL{$,100.000000}
 
 # Probability of visibility being lower than some threshold value
-# PROB-VV-3 => NEWBASE-PARAMETER[1348]
+# PROB-VV-3 => ProbabilityOfVisibilityLimit3
 1132;1348;MUL{$,100.000000}
 
 # Probability of visibility being lower than some threshold value
-# PROB-VV-4 => NEWBASE-PARAMETER[1349]
+# PROB-VV-4 => ProbabilityOfVisibilityLimit4
 1133;1349;MUL{$,100.000000}
 
 # Probability of visibility being lower than some threshold value
-# PROB-VV-5 => NEWBASE-PARAMETER[1350]
+# PROB-VV-5 => ProbabilityOfVisibilityLimit5
 1134;1350;MUL{$,100.000000}
 
 # Probability of visibility being lower than some threshold value
-# PROB-VV-6 => NEWBASE-PARAMETER[1351]
+# PROB-VV-6 => ProbabilityOfVisibilityLimit6
 1135;1351;MUL{$,100.000000}
 
 # Probability of Himan calculated visibility being lower than some threshold value
-# PROB-VV2-1 => NEWBASE-PARAMETER[1353]
+# PROB-VV2-1 => ProbabilityOfVisibility2Limit1
 1136;1353;MUL{$,100.000000}
 
 # Probability of Himan calculated visibility being lower than some threshold value
-# PROB-VV2-2 => NEWBASE-PARAMETER[1354]
+# PROB-VV2-2 => ProbabilityOfVisibility2Limit2
 1137;1354;MUL{$,100.000000}
 
 # Probability of Himan calculated visibility being lower than some threshold value
-# PROB-VV2-3 => NEWBASE-PARAMETER[1355]
+# PROB-VV2-3 => ProbabilityOfVisibility2Limit3
 1138;1355;MUL{$,100.000000}
 
 # Probability of Himan calculated visibility being lower than some threshold value
-# PROB-VV2-4 => NEWBASE-PARAMETER[1356]
+# PROB-VV2-4 => ProbabilityOfVisibility2Limit4
 1139;1356;MUL{$,100.000000}
 
 # Probability of Himan calculated visibility being lower than some threshold value
-# PROB-VV2-5 => NEWBASE-PARAMETER[1357]
+# PROB-VV2-5 => ProbabilityOfVisibility2Limit5
 1140;1357;MUL{$,100.000000}
 
 # Probability of Himan calculated visibility being lower than some threshold value
-# PROB-VV2-6 => NEWBASE-PARAMETER[1358]
+# PROB-VV2-6 => ProbabilityOfVisibility2Limit6
 1141;1358;MUL{$,100.000000}
 
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-1 => NEWBASE-PARAMETER[1339]
+# PROB-CLFT-1 => ProbabilityOfCeilingLimit1
 1142;1339;MUL{$,100.000000}
 
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-2 => NEWBASE-PARAMETER[1340]
+# PROB-CLFT-2 => ProbabilityOfCeilingLimit2
 1143;1340;MUL{$,100.000000}
 
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-3 => NEWBASE-PARAMETER[1341]
+# PROB-CLFT-3 => ProbabilityOfCeilingLimit3
 1144;1341;MUL{$,100.000000}
 
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-4 => NEWBASE-PARAMETER[1342]
+# PROB-CLFT-4 => ProbabilityOfCeilingLimit4
 1145;1342;MUL{$,100.000000}
 
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-5 => NEWBASE-PARAMETER[1343]
+# PROB-CLFT-5 => ProbabilityOfCeilingLimit5
 1146;1343;MUL{$,100.000000}
 
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-6 => NEWBASE-PARAMETER[1344]
+# PROB-CLFT-6 => ProbabilityOfCeilingLimit6
 1147;1344;MUL{$,100.000000}
 
 # Probability of CB-clouds
-# PROB-CBTCU-1 => NEWBASE-PARAMETER[1360]
+# PROB-CBTCU-1 => ProbabilityOfCBOrTCU
 1148;1360;MUL{$,100.000000}
 
 # Probability of snowfall reaching some threshold value
-# PROB-SN3-1 => NEWBASE-PARAMETER[1370]
+# PROB-SN3-1 => ProbabilityOfSn3Limit1
 1151;1370;MUL{$,100.000000}
 
 # Probability of snowfall reaching some threshold value
-# PROB-SN3-2 => NEWBASE-PARAMETER[1371]
+# PROB-SN3-2 => ProbabilityOfSn3Limit2
 1152;1371;MUL{$,100.000000}
 
 # Probability of snowfall reaching some threshold value
-# PROB-SN3-3 => NEWBASE-PARAMETER[1372]
+# PROB-SN3-3 => ProbabilityOfSn3Limit3
 1153;1372;MUL{$,100.000000}
 
 # Probability of snowfall reaching some threshold value
-# PROB-SN3-4 => NEWBASE-PARAMETER[1373]
+# PROB-SN3-4 => ProbabilityOfSn3Limit4
 1154;1373;MUL{$,100.000000}
 
 # Probability of snowfall reaching some threshold value
-# PROB-SN3-5 => NEWBASE-PARAMETER[1374]
+# PROB-SN3-5 => ProbabilityOfSn3Limit5
 1155;1374;MUL{$,100.000000}
 
 # Probability of snowfall reaching some threshold value
-# PROB-SN3-6 => NEWBASE-PARAMETER[1375]
+# PROB-SN3-6 => ProbabilityOfSn3Limit6
 1156;1375;MUL{$,100.000000}
 
 # Height of the lowest FEW cloud layer in feet
-# FEW1-FT => NEWBASE-PARAMETER[1377]
+# FEW1-FT => LowestFEWHeight
 1157;1377;;
 
 # Height of the lowest SCT cloud layer in feet
-# SCT1-FT => NEWBASE-PARAMETER[1378]
+# SCT1-FT => LowestSCTHeight
 1158;1378;;
 
 # Height of the lowest BKN cloud layer in feet
-# BKN1-FT => NEWBASE-PARAMETER[1379]
+# BKN1-FT => LowestBKNHeight
 1159;1379;;
 
 # Height of the lowest OVC cloud layer in feet
-# OVC1-FT => NEWBASE-PARAMETER[1380]
+# OVC1-FT => LowestOVCHeight
 1160;1380;;
 
 # CB Cloud height in feet
@@ -4918,7 +4542,7 @@
 1161;510;;
 
 # Probability of freezing precitipation (rain or drizzle)
-# PROB-FRPREC => NEWBASE-PARAMETER[1361]
+# PROB-FRPREC => ProbabilityOfFreezingPrecForm
 1162;1361;MUL{$,100.000000}
 
 # Probability of snowfall reaching some threshold value in 6 h
@@ -4946,7 +4570,7 @@
 1168;0;;
 
 # Probability of Low Visibility Procedures
-# PROB-LVP-1 => NEWBASE-PARAMETER[1362]
+# PROB-LVP-1 => ProbabilityOfLVP
 1169;1362;MUL{$,100.000000}
 
 # PM25 concentration
@@ -4958,8 +4582,8 @@
 1171;0;;
 
 # Ice ridge thickness
-# IRIDGE-CM => UNKNOWN
-1172;0;;
+# IRIDGE-CM => IceDegreeOfRidging
+1172;388;;
 
 # Ice deformation fraction
 # ICEDEFR-0TO1 => UNKNOWN
@@ -5081,6 +4705,33 @@
 # RACC-KGM2 => PrecipitationWater
 1202;857;;
 
-# Mean temperature in Celcius
-# T-MEAN-C => AverageTemperature
-20000;682;;
+# Growing degree days
+# GDD-C => NEWBASE-PARAMETER[1387]
+1203;1387;;
+
+#30682;1;T-MEAN-C;C;AverageTemperature (682)
+30682;682;;
+
+#30812;1;F02-T-MAX-C;C;NormalMaxTemperatureF02 (812)
+30812;812;;
+
+#30813;1;F12-T-MAX-C;C;NormalMaxTemperatureF12 (813)
+30813;813;;
+
+#30814;1;F37-T-MAX-C;C;NormalMaxTemperatureF37 (814)
+30814;814;;
+
+#30815;1;F50-T-MAX-C;C;NormalMaxTemperatureF50 (815)
+30815;815;;
+
+#30816;1;F63-T-MAX-C;C;NormalMaxTemperatureF63 (816)
+30816;816;;
+
+#30817;1;F88-T-MAX-C;C;NormalMaxTemperatureF88 (817)
+30817;817;;
+
+#30818;1;F98-T-MAX-C;C;NormalMaxTemperatureF98 (818)
+30818;818;;
+
+
+
