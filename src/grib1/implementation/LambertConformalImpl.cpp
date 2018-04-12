@@ -113,6 +113,9 @@ T::Coordinate_vec LambertConformalImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
+    if (mCt_latlon2lambert == NULL  ||  mCt_lambert2latlon == NULL)
+      return coordinateList;
+
     uint nx = (uint)mNx;
     uint ny = (uint)mNy;
 
@@ -187,6 +190,9 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
 {
   try
   {
+    if (mCt_latlon2lambert == NULL  ||  mCt_lambert2latlon == NULL)
+      return false;
+
     uint nx = (uint)mNx;
     uint ny = (uint)mNy;
 
@@ -238,6 +244,9 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
   try
   {
     T::Coordinate_vec coordinateList;
+
+    if (mCt_latlon2lambert == NULL  ||  mCt_lambert2latlon == NULL)
+      return false;
 
     uint nx = (uint)mNx;
     uint ny = (uint)mNy;

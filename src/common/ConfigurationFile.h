@@ -55,11 +55,13 @@ class ConfigurationFile
     int           readValue(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path);
     int           readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path);
 
-  private:
+  public:
 
-    std::string                    mFilename;
-    std::vector<T::Attribute>      mAttributeList;
-    std::vector<ConfigurationFile> mIncludedConfigurationFiles;
+    std::vector<T::Attribute>  mAttributeList;
+    std::string                mFilename;
+
+  private:
+    std::set<std::string>      mIncludedConfigurationFiles;
 };
 
 

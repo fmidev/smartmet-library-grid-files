@@ -179,6 +179,7 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 {
   try
   {
+    //printf("*** GET COORDINATES version 2\n");
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {
@@ -211,6 +212,8 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
       double lon = it->x();
 
       mCoordinateTranformation_orig2latlon->Transform(1,&lon,&lat);
+
+      //printf("CONV %f,%f => %f,%f\n",it->y(),it->x(),lon,lat);
 
       latLonCoordinates.push_back(T::Coordinate(lon,lat));
     }

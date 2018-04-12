@@ -1,6 +1,7 @@
 #include "GeneralFunctions.h"
 #include "GeneralDefinitions.h"
 #include "Exception.h"
+#include "AutoThreadLock.h"
 
 #include <stdlib.h>
 #include <sstream>
@@ -13,6 +14,9 @@
 
 namespace SmartMet
 {
+
+ThreadLock timeThreadLock;
+
 
 std::string uint64_toHex(unsigned long long value)
 {
@@ -54,7 +58,51 @@ int uint_compare(uint v1,uint v2)
 
 
 
+int int_compare(int v1,int v2)
+{
+  try
+  {
+    if (v1 == v2)
+      return 0;
+
+    if (v1 < v2)
+      return -1;
+
+    return 1;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 int uint64_compare(unsigned long long v1,unsigned long long v2)
+{
+  try
+  {
+    if (v1 == v2)
+      return 0;
+
+    if (v1 < v2)
+      return -1;
+
+    return 1;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+int int64_compare(long long v1,long long v2)
 {
   try
   {
@@ -314,10 +362,17 @@ uint stringToId(const char *str)
 
 int getInt(const char *str,uint startIdx,uint len)
 {
-  char buf[100];
-  strncpy(buf,str+startIdx,len);
-  buf[len] = '\0';
-  return atoi(buf);
+  try
+  {
+    char buf[100];
+    strncpy(buf,str+startIdx,len);
+    buf[len] = '\0';
+    return atoi(buf);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
 }
 
 
@@ -326,23 +381,32 @@ int getInt(const char *str,uint startIdx,uint len)
 
 time_t mktime_tz(struct tm *tm,const char *tzone)
 {
-  time_t ret;
-  char *tz;
-  tz = getenv("TZ");
-  if (tz)
-    tz = strdup(tz);
-  setenv("TZ", tzone, 1);
-  tzset();
-  ret = mktime(tm);
-  if (tz)
+  try
   {
-    setenv("TZ", tz, 1);
-    free(tz);
+    AutoThreadLock lock(&timeThreadLock);
+
+    time_t ret;
+    char *tz;
+    tz = getenv("TZ");
+    if (tz)
+      tz = strdup(tz);
+    setenv("TZ", tzone, 1);
+    tzset();
+    ret = mktime(tm);
+    if (tz)
+    {
+      setenv("TZ", tz, 1);
+      free(tz);
+    }
+    else
+      unsetenv("TZ");
+    tzset();
+    return ret;
   }
-  else
-    unsetenv("TZ");
-  tzset();
-  return ret;
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
 }
 
 
@@ -351,25 +415,34 @@ time_t mktime_tz(struct tm *tm,const char *tzone)
 
 struct tm* localtime_tz(time_t t,struct tm *tt,const char *tzone)
 {
-  char *tz;
-  tz = getenv("TZ");
-  if (tz)
-    tz = strdup(tz);
-  setenv("TZ", tzone, 1);
-  tzset();
-
-  localtime_r(&t,tt);
-
-  if (tz)
+  try
   {
-    setenv("TZ", tz, 1);
-    free(tz);
-  }
-  else
-    unsetenv("TZ");
-  tzset();
+    AutoThreadLock lock(&timeThreadLock);
 
-  return tt;
+    char *tz;
+    tz = getenv("TZ");
+    if (tz)
+      tz = strdup(tz);
+    setenv("TZ", tzone, 1);
+    tzset();
+
+    localtime_r(&t,tt);
+
+    if (tz)
+    {
+      setenv("TZ", tz, 1);
+      free(tz);
+    }
+    else
+      unsetenv("TZ");
+    tzset();
+
+    return tt;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
 }
 
 

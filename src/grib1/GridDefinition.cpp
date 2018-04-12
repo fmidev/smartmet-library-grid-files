@@ -10,6 +10,7 @@ namespace SmartMet
 namespace GRIB1
 {
 
+std::map<uint,T::Coordinate_vec> coordinateCache;
 
 
 /*! \brief The constructor of the class. */
@@ -244,6 +245,18 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 {
   try
   {
+    //printf("*** GET COORDINATES version 1\n");
+
+    uint geomId = getGridGeometryId();
+    if (geomId != 0)
+    {
+      auto it = coordinateCache.find(geomId);
+      if (it != coordinateCache.end())
+      {
+        return it->second;
+      }
+    }
+
     if (mCoordinateTranformation_orig2latlon == NULL)
     {
       OGRSpatialReference sr_latlon;
@@ -269,6 +282,12 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 
       latLonCoordinates.push_back(T::Coordinate(lon,lat));
     }
+
+    if (geomId != 0)
+    {
+      coordinateCache.insert(std::pair<uint,T::Coordinate_vec>(geomId,latLonCoordinates));
+    }
+
     return latLonCoordinates;
   }
   catch (...)

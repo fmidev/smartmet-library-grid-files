@@ -17,20 +17,23 @@ double grib_power(long s,long n);
 unsigned long long getTime();
 
 int uint_compare(uint v1,uint v2);
+int int_compare(int v1,int v2);
 int uint64_compare(unsigned long long v1,unsigned long long v2);
+int int64_compare(long long v1,long long v2);
 int double_compare(double v1,double v2);
 int time_compare(time_t v1,time_t v2);
 void time_usleep(int _sec,int _usec);
 uint stringToId(const char *str,uint len);
 uint stringToId(const char *str);
 
-
+/*
 time_t      localTimeToTimeT(std::string localTime,const char *tzone);
 time_t      utcTimeToTimeT(std::string utcTime);
 std::string localTimeFromTimeT(time_t t,const char *tzone);
 std::string utcTimeFromTimeT(time_t t);
 std::string localTimeToUtcTime(std::string localTime,const char *tzone);
 std::string utcTimeToLocalTime(std::string utcTime,const char *tzone);
+*/
 
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
 

@@ -100,6 +100,9 @@ class GridDef
     void              getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList);
     bool              getGeometryNameById(T::GeometryId  geometryId,std::string& name);
 
+    T::Coordinate_vec getGridCoordinatesByGeometryId(T::GeometryId  geometryId);
+    T::Coordinate_vec getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId);
+
     T::ParamId        getGribParameterId(GRIB1::Message& message);
     T::ParamId        getGribParameterId(GRIB2::Message& message);
     T::ParamLevelId   getGrib1LevelId(GRIB1::Message& message);
@@ -121,6 +124,7 @@ class GridDef
 
     T::ParamId        getFmiParameterId(GRIB1::Message& message);
     T::ParamId        getFmiParameterId(GRIB2::Message& message);
+    bool              getFmiLevelDef(uint levelId,LevelDef& levelDef);
     T::ParamLevelId   getFmiLevelId(GRIB1::Message& message);
     T::ParamLevelId   getFmiLevelId(GRIB2::Message& message);
     std::string       getFmiParameterName(GRIB1::Message& message);
@@ -190,6 +194,7 @@ class GridDef
     void                    loadGrib2TimeRangeDefinitions(const char *filename);
 
     void                    loadFmiParameterDefinitions(const char *filename);
+    void                    loadFmiLevelDefinitions(const char *filename);
     void                    loadFmiParameterId_grib1(const char *filename);
     void                    loadFmiParameterId_grib2(const char *filename);
     void                    loadFmiParameterId_newbase(const char *filename);
@@ -208,6 +213,7 @@ class GridDef
 
     GribParamDef_cptr       getGribParameterDefById(T::ParamId gribParamId);
     FmiParamDef_cptr        getFmiParameterDefById(T::ParamId fmiParamId);
+    LevelDef_cptr           getFmiLevelDef(uint levelId);
     FmiParamDef_cptr        getFmiParameterDefByNewbaseId(T::ParamId nwebaseParamId);
     FmiParamDef_cptr        getFmiParameterDefByName(std::string fmiParamName);
     FmiProducerId_grib_cptr getFmiProducerByName(std::string fmiProducerName);
@@ -220,8 +226,6 @@ class GridDef
 
     std::string             mConfigFileName;
     ConfigurationFile       mConfigurationFile;
-
-    std::string             mConfigDirectory;
 
     bool                    mInitialized;
     time_t                  mLastCheckTime;
@@ -266,6 +270,10 @@ class GridDef
     string_vec              mFmi_parameterDef_files;
     time_t                  mFmi_parameterDef_modificationTime;
     FmiParamDef_vec         mFmi_parameterDef_records;
+
+    string_vec              mFmi_levelDef_files;
+    time_t                  mFmi_levelDef_modificationTime;
+    LevelDef_vec            mFmi_levelDef_records;
 
     string_vec              mFmi_parametersFromGrib1_files;
     time_t                  mFmi_parametersFromGrib1_modificationTime;

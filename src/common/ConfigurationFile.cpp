@@ -99,8 +99,17 @@ void ConfigurationFile::addConfigurationFile(std::string filename)
   FUNCTION_TRACE
   try
   {
+    if (mIncludedConfigurationFiles.find(filename) != mIncludedConfigurationFiles.end())
+      return; // Already loaded
+
+    mIncludedConfigurationFiles.insert(filename);
     ConfigurationFile configFile(filename);
-    mIncludedConfigurationFiles.push_back(configFile);
+    for (auto it=configFile.mAttributeList.begin(); it!=configFile.mAttributeList.end();++it)
+    {
+      mAttributeList.push_back(*it);
+    }
+
+//    mIncludedConfigurationFiles.push_back(configFile);
   }
   catch (...)
   {
@@ -118,7 +127,7 @@ void ConfigurationFile::clear()
   try
   {
     mAttributeList.clear();
-    mIncludedConfigurationFiles.clear();
+    //mIncludedConfigurationFiles.clear();
   }
   catch (...)
   {
@@ -240,13 +249,13 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
         throw exception;
       }
     }
-
+/*
     for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
     {
       if (configFile->getAttributeValue(attributeName,attributeValue))
         return true;
     }
-
+*/
     return false;
   }
   catch (...)
@@ -291,13 +300,13 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
         return true;
       }
     }
-
+/*
     for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
     {
       if (configFile->getAttributeValue(attributeName,attributeValue))
         return true;
     }
-
+*/
     return false;
   }
   catch (...)
@@ -430,13 +439,13 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,long long& a
         return true;
       }
     }
-
+/*
     for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
     {
       if (configFile->getAttributeValue(attributeName,attributeValue))
         return true;
     }
-
+*/
     return false;
   }
   catch (...)
@@ -582,13 +591,13 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::string&
         return true;
       }
     }
-
+/*
     for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
     {
       if (configFile->getAttributeValue(attributeName,attributeValue))
         return true;
     }
-
+*/
     return false;
   }
   catch (...)
@@ -648,7 +657,13 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
 
     if (attributeValueVec.size() > 0  ||  exists)
       return true;
-
+/*
+    for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
+    {
+      if (configFile->getAttributeValue(attributeName,attributeValueVec))
+        return true;
+    }
+*/
     return false;
   }
   catch (...)
@@ -725,6 +740,13 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
           return true;
       }
     }
+/*
+    for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
+    {
+      if (configFile->findAttribute(attributeName))
+        return true;
+    }
+*/
     return false;
   }
   catch (...)
@@ -749,11 +771,12 @@ void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
     stream << space(level) << "- mAttributeList       = \n";
 
     for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
-      stream << space(level) << "    * " << attr->mName << " = " << attr->mValue << "\n";
-
-    stream << space(level) << "- mConfigurationFiles  = \n";
-    for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
-      configFile->print(stream,level+2,optionFlags);
+    {
+      if ((optionFlags & 0x0001) != 0)
+        stream << space(level) << "    * " << attr->mName << " = " << parseValue(attr->mValue) << "\n";
+      else
+        stream << space(level) << "    * " << attr->mName << " = " << attr->mValue << "\n";
+    }
   }
   catch (...)
   {
@@ -1166,8 +1189,17 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
           fname = mFilename.substr(0,p+1) + fname;
       }
 
-      ConfigurationFile configFile(fname);
-      mIncludedConfigurationFiles.push_back(configFile);
+      if (mIncludedConfigurationFiles.find(fname) == mIncludedConfigurationFiles.end())
+      {
+        mIncludedConfigurationFiles.insert(fname);
+        ConfigurationFile configFile(fname);
+
+        for (auto it=configFile.mAttributeList.begin(); it!=configFile.mAttributeList.end();++it)
+        {
+          mAttributeList.push_back(*it);
+        }
+      }
+
 
       pos = pos + 1;
     }

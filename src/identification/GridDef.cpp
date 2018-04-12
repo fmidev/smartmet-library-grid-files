@@ -89,6 +89,7 @@ GridDef::GridDef()
     mGrib2_levelDef_modificationTime = 0;
     mGrib2_timeRangeDef_modificationTime = 0;
     mFmi_parameterDef_modificationTime = 0;
+    mFmi_levelDef_modificationTime = 0;
     mFmi_parametersFromGrib1_modificationTime = 0;
     mFmi_parametersFromGrib2_modificationTime = 0;
     mFmi_parametersFromNewbase_modificationTime = 0;
@@ -141,25 +142,25 @@ void GridDef::init(const char* configFile)
   {
     const char *configAttribute[] =
     {
-      "configDirectory",
-      "grib.parameterDef",
-      "grib.tableDef",
-      "grib.unitDef",
-      "grib1.parameterDef",
-      "grib1.levelDef",
-      "grib1.timeRangeDef",
-      "grib2.parameterDef",
-      "grib2.levelDef",
-      "grib2.timeRangeDef",
-      "fmi.parameterDef",
-      "fmi.geometryDef",
-      "fmi.parametersFromGrib1",
-      "fmi.parametersFromGrib2",
-      "fmi.parametersFromNewbase",
-      "fmi.levelsFromGrib1",
-      "fmi.levelsFromGrib2",
-      "fmi.producersFromGrib",
-      "newbase.parameterDef",
+      "smartmet.library.grid-files.grib.parameterDef[]",
+      "smartmet.library.grid-files.grib.tableDef[]",
+      "smartmet.library.grid-files.grib.unitDef[]",
+      "smartmet.library.grid-files.grib1.parameterDef[]",
+      "smartmet.library.grid-files.grib1.levelDef[]",
+      "smartmet.library.grid-files.grib1.timeRangeDef[]",
+      "smartmet.library.grid-files.grib2.parameterDef[]",
+      "smartmet.library.grid-files.grib2.levelDef[]",
+      "smartmet.library.grid-files.grib2.timeRangeDef[]",
+      "smartmet.library.grid-files.fmi.parameterDef[]",
+      "smartmet.library.grid-files.fmi.levelDef[]",
+      "smartmet.library.grid-files.fmi.geometryDef[]",
+      "smartmet.library.grid-files.fmi.parametersFromGrib1[]",
+      "smartmet.library.grid-files.fmi.parametersFromGrib2[]",
+      "smartmet.library.grid-files.fmi.parametersFromNewbase[]",
+      "smartmet.library.grid-files.fmi.levelsFromGrib1[]",
+      "smartmet.library.grid-files.fmi.levelsFromGrib2[]",
+      "smartmet.library.grid-files.fmi.producersFromGrib[]",
+      "smartmet.library.grid-files.newbase.parameterDef[]",
        NULL
     };
 
@@ -169,6 +170,7 @@ void GridDef::init(const char* configFile)
     mConfigFileName = configFile;
 
     mConfigurationFile.readFile(configFile);
+    //mConfigurationFile.print(std::cout,0,0);
 
     uint t=0;
     while (configAttribute[t] != NULL)
@@ -178,30 +180,30 @@ void GridDef::init(const char* configFile)
         SmartMet::Spine::Exception exception(BCP, "Missing configuration attribute!");
         exception.addParameter("File",mConfigFileName);
         exception.addParameter("Attribute",configAttribute[t]);
+        throw exception;
       }
       t++;
     }
 
-    mConfigurationFile.getAttributeValue("configDirectory", mConfigDirectory);
-
-    mConfigurationFile.getAttributeValue("grib.parameterDef",mGrib_parameterDef_files);
-    mConfigurationFile.getAttributeValue("grib.tableDef",mGrib_tableDef_files);
-    mConfigurationFile.getAttributeValue("grib.unitDef",mGrib_unitDef_files);
-    mConfigurationFile.getAttributeValue("grib1.parameterDef",mGrib1_parameterDef_files);
-    mConfigurationFile.getAttributeValue("grib1.levelDef",mGrib1_levelDef_files);
-    mConfigurationFile.getAttributeValue("grib1.timeRangeDef",mGrib1_timeRangeDef_files);
-    mConfigurationFile.getAttributeValue("grib2.parameterDef",mGrib2_parameterDef_files);
-    mConfigurationFile.getAttributeValue("grib2.levelDef",mGrib2_levelDef_files);
-    mConfigurationFile.getAttributeValue("grib2.timeRangeDef",mGrib2_timeRangeDef_files);
-    mConfigurationFile.getAttributeValue("fmi.parameterDef",mFmi_parameterDef_files);
-    mConfigurationFile.getAttributeValue("fmi.geometryDef",mFmi_geometryDef_files);
-    mConfigurationFile.getAttributeValue("fmi.parametersFromGrib1",mFmi_parametersFromGrib1_files);
-    mConfigurationFile.getAttributeValue("fmi.parametersFromGrib2",mFmi_parametersFromGrib2_files);
-    mConfigurationFile.getAttributeValue("fmi.parametersFromNewbase",mFmi_parametersFromNewbase_files);
-    mConfigurationFile.getAttributeValue("fmi.levelsFromGrib1",mFmi_levelsFromGrib1_files);
-    mConfigurationFile.getAttributeValue("fmi.levelsFromGrib2",mFmi_levelsFromGrib2_files);
-    mConfigurationFile.getAttributeValue("fmi.producersFromGrib",mFmi_producersFromGrib_files);
-    mConfigurationFile.getAttributeValue("newbase.parameterDef",mNewbase_parameterDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.grib.parameterDef",mGrib_parameterDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.grib.tableDef",mGrib_tableDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.grib.unitDef",mGrib_unitDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.grib1.parameterDef",mGrib1_parameterDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.grib1.levelDef",mGrib1_levelDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.grib1.timeRangeDef",mGrib1_timeRangeDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.grib2.parameterDef",mGrib2_parameterDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.grib2.levelDef",mGrib2_levelDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.grib2.timeRangeDef",mGrib2_timeRangeDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parameterDef",mFmi_parameterDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelDef",mFmi_levelDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.geometryDef",mFmi_geometryDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib1",mFmi_parametersFromGrib1_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib2",mFmi_parametersFromGrib2_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromNewbase",mFmi_parametersFromNewbase_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelsFromGrib1",mFmi_levelsFromGrib1_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelsFromGrib2",mFmi_levelsFromGrib2_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.producersFromGrib",mFmi_producersFromGrib_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.newbase.parameterDef",mNewbase_parameterDef_files);
 
     mInitialized = true;
 
@@ -435,6 +437,17 @@ void GridDef::updateFmi()
         loadFmiParameterDefinitions(it->c_str());
       }
       mFmi_parameterDef_modificationTime = tt;
+    }
+
+    tt = getModificationTime(mFmi_levelDef_files);
+    if (tt != mFmi_levelDef_modificationTime)
+    {
+      mFmi_levelDef_records.clear();
+      for (auto it = mFmi_levelDef_files.begin(); it != mFmi_levelDef_files.end(); ++it)
+      {
+        loadFmiLevelDefinitions(it->c_str());
+      }
+      mFmi_levelDef_modificationTime = tt;
     }
 
     tt = getModificationTime(mFmi_parametersFromGrib1_files);
@@ -1241,6 +1254,31 @@ GribParamDef_cptr GridDef::getGribParamDef(uint discipline,uint category,uint nu
 
 
 
+bool GridDef::getFmiLevelDef(uint levelId,LevelDef& levelDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getFmiLevelDef(levelId);
+    if (def == NULL)
+      return false;
+
+    levelDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool GridDef::getGrib1LevelDef(uint levelId,LevelDef& levelDef)
 {
   FUNCTION_TRACE
@@ -1280,6 +1318,28 @@ bool GridDef::getGrib2LevelDef(uint levelId,LevelDef& levelDef)
 
     levelDef = *def;
     return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+LevelDef_cptr GridDef::getFmiLevelDef(uint levelId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_levelDef_records.begin(); it != mFmi_levelDef_records.end(); ++it)
+    {
+      if (it->mLevelId == levelId)
+        return &(*it);
+    }
+    return NULL;
   }
   catch (...)
   {
@@ -2007,6 +2067,77 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
 
 
 
+void GridDef::loadFmiLevelDefinitions(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *file = fopen(filename,"r");
+    if (file == NULL)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file) != NULL  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 2)
+        {
+          LevelDef rec;
+
+          if (field[0][0] != '\0')
+            rec. mLevelId = (uint)atoll(field[0]);
+
+          if (field[1][0] != '\0')
+            rec.mName = field[1];
+
+          if (field[2][0] != '\0')
+            rec.mDescription = field[2];
+
+          mFmi_levelDef_records.push_back(rec);
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 void GridDef::loadFmiParameterId_grib1(const char *filename)
 {
   FUNCTION_TRACE
@@ -2640,6 +2771,63 @@ void GridDef::loadFmiProducerId_grib(const char *filename)
       }
     }
     fclose(file);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+T::Coordinate_vec GridDef::getGridCoordinatesByGeometryId(T::GeometryId  geometryId)
+{
+  try
+  {
+    auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
+    if (g1 != NULL)
+      return g1->getGridCoordinates();
+
+    auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
+    if (g2 != NULL)
+      return g2->getGridCoordinates();
+
+    T::Coordinate_vec empty;
+    return empty;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+T::Coordinate_vec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId)
+{
+  try
+  {
+    auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
+    if (g2 != NULL)
+    {
+      //g2->print(std::cout,0,2);
+      return g2->getGridLatLonCoordinates();
+    }
+
+    auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
+    if (g1 != NULL)
+    {
+      //g1->print(std::cout,0,2);
+      return g1->getGridLatLonCoordinates();
+    }
+
+    printf("*** Coordinates not found by the geometry %u\n",geometryId);
+    T::Coordinate_vec empty;
+    return empty;
   }
   catch (...)
   {
@@ -3330,8 +3518,8 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               int nj = atoll(field[4]);
               int longitude = (int)round(atof(field[5])*1000000);
               int latitude = (int)round(atof(field[6])*1000000);
-              int iInc = (int)round(atof(field[7]) * 1000000);
-              int jInc = (int)round(atof(field[8]) * 1000000);
+              int iInc = (int)round(atof(field[7]) * 1000);
+              int jInc = (int)round(atof(field[8]) * 1000);
               char *scanningMode = field[9];
               int orientation = (int)round(atof(field[10])*1000000);
               int laD = 60000000;
@@ -3472,8 +3660,8 @@ void GridDef::loadGeometryDefinitions(const char *filename)
 
               def2->setLaD(latin1);
               def2->setLoV(orientation);
-              def2->setDx(T::UInt32_opt(iInc));
-              def2->setDy(T::UInt32_opt(jInc));
+              def2->setDx(T::UInt32_opt(iInc*1000));
+              def2->setDy(T::UInt32_opt(jInc*1000));
               //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
               def2->setLatin1(T::Int32_opt(latin1));
               def2->setLatin2(T::Int32_opt(latin2));

@@ -6,14 +6,27 @@
 namespace SmartMet
 {
 
+
+class CImage
+{
+  public:
+              CImage() {width = 0; height = 0; pixel = NULL;}
+    virtual   ~CImage() {if (pixel != NULL) delete pixel;}
+
+    int       width;
+    int       height;
+    uint      *pixel;
+};
+
+
+
+
+
+int jpg_load(const char *_filename,CImage& _image);
+
 // The function writes an image data to the JPEG file.
 
-void jpeg_save(
-    const char *filename,
-    unsigned long *image,
-    int image_height,
-    int image_width,
-    int quality);
+void jpeg_save(const char *filename,unsigned long *image,int image_height,int image_width,int quality);
 
 
 // The function converts RGB color component (Red,Green,Blue) to a single RGB value.
