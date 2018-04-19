@@ -4,8 +4,9 @@
 #include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
 #include "grib2/Message.h"
+#include <jasper/jasper.h>
 
-#include <openjpeg-1.5/openjpeg.h>
+//#include <openjpeg-1.5/openjpeg.h>
 #include <cstring>
 #include <iostream>
 #include <memory>
@@ -21,6 +22,10 @@ namespace GRIB2
 
 JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl()
 {
+  if (jas_init())
+  {
+    abort();
+  }
 }
 
 
@@ -71,6 +76,163 @@ void JpegGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 }
 
 
+
+
+
+void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+{
+  try
+  {
+    std::size_t numOfValues = message->getGridOriginalValueCount();
+    T::Data_ptr data = message->getDataPtr();
+    std::size_t dataSize = message->getDataSize();
+    T::Data_ptr bitmap = message->getBitmapDataPtr();
+    std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
+
+    char filename[100];
+    sprintf(filename,"/tmp/smartmet-library-grid_jpg2000_decoding_%llu.jpg",getTime());
+    FILE *file = fopen(filename,"w");
+    fwrite(data,dataSize,1,file);
+    fclose(file);
+
+    jas_stream_t *instream = jas_stream_fopen(filename, "rb");
+    if (instream == NULL)
+    {
+      SmartMet::Spine::Exception exception(BCP, "Cannot open the JPG-2000 file!");
+      exception.addParameter("Filename",filename);
+      throw exception;
+    }
+
+    int fmtid = jas_image_getfmt(instream);
+    if (fmtid < 0)
+    {
+      SmartMet::Spine::Exception exception(BCP, "Not a JPG-2000 image!");
+      exception.addParameter("Filename",filename);
+      throw exception;
+    }
+
+
+    /* Decode the image. */
+
+    jas_image_t *image = jas_image_decode(instream, fmtid, 0);
+
+    /* Close the image file. */
+    jas_stream_close(instream);
+    remove(filename);
+
+    if (image == NULL)
+    {
+      SmartMet::Spine::Exception exception(BCP, "Cannot decode the JPG-2000 image!");
+      exception.addParameter("Filename",filename);
+      throw exception;
+    }
+
+    //int numcmpts = jas_image_numcmpts(image);
+    int width = jas_image_cmptwidth(image, 0);
+    int height = jas_image_cmptheight(image, 0);
+    int depth = jas_image_cmptprec(image, 0);
+
+    int sz = width*height;
+
+    // int rawsz = jas_image_rawsize(image);
+    // printf("IMAGE %d x %d x %d => %d (%d)\n",width,height,depth,sz,rawsz);
+
+
+    jas_matrix_t *matrix = jas_matrix_create(height,width);
+    jas_image_readcmpt(image,0,0,0,width,height,matrix);
+
+    // Vector to return
+    decodedValues.clear();
+    decodedValues.reserve(numOfValues);
+
+    if (numOfValues == 0)
+      return;
+
+    // Sanity checks
+    auto bits_per_value = mPacking.getBitsPerValue();
+    if (!bits_per_value)
+      throw SmartMet::Spine::Exception(BCP,"GridDataRepresentation number of bits per value must be > 0");
+
+    // Number of bits per value
+    //const unsigned int nbits = *bits_per_value;
+
+    // Reference value R, IEEE 32-bit floating point value
+    // TODO: GRIB1 USES IBM-FLOATS INSTEAD OF IEEE-754!!!!!
+    double R = mPacking.getReferenceValue();
+
+    // Binary scale factor E, possibly negative
+    std::int16_t E = (mPacking.getBinaryScaleFactor() ? *mPacking.getBinaryScaleFactor() : 0);
+
+    // Decimal scale factor D, possibly negative
+    std::int16_t D = (mPacking.getDecimalScaleFactor() ? *mPacking.getDecimalScaleFactor() : 0);
+
+    // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
+
+    const double Efac = std::pow(2.0, E);
+    const double Dfac = std::pow(10, -D);
+
+    const double RDfac = R * Dfac;
+    const double EDfac = Efac * Dfac;
+
+    if (bitmapSizeInBytes > 0)
+    {
+      T::Data_ptr bmap = bitmap;
+      unsigned char tmp = 0;
+      if (bmap == NULL)
+        bmap = &tmp;
+
+      BitArrayReader bitmapReader(bmap,bitmapSizeInBytes*8);
+
+      uint pos = 0;
+      for (int i = 0; i < sz; i++)
+      {
+        if (bitmapReader.readBit())
+        {
+          int X = matrix->data_[pos];
+          double Y = RDfac + X * EDfac;
+          decodedValues.push_back((T::ParamValue)Y);
+          pos++;
+        }
+        else
+        {
+          decodedValues.push_back(ParamValueMissing);
+        }
+      }
+    }
+    else
+    {
+      for (int i = 0; i < sz; i++)
+      {
+        int X = matrix->data_[i];
+        double Y = RDfac + X * EDfac;
+        decodedValues.push_back((T::ParamValue)Y);
+      }
+    }
+
+    jas_matrix_destroy(matrix);
+    jas_image_destroy(image);
+    jas_image_clearfmts();
+
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, "JPEG decodeValues failed!", NULL);
+  }
+}
+
+
+
+
+
+
+#if 0
+
+// **********************************************************************************'
+//
+//   NOTICE: The open-jpeg library is not very stable. It crashes quite often.
+//   That's why we are using jasper -library instead.
+//
+// **********************************************************************************'
 
 
 
@@ -385,6 +547,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     throw SmartMet::Spine::Exception(BCP, "JPEG decodeValues failed!", NULL);
   }
 }
+#endif
 
 
 

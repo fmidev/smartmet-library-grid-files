@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fnmatch.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -146,8 +147,10 @@ void ConfigurationFile::readFile(std::string filename)
   FUNCTION_TRACE
   try
   {
-    clear();
-    mFilename = filename;
+    if (mFilename.length() == 0)
+      mFilename = filename;
+
+    mCurrentFilename = filename;
     FILE *file = fopen(filename.c_str(),"r");
     if (file == NULL)
     {
@@ -196,7 +199,9 @@ void ConfigurationFile::readFile(std::string filename)
   catch (...)
   {
     SmartMet::Spine::Exception exception(BCP,"Configuration file reading failed!",NULL);
-    exception.addParameter("Configuration file",mFilename);
+    if (mFilename != filename)
+      exception.addParameter("Main configuration file",mFilename);
+    exception.addParameter("Configuration file",filename);
     throw exception;
   }
 }
@@ -761,6 +766,33 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
 
 
 
+void ConfigurationFile::setAttributeValue(const char *attributeName,std::string& attributeValue)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    {
+      if (strcasecmp(attr->mName.c_str(),attributeName) == 0)
+      {
+        attr->mValue = attributeValue;
+        return;
+      }
+    }
+    mAttributeList.push_back(T::Attribute(std::string(attributeName),attributeValue));
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    exception.addParameter("Configuration file",mFilename);
+    throw exception;
+  }
+}
+
+
+
+
+
 void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
 {
   FUNCTION_TRACE
@@ -773,9 +805,9 @@ void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
     for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
     {
       if ((optionFlags & 0x0001) != 0)
-        stream << space(level) << "    * " << attr->mName << " = " << parseValue(attr->mValue) << "\n";
+        stream << space(level) << "    * ATTR " << attr->mName << " = " << parseValue(attr->mValue) << "\n";
       else
-        stream << space(level) << "    * " << attr->mName << " = " << attr->mValue << "\n";
+        stream << space(level) << "    * ATTR " << attr->mName << " = " << attr->mValue << "\n";
     }
   }
   catch (...)
@@ -1100,15 +1132,31 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
     else
     if (words[pos] == "[")
     {
+      char tmp[1000];
+      uint index = 0;
       T::Attribute attr;
       attr.mName = path + "[]";
       attr.mValue = "";
-      mAttributeList.push_back(attr);
+      if (!findAttribute(attr.mName.c_str()))
+      {
+        mAttributeList.push_back(attr);
+      }
+      else
+      {
+        // The array already exists. Let's try to find the first free index.
+        bool idxFound = true;
+        while (idxFound)
+        {
+          sprintf(tmp,"%s.%u",path.c_str(),index);
+          if (findAttribute(tmp))
+            index++;
+          else
+            idxFound = false;
+        }
+      }
 
       int startPos = pos;
       pos++;
-      uint index = 0;
-      char tmp[1000];
       while (pos < len  &&  words[pos] != "]")
       {
         sprintf(tmp,"%s.%u",path.c_str(),index);
@@ -1142,15 +1190,42 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
       std::string attributeValue = words[pos];
       //std::cout << "ATTRIBUTE " << path << " = " << attributeValue << "\n";
 
+      setAttributeValue(path.c_str(),attributeValue);
+      /*
       T::Attribute attr;
       attr.mName = path;
       attr.mValue = attributeValue;
 
       mAttributeList.push_back(attr);
-
+      */
       return pos + 1;
     }
     return pos;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+void ConfigurationFile::removeAttributes(const char *pattern)
+{
+  try
+  {
+    std::vector<T::Attribute>  newAttributeList;
+
+    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    {
+      if (fnmatch(pattern,attr->mName.c_str(),0) != 0)
+      {
+        newAttributeList.push_back(*attr);
+      }
+    }
+    if (newAttributeList.size() != mAttributeList.size())
+      mAttributeList = newAttributeList;
   }
   catch (...)
   {
@@ -1167,17 +1242,26 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
   FUNCTION_TRACE
   try
   {
+    //printf("READ ATTR [%d: %d,%d] : %s\n",pos,(int)(wordPositions[pos] >> 32),(int)(wordPositions[pos] & 0xFFFFFFFF),words[pos].c_str());
     if (pos >= len)
       return pos;
 
-    if ((pos+1) < len  &&  words[pos] == "include")
+    if ((pos+1) < len  &&  words[pos] == "@include")
     {
-
       std::string fname = parseValue(words[pos+1]);
 
       auto slen = fname.length();
       if (slen > 1  &&  fname[0] == '"'  &&  fname[slen-1] == '"')
         fname = fname.substr(1,slen-2);
+
+
+      if (fname <= " ")
+      {
+        SmartMet::Spine::Exception exception(BCP,"No include file defined!");
+        exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
+        exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
+        throw exception;
+      }
 
       if (fname[0] != '/')
       {
@@ -1192,16 +1276,165 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
       if (mIncludedConfigurationFiles.find(fname) == mIncludedConfigurationFiles.end())
       {
         mIncludedConfigurationFiles.insert(fname);
-        ConfigurationFile configFile(fname);
-
-        for (auto it=configFile.mAttributeList.begin(); it!=configFile.mAttributeList.end();++it)
-        {
-          mAttributeList.push_back(*it);
-        }
+        readFile(fname);
       }
+      pos = pos + 1;
+    }
+    else
+    if ((pos+1) < len  &&  words[pos] == "@remove")
+    {
+      std::string pattern = parseValue(words[pos+1]);
 
+      auto slen = pattern.length();
+      if (slen > 1  &&  pattern[0] == '"'  &&  pattern[slen-1] == '"')
+        pattern = pattern.substr(1,slen-2);
+
+      removeAttributes(pattern.c_str());
 
       pos = pos + 1;
+    }
+    else
+    if ((pos+1) < len  &&  words[pos] == "@print")
+    {
+      std::string message = parseValue(words[pos+1]);
+      auto slen = message.length();
+      if (slen > 1  &&  message[0] == '"'  &&  message[slen-1] == '"')
+        message = message.substr(1,slen-2);
+
+      printf("%s\n",message.c_str());
+      pos = pos + 1;
+    }
+    else
+    if ((pos+1) < len  &&  words[pos] == "@location")
+    {
+      printf("*** %s [%d:%d]\n",mCurrentFilename.c_str(),(int)(wordPositions[pos] >> 32),(int)(wordPositions[pos] & 0xFFFFFFFF));
+    }
+    else
+    if ((pos+1) < len  &&  words[pos] == "@throw")
+    {
+      std::string message = parseValue(words[pos+1]);
+
+      SmartMet::Spine::Exception exception(BCP,message);
+      exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
+      exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
+      throw exception;
+    }
+    else
+    if ((pos+1) < len  &&  words[pos] == "@ifdef")
+    {
+      int startPos = pos;
+      std::string attrName = parseValue(words[pos+1]);
+      pos = pos + 1;
+
+      if (!findAttribute(attrName.c_str())  &&  getenv(attrName.c_str()) == NULL)
+      {
+        // Attribute not defined. Ignoring the section.
+        while (pos < len  &&  words[pos] != "@endif"  &&  words[pos] != "@else")
+        {
+          pos++;
+        }
+
+        if (words[pos] != "@endif"  &&  words[pos] != "@else")
+        {
+          SmartMet::Spine::Exception exception(BCP,"Expected '@endif' or '@else' for '@ifdef'!");
+          exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
+          exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
+          throw exception;
+        }
+      }
+      else
+      {
+        // Attribute is defined. If there is 'else' section in this condition then we should
+        // ignore it.
+
+        int p = pos;
+        while (p < len  &&  words[p] != "@endif"  &&  words[p] != "@else")
+          p++;
+
+        if (words[p] == "@else")
+        {
+          while (p < len  &&  words[p] != "@endif")
+          {
+            words[p] = "@ignore";
+            p++;
+          }
+        }
+      }
+    }
+    else
+    if ((pos+1) < len  &&  words[pos] == "@ifndef")
+    {
+      int startPos = pos;
+      std::string attrName = parseValue(words[pos+1]);
+      pos = pos + 1;
+
+      if (findAttribute(attrName.c_str())  ||  getenv(attrName.c_str()) != NULL)
+      {
+        // Attribute defined. Ignoring the section.
+        while (pos < len  &&  words[pos] != "@endif"  &&  words[pos] != "@else")
+        {
+          pos++;
+        }
+        if (words[pos] != "@endif"  &&  words[pos] != "@else")
+        {
+          SmartMet::Spine::Exception exception(BCP,"Expected '@endif' or '@else' for '@ifndef'!");
+          exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
+          exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
+          throw exception;
+        }
+      }
+      else
+      {
+        // Attribute nit defined. If there is 'else' section in this condition then we should
+        // ignore it.
+
+        int p = pos;
+        while (p < len  &&  words[p] != "@endif"  &&  words[p] != "@else")
+          p++;
+
+        if (words[p] == "@else")
+        {
+          while (p < len  &&  words[p] != "@endif")
+          {
+            words[p] = "@ignore";
+            p++;
+          }
+        }
+      }
+    }
+    else
+    if (words[pos] == "@endif")
+    {
+      int p = pos-1;
+      while (p > 0  &&  words[p] != "@endif"  &&  words[p] != "@else"  &&  words[p] != "@ifdef"  &&  words[p] != "@ifndef")
+        p--;
+
+      if (words[p] != "@ifdef"  &&  words[p] != "@ifndef"  &&  words[p] != "@else")
+      {
+        SmartMet::Spine::Exception exception(BCP,"Unexpected '@endif' found!");
+        exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
+        exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
+        throw exception;
+      }
+    }
+    else
+    if (words[pos] == "@else")
+    {
+      int p = pos-1;
+      while (p > 0  &&  words[p] != "@endif"  &&  words[p] != "@else"  &&  words[p] != "@ifdef"  &&  words[p] != "@ifndef")
+        p--;
+
+      if (words[p] != "@ifdef"  &&  words[p] != "@ifndef")
+      {
+        SmartMet::Spine::Exception exception(BCP,"Unexpected '@endif' found!");
+        exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
+        exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
+        throw exception;
+      }
+    }
+    else
+    if (words[pos] == "@ignore")
+    {
     }
     else
     if ((pos+1) < len  &&  (words[pos+1] == ":" || words[pos+1] == "="))

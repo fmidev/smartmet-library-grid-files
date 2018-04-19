@@ -2786,13 +2786,13 @@ T::Coordinate_vec GridDef::getGridCoordinatesByGeometryId(T::GeometryId  geometr
 {
   try
   {
-    auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
-    if (g1 != NULL)
-      return g1->getGridCoordinates();
-
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
     if (g2 != NULL)
       return g2->getGridCoordinates();
+
+    auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
+    if (g1 != NULL)
+      return g1->getGridCoordinates();
 
     T::Coordinate_vec empty;
     return empty;
@@ -3596,8 +3596,8 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
               //def1->setLoV(orientation/1000);
               def1->setOrientationOfTheGrid(orientation/1000);
-              def1->setDxInMetres((std::uint24_t)(iInc/1000));
-              def1->setDyInMetres((std::uint24_t)(jInc/1000));
+              def1->setDxInMetres((std::uint24_t)(iInc));
+              def1->setDyInMetres((std::uint24_t)(jInc));
               //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
               //def1->setLatin1((std::int24_t)latin1/1000);
               //def1->setLatin2((std::int24_t)latin2/1000);

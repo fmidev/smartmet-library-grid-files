@@ -1616,10 +1616,11 @@ void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint ve
 
     if (getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       getGridValueVectorByGridPoint(grid_i,grid_j,vectorType,valueVector);
-
+/*
     printf("getGridValueVectorByLatLonCoordinate %f,%f => %f,%f\n",lat,lon,grid_i,grid_j);
     for (auto it = valueVector.begin(); it != valueVector.end(); ++it)
       std::cout << *it << "\n";
+*/
   }
   catch (...)
   {

@@ -42,7 +42,10 @@ class ConfigurationFile
 
     bool          getAttributeFields(const char *attributeName,std::set<std::string>& attributeFields);
 
+    void          setAttributeValue(const char *attributeName,std::string& attributeValue);
+
     bool          findAttribute(const char *attributeName);
+    void          removeAttributes(const char *pattern);
 
     void          print(std::ostream& stream,uint level,uint optionFlags);
 
@@ -59,6 +62,7 @@ class ConfigurationFile
 
     std::vector<T::Attribute>  mAttributeList;
     std::string                mFilename;
+    std::string                mCurrentFilename;
 
   private:
     std::set<std::string>      mIncludedConfigurationFiles;

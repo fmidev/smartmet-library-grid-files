@@ -364,7 +364,11 @@ void Message::read(MemoryReader& memoryReader)
         if (geometryId != 0)
           setGridGeometryId(geometryId);
         else
+        {
           printf("** Geometry not found %llu (file = %s)\n",(unsigned long long)hash,mGribFile->getFileName().c_str());
+          //SmartMet::Spine::Exception exception(BCP,"Geometry not found");
+          //throw exception;
+        }
       }
       else
       {
