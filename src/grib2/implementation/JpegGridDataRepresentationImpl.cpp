@@ -22,10 +22,6 @@ namespace GRIB2
 
 JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl()
 {
-  if (jas_init())
-  {
-    abort();
-  }
 }
 
 
@@ -83,31 +79,42 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
 {
   try
   {
+    if (jas_init())
+      return;
+
     std::size_t numOfValues = message->getGridOriginalValueCount();
     T::Data_ptr data = message->getDataPtr();
     std::size_t dataSize = message->getDataSize();
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
+    if (numOfValues == 0 ||  data == NULL  ||  dataSize == 0)
+      return;
+/*
     char filename[100];
     sprintf(filename,"/tmp/smartmet-library-grid_jpg2000_decoding_%llu.jpg",getTime());
     FILE *file = fopen(filename,"w");
     fwrite(data,dataSize,1,file);
     fclose(file);
-
     jas_stream_t *instream = jas_stream_fopen(filename, "rb");
+    */
+
+    jas_stream_t *instream = jas_stream_memopen((char*)data,(size_t)dataSize);
     if (instream == NULL)
     {
+      //remove(filename);
       SmartMet::Spine::Exception exception(BCP, "Cannot open the JPG-2000 file!");
-      exception.addParameter("Filename",filename);
+      //exception.addParameter("Filename",filename);
       throw exception;
     }
 
     int fmtid = jas_image_getfmt(instream);
     if (fmtid < 0)
     {
+      jas_stream_close(instream);
+      //remove(filename);
       SmartMet::Spine::Exception exception(BCP, "Not a JPG-2000 image!");
-      exception.addParameter("Filename",filename);
+      //exception.addParameter("Filename",filename);
       throw exception;
     }
 
@@ -116,23 +123,21 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
 
     jas_image_t *image = jas_image_decode(instream, fmtid, 0);
 
-    /* Close the image file. */
-    jas_stream_close(instream);
-    remove(filename);
-
     if (image == NULL)
     {
+      jas_stream_close(instream);
+      //remove(filename);
       SmartMet::Spine::Exception exception(BCP, "Cannot decode the JPG-2000 image!");
-      exception.addParameter("Filename",filename);
+      //exception.addParameter("Filename",filename);
       throw exception;
     }
 
     //int numcmpts = jas_image_numcmpts(image);
     int width = jas_image_cmptwidth(image, 0);
     int height = jas_image_cmptheight(image, 0);
-    int depth = jas_image_cmptprec(image, 0);
+    //int depth = jas_image_cmptprec(image, 0);
 
-    int sz = width*height;
+    //int sz = width*height;
 
     // int rawsz = jas_image_rawsize(image);
     // printf("IMAGE %d x %d x %d => %d (%d)\n",width,height,depth,sz,rawsz);
@@ -144,9 +149,6 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     // Vector to return
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
-
-    if (numOfValues == 0)
-      return;
 
     // Sanity checks
     auto bits_per_value = mPacking.getBitsPerValue();
@@ -184,7 +186,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
       BitArrayReader bitmapReader(bmap,bitmapSizeInBytes*8);
 
       uint pos = 0;
-      for (int i = 0; i < sz; i++)
+      for (int i = 0; i < (int)numOfValues; i++)
       {
         if (bitmapReader.readBit())
         {
@@ -201,7 +203,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     }
     else
     {
-      for (int i = 0; i < sz; i++)
+      for (int i = 0; i < (int)numOfValues; i++)
       {
         int X = matrix->data_[i];
         double Y = RDfac + X * EDfac;
@@ -212,7 +214,8 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     jas_matrix_destroy(matrix);
     jas_image_destroy(image);
     jas_image_clearfmts();
-
+    jas_stream_close(instream);
+    //remove(filename);
   }
   catch (...)
   {

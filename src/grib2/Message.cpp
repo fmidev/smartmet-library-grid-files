@@ -1189,6 +1189,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     {
       SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
       exception.addParameter("Message index",std::to_string(mMessageIndex));
+      exception.addParameter("Filename",mGribFile->getFileName());
       exception.printError();
       mValueDecodingFailed = true;
     }

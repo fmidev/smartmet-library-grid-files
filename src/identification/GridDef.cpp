@@ -3033,6 +3033,124 @@ bool GridDef::getGeometryNameById(T::GeometryId geometryId,std::string& name)
 
 
 
+bool GridDef::getGridDirectionsByGeometryId(T::GeometryId  geometryId,bool& reverseXDirection,bool& reverseYDirection)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+    {
+      reverseXDirection = def1->reverseXDirection();
+      reverseYDirection = def1->reverseYDirection();
+      return true;
+    }
+
+    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    if (def2)
+    {
+      reverseXDirection = def2->reverseXDirection();
+      reverseYDirection = def2->reverseYDirection();
+      return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::GeometryId  geometryId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    T::Coordinate_vec coordinates;
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+    {
+      for (int lat=-90; lat < 90; lat = lat + 10)
+      {
+        for (int lon=-1800; lon < 1800; lon++)
+        {
+          double grid_i = 0;
+          double grid_j = 0;
+          if (def1->getGridPointByLatLonCoordinates((double)lat,((double)lon)/10,grid_i,grid_j))
+          {
+            coordinates.push_back(T::Coordinate(grid_i,grid_j));
+          }
+        }
+      }
+
+      for (int lon=-180; lon < 180; lon=lon+10)
+      {
+        for (int lat=-900; lat < 900; lat++)
+        {
+          double grid_i = 0;
+          double grid_j = 0;
+          if (def1->getGridPointByLatLonCoordinates(((double)lat)/10,(double)lon,grid_i,grid_j))
+          {
+            coordinates.push_back(T::Coordinate(grid_i,grid_j));
+          }
+        }
+      }
+      return coordinates;
+    }
+
+    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    if (def2)
+    {
+      for (int lat=-90; lat < 90; lat = lat + 10)
+      {
+        for (int lon=-1800; lon < 1800; lon++)
+        {
+          double grid_i = 0;
+          double grid_j = 0;
+          if (def2->getGridPointByLatLonCoordinates((double)lat,((double)lon)/10,grid_i,grid_j))
+          {
+            coordinates.push_back(T::Coordinate(grid_i,grid_j));
+          }
+        }
+      }
+
+      for (int lon=-180; lon < 180; lon=lon+10)
+      {
+        for (int lat=-900; lat < 900; lat++)
+        {
+          double grid_i = 0;
+          double grid_j = 0;
+          if (def2->getGridPointByLatLonCoordinates(((double)lat)/10,(double)lon,grid_i,grid_j))
+          {
+            coordinates.push_back(T::Coordinate(grid_i,grid_j));
+          }
+        }
+      }
+    }
+
+    return coordinates;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool GridDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols,uint& rows)
 {
   FUNCTION_TRACE
@@ -3522,7 +3640,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               int jInc = (int)round(atof(field[8]) * 1000);
               char *scanningMode = field[9];
               int orientation = (int)round(atof(field[10])*1000000);
-              int laD = 60000000;
+              int laD = (int)round(atof(field[11]) * 1000000);
 
               // ******* GRIB 2 ********
 //#if 0
@@ -3596,8 +3714,8 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               //def1->setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
               //def1->setLoV(orientation/1000);
               def1->setOrientationOfTheGrid(orientation/1000);
-              def1->setDxInMetres((std::uint24_t)(iInc));
-              def1->setDyInMetres((std::uint24_t)(jInc));
+              def1->setDxInMetres((std::uint24_t)(iInc)/1000);
+              def1->setDyInMetres((std::uint24_t)(jInc)/1000);
               //def1->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
               //def1->setLatin1((std::int24_t)latin1/1000);
               //def1->setLatin2((std::int24_t)latin2/1000);

@@ -40,6 +40,8 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
 time_t toTimeT(boost::posix_time::ptime tim);
 time_t getFileModificationTime(const char *filename);
 long long getFileSize(const char *filename);
+std::string getAbsoluteFilePath(std::string filename);
+std::string getFileDir(std::string filename);
 
 std::string space(uint size);
 

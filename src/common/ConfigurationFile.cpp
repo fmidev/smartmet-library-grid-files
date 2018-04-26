@@ -147,6 +147,7 @@ void ConfigurationFile::readFile(std::string filename)
   FUNCTION_TRACE
   try
   {
+    // std::cout << "READ CONFIG : " << filename << "\n";
     if (mFilename.length() == 0)
       mFilename = filename;
 
@@ -195,6 +196,8 @@ void ConfigurationFile::readFile(std::string filename)
         pos = readAttribute(wordList,wordPositions,len,pos,path);
       }
     }
+
+    mCurrentFilename = mFilename;
   }
   catch (...)
   {
@@ -202,6 +205,52 @@ void ConfigurationFile::readFile(std::string filename)
     if (mFilename != filename)
       exception.addParameter("Main configuration file",mFilename);
     exception.addParameter("Configuration file",filename);
+    throw exception;
+  }
+}
+
+
+
+
+
+void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilename,std::string outputFilename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *inFile = fopen(inputFilename.c_str(),"r");
+    if (inFile == NULL)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Cannot open the input file!");
+      exception.addParameter("Input file",inputFilename);
+      throw exception;
+    }
+
+    FILE *outFile = fopen(outputFilename.c_str(),"w");
+    if (outFile == NULL)
+    {
+      fclose(inFile);
+      SmartMet::Spine::Exception exception(BCP,"Cannot open the output file!");
+      exception.addParameter("Output file",outputFilename);
+      throw exception;
+    }
+
+    char st[10000];
+    while (!feof(inFile))
+    {
+      if (fgets(st,10000,inFile) != NULL)
+      {
+        std::string newStr = parseValue(std::string(st));
+        fprintf(outFile,"%s",newStr.c_str());
+      }
+    }
+
+    fclose(inFile);
+    fclose(outFile);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
     throw exception;
   }
 }
@@ -830,6 +879,7 @@ std::string ConfigurationFile::parseValue(std::string value)
     std::size_t p1 = 0;
     while (p1 != std::string::npos)
     {
+      //std::cout << "PARSE START [" << val << "]\n";
       p1 = val.find("$(");
       if (p1 != std::string::npos)
       {
@@ -855,7 +905,80 @@ std::string ConfigurationFile::parseValue(std::string value)
           }
 
           std::string newVal = val.substr(0,p1) + varValue + val.substr(p2+1);
+          //std::cout << "[" << val << "] <= [" << newVal << "]\n";
           val = newVal;
+        }
+        else
+        {
+          SmartMet::Spine::Exception exception(BCP,"Expecting the character ')' at the end of the variable name!");
+          exception.addParameter("Value",value);
+          throw exception;
+        }
+      }
+      //std::cout << "PARSE END [" << val << "]\n";
+    }
+
+    return val;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+std::string ConfigurationFile::parseConstValue(std::string value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::string val = value;
+
+    std::size_t p1 = 0;
+    while (p1 != std::string::npos)
+    {
+      p1 = val.find("%(");
+      if (p1 != std::string::npos)
+      {
+        std::size_t p2 = val.find(")",p1+1);
+        if (p2 != std::string::npos)
+        {
+          std::string var = val.substr(p1+2,p2-p1-2);
+          std::string varValue;
+
+          if (var == "DIR")
+          {
+            varValue = getFileDir(mCurrentFilename);
+            //std::cout << "***** " << mCurrentFilename << " : " << varValue << "\n";
+          }
+          else
+          // Searching a value for the variable
+          if (!getAttributeValue(var.c_str(),varValue))
+          {
+            // Variable not defined in the configuration file. Maybe it is an environmental variable.
+            char *env = getenv(var.c_str());
+            if (env == NULL)
+            {
+              SmartMet::Spine::Exception exception(BCP,"Unknown variable name!");
+              exception.addParameter("VariableName",var);
+              throw exception;
+            }
+
+            varValue = env;
+          }
+
+          std::string newVal = val.substr(0,p1) + varValue + val.substr(p2+1);
+          //std::cout << "[" << val << "] <= [" << newVal << "]\n";
+          val = newVal;
+        }
+        else
+        {
+          SmartMet::Spine::Exception exception(BCP,"Expecting the character ')' at the end of the variable name!");
+          exception.addParameter("Value",value);
+          throw exception;
         }
       }
     }
@@ -1069,6 +1192,17 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
       return pos + 4;
     }
     else
+    if ((pos+3) < len &&  words[pos] == "%" &&  words[pos+1] == "("  &&  words[pos+3] == ")")
+    {
+      T::Attribute attr;
+      attr.mName = path;
+      std::string v = "%(" + words[pos+2] + ")";
+      attr.mValue = parseConstValue(v);
+      mAttributeList.push_back(attr);
+
+      return pos + 4;
+    }
+    else
     if (words[pos] == "{" )
     {
       int startPos = pos;
@@ -1187,7 +1321,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
     }
     else
     {
-      std::string attributeValue = words[pos];
+      std::string attributeValue = parseConstValue(words[pos]);
       //std::cout << "ATTRIBUTE " << path << " = " << attributeValue << "\n";
 
       setAttributeValue(path.c_str(),attributeValue);
@@ -1248,7 +1382,8 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
 
     if ((pos+1) < len  &&  words[pos] == "@include")
     {
-      std::string fname = parseValue(words[pos+1]);
+      std::string fname = parseConstValue(words[pos+1]);
+      fname = parseValue(fname);
 
       auto slen = fname.length();
       if (slen > 1  &&  fname[0] == '"'  &&  fname[slen-1] == '"')
@@ -1268,15 +1403,16 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
         // The file name does not contain path, so it should be relational
         // to the current path.
 
-        std::size_t p = mFilename.rfind("/");
-        if (p != std::string::npos)
-          fname = mFilename.substr(0,p+1) + fname;
+        std::string dir = getFileDir(mCurrentFilename);
+        fname = dir + fname;
       }
 
       if (mIncludedConfigurationFiles.find(fname) == mIncludedConfigurationFiles.end())
       {
+        std::string currentFilename = mCurrentFilename;
         mIncludedConfigurationFiles.insert(fname);
         readFile(fname);
+        mCurrentFilename = currentFilename;
       }
       pos = pos + 1;
     }
@@ -1296,7 +1432,9 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
     else
     if ((pos+1) < len  &&  words[pos] == "@print")
     {
-      std::string message = parseValue(words[pos+1]);
+      std::string message = parseConstValue(words[pos+1]);
+      message = parseValue(message);
+
       auto slen = message.length();
       if (slen > 1  &&  message[0] == '"'  &&  message[slen-1] == '"')
         message = message.substr(1,slen-2);
@@ -1312,7 +1450,8 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
     else
     if ((pos+1) < len  &&  words[pos] == "@throw")
     {
-      std::string message = parseValue(words[pos+1]);
+      std::string message = parseConstValue(words[pos+1]);
+      message = parseValue(message);
 
       SmartMet::Spine::Exception exception(BCP,message);
       exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));

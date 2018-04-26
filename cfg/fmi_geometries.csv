@@ -117,6 +117,8 @@
 2;1054;GLAMEPS;870;660;-52.4;-11.5;0.075;0.075;+x+y;30;-46;0;GLAMEPS 870 x 660 0.075 deg;
 2;1066;SMHIMESAN025;630;779;-7.945;-6.818;0.025;0.025;+x+y;15;-30;0;SMHI mesoanalysis area 0.025 degrees;
 2;1068;ECEUR0200G2;331;289;334;22.6;0.2;0.2;+x-y;0;-30;0;ECMWF Europe, rotated 0.2 degrees, GRIB2 version;
+2;1090;ECEDIT100;201;221;-10;13;0.1;0.1;+x-y;20;-30;0;EC editing area in 0.1 deg;
+2;1091;ECEDIT100G2;201;221;350;13;0.1;0.1;+x-y;0;-30;0;EC editing area in 0.1 deg GRIB 2;
 
 # LAMBERT CONFORMAL : projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,orientation,latin1,latin2,south_pole.x,south_pole.y,description
 10;1050;MEPSNOFMI2500;739;949;1.639;52.041;2500;2500;+x+y;15;63;63;0;0;MEPS Scandinavia area without FMI extension;
@@ -125,32 +127,32 @@
 
 # GAUSSIAN : projection,id,name,nj,first_point.x,first_point.y,scanning_mode,n,point_along_parallels,description
 
-# POLAR STEREOGRAPHIC : projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,orientation,description
-9;20;MTSKAPS22;94;109;6;51.3;22;22;+x+y;20;Polaaristereografinen Fennoskandian alue 22 km;
-9;39;LAPS1000;400;300;20.744;59.736;1000;1000;+x+y;20;LAPS Analysis Area over Finland;
-9;40;LAPS3000;270;400;17.8051;59.3791;3000;3000;+x+y;20;LAPS Analysis Area over Finland;
-9;41;LAPSSCAN;490;560;7.17828;54.2871;3000;3000;+x+y;20;LAPS Analysis Area over Scandinavia;
-9;42;KALLAPS3;685;765;5.941;51.058;3;3;+x+y;20;Suomi 3x3 km;
-9;211;MTHIPS50;144;120;-35.7;25.6;50;50;+x+y;0;Polar stereographic area covering most of HIR;
-9;212;MTEUPS20;175;135;-12.4;49;20;20;+x+y;0;Polar stereographic area covering most of EUR;
-9;213;MTHIPS25;290;225;-19.3;24.9;25000;25000;+x+y;10;Polar stereographic area covering most of RCR;
-9;214;MTHIPS125;58;45;-19.3;24.9;125;125;+x+y;10;Polar stereographic area covering most of RCR;
-9;238;MTSKAPS33;63;73;6;51.3;33;33;+x+y;20;Polaaristereografinen Fennoskandian alue 33 km;
-9;239;MTSKAPS66;32;37;6;51.3;66;66;+x+y;20;Polaaristereografinen Fennoskandian alue 66 km;
-9;281;ILA50500400;50;50;24.729;60.14;0.4;0.4;+x+y;0;ILA 50x50 400m;
-9;505;NETE1000;775;665;17.53;57.93;1;1;+x+y;0;Nordrad Etela2 665x775;
-9;506;NKESKI1000;775;565;17.3;61.16;1;1;+x+y;0;Nordrad Keski2 565x775;
-9;507;NPOHJO2000;275;290;18.55;64.04;2;2;+x+y;0;Nordrad Pohjo2 290x275;
-9;508;NNORDEN4000;374;431;9;52.4;4;4;+x+y;0;Nordrad Finorden 431x374;
-9;610;NEMO609719;609;719;-85.9766;41.1385;12.5;12.5;+x+y;-45;Polar stereographic area;
-9;901;OSI_NO_AHL;1260;900;-40.173;37.345;5000;5000;+x+y;0;OSI North Atlantic from met.no;
-9;1043;MOSLAPS;980;840;354.093;30.3273;5000;5000;+x+y;20;MOS ECMWF LAPS gridded dataset;
-9;1057;ERASCAND;28;31;6;51.3;76000;76000;+x+y;20;ERA Interim area for Smartmet Scandinavia editor;
-9;1058;MEPS10000;212;235;6;51.3;10000;10000;+x+y;20;MEPS area in 10km resolution for Smartmet Scandinavia editor;
-9;1063;MOSLAPSNC;980;840;-5.90741;30.3273;5000;5000;+x+y;20;MOS ECMWF LAPS gridded static dataset;
-9;1067;LAPSSCANLARGE;685;765;5.94086;51.0579;3000.0;3000.0;+x+y;20.0;LAPS Scandinavia extended domain;
-9;1071;PEPSSCAND;735;795;7.7;52.81;2465;2473;+x+y;20;PEPS Scandinavia;
-9;1073;SMARTMET7500;270;300;6;51.3;7494.39;7479.17;+x+y;20.0;SmartMet Scandinavian area 7500km resolution;
-9;1079;IASI_L2;171;191;5.98561;51.1047;12017.5;12015.7;+x-y;20.0;IASI L2 satellite area over Europe;
-9;1080;KALMANSCAN3000;685;765;5.941;51.058;3000;3000;+x+y;20.0;Kalman filtered data with LAPS gridding over Scandinavia;
-9;1086;BLENDSCAN3000;685;765;5.94086;51.0579;3000;3000;+x+y;20.0;Blend Scandinavia from extended LAPS;
+# POLAR STEREOGRAPHIC : projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,orientation,laD,description
+9;20;MTSKAPS22;94;109;6;51.3;22;22;+x+y;20;60.0;Polaaristereografinen Fennoskandian alue 22 km;
+9;39;LAPS1000;400;300;20.744;59.736;1000;1000;+x+y;20;60.0;LAPS Analysis Area over Finland;
+9;40;LAPS3000;270;400;17.8051;59.3791;3000;3000;+x+y;20;60.0;LAPS Analysis Area over Finland;
+9;41;LAPSSCAN;490;560;7.17828;54.2871;3000;3000;+x+y;20;60.0;LAPS Analysis Area over Scandinavia;
+9;42;KALLAPS3;685;765;5.941;51.058;3;3;+x+y;20;60.0;Suomi 3x3 km;
+9;211;MTHIPS50;144;120;-35.7;25.6;50;50;+x+y;0;60.0;Polar stereographic area covering most of HIR;
+9;212;MTEUPS20;175;135;-12.4;49;20;20;+x+y;0;60.0;Polar stereographic area covering most of EUR;
+9;213;MTHIPS25;290;225;-19.3;24.9;25000;25000;+x+y;10;60.0;Polar stereographic area covering most of RCR;
+9;214;MTHIPS125;58;45;-19.3;24.9;125;125;+x+y;10;60.0;Polar stereographic area covering most of RCR;
+9;238;MTSKAPS33;63;73;6;51.3;33;33;+x+y;20;60.0;Polaaristereografinen Fennoskandian alue 33 km;
+9;239;MTSKAPS66;32;37;6;51.3;66;66;+x+y;20;60.0;Polaaristereografinen Fennoskandian alue 66 km;
+9;281;ILA50500400;50;50;24.729;60.14;0.4;0.4;+x+y;0;60.0;ILA 50x50 400m;
+9;505;NETE1000;775;665;17.53;57.93;1;1;+x+y;0;60.0;Nordrad Etela2 665x775;
+9;506;NKESKI1000;775;565;17.3;61.16;1;1;+x+y;0;60.0;Nordrad Keski2 565x775;
+9;507;NPOHJO2000;275;290;18.55;64.04;2;2;+x+y;0;60.0;Nordrad Pohjo2 290x275;
+9;508;NNORDEN4000;374;431;9;52.4;4;4;+x+y;0;60.0;Nordrad Finorden 431x374;
+9;610;NEMO609719;609;719;-85.9766;41.1385;12.5;12.5;+x+y;-45;60.0;Polar stereographic area;
+9;901;OSI_NO_AHL;1260;900;-40.173;37.345;5000;5000;+x+y;0;60.0;OSI North Atlantic from met.no;
+9;1043;MOSLAPS;980;840;354.093;30.3273;5000;5000;+x+y;20;60.0;MOS ECMWF LAPS gridded dataset;
+9;1057;ERASCAND;28;31;6;51.3;76000;76000;+x+y;20;60.0;ERA Interim area for Smartmet Scandinavia editor;
+9;1058;MEPS10000;212;235;6;51.3;10000;10000;+x+y;20;60.0;MEPS area in 10km resolution for Smartmet Scandinavia editor;
+9;1063;MOSLAPSNC;980;840;-5.90741;30.3273;5000;5000;+x+y;20;60.0;MOS ECMWF LAPS gridded static dataset;
+9;1067;LAPSSCANLARGE;685;765;5.94086;51.0579;3000.0;3000.0;+x+y;20.0;60.0;LAPS Scandinavia extended domain;
+9;1071;PEPSSCAND;735;795;7.7;52.81;2465;2473;+x+y;20;60.0;PEPS Scandinavia;
+9;1073;SMARTMET7500;270;300;6;51.3;7494.39;7479.17;+x+y;20.0;60.0;SmartMet Scandinavian area 7500km resolution;
+9;1079;IASI_L2;171;191;5.98561;51.1047;12017.5;12015.7;+x-y;20.0;60.0;IASI L2 satellite area over Europe;
+9;1080;KALMANSCAN3000;685;765;5.941;51.058;3000;3000;+x+y;20.0;60.0;Kalman filtered data with LAPS gridding over Scandinavia;
+9;1086;BLENDSCAN3000;685;765;5.94086;51.0579;3000;3000;+x+y;20.0;60.0;Blend Scandinavia from extended LAPS;

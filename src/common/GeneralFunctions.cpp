@@ -3,6 +3,8 @@
 #include "Exception.h"
 #include "AutoThreadLock.h"
 
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/convenience.hpp>
 #include <stdlib.h>
 #include <sstream>
 #include <sys/time.h>
@@ -11,9 +13,12 @@
 #include <unistd.h>
 #include <zlib.h>
 
+namespace fs = boost::filesystem;
+
 
 namespace SmartMet
 {
+
 
 ThreadLock timeThreadLock;
 
@@ -1315,6 +1320,41 @@ void splitString(std::string str,char separator,std::vector<float>& partList)
 }
 
 
+
+
+
+std::string getAbsoluteFilePath(std::string filename)
+{
+  if (!filename.empty() && fs::exists(filename))
+  {
+    fs::path path(filename);
+    if (!path.is_absolute())
+    {
+      path = fs::canonical(path);
+      return path.string();
+    }
+    return path.string();
+  }
+  return filename;
+}
+
+
+
+
+
+std::string getFileDir(std::string filename)
+{
+  std::string fname = getAbsoluteFilePath(filename);
+  std::string::size_type n = fname.rfind("/");
+  if (n != std::string::npos)
+    return fname.substr(0,n);
+
+  n = fname.rfind("\\");
+  if (n != std::string::npos)
+    return fname.substr(0,n);
+
+  return std::string("");
+}
 
 
 

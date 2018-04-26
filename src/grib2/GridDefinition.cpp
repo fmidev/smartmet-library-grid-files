@@ -1,8 +1,13 @@
 #include "GridDefinition.h"
 #include "common/Exception.h"
+#include "common/ShowFunction.h"
 
 #include <iostream>
 #include <map>
+#include <iostream>
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
 namespace SmartMet
@@ -20,6 +25,7 @@ std::map<uint,T::Coordinate_vec> coordinateCache;
 
 GridDefinition::GridDefinition()
 {
+  FUNCTION_TRACE
   try
   {
     mGridProjection = T::GridProjection::Unknown;
@@ -46,6 +52,7 @@ GridDefinition::GridDefinition()
 
 GridDefinition::~GridDefinition()
 {
+  FUNCTION_TRACE
   try
   {
     if (mCoordinateTranformation_latlon2orig != NULL)
@@ -69,6 +76,7 @@ GridDefinition::~GridDefinition()
 
 void GridDefinition::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
 {
+  FUNCTION_TRACE
 }
 
 
@@ -77,6 +85,7 @@ void GridDefinition::getAttributeList(std::string prefix,T::AttributeList& attri
 
 T::GeometryId GridDefinition::getGridGeometryId() const
 {
+  FUNCTION_TRACE
   try
   {
     return mGeometryId;
@@ -94,6 +103,7 @@ T::GeometryId GridDefinition::getGridGeometryId() const
 
 T::GridProjection GridDefinition::getGridProjection()
 {
+  FUNCTION_TRACE
   try
   {
     return mGridProjection;
@@ -111,6 +121,7 @@ T::GridProjection GridDefinition::getGridProjection()
 
 void GridDefinition::setGridGeometryId(T::GeometryId geometryId)
 {
+  FUNCTION_TRACE
   try
   {
     mGeometryId = geometryId;
@@ -127,6 +138,7 @@ void GridDefinition::setGridGeometryId(T::GeometryId geometryId)
 
 std::string  GridDefinition::getGridGeometryName()
 {
+  FUNCTION_TRACE
   try
   {
     return mGeometryName;
@@ -143,6 +155,7 @@ std::string  GridDefinition::getGridGeometryName()
 
 void GridDefinition::setGridGeometryName(std::string geometryName)
 {
+  FUNCTION_TRACE
   try
   {
     mGeometryName = geometryName;
@@ -168,6 +181,7 @@ void GridDefinition::setGridGeometryName(std::string geometryName)
 
 T::Coordinate_vec GridDefinition::getGridCoordinates() const
 {
+  FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 
@@ -177,6 +191,7 @@ T::Coordinate_vec GridDefinition::getGridCoordinates() const
 
 T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 {
+  FUNCTION_TRACE
   try
   {
     //printf("*** GET COORDINATES version 2\n");
@@ -237,6 +252,7 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 
 bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
     T::Dimensions_opt d = getGridDimensions();
@@ -265,6 +281,7 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
 
 bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
+  FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in a child class!");
 }
 
@@ -274,6 +291,7 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,doub
 
 bool GridDefinition::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
     double x = 0, y = 0;
@@ -305,6 +323,7 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPosition(double grid_i,double
 
 T::Dimensions_opt GridDefinition::getGridDimensions() const
 {
+  FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 
@@ -319,6 +338,7 @@ T::Dimensions_opt GridDefinition::getGridDimensions() const
 
 void GridDefinition::initSpatialReference()
 {
+  FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in a child class!");
 }
 
@@ -328,6 +348,7 @@ void GridDefinition::initSpatialReference()
 
 bool GridDefinition::reverseXDirection() const
 {
+  FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 
@@ -337,6 +358,7 @@ bool GridDefinition::reverseXDirection() const
 
 bool GridDefinition::reverseYDirection() const
 {
+  FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 
@@ -353,6 +375,7 @@ bool GridDefinition::reverseYDirection() const
 
 bool GridDefinition::isGridGlobal() const
 {
+  FUNCTION_TRACE
   try
   {
     return mGlobal;
@@ -381,6 +404,7 @@ bool GridDefinition::isGridGlobal() const
 
 bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
     double x = 0, y = 0;
@@ -400,6 +424,7 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
 
 bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
     T::Dimensions_opt d = getGridDimensions();
@@ -439,6 +464,7 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
 
 bool GridDefinition::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
 {
+  FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 
@@ -459,6 +485,7 @@ bool GridDefinition::getGridPointByOriginalCoordinates(double x,double y,double&
 
 bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mCoordinateTranformation_latlon2orig == NULL)
@@ -474,10 +501,13 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
         throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
     }
 
-    x =lon;
+    x = lon;
     y = lat;
 
     mCoordinateTranformation_latlon2orig->Transform(1,&x,&y);
+
+    //printf("COORDINATE %f,%f => %f,%f\n",lon,lat,x,y);
+
     return true;
   }
   catch (...)
@@ -503,6 +533,7 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
 
 bool GridDefinition::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mCoordinateTranformation_orig2latlon == NULL)
@@ -537,6 +568,7 @@ bool GridDefinition::getGridLatLonCoordinatesByOriginalCoordinates(double x,doub
 
 T::SpatialReference* GridDefinition::getSpatialReference()
 {
+  FUNCTION_TRACE
   try
   {
     return &mSpatialReference;
@@ -558,6 +590,7 @@ T::SpatialReference* GridDefinition::getSpatialReference()
 
 T::GridLayout GridDefinition::getGridLayout()
 {
+  FUNCTION_TRACE
   try
   {
     return mGridLayout;
@@ -574,6 +607,7 @@ T::GridLayout GridDefinition::getGridLayout()
 
 T::Hash GridDefinition::getGridHash()
 {
+  FUNCTION_TRACE
   try
   {
     if (mHash == 0)
@@ -594,6 +628,7 @@ T::Hash GridDefinition::getGridHash()
 
 T::Hash GridDefinition::countHash()
 {
+  FUNCTION_TRACE
   //std::cout << "Hash not defined\n";
   return 0;
 }
@@ -605,6 +640,7 @@ T::Hash GridDefinition::countHash()
 
 double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
 {
+  FUNCTION_TRACE
   try
   {
     auto shape = earthSettings.getShapeOfTheEarth();
@@ -653,6 +689,7 @@ double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
 
 double GridDefinition::getMinorAxis(EarthShapeSettings& earthSettings)
 {
+  FUNCTION_TRACE
   try
   {
     auto shape = earthSettings.getShapeOfTheEarth();
@@ -701,6 +738,7 @@ double GridDefinition::getMinorAxis(EarthShapeSettings& earthSettings)
 
 double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
 {
+  FUNCTION_TRACE
   try
   {
     auto shape = earthSettings.getShapeOfTheEarth();
@@ -757,6 +795,7 @@ double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
 
 void GridDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
 {
+  FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 

@@ -46,12 +46,15 @@ class ConfigurationFile
 
     bool          findAttribute(const char *attributeName);
     void          removeAttributes(const char *pattern);
+    void          replaceAttributeNamesWithValues(std::string inputFilename,std::string outputFilename);
 
     void          print(std::ostream& stream,uint level,uint optionFlags);
 
   protected:
 
     std::string   parseValue(std::string value);
+    std::string   parseConstValue(std::string value);
+
     void          removeComments(char *st,unsigned long long *positions,char *newst,unsigned long long *newpositions,int len);
     void          setPositions(char *st,unsigned long long *positions,int len);
     void          getWords(char *st,unsigned long long *positions,std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions);

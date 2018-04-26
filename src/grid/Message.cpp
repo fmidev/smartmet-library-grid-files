@@ -1594,6 +1594,21 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
         valueVector.push_back(getGridValueByGridPoint(x2,y2));
         valueVector.push_back(getGridValueByGridPoint(x1,y2));
         break;
+
+      case T::AreaInterpolationMethod::ListWithAngles:
+        valueVector.push_back(7);
+        valueVector.push_back(x-(double)x1);
+        valueVector.push_back(y-(double)y1);
+        valueVector.push_back(getGridPointAngle(T::CoordinateType::GRID_COORDINATES,grid_i,grid_j));
+        valueVector.push_back(getGridPointAngle(T::CoordinateType::GRID_COORDINATES,(double)x1,(double)y1));
+        valueVector.push_back(getGridPointAngle(T::CoordinateType::GRID_COORDINATES,(double)x2,(double)y1));
+        valueVector.push_back(getGridPointAngle(T::CoordinateType::GRID_COORDINATES,(double)x2,(double)y2));
+        valueVector.push_back(getGridPointAngle(T::CoordinateType::GRID_COORDINATES,(double)x1,(double)y2));
+        valueVector.push_back(getGridValueByGridPoint(x1,y1));
+        valueVector.push_back(getGridValueByGridPoint(x2,y1));
+        valueVector.push_back(getGridValueByGridPoint(x2,y2));
+        valueVector.push_back(getGridValueByGridPoint(x1,y2));
+        break;
     }
   }
   catch (...)

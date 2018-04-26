@@ -5286,9 +5286,6 @@
 85001160;0;84;7;6;;;;;;;;;;;;;;;;;;;m**2 s**-2;CAPE_INS;Convective Available Potential Energy instantaneous;
 94001224;0;94;7;7;;;1;8;;;;;;;;;;;;;;J kg**-1;cin;Convective inhibition;
 94001225;0;94;7;6;;;;1;8;;;;;;;;;;;;;;J kg**-1;cape;Convective available potential energy;
-1000000000;192;;0;0;;;;;;;;;;;;;;;;;;;;;;
-1000000000;192;;0;0;;;;;;;;;;;;;;;;;;;;;;
-1000000000;192;;0;0;;;;;;;;;;;;;;;;;;;;;;
 1000000001;192;;0;1;;;;;;;;;;;;;;;;;;;Pressure;Pressure;;
 1000000002;192;;0;2;;;;;;;;;;;;;;;;;;;GeopHeight;GeopHeight;;
 1000000003;192;;0;3;;;;;;;;;;;;;;;;;;;GeomHeight;GeomHeight;;
