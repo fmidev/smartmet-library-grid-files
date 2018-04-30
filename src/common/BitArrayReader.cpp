@@ -121,6 +121,9 @@ bool BitArrayReader::readBit()
 {
   try
   {
+    if (mData == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to NULL!");
+
     if ((mReadPosition + 1) > mNumberOfBits)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot read a bit outside of the memory area !");
@@ -195,6 +198,9 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int& value)
 {
   try
   {
+    if (mData == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to NULL!");
+
     if (numberOfBits > 32)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot read more than 32 bits into 'int'!");
@@ -241,6 +247,9 @@ void BitArrayReader::readBits(unsigned int numberOfBits,unsigned int& value)
 {
   try
   {
+    if (mData == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to NULL!");
+
     if (numberOfBits > 32)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot read more than 32 bits into 'unsigned int'!");
@@ -287,6 +296,9 @@ void BitArrayReader::readBits(unsigned int numberOfBits,unsigned long long& valu
 {
   try
   {
+    if (mData == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to NULL!");
+
     if (numberOfBits > 64)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot read more than 64 bits into 'unsigned long long'!");
@@ -334,6 +346,9 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int *array,unsigned int 
 {
   try
   {
+    if (mData == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to NULL!");
+
     for (unsigned int t=0; t<arraySize; t++)
     {
       readBits(numberOfBits,array[t]);

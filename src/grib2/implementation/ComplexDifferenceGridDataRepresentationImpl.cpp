@@ -78,6 +78,9 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
+    if (data == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to NULL!");
+
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
 

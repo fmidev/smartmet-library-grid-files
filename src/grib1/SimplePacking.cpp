@@ -60,6 +60,9 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
     std::float_t referenceValue = message->getReferenceValue();
     std::uint8_t bitsPerValue = message->getBitsPerValue();
 
+    if (data == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to NULL!");
+
     // If 'bitsPerValue' is zero then all values are same as the reference value
 
     if (!bitsPerValue)

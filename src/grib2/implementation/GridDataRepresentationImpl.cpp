@@ -131,6 +131,9 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
+    if (data == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to NULL!");
+
     const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
 
     // Vector to return

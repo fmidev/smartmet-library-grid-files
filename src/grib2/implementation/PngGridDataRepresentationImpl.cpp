@@ -104,6 +104,9 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
+    if (data == NULL)
+      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to NULL!");
+
     long bits_per_value = *mPacking.getBitsPerValue();
     double reference_value = mPacking.getReferenceValue();
 
