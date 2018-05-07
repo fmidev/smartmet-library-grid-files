@@ -100,7 +100,9 @@ class GridDef
     void              getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList);
     bool              getGeometryNameById(T::GeometryId  geometryId,std::string& name);
 
-    bool              getGridDirectionsByGeometryId(T::GeometryId  geometryId,bool& reverseXDirection,bool& reverseYDirection);
+    bool              getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double& width,double& height);
+    bool              getGridDirectionsByGeometryId(T::GeometryId geometryId,bool& reverseXDirection,bool& reverseYDirection);
+
     T::Coordinate_vec getGridCoordinatesByGeometryId(T::GeometryId  geometryId);
     T::Coordinate_vec getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId);
     T::Coordinate_vec getGridLatLonCoordinateLinePointsByGeometryId(T::GeometryId  geometryId);

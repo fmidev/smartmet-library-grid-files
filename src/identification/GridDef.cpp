@@ -2782,6 +2782,38 @@ void GridDef::loadFmiProducerId_grib(const char *filename)
 
 
 
+bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double& width,double& height)
+{
+  try
+  {
+    auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
+    if (g2 != NULL)
+    {
+      g2->getGridCellAverageSize(width,height);
+      if (width != 0  &&  height != 0)
+        return true;
+    }
+
+    auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
+    if (g1 != NULL)
+    {
+      g1->getGridCellAverageSize(width,height);
+      if (width != 0  &&  height != 0)
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 T::Coordinate_vec GridDef::getGridCoordinatesByGeometryId(T::GeometryId  geometryId)
 {
   try

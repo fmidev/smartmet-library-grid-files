@@ -1,5 +1,6 @@
 #include "GridDefinition.h"
 #include "common/Exception.h"
+#include "common/CoordinateConversions.h"
 #include "common/GeneralFunctions.h"
 #include "common/GeneralDefinitions.h"
 #include "common/ShowFunction.h"
@@ -593,6 +594,37 @@ T::Hash GridDefinition::countHash()
   return 0;
 }
 
+
+
+
+
+void GridDefinition::getGridCellAverageSize(double& width,double& height)
+{
+  FUNCTION_TRACE
+  try
+  {
+    T::Dimensions_opt d = getGridDimensions();
+    if (d)
+    {
+      int x = d->nx()/2;
+      int y = d->ny()/2;
+
+      double lat1 = 0,lon1 = 0,lat2 = 0,lon2 = 0;;
+      if (getGridLatLonCoordinatesByGridPoint(x,y,lat1,lon1)  &&  getGridLatLonCoordinatesByGridPoint(x+1,y+1,lat2,lon2))
+      {
+        width = latlon_distance(lat1,lon1,lat1,lon2);
+        height = latlon_distance(lat1,lon1,lat2,lon1);
+        return;
+      }
+    }
+    width = 0;
+    height = 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
 
 
 
