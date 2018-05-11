@@ -3227,6 +3227,34 @@ bool GridDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols
 
 
 
+bool GridDef::getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geometryId,double lat,double lon,double& grid_i,double& grid_j)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+      return def1->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
+
+    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    if (def2)
+      return def2->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_vec& coordinates)
 {
   FUNCTION_TRACE

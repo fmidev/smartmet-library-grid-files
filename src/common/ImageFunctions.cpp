@@ -1,11 +1,15 @@
 #include "ImageFunctions.h"
 #include "Exception.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <setjmp.h>
-#include <jpeglib.h>
-#include <math.h>
+extern "C"
+{
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <jpeglib.h>
+  #include <math.h>
+  #include <png.h>
+  #include <setjmp.h>
+};
 
 
 namespace SmartMet
@@ -117,6 +121,7 @@ uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value
 
 
 
+// ********************************************* JPEG *********************************************************
 
 
 void jpeg_save(const char *filename, unsigned long *image, int image_height,int image_width, int quality)
@@ -425,6 +430,283 @@ int jpg_load(const char *_filename,CImage& _image)
 
   return 0;
 }
+
+
+
+
+
+
+// ********************************************* PNG **********************************************************
+
+
+
+static png_structp png_ptr = NULL;
+static png_infop info_ptr = NULL;
+
+png_uint_32 width = 0, height = 0;
+int bit_depth = 0, color_type = 0;
+uchar *image_data = NULL;
+
+
+
+
+void readpng_version_info(void)
+{
+//  fprintf(moutput,"Compiled with libpng %s; using libpng %s.\n",PNG_LIBPNG_VER_STRING, png_libpng_ver);
+//  fprintf(moutput,"Compiled with zlib %s; using zlib %s.\n",ZLIB_VERSION, zlib_version);
+}
+
+
+
+
+
+
+int readpng_init(FILE *infile, uint *pWidth, uint *pHeight)
+{
+  uchar sig[8];
+
+  if (fread(sig, 1, 8, infile) != 8 || !png_check_sig(sig, 8))
+    return -1;   /* bad signature */
+
+
+  png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  if (!png_ptr)
+    return -2;   /* out of memory */
+
+  info_ptr = png_create_info_struct(png_ptr);
+  if (!info_ptr)
+  {
+    png_destroy_read_struct(&png_ptr, NULL, NULL);
+    return -3;   /* out of memory */
+  }
+
+  if (setjmp(png_jmpbuf(png_ptr)))
+  {
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+    return -4;
+  }
+
+
+  png_init_io(png_ptr, infile);
+  png_set_sig_bytes(png_ptr, 8);
+
+  png_read_info(png_ptr, info_ptr);
+
+  png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,NULL, NULL, NULL);
+
+  *pWidth = width;
+  *pHeight = height;
+
+  return 0;
+}
+
+
+
+
+
+int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
+{
+  png_color_16p pBackground;
+
+  if (setjmp(png_jmpbuf(png_ptr)))
+  {
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+    return 2;
+  }
+
+
+  if (!png_get_valid(png_ptr, info_ptr, PNG_INFO_bKGD))
+    return 1;
+
+  png_get_bKGD(png_ptr, info_ptr, &pBackground);
+
+  if (bit_depth == 16)
+  {
+    *red   = pBackground->red   >> 8;
+    *green = pBackground->green >> 8;
+    *blue  = pBackground->blue  >> 8;
+  }
+  else
+  if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+  {
+    if (bit_depth == 1)
+      *red = *green = *blue = pBackground->gray? 255 : 0;
+    else
+    if (bit_depth == 2)
+      *red = *green = *blue = (255/3) * pBackground->gray;
+    else /* bit_depth == 4 */
+      *red = *green = *blue = (255/15) * pBackground->gray;
+  }
+  else
+  {
+    *red   = (uchar)pBackground->red;
+    *green = (uchar)pBackground->green;
+    *blue  = (uchar)pBackground->blue;
+  }
+  return 0;
+}
+
+
+
+
+
+
+uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbytes)
+{
+  double gamma;
+  png_uint_32 i, rowbytes;
+
+
+  if (setjmp(png_jmpbuf(png_ptr)))
+  {
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+    return NULL;
+  }
+
+  if (color_type == PNG_COLOR_TYPE_PALETTE)
+    png_set_expand(png_ptr);
+
+  if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+    png_set_expand(png_ptr);
+
+  if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+    png_set_expand(png_ptr);
+
+  if (bit_depth == 16)
+    png_set_strip_16(png_ptr);
+
+  if (color_type == PNG_COLOR_TYPE_GRAY  ||  color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+    png_set_gray_to_rgb(png_ptr);
+
+  if (png_get_gAMA(png_ptr, info_ptr, &gamma))
+    png_set_gamma(png_ptr, display_exponent, gamma);
+
+
+  png_read_update_info(png_ptr,info_ptr);
+
+  *pRowbytes = rowbytes = png_get_rowbytes(png_ptr, info_ptr);
+  *pChannels = (int)png_get_channels(png_ptr, info_ptr);
+
+  if ((image_data = (uchar *)malloc(rowbytes*height)) == NULL)
+  {
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+    return NULL;
+  }
+
+  png_bytepp row_pointers = (png_bytepp)malloc(height*sizeof(png_bytep));
+  if (row_pointers == NULL)
+  {
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+    free(image_data);
+    image_data = NULL;
+    return NULL;
+  }
+
+  for (i = 0;  i < height;  ++i)
+    row_pointers[i] = image_data + i*rowbytes;
+
+
+  png_read_image(png_ptr, row_pointers);
+
+  free(row_pointers);
+  row_pointers = NULL;
+
+  png_read_end(png_ptr, NULL);
+
+  return image_data;
+}
+
+
+
+
+
+void readpng_cleanup(int free_image_data)
+{
+  if (free_image_data && image_data)
+  {
+    free(image_data);
+    image_data = NULL;
+  }
+
+  if (png_ptr && info_ptr)
+  {
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+    png_ptr = NULL;
+    info_ptr = NULL;
+  }
+}
+
+
+
+
+
+int png_load(const char *_filename,CImage& _image)
+{
+  double LUT_exponent = 1.0;
+  double CRT_exponent = 2.2;
+  double display_exponent = LUT_exponent * CRT_exponent;
+  int image_channels = 0;
+  uint image_rowbytes = 0;
+
+  uint width = 0;
+  uint height = 0;
+
+
+  FILE *infile = fopen(_filename, "rb");
+  if (infile == NULL)
+    return -1;
+
+  if (readpng_init(infile, &width, &height) != 0)
+    return -2;
+
+  _image.width = width;
+  _image.height = height;
+
+  uchar *pixel = readpng_get_image(display_exponent, &image_channels,&image_rowbytes);
+  if (pixel == NULL)
+    return -3;
+
+  int size = width * height;
+  _image.pixel = (uint*)pixel;
+
+  _image.pixel = new uint[size];
+
+  register int p1 = 0;
+  register int p2 = 0;
+
+  uchar *ptr = (uchar*)_image.pixel;
+
+  for (register int t=0; t<size; t++)
+  {
+    ptr[p2+0] = pixel[p1+2];
+    ptr[p2+1] = pixel[p1+1];
+    ptr[p2+2] = pixel[p1+0];
+
+    if (image_channels == 4)
+    {
+      if (pixel[p1+3] == 0)
+      {
+        ptr[p2+3] = 0x01;
+      }
+      else
+        ptr[p2+3] = 0;
+    }
+
+    p1 = p1 + image_channels;
+    p2 = p2 + 4;
+  }
+
+  delete pixel;
+
+  readpng_cleanup(0);
+  fclose(infile);
+
+  if (!_image.pixel)
+    return -4;
+
+  return 0;
+}
+
 
 
 

@@ -106,6 +106,7 @@ class GridDef
     T::Coordinate_vec getGridCoordinatesByGeometryId(T::GeometryId  geometryId);
     T::Coordinate_vec getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId);
     T::Coordinate_vec getGridLatLonCoordinateLinePointsByGeometryId(T::GeometryId  geometryId);
+    bool              getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geometryId,double lat,double lon,double& grid_i,double& grid_j);
 
     T::ParamId        getGribParameterId(GRIB1::Message& message);
     T::ParamId        getGribParameterId(GRIB2::Message& message);
