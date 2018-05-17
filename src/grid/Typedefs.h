@@ -130,6 +130,8 @@ class AreaInterpolationMethod
     static const short None = 0;           // Numbers 0 - 99 reserved for build-in interpolation types
     static const short Linear = 1;
     static const short Nearest = 2;
+    static const short Min = 3;
+    static const short Max = 4;
     static const short List = 500;           // Returns grid corner values
     static const short ListWithAngles = 501; // Returns grid corner values and angles
     static const short External = 1000;      // Numbers 1000 - 65535 reserved for external interpolation types
@@ -143,6 +145,8 @@ class TimeInterpolationMethod
     static const short None = 0;           // Numbers 0 - 999 reserved for build-in interpolation types
     static const short Linear = 1;
     static const short Nearest = 2;
+    static const short Min = 3;
+    static const short Max = 4;
     static const short External = 1000;      // Numbers 1000 - 65535 reserved for external interpolation types
 };
 
@@ -154,7 +158,9 @@ class LevelInterpolationMethod
     static const short None = 0;           // Numbers 0 - 999 reserved for build-in interpolation types
     static const short Linear = 1;
     static const short Nearest = 2;
-    static const short Logarithmic = 3;
+    static const short Min = 3;
+    static const short Max = 4;
+    static const short Logarithmic = 5;
     static const short External = 1000;      // Numbers 1000 - 65535 reserved for external interpolation types
 };
 

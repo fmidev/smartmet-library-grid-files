@@ -83,6 +83,12 @@ std::string get_areaInterpolationMethodString(short interpolationMethod)
       case AreaInterpolationMethod::Nearest:
         return "Nearest";
 
+      case AreaInterpolationMethod::Min:
+        return "Min";
+
+      case AreaInterpolationMethod::Max:
+        return "Max";
+
       case AreaInterpolationMethod::External:
         return "External";
 
@@ -116,6 +122,12 @@ std::string get_timeInterpolationMethodString(short interpolationMethod)
       case TimeInterpolationMethod::Nearest:
         return "Nearest";
 
+      case TimeInterpolationMethod::Min:
+        return "Min";
+
+      case TimeInterpolationMethod::Max:
+        return "Max";
+
       case TimeInterpolationMethod::External:
         return "External";
 
@@ -148,6 +160,12 @@ std::string get_levelInterpolationMethodString(short interpolationMethod)
 
       case LevelInterpolationMethod::Nearest:
         return "Nearest";
+
+      case LevelInterpolationMethod::Min:
+        return "Min";
+
+      case LevelInterpolationMethod::Max:
+        return "Max";
 
       case LevelInterpolationMethod::Logarithmic:
         return "Logarithmic";

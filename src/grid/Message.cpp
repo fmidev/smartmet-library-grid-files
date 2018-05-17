@@ -1585,6 +1585,14 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
         valueVector.push_back(getGridValueByGridPoint_nearest(x,y));
         break;
 
+      case T::AreaInterpolationMethod::Min:
+        valueVector.push_back(getGridValueByGridPoint_min(x,y));
+        break;
+
+      case T::AreaInterpolationMethod::Max:
+        valueVector.push_back(getGridValueByGridPoint_max(x,y));
+        break;
+
       case T::AreaInterpolationMethod::List:
         valueVector.push_back(2);
         valueVector.push_back(x-(double)x1);
@@ -2215,6 +2223,12 @@ T::ParamValue Message::getGridValueByGridPoint(double grid_i,double grid_j,short
       case T::AreaInterpolationMethod::Linear:
         return getGridValueByGridPoint_linearInterpolation(grid_i,grid_j);
 
+      case T::AreaInterpolationMethod::Min:
+        return getGridValueByGridPoint_min(grid_i,grid_j);
+
+      case T::AreaInterpolationMethod::Max:
+        return getGridValueByGridPoint_max(grid_i,grid_j);
+
       case T::AreaInterpolationMethod::External:
         return getGridValueByGridPoint_nearest(grid_i,grid_j);
 
@@ -2415,6 +2429,70 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
 
 
 
+T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    double x = grid_i;
+    double y = grid_j;
+
+    double x1 = floor(x);
+    double y1 = floor(y);
+    double x2 = x1+1;
+    double y2 = y1+1;
+
+    std::set<T::ParamValue> values;
+    values.insert(getGridValueByGridPoint((uint)x1,(uint)y1));
+    values.insert(getGridValueByGridPoint((uint)x2,(uint)y1));
+    values.insert(getGridValueByGridPoint((uint)x1,(uint)y2));
+    values.insert(getGridValueByGridPoint((uint)x2,(uint)y2));
+
+    return *values.begin();
+
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    double x = grid_i;
+    double y = grid_j;
+
+    double x1 = floor(x);
+    double y1 = floor(y);
+    double x2 = x1+1;
+    double y2 = y1+1;
+
+    std::set<T::ParamValue> values;
+    values.insert(getGridValueByGridPoint((uint)x1,(uint)y1));
+    values.insert(getGridValueByGridPoint((uint)x2,(uint)y1));
+    values.insert(getGridValueByGridPoint((uint)x1,(uint)y2));
+    values.insert(getGridValueByGridPoint((uint)x2,(uint)y2));
+
+    return *values.rbegin();
+
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns an interpolated value of the given grid position.
 
         \param grid_i   The grid i-position.
@@ -2437,30 +2515,6 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
     double x2 = x1+1;
     double y2 = y1+1;
 
-#if 0
-    double dist_x1 = x-x1;
-    double dist_x2 = x2-x;
-    double dist_y1 = y-y1;
-    double dist_y2 = y2-y;
-
-    // If the given point is close enough the actual grid point
-    // then there is no need for interpolation.
-
-    double closeDist = 0.1;
-
-    if (dist_x1 <= closeDist  &&  dist_y1 <= closeDist)
-      return getGridValueByGridPoint((uint)x1,(uint)y1);
-
-    if (dist_x1 <= closeDist  &&  dist_y2 <= closeDist)
-      return getGridValueByGridPoint((uint)x1,(uint)y2);
-
-    if (dist_x2 <= closeDist  &&  dist_y1 <= closeDist)
-      return getGridValueByGridPoint((uint)x2,(uint)y1);
-
-    if (dist_x2 <= closeDist  &&  dist_y2 <= closeDist)
-      return getGridValueByGridPoint((uint)x2,(uint)y2);
-#endif
-
     // Reading values of the corner grid points
 
     auto val_q11 = getGridValueByGridPoint((uint)x1,(uint)y1);
@@ -2468,98 +2522,7 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
     auto val_q12 = getGridValueByGridPoint((uint)x1,(uint)y2);
     auto val_q22 = getGridValueByGridPoint((uint)x2,(uint)y2);
 
-
     return linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12);
-
-#if 0
-    // If the given point is on the border then we can do simple
-    // linear interpolation.
-
-    if (dist_x1 == 0)
-    {
-      // Linear interpolation x1,y1 - x1,y2
-      if (val_q11 != ParamValueMissing  &&  val_q12 != ParamValueMissing)
-        return (T::ParamValue)(dist_y1*val_q11 + dist_y2*val_q12);
-
-      return ParamValueMissing;
-    }
-
-    if (dist_x2 == 0)
-    {
-      // Linear interpolation x2,y1 - x2,y2
-      if (val_q21 != ParamValueMissing  &&  val_q22 != ParamValueMissing)
-        return (T::ParamValue)(dist_y1*val_q21 + dist_y2*val_q22);
-
-      return ParamValueMissing;
-    }
-
-    if (dist_y1 == 0)
-    {
-      // Linear interpolation x1,y1 - x2,y1
-      if (val_q11 != ParamValueMissing  &&  val_q21 != ParamValueMissing)
-        return (T::ParamValue)(dist_x1*val_q11 + dist_x2*val_q21);
-
-      return ParamValueMissing;
-    }
-
-    if (dist_y2 == 0)
-    {
-      // Linear interpolation x1,y2 - x2,y2
-      if (val_q12 != ParamValueMissing  &&  val_q22 != ParamValueMissing)
-        return (T::ParamValue)(dist_x1*val_q12 + dist_x2*val_q22);
-
-      return ParamValueMissing;
-    }
-
-    // Bilinear interpolation
-
-    if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
-        val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
-    {
-      // All corners have a value.
-
-      double fy1 = dist_x2*val_q11 + dist_x1*val_q21;
-      double fy2 = dist_x2*val_q12 + dist_x1*val_q22;
-      double f = dist_y2*fy1 + dist_y1*fy2;
-      return (T::ParamValue)f;
-    }
-
-    // Three corners have a value (triangular interpolation).
-
-    if (val_q11 == ParamValueMissing && val_q21 != ParamValueMissing  &&
-        val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
-    {
-      double wsum = (dist_x2 * dist_y1 + dist_x1 * dist_y1 + dist_x1 * dist_y2);
-      return (T::ParamValue)((dist_x1 * dist_y2 * val_q21 + dist_x2 * dist_y1 * val_q12 +
-          dist_x1 * dist_y1 * val_q22) / wsum);
-    }
-
-    if (val_q11 != ParamValueMissing && val_q21 == ParamValueMissing  &&
-        val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
-    {
-      double wsum = (dist_x2 * dist_y2 + dist_x2 * dist_y1 + dist_x1 * dist_y1);
-      return (T::ParamValue)((dist_x2 * dist_y2 * val_q11 + dist_x2 * dist_y1 * val_q12 +
-          dist_x1 * dist_y1 * val_q22) / wsum);
-    }
-
-    if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
-        val_q12 == ParamValueMissing &&  val_q22 != ParamValueMissing)
-    {
-      double wsum = (dist_x1 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
-      return (T::ParamValue)((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
-        dist_x1 * dist_y1 * val_q22) / wsum);
-    }
-
-    if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
-        val_q12 != ParamValueMissing &&  val_q22 == ParamValueMissing)
-    {
-      double wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
-      return (T::ParamValue)((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
-        dist_x2 * dist_y2 * val_q12) / wsum);
-    }
-
-    return ParamValueMissing;
-#endif
   }
   catch (...)
   {

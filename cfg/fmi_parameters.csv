@@ -145,7 +145,7 @@
 137;1;ALBEDO-0TO1;0to1;ALBEDO 0 to 1;1;1;;
 138;1;Q-KGKG;kg kg-1;Specific Humidity in kg/kg;1;1;;
 139;1;P-PA;kg m-1 s-2;Pressure in Pascals;1;1;;
-143;1;LC-0TO1;0to1;Land Cover, 1=land, 0=sea;1;1;;
+143;1;LC-0TO1;0to1;Land Cover, 1=land, 0=sea;2;1;;
 144;1;VV-HPAS;hPa s-1;Vertical Velocity in hPa/s;1;1;;
 145;1;PTD-N;No Unit;Pressure Tendency);1;1;;
 146;1;SR-M;m;Surface Roughness in Meters;1;1;;

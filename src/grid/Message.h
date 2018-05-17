@@ -129,6 +129,8 @@ class Message
     virtual T::ParamValue           getGridValueByGridPoint(double grid_i,double grid_j,short interpolationMethod) const;
     virtual T::ParamValue           getGridValueByGridPoint_noInterpolation(double grid_i,double grid_j) const;
     virtual T::ParamValue           getGridValueByGridPoint_nearest(double grid_i,double grid_j) const;
+    virtual T::ParamValue           getGridValueByGridPoint_min(double grid_i,double grid_j) const;
+    virtual T::ParamValue           getGridValueByGridPoint_max(double grid_i,double grid_j) const;
     virtual T::ParamValue           getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j) const;
     virtual T::ParamValue           getGridValueByLatLonCoordinate(double lat,double lon,short interpolationMethod) const;
     virtual T::ParamValue           getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
