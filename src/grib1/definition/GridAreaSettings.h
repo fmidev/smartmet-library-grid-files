@@ -7,10 +7,10 @@
 // ***********************************************************************
 
 #pragma once
-#include "common/AttributeList.h"
-#include "common/MemoryReader.h"
-#include "grib1/definition/ResolutionFlagsSettings.h"
-#include "grid/Typedefs.h"
+#include "../../common/AttributeList.h"
+#include "../../common/MemoryReader.h"
+#include "ResolutionFlagsSettings.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB1 {

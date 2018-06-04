@@ -1,11 +1,11 @@
 #pragma once
 
+#include "Coordinate.h"
+#include "../grid/Typedefs.h"
+
 #include <string>
 #include <set>
 #include <boost/date_time/posix_time/posix_time.hpp>
-
-#include "grid/Typedefs.h"
-#include "Coordinate.h"
 
 
 namespace SmartMet

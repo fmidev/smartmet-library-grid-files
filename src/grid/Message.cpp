@@ -1,13 +1,13 @@
 #include "Message.h"
-#include "common/CoordinateConversions.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GraphFunctions.h"
-#include "common/Point.h"
-#include "common/InterpolationFunctions.h"
-#include "common/ShowFunction.h"
-#include "identification/GridDef.h"
+#include "../common/CoordinateConversions.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/GeneralDefinitions.h"
+#include "../common/GraphFunctions.h"
+#include "../common/Point.h"
+#include "../common/InterpolationFunctions.h"
+#include "../common/ShowFunction.h"
+#include "../identification/GridDef.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF

@@ -6,10 +6,10 @@
 //   you should write them into the 'AtmosphericChemicalEnsembleProductImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/AtmosphericChemicalEnsembleProduct.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "AtmosphericChemicalEnsembleProduct.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

@@ -3,9 +3,9 @@
 #include "BitmapSection.h"
 #include "RepresentationSection.h"
 #include "Message.h"
-#include "grid/PrintOptions.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
+#include "../grid/PrintOptions.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/kurtosis.hpp>

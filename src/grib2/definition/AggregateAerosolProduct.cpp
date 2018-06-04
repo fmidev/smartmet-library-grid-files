@@ -6,10 +6,10 @@
 //   you should write them into the 'AggregateAerosolProductImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/AggregateAerosolProduct.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "AggregateAerosolProduct.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

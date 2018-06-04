@@ -1,8 +1,9 @@
 #pragma once
 
+#include "../grid/Typedefs.h"
+
 #include <array>
 #include <cstdint>
-#include "grid/Typedefs.h"
 
 
 namespace std

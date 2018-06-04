@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/DeprecatedSatelliteProduct.h"
+#include "../definition/DeprecatedSatelliteProduct.h"
 
 
 namespace SmartMet

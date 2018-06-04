@@ -6,10 +6,10 @@
 //   you should write them into the 'SphericalHarmonicsDataRepresentationImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/SphericalHarmonicsDataRepresentation.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "SphericalHarmonicsDataRepresentation.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

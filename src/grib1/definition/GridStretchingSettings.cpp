@@ -6,10 +6,10 @@
 //   you should write them into the 'GridStretchingSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib1/definition/GridStretchingSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "GridStretchingSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

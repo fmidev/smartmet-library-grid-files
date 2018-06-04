@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grid/PhysicalGridFile.h"
+#include "../grid/PhysicalGridFile.h"
 #include "Message.h"
 
 

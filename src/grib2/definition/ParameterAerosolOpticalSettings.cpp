@@ -6,10 +6,10 @@
 //   you should write them into the 'ParameterAerosolOpticalSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/ParameterAerosolOpticalSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "ParameterAerosolOpticalSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

@@ -6,10 +6,10 @@
 //   you should write them into the 'TimeIntervalEnsembleClusterDerivedForecastImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/TimeIntervalEnsembleClusterDerivedForecast.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "TimeIntervalEnsembleClusterDerivedForecast.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

@@ -1,9 +1,9 @@
 #include "GridDefinition.h"
-#include "common/Exception.h"
-#include "common/CoordinateConversions.h"
-#include "common/GeneralFunctions.h"
-#include "common/GeneralDefinitions.h"
-#include "common/ShowFunction.h"
+#include "../common/Exception.h"
+#include "../common/CoordinateConversions.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/GeneralDefinitions.h"
+#include "../common/ShowFunction.h"
 #include <iostream>
 
 

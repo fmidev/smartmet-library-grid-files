@@ -1,7 +1,8 @@
 #pragma once
 
 #include "DataDefinition.h"
-#include "grid/MessageSection.h"
+#include "../grid/MessageSection.h"
+
 #include <memory>
 
 

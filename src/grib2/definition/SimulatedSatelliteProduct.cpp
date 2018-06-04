@@ -6,10 +6,10 @@
 //   you should write them into the 'SimulatedSatelliteProductImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/SimulatedSatelliteProduct.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "SimulatedSatelliteProduct.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

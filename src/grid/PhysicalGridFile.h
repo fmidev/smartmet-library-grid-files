@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GridFile.h"
+
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
 

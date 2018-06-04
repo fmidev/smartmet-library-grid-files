@@ -6,10 +6,10 @@
 //   you should write them into the 'TimeIntervalCategoricalForecastImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/TimeIntervalCategoricalForecast.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "TimeIntervalCategoricalForecast.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

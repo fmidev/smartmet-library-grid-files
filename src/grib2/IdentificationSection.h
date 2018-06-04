@@ -1,8 +1,9 @@
 #pragma once
 
-#include "grid/MessageSection.h"
-#include "grid/Typedefs.h"
-#include "common/MemoryReader.h"
+#include "../grid/MessageSection.h"
+#include "../grid/Typedefs.h"
+#include "../common/MemoryReader.h"
+
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace SmartMet

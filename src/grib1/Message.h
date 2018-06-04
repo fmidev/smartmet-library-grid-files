@@ -1,17 +1,17 @@
 #pragma once
 
-#include "grid/Message.h"
-#include "common/Coordinate.h"
-#include "common/Dimensions.h"
-#include "grid/ValueCache.h"
-#include "grid/Typedefs.h"
-#include "common/MemoryReader.h"
-#include "common/GeneralDefinitions.h"
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "GridSection.h"
 #include "ProductSection.h"
 #include "IndicatorSection.h"
+#include "../common/Coordinate.h"
+#include "../common/Dimensions.h"
+#include "../common/MemoryReader.h"
+#include "../common/GeneralDefinitions.h"
+#include "../grid/Message.h"
+#include "../grid/ValueCache.h"
+#include "../grid/Typedefs.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/optional.hpp>

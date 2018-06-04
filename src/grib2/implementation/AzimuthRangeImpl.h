@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/AzimuthRange.h"
+#include "../definition/AzimuthRange.h"
 
 namespace SmartMet
 {

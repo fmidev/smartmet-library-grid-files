@@ -1,5 +1,9 @@
 #pragma once
 
+#include "../common/Coordinate.h"
+#include "../common/Dimensions.h"
+#include "../common/Typedefs.h"
+
 #include <cstdint>
 #include <vector>
 #include <set>
@@ -8,10 +12,6 @@
 #include <gdal/ogr_spatialref.h>
 #include <float.h>
 #include <string>
-
-#include "common/Coordinate.h"
-#include "common/Dimensions.h"
-#include "common/Typedefs.h"
 
 
 

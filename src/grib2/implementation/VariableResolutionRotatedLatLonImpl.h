@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/VariableResolutionRotatedLatLon.h"
+#include "../definition/VariableResolutionRotatedLatLon.h"
 
 
 namespace SmartMet

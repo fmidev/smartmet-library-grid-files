@@ -7,10 +7,10 @@
 // ***********************************************************************
 
 #pragma once
-#include "common/AttributeList.h"
-#include "common/MemoryReader.h"
-#include "grib1/GridDefinition.h"
-#include "grid/Typedefs.h"
+#include "../../common/AttributeList.h"
+#include "../../common/MemoryReader.h"
+#include "../GridDefinition.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -51,7 +51,7 @@ protected:
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 50;
   //
-  // template commonBlock "grib1/grid_definition_spherical_harmonics.def";
+  // template commonBlock "../grid_definition_spherical_harmonics.def";
   // # Copyright 2005-2015 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0

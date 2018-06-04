@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/TransverseMercator.h"
+#include "../definition/TransverseMercator.h"
 
 
 namespace SmartMet

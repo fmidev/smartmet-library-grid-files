@@ -6,10 +6,10 @@
 //   you should write them into the 'TimeIntervalAggregateForecastImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/TimeIntervalAggregateForecast.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "TimeIntervalAggregateForecast.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

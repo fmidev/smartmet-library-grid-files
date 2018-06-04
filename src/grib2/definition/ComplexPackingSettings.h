@@ -7,9 +7,9 @@
 // ***********************************************************************
 
 #pragma once
-#include "common/AttributeList.h"
-#include "common/MemoryReader.h"
-#include "grid/Typedefs.h"
+#include "../../common/AttributeList.h"
+#include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -90,7 +90,7 @@ protected:
   //
   // alias data.packedValues = codedValues;
   //
-  // template statistics "common/statistics_grid.def";
+  // template statistics "../../common/statistics_grid.def";
   //
   // # END   2/template.7.2 ----------------------------------------------------------------------
 };

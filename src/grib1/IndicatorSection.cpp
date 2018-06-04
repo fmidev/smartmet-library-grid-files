@@ -1,7 +1,7 @@
 #include "IndicatorSection.h"
 #include "Message.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
 
 #include <iostream>
 

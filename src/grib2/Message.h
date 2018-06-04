@@ -1,8 +1,5 @@
 #pragma once
 
-#include "grid/Message.h"
-#include "common/MemoryReader.h"
-#include "common/GeneralDefinitions.h"
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "GridSection.h"
@@ -11,9 +8,12 @@
 #include "IndicatorSection.h"
 #include "IdentificationSection.h"
 #include "RepresentationSection.h"
-#include "common/Coordinate.h"
-#include "common/Dimensions.h"
-#include "grid/ValueCache.h"
+#include "../common/MemoryReader.h"
+#include "../common/GeneralDefinitions.h"
+#include "../common/Coordinate.h"
+#include "../common/Dimensions.h"
+#include "../grid/Message.h"
+#include "../grid/ValueCache.h"
 
 
 namespace SmartMet

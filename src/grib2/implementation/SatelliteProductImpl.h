@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/SatelliteProduct.h"
+#include "../definition/SatelliteProduct.h"
 
 
 namespace SmartMet

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/AtmosphericChemicalProduct.h"
+#include "../definition/AtmosphericChemicalProduct.h"
 
 
 namespace SmartMet

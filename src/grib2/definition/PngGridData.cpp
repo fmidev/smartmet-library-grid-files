@@ -6,10 +6,10 @@
 //   you should write them into the 'PngGridDataImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/PngGridData.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "PngGridData.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

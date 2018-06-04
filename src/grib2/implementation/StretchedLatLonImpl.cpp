@@ -1,6 +1,6 @@
 #include "StretchedLatLonImpl.h"
-#include "common/Exception.h"
-#include "common/Dimensions.h"
+#include "../../common/Exception.h"
+#include "../../common/Dimensions.h"
 
 namespace SmartMet
 {

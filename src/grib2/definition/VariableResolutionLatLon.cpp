@@ -6,10 +6,10 @@
 //   you should write them into the 'VariableResolutionLatLonImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/VariableResolutionLatLon.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "VariableResolutionLatLon.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

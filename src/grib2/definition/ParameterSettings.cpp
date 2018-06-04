@@ -6,10 +6,10 @@
 //   you should write them into the 'ParameterSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/ParameterSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "ParameterSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

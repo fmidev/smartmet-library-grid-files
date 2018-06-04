@@ -6,10 +6,10 @@
 //   you should write them into the 'GridDataImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/GridData.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "GridData.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

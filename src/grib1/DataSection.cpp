@@ -4,9 +4,9 @@
 #include "SimplePacking.h"
 #include "SphericalHarmonicsSimplePacking.h"
 #include "SphericalHarmonicsComplexPacking.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/GeneralDefinitions.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/GeneralDefinitions.h"
 
 
 namespace SmartMet

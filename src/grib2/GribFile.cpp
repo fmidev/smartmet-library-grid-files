@@ -1,7 +1,7 @@
 #include "GribFile.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "grid/PrintOptions.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
+#include "../grid/PrintOptions.h"
 
 namespace SmartMet
 {

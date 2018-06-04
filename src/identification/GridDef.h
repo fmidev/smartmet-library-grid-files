@@ -15,12 +15,12 @@
 #include "TimeRangeDef.h"
 #include "UnitDefinition.h"
 
-#include "common/AutoThreadLock.h"
-#include "common/ConfigurationFile.h"
-#include "grib1/Message.h"
-#include "grib2/Message.h"
-#include "grid/Typedefs.h"
-#include "grib2/GridDefinition.h"
+#include "../common/AutoThreadLock.h"
+#include "../common/ConfigurationFile.h"
+#include "../grib1/Message.h"
+#include "../grib2/Message.h"
+#include "../grid/Typedefs.h"
+#include "../grib2/GridDefinition.h"
 
 #include <set>
 

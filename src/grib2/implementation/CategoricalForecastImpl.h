@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/CategoricalForecast.h"
+#include "../definition/CategoricalForecast.h"
 
 
 namespace SmartMet

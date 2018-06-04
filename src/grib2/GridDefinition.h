@@ -1,11 +1,12 @@
 #pragma once
 
-#include "common/Coordinate.h"
-#include "common/Dimensions.h"
-#include "grid/Typedefs.h"
-#include "common/MemoryReader.h"
-#include "common/AttributeList.h"
-#include "grib2/definition/EarthShapeSettings.h"
+#include "../common/Coordinate.h"
+#include "../common/Dimensions.h"
+#include "../grid/Typedefs.h"
+#include "../common/MemoryReader.h"
+#include "../common/AttributeList.h"
+#include "definition/EarthShapeSettings.h"
+
 #include <gdal/ogr_spatialref.h>
 #include <map>
 

@@ -1,9 +1,9 @@
 #include "JpegGridDataRepresentationImpl.h"
-#include "common/Exception.h"
-#include "common/BitArrayReader.h"
-#include "common/GeneralFunctions.h"
-#include "common/GeneralDefinitions.h"
-#include "grib2/Message.h"
+#include "../../common/Exception.h"
+#include "../../common/BitArrayReader.h"
+#include "../../common/GeneralFunctions.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../Message.h"
 #include <jasper/jasper.h>
 
 //#include <openjpeg-1.5/openjpeg.h>

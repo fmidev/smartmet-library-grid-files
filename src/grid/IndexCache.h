@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vector>
 #include "Typedefs.h"
-#include "common/ThreadLock.h"
+#include "../common/ThreadLock.h"
+
+#include <vector>
 
 
 namespace SmartMet

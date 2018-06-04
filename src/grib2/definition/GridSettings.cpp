@@ -6,10 +6,10 @@
 //   you should write them into the 'GridSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/GridSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "GridSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

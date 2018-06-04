@@ -6,10 +6,10 @@
 //   you should write them into the 'NormalProductImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/NormalProduct.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "NormalProduct.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/CharacterStringProduct.h"
+#include "../definition/CharacterStringProduct.h"
 
 
 namespace SmartMet

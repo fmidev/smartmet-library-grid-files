@@ -6,10 +6,10 @@
 //   you should write them into the 'EnsembleClusterDerivedForecastImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/EnsembleClusterDerivedForecast.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "EnsembleClusterDerivedForecast.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

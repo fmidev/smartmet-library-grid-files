@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib1/definition/StretchedLatLon.h"
+#include "../definition/StretchedLatLon.h"
 
 namespace SmartMet
 {

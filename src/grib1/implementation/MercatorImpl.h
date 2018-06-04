@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib1/definition/Mercator.h"
+#include "../definition/Mercator.h"
 
 namespace SmartMet
 {

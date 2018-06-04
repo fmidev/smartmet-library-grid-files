@@ -1,10 +1,10 @@
 #include "SecondOrderPacking.h"
 #include "DataSection.h"
 #include "Message.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/BitArrayReader.h"
-#include "common/MemoryReader.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/BitArrayReader.h"
+#include "../common/MemoryReader.h"
 
 
 namespace SmartMet

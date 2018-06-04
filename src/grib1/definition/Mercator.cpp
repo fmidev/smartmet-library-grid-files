@@ -6,10 +6,10 @@
 //   you should write them into the 'MercatorImpl.*' files.
 // ***********************************************************************
 
-#include "grib1/definition/Mercator.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "Mercator.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

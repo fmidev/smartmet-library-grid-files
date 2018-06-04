@@ -1,5 +1,5 @@
 #include "GridPointValue.h"
-#include "common/GeneralFunctions.h"
+#include "../common/GeneralFunctions.h"
 
 namespace SmartMet
 {

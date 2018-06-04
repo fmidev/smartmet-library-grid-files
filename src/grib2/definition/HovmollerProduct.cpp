@@ -6,10 +6,10 @@
 //   you should write them into the 'HovmollerProductImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/HovmollerProduct.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "HovmollerProduct.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

@@ -1,10 +1,10 @@
 #include "GridFile.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
-#include "identification/GridDef.h"
-#include "grib1/GribFile.h"
-#include "grib2/GribFile.h"
+#include "../common/Exception.h"
+#include "../common/GeneralDefinitions.h"
+#include "../common/GeneralFunctions.h"
+#include "../identification/GridDef.h"
+#include "../grib1/GribFile.h"
+#include "../grib2/GribFile.h"
 
 namespace SmartMet
 {

@@ -1,8 +1,8 @@
 #include "ValueCache.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
-#include "common/AutoThreadLock.h"
+#include "../common/Exception.h"
+#include "../common/GeneralDefinitions.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/AutoThreadLock.h"
 
 
 namespace SmartMet

@@ -1,6 +1,6 @@
 #include "InterpolationFunctions.h"
 #include "Exception.h"
-#include "grid/Typedefs.h"
+#include "../grid/Typedefs.h"
 
 
 namespace SmartMet

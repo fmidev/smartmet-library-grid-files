@@ -6,10 +6,10 @@
 //   you should write them into the 'ResolutionFlagsSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib1/definition/ResolutionFlagsSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "ResolutionFlagsSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

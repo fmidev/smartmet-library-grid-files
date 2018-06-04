@@ -6,10 +6,10 @@
 //   you should write them into the 'StretchedSphericalHarmonicImpl.*' files.
 // ***********************************************************************
 
-#include "grib1/definition/StretchedSphericalHarmonic.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "StretchedSphericalHarmonic.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

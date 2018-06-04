@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/FloatingPointGridDataRepresentation.h"
+#include "../definition/FloatingPointGridDataRepresentation.h"
 
 
 namespace SmartMet

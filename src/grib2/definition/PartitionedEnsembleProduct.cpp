@@ -6,10 +6,10 @@
 //   you should write them into the 'PartitionedEnsembleProductImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/PartitionedEnsembleProduct.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "PartitionedEnsembleProduct.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

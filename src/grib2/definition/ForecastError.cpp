@@ -6,10 +6,10 @@
 //   you should write them into the 'ForecastErrorImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/ForecastError.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "ForecastError.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib1/definition/SphericalHarmonic.h"
+#include "../definition/SphericalHarmonic.h"
 
 namespace SmartMet
 {

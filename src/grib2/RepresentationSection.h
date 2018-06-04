@@ -1,8 +1,9 @@
 #pragma once
 
-#include "common/MemoryReader.h"
-#include "grid/MessageSection.h"
 #include "RepresentationDefinition.h"
+#include "../common/MemoryReader.h"
+#include "../grid/MessageSection.h"
+
 #include <memory>
 #include <vector>
 

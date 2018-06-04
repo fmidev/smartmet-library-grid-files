@@ -6,10 +6,10 @@
 //   you should write them into the 'RotatedSphericalHarmonicImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/RotatedSphericalHarmonic.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "RotatedSphericalHarmonic.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

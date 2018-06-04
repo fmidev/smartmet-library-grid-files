@@ -1,10 +1,10 @@
 #include "SimplePacking.h"
 #include "Message.h"
 #include "GribFile.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/GeneralDefinitions.h"
-#include "common/BitArrayReader.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/GeneralDefinitions.h"
+#include "../common/BitArrayReader.h"
 
 
 namespace SmartMet

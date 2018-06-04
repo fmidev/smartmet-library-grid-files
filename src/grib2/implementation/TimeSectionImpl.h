@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/TimeSection.h"
+#include "../definition/TimeSection.h"
 
 
 namespace SmartMet

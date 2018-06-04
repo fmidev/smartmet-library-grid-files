@@ -7,13 +7,13 @@
 // ***********************************************************************
 
 #pragma once
-#include "common/AttributeList.h"
-#include "common/MemoryReader.h"
-#include "grib1/GridDefinition.h"
-#include "grib1/definition/GridAreaSettings.h"
-#include "grib1/definition/GridStretchingSettings.h"
-#include "grib1/definition/ScanningModeSettings.h"
-#include "grid/Typedefs.h"
+#include "../../common/AttributeList.h"
+#include "../../common/MemoryReader.h"
+#include "../GridDefinition.h"
+#include "GridAreaSettings.h"
+#include "GridStretchingSettings.h"
+#include "ScanningModeSettings.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -58,7 +58,7 @@ protected:
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 42;
   //
-  // template commonBlock "grib1/grid_definition_gaussian.def";
+  // template commonBlock "../grid_definition_gaussian.def";
   // # Copyright 2005-2015 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0

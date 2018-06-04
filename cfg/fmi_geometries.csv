@@ -120,10 +120,10 @@
 2;1090;ECEDIT100;201;221;-10;13;0.1;0.1;+x-y;20;-30;0;EC editing area in 0.1 deg;
 2;1091;ECEDIT100G2;201;221;350;13;0.1;0.1;+x-y;0;-30;0;EC editing area in 0.1 deg GRIB 2;
 
-# LAMBERT CONFORMAL : projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,orientation,latin1,latin2,south_pole.x,south_pole.y,description
-10;1050;MEPSNOFMI2500;739;949;1.639;52.041;2500;2500;+x+y;15;63;63;0;0;MEPS Scandinavia area without FMI extension;
-10;1078;MEPSSCAN2500;889;949;0.238;51.849;2500;2500;+x+y;15.0;63.0;63.0;0;0;MEPS scandinavia (including Finland) in 2500 meter grid resolution;
-10;1087;LAPSLAMBERT2500;869;929;0.504028;52.1174;2500;2500;+x+y;15;63;63;-90;15;LAPS Analysis over Scandinavia;
+# LAMBERT CONFORMAL : projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,orientation,latin1,latin2,south_pole.x,south_pole.y,laD,description
+10;1050;MEPSNOFMI2500;739;949;1.639;52.041;2500;2500;+x+y;15;63;63;0;0;60.0;MEPS Scandinavia area without FMI extension;
+10;1078;MEPSSCAN2500;889;949;0.238;51.849;2500;2500;+x+y;15.0;63.0;63.0;0;0;60.0;MEPS scandinavia (including Finland) in 2500 meter grid resolution;
+10;1087;LAPSLAMBERT2500;869;929;0.504028;52.1174;2500;2500;+x+y;15;63;63;-90;15;60.0;LAPS Analysis over Scandinavia;
 
 # GAUSSIAN : projection,id,name,nj,first_point.x,first_point.y,scanning_mode,n,point_along_parallels,description
 
@@ -153,6 +153,6 @@
 9;1067;LAPSSCANLARGE;685;765;5.94086;51.0579;3000.0;3000.0;+x+y;20.0;60.0;LAPS Scandinavia extended domain;
 9;1071;PEPSSCAND;735;795;7.7;52.81;2465;2473;+x+y;20;60.0;PEPS Scandinavia;
 9;1073;SMARTMET7500;270;300;6;51.3;7494.389;7479.167;+x+y;20.0;60.0;SmartMet Scandinavian area 7500km resolution;
-9;1079;IASI_L2;171;191;5.98561;51.1047;12017.5;12015.7;+x-y;20.0;60.0;IASI L2 satellite area over Europe;
+9;1079;IASI_L2;171;191;5.98561;51.1047;12017.5;12015.7;+x+y;20.0;60.0;IASI L2 satellite area over Europe;
 9;1080;KALMANSCAN3000;685;765;5.941;51.058;3000;3000;+x+y;20.0;60.0;Kalman filtered data with LAPS gridding over Scandinavia;
 9;1086;BLENDSCAN3000;685;765;5.94086;51.0579;3000;3000;+x+y;20.0;60.0;Blend Scandinavia from extended LAPS;

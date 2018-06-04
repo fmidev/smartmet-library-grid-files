@@ -6,10 +6,10 @@
 //   you should write them into the 'ProcessedCrossSectionProductImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/ProcessedCrossSectionProduct.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "ProcessedCrossSectionProduct.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

@@ -6,10 +6,10 @@
 //   you should write them into the 'SphericalHarmonicSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/SphericalHarmonicSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "SphericalHarmonicSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

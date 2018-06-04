@@ -7,13 +7,13 @@
 // ***********************************************************************
 
 #pragma once
-#include "common/AttributeList.h"
-#include "common/MemoryReader.h"
-#include "grib2/ProductDefinition.h"
-#include "grib2/definition/HorizontalSettings.h"
-#include "grib2/definition/ParameterSettings.h"
-#include "grib2/definition/StatisticalSettings.h"
-#include "grid/Typedefs.h"
+#include "../../common/AttributeList.h"
+#include "../../common/MemoryReader.h"
+#include "../ProductDefinition.h"
+#include "HorizontalSettings.h"
+#include "ParameterSettings.h"
+#include "StatisticalSettings.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -46,7 +46,7 @@ protected:
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # TEMPLATE 4.1101, Hovmöller-type grid with averaging or other statistical processing
+  // # TEMPLATE 4.1101, Hovmï¿½ller-type grid with averaging or other statistical processing
   //
   // include "template.4.parameter.def"
 

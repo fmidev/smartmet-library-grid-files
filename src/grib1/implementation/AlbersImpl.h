@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib1/definition/Albers.h"
+#include "../definition/Albers.h"
 
 namespace SmartMet
 {

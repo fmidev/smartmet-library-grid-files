@@ -6,10 +6,10 @@
 //   you should write them into the 'OriginalValuesSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/OriginalValuesSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "OriginalValuesSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

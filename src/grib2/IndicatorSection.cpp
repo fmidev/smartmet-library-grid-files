@@ -1,8 +1,8 @@
-#include "grib2/IndicatorSection.h"
-#include "identification/GridDef.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
+#include "IndicatorSection.h"
 #include "Message.h"
+#include "../identification/GridDef.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
 
 #include <iostream>
 

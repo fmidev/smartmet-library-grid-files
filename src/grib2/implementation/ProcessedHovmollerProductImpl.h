@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/ProcessedHovmollerProduct.h"
+#include "../definition/ProcessedHovmollerProduct.h"
 
 
 namespace SmartMet

@@ -6,10 +6,10 @@
 //   you should write them into the 'ComplexGridDataRepresentationImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/ComplexGridDataRepresentation.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "ComplexGridDataRepresentation.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

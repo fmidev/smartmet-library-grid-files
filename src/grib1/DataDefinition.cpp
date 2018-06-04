@@ -1,8 +1,8 @@
 #include "DataDefinition.h"
 #include "Message.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/GeneralDefinitions.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/GeneralDefinitions.h"
 
 
 namespace SmartMet

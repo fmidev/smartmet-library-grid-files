@@ -6,10 +6,10 @@
 //   you should write them into the 'LambertConformalImpl.*' files.
 // ***********************************************************************
 
-#include "grib1/definition/LambertConformal.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "LambertConformal.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

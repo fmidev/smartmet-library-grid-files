@@ -1,8 +1,8 @@
-#include "grib2/IdentificationSection.h"
-#include "identification/GridDef.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
+#include "IdentificationSection.h"
 #include "Message.h"
+#include "../identification/GridDef.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
 
 #include <iostream>
 #include <boost/date_time/gregorian/gregorian.hpp>

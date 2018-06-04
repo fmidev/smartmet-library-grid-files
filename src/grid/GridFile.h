@@ -1,11 +1,12 @@
 #pragma once
 
-#include "common/MemoryReader.h"
 #include "Message.h"
-#include <memory>
-#include <vector>
 #include "GridPointValue.h"
 #include "Typedefs.h"
+#include "../common/MemoryReader.h"
+
+#include <memory>
+#include <vector>
 
 
 namespace SmartMet

@@ -6,10 +6,10 @@
 //   you should write them into the 'TimeIntervalEnsembleReforecastImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/TimeIntervalEnsembleReforecast.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "TimeIntervalEnsembleReforecast.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

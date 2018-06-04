@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common/Dimensions.h"
-#include "grib2/definition/PolarStereographic.h"
+#include "../../common/Dimensions.h"
+#include "../definition/PolarStereographic.h"
 #include <boost/optional.hpp>
 
 namespace SmartMet

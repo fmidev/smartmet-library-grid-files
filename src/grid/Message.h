@@ -1,13 +1,13 @@
 #pragma once
 
-#include "common/AttributeList.h"
-#include "common/Coordinate.h"
-#include "common/Dimensions.h"
 #include "MessageSection.h"
 #include "Typedefs.h"
 #include "GridPointValue.h"
 #include "GridPointValueList.h"
 #include "GridValueList.h"
+#include "../common/AttributeList.h"
+#include "../common/Coordinate.h"
+#include "../common/Dimensions.h"
 
 #include <vector>
 #include <string>

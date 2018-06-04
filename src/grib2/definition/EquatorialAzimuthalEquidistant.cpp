@@ -6,10 +6,10 @@
 //   you should write them into the 'EquatorialAzimuthalEquidistantImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/EquatorialAzimuthalEquidistant.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "EquatorialAzimuthalEquidistant.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

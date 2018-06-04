@@ -1,9 +1,9 @@
 #include "GaussianImpl.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/Dimensions.h"
-#include "grid/PrintOptions.h"
-#include "grid/GaussianLatitudeCache.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralFunctions.h"
+#include "../../common/Dimensions.h"
+#include "../../grid/PrintOptions.h"
+#include "../../grid/GaussianLatitudeCache.h"
 
 #include <iostream>
 #include <math.h>

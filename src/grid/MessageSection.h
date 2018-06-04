@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Typedefs.h"
-#include "common/AttributeList.h"
+#include "../common/AttributeList.h"
 
 
 namespace SmartMet

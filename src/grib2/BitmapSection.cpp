@@ -1,9 +1,9 @@
-#include "grib2/BitmapSection.h"
-#include "identification/GridDef.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/BitArrayReader.h"
+#include "BitmapSection.h"
 #include "Message.h"
+#include "../identification/GridDef.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/BitArrayReader.h"
 
 #include <iostream>
 

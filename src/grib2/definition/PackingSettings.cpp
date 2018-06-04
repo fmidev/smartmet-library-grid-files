@@ -6,10 +6,10 @@
 //   you should write them into the 'PackingSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/PackingSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "PackingSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

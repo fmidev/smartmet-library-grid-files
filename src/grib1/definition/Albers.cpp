@@ -6,10 +6,10 @@
 //   you should write them into the 'AlbersImpl.*' files.
 // ***********************************************************************
 
-#include "grib1/definition/Albers.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "Albers.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

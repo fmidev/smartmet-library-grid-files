@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/TimeIntervalPercentileForecast.h"
+#include "../definition/TimeIntervalPercentileForecast.h"
 
 
 namespace SmartMet

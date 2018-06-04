@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib1/definition/SpaceView.h"
+#include "../definition/SpaceView.h"
 
 namespace SmartMet
 {

@@ -6,10 +6,10 @@
 //   you should write them into the 'CrossSectionImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/CrossSection.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "CrossSection.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

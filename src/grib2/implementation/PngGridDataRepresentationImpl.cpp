@@ -1,8 +1,8 @@
 #include "PngGridDataRepresentationImpl.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/BitArrayReader.h"
-#include "grib2/Message.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralFunctions.h"
+#include "../../common/BitArrayReader.h"
+#include "../Message.h"
 
 #include <png.h>
 

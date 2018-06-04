@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/PartitionedEnsembleProduct.h"
+#include "../definition/PartitionedEnsembleProduct.h"
 
 
 namespace SmartMet

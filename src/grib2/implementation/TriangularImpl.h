@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/Triangular.h"
+#include "../definition/Triangular.h"
 
 
 namespace SmartMet

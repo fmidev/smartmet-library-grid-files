@@ -1,6 +1,6 @@
 #include "ProductDefinition.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
 #include <boost/date_time/gregorian/gregorian.hpp>
 
 

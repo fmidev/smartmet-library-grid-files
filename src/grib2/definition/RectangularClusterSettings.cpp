@@ -6,10 +6,10 @@
 //   you should write them into the 'RectangularClusterSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/RectangularClusterSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "RectangularClusterSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

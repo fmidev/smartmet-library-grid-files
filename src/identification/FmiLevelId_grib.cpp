@@ -1,6 +1,6 @@
 #include "FmiLevelId_grib.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
 
 
 namespace SmartMet

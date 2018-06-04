@@ -6,10 +6,10 @@
 //   you should write them into the 'StretchedLatLonImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/StretchedLatLon.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "StretchedLatLon.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

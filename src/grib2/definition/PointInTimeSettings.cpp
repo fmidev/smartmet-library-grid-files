@@ -6,10 +6,10 @@
 //   you should write them into the 'PointInTimeSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/PointInTimeSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "PointInTimeSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

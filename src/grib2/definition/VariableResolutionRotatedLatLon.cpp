@@ -6,10 +6,10 @@
 //   you should write them into the 'VariableResolutionRotatedLatLonImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/VariableResolutionRotatedLatLon.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "VariableResolutionRotatedLatLon.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

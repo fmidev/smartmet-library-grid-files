@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/LogarithmicGridDataRepresentation.h"
+#include "../definition/LogarithmicGridDataRepresentation.h"
 
 namespace SmartMet
 {

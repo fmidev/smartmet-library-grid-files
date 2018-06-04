@@ -1,9 +1,9 @@
 #include "PolarStereographicImpl.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/GeneralDefinitions.h"
-#include "common/CoordinateConversions.h"
-#include "grid/PrintOptions.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralFunctions.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/CoordinateConversions.h"
+#include "../../grid/PrintOptions.h"
 
 #include <iostream>
 

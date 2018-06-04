@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common/Exception.h"
+#include "Exception.h"
 
 namespace SmartMet
 {

@@ -6,10 +6,10 @@
 //   you should write them into the 'VariableLatLonSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/VariableLatLonSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "VariableLatLonSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

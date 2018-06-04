@@ -1,6 +1,6 @@
 #include "IndexCache.h"
-#include "common/Exception.h"
-#include "common/AutoThreadLock.h"
+#include "../common/Exception.h"
+#include "../common/AutoThreadLock.h"
 
 
 

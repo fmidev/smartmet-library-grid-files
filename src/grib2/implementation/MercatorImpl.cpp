@@ -1,8 +1,8 @@
 #include "MercatorImpl.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/GeneralDefinitions.h"
-#include "grid/PrintOptions.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralFunctions.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../grid/PrintOptions.h"
 
 #include <iostream>
 

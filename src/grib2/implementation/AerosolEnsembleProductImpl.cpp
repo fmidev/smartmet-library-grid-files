@@ -1,5 +1,5 @@
 #include "AerosolEnsembleProductImpl.h"
-#include "common/Exception.h"
+#include "../../common/Exception.h"
 
 
 namespace SmartMet

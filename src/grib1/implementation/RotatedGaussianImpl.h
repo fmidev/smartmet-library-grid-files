@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib1/definition/RotatedGaussian.h"
+#include "../definition/RotatedGaussian.h"
 
 namespace SmartMet
 {

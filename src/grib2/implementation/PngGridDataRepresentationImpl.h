@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/PngGridDataRepresentation.h"
+#include "../definition/PngGridDataRepresentation.h"
 
 
 namespace SmartMet

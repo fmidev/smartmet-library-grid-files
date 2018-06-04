@@ -1,9 +1,10 @@
 #pragma once
 
 #include "ProductDefinition.h"
-#include "grid/MessageSection.h"
-#include "common/Coordinate.h"
-#include "common/MemoryReader.h"
+#include "../grid/MessageSection.h"
+#include "../common/Coordinate.h"
+#include "../common/MemoryReader.h"
+
 #include <memory>
 #include <vector>
 

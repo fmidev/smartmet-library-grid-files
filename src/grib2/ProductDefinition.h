@@ -1,11 +1,11 @@
 #pragma once
 
-#include "common/MemoryReader.h"
-#include "common/AttributeList.h"
-#include "grib2/definition/ParameterSettings.h"
-#include "grib2/definition/HorizontalSettings.h"
-#include "grib2/definition/StatisticalSettings.h"
-#include "grib2/definition/EpsSettings.h"
+#include "../common/MemoryReader.h"
+#include "../common/AttributeList.h"
+#include "../grib2/definition/ParameterSettings.h"
+#include "../grib2/definition/HorizontalSettings.h"
+#include "../grib2/definition/StatisticalSettings.h"
+#include "../grib2/definition/EpsSettings.h"
 
 
 namespace SmartMet

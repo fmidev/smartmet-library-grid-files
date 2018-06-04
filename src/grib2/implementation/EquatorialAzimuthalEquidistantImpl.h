@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/EquatorialAzimuthalEquidistant.h"
+#include "../definition/EquatorialAzimuthalEquidistant.h"
 
 
 namespace SmartMet

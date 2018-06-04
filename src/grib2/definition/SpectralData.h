@@ -7,10 +7,10 @@
 // ***********************************************************************
 
 #pragma once
-#include "common/AttributeList.h"
-#include "common/MemoryReader.h"
-#include "grib2/DataDefinition.h"
-#include "grid/Typedefs.h"
+#include "../../common/AttributeList.h"
+#include "../../common/MemoryReader.h"
+#include "../DataDefinition.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -76,7 +76,7 @@ protected:
   //
   // alias x.packedValues = values;
   //
-  // template statistics "common/statistics_spectral.def";
+  // template statistics "../../common/statistics_spectral.def";
 };
 
 } // namespace GRIB2

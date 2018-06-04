@@ -6,10 +6,10 @@
 //   you should write them into the 'StretchingSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/StretchingSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "StretchingSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

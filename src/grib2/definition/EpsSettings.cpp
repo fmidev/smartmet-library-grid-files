@@ -6,10 +6,10 @@
 //   you should write them into the 'EpsSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/EpsSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "EpsSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

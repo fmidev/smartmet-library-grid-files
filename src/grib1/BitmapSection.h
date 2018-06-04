@@ -1,8 +1,10 @@
 #pragma once
 
-#include "common/MemoryReader.h"
-#include "grid/MessageSection.h"
+#include "../common/MemoryReader.h"
+#include "../grid/MessageSection.h"
+
 #include <vector>
+
 
 namespace SmartMet
 {

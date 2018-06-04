@@ -6,10 +6,10 @@
 //   you should write them into the 'SpectralGridDataImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/SpectralGridData.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "SpectralGridData.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

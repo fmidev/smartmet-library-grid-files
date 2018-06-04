@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib1/definition/PolarStereographic.h"
+#include "../definition/PolarStereographic.h"
 
 namespace SmartMet
 {

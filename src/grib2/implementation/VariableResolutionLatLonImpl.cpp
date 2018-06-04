@@ -1,5 +1,5 @@
 #include "VariableResolutionLatLonImpl.h"
-#include "common/Exception.h"
+#include "../../common/Exception.h"
 
 namespace SmartMet
 {

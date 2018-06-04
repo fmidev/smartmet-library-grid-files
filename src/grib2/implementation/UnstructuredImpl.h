@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/Unstructured.h"
+#include "../definition/Unstructured.h"
 
 
 namespace SmartMet

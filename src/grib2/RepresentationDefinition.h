@@ -1,8 +1,8 @@
 #pragma once
 
-#include "grid/Typedefs.h"
-#include "common/MemoryReader.h"
-#include "common/AttributeList.h"
+#include "../grid/Typedefs.h"
+#include "../common/MemoryReader.h"
+#include "../common/AttributeList.h"
 
 
 namespace SmartMet

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common/MemoryReader.h"
-#include "grid/MessageSection.h"
+#include "../common/MemoryReader.h"
+#include "../grid/MessageSection.h"
 
 namespace SmartMet
 {

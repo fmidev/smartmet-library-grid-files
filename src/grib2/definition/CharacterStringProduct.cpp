@@ -6,10 +6,10 @@
 //   you should write them into the 'CharacterStringProductImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/CharacterStringProduct.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "CharacterStringProduct.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

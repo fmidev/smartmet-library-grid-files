@@ -6,10 +6,10 @@
 //   you should write them into the 'SpaceViewImpl.*' files.
 // ***********************************************************************
 
-#include "grib1/definition/SpaceView.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "SpaceView.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

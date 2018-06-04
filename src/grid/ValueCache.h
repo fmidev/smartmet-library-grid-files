@@ -1,11 +1,11 @@
 #pragma once
 
+#include "Typedefs.h"
+#include "../common/Exception.h"
+#include "../common/AutoThreadLock.h"
+
 #include <string>
 #include <vector>
-#include "Typedefs.h"
-#include "common/Exception.h"
-#include "common/AutoThreadLock.h"
-//#include <boost/thread.hpp>
 
 namespace SmartMet
 {

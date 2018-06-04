@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/CrossSectionProduct.h"
+#include "../definition/CrossSectionProduct.h"
 
 
 namespace SmartMet

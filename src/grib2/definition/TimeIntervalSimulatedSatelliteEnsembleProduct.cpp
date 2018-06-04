@@ -6,10 +6,10 @@
 //   you should write them into the 'TimeIntervalSimulatedSatelliteEnsembleProductImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/TimeIntervalSimulatedSatelliteEnsembleProduct.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "TimeIntervalSimulatedSatelliteEnsembleProduct.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

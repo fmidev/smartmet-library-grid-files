@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/MatrixDataRepresentation.h"
+#include "../definition/MatrixDataRepresentation.h"
 
 namespace SmartMet
 {

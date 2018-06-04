@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DataDefinition.h"
-#include "common/MemoryReader.h"
+#include "../common/MemoryReader.h"
 
 namespace SmartMet
 {

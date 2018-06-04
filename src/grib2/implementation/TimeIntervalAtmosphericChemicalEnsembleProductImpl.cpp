@@ -1,5 +1,5 @@
 #include "TimeIntervalAtmosphericChemicalEnsembleProductImpl.h"
-#include "common/Exception.h"
+#include "../../common/Exception.h"
 
 
 namespace SmartMet

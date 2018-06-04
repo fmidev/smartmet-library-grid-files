@@ -1,10 +1,10 @@
 #pragma once
 
-#include "common/MemoryReader.h"
-#include "grid/MessageSection.h"
-#include "common/Dimensions.h"
-#include "common/Coordinate.h"
 #include "GridDefinition.h"
+#include "../common/MemoryReader.h"
+#include "../grid/MessageSection.h"
+#include "../common/Dimensions.h"
+#include "../common/Coordinate.h"
 
 #include <boost/optional.hpp>
 #include <memory>

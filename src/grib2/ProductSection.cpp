@@ -1,49 +1,49 @@
-#include "grib2/ProductSection.h"
-#include "identification/GridDef.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
+#include "ProductSection.h"
 #include "Message.h"
+#include "../identification/GridDef.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
 
-#include "grib2/implementation/NormalProductImpl.h"                                   // 4.0
-#include "grib2/implementation/EnsembleForecastImpl.h"                                // 4.1
-#include "grib2/implementation/EnsembleDerivedForecastImpl.h"                         // 4.2
-#include "grib2/implementation/EnsembleClusterDerivedForecastImpl.h"                  // 4.3
-#include "grib2/implementation/ProbabilityForecastImpl.h"                             // 4.5
-#include "grib2/implementation/PercentileForecastImpl.h"                              // 4.6
-#include "grib2/implementation/ForecastErrorImpl.h"                                   // 4.7
-#include "grib2/implementation/AggregateForecastImpl.h"                               // 4.8
-#include "grib2/implementation/TimeIntervalProbabilityForecastImpl.h"                 // 4.9
-#include "grib2/implementation/TimeIntervalPercentileForecastImpl.h"                  // 4.10
-#include "grib2/implementation/TimeIntervalEnsembleForecastImpl.h"                    // 4.11
-#include "grib2/implementation/TimeIntervalEnsembleDerivedForecastImpl.h"             // 4.12
-#include "grib2/implementation/TimeIntervalEnsembleClusterDerivedForecastImpl.h"      // 4.13
-#include "grib2/implementation/TimeIntervalAggregateForecastImpl.h"                   // 4.15
-#include "grib2/implementation/DeprecatedSatelliteProductImpl.h"                      // 4.30
-#include "grib2/implementation/SatelliteProductImpl.h"                                // 4.31
-#include "grib2/implementation/SimulatedSatelliteProductImpl.h"                       // 4.32
-#include "grib2/implementation/SimulatedSatelliteEnsembleProductImpl.h"               // 4.33
-#include "grib2/implementation/TimeIntervalSimulatedSatelliteEnsembleProductImpl.h"   // 4.34
-#include "grib2/implementation/AtmosphericChemicalProductImpl.h"                      // 4.40
-#include "grib2/implementation/AtmosphericChemicalEnsembleProductImpl.h"              // 4.41
-#include "grib2/implementation/AggregateAtmosphericChemicalProductImpl.h"             // 4.42
-#include "grib2/implementation/TimeIntervalAtmosphericChemicalEnsembleProductImpl.h"  // 4.43
-#include "grib2/implementation/AerosolEnsembleProductImpl.h"                          // 4.45
-#include "grib2/implementation/AggregateAerosolProductImpl.h"                         // 4.46
-#include "grib2/implementation/TimeIntervalAerosolEnsembleProductImpl.h"              // 4.47
-#include "grib2/implementation/AerosolOpticalPropertiesProductImpl.h"                 // 4.48
-#include "grib2/implementation/CategoricalForecastImpl.h"                             // 4.51
-#include "grib2/implementation/PartitionedProductImpl.h"                              // 4.53
-#include "grib2/implementation/PartitionedEnsembleProductImpl.h"                      // 4.54
-#include "grib2/implementation/EnsembleReforecastImpl.h"                              // 4.60
-#include "grib2/implementation/TimeIntervalEnsembleReforecastImpl.h"                  // 4.61
-#include "grib2/implementation/TimeIntervalCategoricalForecastImpl.h"                 // 4.91
-#include "grib2/implementation/CharacterStringProductImpl.h"                          // 4.254
-#include "grib2/implementation/AuxiliarySatelliteProductImpl.h"                       // 4.311
-#include "grib2/implementation/CrossSectionProductImpl.h"                             // 4.1000
-#include "grib2/implementation/ProcessedCrossSectionProductImpl.h"                    // 4.1001
-#include "grib2/implementation/AreaProcessedCrossSectionProductImpl.h"                // 4.1002
-#include "grib2/implementation/HovmollerProductImpl.h"                                // 4.1100
-#include "grib2/implementation/ProcessedHovmollerProductImpl.h"                       // 4.1101
+#include "implementation/NormalProductImpl.h"                                   // 4.0
+#include "implementation/EnsembleForecastImpl.h"                                // 4.1
+#include "implementation/EnsembleDerivedForecastImpl.h"                         // 4.2
+#include "implementation/EnsembleClusterDerivedForecastImpl.h"                  // 4.3
+#include "implementation/ProbabilityForecastImpl.h"                             // 4.5
+#include "implementation/PercentileForecastImpl.h"                              // 4.6
+#include "implementation/ForecastErrorImpl.h"                                   // 4.7
+#include "implementation/AggregateForecastImpl.h"                               // 4.8
+#include "implementation/TimeIntervalProbabilityForecastImpl.h"                 // 4.9
+#include "implementation/TimeIntervalPercentileForecastImpl.h"                  // 4.10
+#include "implementation/TimeIntervalEnsembleForecastImpl.h"                    // 4.11
+#include "implementation/TimeIntervalEnsembleDerivedForecastImpl.h"             // 4.12
+#include "implementation/TimeIntervalEnsembleClusterDerivedForecastImpl.h"      // 4.13
+#include "implementation/TimeIntervalAggregateForecastImpl.h"                   // 4.15
+#include "implementation/DeprecatedSatelliteProductImpl.h"                      // 4.30
+#include "implementation/SatelliteProductImpl.h"                                // 4.31
+#include "implementation/SimulatedSatelliteProductImpl.h"                       // 4.32
+#include "implementation/SimulatedSatelliteEnsembleProductImpl.h"               // 4.33
+#include "implementation/TimeIntervalSimulatedSatelliteEnsembleProductImpl.h"   // 4.34
+#include "implementation/AtmosphericChemicalProductImpl.h"                      // 4.40
+#include "implementation/AtmosphericChemicalEnsembleProductImpl.h"              // 4.41
+#include "implementation/AggregateAtmosphericChemicalProductImpl.h"             // 4.42
+#include "implementation/TimeIntervalAtmosphericChemicalEnsembleProductImpl.h"  // 4.43
+#include "implementation/AerosolEnsembleProductImpl.h"                          // 4.45
+#include "implementation/AggregateAerosolProductImpl.h"                         // 4.46
+#include "implementation/TimeIntervalAerosolEnsembleProductImpl.h"              // 4.47
+#include "implementation/AerosolOpticalPropertiesProductImpl.h"                 // 4.48
+#include "implementation/CategoricalForecastImpl.h"                             // 4.51
+#include "implementation/PartitionedProductImpl.h"                              // 4.53
+#include "implementation/PartitionedEnsembleProductImpl.h"                      // 4.54
+#include "implementation/EnsembleReforecastImpl.h"                              // 4.60
+#include "implementation/TimeIntervalEnsembleReforecastImpl.h"                  // 4.61
+#include "implementation/TimeIntervalCategoricalForecastImpl.h"                 // 4.91
+#include "implementation/CharacterStringProductImpl.h"                          // 4.254
+#include "implementation/AuxiliarySatelliteProductImpl.h"                       // 4.311
+#include "implementation/CrossSectionProductImpl.h"                             // 4.1000
+#include "implementation/ProcessedCrossSectionProductImpl.h"                    // 4.1001
+#include "implementation/AreaProcessedCrossSectionProductImpl.h"                // 4.1002
+#include "implementation/HovmollerProductImpl.h"                                // 4.1100
+#include "implementation/ProcessedHovmollerProductImpl.h"                       // 4.1101
 
 #include <iostream>
 

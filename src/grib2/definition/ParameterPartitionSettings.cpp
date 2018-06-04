@@ -6,10 +6,10 @@
 //   you should write them into the 'ParameterPartitionSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/ParameterPartitionSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "ParameterPartitionSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

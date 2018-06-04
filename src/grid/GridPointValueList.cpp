@@ -1,9 +1,9 @@
 #include "GridPointValueList.h"
-#include "common/Exception.h"
-#include "common/GeneralFunctions.h"
-#include "common/AutoWriteLock.h"
-#include "common/AutoThreadLock.h"
-#include "common/AutoReadLock.h"
+#include "../common/Exception.h"
+#include "../common/GeneralFunctions.h"
+#include "../common/AutoWriteLock.h"
+#include "../common/AutoThreadLock.h"
+#include "../common/AutoReadLock.h"
 
 
 namespace SmartMet

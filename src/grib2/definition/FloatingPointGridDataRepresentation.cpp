@@ -6,10 +6,10 @@
 //   you should write them into the 'FloatingPointGridDataRepresentationImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/FloatingPointGridDataRepresentation.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "FloatingPointGridDataRepresentation.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

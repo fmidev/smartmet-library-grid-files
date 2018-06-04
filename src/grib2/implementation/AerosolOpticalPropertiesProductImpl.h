@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/AerosolOpticalPropertiesProduct.h"
+#include "../definition/AerosolOpticalPropertiesProduct.h"
 
 
 namespace SmartMet

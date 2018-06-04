@@ -6,10 +6,10 @@
 //   you should write them into the 'AggregateForecastImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/AggregateForecast.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "AggregateForecast.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

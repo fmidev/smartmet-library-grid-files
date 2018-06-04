@@ -6,10 +6,10 @@
 //   you should write them into the 'LambertAzimuthalEqualAreaImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/LambertAzimuthalEqualArea.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "LambertAzimuthalEqualArea.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

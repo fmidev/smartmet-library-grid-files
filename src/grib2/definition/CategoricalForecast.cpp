@@ -6,10 +6,10 @@
 //   you should write them into the 'CategoricalForecastImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/CategoricalForecast.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "CategoricalForecast.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

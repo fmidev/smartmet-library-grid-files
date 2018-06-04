@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/PreprocessedGridDataRepresentation.h"
+#include "../definition/PreprocessedGridDataRepresentation.h"
 
 
 namespace SmartMet

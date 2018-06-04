@@ -7,13 +7,13 @@
 // ***********************************************************************
 
 #pragma once
-#include "common/AttributeList.h"
-#include "common/MemoryReader.h"
-#include "grib2/ProductDefinition.h"
-#include "grib2/definition/HorizontalSettings.h"
-#include "grib2/definition/ParameterChemicalSettings.h"
-#include "grib2/definition/PointInTimeSettings.h"
-#include "grid/Typedefs.h"
+#include "../../common/AttributeList.h"
+#include "../../common/MemoryReader.h"
+#include "../ProductDefinition.h"
+#include "HorizontalSettings.h"
+#include "ParameterChemicalSettings.h"
+#include "PointInTimeSettings.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {

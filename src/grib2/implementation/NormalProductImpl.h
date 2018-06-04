@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/NormalProduct.h"
+#include "../definition/NormalProduct.h"
 
 
 namespace SmartMet

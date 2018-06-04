@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common/Exception.h"
-#include "grid/Typedefs.h"
+#include "Typedefs.h"
+#include "../common/Exception.h"
 
 namespace SmartMet
 {

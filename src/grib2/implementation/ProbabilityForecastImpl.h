@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/ProbabilityForecast.h"
+#include "../definition/ProbabilityForecast.h"
 
 namespace SmartMet
 {

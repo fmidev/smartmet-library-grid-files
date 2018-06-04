@@ -1,10 +1,10 @@
 #pragma once
 
-#include "grid/Typedefs.h"
-#include "common/Coordinate.h"
-#include "common/Dimensions.h"
-#include "common/MemoryReader.h"
-#include "common/AttributeList.h"
+#include "../grid/Typedefs.h"
+#include "../common/Coordinate.h"
+#include "../common/Dimensions.h"
+#include "../common/MemoryReader.h"
+#include "../common/AttributeList.h"
 
 #include <gdal/ogr_spatialref.h>
 #include <map>

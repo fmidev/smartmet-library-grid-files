@@ -6,10 +6,10 @@
 //   you should write them into the 'StretchedRotatedGaussianImpl.*' files.
 // ***********************************************************************
 
-#include "grib1/definition/StretchedRotatedGaussian.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "StretchedRotatedGaussian.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

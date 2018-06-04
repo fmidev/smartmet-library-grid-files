@@ -6,10 +6,10 @@
 //   you should write them into the 'SecondOrderSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/SecondOrderSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "SecondOrderSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

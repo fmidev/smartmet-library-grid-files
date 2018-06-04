@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grib2/definition/LambertAzimuthalEqualArea.h"
+#include "../definition/LambertAzimuthalEqualArea.h"
 
 
 namespace SmartMet

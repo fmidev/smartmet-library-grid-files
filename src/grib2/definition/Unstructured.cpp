@@ -6,10 +6,10 @@
 //   you should write them into the 'UnstructuredImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/Unstructured.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "Unstructured.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

@@ -6,10 +6,10 @@
 //   you should write them into the 'AzimuthRangeImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/AzimuthRange.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "AzimuthRange.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

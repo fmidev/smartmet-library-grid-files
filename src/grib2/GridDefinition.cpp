@@ -1,7 +1,7 @@
 #include "GridDefinition.h"
-#include "common/CoordinateConversions.h"
-#include "common/Exception.h"
-#include "common/ShowFunction.h"
+#include "../common/CoordinateConversions.h"
+#include "../common/Exception.h"
+#include "../common/ShowFunction.h"
 
 #include <iostream>
 #include <map>

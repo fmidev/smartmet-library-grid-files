@@ -6,10 +6,10 @@
 //   you should write them into the 'GaussianSettingsImpl.*' files.
 // ***********************************************************************
 
-#include "grib2/definition/GaussianSettings.h"
-#include "common/Exception.h"
-#include "common/GeneralDefinitions.h"
-#include "common/GeneralFunctions.h"
+#include "GaussianSettings.h"
+#include "../../common/Exception.h"
+#include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
 

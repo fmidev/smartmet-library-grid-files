@@ -182,7 +182,7 @@ function process_template($file, $name, $class, $outdir)
   {
     $parent = $parents ["$class"];
     $parentdecl = " : public $parent";
-    $headers ["\"grib1/${parent}.h\""] = true;
+    $headers ["\"../${parent}.h\""] = true;
   }
 
   $header  = "// ***********************************************************************\n";
@@ -277,7 +277,7 @@ function process_template($file, $name, $class, $outdir)
         $setters .= "void ${class}::set$Var($incclass $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
         
         $protected .= "$incclass m$Var;\n";
-        $headers ["\"grib1/definition/${incclass}.h\""] = 1;
+        $headers ["\"${incclass}.h\""] = 1;
 
         $members [$Var] = "class";
       }
@@ -377,9 +377,9 @@ function process_template($file, $name, $class, $outdir)
   }
 
   // Add unique includes
-  $headers ['"common/MemoryReader.h"'] = true;
-  $headers ['"common/AttributeList.h"'] = true;
-  $headers ['"grid/Typedefs.h"'] = true;
+  $headers ['"../../common/MemoryReader.h"'] = true;
+  $headers ['"../../common/AttributeList.h"'] = true;
+  $headers ['"../../grid/Typedefs.h"'] = true;
 
   $headers = array_keys ( $headers );
 
@@ -404,10 +404,10 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "//   changes will be overridden. If you want to do permanent changes then\n";
   $cpp .= "//   you should write them into the '${class}Impl.*' files.\n";
   $cpp .= "// ***********************************************************************\n\n"; 
-  $cpp .= "#include \"grib1/definition/${class}.h\"\n";
-  $cpp .= "#include \"common/Exception.h\"\n";
-  $cpp .= "#include \"common/GeneralFunctions.h\"\n";
-  $cpp .= "#include \"common/GeneralDefinitions.h\"\n";
+  $cpp .= "#include \"${class}.h\"\n";
+  $cpp .= "#include \"../../common/Exception.h\"\n";
+  $cpp .= "#include \"../../common/GeneralFunctions.h\"\n";
+  $cpp .= "#include \"../../common/GeneralDefinitions.h\"\n";
   $cpp .= "#include <iostream>\n";
   $cpp .= "#include <boost/functional/hash.hpp>\n";
   $cpp .= "\n";
