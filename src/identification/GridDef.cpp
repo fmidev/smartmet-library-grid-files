@@ -90,6 +90,7 @@ GridDef::GridDef()
     mGrib2_timeRangeDef_modificationTime = 0;
     mFmi_parameterDef_modificationTime = 0;
     mFmi_levelDef_modificationTime = 0;
+    mFmi_parametersFromGrib_modificationTime = 0;
     mFmi_parametersFromGrib1_modificationTime = 0;
     mFmi_parametersFromGrib2_modificationTime = 0;
     mFmi_parametersFromNewbase_modificationTime = 0;
@@ -154,6 +155,7 @@ void GridDef::init(const char* configFile)
       "smartmet.library.grid-files.fmi.parameterDef[]",
       "smartmet.library.grid-files.fmi.levelDef[]",
       "smartmet.library.grid-files.fmi.geometryDef[]",
+      "smartmet.library.grid-files.fmi.parametersFromGrib[]",
       "smartmet.library.grid-files.fmi.parametersFromGrib1[]",
       "smartmet.library.grid-files.fmi.parametersFromGrib2[]",
       "smartmet.library.grid-files.fmi.parametersFromNewbase[]",
@@ -197,6 +199,7 @@ void GridDef::init(const char* configFile)
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parameterDef",mFmi_parameterDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelDef",mFmi_levelDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.geometryDef",mFmi_geometryDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib",mFmi_parametersFromGrib_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib1",mFmi_parametersFromGrib1_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib2",mFmi_parametersFromGrib2_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromNewbase",mFmi_parametersFromNewbase_files);
@@ -448,6 +451,17 @@ void GridDef::updateFmi()
         loadFmiLevelDefinitions(it->c_str());
       }
       mFmi_levelDef_modificationTime = tt;
+    }
+
+    tt = getModificationTime(mFmi_parametersFromGrib_files);
+    if (tt != mFmi_parametersFromGrib_modificationTime)
+    {
+      mFmi_parametersFromGrib_records.clear();
+      for (auto it = mFmi_parametersFromGrib_files.begin(); it != mFmi_parametersFromGrib_files.end(); ++it)
+      {
+        loadFmiParameterId_grib(it->c_str());
+      }
+      mFmi_parametersFromGrib_modificationTime = tt;
     }
 
     tt = getModificationTime(mFmi_parametersFromGrib1_files);
@@ -2138,6 +2152,77 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
 
 
 
+void GridDef::loadFmiParameterId_grib(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *file = fopen(filename,"r");
+    if (file == NULL)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file) != NULL  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 2)
+        {
+          FmiParameterId_grib rec;
+
+          if (field[0][0] != '\0')
+            rec.mFmiParameterId = field[0];
+
+          if (field[1][0] != '\0')
+            rec.mGribParameterId = field[1];
+
+          if (field[2][0] != '\0')
+            rec.mConversionFunction = field[2];
+
+          mFmi_parametersFromGrib_records.push_back(rec);
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 void GridDef::loadFmiParameterId_grib1(const char *filename)
 {
   FUNCTION_TRACE
@@ -3039,17 +3124,17 @@ bool GridDef::getGeometryNameById(T::GeometryId geometryId,std::string& name)
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
-    if (def1)
-    {
-      name = def1->getGridGeometryName();
-      return true;
-    }
-
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
     {
       name = def2->getGridGeometryName();
+      return true;
+    }
+
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+    {
+      name = def1->getGridGeometryName();
       return true;
     }
 
@@ -3073,19 +3158,19 @@ bool GridDef::getGridDirectionsByGeometryId(T::GeometryId  geometryId,bool& reve
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
-    if (def1)
-    {
-      reverseXDirection = def1->reverseXDirection();
-      reverseYDirection = def1->reverseYDirection();
-      return true;
-    }
-
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
     {
       reverseXDirection = def2->reverseXDirection();
       reverseYDirection = def2->reverseYDirection();
+      return true;
+    }
+
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+    {
+      reverseXDirection = def1->reverseXDirection();
+      reverseYDirection = def1->reverseYDirection();
       return true;
     }
 
@@ -3110,36 +3195,6 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
     AutoThreadLock lock(&mThreadLock);
 
     T::Coordinate_vec coordinates;
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
-    if (def1)
-    {
-      for (int lat=-90; lat < 90; lat = lat + 10)
-      {
-        for (int lon=-1800; lon < 1800; lon++)
-        {
-          double grid_i = 0;
-          double grid_j = 0;
-          if (def1->getGridPointByLatLonCoordinates((double)lat,((double)lon)/10,grid_i,grid_j))
-          {
-            coordinates.push_back(T::Coordinate(grid_i,grid_j));
-          }
-        }
-      }
-
-      for (int lon=-180; lon < 180; lon=lon+10)
-      {
-        for (int lat=-900; lat < 900; lat++)
-        {
-          double grid_i = 0;
-          double grid_j = 0;
-          if (def1->getGridPointByLatLonCoordinates(((double)lat)/10,(double)lon,grid_i,grid_j))
-          {
-            coordinates.push_back(T::Coordinate(grid_i,grid_j));
-          }
-        }
-      }
-      return coordinates;
-    }
 
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
@@ -3169,6 +3224,37 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
           }
         }
       }
+      return coordinates;
+    }
+
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+    {
+      for (int lat=-90; lat < 90; lat = lat + 10)
+      {
+        for (int lon=-1800; lon < 1800; lon++)
+        {
+          double grid_i = 0;
+          double grid_j = 0;
+          if (def1->getGridPointByLatLonCoordinates((double)lat,((double)lon)/10,grid_i,grid_j))
+          {
+            coordinates.push_back(T::Coordinate(grid_i,grid_j));
+          }
+        }
+      }
+
+      for (int lon=-180; lon < 180; lon=lon+10)
+      {
+        for (int lat=-900; lat < 900; lat++)
+        {
+          double grid_i = 0;
+          double grid_j = 0;
+          if (def1->getGridPointByLatLonCoordinates(((double)lat)/10,(double)lon,grid_i,grid_j))
+          {
+            coordinates.push_back(T::Coordinate(grid_i,grid_j));
+          }
+        }
+      }
     }
 
     return coordinates;
@@ -3191,10 +3277,10 @@ bool GridDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
-    if (def1)
+    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    if (def2)
     {
-      T::Dimensions_opt dim = def1->getGridDimensions();
+      T::Dimensions_opt dim = def2->getGridDimensions();
       if (dim)
       {
         cols = dim->nx();
@@ -3203,10 +3289,10 @@ bool GridDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols
       }
     }
 
-    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
-    if (def2)
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
     {
-      T::Dimensions_opt dim = def2->getGridDimensions();
+      T::Dimensions_opt dim = def1->getGridDimensions();
       if (dim)
       {
         cols = dim->nx();
@@ -3235,13 +3321,13 @@ bool GridDef::getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geomet
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
-    if (def1)
-      return def1->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
-
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
       return def2->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
+
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+      return def1->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
 
     return false;
   }
@@ -3263,17 +3349,17 @@ bool GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
-    if (def1)
-    {
-      coordinates = def1->getGridLatLonCoordinates();
-      return true;
-    }
-
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
     {
       coordinates = def2->getGridLatLonCoordinates();
+      return true;
+    }
+
+    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    if (def1)
+    {
+      coordinates = def1->getGridLatLonCoordinates();
       return true;
     }
 
@@ -3297,7 +3383,7 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
+    for (auto it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
     {
       double grid_i = 0;
       double grid_j = 0;
@@ -3310,7 +3396,7 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
       }
     }
 
-    for (auto it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
+    for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
     {
       double grid_i = 0;
       double grid_j = 0;
@@ -4572,6 +4658,14 @@ T::ParamId GridDef::getFmiParameterId(GRIB1::Message& message)
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
+    T::ParamId gribId = getGribParameterId(message);
+    if (!gribId.empty())
+    {
+      auto r =  getFmiParameterIdByGribId(gribId);
+      if (r != NULL)
+        return r->mFmiParameterId;
+    }
+
     const GRIB1::ProductSection *productSection =  message.getProductSection();
     if (productSection == NULL)
       return std::string("");
@@ -4647,6 +4741,15 @@ T::ParamId GridDef::getFmiParameterId(GRIB2::Message& message)
   {
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
+
+    T::ParamId gribId = getGribParameterId(message);
+    if (!gribId.empty())
+    {
+      auto r =  getFmiParameterIdByGribId(gribId);
+      if (r != NULL)
+        return r->mFmiParameterId;
+    }
+
 
     GRIB2::IndicatorSection_sptr indicatorSection = message.getIndicatorSection();
     if (!indicatorSection)
@@ -4944,6 +5047,27 @@ FmiParamId_newbase_cptr GridDef::getFmiParameterIdByNewbaseId(T::ParamId newbase
 
 
 
+FmiParamId_grib_cptr GridDef::getFmiParameterIdByGribId(T::ParamId gribParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_parametersFromGrib_records.begin(); it != mFmi_parametersFromGrib_records.end(); ++it)
+    {
+      if (strcasecmp(it->mGribParameterId.c_str(),gribParamId.c_str()) == 0)
+        return &(*it);
+    }
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
 
 FmiParamId_newbase_cptr GridDef::getNewbaseParameterIdByFmiId(T::ParamId fmiParamId)
 {
@@ -5059,6 +5183,27 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByNewbaseId(T::ParamId newbaseParamI
 
 
 
+FmiParamDef_cptr GridDef::getFmiParameterDefByGribId(T::ParamId gribParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto p = getFmiParameterIdByGribId(gribParamId);
+    if (p)
+      return getFmiParameterDefById(p->mFmiParameterId);
+
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 FmiParamDef_cptr GridDef::getFmiParameterDefByName(std::string fmiParamName)
 {
   FUNCTION_TRACE
@@ -5115,6 +5260,31 @@ bool GridDef::getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId,FmiParamet
     AutoThreadLock lock(&mThreadLock);
 
     auto def = getFmiParameterDefByNewbaseId(newbaseParamId);
+    if (def == NULL)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool GridDef::getFmiParameterDefByGribId(T::ParamId gribParamId,FmiParameterDef& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getFmiParameterDefByGribId(gribParamId);
     if (def == NULL)
       return false;
 

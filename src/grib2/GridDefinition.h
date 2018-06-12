@@ -28,6 +28,7 @@ class GridDefinition
     virtual T::Hash             countHash(); // Do not call this, call getGridHash() instead.
     virtual void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     virtual T::GeometryId       getGridGeometryId() const;
+    virtual std::string         getGridGeometryString() const;
     virtual std::string         getGridGeometryName();
     virtual void                getGridCellAverageSize(double& width,double& height);
     virtual T::Coordinate_vec   getGridCoordinates() const;

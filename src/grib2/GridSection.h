@@ -79,6 +79,7 @@ class GridSection : public GRID::MessageSection
     T::Dimensions_opt     getGridDimensions() const;
     T::UInt16_opt         getGridDefinitionTemplateNumber() const;
     T::GeometryId         getGridGeometryId() const;
+    std::string           getGridGeometryString() const;
     T::Hash               getGridHash() const;
     T::Coordinate_vec     getGridLatLonCoordinates() const;
     bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;

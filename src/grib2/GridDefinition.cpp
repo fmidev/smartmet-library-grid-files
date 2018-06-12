@@ -102,6 +102,25 @@ T::GeometryId GridDefinition::getGridGeometryId() const
 
 
 
+std::string GridDefinition::getGridGeometryString() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::string str;
+    return str;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+
 T::GridProjection GridDefinition::getGridProjection()
 {
   FUNCTION_TRACE

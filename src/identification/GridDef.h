@@ -6,6 +6,7 @@
 #include "Grib2ParameterDef.h"
 #include "FmiLevelId_grib.h"
 #include "FmiParameterDef.h"
+#include "FmiParameterId_grib.h"
 #include "FmiParameterId_grib1.h"
 #include "FmiParameterId_grib2.h"
 #include "FmiParameterId_newbase.h"
@@ -123,6 +124,7 @@ class GridDef
 
     T::ParamId        getFmiParameterIdByFmiName(std::string fmiParamName);
     bool              getFmiParameterDefById(T::ParamId fmiParamId,FmiParameterDef& paramDef);
+    bool              getFmiParameterDefByGribId(T::ParamId gribParamId,FmiParameterDef& paramDef);
     bool              getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId,FmiParameterDef& paramDef);
     bool              getFmiParameterDefByName(std::string fmiParamName,FmiParameterDef& paramDef);
     bool              getFmiProducerByName(std::string fmiProducerName,FmiProducerId_grib& producer);
@@ -200,6 +202,7 @@ class GridDef
 
     void                    loadFmiParameterDefinitions(const char *filename);
     void                    loadFmiLevelDefinitions(const char *filename);
+    void                    loadFmiParameterId_grib(const char *filename);
     void                    loadFmiParameterId_grib1(const char *filename);
     void                    loadFmiParameterId_grib2(const char *filename);
     void                    loadFmiParameterId_newbase(const char *filename);
@@ -219,12 +222,14 @@ class GridDef
     GribParamDef_cptr       getGribParameterDefById(T::ParamId gribParamId);
     FmiParamDef_cptr        getFmiParameterDefById(T::ParamId fmiParamId);
     LevelDef_cptr           getFmiLevelDef(uint levelId);
-    FmiParamDef_cptr        getFmiParameterDefByNewbaseId(T::ParamId nwebaseParamId);
+    FmiParamDef_cptr        getFmiParameterDefByGribId(T::ParamId gribParamId);
+    FmiParamDef_cptr        getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId);
     FmiParamDef_cptr        getFmiParameterDefByName(std::string fmiParamName);
     FmiProducerId_grib_cptr getFmiProducerByName(std::string fmiProducerName);
     NewbaseParamDef_cptr    getNewbaseParameterDefById(T::ParamId newbaseParamId);
     NewbaseParamDef_cptr    getNewbaseParameterDefByName(std::string newbaseParamName);
     FmiParamId_newbase_cptr getFmiParameterIdByNewbaseId(T::ParamId newbaseParamId);
+    FmiParamId_grib_cptr    getFmiParameterIdByGribId(T::ParamId gribParamId);
     FmiParamId_newbase_cptr getNewbaseParameterIdByFmiId(T::ParamId fmiParamId);
 
 
@@ -279,6 +284,10 @@ class GridDef
     string_vec              mFmi_levelDef_files;
     time_t                  mFmi_levelDef_modificationTime;
     LevelDef_vec            mFmi_levelDef_records;
+
+    string_vec              mFmi_parametersFromGrib_files;
+    time_t                  mFmi_parametersFromGrib_modificationTime;
+    FmiParamId_grib_vec     mFmi_parametersFromGrib_records;
 
     string_vec              mFmi_parametersFromGrib1_files;
     time_t                  mFmi_parametersFromGrib1_modificationTime;

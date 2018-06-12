@@ -624,6 +624,26 @@ T::GeometryId GridSection::getGridGeometryId() const
 
 
 
+std::string GridSection::getGridGeometryString() const
+{
+  try
+  {
+    if (mGridDefinition != NULL)
+      return mGridDefinition->getGridGeometryString();
+
+    std::string str;
+    return str;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 void GridSection::setGridGeometryId(T::GeometryId geometryId)
 {
   try

@@ -28,6 +28,7 @@ class GridDefinition
     virtual void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     virtual T::Dimensions_opt   getGridDimensions() const;
     virtual T::GeometryId       getGridGeometryId() const;
+    virtual std::string         getGridGeometryString() const;
     virtual std::string         getGridGeometryName();
     virtual void                getGridCellAverageSize(double& width,double& height);
     virtual T::Coordinate_vec   getGridCoordinates() const;

@@ -3,6 +3,7 @@
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../grid/PrintOptions.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {
@@ -153,6 +154,55 @@ T::Coordinate_vec PolarStereographicImpl::getGridCoordinates() const
     }
 
     return coordinateList;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+std::string PolarStereographicImpl::getGridGeometryString() const
+{
+  try
+  {
+    char buf[1000];
+
+    double y = (double)mLatitudeOfFirstGridPoint / 1000;
+    double x = (double)mLongitudeOfFirstGridPoint / 1000;
+    double dx = (double)mDxInMetres;
+    double dy = (double)mDyInMetres;
+
+    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+
+    char sm[100];
+    char *p = sm;
+    if ((scanningMode & 0x80) != 0)
+    {
+      dx = -dx;
+      p += sprintf(p,"-x");
+    }
+    else
+    {
+      p += sprintf(p,"+x");
+    }
+
+    if ((scanningMode & 0x40) == 0)
+    {
+      dy = -dy;
+      p += sprintf(p,"-y");
+    }
+    else
+    {
+      p += sprintf(p,"+y");
+    }
+
+    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%d;60.0;description",
+        (int)T::GridProjection::PolarStereographic,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,mOrientationOfTheGrid);
+
+    return std::string(buf);
   }
   catch (...)
   {

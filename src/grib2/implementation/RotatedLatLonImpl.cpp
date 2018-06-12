@@ -400,6 +400,63 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,d
 
 
 
+std::string RotatedLatLonImpl::getGridGeometryString() const
+{
+  try
+  {
+    char buf[1000];
+
+    uint ni = (uint)(*mLatLon.getGrid()->getNi());
+    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+    double y = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
+    double x = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
+    double dx = (double)(*mLatLon.getIDirectionIncrement());
+    double dy = (double)(*mLatLon.getJDirectionIncrement());
+
+    double sy = (double)(*mRotation.getLatitudeOfSouthernPole()/1000000);
+    double sx = (double)(*mRotation.getLongitudeOfSouthernPole()/1000000);
+
+    double angle = (double)mRotation.getAngleOfRotation();
+
+    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+
+    char sm[100];
+    char *p = sm;
+    if ((scanningMode & 0x80) != 0)
+    {
+      dx = -dx;
+      p += sprintf(p,"-x");
+    }
+    else
+    {
+      p += sprintf(p,"+x");
+    }
+
+    if ((scanningMode & 0x40) == 0)
+    {
+      dy = -dy;
+      p += sprintf(p,"-y");
+    }
+    else
+    {
+      p += sprintf(p,"+y");
+    }
+
+    sprintf(buf,"%d;id;name;%u;%u;%f;%f;%f;%f;%s;%f;%f;%f;description",
+        (int)T::GridProjection::RotatedLatLon,ni,nj,x,y,fabs(dx),fabs(dy),sm,sx,sy,angle);
+
+    return std::string(buf);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid dimensions (i.e. the width and the height).
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each

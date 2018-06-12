@@ -29,12 +29,11 @@ uint stringToId(const char *str);
 /*
 time_t      localTimeToTimeT(std::string localTime,const char *tzone);
 time_t      utcTimeToTimeT(std::string utcTime);
-std::string localTimeFromTimeT(time_t t,const char *tzone);
 std::string utcTimeFromTimeT(time_t t);
 std::string localTimeToUtcTime(std::string localTime,const char *tzone);
 std::string utcTimeToLocalTime(std::string utcTime,const char *tzone);
 */
-
+std::string localTimeFromTimeT(time_t t,const char *tzone);
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
 
 time_t toTimeT(boost::posix_time::ptime tim);
@@ -83,5 +82,9 @@ void splitString(const char *str,char separator,std::vector<std::string>& partLi
 void splitString(std::string str,char separator,std::vector<std::string>& partList);
 void splitString(const char *str,char separator,std::set<std::string>& partList);
 void splitString(std::string str,char separator,std::set<std::string>& partList);
+
+
+bool patternMatch(const char *str,std::vector<std::string>& patterns);
+void getFileList(const char *dirName,std::vector<std::string>& filePatterns,bool includeSubDirs,std::set<std::string>& dirList,std::vector<std::pair<std::string,std::string>>& fileList);
 
 }

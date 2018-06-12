@@ -150,6 +150,60 @@ T::Coordinate_vec LatLonImpl::getGridLatLonCoordinates() const
 
 
 
+
+std::string LatLonImpl::getGridGeometryString() const
+{
+  try
+  {
+    char buf[1000];
+
+    uint ni = (uint)(*mLatLon.getGrid()->getNi());
+    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+    double y = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
+    double x = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
+    double dx = (double)(*mLatLon.getIDirectionIncrement()) / 1000000;
+    double dy = (double)(*mLatLon.getJDirectionIncrement()) / 1000000;
+
+    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+
+    char sm[100];
+    char *p = sm;
+    if ((scanningMode & 0x80) != 0)
+    {
+      dx = -dx;
+      p += sprintf(p,"-x");
+    }
+    else
+    {
+      p += sprintf(p,"+x");
+    }
+
+    if ((scanningMode & 0x40) == 0)
+    {
+      dy = -dy;
+      p += sprintf(p,"-y");
+    }
+    else
+    {
+      p += sprintf(p,"+y");
+    }
+
+
+    sprintf(buf,"%d;id;name;%u;%u;%f;%f;%f;%f;%s;description",
+      (int)T::GridProjection::LatLon,ni,nj,x,y,fabs(dx),fabs(dy),sm);
+
+    return std::string(buf);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid dimensions (i.e. the width and the height).
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each

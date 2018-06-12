@@ -168,6 +168,58 @@ T::Coordinate_vec PolarStereographicImpl::getGridCoordinates() const
 
 
 
+std::string PolarStereographicImpl::getGridGeometryString() const
+{
+  try
+  {
+    char buf[1000];
+
+    double y = (double)(*mLatitudeOfFirstGridPoint) / 1000000;
+    double x = (double)(*mLongitudeOfFirstGridPoint) / 1000000;
+    double laD = (double)(*mLaD) / 1000000;
+    double dx = (double)(*mDx) / 1000;
+    double dy = (double)(*mDy) / 1000;
+    double orientation = (double)(*mOrientationOfTheGrid) / 1000000;
+
+    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+
+    char sm[100];
+    char *p = sm;
+    if ((scanningMode & 0x80) != 0)
+    {
+      dx = -dx;
+      p += sprintf(p,"-x");
+    }
+    else
+    {
+      p += sprintf(p,"+x");
+    }
+
+    if ((scanningMode & 0x40) == 0)
+    {
+      dy = -dy;
+      p += sprintf(p,"-y");
+    }
+    else
+    {
+      p += sprintf(p,"+y");
+    }
+
+    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;%f;description",
+        (int)T::GridProjection::PolarStereographic,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,orientation,laD);
+
+    return std::string(buf);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid dimensions (i.e. the width and the height).
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each

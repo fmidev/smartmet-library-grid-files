@@ -18,6 +18,7 @@ class RotatedLatLonImpl : public RotatedLatLon
 
     T::Coordinate_vec getGridCoordinates() const;
     T::Dimensions_opt getGridDimensions() const;
+    std::string       getGridGeometryString() const;
     T::Coordinate_vec getGridLatLonCoordinates() const;
     bool              getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     bool              getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;

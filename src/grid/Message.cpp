@@ -395,6 +395,15 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
+std::string Message::getGridGeometryString() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
 void Message::setGridGeometryId(T::GeometryId geometryId)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");

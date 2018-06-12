@@ -171,6 +171,57 @@ T::Coordinate_vec LatLonImpl::getGridLatLonCoordinates() const
 
 
 
+std::string LatLonImpl::getGridGeometryString() const
+{
+  try
+  {
+    char buf[1000];
+
+    double y = (double)mGridArea.getLatitudeOfFirstGridPoint() / 1000;
+    double x = (double)mGridArea.getLongitudeOfFirstGridPoint() / 1000;
+    double dx = (double)mIDirectionIncrement / 1000;
+    double dy = (double)mJDirectionIncrement / 1000;
+
+    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+
+    char sm[100];
+    char *p = sm;
+    if ((scanningMode & 0x80) != 0)
+    {
+      dx = -dx;
+      p += sprintf(p,"-x");
+    }
+    else
+    {
+      p += sprintf(p,"+x");
+    }
+
+    if ((scanningMode & 0x40) == 0)
+    {
+      dy = -dy;
+      p += sprintf(p,"-y");
+    }
+    else
+    {
+      p += sprintf(p,"+y");
+    }
+
+
+    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;description",
+      (int)T::GridProjection::LatLon,mNi,mNj,x,y,fabs(dx),fabs(dy),sm);
+
+    return std::string(buf);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid dimensions (i.e. the width and the height).
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each

@@ -162,6 +162,62 @@ T::Coordinate_vec LambertConformalImpl::getGridCoordinates() const
 
 
 
+std::string LambertConformalImpl::getGridGeometryString() const
+{
+  try
+  {
+    char buf[1000];
+
+    double y = (double)mLatitudeOfFirstGridPoint / 1000;
+    double x = (double)mLongitudeOfFirstGridPoint / 1000;
+    double loV = (double)mLoV / 1000;
+    double latin1 = (double)mLatin1 / 1000;
+    double latin2 = (double)mLatin2 / 1000;
+    double sx = (double)mLongitudeOfSouthernPole / 1000;
+    double sy = (double)mLatitudeOfSouthernPole / 1000;
+    double dx = (double)mDxInMetres;
+    double dy = (double)mDyInMetres;
+
+    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+
+    char sm[100];
+    char *p = sm;
+    if ((scanningMode & 0x80) != 0)
+    {
+      dx = -dx;
+      p += sprintf(p,"-x");
+    }
+    else
+    {
+      p += sprintf(p,"+x");
+    }
+
+    if ((scanningMode & 0x40) == 0)
+    {
+      dy = -dy;
+      p += sprintf(p,"-y");
+    }
+    else
+    {
+      p += sprintf(p,"+y");
+    }
+
+
+    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s,%f;%f;%f;%f;%f;60.0;description",
+      (int)T::GridProjection::LambertConformal,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy);
+
+    return std::string(buf);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid dimensions (i.e. the width and the height).
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each

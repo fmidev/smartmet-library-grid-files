@@ -57,6 +57,7 @@ class Message : public GRID::Message
     GribFile*               getGribFile() const;
 
     T::GeometryId           getGridGeometryId() const;
+    std::string             getGridGeometryString() const;
     T::Coordinate_vec       getGridCoordinates() const;
     T::Coordinate_vec       getGridLatLonCoordinates() const;
     T::Dimensions_opt       getGridDimensions() const;

@@ -47,6 +47,7 @@ class Message
     virtual short                   getForecastType() const;
     virtual short                   getForecastNumber() const;
     virtual T::GeometryId           getGridGeometryId() const;
+    virtual std::string             getGridGeometryString() const;
 
     virtual std::string             getFmiProducerName() const;
     virtual T::ParamId              getFmiParameterId() const;

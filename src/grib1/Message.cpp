@@ -365,7 +365,9 @@ void Message::read(MemoryReader& memoryReader)
           setGridGeometryId(geometryId);
         else
         {
-          printf("** Geometry not found %llu (file = %s)\n",(unsigned long long)hash,mGribFile->getFileName().c_str());
+          std::cout << "\n** Geometry not configured : " << hash << " (" << mGribFile->getFileName() << ")\n";
+          std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
+          std::cout << getGridGeometryString() << "\n\n";
           //SmartMet::Spine::Exception exception(BCP,"Geometry not found");
           //throw exception;
         }
@@ -487,6 +489,30 @@ T::GeometryId Message::getGridGeometryId() const
       return mGridSection->getGridGeometryId();
 
     return 0;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+
+std::string Message::getGridGeometryString() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection != NULL)
+      return mGridSection->getGridGeometryString();
+
+    std::string str;
+    return str;
   }
   catch (...)
   {

@@ -12,6 +12,16 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <zlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <limits.h>
+#include <string.h>
+#include <set>
+#include <vector>
+#include <string>
+#include <fnmatch.h>
+
 
 namespace fs = boost::filesystem;
 
@@ -1015,17 +1025,24 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
 
 int compressData(void *_data,uint _dataSize,void *_compressedData,uint& _compressedDataSize)
 {
-  uLongf comprLen = (uLongf)_compressedDataSize;
-  compress((Bytef*)_compressedData, &comprLen, (Bytef*)_data, (uLong)_dataSize);
-
-  if (comprLen > 0)
+  try
   {
-    _compressedDataSize = comprLen;
-    return 0;
-  }
+    uLongf comprLen = (uLongf)_compressedDataSize;
+    compress((Bytef*)_compressedData, &comprLen, (Bytef*)_data, (uLong)_dataSize);
 
-  _compressedDataSize = 0;
-  return -1;
+    if (comprLen > 0)
+    {
+      _compressedDataSize = comprLen;
+      return 0;
+    }
+
+    _compressedDataSize = 0;
+    return -1;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
 }
 
 
@@ -1035,52 +1052,67 @@ int compressData(void *_data,uint _dataSize,void *_compressedData,uint& _compres
 
 int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompressedData,uint& _decompressedDataSize)
 {
-  uLongf len = (uLongf)_decompressedDataSize;
-  int res = uncompress((Bytef*)_decompressedData, &len, (Bytef*)_compressedData, (uLong)_compressedDataSize);
-  //printf("UNCOMPRESS %d\n",res);
-  _decompressedDataSize = len;
-
-  if (res < 0)
+  try
   {
-    _decompressedDataSize = 0;
-    return -1;
-  }
+    uLongf len = (uLongf)_decompressedDataSize;
+    int res = uncompress((Bytef*)_decompressedData, &len, (Bytef*)_compressedData, (uLong)_compressedDataSize);
+    //printf("UNCOMPRESS %d\n",res);
+    _decompressedDataSize = len;
 
-  return 0;
+    if (res < 0)
+    {
+      _decompressedDataSize = 0;
+      return -1;
+    }
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
 }
+
 
 
 
 
 void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordinate>& coordinates)
 {
-  char st[10000];
-  strcpy(st,latLonCoordinates.c_str());
-  char *field[1000];
-  uint c = 1;
-  field[0] = st;
-  char *p = st;
-  while (*p != '\0'  &&  c < 1000)
+  try
   {
-    if (*p == ';' ||  *p == ',')
+    char st[10000];
+    strcpy(st,latLonCoordinates.c_str());
+    char *field[1000];
+    uint c = 1;
+    field[0] = st;
+    char *p = st;
+    while (*p != '\0'  &&  c < 1000)
     {
-      *p = '\0';
-      p++;
-      field[c] = p;
-      c++;
+      if (*p == ';' ||  *p == ',')
+      {
+        *p = '\0';
+        p++;
+        field[c] = p;
+        c++;
+      }
+      else
+      {
+        p++;
+      }
     }
-    else
+
+    if ((c % 2) == 0)
     {
-      p++;
+      for (uint t = 0; t<c; t = t + 2)
+      {
+        coordinates.push_back(T::Coordinate(atof(field[t+1]),atof(field[t])));
+      }
     }
   }
-
-  if ((c % 2) == 0)
+  catch (...)
   {
-    for (uint t = 0; t<c; t = t + 2)
-    {
-      coordinates.push_back(T::Coordinate(atof(field[t+1]),atof(field[t])));
-    }
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
   }
 }
 
@@ -1188,6 +1220,7 @@ void splitString(const char *str,char separator,std::set<std::string>& partList)
 
 
 
+
 void splitString(std::string str,char separator,std::set<std::string>& partList)
 {
   try
@@ -1199,7 +1232,6 @@ void splitString(std::string str,char separator,std::set<std::string>& partList)
     throw Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
-
 
 
 
@@ -1325,17 +1357,24 @@ void splitString(std::string str,char separator,std::vector<float>& partList)
 
 std::string getAbsoluteFilePath(std::string filename)
 {
-  if (!filename.empty() && fs::exists(filename))
+  try
   {
-    fs::path path(filename);
-    if (!path.is_absolute())
+    if (!filename.empty() && fs::exists(filename))
     {
-      path = fs::canonical(path);
+      fs::path path(filename);
+      if (!path.is_absolute())
+      {
+        path = fs::canonical(path);
+        return path.string();
+      }
       return path.string();
     }
-    return path.string();
+    return filename;
   }
-  return filename;
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
 }
 
 
@@ -1344,17 +1383,125 @@ std::string getAbsoluteFilePath(std::string filename)
 
 std::string getFileDir(std::string filename)
 {
-  std::string fname = getAbsoluteFilePath(filename);
-  std::string::size_type n = fname.rfind("/");
-  if (n != std::string::npos)
-    return fname.substr(0,n);
+  try
+  {
+    std::string fname = getAbsoluteFilePath(filename);
+    std::string::size_type n = fname.rfind("/");
+    if (n != std::string::npos)
+      return fname.substr(0,n);
 
-  n = fname.rfind("\\");
-  if (n != std::string::npos)
-    return fname.substr(0,n);
+    n = fname.rfind("\\");
+    if (n != std::string::npos)
+      return fname.substr(0,n);
 
-  return std::string("");
+    return std::string("");
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
 }
+
+
+
+
+
+bool patternMatch(const char *str,std::vector<std::string>& patterns)
+{
+  try
+  {
+    for (auto it = patterns.begin(); it != patterns.end(); ++it)
+    {
+      if (fnmatch(it->c_str(),str,0) == 0)
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+
+
+
+
+void getFileList(const char *dirName,std::vector<std::string>& filePatterns,bool includeSubDirs,std::set<std::string>& dirList,std::vector<std::pair<std::string,std::string>>& fileList)
+{
+  try
+  {
+    char *path = realpath(dirName, NULL);
+    if (path == NULL)
+    {
+      // printf("Cannot find the dir [%s]\n", dirName);
+      return;
+    }
+
+    if (dirList.find(path) != dirList.end())
+      return; // Dir already processed
+
+    //printf("DIR [%s]\n", path);
+
+    DIR *dp = opendir(dirName);
+    if (dp == NULL)
+    {
+      // printf("Cannot open dir : %s\n",dirName);
+      return;
+    }
+
+
+    struct dirent entry;
+    struct dirent *ep = NULL;
+
+    while (readdir_r(dp,&entry,&ep) == 0  &&  ep != NULL)
+    {
+      if (ep != NULL)
+      {
+        char fullName[2000];
+        sprintf(fullName,"%s/%s",path,ep->d_name);
+
+        if (includeSubDirs  &&  ep->d_type == DT_DIR  &&  strcmp(ep->d_name,"..") != 0   &&  strcmp(ep->d_name,".") != 0)
+        {
+          getFileList(fullName,filePatterns,includeSubDirs,dirList,fileList);
+        }
+        else
+        if (ep->d_type == DT_REG)
+        {
+          if (filePatterns.size() == 0  ||  patternMatch(ep->d_name,filePatterns))
+            fileList.push_back(std::pair<std::string,std::string>(path,ep->d_name));
+        }
+        else
+        if (ep->d_type == DT_UNKNOWN)
+        {
+          struct stat s;
+          if (stat(fullName,&s) == 0)
+          {
+            if (includeSubDirs  &&  (s.st_mode & S_IFDIR) != 0  &&  strcmp(ep->d_name,"..") != 0   &&  strcmp(ep->d_name,".") != 0)
+            {
+              getFileList(fullName,filePatterns,includeSubDirs,dirList,fileList);
+            }
+            else
+            if (s.st_mode & S_IFREG)
+            {
+              if (filePatterns.size() == 0  ||  patternMatch(ep->d_name,filePatterns))
+                fileList.push_back(std::pair<std::string,std::string>(path,ep->d_name));
+            }
+          }
+        }
+      }
+    }
+    closedir(dp);
+    free(path);
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
+  }
+}
+
+
 
 
 
