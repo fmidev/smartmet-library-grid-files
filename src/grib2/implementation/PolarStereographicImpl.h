@@ -25,6 +25,8 @@ class PolarStereographicImpl : public PolarStereographic
     void              initSpatialReference();
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
     void              read(MemoryReader& memoryReader);
+    bool              reverseXDirection() const;
+    bool              reverseYDirection() const;
 
   protected:
 

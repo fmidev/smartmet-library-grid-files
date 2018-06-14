@@ -351,6 +351,47 @@ bool PolarStereographicImpl::getGridOriginalCoordinatesByGridPosition(double gri
 
 
 
+bool PolarStereographicImpl::reverseXDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)(mScanningMode.getScanningMode());
+
+    if ((scanMode & 0x80) != 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+bool PolarStereographicImpl::reverseYDirection() const
+{
+  try
+  {
+    unsigned char scanMode = (unsigned char)(mScanningMode.getScanningMode());
+
+    if ((scanMode & 0x40) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
 /*! \brief The method initializes the spatial reference (mSpatialReference) of the grid. */
 
 void PolarStereographicImpl::initSpatialReference()
