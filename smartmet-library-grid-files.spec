@@ -3,8 +3,8 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 18.1.25
-Release: 1%{?dist}.fmi
+Version: 18.6.14
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -17,6 +17,11 @@ BuildRequires: boost-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal-devel
 BuildRequires: make
+BuildRequires: libjpeg-devel
+BuildRequires: libjpeg-turbo-devel
+BuildRequires: openjpeg-devel
+BuildRequires: libpng-devel
+BuildRequires: libjasper-devel
 Provides: %{SPECNAME}
 Requires: boost-date-time
 Requires: boost-filesystem
@@ -26,6 +31,7 @@ Requires: boost-system
 Requires: boost-thread
 Requires: gdal
 Requires: openjpeg
+Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 18.1.22
 Requires: smartmet-library-spine >= 18.1.15
 
@@ -36,7 +42,7 @@ FMI Grid File handling library
 rm -rf $RPM_BUILD_ROOT
 
 %setup -q -n %{SPECNAME}
- 
+
 %build
 make %{_smp_mflags}
 
@@ -66,7 +72,7 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Jun 14 2018 Roope Tervo <roope.tervo@fmi.fi> - 18.6.14-1.fmi
+- Build for testing
 * Thu Jan 25 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.1.25-1.fmi
 - First packaged version
-
-
