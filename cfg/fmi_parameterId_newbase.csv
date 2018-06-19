@@ -702,10 +702,6 @@
 180;0;;
 
 # Rain over the last 6 hours in mm
-# RR-6-MM => SigWaveLength
-181;179;;
-
-# Rain over the last 6 hours in mm
 # RR-6-MM => Precipitation6h
 181;355;;
 

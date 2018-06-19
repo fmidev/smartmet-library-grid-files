@@ -174,6 +174,7 @@ std::string PolarStereographicImpl::getGridGeometryString() const
     double x = (double)mLongitudeOfFirstGridPoint / 1000;
     double dx = (double)mDxInMetres;
     double dy = (double)mDyInMetres;
+    double orientation = (double)mOrientationOfTheGrid/1000;
 
     unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
 
@@ -199,8 +200,8 @@ std::string PolarStereographicImpl::getGridGeometryString() const
       p += sprintf(p,"+y");
     }
 
-    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%d;60.0;description",
-        (int)T::GridProjection::PolarStereographic,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,mOrientationOfTheGrid);
+    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;60.0;description",
+        (int)T::GridProjection::PolarStereographic,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,orientation);
 
     return std::string(buf);
   }

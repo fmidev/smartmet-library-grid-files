@@ -92,8 +92,14 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
     bitArrayReader.setReadPosition(index*bitsPerValue);
     bitArrayReader.readBits(bitsPerValue,X);
 
-    value = (T::ParamValue)(RDfac + X * EDfac);
-    //printf("VAL %f\n",value);
+    double Y = RDfac + X * EDfac;
+
+    if (round(Y) == 9999)
+      value = ParamValueMissing;
+    else
+      value = Y;
+
+    // value = (T::ParamValue)(RDfac + X * EDfac);
     return true;
   }
   catch (...)
@@ -227,7 +233,10 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
 
         // Output the calculated value
         double Y = RDfac + X * EDfac;
-        decodedValues.push_back((T::ParamValue)Y);
+        if (round(Y) == 9999)
+          decodedValues.push_back(ParamValueMissing);
+        else
+          decodedValues.push_back((T::ParamValue)Y);
       }
     }
   }

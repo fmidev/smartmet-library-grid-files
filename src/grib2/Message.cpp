@@ -517,24 +517,18 @@ void Message::initParameterInfo()
 
     if (getGridGeometryId() == 0)
     {
-      T::Hash hash = getGridHash();
-      if (hash != 0)
+      int geometryId = Identification::gridDef.getGrib2GeometryId(*this);
+      if (geometryId != 0)
       {
-        int geometryId = Identification::gridDef.getGrib2GeometryIdByHash(hash);
-        if (geometryId != 0)
-          setGridGeometryId(geometryId);
-        else
-        {
-          std::cout << "\n** Geometry not configured : " << hash << " (" << mGribFile->getFileName() << ")\n";
-          std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
-          std::cout << getGridGeometryString() << "\n\n";
-          //SmartMet::Spine::Exception exception(BCP,"Geometry not found");
-          //throw exception;
-        }
+        setGridGeometryId(geometryId);
       }
       else
       {
-        printf("Hash is zero!\n");
+        std::cout << "\n** Geometry not configured : " << mGribFile->getFileName() << "\n";
+        std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
+        std::cout << getGridGeometryString() << "\n\n";
+          //SmartMet::Spine::Exception exception(BCP,"Geometry not found");
+          //throw exception;
       }
     }
   }

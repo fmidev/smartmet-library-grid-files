@@ -81,7 +81,7 @@ class GridDef
     bool              getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_vec& coordinates);
     bool              getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols,uint& rows);
 
-    int               getGrib1GeometryIdByHash(T::Hash hash);
+    int               getGrib1GeometryId(GRIB1::Message& message);
     bool              getGrib1LevelDef(uint levelId,LevelDef& levelDef);
     uint              getGrib1ParameterDefCount();
     bool              getGrib1ParameterDefById(T::ParamId gribParamId,Grib1ParameterDef& paramDef);
@@ -90,7 +90,7 @@ class GridDef
     bool              getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfParameter,Grib1ParameterDef& paramDef);
     bool              getGrib1TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef);
 
-    int               getGrib2GeometryIdByHash(T::Hash hash);
+    int               getGrib2GeometryId(GRIB2::Message& message);
     bool              getGrib2LevelDef(uint levelId,LevelDef& levelDef);
     uint              getGrib2ParameterDefCount();
     bool              getGrib2ParameterDefById(T::ParamId gribParamId,Grib2ParameterDef& paramDef);
@@ -172,7 +172,7 @@ class GridDef
     GribParamDef_cptr       getGribParamDef(uint discipline,uint category,uint number);
 
     GRIB1::GridDef_ptr      getGrib1DefinitionByGeometryId(int geometryId);
-    GRIB1::GridDef_ptr      getGrib1DefinitionByHash(T::Hash hash);
+    GRIB1::GridDef_ptr      getGrib1Definition(GRIB1::Message& message);
     LevelDef_cptr           getGrib1LevelDef(uint levelId);
     Grib1ParamDef_cptr      getGrib1ParameterDefById(T::ParamId gribParamId);
     Grib1ParamDef_cptr      getGrib1ParameterDefByIndex(uint index);
@@ -181,7 +181,7 @@ class GridDef
     TimeRangeDef_cptr       getGrib1TimeRangeDef(uint timeRangeId);
 
     GRIB2::GridDef_ptr      getGrib2DefinitionByGeometryId(int geometryId);
-    GRIB2::GridDef_ptr      getGrib2DefinitionByHash(T::Hash hash);
+    GRIB2::GridDef_ptr      getGrib2Definition(GRIB2::Message& message);
     LevelDef_cptr           getGrib2LevelDef(uint levelId);
     Grib2ParamDef_cptr      getGrib2ParameterDefById(T::ParamId gribParamId);
     Grib2ParamDef_cptr      getGrib2ParameterDefByName(std::string gribParamName);
@@ -211,7 +211,6 @@ class GridDef
     void                    loadFmiLevelId_grib1(const char *filename);
     void                    loadFmiLevelId_grib2(const char *filename);
     void                    loadFmiProducerId_grib(const char *filename);
-
 
     void                    updateCheck();
     time_t                  getModificationTime(string_vec& files);

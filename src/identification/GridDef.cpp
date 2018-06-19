@@ -2985,21 +2985,46 @@ GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
 
 
 
-GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByHash(T::Hash hash)
+GRIB1::GridDef_ptr GridDef::getGrib1Definition(GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
   {
-    /*
-    auto it = mHashAlternatives.find(hash);
-    if (it != mHashAlternatives.end())
-      hash = it->second;
-*/
-    for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
+    std::string geometryStr = message.getGridGeometryString();
+
+    std::vector<GRIB1::GridDef_ptr>::iterator it;
+    for (it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
     {
-      if ((*it)->getGridHash() == hash)
-        return (*it);
+      if ((*it)->getGridGeometryString() == geometryStr)
+        return *it;
     }
+
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+GRIB2::GridDef_ptr GridDef::getGrib2Definition(GRIB2::Message& message)
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::string geometryStr = message.getGridGeometryString();
+
+    std::vector<GRIB2::GridDef_ptr>::iterator it;
+    for (it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
+    {
+      if ((*it)->getGridGeometryString() == geometryStr)
+        return *it;
+    }
+
     return NULL;
   }
   catch (...)
@@ -3040,7 +3065,7 @@ GRIB2::GridDef_ptr GridDef::getGrib2DefinitionByGeometryId(int geometryId)
 
 
 
-int GridDef::getGrib1GeometryIdByHash(T::Hash hash)
+int GridDef::getGrib1GeometryId(GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -3048,7 +3073,7 @@ int GridDef::getGrib1GeometryIdByHash(T::Hash hash)
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    auto def = getGrib1DefinitionByHash(hash);
+    auto def = getGrib1Definition(message);
     if (def == NULL)
       return 0;
 
@@ -3065,7 +3090,7 @@ int GridDef::getGrib1GeometryIdByHash(T::Hash hash)
 
 
 
-int GridDef::getGrib2GeometryIdByHash(T::Hash hash)
+int GridDef::getGrib2GeometryId(GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -3073,38 +3098,11 @@ int GridDef::getGrib2GeometryIdByHash(T::Hash hash)
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    auto def = getGrib2DefinitionByHash(hash);
+    auto def = getGrib2Definition(message);
     if (def == NULL)
       return 0;
 
     return def->getGridGeometryId();
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
-GRIB2::GridDef_ptr GridDef::getGrib2DefinitionByHash(T::Hash hash)
-{
-  FUNCTION_TRACE
-  try
-  {
-    /*
-    auto it = mHashAlternatives.find(hash);
-    if (it != mHashAlternatives.end())
-      hash = it->second;
-*/
-    for (auto it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
-    {
-      if ((*it)->getGridHash() == hash)
-        return *it;
-    }
-    return NULL;
   }
   catch (...)
   {
@@ -3537,44 +3535,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               def2->initSpatialReference();
 
               //def2->print(std::cout,0,0);
-              //T::Hash hash = def2->countHash();
-              //printf("HASH %llu\n",(unsigned long long)hash);
-/*
-              T::Hash hash1 = def2->countHash();
 
-              if (longitude < 0 || lastLongitude < 0)
-              {
-                GRIB2::GridSettings gridx;
-
-                gridx.setNi(T::UInt32_opt(ni));
-                gridx.setNj(T::UInt32_opt(nj));
-
-                if (longitude < 0)
-                  gridx.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude+360000000));
-                else
-                  gridx.setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
-
-                gridx.setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
-                gridx.setLongitudeOfLastGridPoint(T::Int32_opt(lastLongitude));
-
-                if (lastLongitude < 0)
-                  gridx.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude+360000000));
-                else
-                  gridx.setLatitudeOfLastGridPoint(T::Int32_opt(lastLatitude));
-
-                latLon.setGrid(gridx);
-                def2->setLatLon(latLon);
-
-                T::Hash hash2 = def2->countHash();
-                def2->print(std::cout,0,0);
-                printf("** ALT %llu => %llu\n",(unsigned long long)hash2,(unsigned long long)hash1);
-
-                mHashAlternatives.insert(std::pair<T::Hash,T::Hash>(hash2,hash1));
-
-                latLon.setGrid(grid);
-                def2->setLatLon(latLon);
-              }
-*/
               mGridDefinitions2.push_back(def2);
 
               // ******* GRIB 1 ********
@@ -3617,8 +3578,6 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               def1->initSpatialReference();
 
               //def1->print(std::cout,0,0);
-              //T::Hash hash = def1->getGridHash();
-              //printf("HASH %llu\n",(unsigned long long)hash);
 
               mGridDefinitions1.push_back(def1);
             }
@@ -3702,8 +3661,6 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               def2->initSpatialReference();
 
               //def2->print(std::cout,0,0);
-              //T::Hash hash = def2->getGridHash();
-              //printf("HASH %llu\n",(unsigned long long)hash);
 
               mGridDefinitions2.push_back(def2);
 
@@ -3749,8 +3706,6 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               def1->initSpatialReference();
 
               // def1->print(std::cout,0,0);
-              // T::Hash hash = def1->getGridHash();
-              // printf("HASH %llu\n",(unsigned long long)hash);
 
               mGridDefinitions1.push_back(def1);
             }
@@ -3789,7 +3744,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               int laD = (int)round(atof(field[11]) * 1000000);
 
               // ******* GRIB 2 ********
-//#if 0
+
               GRIB2::PolarStereographicImpl *def2 = new GRIB2::PolarStereographicImpl();
               GRIB2::ScanningModeSettings scanningMode2;
 
@@ -3827,12 +3782,9 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               def2->initSpatialReference();
 
               //def2->print(std::cout,0,0);
-              //T::Hash hash = def2->getGridHash();
-              //printf("HASH %llu\n",(unsigned long long)hash);
 
               mGridDefinitions2.push_back(def2);
               //mGridDefinitions2.insert(std::pair<uint,GRIB2::GridDef_ptr>(geometryId,def2));
-//#endif
 
               // ******* GRIB 1 ********
 
@@ -3872,10 +3824,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               def1->setGridGeometryName(geometryName);
               def1->initSpatialReference();
 
-              //printf("*** GEOMETRY : %d\n",geometryId);
               //def1->print(std::cout,0,0);
-              //std::size_t hash = def1->getGridHash();
-              //printf("HASH %llu\n",(unsigned long long)hash);
 
               mGridDefinitions1.push_back(def1);
             }
@@ -3937,8 +3886,6 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               def2->initSpatialReference();
 
               //def2->print(std::cout,0,0);
-              //T::Hash hash = def2->getGridHash();
-              //printf("HASH %llu\n",(unsigned long long)hash);
 
               mGridDefinitions2.push_back(def2);
 
@@ -3980,8 +3927,6 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               def1->initSpatialReference();
 
               //def1->print(std::cout,0,0);
-              //std::size_t hash = def1->getGridHash();
-              //printf("HASH %llu\n",(unsigned long long)hash);
 
               mGridDefinitions1.push_back(def1);
             }
@@ -4171,9 +4116,9 @@ T::ParamId GridDef::getGribParameterId(GRIB1::Message& message)
 
       if (p->mIndicatorOfParameter)
       {
-        requiredPoints++;
+        requiredPoints += 3;
         if (p->mIndicatorOfParameter == productSection->getIndicatorOfParameter())
-          points++;
+          points += 3;
       }
 
       if (p->mIndicatorOfTypeOfLevel)
@@ -4185,9 +4130,9 @@ T::ParamId GridDef::getGribParameterId(GRIB1::Message& message)
 
       if (p->mTable2Version)
       {
-        requiredPoints++;
+        requiredPoints += 3;
         if (p->mTable2Version == productSection->getTableVersion())
-          points++;
+          points += 3;
       }
 
       if (p->mParameterLevel)
@@ -4659,11 +4604,15 @@ T::ParamId GridDef::getFmiParameterId(GRIB1::Message& message)
     AutoThreadLock lock(&mThreadLock);
 
     T::ParamId gribId = getGribParameterId(message);
+    //printf("*** GRIB-ID : %s\n",gribId.c_str());
     if (!gribId.empty())
     {
       auto r =  getFmiParameterIdByGribId(gribId);
       if (r != NULL)
+      {
+        //printf("    => %s\n",r->mFmiParameterId.c_str());
         return r->mFmiParameterId;
+      }
     }
 
     const GRIB1::ProductSection *productSection =  message.getProductSection();

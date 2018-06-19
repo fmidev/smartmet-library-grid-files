@@ -41,7 +41,7 @@ class PhysicalGridFile : public GridFile
 
   private:
 
-    T::FileType     getFileType(MemoryReader& memoryReader);
+    T::FileType     readFileType(MemoryReader& memoryReader);
     ulonglong       searchFileStartPosition(MemoryReader& memoryReader);
 
   protected:

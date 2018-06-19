@@ -159,7 +159,7 @@ void PhysicalGridFile::read(std::string filename)
 
     MemoryReader memoryReader((unsigned char*)startAddr,(unsigned char*)endAddr);
 
-    T::FileType fileType = getFileType(memoryReader);
+    T::FileType fileType = readFileType(memoryReader);
 
     switch (fileType)
     {
@@ -214,7 +214,7 @@ void PhysicalGridFile::read(std::string filename)
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-T::FileType PhysicalGridFile::getFileType(MemoryReader& memoryReader)
+T::FileType PhysicalGridFile::readFileType(MemoryReader& memoryReader)
 {
   try
   {
