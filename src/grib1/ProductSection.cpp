@@ -813,6 +813,8 @@ T::TimeString ProductSection::getForecastTime() const
 
     T::TimeStamp tt = refTime;
 
+    uint p12 = (((uint)mP1) << 8) + mP2;
+
     switch (mTimeRangeIndicator)
     {
       case 0: // Forecast product valid at reference time + P1 (P1>0)
@@ -840,7 +842,7 @@ T::TimeString ProductSection::getForecastTime() const
         break;
 
       case 10: // P1 occupies octets 19 and 20; product valid at reference time + P1
-        tt = refTime + dd*mP1;
+        tt = refTime + dd*p12;
         break;
 
       case 51: // Climatological Mean Value:
