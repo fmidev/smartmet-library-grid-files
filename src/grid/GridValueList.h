@@ -22,6 +22,7 @@ class GridValueList
      void             addGridValue(GridValue *gridValue);
      void             clear();
      GridValue*       getGridValueByIndex(uint index) const;
+     GridValue*       getGridValueByCoordinates(double x,double y) const;
      uint             getLength() const;
      T::ParamValue    getMaxValue() const;
      T::ParamValue    getMinValue() const;
