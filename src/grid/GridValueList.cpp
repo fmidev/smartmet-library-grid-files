@@ -141,6 +141,28 @@ GridValue* GridValueList::getGridValueByIndex(uint index) const
 
 
 
+
+GridValue* GridValueList::getGridValueByCoordinates(double x,double y) const
+{
+  try
+  {
+    for (auto it=mList.begin(); it != mList.end(); ++it)
+    {
+      if ((*it)->mX == x  &&  (*it)->mY == y)
+        return (*it);
+    }
+    return NULL;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 uint GridValueList::getLength() const
 {
   try
