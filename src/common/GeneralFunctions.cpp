@@ -3,6 +3,9 @@
 #include "Exception.h"
 #include "AutoThreadLock.h"
 
+#include <macgyver/StringConversion.h>
+#include <macgyver/TimeParser.h>
+
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/convenience.hpp>
 #include <stdlib.h>
@@ -578,6 +581,26 @@ std::string localTimeToUtcTime(std::string localTime,const char *tzone)
   catch (...)
   {
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+
+std::string localTimeToUtc(std::string localTime,boost::local_time::time_zone_ptr tz)
+{
+  try
+  {
+    auto ptime = boost::posix_time::from_iso_string(localTime);
+    boost::local_time::local_date_time localTime(ptime,tz);
+    auto lTime = Fmi::TimeParser::make_time(localTime.date(),localTime.time_of_day(), tz);
+    return to_iso_string(lTime.utc_time());
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", NULL);
   }
 }
 

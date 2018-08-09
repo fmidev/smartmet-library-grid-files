@@ -5,7 +5,9 @@
 
 #include <string>
 #include <set>
+#include <boost/date_time/local_time/local_time.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/gregorian/gregorian.hpp>
 
 
 namespace SmartMet
@@ -35,6 +37,8 @@ std::string utcTimeToLocalTime(std::string utcTime,const char *tzone);
 */
 std::string localTimeFromTimeT(time_t t,const char *tzone);
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
+std::string localTimeToUtc(std::string localTime,boost::local_time::time_zone_ptr tz);
+
 
 time_t toTimeT(boost::posix_time::ptime tim);
 time_t getFileModificationTime(const char *filename);
