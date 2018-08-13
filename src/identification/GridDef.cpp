@@ -2867,6 +2867,34 @@ void GridDef::loadFmiProducerId_grib(const char *filename)
 
 
 
+bool GridDef::getGridLatLonAreaByGeometryId(T::GeometryId geometryId,T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  try
+  {
+    auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
+    if (g2 != NULL)
+    {
+      return g2->getGridLatLonArea(topLeft,topRight,bottomLeft,bottomRight);
+    }
+
+    auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
+    if (g1 != NULL)
+    {
+      return g1->getGridLatLonArea(topLeft,topRight,bottomLeft,bottomRight);
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double& width,double& height)
 {
   try

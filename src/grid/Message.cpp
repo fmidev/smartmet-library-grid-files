@@ -1491,7 +1491,7 @@ void Message::setNewbaseParameterName(std::string newbaseParameterName)
 
 
 
-void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short interpolationMethod,T::ParamValue& value)
+void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short interpolationMethod,T::ParamValue& value) const
 {
   FUNCTION_TRACE
   try
@@ -1530,7 +1530,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
 
 
 
-void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double x,double y,uint vectorType,double_vec& valueVector)
+void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double x,double y,uint vectorType,double_vec& valueVector) const
 {
   FUNCTION_TRACE
   try
@@ -1664,7 +1664,7 @@ void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint ve
 
 
 
-void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList)
+void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -1832,7 +1832,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
 
 
-void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short interpolationMethod,T::GridValueList& valueList)
+void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short interpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -1856,7 +1856,7 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
 
 
 
-void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList)
+void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -1972,7 +1972,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
 
 
-void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,T::GridValueList& valueList)
+void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -2094,7 +2094,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
 
 
-void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,bool gridRectangle,T::GridValueList& valueList)
+void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,bool gridRectangle,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -2188,6 +2188,28 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
           throw exception;
         }
       }
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
+void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,short interpolationMethod,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
+    {
+      T::ParamValue value;
+      getGridValueByPoint(coordinateType,it->x(),it->y(),interpolationMethod,value);
+      values.push_back(value);
     }
   }
   catch (...)

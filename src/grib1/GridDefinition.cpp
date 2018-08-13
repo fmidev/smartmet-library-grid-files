@@ -166,6 +166,41 @@ void GridDefinition::setGridGeometryName(std::string geometryName)
 
 
 
+bool GridDefinition::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  FUNCTION_TRACE
+  try
+  {
+    T::Dimensions_opt d = getGridDimensions();
+    if (!d)
+      return false;
+
+    double lat[4] = {0};
+    double lon[4] = {0};
+
+    if (getGridLatLonCoordinatesByGridPoint(0,0,lat[0],lon[0]) &&
+        getGridLatLonCoordinatesByGridPoint(d->nx(),0,lat[1],lon[1]) &&
+        getGridLatLonCoordinatesByGridPoint(0,d->ny(),lat[2],lon[2]) &&
+        getGridLatLonCoordinatesByGridPoint(d->nx(),d->ny(),lat[3],lon[3]))
+    {
+      topLeft.set(lon[0],lat[0]);
+      topRight.set(lon[1],lat[1]);
+      bottomLeft.set(lon[2],lat[2]);
+      bottomRight.set(lon[3],lat[3]);
+      return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+  }
+}
+
+
+
+
+
 bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
   FUNCTION_TRACE
