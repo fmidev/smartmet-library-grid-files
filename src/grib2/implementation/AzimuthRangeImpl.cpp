@@ -41,6 +41,24 @@ AzimuthRangeImpl::~AzimuthRangeImpl()
 
 
 
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* AzimuthRangeImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new AzimuthRangeImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -59,7 +77,7 @@ void AzimuthRangeImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -92,7 +110,7 @@ T::Coordinate_vec AzimuthRangeImpl::getGridCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt AzimuthRangeImpl::getGridDimensions() const
+T::Dimensions AzimuthRangeImpl::getGridDimensions() const
 {
   try
   {
@@ -100,7 +118,7 @@ T::Dimensions_opt AzimuthRangeImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -129,7 +147,7 @@ bool AzimuthRangeImpl::getGridPointByLatLonCoordinates(double lat,double lon,dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -152,7 +170,7 @@ void AzimuthRangeImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

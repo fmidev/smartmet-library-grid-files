@@ -21,17 +21,23 @@ namespace GRIB2 {
 SphericalHarmonic::SphericalHarmonic() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+SphericalHarmonic::SphericalHarmonic(const SphericalHarmonic &other) : GridDefinition(other) {
+  try {
+    mSphericalHarmonic = other.mSphericalHarmonic;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 SphericalHarmonic::~SphericalHarmonic() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -43,7 +49,20 @@ void SphericalHarmonic::read(MemoryReader &memoryReader) {
   try {
     mSphericalHarmonic.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void SphericalHarmonic::write(DataWriter &dataWriter) {
+  try {
+    mSphericalHarmonic.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -59,7 +78,7 @@ void SphericalHarmonic::getAttributeList(std::string prefix, T::AttributeList &a
     sprintf(name, "%sSphericalHarmonic.", prefix.c_str());
     mSphericalHarmonic.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -75,7 +94,7 @@ void SphericalHarmonic::print(std::ostream &stream, uint level, uint optionFlags
     stream << space(level) << "SphericalHarmonic\n";
     mSphericalHarmonic.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -87,25 +106,39 @@ T::Hash SphericalHarmonic::countHash() {
     boost::hash_combine(seed, mSphericalHarmonic.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint SphericalHarmonic::getTemplateNumber() const {
+  return 50;
+}
+
+GridDefinition *SphericalHarmonic::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new SphericalHarmonic(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mSphericalHarmonic} attribute. */
 
-const SphericalHarmonicSettings *SphericalHarmonic::getSphericalHarmonic() const {
+SphericalHarmonicSettings *SphericalHarmonic::getSphericalHarmonic() const {
   try {
-    return &mSphericalHarmonic;
+    return (SphericalHarmonicSettings *)&mSphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void SphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings sphericalHarmonic) {
+void SphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic) {
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

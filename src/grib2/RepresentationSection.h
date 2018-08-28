@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RepresentationDefinition.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 #include "../grid/MessageSection.h"
 
@@ -48,7 +49,8 @@ class RepresentationSection : public GRID::MessageSection
 {
   public:
 
-                    RepresentationSection(Message *message);
+                    RepresentationSection();
+                    RepresentationSection(const RepresentationSection& other);
     virtual         ~RepresentationSection();
 
     // ### Common methods for all message sections
@@ -58,21 +60,34 @@ class RepresentationSection : public GRID::MessageSection
     std::uint32_t   getSectionLength() const;
     std::string     getSectionName() const;
     std::uint8_t    getSectionNumber() const;
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
+    void            decodeValues(T::ParamValue_vec& decodedValues) const;
+    void            encodeValues(Message *message,T::ParamValue_vec& values);
     std::uint8_t    getNumberOfSection() const;
     std::uint32_t   getNumberOfValues() const;
     std::uint16_t   getDataRepresentationTemplateNumber() const;
     std::string     getDataRepresentationString() const;
     bool            getValueByIndex(uint index,T::ParamValue& value) const;
-    void            decodeValues(T::ParamValue_vec& decodedValues) const;
+
+    void            setNumberOfValues(std::uint32_t numOfValues);
+    void            setMessagePtr(Message *message);
+    void            setRepresentationDefinition(std::uint16_t templateNumber);
+    void            setRepresentationDefinition(RepresentationDefinition *representationDefinition);
+
+    bool            setProperty(uint propertyId,long long value);
+
     void            read(MemoryReader& memoryReader);
+    void            write(DataWriter& dataWriter);
+    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+
+
+    RepresentationDefinition_sptr getRepresentationDefinition();
 
   private:
 
-    RepresentationDefinition* createRepresentationDefinition(T::UInt16_opt number);
+    RepresentationDefinition*     createRepresentationDefinition(std::uint16_t templateNumber);
 
     /*! \brief The pointer to the message object. */
     Message*        mMessage;
@@ -93,12 +108,32 @@ class RepresentationSection : public GRID::MessageSection
     T::UInt16_opt   mDataRepresentationTemplateNumber;
 
     /*! \brief The pointer to the RepresentationDefinition object. */
-    RepresentationDefinition_uptr mRepresentationDefinition;
+    RepresentationDefinition_sptr mRepresentationDefinition;
+
+  public:
+    class Template
+    {
+      public:
+
+        const static std::uint16_t GridDataRepresentation = 0;
+        const static std::uint16_t MatrixDataRepresentation = 1;
+        const static std::uint16_t ComplexGridDataRepresentation = 2;
+        const static std::uint16_t ComplexDifferenceGridDataRepresentation = 3;
+        const static std::uint16_t FloatingPointGridDataRepresentation = 4;
+        const static std::uint16_t PreprocessedGridDataRepresentation = 6;
+        const static std::uint16_t JpegGridDataRepresentation = 40;
+        const static std::uint16_t PngGridDataRepresentation = 41;
+        const static std::uint16_t SpectralGridDataRepresentation = 42;
+        const static std::uint16_t SpectralDataRepresentation = 50;
+        const static std::uint16_t SphericalHarmonicsDataRepresentation = 51;
+        const static std::uint16_t LogarithmicGridDataRepresentation = 61;
+        const static std::uint16_t ComplexSphericalHarmonicsDataRepresentation = 50000;
+    };
+
 };
 
 
-typedef std::unique_ptr<RepresentationSection> RepresentSection_uptr;
-typedef const RepresentationSection* RepresentSection_cptr;
+typedef std::shared_ptr<RepresentationSection> RepresentSect_sptr;
 
 
 }  // namespace GRIB2

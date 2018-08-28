@@ -8,14 +8,15 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../ProductDefinition.h"
 #include "DerivedSettings.h"
 #include "HorizontalSettings.h"
 #include "ParameterSettings.h"
 #include "RectangularClusterSettings.h"
 #include "StatisticalSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -24,23 +25,27 @@ namespace GRIB2 {
 class TimeIntervalEnsembleClusterDerivedForecast : public ProductDefinition {
 public:
   TimeIntervalEnsembleClusterDerivedForecast();
+  TimeIntervalEnsembleClusterDerivedForecast(const TimeIntervalEnsembleClusterDerivedForecast &other);
   virtual ~TimeIntervalEnsembleClusterDerivedForecast();
 
+  virtual uint getTemplateNumber() const;
+  virtual ProductDefinition *createProductDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const ParameterSettings *getParameter() const;
-  void setParameter(ParameterSettings parameter);
-  const HorizontalSettings *getHorizontal() const;
-  void setHorizontal(HorizontalSettings horizontal);
-  const DerivedSettings *getDerived() const;
-  void setDerived(DerivedSettings derived);
-  const RectangularClusterSettings *getRectangularCluster() const;
-  void setRectangularCluster(RectangularClusterSettings rectangularCluster);
-  const StatisticalSettings *getStatistical() const;
-  void setStatistical(StatisticalSettings statistical);
+  ParameterSettings *getParameter() const;
+  void setParameter(ParameterSettings &parameter);
+  HorizontalSettings *getHorizontal() const;
+  void setHorizontal(HorizontalSettings &horizontal);
+  DerivedSettings *getDerived() const;
+  void setDerived(DerivedSettings &derived);
+  RectangularClusterSettings *getRectangularCluster() const;
+  void setRectangularCluster(RectangularClusterSettings &rectangularCluster);
+  StatisticalSettings *getStatistical() const;
+  void setStatistical(StatisticalSettings &statistical);
   const T::UInt8_opt &getEnsembleForecastNumbers() const;
   void setEnsembleForecastNumbers(T::UInt8_opt ensembleForecastNumbers);
 

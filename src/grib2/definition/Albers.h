@@ -8,12 +8,13 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "EarthShapeSettings.h"
 #include "ResolutionSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,15 +23,19 @@ namespace GRIB2 {
 class Albers : public GridDefinition {
 public:
   Albers();
+  Albers(const Albers &other);
   virtual ~Albers();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings earthShape);
+  EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNx() const;
   void setNx(T::UInt32_opt nx);
   const T::UInt32_opt &getNy() const;
@@ -39,8 +44,8 @@ public:
   void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::UInt32_opt &getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint);
-  const ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings resolution);
+  ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings &resolution);
   const T::Int32_opt &getLaD() const;
   void setLaD(T::Int32_opt laD);
   const T::UInt32_opt &getLoV() const;
@@ -51,8 +56,8 @@ public:
   void setYDirectionGridLength(T::UInt32_opt yDirectionGridLength);
   std::uint8_t getProjectionCentreFlag() const;
   void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
   const T::Int32_opt &getLatin1() const;
   void setLatin1(T::Int32_opt latin1);
   const T::UInt32_opt &getLatin2() const;

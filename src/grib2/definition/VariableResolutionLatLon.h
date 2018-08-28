@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "EarthShapeSettings.h"
 #include "VariableLatLonSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,17 +22,21 @@ namespace GRIB2 {
 class VariableResolutionLatLon : public GridDefinition {
 public:
   VariableResolutionLatLon();
+  VariableResolutionLatLon(const VariableResolutionLatLon &other);
   virtual ~VariableResolutionLatLon();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings earthShape);
-  const VariableLatLonSettings *getVariableLatLon() const;
-  void setVariableLatLon(VariableLatLonSettings variableLatLon);
+  EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings &earthShape);
+  VariableLatLonSettings *getVariableLatLon() const;
+  void setVariableLatLon(VariableLatLonSettings &variableLatLon);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

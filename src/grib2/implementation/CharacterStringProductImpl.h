@@ -12,13 +12,16 @@ namespace GRIB2
 class CharacterStringProductImpl : public CharacterStringProduct
 {
   public:
-                      CharacterStringProductImpl();
-    virtual           ~CharacterStringProductImpl();
+                        CharacterStringProductImpl();
+                        CharacterStringProductImpl(const CharacterStringProductImpl& other);
+    virtual             ~CharacterStringProductImpl();
 
-    T::TimeString     getForecastTime(T::TimeString referenceTime) const;
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::TimeString       getForecastTime(T::TimeString referenceTime) const;
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

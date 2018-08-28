@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../RepresentationDefinition.h"
 #include "OriginalValuesSettings.h"
 #include "PackingSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,17 +22,21 @@ namespace GRIB2 {
 class ComplexGridDataRepresentation : public RepresentationDefinition {
 public:
   ComplexGridDataRepresentation();
+  ComplexGridDataRepresentation(const ComplexGridDataRepresentation &other);
   virtual ~ComplexGridDataRepresentation();
 
+  virtual uint getTemplateNumber() const;
+  virtual RepresentationDefinition *createRepresentationDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const PackingSettings *getPacking() const;
-  void setPacking(PackingSettings packing);
-  const OriginalValuesSettings *getOriginalValues() const;
-  void setOriginalValues(OriginalValuesSettings originalValues);
+  PackingSettings *getPacking() const;
+  void setPacking(PackingSettings &packing);
+  OriginalValuesSettings *getOriginalValues() const;
+  void setOriginalValues(OriginalValuesSettings &originalValues);
   const T::UInt8_opt &getGroupSplittingMethodUsed() const;
   void setGroupSplittingMethodUsed(T::UInt8_opt groupSplittingMethodUsed);
   const T::UInt8_opt &getMissingValueManagementUsed() const;

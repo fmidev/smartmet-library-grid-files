@@ -18,10 +18,39 @@ ProcessedHovmollerProductImpl::ProcessedHovmollerProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+ProcessedHovmollerProductImpl::ProcessedHovmollerProductImpl(const ProcessedHovmollerProductImpl& other)
+:ProcessedHovmollerProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 ProcessedHovmollerProductImpl::~ProcessedHovmollerProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* ProcessedHovmollerProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new ProcessedHovmollerProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void ProcessedHovmollerProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -70,7 +99,7 @@ T::ParamLevel ProcessedHovmollerProductImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +123,7 @@ T::ParamLevelId ProcessedHovmollerProductImpl::getGribParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

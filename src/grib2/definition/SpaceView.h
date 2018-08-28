@@ -8,12 +8,13 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "EarthShapeSettings.h"
 #include "ResolutionSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,15 +23,19 @@ namespace GRIB2 {
 class SpaceView : public GridDefinition {
 public:
   SpaceView();
+  SpaceView(const SpaceView &other);
   virtual ~SpaceView();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings earthShape);
+  EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNx() const;
   void setNx(T::UInt32_opt nx);
   const T::UInt32_opt &getNy() const;
@@ -39,8 +44,8 @@ public:
   void setLatitudeOfSubSatellitePoint(T::Int32_opt latitudeOfSubSatellitePoint);
   const T::Int32_opt &getLongitudeOfSubSatellitePoint() const;
   void setLongitudeOfSubSatellitePoint(T::Int32_opt longitudeOfSubSatellitePoint);
-  const ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings resolution);
+  ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings &resolution);
   const T::UInt32_opt &getDx() const;
   void setDx(T::UInt32_opt dx);
   const T::UInt32_opt &getDy() const;
@@ -49,8 +54,8 @@ public:
   void setXp(T::UInt32_opt xp);
   const T::UInt32_opt &getYp() const;
   void setYp(T::UInt32_opt yp);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
   const T::Int32_opt &getOrientationOfTheGrid() const;
   void setOrientationOfTheGrid(T::Int32_opt orientationOfTheGrid);
   const T::UInt32_opt &getNr() const;

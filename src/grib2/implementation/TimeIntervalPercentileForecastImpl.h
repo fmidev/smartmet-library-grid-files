@@ -12,12 +12,15 @@ namespace GRIB2
 class TimeIntervalPercentileForecastImpl : public TimeIntervalPercentileForecast
 {
   public:
-                      TimeIntervalPercentileForecastImpl();
-    virtual           ~TimeIntervalPercentileForecastImpl();
+                        TimeIntervalPercentileForecastImpl();
+                        TimeIntervalPercentileForecastImpl(const TimeIntervalPercentileForecastImpl& other);
+    virtual             ~TimeIntervalPercentileForecastImpl();
 
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

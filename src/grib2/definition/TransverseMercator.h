@@ -8,12 +8,13 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "EarthShapeSettings.h"
 #include "ResolutionSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,15 +23,19 @@ namespace GRIB2 {
 class TransverseMercator : public GridDefinition {
 public:
   TransverseMercator();
+  TransverseMercator(const TransverseMercator &other);
   virtual ~TransverseMercator();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings earthShape);
+  EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNi() const;
   void setNi(T::UInt32_opt ni);
   const T::UInt32_opt &getNj() const;
@@ -39,16 +44,16 @@ public:
   void setLatitudeOfReferencePoint(T::Int32_opt latitudeOfReferencePoint);
   const T::Int32_opt &getLongitudeOfReferencePoint() const;
   void setLongitudeOfReferencePoint(T::Int32_opt longitudeOfReferencePoint);
-  const ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings resolution);
+  ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings &resolution);
   float getScaleFactorAtReferencePoint() const;
   void setScaleFactorAtReferencePoint(float scaleFactorAtReferencePoint);
   const T::Int32_opt &getXR() const;
   void setXR(T::Int32_opt xR);
   const T::Int32_opt &getYR() const;
   void setYR(T::Int32_opt yR);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
   const T::UInt32_opt &getDi() const;
   void setDi(T::UInt32_opt di);
   const T::UInt32_opt &getDj() const;

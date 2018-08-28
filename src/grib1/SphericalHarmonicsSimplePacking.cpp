@@ -19,10 +19,37 @@ SphericalHarmonicsSimplePacking::SphericalHarmonicsSimplePacking()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+SphericalHarmonicsSimplePacking::SphericalHarmonicsSimplePacking(const SphericalHarmonicsSimplePacking& other)
+:DataDefinition(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 SphericalHarmonicsSimplePacking::~SphericalHarmonicsSimplePacking()
 {
+}
+
+
+
+
+
+DataDefinition* SphericalHarmonicsSimplePacking::createDataDefinition() const
+{
+  try
+  {
+    return (DataDefinition*) new SphericalHarmonicsSimplePacking(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -37,9 +64,10 @@ PackingMethod SphericalHarmonicsSimplePacking::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
 
 
 
@@ -52,7 +80,7 @@ void SphericalHarmonicsSimplePacking::decodeValues(Message *message,T::ParamValu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -75,7 +103,7 @@ void SphericalHarmonicsSimplePacking::print(std::ostream& stream,uint level,uint
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

@@ -4,6 +4,7 @@
 #include "../common/Coordinate.h"
 #include "../common/Dimensions.h"
 #include "../grid/MessageSection.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 
 #include <vector>
@@ -58,7 +59,8 @@ class GridSection : public GRID::MessageSection
 {
   public:
 
-                          GridSection(Message *message);
+                          GridSection();
+                          GridSection(const GridSection& other);
     virtual               ~GridSection();
 
     // ### Common methods for all message sections
@@ -68,12 +70,11 @@ class GridSection : public GRID::MessageSection
     std::uint32_t         getSectionLength() const;
     std::string           getSectionName() const;
     std::uint8_t          getSectionNumber() const;
-    void                  print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
     T::Coordinate_vec     getGridCoordinates() const;
-    T::Dimensions_opt     getGridDimensions() const;
+    T::Dimensions         getGridDimensions() const;
     T::GeometryId         getGridGeometryId() const;
     std::string           getGridGeometryString() const;
     T::Hash               getGridHash() const;
@@ -94,13 +95,17 @@ class GridSection : public GRID::MessageSection
     bool                  getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     T::GridProjection     getGridProjection() const;
     std::string           getGridProjectionString() const;
-    T::SpatialReference*  getSpatialReference() const;
+    T::SpatialRef*        getSpatialReference() const;
+    bool                  isGridGlobal() const;
     bool                  reverseXDirection() const;
     bool                  reverseYDirection() const;
 
-    bool                  isGridGlobal() const;
-    void                  read(MemoryReader& memoryReader);
     void                  setGridGeometryId(T::GeometryId geometryId);
+    void                  setMessagePtr(Message *message);
+
+    void                  read(MemoryReader& memoryReader);
+    void                  write(DataWriter& dataWriter);
+    void                  print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
@@ -125,14 +130,14 @@ class GridSection : public GRID::MessageSection
     std::uint8_t          mDataRepresentationType;
 
     /*! \brief The pointer to the GridDefinition object. */
-    GridDefinition_uptr   mGridDefinition;
+    GridDefinition_sptr   mGridDefinition;
 
     /*! \brief The number of the grid point (calculated when the grid is irregular). */
     std::uint32_t         mNumberOfPoints;
 };
 
 
-typedef std::shared_ptr<GridSection> GridSection_sptr;
+typedef std::shared_ptr<GridSection> GridSect_sptr;
 
 }  // namespace GRIB1
 }  // namespace SmartMet

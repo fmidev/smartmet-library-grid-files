@@ -39,6 +39,24 @@ SpaceViewImpl::~SpaceViewImpl()
 
 
 
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* SpaceViewImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new SpaceViewImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -57,7 +75,7 @@ void SpaceViewImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -90,7 +108,7 @@ T::Coordinate_vec SpaceViewImpl::getGridCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt SpaceViewImpl::getGridDimensions() const
+T::Dimensions SpaceViewImpl::getGridDimensions() const
 {
   try
   {
@@ -98,7 +116,7 @@ T::Dimensions_opt SpaceViewImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -127,7 +145,7 @@ bool SpaceViewImpl::getGridPointByLatLonCoordinates(double lat,double lon,double
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -150,7 +168,7 @@ void SpaceViewImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

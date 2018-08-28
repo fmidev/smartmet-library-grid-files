@@ -8,12 +8,13 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "EarthShapeSettings.h"
 #include "ResolutionSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,15 +23,19 @@ namespace GRIB2 {
 class Mercator : public GridDefinition {
 public:
   Mercator();
+  Mercator(const Mercator &other);
   virtual ~Mercator();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings earthShape);
+  EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNi() const;
   void setNi(T::UInt32_opt ni);
   const T::UInt32_opt &getNj() const;
@@ -39,16 +44,16 @@ public:
   void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::Int32_opt &getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint);
-  const ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings resolution);
+  ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings &resolution);
   const T::Int32_opt &getLaD() const;
   void setLaD(T::Int32_opt laD);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
   void setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint);
   const T::Int32_opt &getLongitudeOfLastGridPoint() const;
   void setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
   const T::UInt32_opt &getOrientationOfTheGrid() const;
   void setOrientationOfTheGrid(T::UInt32_opt orientationOfTheGrid);
   const T::UInt32_opt &getDi() const;

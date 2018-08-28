@@ -32,22 +32,17 @@ typedef float ParamValue;
 #define ParamValueMissing -16777216
 //std::numeric_limits<double>::quiet_NaN()
 
-//typedef std::uint32_t FmiParamId;
-//typedef std::uint32_t FmiParamLevel;
-//typedef std::uint8_t FmiParamLevelId;
-
 typedef std::vector<ParamId> ParamId_vec;
 typedef std::vector<ParamLevel> ParamLevel_vec;
 typedef std::vector<ParamValue> ParamValue_vec;
 typedef ParamValue_vec* ParamValue_vec_ptr;
 typedef std::vector<Coordinate> Coordinate_vec;
-typedef boost::optional<Dimensions> Dimensions_opt;
 
 typedef std::vector<std::size_t> Index_vec;
 typedef boost::posix_time::ptime TimeStamp;
 typedef std::string TimeString;
 
-typedef OGRSpatialReference SpatialReference;
+typedef OGRSpatialReference SpatialRef;
 typedef unsigned char* Data_ptr;
 
 typedef std::vector<Data_ptr> Data_ptr_vec;
@@ -82,24 +77,24 @@ typedef int   GeometryId;
 
 enum class ParamKeyType
 {
-   UNKNOWN      = 0,
-   FMI_ID       = 1,
-   FMI_NAME     = 2,
-   GRIB_ID      = 3,
-   NEWBASE_ID   = 4,
-   NEWBASE_NAME = 5,
-   CDM_ID       = 6,
-   CDM_NAME     = 7,
-   BUILD_IN     = 100
+  UNKNOWN      = 0,
+  FMI_ID       = 1,
+  FMI_NAME     = 2,
+  GRIB_ID      = 3,
+  NEWBASE_ID   = 4,
+  NEWBASE_NAME = 5,
+  CDM_ID       = 6,
+  CDM_NAME     = 7,
+  BUILD_IN     = 100
 };
 
 enum class ParamLevelIdType
 {
-    ANY       = 0,
-    FMI       = 1,
-    GRIB1     = 2,
-    GRIB2     = 3,
-    IGNORE    = 100
+  ANY       = 0,
+  FMI       = 1,
+  GRIB1     = 2,
+  GRIB2     = 3,
+  IGNORE    = 100
 };
 
 
@@ -115,10 +110,11 @@ enum class FileType
 
 enum class GridLayout
 {
-  Regular,
-  Irregular,
-  Points,               // No 'shapeOfEarth'; no coordinate transformations
-  Data                  // No coordinates
+  Unknown   = 0,
+  Regular   = 1,
+  Irregular = 2,
+  Points    = 3,   // No 'shapeOfEarth'; no coordinate transformations
+  Data      = 4    // No coordinates
 };
 
 
@@ -126,42 +122,42 @@ enum class GridLayout
 class AreaInterpolationMethod
 {
   public:
-    static const short Undefined = -1;
-    static const short None = 0;           // Numbers 0 - 99 reserved for build-in interpolation types
-    static const short Linear = 1;
-    static const short Nearest = 2;
-    static const short Min = 3;
-    static const short Max = 4;
-    static const short List = 500;           // Returns grid corner values
-    static const short ListWithAngles = 501; // Returns grid corner values and angles
-    static const short External = 1000;      // Numbers 1000 - 65535 reserved for external interpolation types
+    static const short Undefined      = -1;
+    static const short None           = 0;     // Numbers 0 - 99 reserved for build-in interpolation types
+    static const short Linear         = 1;
+    static const short Nearest        = 2;
+    static const short Min            = 3;
+    static const short Max            = 4;
+    static const short List           = 500;   // Returns grid corner values
+    static const short ListWithAngles = 501;   // Returns grid corner values and angles
+    static const short External       = 1000;  // Numbers 1000 - 65535 reserved for external interpolation types
 };
 
 
 class TimeInterpolationMethod
 {
   public:
-    static const short Undefined = -1;
-    static const short None = 0;           // Numbers 0 - 999 reserved for build-in interpolation types
-    static const short Linear = 1;
-    static const short Nearest = 2;
-    static const short Min = 3;
-    static const short Max = 4;
-    static const short External = 1000;      // Numbers 1000 - 65535 reserved for external interpolation types
+    static const short Undefined    = -1;
+    static const short None         = 0;       // Numbers 0 - 999 reserved for build-in interpolation types
+    static const short Linear       = 1;
+    static const short Nearest      = 2;
+    static const short Min          = 3;
+    static const short Max          = 4;
+    static const short External     = 1000;    // Numbers 1000 - 65535 reserved for external interpolation types
 };
 
 
 class LevelInterpolationMethod
 {
   public:
-    static const short Undefined = -1;
-    static const short None = 0;           // Numbers 0 - 999 reserved for build-in interpolation types
-    static const short Linear = 1;
-    static const short Nearest = 2;
-    static const short Min = 3;
-    static const short Max = 4;
-    static const short Logarithmic = 5;
-    static const short External = 1000;      // Numbers 1000 - 65535 reserved for external interpolation types
+    static const short Undefined    = -1;
+    static const short None         = 0;       // Numbers 0 - 999 reserved for build-in interpolation types
+    static const short Linear       = 1;
+    static const short Nearest      = 2;
+    static const short Min          = 3;
+    static const short Max          = 4;
+    static const short Logarithmic  = 5;
+    static const short External     = 1000;    // Numbers 1000 - 65535 reserved for external interpolation types
 };
 
 
@@ -179,41 +175,66 @@ enum CoordinateType
 
 enum class GridProjection
 {
-  Unknown = 0,
-  LatLon = 1,
-  RotatedLatLon = 2,
-  StretchedLatLon = 3,
-  StretchedRotatedLatLon = 4,
-  VariableResolutionLatLon = 5,
-  VariableResolutionRotatedLatLon = 6,
-  Mercator = 7,
-  TransverseMercator = 8,
-  PolarStereographic = 9,
-  LambertConformal = 10,
-  ObliqueLambertConformal = 11,
-  Albers = 12,
-  Gaussian = 13,
-  RotatedGaussian = 14,
-  StretchedGaussian = 15,
-  StretchedRotatedGaussian = 16,
-  SphericalHarmonic = 17,
-  RotatedSphericalHarmonic = 18,
-  StretchedSphericalHarmonic = 19,
-  StretchedRotatedSphericalHarmonic = 20,
-  SpaceView = 21,
-  Triangular = 22,
-  Unstructured = 23,
-  EquatorialAzimuthalEquidistant = 24,
-  AzimuthRange = 25,
-  IrregularLatLon = 26,
-  LambertAzimuthalEqualArea = 27,
-  CrossSection = 28,
-  Hovmoller = 29,
-  TimeSection = 30,
-  GnomonicProjection = 31,
-  SimplePolyconicProjection = 32,
-  MillersCylindricalProjection = 33
+  Unknown                             = 0,
+  LatLon                              = 1,
+  RotatedLatLon                       = 2,
+  StretchedLatLon                     = 3,
+  StretchedRotatedLatLon              = 4,
+  VariableResolutionLatLon            = 5,
+  VariableResolutionRotatedLatLon     = 6,
+  Mercator                            = 7,
+  TransverseMercator                  = 8,
+  PolarStereographic                  = 9,
+  LambertConformal                    = 10,
+  ObliqueLambertConformal             = 11,
+  Albers                              = 12,
+  Gaussian                            = 13,
+  RotatedGaussian                     = 14,
+  StretchedGaussian                   = 15,
+  StretchedRotatedGaussian            = 16,
+  SphericalHarmonic                   = 17,
+  RotatedSphericalHarmonic            = 18,
+  StretchedSphericalHarmonic          = 19,
+  StretchedRotatedSphericalHarmonic   = 20,
+  SpaceView                           = 21,
+  Triangular                          = 22,
+  Unstructured                        = 23,
+  EquatorialAzimuthalEquidistant      = 24,
+  AzimuthRange                        = 25,
+  IrregularLatLon                     = 26,
+  LambertAzimuthalEqualArea           = 27,
+  CrossSection                        = 28,
+  Hovmoller                           = 29,
+  TimeSection                         = 30,
+  GnomonicProjection                  = 31,
+  SimplePolyconicProjection           = 32,
+  MillersCylindricalProjection        = 33
 };
+
+
+enum class CompressionMethod
+{
+  Undefined                                               = 0,
+  None                                                    = 1,
+
+  GridPointData_SimplePacking                             = 10,
+  GridPointData_SimplePackingWithPreprocessing            = 11,
+  GridPointData_SimplePackingWithLogarithmicPreprocessing = 12,
+  GridPointData_ComplexPacking                            = 13,  // = SecondOrderPacking
+  GridPointData_ComplexPackingAndSpatialDifferencing      = 14,
+  GridPointData_IEEE_packing                              = 15,
+  GridPointData_JPEG_2000                                 = 16,
+  GridPointData_PNG                                       = 17,
+
+  GridPointMatrixValues_SimplePacking                     = 30,
+
+  SphericalHarmonics_SimplePacking                        = 40,
+  SphericalHarmonics_ComplexPacking                       = 41,
+
+  SpectralData_SimplePacking                              = 50,
+  SpectralData_ComplexPacking                             = 51
+};
+
 
 
 std::string get_fileTypeString(FileType fileType);

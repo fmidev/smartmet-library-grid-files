@@ -68,6 +68,24 @@ PngGridDataRepresentationImpl::~PngGridDataRepresentationImpl()
 
 
 
+/*! \brief The method creates a duplicate of the current object. */
+
+RepresentationDefinition* PngGridDataRepresentationImpl::createRepresentationDefinition() const
+{
+  try
+  {
+    return (RepresentationDefinition*) new PngGridDataRepresentationImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -86,7 +104,7 @@ void PngGridDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -104,15 +122,15 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
-    if (data == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to NULL!");
+    if (data == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     long bits_per_value = *mPacking.getBitsPerValue();
     double reference_value = mPacking.getReferenceValue();
 
     if (dataSize == 0 ||  bits_per_value == 0)
     {
-      if (bitmap != NULL  &&  bitmapSizeInBytes > 0)
+      if (bitmap != nullptr  &&  bitmapSizeInBytes > 0)
       {
         // There is no data, but there is a bitmap available.
         BitArrayReader bitmapReader(bitmap,bitmapSizeInBytes*8);
@@ -146,21 +164,21 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
       throw SmartMet::Spine::Exception(BCP,"Invalid PNG!");
     }
 
-    png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    if (png == NULL)
+    png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+    if (png == nullptr)
     {
       throw SmartMet::Spine::Exception(BCP,"PNG decoding failed!");
     }
 
     png_infop info = png_create_info_struct(png);
-    if (info == NULL)
+    if (info == nullptr)
     {
-      png_destroy_read_struct(&png,&info,NULL);
+      png_destroy_read_struct(&png,&info,nullptr);
       throw SmartMet::Spine::Exception(BCP,"PNG decoding error!");
     }
 
     png_infop theEnd = png_create_info_struct(png);
-    if (theEnd == NULL)
+    if (theEnd == nullptr)
     {
       png_destroy_read_struct(&png,&info,&theEnd);
       throw SmartMet::Spine::Exception(BCP,"PNG decoding error!");
@@ -186,7 +204,7 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
     callback_data.length = dataSize;
 
     png_set_read_fn(png,&callback_data,png_read_callback);
-    png_read_png(png, info, PNG_TRANSFORM_IDENTITY, NULL);
+    png_read_png(png, info, PNG_TRANSFORM_IDENTITY, nullptr);
     png_bytepp rows = png_get_rows(png, info);
     png_get_IHDR(png, info, &width, &height,&depth, &colour,&interlace,&compression,&filter);
 
@@ -212,7 +230,7 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

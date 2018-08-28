@@ -8,10 +8,11 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -20,9 +21,13 @@ namespace GRIB2 {
 class AzimuthRange : public GridDefinition {
 public:
   AzimuthRange();
+  AzimuthRange(const AzimuthRange &other);
   virtual ~AzimuthRange();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
@@ -39,8 +44,8 @@ public:
   void setSpacingOfBinsAlongRadials(T::UInt32_opt spacingOfBinsAlongRadials);
   const T::UInt32_opt &getOffsetFromOriginToInnerBound() const;
   void setOffsetFromOriginToInnerBound(T::UInt32_opt offsetFromOriginToInnerBound);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
   const T::Int16_opt &getStartingAzimuth() const;
   void setStartingAzimuth(T::Int16_opt startingAzimuth);
   const T::Int16_opt &getAzimuthalWidth() const;

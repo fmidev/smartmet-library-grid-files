@@ -14,13 +14,13 @@ LambertConformalImpl::LambertConformalImpl()
   try
   {
     mGridProjection = T::GridProjection::LambertConformal;
-    mSr_lambertConformal = NULL;
-    mCt_latlon2lambert = NULL;
-    mCt_lambert2latlon = NULL;
+    mSr_lambertConformal = nullptr;
+    mCt_latlon2lambert = nullptr;
+    mCt_lambert2latlon = nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -34,13 +34,13 @@ LambertConformalImpl::LambertConformalImpl(const LambertConformalImpl& other):La
 {
   try
   {
-    mSr_lambertConformal = NULL;
-    mCt_latlon2lambert = NULL;
-    mCt_lambert2latlon = NULL;
+    mSr_lambertConformal = nullptr;
+    mCt_latlon2lambert = nullptr;
+    mCt_lambert2latlon = nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -54,18 +54,37 @@ LambertConformalImpl::~LambertConformalImpl()
 {
   try
   {
-    if (mSr_lambertConformal != NULL)
+    if (mSr_lambertConformal != nullptr)
       mSpatialReference.DestroySpatialReference(mSr_lambertConformal);
 
-    if (mCt_lambert2latlon == NULL)
+    if (mCt_lambert2latlon == nullptr)
       OCTDestroyCoordinateTransformation(mCt_lambert2latlon);
 
-    if (mCt_latlon2lambert != NULL)
+    if (mCt_latlon2lambert != nullptr)
       OCTDestroyCoordinateTransformation(mCt_latlon2lambert);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
+  }
+}
+
+
+
+
+
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* LambertConformalImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new LambertConformalImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -91,7 +110,7 @@ void LambertConformalImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -113,7 +132,7 @@ T::Coordinate_vec LambertConformalImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    if (mCt_latlon2lambert == NULL  ||  mCt_lambert2latlon == NULL)
+    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return coordinateList;
 
     uint nx = (uint)mNx;
@@ -154,7 +173,7 @@ T::Coordinate_vec LambertConformalImpl::getGridCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -210,7 +229,7 @@ std::string LambertConformalImpl::getGridGeometryString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -226,15 +245,15 @@ std::string LambertConformalImpl::getGridGeometryString() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt LambertConformalImpl::getGridDimensions() const
+T::Dimensions LambertConformalImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions{mNx, mNy};
+    return T::Dimensions(mNx, mNy);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -246,7 +265,7 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
 {
   try
   {
-    if (mCt_latlon2lambert == NULL  ||  mCt_lambert2latlon == NULL)
+    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return false;
 
     uint nx = (uint)mNx;
@@ -277,7 +296,7 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -301,7 +320,7 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
   {
     T::Coordinate_vec coordinateList;
 
-    if (mCt_latlon2lambert == NULL  ||  mCt_lambert2latlon == NULL)
+    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return false;
 
     uint nx = (uint)mNx;
@@ -341,7 +360,7 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -361,7 +380,7 @@ bool LambertConformalImpl::reverseXDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -382,7 +401,7 @@ bool LambertConformalImpl::reverseYDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -415,10 +434,10 @@ void LambertConformalImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double stdP1 = dfStdP1 / 1000;
-    double stdP2 = dfStdP2 / 1000;
-    double centerLat = dfCenterLat / 1000;
-    double centerLon = dfCenterLong / 1000;
+    double stdP1 = (double)dfStdP1 / 1000;
+    double stdP2 = (double)dfStdP2 / 1000;
+    double centerLat = (double)dfCenterLat / 1000;
+    double centerLon = (double)dfCenterLong / 1000;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
 
@@ -443,16 +462,16 @@ void LambertConformalImpl::initSpatialReference()
     mSr_lambertConformal = mSpatialReference.Clone();
 
     mCt_latlon2lambert = OGRCreateCoordinateTransformation(&sr_latlon,mSr_lambertConformal);
-    if (mCt_latlon2lambert == NULL)
+    if (mCt_latlon2lambert == nullptr)
       throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
 
     mCt_lambert2latlon = OGRCreateCoordinateTransformation(mSr_lambertConformal,&sr_latlon);
-    if (mCt_lambert2latlon == NULL)
+    if (mCt_lambert2latlon == nullptr)
       throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

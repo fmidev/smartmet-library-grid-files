@@ -41,7 +41,7 @@ class Exception
                   Exception(const char *_filename,int _line,const char *_function,std::string _message);
 
                   // Use the following constructor when there is previous exception in place
-                  // (i.e when you are in a "catch" block. If '_prevExeption' parameter is NULL then
+                  // (i.e when you are in a "catch" block. If '_prevExeption' parameter is nullptr then
                   // the constructor automatically detects the content of the previous exception.
 
                   Exception(const char *_filename,int _line,const char *_function,std::string _message,Exception *_prevException);

@@ -12,12 +12,15 @@ namespace GRIB2
 class NormalProductImpl : public NormalProduct
 {
   public:
-                      NormalProductImpl();
-    virtual           ~NormalProductImpl();
+                        NormalProductImpl();
+                        NormalProductImpl(const NormalProductImpl& other);
+    virtual             ~NormalProductImpl();
 
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

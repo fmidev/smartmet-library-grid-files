@@ -18,10 +18,39 @@ TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemi
 
 
 
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalAtmosphericChemicalEnsembleProductImpl::TimeIntervalAtmosphericChemicalEnsembleProductImpl(const TimeIntervalAtmosphericChemicalEnsembleProductImpl& other)
+:TimeIntervalAtmosphericChemicalEnsembleProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 TimeIntervalAtmosphericChemicalEnsembleProductImpl::~TimeIntervalAtmosphericChemicalEnsembleProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* TimeIntervalAtmosphericChemicalEnsembleProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new TimeIntervalAtmosphericChemicalEnsembleProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProductImpl::read(MemoryReader& memo
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

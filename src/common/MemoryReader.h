@@ -2,46 +2,36 @@
 
 #include "../grid/Typedefs.h"
 
-#include <array>
-#include <cstdint>
-
-
-namespace std
-{
-  typedef int32_t int24_t;
-  typedef uint32_t uint24_t;
-};
 
 namespace SmartMet
 {
 
-typedef std::float_t ibmfloat;
 
 class MemoryReader
 {
   public:
-                        MemoryReader(unsigned char *_startPtr,unsigned long long _size);
+                        MemoryReader(unsigned char *_startPtr,ulonglong _size);
                         MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr);
     virtual             ~MemoryReader();
 
-    unsigned long long  getDataSize();
+    ulonglong           getDataSize();
     unsigned char*      getStartPtr();
     unsigned char*      getEndPtr();
     unsigned char*      getReadPtr();
     void                setReadPtr(unsigned char *_readPtr);
-    unsigned long long  getReadPosition();
-    unsigned long long  getGlobalReadPosition();
-    void                setReadPosition(unsigned long long _pos);
+    ulonglong           getReadPosition();
+    ulonglong           getGlobalReadPosition();
+    void                setReadPosition(ulonglong _pos);
     void                setParentPtr(unsigned char *_parentPtr);
     unsigned char*      getParentPtr();
 
-    unsigned char       getByte(unsigned long long _pos);
+    unsigned char       getByte(ulonglong _pos);
     unsigned char       getByte(unsigned char *_posPtr);
 
     bool                peek_string(const char *_str);
 
-    void                read_data(unsigned char *_data,unsigned long long _size);
-    void                read_null(unsigned long long _size);
+    void                read_data(unsigned char *_data,ulonglong _size);
+    void                read_null(ulonglong _size);
 
     MemoryReader&       operator>>(std::uint8_t& _value);
     MemoryReader&       operator>>(std::uint16_t& _value);

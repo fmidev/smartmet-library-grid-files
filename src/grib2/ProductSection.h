@@ -3,6 +3,7 @@
 #include "ProductDefinition.h"
 #include "../grid/MessageSection.h"
 #include "../common/Coordinate.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 
 #include <memory>
@@ -49,38 +50,48 @@ class ProductSection : public GRID::MessageSection
 {
   public:
 
-                          ProductSection(Message *message);
+                          ProductSection();
+                          ProductSection(const ProductSection& other);
     virtual               ~ProductSection();
 
     // ### Common methods for all message sections
 
     void                  getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     T::FilePosition       getFilePosition() const;
-    T::TimeString         getForecastTime(T::TimeString referenceTime) const;
     std::uint32_t         getSectionLength() const;
     std::string           getSectionName() const;
     std::uint8_t          getSectionNumber() const;
-    T::ParamLevel         getGribParameterLevel() const;
-    T::ParamLevelId       getGribParameterLevelId() const;
-    ProductDefinition*    getProductDefinition() const;
-    void                  print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
+    T::TimeString         getForecastTime(T::TimeString referenceTime) const;
     const T::UInt8_opt    getGribParameterCategory() const;
+    T::ParamLevel         getGribParameterLevel() const;
+    T::ParamLevelId       getGribParameterLevelId() const;
     const T::UInt8_opt    getGribParameterNumber() const;
     T::UInt8_opt          getGeneratingProcessIdentifier() const;
     short                 getForecastType() const;
     short                 getForecastNumber() const;
     std::uint8_t          getNumberOfSection() const;
     T::UInt16_opt         getNV() const;
+    ProductDefinition*    getProductDefinition() const;
     std::uint16_t         getProductDefinitionTemplateNumber() const;
     std::string           getProductDefinitionString() const;
+
+    void                  setNV(T::UInt16_opt nv);
+
+    void                  setProductDefinition(std::uint16_t productTemplateId);
+    void                  setMessagePtr(Message *message);
+
+    bool                  setProperty(uint propertyId,long long value);
+
     void                  read(MemoryReader& memoryReader);
+    void                  write(DataWriter& dataWriter);
+    void                  print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
-    ProductDefinition*    createProductDefinition(T::UInt16_opt number);
+    ProductDefinition*    createProductDefinition(std::uint16_t productTemplateId);
 
     /*! \brief The pointer to the message object. */
     Message*              mMessage;
@@ -101,15 +112,61 @@ class ProductSection : public GRID::MessageSection
     T::UInt16_opt         mProductDefinitionTemplateNumber;
 
     /*! \brief The pointer to the product definition object. */
-    ProductDefinition_uptr  mProductDefinition;
+    ProductDefinition_sptr  mProductDefinition;
 
     /*! \brief The optional list of the coordinates values. */
     std::vector<float>    mCoordinates;
+
+  public:
+
+    class Template
+    {
+      public:
+        const static std::uint16_t NormalProduct = 0;
+        const static std::uint16_t EnsembleForecast = 1;
+        const static std::uint16_t EnsembleDerivedForecast = 2;
+        const static std::uint16_t EnsembleClusterDerivedForecast = 3;
+        const static std::uint16_t ProbabilityForecast = 5;
+        const static std::uint16_t PercentileForecast = 6;
+        const static std::uint16_t ForecastError = 7;
+        const static std::uint16_t AggregateForecast = 8;
+        const static std::uint16_t TimeIntervalProbabilityForecast = 9;
+        const static std::uint16_t TimeIntervalPercentileForecast = 10;
+        const static std::uint16_t TimeIntervalEnsembleForecast = 11;
+        const static std::uint16_t TimeIntervalEnsembleDerivedForecast = 12;
+        const static std::uint16_t TimeIntervalEnsembleClusterDerivedForecast = 13;
+        const static std::uint16_t TimeIntervalAggregateForecast = 15;
+        const static std::uint16_t DeprecatedSatelliteProduct = 30;
+        const static std::uint16_t SatelliteProduct = 31;
+        const static std::uint16_t SimulatedSatelliteProduct = 32;
+        const static std::uint16_t SimulatedSatelliteEnsembleProduct = 33;
+        const static std::uint16_t TimeIntervalSimulatedSatelliteEnsembleProduct = 34;
+        const static std::uint16_t AtmosphericChemicalProduct = 40;
+        const static std::uint16_t AtmosphericChemicalEnsembleProduct = 41;
+        const static std::uint16_t AggregateAtmosphericChemicalProduct = 42;
+        const static std::uint16_t TimeIntervalAtmosphericChemicalEnsembleProduct = 43;
+        const static std::uint16_t AerosolEnsembleProduct = 45;
+        const static std::uint16_t AggregateAerosolProduct = 46;
+        const static std::uint16_t TimeIntervalAerosolEnsembleProduct = 47;
+        const static std::uint16_t AerosolOpticalPropertiesProduct = 48;
+        const static std::uint16_t CategoricalForecast = 51;
+        const static std::uint16_t PartitionedProduct = 53;
+        const static std::uint16_t PartitionedEnsembleProduct = 54;
+        const static std::uint16_t EnsembleReforecast = 60;
+        const static std::uint16_t TimeIntervalEnsembleReforecast = 61;
+        const static std::uint16_t TimeIntervalCategoricalForecast = 91;
+        const static std::uint16_t CharacterStringProduct = 254;
+        const static std::uint16_t AuxiliarySatelliteProduct = 311;
+        const static std::uint16_t CrossSectionProduct = 1000;
+        const static std::uint16_t ProcessedCrossSectionProduct = 1001;
+        const static std::uint16_t AreaProcessedCrossSectionProduct = 1002;
+        const static std::uint16_t HovmollerProduct = 1100;
+        const static std::uint16_t ProcessedHovmollerProduct = 1101;
+    };
 };
 
 
-typedef std::unique_ptr<ProductSection> ProductSection_uptr;
-typedef const ProductSection* ProductSection_cptr;
+typedef std::shared_ptr<ProductSection> ProductSect_sptr;
 
 
 }  // namespace GRIB2

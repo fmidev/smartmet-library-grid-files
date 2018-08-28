@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../grid/MessageSection.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 
 namespace SmartMet
@@ -42,7 +43,8 @@ class IndicatorSection : public GRID::MessageSection
 {
   public:
 
-                      IndicatorSection(Message *message);
+                      IndicatorSection();
+                      IndicatorSection(const IndicatorSection& other);
     virtual           ~IndicatorSection();
 
     // ### Common methods for all message sections
@@ -52,17 +54,25 @@ class IndicatorSection : public GRID::MessageSection
     std::uint32_t     getSectionLength() const;
     std::string       getSectionName() const;
     std::uint8_t      getSectionNumber() const;
-    void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
-    T::UInt32_opt     getIdentifier() const;
     T::UInt16_opt     getReserved() const;
-    std::uint8_t      getDiscipline() const;
+    T::UInt8_opt      getDiscipline() const;
     std::string       getDisciplineString() const;
-    std::uint8_t      getEditionNumber() const;
+    T::UInt8_opt      getEditionNumber() const;
     std::uint64_t     getTotalLength() const;
+
+    void              setDiscipline(std::uint8_t discipline);
+    void              setEditionNumber(std::uint8_t editionNumber);
+    void              setTotalLength(std::uint64_t totalLength);
+    void              setMessagePtr(Message *message);
+
+    bool              setProperty(uint propertyId,long long value);
+
     void              read(MemoryReader& memoryReader);
+    void              write(DataWriter& dataWriter);
+    void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
@@ -73,7 +83,7 @@ class IndicatorSection : public GRID::MessageSection
     T::FilePosition   mFilePosition;
 
     /*! \brief The GRIB file identifier ('GRIB'). */
-    T::UInt32_opt     mIdentifier;
+    uchar             mIdentifier[4];
 
     /*! \brief Reserved bytes. */
     T::UInt16_opt     mReserved;
@@ -88,7 +98,7 @@ class IndicatorSection : public GRID::MessageSection
     std::uint64_t     mTotalLength;
 };
 
-typedef std::shared_ptr<IndicatorSection> IndicatorSection_sptr;
+typedef std::shared_ptr<IndicatorSection> IndicatorSect_sptr;
 
 
 }  // namespace GRIB2

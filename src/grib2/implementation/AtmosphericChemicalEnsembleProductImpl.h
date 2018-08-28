@@ -12,13 +12,16 @@ namespace GRIB2
 class AtmosphericChemicalEnsembleProductImpl : public AtmosphericChemicalEnsembleProduct
 {
   public:
-                      AtmosphericChemicalEnsembleProductImpl();
-    virtual           ~AtmosphericChemicalEnsembleProductImpl();
+                        AtmosphericChemicalEnsembleProductImpl();
+                        AtmosphericChemicalEnsembleProductImpl(const AtmosphericChemicalEnsembleProductImpl& other);
+    virtual             ~AtmosphericChemicalEnsembleProductImpl();
 
-    T::TimeString     getForecastTime(T::TimeString referenceTime) const;
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::TimeString       getForecastTime(T::TimeString referenceTime) const;
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

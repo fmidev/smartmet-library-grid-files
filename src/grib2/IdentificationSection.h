@@ -2,6 +2,7 @@
 
 #include "../grid/MessageSection.h"
 #include "../grid/Typedefs.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -58,7 +59,8 @@ class IdentificationSection : public GRID::MessageSection
 {
   public:
 
-                    IdentificationSection(Message *message);
+                    IdentificationSection();
+                    IdentificationSection(const IdentificationSection& other);
     virtual         ~IdentificationSection();
 
     // ### Common methods for all message sections
@@ -69,26 +71,45 @@ class IdentificationSection : public GRID::MessageSection
     std::string     getSectionName() const;
     std::uint8_t    getSectionNumber() const;
     T::TimeString   getReferenceTime() const;
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
-    std::uint8_t    getNumberOfSection() const;
-    std::uint16_t   getCentre() const;
+    T::UInt8_opt    getNumberOfSection() const;
+    T::UInt16_opt   getCentre() const;
     T::UInt16_opt   getSubCentre() const;
     T::UInt8_opt    getTablesVersion() const;
     T::UInt8_opt    getLocalTablesVersion() const;
     T::UInt8_opt    getSignificanceOfReferenceTime() const;
-    std::uint16_t   getYear() const;
-    std::uint8_t    getMonth() const;
-    std::uint8_t    getDay() const;
-    std::uint8_t    getHour() const;
-    std::uint8_t    getMinute() const;
-    std::uint8_t    getSecond() const;
+    T::UInt16_opt   getYear() const;
+    T::UInt8_opt    getMonth() const;
+    T::UInt8_opt    getDay() const;
+    T::UInt8_opt    getHour() const;
+    T::UInt8_opt    getMinute() const;
+    T::UInt8_opt    getSecond() const;
     T::UInt8_opt    getProductionStatusOfProcessedData() const;
     T::UInt8_opt    getTypeOfProcessedData() const;
     T::Data_ptr     getReservedDataPtr() const;
+
+    void            setCentre(T::UInt16_opt centre);
+    void            setSubCentre(T::UInt16_opt subCentre);
+    void            setTablesVersion(T::UInt8_opt tablesVersion);
+    void            setLocalTablesVersion(T::UInt8_opt localTablesVersion);
+    void            setSignificanceOfReferenceTime(T::UInt8_opt significanceOfReferenceTime);
+    void            setYear(T::UInt16_opt year);
+    void            setMonth(T::UInt8_opt month);
+    void            setDay(T::UInt8_opt day);
+    void            setHour(T::UInt8_opt hour);
+    void            setMinute(T::UInt8_opt minute);
+    void            setSecond(T::UInt8_opt second);
+    void            setProductionStatusOfProcessedData(T::UInt8_opt productionStatusOfProcessedData);
+    void            setTypeOfProcessedData(T::UInt8_opt typeOfProcessedData);
+    void            setMessagePtr(Message *message);
+
+    bool            setProperty(uint propertyId,long long value);
+
     void            read(MemoryReader& memoryReader);
+    void            write(DataWriter& dataWriter);
+    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
@@ -144,10 +165,15 @@ class IdentificationSection : public GRID::MessageSection
     T::UInt8_opt    mTypeOfProcessedData;
 
     /*! \brief  Optional extra data. */
-    T::Data_ptr     mData;
+    T::Data_ptr     mDataPtr;
+
+    /*! \brief  The size of the optional extra data. */
+    uint            mDataSize;
+
+    bool            mReleaseData;
 };
 
-typedef std::shared_ptr<IdentificationSection> IdentificSection_sptr;
+typedef std::shared_ptr<IdentificationSection> IdentifSect_sptr;
 
 }  // namespace GRIB2
 }  // namespace SmartMet

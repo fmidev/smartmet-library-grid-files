@@ -43,6 +43,24 @@ RotatedLatLonImpl::~RotatedLatLonImpl()
 
 
 
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* RotatedLatLonImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new RotatedLatLonImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -61,7 +79,7 @@ void RotatedLatLonImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -121,7 +139,7 @@ T::Coordinate_vec RotatedLatLonImpl::getGridCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -138,8 +156,8 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
     uint ni = (uint)mNi;
     uint nj = (uint)mNj;
 
-    double southPoleLat = (double)(mRotation.getLatitudeOfSouthernPole()/1000);
-    double southPoleLon = (double)(mRotation.getLongitudeOfSouthernPole()/1000);
+    double southPoleLat = ((double)mRotation.getLatitudeOfSouthernPole()/1000);
+    double southPoleLon = ((double)mRotation.getLongitudeOfSouthernPole()/1000);
     double latitudeOfFirstGridPoint = (double)mGridArea.getLatitudeOfFirstGridPoint();
     double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint();
     double iDirectionIncrement = (double)mIDirectionIncrement;
@@ -182,7 +200,7 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -245,8 +263,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     double rotated_lon = x/1000;
     double rotated_lat = y/1000;
 
-    double southPoleLat = (double)(mRotation.getLatitudeOfSouthernPole()/1000);
-    double southPoleLon = (double)(mRotation.getLongitudeOfSouthernPole()/1000);
+    double southPoleLat = ((double)mRotation.getLatitudeOfSouthernPole()/1000);
+    double southPoleLon = ((double)mRotation.getLongitudeOfSouthernPole()/1000);
 
     rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
 
@@ -254,7 +272,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -317,8 +335,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     double rotated_lon = x/1000;
     double rotated_lat = y/1000;
 
-    double southPoleLat = (double)(mRotation.getLatitudeOfSouthernPole()/1000);
-    double southPoleLon = (double)(mRotation.getLongitudeOfSouthernPole()/1000);
+    double southPoleLat = ((double)mRotation.getLatitudeOfSouthernPole()/1000);
+    double southPoleLon = ((double)mRotation.getLongitudeOfSouthernPole()/1000);
 
     rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
 
@@ -326,7 +344,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -385,7 +403,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -443,7 +461,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -460,8 +478,8 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     double y = (double)mGridArea.getLatitudeOfFirstGridPoint() / 1000;
     double dx = (double)mIDirectionIncrement/1000;
     double dy = (double)mJDirectionIncrement/1000;
-    double sx = (double)(mRotation.getLongitudeOfSouthernPole()/1000);
-    double sy = (double)(mRotation.getLatitudeOfSouthernPole()/1000);
+    double sx = ((double)mRotation.getLongitudeOfSouthernPole()/1000);
+    double sy = ((double)mRotation.getLatitudeOfSouthernPole()/1000);
     double angle = (double)mRotation.getGeography_angleOfRotationInDegrees();
 
     unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
@@ -495,7 +513,7 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -511,15 +529,15 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt RotatedLatLonImpl::getGridDimensions() const
+T::Dimensions RotatedLatLonImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions{mNi, mNj};
+    return T::Dimensions(mNi, mNj);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -541,15 +559,15 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
 {
   try
   {
-    double southPoleLat = (double)(mRotation.getLatitudeOfSouthernPole()/1000);
-    double southPoleLon = (double)(mRotation.getLongitudeOfSouthernPole()/1000);
+    double southPoleLat = ((double)mRotation.getLatitudeOfSouthernPole()/1000);
+    double southPoleLon = ((double)mRotation.getLongitudeOfSouthernPole()/1000);
 
     latlon_to_rotatedLatlon(lat,lon,southPoleLat,southPoleLon,y,x);
     return true;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -570,8 +588,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
 {
   try
   {
-    double southPoleLat = (double)(mRotation.getLatitudeOfSouthernPole()/1000);
-    double southPoleLon = (double)(mRotation.getLongitudeOfSouthernPole()/1000);
+    double southPoleLat = ((double)mRotation.getLatitudeOfSouthernPole()/1000);
+    double southPoleLon = ((double)mRotation.getLongitudeOfSouthernPole()/1000);
 
     rotatedLatlon_to_latlon(y,x,southPoleLat,southPoleLon,lat,lon);
 
@@ -579,7 +597,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -644,7 +662,7 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -665,7 +683,7 @@ bool RotatedLatLonImpl::reverseXDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -686,7 +704,7 @@ bool RotatedLatLonImpl::reverseYDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -734,7 +752,7 @@ void RotatedLatLonImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -787,7 +805,7 @@ void RotatedLatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

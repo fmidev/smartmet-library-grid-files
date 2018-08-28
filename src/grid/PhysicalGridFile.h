@@ -29,6 +29,7 @@ class PhysicalGridFile : public GridFile
 {
   public:
                     PhysicalGridFile();
+                    PhysicalGridFile(const PhysicalGridFile& other);
     virtual         ~PhysicalGridFile();
 
     virtual bool    isPhysical() const;
@@ -38,6 +39,7 @@ class PhysicalGridFile : public GridFile
 
     virtual void    print(std::ostream& stream,uint level,uint optionFlags) const;
     virtual void    read(std::string filename);
+    virtual void    write(std::string filename);
 
   private:
 

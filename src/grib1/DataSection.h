@@ -1,7 +1,9 @@
 #pragma once
 
 #include "DataDefinition.h"
+#include "../common/DataWriter.h"
 #include "../grid/MessageSection.h"
+#include "../grid/Typedefs.h"
 
 #include <memory>
 
@@ -48,7 +50,8 @@ class DataSection : public GRID::MessageSection
 {
   public:
 
-                      DataSection(Message *message);
+                      DataSection();
+                      DataSection(const DataSection& other);
     virtual           ~DataSection();
 
     // ### Common methods for all message sections
@@ -58,10 +61,10 @@ class DataSection : public GRID::MessageSection
     std::uint32_t     getSectionLength() const;
     std::string       getSectionName() const;
     std::uint8_t      getSectionNumber() const;
-    void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
+    void              decodeValues(T::ParamValue_vec& decodedValues) const;
     std::uint8_t      getFlags() const;
     std::int16_t      getBinaryScaleFactor() const;
     std::float_t      getReferenceValue() const;
@@ -72,8 +75,20 @@ class DataSection : public GRID::MessageSection
     PackingMethod     getPackingMethod() const;
     bool              getValueByIndex(uint index,T::ParamValue& value) const;
 
-    void              decodeValues(T::ParamValue_vec& decodedValues) const;
+    void              setFlags(std::uint8_t flags);
+    void              setBinaryScaleFactor(std::int16_t binaryScaleFactor);
+    void              setReferenceValue(std::float_t referenceValue);
+    void              setBitsPerValue(std::uint8_t bitsPerValue);
+    void              setData(T::Data_ptr data,std::size_t size);
+    void              setDataDefinition(T::CompressionMethod compressionMethod);
+    void              setDataDefinition(DataDefinition *dataDefinition);
+    void              setMessagePtr(Message *message);
+
+    bool              setProperty(uint propertyId,long long value);
+
     void              read(MemoryReader& memoryReader);
+    void              write(DataWriter& dataWriter);
+    void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
@@ -92,8 +107,9 @@ class DataSection : public GRID::MessageSection
     std::uint8_t      mBitsPerValue;
     DataDefintionUptr mDataDefinition;
     T::Data_ptr       mDataPtr;
-    std::size_t       mDataLength;
-    std::size_t       mDataLengthMax;
+    std::size_t       mDataSize;
+    std::size_t       mDataSizeMax;
+    bool              mReleaseData;
 };
 
 
@@ -139,7 +155,7 @@ enum DataSection_additionalFlags
 };
 
 
-typedef std::unique_ptr<DataSection> DataSection_uptr;
+typedef std::shared_ptr<DataSection> DataSect_sptr;
 
 
 }  // namespace GRIB1

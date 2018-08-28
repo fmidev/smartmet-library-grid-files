@@ -8,9 +8,10 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
-#include "../RepresentationDefinition.h"
 #include "../../grid/Typedefs.h"
+#include "../RepresentationDefinition.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -19,9 +20,13 @@ namespace GRIB2 {
 class FloatingPointGridDataRepresentation : public RepresentationDefinition {
 public:
   FloatingPointGridDataRepresentation();
+  FloatingPointGridDataRepresentation(const FloatingPointGridDataRepresentation &other);
   virtual ~FloatingPointGridDataRepresentation();
 
+  virtual uint getTemplateNumber() const;
+  virtual RepresentationDefinition *createRepresentationDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();

@@ -14,6 +14,8 @@ class MatrixDataRepresentationImpl : public MatrixDataRepresentation
               MatrixDataRepresentationImpl(const MatrixDataRepresentationImpl& other);
     virtual   ~MatrixDataRepresentationImpl();
 
+    RepresentationDefinition* createRepresentationDefinition() const;
+
     void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
     void      read(MemoryReader& memoryReader);
 

@@ -20,6 +20,7 @@ class MessageSection
 {
   public:
                             MessageSection();
+                            MessageSection(const MessageSection& other);
     virtual                 ~MessageSection();
 
     // ### Common methods for all message sections

@@ -8,10 +8,11 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../RepresentationDefinition.h"
 #include "PackingSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -20,15 +21,19 @@ namespace GRIB2 {
 class SphericalHarmonicsDataRepresentation : public RepresentationDefinition {
 public:
   SphericalHarmonicsDataRepresentation();
+  SphericalHarmonicsDataRepresentation(const SphericalHarmonicsDataRepresentation &other);
   virtual ~SphericalHarmonicsDataRepresentation();
 
+  virtual uint getTemplateNumber() const;
+  virtual RepresentationDefinition *createRepresentationDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const PackingSettings *getPacking() const;
-  void setPacking(PackingSettings packing);
+  PackingSettings *getPacking() const;
+  void setPacking(PackingSettings &packing);
   const T::Int32_opt &getLaplacianScalingFactor() const;
   void setLaplacianScalingFactor(T::Int32_opt laplacianScalingFactor);
   const T::UInt16_opt &getJS() const;

@@ -39,6 +39,24 @@ TransverseMercatorImpl::~TransverseMercatorImpl()
 
 
 
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* TransverseMercatorImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new TransverseMercatorImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -57,7 +75,7 @@ void TransverseMercatorImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -91,15 +109,15 @@ T::Coordinate_vec TransverseMercatorImpl::getGridCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt TransverseMercatorImpl::getGridDimensions() const
+T::Dimensions TransverseMercatorImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions{*mNi, *mNj};
+    return T::Dimensions(*mNi, *mNj);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -128,7 +146,7 @@ bool TransverseMercatorImpl::getGridPointByLatLonCoordinates(double lat,double l
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -206,8 +224,8 @@ void TransverseMercatorImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double centerLat = *dfCenterLat / 1000000;
-    double centerLon = *dfCenterLong / 1000000;
+    double centerLat = (double)(*dfCenterLat) / 1000000;
+    double centerLon = (double)(*dfCenterLong) / 1000000;
     double falseEasting = *dfFalseEasting / 1000;
     double falseNorthing = *dfFalseNorthing / 1000;
     double scale = (double)(dfScale);
@@ -228,7 +246,7 @@ void TransverseMercatorImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

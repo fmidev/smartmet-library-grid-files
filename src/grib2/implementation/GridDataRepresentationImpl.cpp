@@ -3,6 +3,7 @@
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/BitArrayReader.h"
+#include "../../common/BitArrayWriter.h"
 #include "../Message.h"
 
 #include <limits>
@@ -45,6 +46,24 @@ GridDataRepresentationImpl::~GridDataRepresentationImpl()
 
 
 
+/*! \brief The method creates a duplicate of the current object. */
+
+RepresentationDefinition* GridDataRepresentationImpl::createRepresentationDefinition() const
+{
+  try
+  {
+    return (RepresentationDefinition*) new GridDataRepresentationImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -63,7 +82,7 @@ void GridDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -77,10 +96,10 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
   {
     T::Data_ptr data = message->getDataPtr();
     std::size_t dataSize = message->getDataSize();
-    std::int16_t binaryScaleFactor = *mPacking.getBinaryScaleFactor();
-    std::uint16_t decimalScaleFactor = *mPacking.getDecimalScaleFactor();
+    std::int16_t binaryScaleFactor = *(mPacking.getBinaryScaleFactor());
+    std::uint16_t decimalScaleFactor = *(mPacking.getDecimalScaleFactor());
     std::float_t referenceValue = mPacking.getReferenceValue();
-    std::uint8_t bitsPerValue = *mPacking.getBitsPerValue();
+    std::uint8_t bitsPerValue = *(mPacking.getBitsPerValue());
 
     // If 'bitsPerValue' is zero then all values are same as the reference value
 
@@ -114,9 +133,10 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
 
 
 
@@ -131,8 +151,8 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
-    if (data == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to NULL!");
+    if (data == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
 
@@ -182,6 +202,26 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     const double RDfac = R * Dfac;
     const double EDfac = Efac * Dfac;
 
+    BitArrayReader bitArrayReader(data,dataSize*8);
+
+    for (std::uint32_t i = 0; i < numOfValues; i++)
+    {
+      if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
+      {
+        decodedValues.push_back(ParamValueMissing);
+      }
+      else
+      {
+        ulonglong X = 0;
+        bitArrayReader.readBits(nbits,X);
+
+        // Output the caclulated value
+        double Y = RDfac + X * EDfac;
+        decodedValues.push_back((T::ParamValue)Y);
+      }
+    }
+
+#if 0
     // Note: It would be nice to just read a full 64-bit value and shift it all at once.
     // However, the data section is only guaranteed to be followed by the 4 bytes of an
     // End section. If we are extremely unlucky, the minimum one byte required by the
@@ -233,10 +273,217 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
         decodedValues.push_back((T::ParamValue)Y);
       }
     }
+#endif
+/*
+    uint valueCount = 0;
+    uint missingCount = 0;
+    T::ParamValue minValue = ParamValueMissing;
+    T::ParamValue maxValue = ParamValueMissing;
+
+    for (auto it = decodedValues.begin(); it != decodedValues.end(); ++it)
+    {
+      if ((*it) != ParamValueMissing)
+      {
+        if (minValue == ParamValueMissing || ((*it) < minValue))
+        {
+          minValue = *it;
+        }
+
+        if (maxValue == ParamValueMissing || ((*it) > maxValue))
+        {
+          maxValue = *it;
+        }
+        valueCount++;
+      }
+      else
+      {
+        missingCount++;
+      }
+    }
+
+
+    printf("*** MIN %f  MAX %f\n",minValue,maxValue);
+    if (missingCount > 0)
+    {
+      // Bitmap required
+    }
+
+*/
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec& values)
+{
+  try
+  {
+    auto binaryScaleFactor = mPacking.getBinaryScaleFactor();
+    auto decimalScaleFactor = mPacking.getDecimalScaleFactor();
+    auto referenceValue = mPacking.getReferenceValue();
+    auto bitsPerValue = mPacking.getBitsPerValue();
+
+
+    uint valueCount = 0;
+    uint missingCount = 0;
+    T::ParamValue minValue = ParamValueMissing;
+    T::ParamValue maxValue = ParamValueMissing;
+
+    for (auto it = values.begin(); it != values.end(); ++it)
+    {
+      if ((*it) != ParamValueMissing)
+      {
+        if (minValue == ParamValueMissing || ((*it) < minValue))
+        {
+          minValue = *it;
+        }
+
+        if (maxValue == ParamValueMissing || ((*it) > maxValue))
+        {
+          maxValue = *it;
+        }
+        valueCount++;
+      }
+      else
+      {
+        missingCount++;
+      }
+    }
+
+    std::int16_t E = 0;
+    if (binaryScaleFactor)
+      E =  *binaryScaleFactor;
+
+    std::int16_t D = 0;
+    if (decimalScaleFactor)
+      D = *decimalScaleFactor;
+
+    referenceValue = minValue;
+    double R = referenceValue;
+
+
+    uint bits = 0;
+
+    if (!bitsPerValue)
+    {
+      T::ParamValue diff = maxValue - minValue;
+      ulonglong valuesInRange = diff / (ulonglong)std::pow(2.0, E);
+
+      while ((ulonglong)(1 << bits) < valuesInRange)
+        (bits)++;
+    }
+    else
+    {
+      bits = (*bitsPerValue);
+    }
+
+
+
+/*
+    if (!binaryScaleFactor)
+    {
+      ulonglong steps = (1 << bits);
+      double stepSize = diff / steps;
+
+      if (stepSize > 1)
+      {
+
+      }
+      else
+      {
+        while (std::pow(2.0, E) > stepSize)
+          E--;
+      }
+    }
+    else
+    {
+      E = *binaryScaleFactor;
+    }
+*/
+
+
+    //printf("*** MIN %f  MAX %f\n",minValue,maxValue);
+    if (missingCount > 0)
+    {
+      // Bitmap required
+    }
+
+
+
+
+
+    //printf("R = %f  E = %d  D = %d  Bits = %u\n",R,E,D,bits);
+
+    // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
+
+    const double Efac = std::pow(2.0, E);
+    const double Dfac = std::pow(10, -D);
+
+    const double RDfac = R * Dfac;
+    const double EDfac = Efac * Dfac;
+
+    uint totalBits = (valueCount * bits);
+
+    uint dataSize = totalBits / 8;
+    if ((totalBits % 8) != 0)
+      dataSize++;
+
+    uchar *data = new uchar[dataSize];
+    memset(data,0,dataSize);
+    BitArrayWriter bitArrayWriter(data,totalBits);
+
+    for (auto it = values.begin(); it != values.end(); ++it)
+    {
+      if ((*it) != ParamValueMissing)
+      {
+        double Y = *it;
+        double X = (Y - RDfac) / EDfac;
+
+        ulonglong v = (ulonglong)round(X);
+        bitArrayWriter.writeBits(bits,v);
+      }
+    }
+
+    DataSect_sptr dataSection = message->getDataSection();
+
+    if (!dataSection)
+    {
+      DataSection *section = new DataSection();
+      section->setMessagePtr(message);
+      section->setData(data,dataSize);
+      message->setDataSection(section);
+    }
+    else
+    {
+      dataSection->setData(data,dataSize);
+    }
+
+
+    mPacking.setReferenceValue(R);
+    mPacking.setBinaryScaleFactor(E);
+    mPacking.setDecimalScaleFactor(D);
+    mPacking.setBitsPerValue(bits);
+
+/*
+    uint idx = message->getMessageIndex();
+
+    char filename[100];
+    sprintf(filename,"/tmp/data_%04d.dat",idx);
+    FILE *file = fopen(filename,"w");
+    fwrite(data,dataSize,1,file);
+    fclose(file);
+    delete data;
+*/
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

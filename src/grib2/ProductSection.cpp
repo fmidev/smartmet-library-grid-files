@@ -53,21 +53,50 @@ namespace GRIB2
 {
 
 
-/*! \brief The constructor of the class.
+/*! \brief The constructor of the class. */
 
-        \param message  A pointer to the message object.
-*/
-
-ProductSection::ProductSection(Message *message)
+ProductSection::ProductSection()
 {
   try
   {
-    mMessage = message;
+    mMessage = nullptr;
     mFilePosition = 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+ProductSection::ProductSection(const ProductSection& other)
+:GRID::MessageSection(other)
+{
+  try
+  {
+    mMessage = nullptr;
+    mFilePosition = other.mFilePosition;
+    mSectionLength = other.mSectionLength;
+    mNumberOfSection = other.mNumberOfSection;
+    mNV = other.mNV;
+    mProductDefinitionTemplateNumber = other.mProductDefinitionTemplateNumber;
+    mCoordinates = other.mCoordinates;
+
+    if (other.mProductDefinition)
+    {
+      // Duplicating the product definition.
+      ProductDefinition *def = other.mProductDefinition->createProductDefinition();
+      mProductDefinition.reset(def);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",nullptr);
   }
 }
 
@@ -107,7 +136,53 @@ void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setMessagePtr(Message *message)
+{
+  try
+  {
+    mMessage = message;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool ProductSection::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::ProductSection::ProductDefinitionTemplateNumber:
+        setProductDefinition(value);
+        return true;
+
+      case Property::ProductSection::NV:
+        setNV(value);
+        return true;
+    }
+
+    if (mProductDefinition)
+      return mProductDefinition->setProperty(propertyId,value);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -153,9 +228,12 @@ void ProductSection::read(MemoryReader& memoryReader)
       throw exception;
     }
 
-    auto productDefinition = createProductDefinition(mProductDefinitionTemplateNumber);
-    mProductDefinition.reset(productDefinition);
-    productDefinition->read(memoryReader);
+    if (mProductDefinitionTemplateNumber)
+    {
+      auto productDefinition = createProductDefinition((*mProductDefinitionTemplateNumber));
+      mProductDefinition.reset(productDefinition);
+      productDefinition->read(memoryReader);
+    }
 
     if (!missing(mNV) && *mNV != 0)
     {
@@ -168,7 +246,62 @@ void ProductSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Operation failed failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::write(DataWriter& dataWriter)
+{
+  try
+  {
+
+    if (!mProductDefinition)
+      throw SmartMet::Spine::Exception(BCP,"Missing product definition");
+
+    if (!missing(mNV) && *mNV != 0)
+    {
+      throw SmartMet::Spine::Exception(BCP,"ProductSection does not support optional coordinates yet");
+    }
+
+    mFilePosition = dataWriter.getWritePosition();
+    mSectionLength = 0;
+    mNumberOfSection = (std::uint8_t)Message::SectionNumber::product_section;
+
+    dataWriter << mSectionLength;
+    dataWriter << mNumberOfSection;
+    dataWriter << mNV;
+
+    mProductDefinitionTemplateNumber = mProductDefinition->getTemplateNumber();
+    dataWriter << mProductDefinitionTemplateNumber;
+
+    mProductDefinition->write(dataWriter);
+
+/*
+    if (!missing(mNV) && *mNV != 0)
+    {
+      for (std::uint16_t t=0; t<*mNV; t++)
+      {
+        auto coordinate = memoryReader.read_float();
+        mCoordinates.push_back(coordinate);
+      }
+    }
+    */
+
+    // Updating the section length.
+
+    ulonglong fPos = dataWriter.getWritePosition();
+    mSectionLength = fPos - mFilePosition;
+    dataWriter.setWritePosition(mFilePosition);
+    dataWriter << mSectionLength;
+    dataWriter.setWritePosition(fPos);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -189,7 +322,7 @@ T::FilePosition ProductSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -206,11 +339,14 @@ std::uint32_t ProductSection::getSectionLength() const
 {
   try
   {
-    return *mSectionLength;
+    if (mSectionLength)
+      return *mSectionLength;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -228,7 +364,7 @@ std::string ProductSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -246,7 +382,7 @@ std::uint8_t ProductSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -262,11 +398,14 @@ std::uint8_t ProductSection::getNumberOfSection() const
   {
     // No missing check necessary here, we cannot know the section type without the number
     // anyway
-    return *mNumberOfSection;
+    if (mNumberOfSection)
+      return *mNumberOfSection;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -282,7 +421,7 @@ T::UInt16_opt ProductSection::getNV() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -299,7 +438,7 @@ std::string ProductSection::getProductDefinitionString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -311,11 +450,14 @@ std::uint16_t ProductSection::getProductDefinitionTemplateNumber() const
 {
   try
   {
-    return *mProductDefinitionTemplateNumber;
+    if (mProductDefinitionTemplateNumber)
+      return *mProductDefinitionTemplateNumber;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -334,14 +476,14 @@ T::TimeString ProductSection::getForecastTime(T::TimeString referenceTime) const
 {
   try
   {
-    if (mProductDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
+    if (mProductDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getForecastTime(referenceTime);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -355,14 +497,14 @@ const T::UInt8_opt ProductSection::getGribParameterCategory() const
 {
   try
   {
-    if (mProductDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
+    if (mProductDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getGribParameterCategory();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -375,14 +517,14 @@ const T::UInt8_opt ProductSection::getGribParameterNumber() const
 {
   try
   {
-    if (mProductDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
+    if (mProductDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getGribParameterNumber();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -401,14 +543,14 @@ std::uint8_t ProductSection::getGribParameterLevelId() const
 {
   try
   {
-    if (mProductDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
+    if (mProductDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getGribParameterLevelId();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -427,14 +569,14 @@ T::ParamLevel ProductSection::getGribParameterLevel() const
 {
   try
   {
-    if (mProductDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
+    if (mProductDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getGribParameterLevel();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -448,11 +590,11 @@ short ProductSection::getForecastType() const
 {
   try
   {
-    if (mProductDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
+    if (mProductDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     const EpsSettings *eps = mProductDefinition->getEps();
-    if (eps != NULL)
+    if (eps != nullptr)
     {
       T::UInt8_opt val = eps->getTypeOfEnsembleForecast();
       if (val)
@@ -463,7 +605,7 @@ short ProductSection::getForecastType() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -477,11 +619,11 @@ short ProductSection::getForecastNumber() const
 {
   try
   {
-    if (mProductDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
+    if (mProductDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     const EpsSettings *eps = mProductDefinition->getEps();
-    if (eps != NULL)
+    if (eps != nullptr)
     {
       T::UInt8_opt val = eps->getPerturbationNumber();
       if (val)
@@ -492,7 +634,7 @@ short ProductSection::getForecastNumber() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -502,125 +644,185 @@ short ProductSection::getForecastNumber() const
 
 
 
-ProductDefinition* ProductSection::createProductDefinition(T::UInt16_opt number)
+void ProductSection::setNV(T::UInt16_opt nv)
 {
   try
   {
-    // Unknown product?
-    if (missing(number))
-      return nullptr;
-
-    switch (*number)
-    {
-      case 0:
-        return new NormalProductImpl();
-      case 1:
-        return new EnsembleForecastImpl();
-      case 2:
-        return new EnsembleDerivedForecastImpl();
-      case 3:
-        return new EnsembleClusterDerivedForecastImpl();
-      case 5:
-        return new ProbabilityForecastImpl();
-      case 6:
-        return new PercentileForecastImpl();
-      case 7:
-        return new ForecastErrorImpl();
-      case 8:
-        return new AggregateForecastImpl();
-      case 9:
-        return new TimeIntervalProbabilityForecastImpl();
-      case 10:
-        return new TimeIntervalPercentileForecastImpl();
-      case 11:
-        return new TimeIntervalEnsembleForecastImpl();
-      case 12:
-        return new TimeIntervalEnsembleDerivedForecastImpl();
-      case 13:
-        return new TimeIntervalEnsembleClusterDerivedForecastImpl();
-      case 15:
-        return new TimeIntervalAggregateForecastImpl();
-      case 30:
-        return new DeprecatedSatelliteProductImpl();
-      case 31:
-        return new SatelliteProductImpl();
-      case 32:
-        return new SimulatedSatelliteProductImpl();
-      case 33:
-        return new SimulatedSatelliteEnsembleProductImpl();
-      case 34:
-        return new TimeIntervalSimulatedSatelliteEnsembleProductImpl();
-      case 40:
-        return new AtmosphericChemicalProductImpl();
-      case 41:
-        return new AtmosphericChemicalEnsembleProductImpl();
-      case 42:
-        return new AggregateAtmosphericChemicalProductImpl();
-      case 43:
-        return new TimeIntervalAtmosphericChemicalEnsembleProductImpl();
-      case 45:
-        return new AerosolEnsembleProductImpl();
-      case 46:
-        return new AggregateAerosolProductImpl();
-      case 47:
-        return new TimeIntervalAerosolEnsembleProductImpl();
-      case 48:
-        return new AerosolOpticalPropertiesProductImpl();
-      case 51:
-        return new CategoricalForecastImpl();
-      case 53:
-        return new PartitionedProductImpl();
-      case 54:
-        return new PartitionedEnsembleProductImpl();
-      case 60:
-        return new EnsembleReforecastImpl();
-      case 61:
-        return new TimeIntervalEnsembleReforecastImpl();
-      case 91:
-        return new TimeIntervalCategoricalForecastImpl();
-      case 254:
-        return new CharacterStringProductImpl();
-      case 311:
-        return new AuxiliarySatelliteProductImpl();
-      case 1000:
-        return new CrossSectionProductImpl();
-      case 1001:
-        return new ProcessedCrossSectionProductImpl();
-      case 1002:
-        return new AreaProcessedCrossSectionProductImpl();
-      case 1100:
-        return new HovmollerProductImpl();
-      case 1101:
-        return new ProcessedHovmollerProductImpl();
-      case 4:
-        throw SmartMet::Spine::Exception(BCP,
-            "Product 4.4 EnsembleClusterDerivedCircleForecast not supported due to a bugged "
-            "4.circular_cluster template!");
-      case 14:
-        throw SmartMet::Spine::Exception(BCP,
-            "Product 4.14 TimeIntervalEnsembleClusterDerivedCircleForecast not supported due to a "
-            "bugged 4.circular_cluster template!");
-      case 44:
-        throw SmartMet::Spine::Exception(BCP,
-            "Product 4.44 AerosolProduct not supported due to a bugged 4.parameter_aerosol_44 "
-            "template!");
-      case 2000:
-        throw SmartMet::Spine::Exception(BCP,
-            "Product 4.2000 not supported TODO due to God knows what - I forgot!");
-      case 40033:
-        throw SmartMet::Spine::Exception(BCP,"Product 4.40033 not supported, use 4.33 instead!");
-      case 40034:
-        throw SmartMet::Spine::Exception(BCP,"Product 4.40034 not supported, use 4.34 instead!");
-      default:
-        throw SmartMet::Spine::Exception(BCP,"Unknown product definition template number '" +
-                                 std::to_string(static_cast<int>(*number)) + "'!");
-    }
+    mNV = nv;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Creation of a product definition failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
+    throw exception;
   }
 }
+
+
+
+
+
+void ProductSection::setProductDefinition(std::uint16_t productTemplateId)
+{
+  try
+  {
+    ProductDefinition *productDefintion = createProductDefinition(productTemplateId);
+
+    if (productDefintion == nullptr)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Cannot create product definition!");
+      exception.addParameter("Product",std::to_string((uint)productTemplateId));
+      throw exception;
+    }
+
+    mProductDefinitionTemplateNumber = productDefintion->getTemplateNumber();
+    mProductDefinition.reset(productDefintion);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Creation of a product definition failed!",nullptr);
+  }
+}
+
+
+
+
+
+ProductDefinition* ProductSection::createProductDefinition(std::uint16_t productTemplateId)
+{
+  try
+  {
+    switch (productTemplateId)
+    {
+      case Template::NormalProduct:
+        return new NormalProductImpl();
+
+      case Template::EnsembleForecast:
+        return new EnsembleForecastImpl();
+
+      case Template::EnsembleDerivedForecast:
+        return new EnsembleDerivedForecastImpl();
+
+      case Template::EnsembleClusterDerivedForecast:
+        return new EnsembleClusterDerivedForecastImpl();
+
+      case Template::ProbabilityForecast:
+        return new ProbabilityForecastImpl();
+
+      case Template::PercentileForecast:
+        return new PercentileForecastImpl();
+
+      case Template::ForecastError:
+        return new ForecastErrorImpl();
+
+      case Template::AggregateForecast:
+        return new AggregateForecastImpl();
+
+      case Template::TimeIntervalProbabilityForecast:
+        return new TimeIntervalProbabilityForecastImpl();
+
+      case Template::TimeIntervalPercentileForecast:
+        return new TimeIntervalPercentileForecastImpl();
+
+      case Template::TimeIntervalEnsembleForecast:
+        return new TimeIntervalEnsembleForecastImpl();
+
+      case Template::TimeIntervalEnsembleDerivedForecast:
+        return new TimeIntervalEnsembleDerivedForecastImpl();
+
+      case Template::TimeIntervalEnsembleClusterDerivedForecast:
+        return new TimeIntervalEnsembleClusterDerivedForecastImpl();
+
+      case Template::TimeIntervalAggregateForecast:
+        return new TimeIntervalAggregateForecastImpl();
+
+      case Template::DeprecatedSatelliteProduct:
+        return new DeprecatedSatelliteProductImpl();
+
+      case Template::SatelliteProduct:
+        return new SatelliteProductImpl();
+
+      case Template::SimulatedSatelliteProduct:
+        return new SimulatedSatelliteProductImpl();
+
+      case Template::SimulatedSatelliteEnsembleProduct:
+        return new SimulatedSatelliteEnsembleProductImpl();
+
+      case Template::TimeIntervalSimulatedSatelliteEnsembleProduct:
+        return new TimeIntervalSimulatedSatelliteEnsembleProductImpl();
+
+      case Template::AtmosphericChemicalProduct:
+        return new AtmosphericChemicalProductImpl();
+
+      case Template::AtmosphericChemicalEnsembleProduct:
+        return new AtmosphericChemicalEnsembleProductImpl();
+
+      case Template::AggregateAtmosphericChemicalProduct:
+        return new AggregateAtmosphericChemicalProductImpl();
+
+      case Template::TimeIntervalAtmosphericChemicalEnsembleProduct:
+        return new TimeIntervalAtmosphericChemicalEnsembleProductImpl();
+
+      case Template::AerosolEnsembleProduct:
+        return new AerosolEnsembleProductImpl();
+
+      case Template::AggregateAerosolProduct:
+        return new AggregateAerosolProductImpl();
+
+      case Template::TimeIntervalAerosolEnsembleProduct:
+        return new TimeIntervalAerosolEnsembleProductImpl();
+
+      case Template::AerosolOpticalPropertiesProduct:
+        return new AerosolOpticalPropertiesProductImpl();
+
+      case Template::CategoricalForecast:
+        return new CategoricalForecastImpl();
+
+      case Template::PartitionedProduct:
+        return new PartitionedProductImpl();
+
+      case Template::PartitionedEnsembleProduct:
+        return new PartitionedEnsembleProductImpl();
+
+      case Template::EnsembleReforecast:
+        return new EnsembleReforecastImpl();
+
+      case Template::TimeIntervalEnsembleReforecast:
+        return new TimeIntervalEnsembleReforecastImpl();
+
+      case Template::TimeIntervalCategoricalForecast:
+        return new TimeIntervalCategoricalForecastImpl();
+
+      case Template::CharacterStringProduct:
+        return new CharacterStringProductImpl();
+
+      case Template::AuxiliarySatelliteProduct:
+        return new AuxiliarySatelliteProductImpl();
+
+      case Template::CrossSectionProduct:
+        return new CrossSectionProductImpl();
+
+      case Template::ProcessedCrossSectionProduct:
+        return new ProcessedCrossSectionProductImpl();
+
+      case Template::AreaProcessedCrossSectionProduct:
+        return new AreaProcessedCrossSectionProductImpl();
+
+      case Template::HovmollerProduct:
+        return new HovmollerProductImpl();
+
+      case Template::ProcessedHovmollerProduct:
+        return new ProcessedHovmollerProductImpl();
+    }
+
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Creation of a product definition failed!",nullptr);
+  }
+}
+
 
 
 
@@ -633,7 +835,7 @@ ProductDefinition* ProductSection::getProductDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Creation of a product definition failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Creation of a product definition failed!",nullptr);
   }
 }
 
@@ -644,14 +846,14 @@ T::UInt8_opt ProductSection::getGeneratingProcessIdentifier() const
 {
   try
   {
-    if (mProductDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to NULL!");
+    if (mProductDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getGeneratingProcessIdentifier();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -687,7 +889,7 @@ void ProductSection::print(std::ostream& stream,uint level,uint optionFlags) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

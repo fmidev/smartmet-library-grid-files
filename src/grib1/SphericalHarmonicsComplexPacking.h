@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DataDefinition.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 
 namespace SmartMet
@@ -27,21 +28,25 @@ namespace GRIB1
 class SphericalHarmonicsComplexPacking : public DataDefinition
 {
   public:
-                  SphericalHarmonicsComplexPacking();
-    virtual       ~SphericalHarmonicsComplexPacking();
+                    SphericalHarmonicsComplexPacking();
+                    SphericalHarmonicsComplexPacking(const SphericalHarmonicsComplexPacking& other);
+    virtual         ~SphericalHarmonicsComplexPacking();
 
-    PackingMethod getPackingMethod() const;
-    void          decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    void          print(std::ostream& stream,uint level,uint optionFlags) const;
-    void          read(MemoryReader& memoryReader);
+    DataDefinition* createDataDefinition() const;
+    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
+    PackingMethod   getPackingMethod() const;
+
+    void            read(MemoryReader& memoryReader);
+    void            write(DataWriter& dataWriter);
+    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
   protected:
 
-    std::uint16_t mN;
-    std::uint16_t mIP;
-    std::uint8_t  mJ1;
-    std::uint8_t  mK1;
-    std::uint8_t  mM1;
+    std::uint16_t   mN;
+    std::uint16_t   mIP;
+    std::uint8_t    mJ1;
+    std::uint8_t    mK1;
+    std::uint8_t    mM1;
 };
 
 }  // namespace GRIB1

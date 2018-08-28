@@ -24,7 +24,30 @@ SphericalHarmonicsComplexPacking::SphericalHarmonicsComplexPacking()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+SphericalHarmonicsComplexPacking::SphericalHarmonicsComplexPacking(const SphericalHarmonicsComplexPacking& other)
+:DataDefinition(other)
+{
+  try
+  {
+    mN = other.mN;
+    mIP = other.mIP;
+    mJ1 = other.mJ1;
+    mK1 = other.mK1;
+    mM1 = other.mM1;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -50,7 +73,23 @@ PackingMethod SphericalHarmonicsComplexPacking::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+DataDefinition* SphericalHarmonicsComplexPacking::createDataDefinition() const
+{
+  try
+  {
+    return (DataDefinition*) new SphericalHarmonicsComplexPacking(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -74,7 +113,22 @@ void SphericalHarmonicsComplexPacking::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void SphericalHarmonicsComplexPacking::write(DataWriter& dataWriter)
+{
+  try
+  {
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -90,7 +144,7 @@ void SphericalHarmonicsComplexPacking::decodeValues(Message *message,T::ParamVal
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -118,7 +172,7 @@ void SphericalHarmonicsComplexPacking::print(std::ostream& stream,uint level,uin
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

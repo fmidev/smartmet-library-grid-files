@@ -14,13 +14,13 @@ ObliqueLambertConformalImpl::ObliqueLambertConformalImpl()
   try
   {
     mGridProjection = T::GridProjection::ObliqueLambertConformal;
-    mSr_lambertConformal = NULL;
-    mCt_latlon2lambert = NULL;
-    mCt_lambert2latlon = NULL;
+    mSr_lambertConformal = nullptr;
+    mCt_latlon2lambert = nullptr;
+    mCt_lambert2latlon = nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -35,13 +35,13 @@ ObliqueLambertConformalImpl::ObliqueLambertConformalImpl(const ObliqueLambertCon
 {
   try
   {
-    mSr_lambertConformal = NULL;
-    mCt_latlon2lambert = NULL;
-    mCt_lambert2latlon = NULL;
+    mSr_lambertConformal = nullptr;
+    mCt_latlon2lambert = nullptr;
+    mCt_lambert2latlon = nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -55,18 +55,37 @@ ObliqueLambertConformalImpl::~ObliqueLambertConformalImpl()
 {
   try
   {
-    if (mSr_lambertConformal != NULL)
+    if (mSr_lambertConformal != nullptr)
       mSpatialReference.DestroySpatialReference(mSr_lambertConformal);
 
-    if (mCt_lambert2latlon == NULL)
+    if (mCt_lambert2latlon == nullptr)
       OCTDestroyCoordinateTransformation(mCt_lambert2latlon);
 
-    if (mCt_latlon2lambert != NULL)
+    if (mCt_latlon2lambert != nullptr)
       OCTDestroyCoordinateTransformation(mCt_latlon2lambert);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
+  }
+}
+
+
+
+
+
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* ObliqueLambertConformalImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new ObliqueLambertConformalImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -92,7 +111,7 @@ void ObliqueLambertConformalImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -150,7 +169,7 @@ T::Coordinate_vec ObliqueLambertConformalImpl::getGridCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -166,15 +185,15 @@ T::Coordinate_vec ObliqueLambertConformalImpl::getGridCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt ObliqueLambertConformalImpl::getGridDimensions() const
+T::Dimensions ObliqueLambertConformalImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions{mNx, mNy};
+    return T::Dimensions(mNx, mNy);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -203,7 +222,7 @@ bool ObliqueLambertConformalImpl::getGridPointByLatLonCoordinates(double lat,dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -237,10 +256,10 @@ void ObliqueLambertConformalImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double stdP1 = dfStdP1 / 1000;
-    double stdP2 = dfStdP2 / 1000;
-    double centerLat = dfCenterLat / 1000;
-    double centerLon = dfCenterLong / 1000;
+    double stdP1 = (double)dfStdP1 / 1000;
+    double stdP2 = (double)dfStdP2 / 1000;
+    double centerLat = (double)dfCenterLat / 1000;
+    double centerLon = (double)dfCenterLong / 1000;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
 
@@ -266,16 +285,16 @@ void ObliqueLambertConformalImpl::initSpatialReference()
     mSr_lambertConformal = mSpatialReference.Clone();
 
     mCt_latlon2lambert = OGRCreateCoordinateTransformation(&sr_latlon,mSr_lambertConformal);
-    if (mCt_latlon2lambert == NULL)
+    if (mCt_latlon2lambert == nullptr)
       throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
 
     mCt_lambert2latlon = OGRCreateCoordinateTransformation(mSr_lambertConformal,&sr_latlon);
-    if (mCt_lambert2latlon == NULL)
+    if (mCt_lambert2latlon == nullptr)
       throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

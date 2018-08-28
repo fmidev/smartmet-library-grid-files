@@ -18,10 +18,39 @@ CharacterStringProductImpl::CharacterStringProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+CharacterStringProductImpl::CharacterStringProductImpl(const CharacterStringProductImpl& other)
+:CharacterStringProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 CharacterStringProductImpl::~CharacterStringProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* CharacterStringProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new CharacterStringProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void CharacterStringProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "EarthShapeSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,15 +22,19 @@ namespace GRIB2 {
 class LambertAzimuthalEqualArea : public GridDefinition {
 public:
   LambertAzimuthalEqualArea();
+  LambertAzimuthalEqualArea(const LambertAzimuthalEqualArea &other);
   virtual ~LambertAzimuthalEqualArea();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings earthShape);
+  EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNumberOfPointsAlongXAxis() const;
   void setNumberOfPointsAlongXAxis(T::UInt32_opt numberOfPointsAlongXAxis);
   const T::UInt32_opt &getNumberOfPointsAlongYAxis() const;
@@ -48,8 +53,8 @@ public:
   void setXDirectionGridLengthInMillimetres(T::UInt32_opt xDirectionGridLengthInMillimetres);
   const T::UInt32_opt &getYDirectionGridLengthInMillimetres() const;
   void setYDirectionGridLengthInMillimetres(T::UInt32_opt yDirectionGridLengthInMillimetres);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

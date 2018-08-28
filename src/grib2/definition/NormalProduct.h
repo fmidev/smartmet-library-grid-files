@@ -8,12 +8,13 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../ProductDefinition.h"
 #include "HorizontalSettings.h"
 #include "ParameterSettings.h"
 #include "PointInTimeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,19 +23,23 @@ namespace GRIB2 {
 class NormalProduct : public ProductDefinition {
 public:
   NormalProduct();
+  NormalProduct(const NormalProduct &other);
   virtual ~NormalProduct();
 
+  virtual uint getTemplateNumber() const;
+  virtual ProductDefinition *createProductDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const ParameterSettings *getParameter() const;
-  void setParameter(ParameterSettings parameter);
-  const PointInTimeSettings *getPointInTime() const;
-  void setPointInTime(PointInTimeSettings pointInTime);
-  const HorizontalSettings *getHorizontal() const;
-  void setHorizontal(HorizontalSettings horizontal);
+  ParameterSettings *getParameter() const;
+  void setParameter(ParameterSettings &parameter);
+  PointInTimeSettings *getPointInTime() const;
+  void setPointInTime(PointInTimeSettings &pointInTime);
+  HorizontalSettings *getHorizontal() const;
+  void setHorizontal(HorizontalSettings &horizontal);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

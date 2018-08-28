@@ -12,12 +12,15 @@ namespace GRIB2
 class TimeIntervalCategoricalForecastImpl : public TimeIntervalCategoricalForecast
 {
   public:
-                      TimeIntervalCategoricalForecastImpl();
-    virtual           ~TimeIntervalCategoricalForecastImpl();
+                        TimeIntervalCategoricalForecastImpl();
+                        TimeIntervalCategoricalForecastImpl(const TimeIntervalCategoricalForecastImpl& other);
+    virtual             ~TimeIntervalCategoricalForecastImpl();
 
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

@@ -18,10 +18,39 @@ SimulatedSatelliteProductImpl::SimulatedSatelliteProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+SimulatedSatelliteProductImpl::SimulatedSatelliteProductImpl(const SimulatedSatelliteProductImpl& other)
+:SimulatedSatelliteProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 SimulatedSatelliteProductImpl::~SimulatedSatelliteProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* SimulatedSatelliteProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new SimulatedSatelliteProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void SimulatedSatelliteProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

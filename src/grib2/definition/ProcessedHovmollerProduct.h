@@ -8,12 +8,13 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../ProductDefinition.h"
 #include "HorizontalSettings.h"
 #include "ParameterSettings.h"
 #include "StatisticalSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,19 +23,23 @@ namespace GRIB2 {
 class ProcessedHovmollerProduct : public ProductDefinition {
 public:
   ProcessedHovmollerProduct();
+  ProcessedHovmollerProduct(const ProcessedHovmollerProduct &other);
   virtual ~ProcessedHovmollerProduct();
 
+  virtual uint getTemplateNumber() const;
+  virtual ProductDefinition *createProductDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const ParameterSettings *getParameter() const;
-  void setParameter(ParameterSettings parameter);
-  const HorizontalSettings *getHorizontal() const;
-  void setHorizontal(HorizontalSettings horizontal);
-  const StatisticalSettings *getStatistical() const;
-  void setStatistical(StatisticalSettings statistical);
+  ParameterSettings *getParameter() const;
+  void setParameter(ParameterSettings &parameter);
+  HorizontalSettings *getHorizontal() const;
+  void setHorizontal(HorizontalSettings &horizontal);
+  StatisticalSettings *getStatistical() const;
+  void setStatistical(StatisticalSettings &statistical);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
@@ -46,7 +51,7 @@ protected:
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # TEMPLATE 4.1101, Hovmï¿½ller-type grid with averaging or other statistical processing
+  // # TEMPLATE 4.1101, Hovmöller-type grid with averaging or other statistical processing
   //
   // include "template.4.parameter.def"
 

@@ -21,17 +21,35 @@ namespace GRIB2 {
 ParameterPartitionSettings::ParameterPartitionSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+ParameterPartitionSettings::ParameterPartitionSettings(const ParameterPartitionSettings &other) {
+  try {
+    mParameterCategory = other.mParameterCategory;
+    mParameterNumber = other.mParameterNumber;
+    mPartitionTable = other.mPartitionTable;
+    mNumberOfPartitions = other.mNumberOfPartitions;
+    mPartitionItems = other.mPartitionItems;
+    mPartitionNumber = other.mPartitionNumber;
+    mTypeOfGeneratingProcess = other.mTypeOfGeneratingProcess;
+    mBackgroundProcess = other.mBackgroundProcess;
+    mGeneratingProcessIdentifier = other.mGeneratingProcessIdentifier;
+    mHoursAfterDataCutoff = other.mHoursAfterDataCutoff;
+    mMinutesAfterDataCutoff = other.mMinutesAfterDataCutoff;
+    mIndicatorOfUnitOfTimeRange = other.mIndicatorOfUnitOfTimeRange;
+    mForecastTime = other.mForecastTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 ParameterPartitionSettings::~ParameterPartitionSettings() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -55,7 +73,32 @@ void ParameterPartitionSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
     mForecastTime = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void ParameterPartitionSettings::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mParameterCategory;
+    dataWriter << mParameterNumber;
+    dataWriter << mPartitionTable;
+    dataWriter << mNumberOfPartitions;
+    dataWriter << mPartitionItems;
+    dataWriter << mPartitionNumber;
+    dataWriter << mTypeOfGeneratingProcess;
+    dataWriter << mBackgroundProcess;
+    dataWriter << mGeneratingProcessIdentifier;
+    dataWriter << mHoursAfterDataCutoff;
+    dataWriter << mMinutesAfterDataCutoff;
+    dataWriter << mIndicatorOfUnitOfTimeRange;
+    dataWriter << mForecastTime;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -95,7 +138,7 @@ void ParameterPartitionSettings::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sParameterPartitionSettings.ForecastTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastTime));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -123,7 +166,7 @@ void ParameterPartitionSettings::print(std::ostream &stream, uint level, uint op
     stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
     stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -160,7 +203,7 @@ T::Hash ParameterPartitionSettings::countHash() {
       boost::hash_combine(seed, *mForecastTime);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -170,7 +213,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -180,7 +223,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -190,7 +233,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getPartitionTable() const {
   try {
     return mPartitionTable;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -200,7 +243,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getNumberOfPartitions() const {
   try {
     return mNumberOfPartitions;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -210,7 +253,7 @@ const T::UInt16_opt &ParameterPartitionSettings::getPartitionItems() const {
   try {
     return mPartitionItems;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -220,7 +263,7 @@ const T::UInt16_opt &ParameterPartitionSettings::getPartitionNumber() const {
   try {
     return mPartitionNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -230,7 +273,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getTypeOfGeneratingProcess() con
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -240,7 +283,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getBackgroundProcess() const {
   try {
     return mBackgroundProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -250,7 +293,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getGeneratingProcessIdentifier()
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -260,7 +303,7 @@ const T::UInt16_opt &ParameterPartitionSettings::getHoursAfterDataCutoff() const
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -270,7 +313,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getMinutesAfterDataCutoff() cons
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -280,7 +323,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getIndicatorOfUnitOfTimeRange() 
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -290,7 +333,7 @@ const T::UInt32_opt &ParameterPartitionSettings::getForecastTime() const {
   try {
     return mForecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -298,7 +341,7 @@ void ParameterPartitionSettings::setParameterCategory(T::UInt8_opt parameterCate
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -306,7 +349,7 @@ void ParameterPartitionSettings::setParameterNumber(T::UInt8_opt parameterNumber
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -314,7 +357,7 @@ void ParameterPartitionSettings::setPartitionTable(T::UInt8_opt partitionTable) 
   try {
     mPartitionTable = partitionTable;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -322,7 +365,7 @@ void ParameterPartitionSettings::setNumberOfPartitions(T::UInt8_opt numberOfPart
   try {
     mNumberOfPartitions = numberOfPartitions;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -330,7 +373,7 @@ void ParameterPartitionSettings::setPartitionItems(T::UInt16_opt partitionItems)
   try {
     mPartitionItems = partitionItems;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -338,7 +381,7 @@ void ParameterPartitionSettings::setPartitionNumber(T::UInt16_opt partitionNumbe
   try {
     mPartitionNumber = partitionNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -346,7 +389,7 @@ void ParameterPartitionSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfG
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -354,7 +397,7 @@ void ParameterPartitionSettings::setBackgroundProcess(T::UInt8_opt backgroundPro
   try {
     mBackgroundProcess = backgroundProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -362,7 +405,7 @@ void ParameterPartitionSettings::setGeneratingProcessIdentifier(T::UInt8_opt gen
   try {
     mGeneratingProcessIdentifier = generatingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -370,7 +413,7 @@ void ParameterPartitionSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfte
   try {
     mHoursAfterDataCutoff = hoursAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -378,7 +421,7 @@ void ParameterPartitionSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesA
   try {
     mMinutesAfterDataCutoff = minutesAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -386,7 +429,7 @@ void ParameterPartitionSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indi
   try {
     mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -394,7 +437,7 @@ void ParameterPartitionSettings::setForecastTime(T::UInt32_opt forecastTime) {
   try {
     mForecastTime = forecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

@@ -21,17 +21,28 @@ namespace GRIB2 {
 TimeIntervalAggregateForecast::TimeIntervalAggregateForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalAggregateForecast::TimeIntervalAggregateForecast(const TimeIntervalAggregateForecast &other) : ProductDefinition(other) {
+  try {
+    mParameter = other.mParameter;
+    mPointInTime = other.mPointInTime;
+    mHorizontal = other.mHorizontal;
+    mStatisticalProcess = other.mStatisticalProcess;
+    mSpatialProcessing = other.mSpatialProcessing;
+    mNumberOfPointsUsed = other.mNumberOfPointsUsed;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 TimeIntervalAggregateForecast::~TimeIntervalAggregateForecast() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -48,7 +59,25 @@ void TimeIntervalAggregateForecast::read(MemoryReader &memoryReader) {
     mSpatialProcessing = memoryReader.read_UInt8_opt();
     mNumberOfPointsUsed = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void TimeIntervalAggregateForecast::write(DataWriter &dataWriter) {
+  try {
+    mParameter.write(dataWriter);
+    mPointInTime.write(dataWriter);
+    mHorizontal.write(dataWriter);
+    dataWriter << mStatisticalProcess;
+    dataWriter << mSpatialProcessing;
+    dataWriter << mNumberOfPointsUsed;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -74,7 +103,7 @@ void TimeIntervalAggregateForecast::getAttributeList(std::string prefix, T::Attr
     sprintf(name, "%sTimeIntervalAggregateForecast.NumberOfPointsUsed", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfPointsUsed));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -95,7 +124,7 @@ void TimeIntervalAggregateForecast::print(std::ostream &stream, uint level, uint
     stream << space(level) << "- SpatialProcessing = " << toString(mSpatialProcessing) << "\n";
     stream << space(level) << "- NumberOfPointsUsed = " << toString(mNumberOfPointsUsed) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -115,37 +144,51 @@ T::Hash TimeIntervalAggregateForecast::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint TimeIntervalAggregateForecast::getTemplateNumber() const {
+  return 15;
+}
+
+ProductDefinition *TimeIntervalAggregateForecast::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new TimeIntervalAggregateForecast(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
-const ParameterSettings *TimeIntervalAggregateForecast::getParameter() const {
+ParameterSettings *TimeIntervalAggregateForecast::getParameter() const {
   try {
-    return &mParameter;
+    return (ParameterSettings *)&mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
 
-const PointInTimeSettings *TimeIntervalAggregateForecast::getPointInTime() const {
+PointInTimeSettings *TimeIntervalAggregateForecast::getPointInTime() const {
   try {
-    return &mPointInTime;
+    return (PointInTimeSettings *)&mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
-const HorizontalSettings *TimeIntervalAggregateForecast::getHorizontal() const {
+HorizontalSettings *TimeIntervalAggregateForecast::getHorizontal() const {
   try {
-    return &mHorizontal;
+    return (HorizontalSettings *)&mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -155,7 +198,7 @@ const T::UInt8_opt &TimeIntervalAggregateForecast::getStatisticalProcess() const
   try {
     return mStatisticalProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -165,7 +208,7 @@ const T::UInt8_opt &TimeIntervalAggregateForecast::getSpatialProcessing() const 
   try {
     return mSpatialProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -175,31 +218,31 @@ const T::UInt8_opt &TimeIntervalAggregateForecast::getNumberOfPointsUsed() const
   try {
     return mNumberOfPointsUsed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalAggregateForecast::setParameter(ParameterSettings parameter) {
+void TimeIntervalAggregateForecast::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalAggregateForecast::setPointInTime(PointInTimeSettings pointInTime) {
+void TimeIntervalAggregateForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalAggregateForecast::setHorizontal(HorizontalSettings horizontal) {
+void TimeIntervalAggregateForecast::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -207,7 +250,7 @@ void TimeIntervalAggregateForecast::setStatisticalProcess(T::UInt8_opt statistic
   try {
     mStatisticalProcess = statisticalProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -215,7 +258,7 @@ void TimeIntervalAggregateForecast::setSpatialProcessing(T::UInt8_opt spatialPro
   try {
     mSpatialProcessing = spatialProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -223,7 +266,7 @@ void TimeIntervalAggregateForecast::setNumberOfPointsUsed(T::UInt8_opt numberOfP
   try {
     mNumberOfPointsUsed = numberOfPointsUsed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

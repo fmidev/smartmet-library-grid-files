@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "SphericalHarmonicSettings.h"
 #include "StretchingSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,17 +22,21 @@ namespace GRIB2 {
 class StretchedSphericalHarmonic : public GridDefinition {
 public:
   StretchedSphericalHarmonic();
+  StretchedSphericalHarmonic(const StretchedSphericalHarmonic &other);
   virtual ~StretchedSphericalHarmonic();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const SphericalHarmonicSettings *getSphericalHarmonic() const;
-  void setSphericalHarmonic(SphericalHarmonicSettings sphericalHarmonic);
-  const StretchingSettings *getStretching() const;
-  void setStretching(StretchingSettings stretching);
+  SphericalHarmonicSettings *getSphericalHarmonic() const;
+  void setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic);
+  StretchingSettings *getStretching() const;
+  void setStretching(StretchingSettings &stretching);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

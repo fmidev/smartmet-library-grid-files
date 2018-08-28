@@ -21,6 +21,16 @@ DataDefinition::DataDefinition()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+DataDefinition::DataDefinition(const DataDefinition& other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 DataDefinition::~DataDefinition()
@@ -47,7 +57,7 @@ PackingMethod DataDefinition::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -62,7 +72,7 @@ bool DataDefinition::getValueByIndex(Message *message,uint index,T::ParamValue& 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -76,6 +86,23 @@ bool DataDefinition::getValueByIndex(Message *message,uint index,T::ParamValue& 
 
 void DataDefinition::read(MemoryReader& memoryReader)
 {
+}
+
+
+
+
+
+void DataDefinition::write(DataWriter& dataWriter)
+{
+}
+
+
+
+
+
+DataDefinition* DataDefinition::createDataDefinition() const
+{
+  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 
 
@@ -106,7 +133,7 @@ void DataDefinition::print(std::ostream& stream,uint level,uint optionFlags) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

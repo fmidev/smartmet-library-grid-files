@@ -31,16 +31,46 @@ namespace GRIB2
         \param message  A pointer to the message object.
 */
 
-RepresentationSection::RepresentationSection(Message *message)
+RepresentationSection::RepresentationSection()
 {
   try
   {
-    mMessage = message;
+    mMessage = nullptr;
     mFilePosition = 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+RepresentationSection::RepresentationSection(const RepresentationSection& other)
+:GRID::MessageSection(other)
+{
+  try
+  {
+    mMessage = nullptr;
+    mFilePosition = other.mFilePosition;
+    mSectionLength = other.mSectionLength;
+    mNumberOfSection = other.mNumberOfSection;
+    mNumberOfValues = other.mNumberOfValues;
+    mDataRepresentationTemplateNumber = other.mDataRepresentationTemplateNumber;
+
+    if (other.mRepresentationDefinition)
+    {
+      RepresentationDefinition *def = other.mRepresentationDefinition->createRepresentationDefinition();
+      mRepresentationDefinition.reset(def);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -84,7 +114,50 @@ void RepresentationSection::getAttributeList(std::string prefix,T::AttributeList
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
+void RepresentationSection::setMessagePtr(Message *message)
+{
+  try
+  {
+    mMessage = message;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool RepresentationSection::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::RepresentationSection::RepresentationTemplateNumber:
+        setRepresentationDefinition((std::uint16_t)value);
+        return true;
+    }
+
+    if (mRepresentationDefinition)
+      return mRepresentationDefinition->setProperty(propertyId,value);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -129,13 +202,53 @@ void RepresentationSection::read(MemoryReader& memoryReader)
       throw exception;
     }
 
-    auto representationDefinition = createRepresentationDefinition(mDataRepresentationTemplateNumber);
-    mRepresentationDefinition.reset(representationDefinition);
-    representationDefinition->read(memoryReader);
+    if (mDataRepresentationTemplateNumber)
+    {
+      auto representationDefinition = createRepresentationDefinition(*mDataRepresentationTemplateNumber);
+      mRepresentationDefinition.reset(representationDefinition);
+      representationDefinition->read(memoryReader);
+    }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void RepresentationSection::write(DataWriter& dataWriter)
+{
+  try
+  {
+    if (!mRepresentationDefinition)
+      throw SmartMet::Spine::Exception(BCP,"Missing represntation definition");
+
+    if (missing(mNumberOfValues))
+      throw SmartMet::Spine::Exception(BCP,"Number of values in section cannot be missing");
+
+    mFilePosition = dataWriter.getWritePosition();
+    mDataRepresentationTemplateNumber = mRepresentationDefinition->getTemplateNumber();
+    mNumberOfSection = GRIB2::Message::SectionNumber::representation_section;
+
+    dataWriter << mSectionLength;
+    dataWriter << mNumberOfSection;
+    dataWriter << mNumberOfValues;
+    dataWriter << mDataRepresentationTemplateNumber;
+
+    mRepresentationDefinition->write(dataWriter);
+
+    ulonglong fPos = dataWriter.getWritePosition();
+    mSectionLength = fPos - mFilePosition;
+    dataWriter.setWritePosition(mFilePosition);
+    dataWriter << mSectionLength;
+    dataWriter.setWritePosition(fPos);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -156,7 +269,7 @@ T::FilePosition RepresentationSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -173,11 +286,14 @@ std::uint32_t RepresentationSection::getSectionLength() const
 {
   try
   {
-    return *mSectionLength;
+    if (mSectionLength)
+      return *mSectionLength;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -195,7 +311,7 @@ std::string RepresentationSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -213,7 +329,7 @@ std::uint8_t RepresentationSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -229,11 +345,14 @@ std::uint8_t RepresentationSection::getNumberOfSection() const
   {
     // No missing check necessary here, we cannot know the section type without the number
     // anyway
-    return *mNumberOfSection;
+    if (mNumberOfSection)
+      return *mNumberOfSection;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -245,11 +364,30 @@ std::uint32_t RepresentationSection::getNumberOfValues() const
 {
   try
   {
-    return *mNumberOfValues;
+    if (mNumberOfValues)
+      return *mNumberOfValues;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void RepresentationSection::setNumberOfValues(std::uint32_t numOfValues)
+{
+  try
+  {
+    mNumberOfValues = numOfValues;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -266,7 +404,7 @@ std::string RepresentationSection::getDataRepresentationString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -282,7 +420,7 @@ std::uint16_t RepresentationSection::getDataRepresentationTemplateNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -301,7 +439,7 @@ bool RepresentationSection::getValueByIndex(uint index,T::ParamValue& value) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -318,7 +456,7 @@ void RepresentationSection::decodeValues(T::ParamValue_vec& decodedValues) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -326,60 +464,139 @@ void RepresentationSection::decodeValues(T::ParamValue_vec& decodedValues) const
 
 
 
-RepresentationDefinition* RepresentationSection::createRepresentationDefinition(T::UInt16_opt number)
+void RepresentationSection::encodeValues(Message *message,T::ParamValue_vec& values)
 {
   try
   {
-    // Unknown representation?
-    if (missing(number))
-      return nullptr;
+    if (!mRepresentationDefinition)
+      throw SmartMet::Spine::Exception(BCP,"The 'mRepresentationDefinition' attribute points to nullptr!");
 
-    switch (*number)
-    {
-      case 0:
-        return new GridDataRepresentationImpl();
-      case 1:
-        return new MatrixDataRepresentationImpl();
-      case 2:
-        return new ComplexGridDataRepresentationImpl();
-      case 3:
-        return new ComplexDifferenceGridDataRepresentationImpl();
-      case 4:
-        return new FloatingPointGridDataRepresentationImpl();
-      case 6:
-        return new PreprocessedGridDataRepresentationImpl();
-      case 40:
-        return new JpegGridDataRepresentationImpl();
-      case 41:
-        return new PngGridDataRepresentationImpl();
-      case 42:
-        return new SpectralGridDataRepresentationImpl();
-      case 50:
-        return new SpectralDataRepresentationImpl();
-      case 51:
-        return new SphericalHarmonicsDataRepresentationImpl();
-      case 61:
-        return new LogarithmicGridDataRepresentationImpl();
-      case 50000:
-        return new ComplexSphericalHarmonicsDataRepresentationImpl();
-      case 40000:
-        throw SmartMet::Spine::Exception(BCP,"Representation template 5.40000 not supported, use 5.40 instead!");
-      case 40010:
-        throw SmartMet::Spine::Exception(BCP,"Representation template 5.40010 not supported, use 5.41 instead!");
-      case 50001:
-        throw SmartMet::Spine::Exception(BCP,
-            "Representation template 5.50001 not supported for lack of documentation!");
-      case 50002:
-        throw SmartMet::Spine::Exception(BCP,
-            "Representation template 5.50002 not supported for lack of documentation!");
-      default:
-        throw SmartMet::Spine::Exception(BCP,"Unknown representation definition template number '" +
-                                 std::to_string(static_cast<int>(*number)) + "'!");
-    }
+    mRepresentationDefinition->encodeValues(mMessage,values);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+RepresentationDefinition_sptr RepresentationSection::getRepresentationDefinition()
+{
+  try
+  {
+    return mRepresentationDefinition;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void RepresentationSection::setRepresentationDefinition(RepresentationDefinition *representationDefinition)
+{
+  try
+  {
+    if (representationDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'representationDefinition' parameter points to nullptr!");
+
+    mDataRepresentationTemplateNumber = representationDefinition->getTemplateNumber();
+    mRepresentationDefinition.reset(representationDefinition);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void RepresentationSection::setRepresentationDefinition(std::uint16_t templateNumber)
+{
+  try
+  {
+    RepresentationDefinition *representationDefinition = createRepresentationDefinition(templateNumber);
+    if (representationDefinition == nullptr)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Unsupported template number!");
+      exception.addParameter("Template number",std::to_string(templateNumber));
+      throw exception;
+    }
+
+    mDataRepresentationTemplateNumber = templateNumber;
+    mRepresentationDefinition.reset(representationDefinition);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+RepresentationDefinition* RepresentationSection::createRepresentationDefinition(std::uint16_t templateNumber)
+{
+  try
+  {
+    switch (templateNumber)
+    {
+      case Template::GridDataRepresentation:
+        return new GridDataRepresentationImpl();
+
+      case Template::MatrixDataRepresentation:
+        return new MatrixDataRepresentationImpl();
+
+      case Template::ComplexGridDataRepresentation:
+        return new ComplexGridDataRepresentationImpl();
+
+      case Template::ComplexDifferenceGridDataRepresentation:
+        return new ComplexDifferenceGridDataRepresentationImpl();
+
+      case Template::FloatingPointGridDataRepresentation:
+        return new FloatingPointGridDataRepresentationImpl();
+
+      case Template::PreprocessedGridDataRepresentation:
+        return new PreprocessedGridDataRepresentationImpl();
+
+      case Template::JpegGridDataRepresentation:
+        return new JpegGridDataRepresentationImpl();
+
+      case Template::PngGridDataRepresentation:
+        return new PngGridDataRepresentationImpl();
+
+      case Template::SpectralGridDataRepresentation:
+        return new SpectralGridDataRepresentationImpl();
+
+      case Template::SpectralDataRepresentation:
+        return new SpectralDataRepresentationImpl();
+
+      case Template::SphericalHarmonicsDataRepresentation:
+        return new SphericalHarmonicsDataRepresentationImpl();
+
+      case Template::LogarithmicGridDataRepresentation:
+        return new LogarithmicGridDataRepresentationImpl();
+
+      case Template::ComplexSphericalHarmonicsDataRepresentation:
+        return new ComplexSphericalHarmonicsDataRepresentationImpl();
+    }
+
+    Spine::Exception exception(BCP,"Unknown representation definition template number!'");
+    exception.addParameter("Template number",std::to_string(templateNumber));
+    throw exception;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -411,7 +628,7 @@ void RepresentationSection::print(std::ostream& stream,uint level,uint optionFla
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

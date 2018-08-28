@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DataDefinition.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 
 namespace SmartMet
@@ -30,29 +31,32 @@ namespace GRIB1
 class SecondOrderPacking : public DataDefinition
 {
   public:
-                  SecondOrderPacking();
-//                  SecondOrderPacking(MemoryReader& memoryReader);
-    virtual       ~SecondOrderPacking();
+                    SecondOrderPacking();
+                    SecondOrderPacking(const SecondOrderPacking& other);
+    virtual         ~SecondOrderPacking();
 
-    PackingMethod getPackingMethod() const;
-    void          decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    void          print(std::ostream& stream,uint level,uint optionFlags) const;
-    void          read(MemoryReader& memoryReader);
+    DataDefinition* createDataDefinition() const;
+    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
+    PackingMethod   getPackingMethod() const;
+
+    void            read(MemoryReader& memoryReader);
+    void            write(DataWriter& dataWriter);
+    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
-    std::uint16_t mN1;
-    std::uint8_t  mExtendedFlags;
-    std::uint16_t mN2;
-    std::uint16_t mP1;
-    std::uint16_t mP2;
-    std::uint8_t  mExtraValues;
+    std::uint16_t   mN1;
+    std::uint8_t    mExtendedFlags;
+    std::uint16_t   mN2;
+    std::uint16_t   mP1;
+    std::uint16_t   mP2;
+    std::uint8_t    mExtraValues;
 
   private:
 
     void decodeValues_rowByRow(
         std::size_t numOfValues,
-        T::Dimensions_opt dimensions,
+        T::Dimensions dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,
@@ -66,7 +70,7 @@ class SecondOrderPacking : public DataDefinition
 
     void decodeValues_constantWidth(
         std::size_t numOfValues,
-        T::Dimensions_opt dimensions,
+        T::Dimensions dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,
@@ -80,7 +84,7 @@ class SecondOrderPacking : public DataDefinition
 
     void decodeValues_differentWidth(
         std::size_t numOfValues,
-        T::Dimensions_opt dimensions,
+        T::Dimensions dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,
@@ -94,7 +98,7 @@ class SecondOrderPacking : public DataDefinition
 
     void decodeValues_SPD(
         std::size_t numOfValues,
-        T::Dimensions_opt dimensions,
+        T::Dimensions dimensions,
         T::Data_ptr data,
         std::size_t dataSize,
         T::Data_ptr bitmap,

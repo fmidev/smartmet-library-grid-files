@@ -22,17 +22,25 @@ Unstructured::Unstructured() {
   try {
     mUuidOfHGrid = {0};
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+Unstructured::Unstructured(const Unstructured &other) : GridDefinition(other) {
+  try {
+    mShapeOfTheEarth = other.mShapeOfTheEarth;
+    mNumberOfGridInReference = other.mNumberOfGridInReference;
+    mUuidOfHGrid = other.mUuidOfHGrid;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 Unstructured::~Unstructured() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -46,7 +54,22 @@ void Unstructured::read(MemoryReader &memoryReader) {
     mNumberOfGridInReference = memoryReader.read_UInt8_opt();
     mUuidOfHGrid = memoryReader.read_uuid();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void Unstructured::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mShapeOfTheEarth;
+    dataWriter << mNumberOfGridInReference;
+    dataWriter << mUuidOfHGrid;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -66,7 +89,7 @@ void Unstructured::getAttributeList(std::string prefix, T::AttributeList &attrib
     sprintf(name, "%sUnstructured.UuidOfHGrid", prefix.c_str());
     attributeList.addAttribute(name, toString(mUuidOfHGrid));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -84,7 +107,7 @@ void Unstructured::print(std::ostream &stream, uint level, uint optionFlags) con
     stream << space(level) << "- NumberOfGridInReference = " << toString(mNumberOfGridInReference) << "\n";
     stream << space(level) << "- UuidOfHGrid = " << toString(mUuidOfHGrid) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -100,7 +123,21 @@ T::Hash Unstructured::countHash() {
     boost::hash_combine(seed, mUuidOfHGrid);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint Unstructured::getTemplateNumber() const {
+  return 101;
+}
+
+GridDefinition *Unstructured::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new Unstructured(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -110,7 +147,7 @@ const T::UInt8_opt &Unstructured::getShapeOfTheEarth() const {
   try {
     return mShapeOfTheEarth;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -120,7 +157,7 @@ const T::UInt8_opt &Unstructured::getNumberOfGridInReference() const {
   try {
     return mNumberOfGridInReference;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -130,7 +167,7 @@ const std::array<char, 16> &Unstructured::getUuidOfHGrid() const {
   try {
     return mUuidOfHGrid;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -138,7 +175,7 @@ void Unstructured::setShapeOfTheEarth(T::UInt8_opt shapeOfTheEarth) {
   try {
     mShapeOfTheEarth = shapeOfTheEarth;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -146,7 +183,7 @@ void Unstructured::setNumberOfGridInReference(T::UInt8_opt numberOfGridInReferen
   try {
     mNumberOfGridInReference = numberOfGridInReference;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -154,7 +191,7 @@ void Unstructured::setUuidOfHGrid(std::array<char, 16> uuidOfHGrid) {
   try {
     mUuidOfHGrid = uuidOfHGrid;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

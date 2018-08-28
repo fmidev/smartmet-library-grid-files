@@ -21,17 +21,38 @@ namespace GRIB2 {
 TimeSection::TimeSection() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+TimeSection::TimeSection(const TimeSection &other) : GridDefinition(other) {
+  try {
+    mNumberOfTimeSteps = other.mNumberOfTimeSteps;
+    mUnitOfOffsetFromReferenceTime = other.mUnitOfOffsetFromReferenceTime;
+    mOffsetFromReferenceOfFirstTime = other.mOffsetFromReferenceOfFirstTime;
+    mTypeOfTimeIncrement = other.mTypeOfTimeIncrement;
+    mUnitOfTimeIncrement = other.mUnitOfTimeIncrement;
+    mTimeIncrement = other.mTimeIncrement;
+    mYear = other.mYear;
+    mMonth = other.mMonth;
+    mDay = other.mDay;
+    mHour = other.mHour;
+    mMinute = other.mMinute;
+    mSecond = other.mSecond;
+    mNumberOfVerticalPoints = other.mNumberOfVerticalPoints;
+    mPhysicalMeaningOfVerticalCoordinate = other.mPhysicalMeaningOfVerticalCoordinate;
+    mVerticalCoordinate = other.mVerticalCoordinate;
+    mNC = other.mNC;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 TimeSection::~TimeSection() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -58,7 +79,35 @@ void TimeSection::read(MemoryReader &memoryReader) {
     mVerticalCoordinate = memoryReader.read_UInt8_opt();
     mNC = memoryReader.read_UInt16_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void TimeSection::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mNumberOfTimeSteps;
+    dataWriter << mUnitOfOffsetFromReferenceTime;
+    dataWriter << mOffsetFromReferenceOfFirstTime;
+    dataWriter << mTypeOfTimeIncrement;
+    dataWriter << mUnitOfTimeIncrement;
+    dataWriter << mTimeIncrement;
+    dataWriter << mYear;
+    dataWriter << mMonth;
+    dataWriter << mDay;
+    dataWriter << mHour;
+    dataWriter << mMinute;
+    dataWriter << mSecond;
+    dataWriter << mNumberOfVerticalPoints;
+    dataWriter << mPhysicalMeaningOfVerticalCoordinate;
+    dataWriter << mVerticalCoordinate;
+    dataWriter << mNC;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -104,7 +153,7 @@ void TimeSection::getAttributeList(std::string prefix, T::AttributeList &attribu
     sprintf(name, "%sTimeSection.NC", prefix.c_str());
     attributeList.addAttribute(name, toString(mNC));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -135,7 +184,7 @@ void TimeSection::print(std::ostream &stream, uint level, uint optionFlags) cons
     stream << space(level) << "- VerticalCoordinate = " << toString(mVerticalCoordinate) << "\n";
     stream << space(level) << "- NC = " << toString(mNC) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -178,7 +227,21 @@ T::Hash TimeSection::countHash() {
       boost::hash_combine(seed, *mNC);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint TimeSection::getTemplateNumber() const {
+  return 1200;
+}
+
+GridDefinition *TimeSection::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new TimeSection(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -188,7 +251,7 @@ const T::UInt32_opt &TimeSection::getNumberOfTimeSteps() const {
   try {
     return mNumberOfTimeSteps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -198,7 +261,7 @@ const T::UInt8_opt &TimeSection::getUnitOfOffsetFromReferenceTime() const {
   try {
     return mUnitOfOffsetFromReferenceTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -208,7 +271,7 @@ const T::UInt32_opt &TimeSection::getOffsetFromReferenceOfFirstTime() const {
   try {
     return mOffsetFromReferenceOfFirstTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -218,7 +281,7 @@ const T::UInt8_opt &TimeSection::getTypeOfTimeIncrement() const {
   try {
     return mTypeOfTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -228,7 +291,7 @@ const T::UInt8_opt &TimeSection::getUnitOfTimeIncrement() const {
   try {
     return mUnitOfTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -238,7 +301,7 @@ const T::UInt32_opt &TimeSection::getTimeIncrement() const {
   try {
     return mTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -248,7 +311,7 @@ const T::UInt16_opt &TimeSection::getYear() const {
   try {
     return mYear;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -258,7 +321,7 @@ const T::UInt8_opt &TimeSection::getMonth() const {
   try {
     return mMonth;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -268,7 +331,7 @@ const T::UInt8_opt &TimeSection::getDay() const {
   try {
     return mDay;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -278,7 +341,7 @@ const T::UInt8_opt &TimeSection::getHour() const {
   try {
     return mHour;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -288,7 +351,7 @@ const T::UInt8_opt &TimeSection::getMinute() const {
   try {
     return mMinute;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -298,7 +361,7 @@ const T::UInt8_opt &TimeSection::getSecond() const {
   try {
     return mSecond;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -308,7 +371,7 @@ const T::UInt16_opt &TimeSection::getNumberOfVerticalPoints() const {
   try {
     return mNumberOfVerticalPoints;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -318,7 +381,7 @@ const T::UInt8_opt &TimeSection::getPhysicalMeaningOfVerticalCoordinate() const 
   try {
     return mPhysicalMeaningOfVerticalCoordinate;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -328,7 +391,7 @@ const T::UInt8_opt &TimeSection::getVerticalCoordinate() const {
   try {
     return mVerticalCoordinate;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -338,7 +401,7 @@ const T::UInt16_opt &TimeSection::getNC() const {
   try {
     return mNC;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -346,7 +409,7 @@ void TimeSection::setNumberOfTimeSteps(T::UInt32_opt numberOfTimeSteps) {
   try {
     mNumberOfTimeSteps = numberOfTimeSteps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -354,7 +417,7 @@ void TimeSection::setUnitOfOffsetFromReferenceTime(T::UInt8_opt unitOfOffsetFrom
   try {
     mUnitOfOffsetFromReferenceTime = unitOfOffsetFromReferenceTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -362,7 +425,7 @@ void TimeSection::setOffsetFromReferenceOfFirstTime(T::UInt32_opt offsetFromRefe
   try {
     mOffsetFromReferenceOfFirstTime = offsetFromReferenceOfFirstTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -370,7 +433,7 @@ void TimeSection::setTypeOfTimeIncrement(T::UInt8_opt typeOfTimeIncrement) {
   try {
     mTypeOfTimeIncrement = typeOfTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -378,7 +441,7 @@ void TimeSection::setUnitOfTimeIncrement(T::UInt8_opt unitOfTimeIncrement) {
   try {
     mUnitOfTimeIncrement = unitOfTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -386,7 +449,7 @@ void TimeSection::setTimeIncrement(T::UInt32_opt timeIncrement) {
   try {
     mTimeIncrement = timeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -394,7 +457,7 @@ void TimeSection::setYear(T::UInt16_opt year) {
   try {
     mYear = year;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -402,7 +465,7 @@ void TimeSection::setMonth(T::UInt8_opt month) {
   try {
     mMonth = month;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -410,7 +473,7 @@ void TimeSection::setDay(T::UInt8_opt day) {
   try {
     mDay = day;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -418,7 +481,7 @@ void TimeSection::setHour(T::UInt8_opt hour) {
   try {
     mHour = hour;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -426,7 +489,7 @@ void TimeSection::setMinute(T::UInt8_opt minute) {
   try {
     mMinute = minute;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -434,7 +497,7 @@ void TimeSection::setSecond(T::UInt8_opt second) {
   try {
     mSecond = second;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -442,7 +505,7 @@ void TimeSection::setNumberOfVerticalPoints(T::UInt16_opt numberOfVerticalPoints
   try {
     mNumberOfVerticalPoints = numberOfVerticalPoints;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -450,7 +513,7 @@ void TimeSection::setPhysicalMeaningOfVerticalCoordinate(T::UInt8_opt physicalMe
   try {
     mPhysicalMeaningOfVerticalCoordinate = physicalMeaningOfVerticalCoordinate;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -458,7 +521,7 @@ void TimeSection::setVerticalCoordinate(T::UInt8_opt verticalCoordinate) {
   try {
     mVerticalCoordinate = verticalCoordinate;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -466,7 +529,7 @@ void TimeSection::setNC(T::UInt16_opt nC) {
   try {
     mNC = nC;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

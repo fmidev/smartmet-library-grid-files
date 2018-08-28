@@ -14,13 +14,13 @@ MercatorImpl::MercatorImpl()
   try
   {
     mGridProjection = T::GridProjection::Mercator;
-    mSr_mercator = NULL;
-    mCt_latlon2mercator = NULL;
-    mCt_mercator2latlon = NULL;
+    mSr_mercator = nullptr;
+    mCt_latlon2mercator = nullptr;
+    mCt_mercator2latlon = nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -35,13 +35,13 @@ MercatorImpl::MercatorImpl(const MercatorImpl& other)
 {
   try
   {
-    mSr_mercator = NULL;
-    mCt_latlon2mercator = NULL;
-    mCt_mercator2latlon = NULL;
+    mSr_mercator = nullptr;
+    mCt_latlon2mercator = nullptr;
+    mCt_mercator2latlon = nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -55,18 +55,37 @@ MercatorImpl::~MercatorImpl()
 {
   try
   {
-    if (mSr_mercator != NULL)
+    if (mSr_mercator != nullptr)
       mSpatialReference.DestroySpatialReference(mSr_mercator);
 
-    if (mCt_latlon2mercator != NULL)
+    if (mCt_latlon2mercator != nullptr)
       OCTDestroyCoordinateTransformation(mCt_latlon2mercator);
 
-    if (mCt_mercator2latlon != NULL)
+    if (mCt_mercator2latlon != nullptr)
       OCTDestroyCoordinateTransformation(mCt_mercator2latlon);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
+  }
+}
+
+
+
+
+
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* MercatorImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new MercatorImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -92,7 +111,7 @@ void MercatorImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -150,7 +169,7 @@ T::Coordinate_vec MercatorImpl::getGridCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -166,17 +185,17 @@ T::Coordinate_vec MercatorImpl::getGridCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt MercatorImpl::getGridDimensions() const
+T::Dimensions MercatorImpl::getGridDimensions() const
 {
   try
   {
     uint ni = (uint)mNi;
     uint nj = (uint)mNj;
-    return T::Dimensions{ni,nj};
+    return T::Dimensions(ni,nj);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -237,7 +256,7 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -258,7 +277,7 @@ bool MercatorImpl::reverseXDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -279,7 +298,7 @@ bool MercatorImpl::reverseYDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -337,16 +356,16 @@ void MercatorImpl::initSpatialReference()
     mSr_mercator = mSpatialReference.Clone();
 
     mCt_latlon2mercator = OGRCreateCoordinateTransformation(&sr_latlon,mSr_mercator);
-    if (mCt_latlon2mercator == NULL)
+    if (mCt_latlon2mercator == nullptr)
       throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
 
     mCt_mercator2latlon = OGRCreateCoordinateTransformation(mSr_mercator,&sr_latlon);
-    if (mCt_mercator2latlon == NULL)
+    if (mCt_mercator2latlon == nullptr)
       throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

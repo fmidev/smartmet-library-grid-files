@@ -18,10 +18,39 @@ TimeIntervalSimulatedSatelliteEnsembleProductImpl::TimeIntervalSimulatedSatellit
 
 
 
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalSimulatedSatelliteEnsembleProductImpl::TimeIntervalSimulatedSatelliteEnsembleProductImpl(const TimeIntervalSimulatedSatelliteEnsembleProductImpl& other)
+:TimeIntervalSimulatedSatelliteEnsembleProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 TimeIntervalSimulatedSatelliteEnsembleProductImpl::~TimeIntervalSimulatedSatelliteEnsembleProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* TimeIntervalSimulatedSatelliteEnsembleProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new TimeIntervalSimulatedSatelliteEnsembleProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProductImpl::read(MemoryReader& memor
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

@@ -12,12 +12,15 @@ namespace GRIB2
 class EnsembleReforecastImpl : public EnsembleReforecast
 {
   public:
-                      EnsembleReforecastImpl();
-    virtual           ~EnsembleReforecastImpl();
+                        EnsembleReforecastImpl();
+                        EnsembleReforecastImpl(const EnsembleReforecastImpl& other);
+    virtual             ~EnsembleReforecastImpl();
 
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

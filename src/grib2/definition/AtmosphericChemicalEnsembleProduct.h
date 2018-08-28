@@ -8,13 +8,14 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../ProductDefinition.h"
 #include "EpsSettings.h"
 #include "HorizontalSettings.h"
 #include "ParameterChemicalSettings.h"
 #include "PointInTimeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -23,21 +24,25 @@ namespace GRIB2 {
 class AtmosphericChemicalEnsembleProduct : public ProductDefinition {
 public:
   AtmosphericChemicalEnsembleProduct();
+  AtmosphericChemicalEnsembleProduct(const AtmosphericChemicalEnsembleProduct &other);
   virtual ~AtmosphericChemicalEnsembleProduct();
 
+  virtual uint getTemplateNumber() const;
+  virtual ProductDefinition *createProductDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const ParameterChemicalSettings *getParameterChemical() const;
-  void setParameterChemical(ParameterChemicalSettings parameterChemical);
-  const PointInTimeSettings *getPointInTime() const;
-  void setPointInTime(PointInTimeSettings pointInTime);
-  const HorizontalSettings *getHorizontal() const;
-  void setHorizontal(HorizontalSettings horizontal);
-  const EpsSettings *getEps() const;
-  void setEps(EpsSettings eps);
+  ParameterChemicalSettings *getParameterChemical() const;
+  void setParameterChemical(ParameterChemicalSettings &parameterChemical);
+  PointInTimeSettings *getPointInTime() const;
+  void setPointInTime(PointInTimeSettings &pointInTime);
+  HorizontalSettings *getHorizontal() const;
+  void setHorizontal(HorizontalSettings &horizontal);
+  EpsSettings *getEps() const;
+  void setEps(EpsSettings &eps);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

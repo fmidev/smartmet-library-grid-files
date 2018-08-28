@@ -8,10 +8,11 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "ResolutionSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -20,9 +21,11 @@ namespace GRIB2 {
 class VariableLatLonSettings {
 public:
   VariableLatLonSettings();
+  VariableLatLonSettings(const VariableLatLonSettings &other);
   virtual ~VariableLatLonSettings();
 
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
@@ -35,10 +38,10 @@ public:
   void setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAngleOfTheInitialProductionDomain);
   const T::UInt32_opt &getSubdivisionsOfBasicAngle() const;
   void setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasicAngle);
-  const ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings resolution);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings &resolution);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
   const T::UInt32_opt &getLongitudes() const;
   void setLongitudes(T::UInt32_opt longitudes);
   const T::Int32_opt &getLatitudes() const;

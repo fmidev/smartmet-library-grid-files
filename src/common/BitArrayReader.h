@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Exception.h"
+#include "Typedefs.h"
 
 namespace SmartMet
 {
@@ -20,27 +21,27 @@ namespace SmartMet
 class BitArrayReader
 {
   public:
-                          BitArrayReader(const unsigned char *data,unsigned long long numberOfBits);
-    virtual               ~BitArrayReader();
+               BitArrayReader(const unsigned char *data,ulonglong numberOfBits);
+    virtual    ~BitArrayReader();
 
-    unsigned long long    getNumberOfBits();
-    unsigned long long    getReadPosition();
-    void                  setReadPosition(unsigned long long readPosition);
-    bool                  readBit();
-    void                  readBits(unsigned int numberOfBits,int& value);
-    void                  readBits(unsigned int numberOfBits,unsigned int& value);
-    void                  readBits(unsigned int numberOfBits,unsigned long long& value);
-    void                  readBits(unsigned int numberOfBits,int *_array,unsigned int arraySize);
+    ulonglong  getNumberOfBits();
+    ulonglong  getReadPosition();
+    void       setReadPosition(ulonglong readPosition);
+    bool       readBit();
+    void       readBits(unsigned int numberOfBits,int& value);
+    void       readBits(unsigned int numberOfBits,unsigned int& value);
+    void       readBits(unsigned int numberOfBits,ulonglong& value);
+    void       readBits(unsigned int numberOfBits,int *_array,unsigned int arraySize);
 
   protected:
 
-    bool                  readBitNoCheck();
+    bool       readBitNoCheck();
 
     /*! \brief The size of the bit array/stream. */
-    unsigned long long    mNumberOfBits;
+    ulonglong  mNumberOfBits;
 
     /*! \brief The current read position of the bit array/stream. */
-    unsigned long long    mReadPosition;
+    ulonglong  mReadPosition;
 
     /*! \brief The pointer to the beginning of the bit array/stream. */
     const unsigned char*  mData;

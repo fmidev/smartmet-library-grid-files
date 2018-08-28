@@ -23,6 +23,17 @@ SimplePacking::SimplePacking()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+SimplePacking::SimplePacking(const SimplePacking& other)
+:DataDefinition(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 SimplePacking::~SimplePacking()
@@ -41,9 +52,26 @@ PackingMethod SimplePacking::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
+
+
+
+
+DataDefinition* SimplePacking::createDataDefinition() const
+{
+  try
+  {
+    return (DataDefinition*) new SimplePacking(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
 
 
 
@@ -60,8 +88,8 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
     std::float_t referenceValue = message->getReferenceValue();
     std::uint8_t bitsPerValue = message->getBitsPerValue();
 
-    if (data == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to NULL!");
+    if (data == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     // If 'bitsPerValue' is zero then all values are same as the reference value
 
@@ -104,7 +132,7 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -116,7 +144,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
   try
   {
     std::size_t numOfValues = message->getGridOriginalValueCount();
-    T::Dimensions_opt dimensions = message->getGridDimensions();
+    T::Dimensions dimensions = message->getGridDimensions();
     T::Data_ptr data = message->getDataPtr();
     std::size_t dataSize = message->getDataSize();
     T::Data_ptr bitmap = message->getBitmapDataPtr();
@@ -242,7 +270,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -265,7 +293,7 @@ void SimplePacking::print(std::ostream& stream,uint level,uint optionFlags) cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

@@ -21,17 +21,26 @@ namespace GRIB2 {
 TimeIntervalAerosolEnsembleProduct::TimeIntervalAerosolEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalAerosolEnsembleProduct::TimeIntervalAerosolEnsembleProduct(const TimeIntervalAerosolEnsembleProduct &other) : ProductDefinition(other) {
+  try {
+    mParameterAerosol = other.mParameterAerosol;
+    mHorizontal = other.mHorizontal;
+    mEps = other.mEps;
+    mStatistical = other.mStatistical;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 TimeIntervalAerosolEnsembleProduct::~TimeIntervalAerosolEnsembleProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -46,7 +55,23 @@ void TimeIntervalAerosolEnsembleProduct::read(MemoryReader &memoryReader) {
     mEps.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void TimeIntervalAerosolEnsembleProduct::write(DataWriter &dataWriter) {
+  try {
+    mParameterAerosol.write(dataWriter);
+    mHorizontal.write(dataWriter);
+    mEps.write(dataWriter);
+    mStatistical.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -68,7 +93,7 @@ void TimeIntervalAerosolEnsembleProduct::getAttributeList(std::string prefix, T:
     sprintf(name, "%sTimeIntervalAerosolEnsembleProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -87,7 +112,7 @@ void TimeIntervalAerosolEnsembleProduct::print(std::ostream &stream, uint level,
     mEps.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -102,79 +127,93 @@ T::Hash TimeIntervalAerosolEnsembleProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint TimeIntervalAerosolEnsembleProduct::getTemplateNumber() const {
+  return 47;
+}
+
+ProductDefinition *TimeIntervalAerosolEnsembleProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new TimeIntervalAerosolEnsembleProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameterAerosol} attribute. */
 
-const ParameterAerosolSettings *TimeIntervalAerosolEnsembleProduct::getParameterAerosol() const {
+ParameterAerosolSettings *TimeIntervalAerosolEnsembleProduct::getParameterAerosol() const {
   try {
-    return &mParameterAerosol;
+    return (ParameterAerosolSettings *)&mParameterAerosol;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
-const HorizontalSettings *TimeIntervalAerosolEnsembleProduct::getHorizontal() const {
+HorizontalSettings *TimeIntervalAerosolEnsembleProduct::getHorizontal() const {
   try {
-    return &mHorizontal;
+    return (HorizontalSettings *)&mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEps} attribute. */
 
-const EpsSettings *TimeIntervalAerosolEnsembleProduct::getEps() const {
+EpsSettings *TimeIntervalAerosolEnsembleProduct::getEps() const {
   try {
-    return &mEps;
+    return (EpsSettings *)&mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mStatistical} attribute. */
 
-const StatisticalSettings *TimeIntervalAerosolEnsembleProduct::getStatistical() const {
+StatisticalSettings *TimeIntervalAerosolEnsembleProduct::getStatistical() const {
   try {
-    return &mStatistical;
+    return (StatisticalSettings *)&mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSettings parameterAerosol) {
+void TimeIntervalAerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSettings &parameterAerosol) {
   try {
     mParameterAerosol = parameterAerosol;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setHorizontal(HorizontalSettings horizontal) {
+void TimeIntervalAerosolEnsembleProduct::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setEps(EpsSettings eps) {
+void TimeIntervalAerosolEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalAerosolEnsembleProduct::setStatistical(StatisticalSettings statistical) {
+void TimeIntervalAerosolEnsembleProduct::setStatistical(StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

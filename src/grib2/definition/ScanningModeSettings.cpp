@@ -22,17 +22,23 @@ ScanningModeSettings::ScanningModeSettings() {
   try {
     mScanningMode = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+ScanningModeSettings::ScanningModeSettings(const ScanningModeSettings &other) {
+  try {
+    mScanningMode = other.mScanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 ScanningModeSettings::~ScanningModeSettings() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -44,7 +50,20 @@ void ScanningModeSettings::read(MemoryReader &memoryReader) {
   try {
     mScanningMode = memoryReader.read_uint8();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void ScanningModeSettings::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mScanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -60,7 +79,7 @@ void ScanningModeSettings::getAttributeList(std::string prefix, T::AttributeList
     sprintf(name, "%sScanningModeSettings.ScanningMode", prefix.c_str());
     attributeList.addAttribute(name, toString(mScanningMode));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -76,7 +95,7 @@ void ScanningModeSettings::print(std::ostream &stream, uint level, uint optionFl
     stream << space(level) << "ScanningModeSettings\n";
     stream << space(level) << "- ScanningMode = " << toString(mScanningMode) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -88,7 +107,7 @@ T::Hash ScanningModeSettings::countHash() {
     boost::hash_combine(seed, mScanningMode);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -98,7 +117,7 @@ std::uint8_t ScanningModeSettings::getScanningMode() const {
   try {
     return mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -106,7 +125,7 @@ void ScanningModeSettings::setScanningMode(std::uint8_t scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

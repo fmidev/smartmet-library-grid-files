@@ -31,7 +31,7 @@ AdditionalParameters::AdditionalParameters(
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", NULL);
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -106,11 +106,11 @@ bool AdditionalParameters::isAdditionalParameter(const char *parameterName)
     "model",
     "producer",
     "covertype",
-    NULL
+    nullptr
   };
 
   uint c = 0;
-  while (buildInParameter[c] != NULL)
+  while (buildInParameter[c] != nullptr)
   {
     if (strcasecmp(buildInParameter[c],parameterName) == 0)
       return true;
@@ -262,7 +262,7 @@ bool AdditionalParameters::getParameterValueByLocation(
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", NULL);
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -547,7 +547,7 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", NULL);
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -571,7 +571,7 @@ std::string AdditionalParameters::formatDate(
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", NULL);
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -591,7 +591,7 @@ std::string AdditionalParameters::formatDate(
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", NULL);
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

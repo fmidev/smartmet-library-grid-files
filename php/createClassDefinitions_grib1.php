@@ -31,7 +31,7 @@ $parents = array (
 $templates = array (
     "grid_definition_0" => "LatLon",
     "grid_definition_1" => "Mercator",
-    "grid_definition_2" => "Gnomonic",
+    "grid_definition.2" => "Gnomonic",
     "grid_definition_3" => "LambertConformal",
     "grid_definition_4" => "Gaussian",
     "grid_definition_5" => "PolarStereographic",
@@ -93,7 +93,6 @@ if ($pos > 0)
   $pos = $pos + 1;
 
 $name = substr ( $templateFile, $pos, - 4 );
-// $name = substr($templateFile,strpos($templateFile,"grid_")+5,-4);
 
 $class = $templates [$name];
 $outdir = $argv [2];
@@ -112,6 +111,9 @@ else
   echo str_pad ( $name, PADDING ), "--> $class\n";
   process_template ( $templateFile, $name, $class, $outdir );
 }
+
+
+
 
 
 function process_template($file, $name, $class, $outdir)
@@ -173,9 +175,12 @@ function process_template($file, $name, $class, $outdir)
   $getters = "";
   $setters = "";
   
+  
+  
   // ********** generate the header **********
 
   $parentdecl = "";
+  $parent = "";
 
   $section = extract_section ( $name );
   if (isset ( $class ) && isset ( $parents [$class] ))
@@ -200,14 +205,24 @@ function process_template($file, $name, $class, $outdir)
   $body .= "class $class $parentdecl\n";
   $body .= "{ public:\n";
   $body .= "${class}();\n";
-  // $body .= "${class}(const ${class} & other);\n";
+  $body .= "${class}(const ${class}& other);\n";
   $body .= "virtual ~${class}();\n\n";
 
-  $body .= "virtual void read(MemoryReader& memoryReader);\n";
   $body .= "virtual void getAttributeList(std::string prefix,T::AttributeList& attributeList) const;\n";
+  $body .= "virtual void read(MemoryReader& memoryReader);\n";
+  $body .= "virtual void write(DataWriter& dataWriter);\n";
   $body .= "virtual void print(std::ostream& stream,uint level,uint optionFlags) const;\n";
   $body .= "virtual T::Hash countHash();\n\n";
 
+  $p = explode("_", $name);
+  if ($p[0] == "grid" && $p[1] == "definition" &&  is_numeric($p[2]))
+  {  
+    $body .= "virtual uint getTemplateNumber() const;\n";
+
+    if ($parent > " ")
+      $body .= "virtual ${parent}* create${parent}() const;\n";
+  }
+  
   $protected = "\n\nprotected:\n\n";
 
   $footer = "\n};\n\n} // namespace GRIB1\n} // namespace SmartMet\n";
@@ -268,13 +283,13 @@ function process_template($file, $name, $class, $outdir)
         $var = lcfirst ( $var );
         $Var = ucfirst ( $var );
 
-        $body .= "const $incclass * get$Var() const;\n";
+        $body .= "$incclass * get$Var() const;\n";
     
         $getters .= "\n/*! \brief The method returns the pointer to the {@link m${Var}} attribute. */\n\n";        
-        $getters .= "const $incclass * ${class}::get$Var() const { try { return &m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+        $getters .= "$incclass * ${class}::get$Var() const { try { return ($incclass*)&m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
 
-        $body .= "void set$Var($incclass $var);\n";
-        $setters .= "void ${class}::set$Var($incclass $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+        $body .= "void set$Var($incclass& $var);\n";
+        $setters .= "void ${class}::set$Var($incclass& $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
         
         $protected .= "$incclass m$Var;\n";
         $headers ["\"${incclass}.h\""] = 1;
@@ -377,6 +392,7 @@ function process_template($file, $name, $class, $outdir)
   }
 
   // Add unique includes
+  $headers ['"../../common/DataWriter.h"'] = true;
   $headers ['"../../common/MemoryReader.h"'] = true;
   $headers ['"../../common/AttributeList.h"'] = true;
   $headers ['"../../grid/Typedefs.h"'] = true;
@@ -391,6 +407,8 @@ function process_template($file, $name, $class, $outdir)
   $outfile = $outdir . "/" . $class . ".h";
   file_put_contents ( $outfile, $output );
   system ( "clang-format -i -style=file $outfile" );
+
+
 
   
   // ********** generate the cpp file **********
@@ -412,6 +430,8 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "#include <boost/functional/hash.hpp>\n";
   $cpp .= "\n";
   $cpp .= "namespace SmartMet { namespace GRIB1 {\n";
+
+
 
 
   // ##### Adding the constructor
@@ -439,10 +459,32 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
 
 
+
+
+  // ##### Adding the copy constructor
+
+  $cpp .= "\n/*! \brief The copy constructor of the class. */\n\n";
+  $cpp .= "${class}::${class}(const ${class}& other)\n";
+
+  if ($parent > " ")
+    $cpp .= ":${parent}(other)\n";  
+
+  $cpp .= "{ try {\n";
+
+  foreach ( $members as $Var => $type )
+  {
+    $cpp .= "m$Var = other.m$Var;\n";
+  }
+
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+
+
+
+
   // ##### Adding the destructor
 
   $cpp .= "\n/*! \brief The destructor of the class. */\n\n";
-  $cpp .= "${class}::~${class}() { try { } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+  $cpp .= "${class}::~${class}() {\n}\n\n";
 
 
   // ##### Adding the read method.
@@ -481,8 +523,35 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
 
 
+
   
-    // ##### Adding the getAttributeList method.
+  // ##### Adding the write method.
+  
+  $cpp .= "\n/*! \brief The method writes all data related to the current section object.\n\n";
+  $cpp .= "        \param dataWriter  This object controls the write stream. \n";
+  $cpp .= "*/\n\n";
+
+  $cpp .= "void ${class}::write(DataWriter& dataWriter) {\n try {\n";
+
+  foreach ( $members as $Var => $type )
+  {
+    $var = lcfirst ( $Var );
+
+    if ($type == "class")
+      $cpp .= "m$Var.write(dataWriter);\n";
+    else if ($cpptype == "std::int24_t")
+      $cpp .= "dataWriter.write_int24(m$Var);\n";
+    else if ($cpptype == "std::uint24_t")
+      $cpp .= "dataWriter.write_uint24(m$Var);\n";
+    else
+      $cpp .= "dataWriter << m$Var;";
+  }
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+
+
+
+  
+  // ##### Adding the getAttributeList method.
 
   $cpp .= "/*! \brief The method is used for collecting the current class attributeList.\n\n";
 
@@ -549,6 +618,8 @@ function process_template($file, $name, $class, $outdir)
     }
   }
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+
+
   
   
   // ##### Adding the hash method.
@@ -558,9 +629,35 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
 
   
+  
+   
+  if ($p[0] == "grid" && $p[1] == "definition" &&  is_numeric($p[2]))
+  {  
+  
+    // ##### Adding the getTemplateNumber method.
+  
+    $cpp .= "\n/*! \brief The method return the template number of the current class. */\n\n";
+    $cpp .= "uint ${class}::getTemplateNumber() const {return ${p[2]};}\n\n";
+
+
+    // ##### Adding the create method.
+    
+    if ($parent > " ")
+    {
+      $cpp .= "${parent}* ${class}::create${parent}() const\n";
+      $cpp .= "{ try { return (${parent}*)new ${class}(*this);\n";
+      $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+    }    
+  }
+
+
+
+
   // ##### Adding the getters.
   
   $cpp .= $getters;
+
+
 
 
   // ##### Adding the setters.
@@ -570,9 +667,15 @@ function process_template($file, $name, $class, $outdir)
 
   $cpp .= "\n} // namespace GRIB1\n} // namespace SmartMet\n";
 
+
+
   file_put_contents ( $outfile, $cpp );
   system ( "clang-format -i -style=file $outfile" );
 }
+
+
+
+
 
 // Assuming string of form 'include "filename.def" ... ' return filename
 function extract_include($line)
@@ -580,6 +683,10 @@ function extract_include($line)
   preg_match ( '/\s*include\s+"([\w.]+)\.def"/', $line, $matches );
   return $matches [1];
 }
+
+
+
+
 
 // Assuming string of form 'template commonBlock "grib1/filename.def" ... ' return filename
 function extract_template($line)
@@ -589,6 +696,8 @@ function extract_template($line)
   $name2 = substr ( $name, 0, strpos ( $name, "\"" ) );
   return $templateDir . $name2;
 }
+
+
 
 
 /*
@@ -608,6 +717,7 @@ function extract_template($line)
  * Why not just use ('4.15.table',masterDir,localDir) ???
  * To prevent local tables?
  */
+
 function extract_codetable($line)
 {
   preg_match ( "/\s*codetable\[\d+\]\s*\w+.*'(.*)\.table'/", $line, $matches );
@@ -618,6 +728,9 @@ function extract_codetable($line)
     $match = substr ( $match, 29 );
   return $match;
 }
+
+
+
 
 
 /*
@@ -634,6 +747,9 @@ function extract_flagtable($line)
     $match = substr ( $match, 29 );
   return $match;
 }
+
+
+
 
 
 /*

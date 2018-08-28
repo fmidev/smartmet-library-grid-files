@@ -18,10 +18,39 @@ ProbabilityForecastImpl::ProbabilityForecastImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+ProbabilityForecastImpl::ProbabilityForecastImpl(const ProbabilityForecastImpl& other)
+:ProbabilityForecast(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 ProbabilityForecastImpl::~ProbabilityForecastImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* ProbabilityForecastImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new ProbabilityForecastImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void ProbabilityForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -70,7 +99,7 @@ T::ParamLevel ProbabilityForecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +123,7 @@ T::ParamLevelId ProbabilityForecastImpl::getGribParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

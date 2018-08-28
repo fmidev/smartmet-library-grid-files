@@ -39,6 +39,24 @@ StretchedLatLonImpl::~StretchedLatLonImpl()
 
 
 
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* StretchedLatLonImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new StretchedLatLonImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -63,7 +81,7 @@ void StretchedLatLonImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -124,7 +142,7 @@ T::Coordinate_vec StretchedLatLonImpl::getGridCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -140,15 +158,15 @@ T::Coordinate_vec StretchedLatLonImpl::getGridCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt StretchedLatLonImpl::getGridDimensions() const
+T::Dimensions StretchedLatLonImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions{mNi, mNj};
+    return T::Dimensions(mNi, mNj);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -215,7 +233,7 @@ bool StretchedLatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -254,7 +272,7 @@ void StretchedLatLonImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

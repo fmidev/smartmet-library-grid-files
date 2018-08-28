@@ -18,10 +18,39 @@ AreaProcessedCrossSectionProductImpl::AreaProcessedCrossSectionProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+AreaProcessedCrossSectionProductImpl::AreaProcessedCrossSectionProductImpl(const AreaProcessedCrossSectionProductImpl& other)
+:AreaProcessedCrossSectionProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 AreaProcessedCrossSectionProductImpl::~AreaProcessedCrossSectionProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* AreaProcessedCrossSectionProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new AreaProcessedCrossSectionProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void AreaProcessedCrossSectionProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -67,7 +96,7 @@ T::ParamLevel AreaProcessedCrossSectionProductImpl::getGribParameterLevel() cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -88,7 +117,7 @@ T::ParamLevelId AreaProcessedCrossSectionProductImpl::getGribParameterLevelId() 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "ResolutionFlagsSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -21,13 +22,17 @@ namespace GRIB1 {
 class SpaceView : public GridDefinition {
 public:
   SpaceView();
+  SpaceView(const SpaceView &other);
   virtual ~SpaceView();
 
-  virtual void read(MemoryReader &memoryReader);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   std::uint16_t getNx() const;
   void setNx(std::uint16_t nx);
   std::uint16_t getNy() const;
@@ -36,8 +41,8 @@ public:
   void setLatitudeOfSubSatellitePoint(std::int24_t latitudeOfSubSatellitePoint);
   std::int24_t getLongitudeOfSubSatellitePoint() const;
   void setLongitudeOfSubSatellitePoint(std::int24_t longitudeOfSubSatellitePoint);
-  const ResolutionFlagsSettings *getResolutionFlags() const;
-  void setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
+  ResolutionFlagsSettings *getResolutionFlags() const;
+  void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
   std::uint24_t getDx() const;
   void setDx(std::uint24_t dx);
   std::uint24_t getDy() const;
@@ -46,8 +51,8 @@ public:
   void setXpInGridLengths(std::uint16_t xpInGridLengths);
   std::uint16_t getYpInGridLengths() const;
   void setYpInGridLengths(std::uint16_t ypInGridLengths);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
   std::uint24_t getOrientationOfTheGrid() const;
   void setOrientationOfTheGrid(std::uint24_t orientationOfTheGrid);
   std::uint24_t getNrInRadiusOfEarth() const;

@@ -39,6 +39,24 @@ UnstructuredImpl::~UnstructuredImpl()
 
 
 
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* UnstructuredImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new UnstructuredImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -57,7 +75,7 @@ void UnstructuredImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -90,7 +108,7 @@ T::Coordinate_vec UnstructuredImpl::getGridCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt UnstructuredImpl::getGridDimensions() const
+T::Dimensions UnstructuredImpl::getGridDimensions() const
 {
   try
   {
@@ -98,7 +116,7 @@ T::Dimensions_opt UnstructuredImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -128,7 +146,7 @@ bool UnstructuredImpl::getGridPointByLatLonCoordinates(double lat,double lon,dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -151,7 +169,7 @@ void UnstructuredImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

@@ -21,17 +21,25 @@ namespace GRIB2 {
 EpsSettings::EpsSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+EpsSettings::EpsSettings(const EpsSettings &other) {
+  try {
+    mTypeOfEnsembleForecast = other.mTypeOfEnsembleForecast;
+    mPerturbationNumber = other.mPerturbationNumber;
+    mNumberOfForecastsInEnsemble = other.mNumberOfForecastsInEnsemble;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 EpsSettings::~EpsSettings() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -41,11 +49,26 @@ EpsSettings::~EpsSettings() {
 
 void EpsSettings::read(MemoryReader &memoryReader) {
   try {
-    mForecastType = memoryReader.read_UInt8_opt();
-    mForecastPerturbationNumber = memoryReader.read_UInt8_opt();
+    mTypeOfEnsembleForecast = memoryReader.read_UInt8_opt();
+    mPerturbationNumber = memoryReader.read_UInt8_opt();
     mNumberOfForecastsInEnsemble = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void EpsSettings::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mTypeOfEnsembleForecast;
+    dataWriter << mPerturbationNumber;
+    dataWriter << mNumberOfForecastsInEnsemble;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -59,13 +82,13 @@ void EpsSettings::getAttributeList(std::string prefix, T::AttributeList &attribu
   try {
     char name[300];
     sprintf(name, "%sEpsSettings.TypeOfEnsembleForecast", prefix.c_str());
-    attributeList.addAttribute(name, toString(mForecastType));
+    attributeList.addAttribute(name, toString(mTypeOfEnsembleForecast));
     sprintf(name, "%sEpsSettings.PerturbationNumber", prefix.c_str());
-    attributeList.addAttribute(name, toString(mForecastPerturbationNumber));
+    attributeList.addAttribute(name, toString(mPerturbationNumber));
     sprintf(name, "%sEpsSettings.NumberOfForecastsInEnsemble", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -79,11 +102,11 @@ void EpsSettings::getAttributeList(std::string prefix, T::AttributeList &attribu
 void EpsSettings::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "EpsSettings\n";
-    stream << space(level) << "- TypeOfEnsembleForecast = " << toString(mForecastType) << "\n";
-    stream << space(level) << "- PerturbationNumber = " << toString(mForecastPerturbationNumber) << "\n";
+    stream << space(level) << "- TypeOfEnsembleForecast = " << toString(mTypeOfEnsembleForecast) << "\n";
+    stream << space(level) << "- PerturbationNumber = " << toString(mPerturbationNumber) << "\n";
     stream << space(level) << "- NumberOfForecastsInEnsemble = " << toString(mNumberOfForecastsInEnsemble) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -92,35 +115,35 @@ void EpsSettings::print(std::ostream &stream, uint level, uint optionFlags) cons
 T::Hash EpsSettings::countHash() {
   try {
     std::size_t seed = 0;
-    if (mForecastType)
-      boost::hash_combine(seed, *mForecastType);
-    if (mForecastPerturbationNumber)
-      boost::hash_combine(seed, *mForecastPerturbationNumber);
+    if (mTypeOfEnsembleForecast)
+      boost::hash_combine(seed, *mTypeOfEnsembleForecast);
+    if (mPerturbationNumber)
+      boost::hash_combine(seed, *mPerturbationNumber);
     if (mNumberOfForecastsInEnsemble)
       boost::hash_combine(seed, *mNumberOfForecastsInEnsemble);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-/*! \brief The method returns the value of the {@link mForecastType} attribute. */
+/*! \brief The method returns the value of the {@link mTypeOfEnsembleForecast} attribute. */
 
 const T::UInt8_opt &EpsSettings::getTypeOfEnsembleForecast() const {
   try {
-    return mForecastType;
+    return mTypeOfEnsembleForecast;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-/*! \brief The method returns the value of the {@link mForecastPerturbationNumber} attribute. */
+/*! \brief The method returns the value of the {@link mPerturbationNumber} attribute. */
 
 const T::UInt8_opt &EpsSettings::getPerturbationNumber() const {
   try {
-    return mForecastPerturbationNumber;
+    return mPerturbationNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -130,23 +153,23 @@ const T::UInt8_opt &EpsSettings::getNumberOfForecastsInEnsemble() const {
   try {
     return mNumberOfForecastsInEnsemble;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void EpsSettings::setTypeOfEnsembleForecast(T::UInt8_opt forecastType) {
+void EpsSettings::setTypeOfEnsembleForecast(T::UInt8_opt typeOfEnsembleForecast) {
   try {
-    mForecastType = forecastType;
+    mTypeOfEnsembleForecast = typeOfEnsembleForecast;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void EpsSettings::setPerturbationNumber(T::UInt8_opt forecastPerturbationNumber) {
+void EpsSettings::setPerturbationNumber(T::UInt8_opt perturbationNumber) {
   try {
-    mForecastPerturbationNumber = forecastPerturbationNumber;
+    mPerturbationNumber = perturbationNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -154,7 +177,7 @@ void EpsSettings::setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForecastsI
   try {
     mNumberOfForecastsInEnsemble = numberOfForecastsInEnsemble;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

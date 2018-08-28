@@ -12,12 +12,15 @@ namespace GRIB2
 class ProcessedHovmollerProductImpl : public ProcessedHovmollerProduct
 {
   public:
-                      ProcessedHovmollerProductImpl();
-    virtual           ~ProcessedHovmollerProductImpl();
+                        ProcessedHovmollerProductImpl();
+                        ProcessedHovmollerProductImpl(const ProcessedHovmollerProductImpl& other);
+    virtual             ~ProcessedHovmollerProductImpl();
 
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

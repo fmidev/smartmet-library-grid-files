@@ -21,17 +21,24 @@ namespace GRIB2 {
 SimulatedSatelliteEnsembleProduct::SimulatedSatelliteEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+SimulatedSatelliteEnsembleProduct::SimulatedSatelliteEnsembleProduct(const SimulatedSatelliteEnsembleProduct &other) : ProductDefinition(other) {
+  try {
+    mSimulatedSatelliteProduct = other.mSimulatedSatelliteProduct;
+    mEps = other.mEps;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 SimulatedSatelliteEnsembleProduct::~SimulatedSatelliteEnsembleProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -44,7 +51,21 @@ void SimulatedSatelliteEnsembleProduct::read(MemoryReader &memoryReader) {
     mSimulatedSatelliteProduct.read(memoryReader);
     mEps.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void SimulatedSatelliteEnsembleProduct::write(DataWriter &dataWriter) {
+  try {
+    mSimulatedSatelliteProduct.write(dataWriter);
+    mEps.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -62,7 +83,7 @@ void SimulatedSatelliteEnsembleProduct::getAttributeList(std::string prefix, T::
     sprintf(name, "%sSimulatedSatelliteEnsembleProduct.", prefix.c_str());
     mEps.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -79,7 +100,7 @@ void SimulatedSatelliteEnsembleProduct::print(std::ostream &stream, uint level, 
     mSimulatedSatelliteProduct.print(stream, level + 1, optionFlags);
     mEps.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -92,43 +113,57 @@ T::Hash SimulatedSatelliteEnsembleProduct::countHash() {
     boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint SimulatedSatelliteEnsembleProduct::getTemplateNumber() const {
+  return 33;
+}
+
+ProductDefinition *SimulatedSatelliteEnsembleProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new SimulatedSatelliteEnsembleProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mSimulatedSatelliteProduct} attribute. */
 
-const SimulatedSatelliteProduct *SimulatedSatelliteEnsembleProduct::getSimulatedSatelliteProduct() const {
+SimulatedSatelliteProduct *SimulatedSatelliteEnsembleProduct::getSimulatedSatelliteProduct() const {
   try {
-    return &mSimulatedSatelliteProduct;
+    return (SimulatedSatelliteProduct *)&mSimulatedSatelliteProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEps} attribute. */
 
-const EpsSettings *SimulatedSatelliteEnsembleProduct::getEps() const {
+EpsSettings *SimulatedSatelliteEnsembleProduct::getEps() const {
   try {
-    return &mEps;
+    return (EpsSettings *)&mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void SimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSatelliteProduct simulatedSatelliteProduct) {
+void SimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSatelliteProduct &simulatedSatelliteProduct) {
   try {
     mSimulatedSatelliteProduct = simulatedSatelliteProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void SimulatedSatelliteEnsembleProduct::setEps(EpsSettings eps) {
+void SimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

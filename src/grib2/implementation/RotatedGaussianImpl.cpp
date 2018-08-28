@@ -39,6 +39,24 @@ RotatedGaussianImpl::~RotatedGaussianImpl()
 
 
 
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* RotatedGaussianImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new RotatedGaussianImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -57,7 +75,7 @@ void RotatedGaussianImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -90,18 +108,18 @@ T::Coordinate_vec RotatedGaussianImpl::getGridCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt RotatedGaussianImpl::getGridDimensions() const
+T::Dimensions RotatedGaussianImpl::getGridDimensions() const
 {
   try
   {
     const auto defs = mGaussian.getGrid();
     uint nx = *defs->getNi();
     uint ny = *defs->getNj();
-    return T::Dimensions{nx, ny};
+    return T::Dimensions(nx, ny);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -130,7 +148,7 @@ bool RotatedGaussianImpl::getGridPointByLatLonCoordinates(double lat,double lon,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -153,7 +171,7 @@ void RotatedGaussianImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

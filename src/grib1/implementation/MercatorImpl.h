@@ -15,8 +15,10 @@ class MercatorImpl : public Mercator
                       MercatorImpl(const MercatorImpl& other);
     virtual           ~MercatorImpl();
 
+    GridDefinition*   createGridDefinition() const;
+
     T::Coordinate_vec getGridCoordinates() const;
-    T::Dimensions_opt getGridDimensions() const;
+    T::Dimensions     getGridDimensions() const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     bool              reverseXDirection() const;
     bool              reverseYDirection() const;

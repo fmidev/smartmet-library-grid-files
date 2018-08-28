@@ -160,6 +160,12 @@ class GridDef
     short             getFmiParameterInterpolationMethod(GRIB1::Message& message);
     short             getFmiParameterInterpolationMethod(GRIB2::Message& message);
 
+    bool              getGribDefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib& def);
+    bool              getGrib2DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib2& def);
+
+    GRIB1::GridDef_ptr      getGrib1DefinitionByGeometryId(int geometryId);
+    GRIB2::GridDef_ptr      getGrib2DefinitionByGeometryId(int geometryId);
+
   protected:
 
     void                    updateGrib();
@@ -172,7 +178,6 @@ class GridDef
     GribParamDef_cptr       getGribParamDefByName(std::string gribParamName);
     GribParamDef_cptr       getGribParamDef(uint discipline,uint category,uint number);
 
-    GRIB1::GridDef_ptr      getGrib1DefinitionByGeometryId(int geometryId);
     GRIB1::GridDef_ptr      getGrib1Definition(GRIB1::Message& message);
     LevelDef_cptr           getGrib1LevelDef(uint levelId);
     Grib1ParamDef_cptr      getGrib1ParameterDefById(T::ParamId gribParamId);
@@ -181,12 +186,13 @@ class GridDef
     Grib1ParamDef_cptr      getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfParameter);
     TimeRangeDef_cptr       getGrib1TimeRangeDef(uint timeRangeId);
 
-    GRIB2::GridDef_ptr      getGrib2DefinitionByGeometryId(int geometryId);
     GRIB2::GridDef_ptr      getGrib2Definition(GRIB2::Message& message);
     LevelDef_cptr           getGrib2LevelDef(uint levelId);
     Grib2ParamDef_cptr      getGrib2ParameterDefById(T::ParamId gribParamId);
     Grib2ParamDef_cptr      getGrib2ParameterDefByName(std::string gribParamName);
     TimeRangeDef_cptr       getGrib2TimeRangeDef(uint timeRangeId);
+    FmiParameterId_grib*    getGribDefByFmiId(T::ParamId fmiParamId);
+    FmiParameterId_grib2*   getGrib2DefByFmiId(T::ParamId fmiParamId);
 
     void                    loadGeometryDefinitions(const char *filename);
     void                    loadGribParameterDefinitions(const char *filename);

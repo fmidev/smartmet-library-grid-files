@@ -1,12 +1,17 @@
 #pragma once
 
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 #include "../common/AttributeList.h"
 #include "../grib2/definition/ParameterSettings.h"
 #include "../grib2/definition/HorizontalSettings.h"
 #include "../grib2/definition/StatisticalSettings.h"
 #include "../grib2/definition/EpsSettings.h"
-
+#include "../grib2/definition/DerivedSettings.h"
+#include "../grib2/definition/RectangularClusterSettings.h"
+#include "../grib2/definition/ProbabilitySettings.h"
+#include "../grib2/definition/PercentileSettings.h"
+#include "../grib2/definition/CategoricalSettings.h"
 
 namespace SmartMet
 {
@@ -20,7 +25,10 @@ class ProductDefinition
   public:
 
                                         ProductDefinition();
+                                        ProductDefinition(const ProductDefinition& other);
     virtual                             ~ProductDefinition();
+
+    virtual ProductDefinition*          createProductDefinition() const;
 
     virtual void                        getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     virtual T::TimeString               getForecastTime(T::TimeString referenceTime) const;
@@ -29,17 +37,22 @@ class ProductDefinition
     virtual const T::UInt8_opt          getGribParameterCategory() const;
     virtual const T::UInt8_opt          getGribParameterNumber() const;
     virtual T::UInt8_opt                getGeneratingProcessIdentifier() const;
-    virtual void                        print(std::ostream& stream,uint level,uint optionFlags) const;
+    virtual uint                        getTemplateNumber() const;
+
+    virtual bool                        setProperty(uint propertyId,long long value);
     virtual void                        read(MemoryReader& memoryReader) {}
+    virtual void                        write(DataWriter& dataWriter) {}
+    virtual void                        print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    // These methods are used for fetching information that is needed for the parameter
-    // identification. The point is that we do not know which child classes contains this
-    // information, so if the information is not present then we get NULL pointer.
-
-    virtual const HorizontalSettings*   getHorizontal() const;
-    virtual const ParameterSettings*    getParameter() const;
-    virtual const StatisticalSettings*  getStatistical() const;
-    virtual const EpsSettings*          getEps() const;
+    virtual HorizontalSettings*         getHorizontal() const;
+    virtual ParameterSettings*          getParameter() const;
+    virtual StatisticalSettings*        getStatistical() const;
+    virtual EpsSettings*                getEps() const;
+    virtual DerivedSettings*            getDerived() const;
+    virtual RectangularClusterSettings* getRectangularCluster() const;
+    virtual ProbabilitySettings*        getProbability() const;
+    virtual PercentileSettings*         getPercentile() const;
+    virtual CategoricalSettings*        getCategorical() const;
 
   protected:
 
@@ -48,10 +61,23 @@ class ProductDefinition
 
     T::TimeString                       countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const;
     T::TimeString                       countForecastEndTime(const StatisticalSettings& stat) const;
+
+    virtual bool                        setProperty_ParameterSettings(uint propertyId,long long value);
+    virtual bool                        setProperty_HorizontalSettings(uint propertyId,long long value);
+    virtual bool                        setProperty_StatisticalSettings(uint propertyId,long long value);
+    virtual bool                        setProperty_EpsSettings(uint propertyId,long long value);
+    virtual bool                        setProperty_DerivedSettings(uint propertyId,long long value);
+    virtual bool                        setProperty_RectangularClusterSettings(uint propertyId,long long value);
+    virtual bool                        setProperty_ProbabilitySettings(uint propertyId,long long value);
+    virtual bool                        setProperty_PercentileSettings(uint propertyId,long long value);
+    virtual bool                        setProperty_CategoricalSettings(uint propertyId,long long value);
+
 };
 
 
-typedef std::unique_ptr<ProductDefinition> ProductDefinition_uptr;
+typedef std::shared_ptr<ProductDefinition> ProductDefinition_sptr;
+
+
 
 }  // namespace GRIB2
 }  // namespace SmartMet

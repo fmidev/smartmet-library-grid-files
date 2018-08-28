@@ -21,17 +21,29 @@ namespace GRIB2 {
 EarthShapeSettings::EarthShapeSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+EarthShapeSettings::EarthShapeSettings(const EarthShapeSettings &other) {
+  try {
+    mShapeOfTheEarth = other.mShapeOfTheEarth;
+    mScaleFactorOfRadiusOfSphericalEarth = other.mScaleFactorOfRadiusOfSphericalEarth;
+    mScaledValueOfRadiusOfSphericalEarth = other.mScaledValueOfRadiusOfSphericalEarth;
+    mScaleFactorOfEarthMajorAxis = other.mScaleFactorOfEarthMajorAxis;
+    mScaledValueOfEarthMajorAxis = other.mScaledValueOfEarthMajorAxis;
+    mScaleFactorOfEarthMinorAxis = other.mScaleFactorOfEarthMinorAxis;
+    mScaledValueOfEarthMinorAxis = other.mScaledValueOfEarthMinorAxis;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 EarthShapeSettings::~EarthShapeSettings() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -49,7 +61,26 @@ void EarthShapeSettings::read(MemoryReader &memoryReader) {
     mScaleFactorOfEarthMinorAxis = memoryReader.read_UInt8_opt();
     mScaledValueOfEarthMinorAxis = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void EarthShapeSettings::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mShapeOfTheEarth;
+    dataWriter << mScaleFactorOfRadiusOfSphericalEarth;
+    dataWriter << mScaledValueOfRadiusOfSphericalEarth;
+    dataWriter << mScaleFactorOfEarthMajorAxis;
+    dataWriter << mScaledValueOfEarthMajorAxis;
+    dataWriter << mScaleFactorOfEarthMinorAxis;
+    dataWriter << mScaledValueOfEarthMinorAxis;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -77,7 +108,7 @@ void EarthShapeSettings::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sEarthShapeSettings.ScaledValueOfEarthMinorAxis", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfEarthMinorAxis));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -99,7 +130,7 @@ void EarthShapeSettings::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "- ScaleFactorOfEarthMinorAxis = " << toString(mScaleFactorOfEarthMinorAxis) << "\n";
     stream << space(level) << "- ScaledValueOfEarthMinorAxis = " << toString(mScaledValueOfEarthMinorAxis) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -124,7 +155,7 @@ T::Hash EarthShapeSettings::countHash() {
       boost::hash_combine(seed, *mScaledValueOfEarthMinorAxis);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -134,7 +165,7 @@ const T::UInt8_opt &EarthShapeSettings::getShapeOfTheEarth() const {
   try {
     return mShapeOfTheEarth;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -144,7 +175,7 @@ const T::UInt8_opt &EarthShapeSettings::getScaleFactorOfRadiusOfSphericalEarth()
   try {
     return mScaleFactorOfRadiusOfSphericalEarth;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -154,7 +185,7 @@ const T::UInt32_opt &EarthShapeSettings::getScaledValueOfRadiusOfSphericalEarth(
   try {
     return mScaledValueOfRadiusOfSphericalEarth;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -164,7 +195,7 @@ const T::UInt8_opt &EarthShapeSettings::getScaleFactorOfEarthMajorAxis() const {
   try {
     return mScaleFactorOfEarthMajorAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -174,7 +205,7 @@ const T::UInt32_opt &EarthShapeSettings::getScaledValueOfEarthMajorAxis() const 
   try {
     return mScaledValueOfEarthMajorAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -184,7 +215,7 @@ const T::UInt8_opt &EarthShapeSettings::getScaleFactorOfEarthMinorAxis() const {
   try {
     return mScaleFactorOfEarthMinorAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -194,7 +225,7 @@ const T::UInt32_opt &EarthShapeSettings::getScaledValueOfEarthMinorAxis() const 
   try {
     return mScaledValueOfEarthMinorAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -202,7 +233,7 @@ void EarthShapeSettings::setShapeOfTheEarth(T::UInt8_opt shapeOfTheEarth) {
   try {
     mShapeOfTheEarth = shapeOfTheEarth;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -210,7 +241,7 @@ void EarthShapeSettings::setScaleFactorOfRadiusOfSphericalEarth(T::UInt8_opt sca
   try {
     mScaleFactorOfRadiusOfSphericalEarth = scaleFactorOfRadiusOfSphericalEarth;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -218,7 +249,7 @@ void EarthShapeSettings::setScaledValueOfRadiusOfSphericalEarth(T::UInt32_opt sc
   try {
     mScaledValueOfRadiusOfSphericalEarth = scaledValueOfRadiusOfSphericalEarth;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -226,7 +257,7 @@ void EarthShapeSettings::setScaleFactorOfEarthMajorAxis(T::UInt8_opt scaleFactor
   try {
     mScaleFactorOfEarthMajorAxis = scaleFactorOfEarthMajorAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -234,7 +265,7 @@ void EarthShapeSettings::setScaledValueOfEarthMajorAxis(T::UInt32_opt scaledValu
   try {
     mScaledValueOfEarthMajorAxis = scaledValueOfEarthMajorAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -242,7 +273,7 @@ void EarthShapeSettings::setScaleFactorOfEarthMinorAxis(T::UInt8_opt scaleFactor
   try {
     mScaleFactorOfEarthMinorAxis = scaleFactorOfEarthMinorAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -250,7 +281,7 @@ void EarthShapeSettings::setScaledValueOfEarthMinorAxis(T::UInt32_opt scaledValu
   try {
     mScaledValueOfEarthMinorAxis = scaledValueOfEarthMinorAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

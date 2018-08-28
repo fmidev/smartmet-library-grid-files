@@ -18,6 +18,16 @@ MessageSection::MessageSection()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+MessageSection::MessageSection(const MessageSection& other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 MessageSection::~MessageSection()
@@ -34,13 +44,6 @@ MessageSection::~MessageSection()
 
 void MessageSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
 {
-  try
-  {
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
 }
 
 

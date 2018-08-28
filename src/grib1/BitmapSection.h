@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 #include "../grid/MessageSection.h"
 
@@ -48,7 +49,8 @@ class BitmapSection : public GRID::MessageSection
 {
   public:
 
-                    BitmapSection(Message *message);
+                    BitmapSection();
+                    BitmapSection(const BitmapSection& other);
     virtual         ~BitmapSection();
 
     // ### Common methods for all message sections
@@ -58,15 +60,23 @@ class BitmapSection : public GRID::MessageSection
     std::uint32_t   getSectionLength() const;
     std::string     getSectionName() const;
     std::uint8_t    getSectionNumber() const;
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
     T::Data_ptr     getBitmapDataPtr() const;
     std::size_t     getBitmapDataSizeInBytes() const;
-    void            read(MemoryReader& memoryReader);
     long long       getHash();
     void            getIndexVector(uint numOfValues,T::IndexVector& indexVector);
+
+    void            setNumberOfUnusedBits(std::uint8_t unusedBits);
+    void            setTableReference(std::uint16_t reference);
+    void            setBitmapData(T::Data_ptr data,std::size_t size);
+    void            setMessagePtr(Message *message);
+
+    void            read(MemoryReader& memoryReader);
+    void            write(DataWriter& dataWriter);
+    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+
 
   private:
 
@@ -93,10 +103,12 @@ class BitmapSection : public GRID::MessageSection
     std::size_t     mBitmapDataSizeInBytes;
 
     long long       mHash;
+
+    bool            mReleaseData;
 };
 
 
-typedef boost::shared_ptr<BitmapSection> BitmapSection_sptr;
+typedef std::shared_ptr<BitmapSection> BitmapSect_sptr;
 
 }  // namespace GRIB1
 }  // namespace SmartMet

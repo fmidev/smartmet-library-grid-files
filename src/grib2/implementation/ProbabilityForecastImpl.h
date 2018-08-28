@@ -11,12 +11,15 @@ namespace GRIB2
 class ProbabilityForecastImpl : public ProbabilityForecast
 {
   public:
-                      ProbabilityForecastImpl();
-    virtual           ~ProbabilityForecastImpl();
+                        ProbabilityForecastImpl();
+                        ProbabilityForecastImpl(const ProbabilityForecastImpl& other);
+    virtual             ~ProbabilityForecastImpl();
 
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

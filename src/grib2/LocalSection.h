@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../grid/MessageSection.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 
 namespace SmartMet
@@ -40,7 +41,8 @@ class LocalSection : public GRID::MessageSection
 {
   public:
 
-                    LocalSection(Message *message);
+                    LocalSection();
+                    LocalSection(const LocalSection& other);
     virtual         ~LocalSection();
 
     // ### Common methods for all message sections
@@ -50,14 +52,20 @@ class LocalSection : public GRID::MessageSection
     std::uint32_t   getSectionLength() const;
     std::string     getSectionName() const;
     std::uint8_t    getSectionNumber() const;
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
     std::uint8_t    getNumberOfSection() const;
     T::Data_ptr     getDataPtr() const;
     std::size_t     getDataSize() const;
+    void            setMessagePtr(Message *message);
+    void            setData(T::Data_ptr data,std::size_t size);
+
+    bool            setProperty(uint propertyId,long long value);
+
     void            read(MemoryReader& memoryReader);
+    void            write(DataWriter& dataWriter);
+    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
@@ -74,14 +82,16 @@ class LocalSection : public GRID::MessageSection
     T::UInt8_opt    mNumberOfSection;
 
     /*! \brief The pointer to the local data. */
-    T::Data_ptr     mData;
+    T::Data_ptr     mDataPtr;
 
     /*! \brief The length of the local data. */
-    std::size_t     mDataLength;
+    std::size_t     mDataSize;
+
+    bool            mReleaseData;
 };
 
 
-typedef std::shared_ptr<LocalSection> LocalSection_sptr;
+typedef std::shared_ptr<LocalSection> LocalSect_sptr;
 
 
 }  // namespace GRIB2

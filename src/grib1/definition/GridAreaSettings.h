@@ -8,9 +8,10 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
-#include "ResolutionFlagsSettings.h"
 #include "../../grid/Typedefs.h"
+#include "ResolutionFlagsSettings.h"
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -19,10 +20,12 @@ namespace GRIB1 {
 class GridAreaSettings {
 public:
   GridAreaSettings();
+  GridAreaSettings(const GridAreaSettings &other);
   virtual ~GridAreaSettings();
 
-  virtual void read(MemoryReader &memoryReader);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
@@ -30,8 +33,8 @@ public:
   void setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint);
   std::int24_t getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint);
-  const ResolutionFlagsSettings *getResolutionFlags() const;
-  void setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
+  ResolutionFlagsSettings *getResolutionFlags() const;
+  void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
   std::int24_t getLatitudeOfLastGridPoint() const;
   void setLatitudeOfLastGridPoint(std::int24_t latitudeOfLastGridPoint);
   std::int24_t getLongitudeOfLastGridPoint() const;

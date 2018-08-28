@@ -3,6 +3,7 @@
 #include "../grid/Typedefs.h"
 #include "../common/Coordinate.h"
 #include "../common/Dimensions.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 #include "../common/AttributeList.h"
 
@@ -22,11 +23,14 @@ class GridDefinition
  public:
 
                                 GridDefinition();
+                                GridDefinition(const GridDefinition& other);
     virtual                     ~GridDefinition();
 
     virtual T::Hash             countHash(); // Do not call this, call getGridHash() instead.
+    virtual GridDefinition*     createGridDefinition() const;
+
     virtual void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
-    virtual T::Dimensions_opt   getGridDimensions() const;
+    virtual T::Dimensions       getGridDimensions() const;
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
     virtual std::string         getGridGeometryName();
@@ -50,23 +54,27 @@ class GridDefinition
     virtual bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     virtual T::GridProjection   getGridProjection() const;
+    virtual uint                getTemplateNumber() const;
 
     virtual bool                reverseXDirection() const;
     virtual bool                reverseYDirection() const;
     virtual void                initSpatialReference();
     virtual void                initRowPositions(std::vector<std::uint32_t>& rowPositions);
-    virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
-    virtual void                read(MemoryReader& memoryReader) {}
+
     virtual void                setGridGeometryId(T::GeometryId geometryId);
     virtual void                setGridGeometryName(std::string geometryName);
 
-    T::SpatialReference*        getSpatialReference();
+    T::SpatialRef*              getSpatialReference();
     bool                        isGridGlobal() const;
+
+    virtual void                read(MemoryReader& memoryReader);
+    virtual void                write(DataWriter& dataWriter);
+    virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
 
    protected:
 
     /*! \brief The spatial reference. */
-     T::SpatialReference        mSpatialReference;
+     T::SpatialRef              mSpatialReference;
 
 
      /*! \brief The grid layout. */
@@ -104,7 +112,7 @@ class GridDefinition
 };
 
 typedef GridDefinition* GridDef_ptr;
-typedef std::unique_ptr<GridDefinition> GridDefinition_uptr;
+typedef std::shared_ptr<GridDefinition> GridDefinition_sptr;
 typedef std::vector<GridDef_ptr> GridDef_pvec;
 typedef std::map<uint,GridDef_ptr> GridDefinition_pmap;
 

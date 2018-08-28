@@ -15,9 +15,12 @@ class ObliqueLambertConformalImpl : public ObliqueLambertConformal
                       ObliqueLambertConformalImpl(const ObliqueLambertConformalImpl& other);
     virtual           ~ObliqueLambertConformalImpl();
 
+    GridDefinition*   createGridDefinition() const;
+
     T::Coordinate_vec getGridCoordinates() const;
-    T::Dimensions_opt getGridDimensions() const;
+    T::Dimensions     getGridDimensions() const;
     bool              getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
+
     void              initSpatialReference();
     void              read(MemoryReader& memoryReader);
 

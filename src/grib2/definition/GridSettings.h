@@ -8,9 +8,10 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
-#include "ResolutionSettings.h"
 #include "../../grid/Typedefs.h"
+#include "ResolutionSettings.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -19,9 +20,11 @@ namespace GRIB2 {
 class GridSettings {
 public:
   GridSettings();
+  GridSettings(const GridSettings &other);
   virtual ~GridSettings();
 
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
@@ -38,8 +41,8 @@ public:
   void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::Int32_opt &getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoint);
-  const ResolutionSettings *getResolution() const;
-  void setResolution(ResolutionSettings resolution);
+  ResolutionSettings *getResolution() const;
+  void setResolution(ResolutionSettings &resolution);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
   void setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint);
   const T::Int32_opt &getLongitudeOfLastGridPoint() const;

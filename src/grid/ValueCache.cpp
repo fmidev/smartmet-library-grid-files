@@ -23,15 +23,15 @@ ValueCache::ValueCache()
   {
     mAccessCounter = 0;
     mKeyCounter = 0;
-    mValueList = NULL;
-    mKeyList = NULL;
-    mAccessCounterList = NULL;
+    mValueList = nullptr;
+    mKeyList = nullptr;
+    mAccessCounterList = nullptr;
     mMaxUncompressedSize = 1000;
     init(1000,1000,1000);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -49,7 +49,8 @@ ValueCache::~ValueCache()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -83,15 +84,15 @@ void ValueCache::init(uint len,std::size_t maxUncompressedSize,std::size_t maxCo
     for (uint t=0; t<mLength; t++)
     {
       mKeyList[t] = 0;
-      mValueList[t] = NULL;
+      mValueList[t] = nullptr;
       mAccessCounterList[t] = 0;
-      mCompressedData[t] = NULL;
+      mCompressedData[t] = nullptr;
       mCompressedDataSize[t] = 0;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -109,7 +110,7 @@ bool ValueCache::compressOldestUncompressed()
 
     for (uint t=0; t<mLength; t++)
     {
-      if (mValueList[t] != NULL  &&  mCompressedData[t] == NULL  &&  mAccessCounterList[t] < ac)
+      if (mValueList[t] != nullptr  &&  mCompressedData[t] == nullptr  &&  mAccessCounterList[t] < ac)
       {
         ac = mAccessCounterList[t];
         idx = t;
@@ -124,7 +125,7 @@ bool ValueCache::compressOldestUncompressed()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -147,7 +148,7 @@ uint ValueCache::getEmpty()
       key++;
       uint i = key % mLength;
 
-      if (mValueList[i] == NULL  &&  mCompressedData[i] == NULL)
+      if (mValueList[i] == nullptr  &&  mCompressedData[i] == nullptr)
         return key;
 
       if (mAccessCounterList[i] < ac)
@@ -158,23 +159,23 @@ uint ValueCache::getEmpty()
       }
     }
 
-    if (mValueList[idx] != NULL)
+    if (mValueList[idx] != nullptr)
     {
       delete mValueList[idx];
-      mValueList[idx] = NULL;
+      mValueList[idx] = nullptr;
     }
 
-    if (mCompressedData[idx] != NULL)
+    if (mCompressedData[idx] != nullptr)
     {
       delete mCompressedData[idx];
-      mCompressedData[idx] = NULL;
+      mCompressedData[idx] = nullptr;
     }
 
     return k;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -192,7 +193,7 @@ bool ValueCache::compressOldestCompressed()
 
     for (uint t=0; t<mLength; t++)
     {
-      if (mCompressedData[t] != NULL  &&  mValueList[t] != NULL)
+      if (mCompressedData[t] != nullptr  &&  mValueList[t] != nullptr)
       {
         if (mAccessCounterList[t] < ac)
         {
@@ -205,14 +206,14 @@ bool ValueCache::compressOldestCompressed()
     if (idx != 0xFFFFFFFF)
     {
       delete mValueList[idx];
-      mValueList[idx] = NULL;
+      mValueList[idx] = nullptr;
       return true;
     }
     return false;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -227,52 +228,52 @@ void ValueCache::clear()
   try
   {
     AutoThreadLock lock(&mThreadLock);
-    if (mValueList != NULL)
+    if (mValueList != nullptr)
     {
       for (uint t=0; t<mLength; t++)
       {
-        if (mValueList[t] != NULL)
+        if (mValueList[t] != nullptr)
         {
           delete mValueList[t];
-          mValueList[t] = NULL;
+          mValueList[t] = nullptr;
         }
       }
       delete mValueList;
-      mValueList = NULL;
+      mValueList = nullptr;
     }
 
-    if (mKeyList != NULL)
+    if (mKeyList != nullptr)
     {
       delete mKeyList;
-      mKeyList = NULL;
+      mKeyList = nullptr;
     }
 
     if (mAccessCounterList)
     {
       delete mAccessCounterList;
-      mAccessCounterList = NULL;
+      mAccessCounterList = nullptr;
     }
 
-    if (mCompressedDataSize != NULL)
+    if (mCompressedDataSize != nullptr)
     {
       delete mCompressedDataSize;
-      mCompressedDataSize = NULL;
+      mCompressedDataSize = nullptr;
     }
 
-    if (mCompressedData != NULL)
+    if (mCompressedData != nullptr)
     {
       for (uint t=0; t<mLength; t++)
       {
-        if (mCompressedData[t] != NULL)
+        if (mCompressedData[t] != nullptr)
           delete mCompressedData[t];
       }
       delete mCompressedData;
-      mCompressedData = NULL;
+      mCompressedData = nullptr;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -289,20 +290,20 @@ void ValueCache::getSizeInBytes(std::size_t& memorySize,std::size_t& compressedS
     memorySize = 0;
     compressedSize = 0;
 
-    if (mValueList != NULL)
+    if (mValueList != nullptr)
     {
       for (uint t=0; t<mLength; t++)
       {
-        if (mValueList[t] != NULL)
+        if (mValueList[t] != nullptr)
         {
           std::size_t s = mValueList[t]->size() * sizeof (T::ParamValue);
           memorySize += s;
 
-          if (mCompressedData[t] != NULL)
+          if (mCompressedData[t] != nullptr)
             ncompCount++;
         }
 
-        if (mCompressedData[t] != NULL)
+        if (mCompressedData[t] != nullptr)
         {
           compressedSize += mCompressedDataSize[t];
           compCount++;
@@ -313,7 +314,7 @@ void ValueCache::getSizeInBytes(std::size_t& memorySize,std::size_t& compressedS
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -342,7 +343,7 @@ void ValueCache::checkLimits()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -367,7 +368,7 @@ uint ValueCache::addValues(T::ParamValue_vec& values)
     mKeyCounter = getEmpty();
     uint idx = mKeyCounter % mLength;
 
-    if (mValueList[idx] == NULL)
+    if (mValueList[idx] == nullptr)
       mValueList[idx] = new T::ParamValue_vec();
 
     *mValueList[idx] = values;
@@ -379,7 +380,7 @@ uint ValueCache::addValues(T::ParamValue_vec& values)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -405,12 +406,12 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
     if (mKeyList[idx] != key)
       return false;
 
-    if (mValueList[idx] == NULL  &&  mCompressedData[idx] != NULL)
+    if (mValueList[idx] == nullptr  &&  mCompressedData[idx] != nullptr)
     {
       decompressCachedValues(idx);
     }
 
-    if (mValueList[idx] == NULL)
+    if (mValueList[idx] == nullptr)
       return false;
 
     values = *mValueList[idx];
@@ -419,7 +420,7 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -434,7 +435,7 @@ bool ValueCache::compressCachedValues(uint index)
     if (index >= mLength)
       return false;
 
-    if (mCompressedData[index] != NULL  ||  mValueList[index] == NULL)
+    if (mCompressedData[index] != nullptr  ||  mValueList[index] == nullptr)
       return false;
 
     std::size_t len = mValueList[index]->size();
@@ -457,7 +458,7 @@ bool ValueCache::compressCachedValues(uint index)
         mCompressedData[index] = new uchar[compressedDataSize];
         memcpy(mCompressedData[index],compressedData,compressedDataSize);
         delete mValueList[index];
-        mValueList[index] = NULL;
+        mValueList[index] = nullptr;
         return true;
       }
     }
@@ -466,7 +467,7 @@ bool ValueCache::compressCachedValues(uint index)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -480,10 +481,10 @@ bool ValueCache::decompressCachedValues(uint index)
     if (index >= mLength)
       return false;
 
-    if (mCompressedData[index] == NULL)
+    if (mCompressedData[index] == nullptr)
       return false;
 
-    if (mValueList[index] != NULL)
+    if (mValueList[index] != nullptr)
       return false;
 
 
@@ -493,7 +494,7 @@ bool ValueCache::decompressCachedValues(uint index)
     int res = decompressData(mCompressedData[index],mCompressedDataSize[index],data,decompressedDataSize);
     if (res == 0)
     {
-      if (mValueList[index] == NULL)
+      if (mValueList[index] == nullptr)
         mValueList[index] = new T::ParamValue_vec();
 
       uint len = decompressedDataSize / sizeof(T::ParamValue);
@@ -504,7 +505,7 @@ bool ValueCache::decompressCachedValues(uint index)
       delete data;
 
       //delete mCompressedData[index];
-      //mCompressedData[index] = NULL;
+      //mCompressedData[index] = nullptr;
       //mCompressedDataSize[index] = 0;
       mAccessCounterList[index] = mAccessCounter++;
       compressOldestUncompressed();
@@ -517,7 +518,7 @@ bool ValueCache::decompressCachedValues(uint index)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -544,7 +545,7 @@ bool ValueCache::getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamVal
     uint idx = key % mLength;
 
     AutoThreadLock lock(&mThreadLock);
-    if (mValueList[idx] == NULL  ||  mKeyList[idx] != key)
+    if (mValueList[idx] == nullptr  ||  mKeyList[idx] != key)
     {
       return false;
     }
@@ -573,7 +574,7 @@ bool ValueCache::getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamVal
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

@@ -23,7 +23,7 @@ Exception::Exception()
 {
   timestamp = boost::posix_time::second_clock::local_time();
   line = 0;
-  prevException = NULL;
+  prevException = nullptr;
 }
 
 
@@ -41,8 +41,8 @@ Exception::Exception(const Exception& _exception)
   message = _exception.message;
   detailVector = _exception.detailVector;
   parameterVector = _exception.parameterVector;
-  prevException = NULL;
-  if (_exception.prevException != NULL)
+  prevException = nullptr;
+  if (_exception.prevException != nullptr)
     prevException = new Exception(*_exception.prevException);
 }
 
@@ -60,8 +60,8 @@ Exception::Exception(const char *_filename,int _line,const char *_function,std::
   line = _line;
   function = _function;
   message = _message;
-  prevException = NULL;
-  if (_prevException != NULL)
+  prevException = nullptr;
+  if (_prevException != nullptr)
   {
     prevException = new Exception(*_prevException);
   }
@@ -146,7 +146,7 @@ Exception::Exception(const char *_filename,int _line,const char *_function,std::
   line = _line;
   function = _function;
   message = _message;
-  prevException = NULL;
+  prevException = nullptr;
 }
 
 
@@ -157,7 +157,7 @@ Exception::Exception(const char *_filename,int _line,const char *_function,std::
 
 Exception::~Exception()
 {
-  if (prevException != NULL)
+  if (prevException != nullptr)
     delete prevException;
 }
 
@@ -212,7 +212,7 @@ Exception* Exception::getPrevException()
 
 Exception* Exception::getFirstException()
 {
-  if (prevException != NULL)
+  if (prevException != nullptr)
     return prevException->getFirstException();
 
   return this;
@@ -235,7 +235,7 @@ unsigned int Exception::getExceptionCount()
 {
   unsigned int count = 0;
   Exception *e = this;
-  while (e != NULL)
+  while (e != nullptr)
   {
     count++;
     e = e->getPrevException();
@@ -251,7 +251,7 @@ Exception* Exception::getExceptionByIndex(unsigned int _index)
 {
   unsigned int count = 0;
   Exception *e = this;
-  while (e != NULL)
+  while (e != nullptr)
   {
     if (count == _index)
       return e;
@@ -259,7 +259,7 @@ Exception* Exception::getExceptionByIndex(unsigned int _index)
     count++;
     e = e->getPrevException();
   }
-  return NULL;
+  return nullptr;
 }
 
 
@@ -311,7 +311,7 @@ const char* Exception::getDetailByIndex(unsigned int _index)
   if (_index < getDetailCount())
     return detailVector.at(_index).c_str();
 
-  return NULL;
+  return nullptr;
 }
 
 
@@ -326,7 +326,7 @@ const char* Exception::getParameterNameByIndex(unsigned int _index)
     return p.first.c_str();
   }
 
-  return NULL;
+  return nullptr;
 }
 
 
@@ -345,7 +345,7 @@ const char* Exception::getParameterValue(const char *_name)
         return p.second.c_str();
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 
@@ -360,7 +360,7 @@ const char* Exception::getParameterValueByIndex(unsigned int _index)
     return p.second.c_str();
   }
 
-  return NULL;
+  return nullptr;
 }
 
 
@@ -369,11 +369,11 @@ const char* Exception::getParameterValueByIndex(unsigned int _index)
 
 Exception* Exception::getExceptionByParameterName(const char *_paramName)
 {
-  if (getParameterValue(_paramName) != NULL)
+  if (getParameterValue(_paramName) != nullptr)
     return this;
 
-  if (prevException == NULL)
-    return NULL;
+  if (prevException == nullptr)
+    return nullptr;
 
   return prevException->getExceptionByParameterName(_paramName);
 }
@@ -421,7 +421,7 @@ std::ostream& operator<<(std::ostream& _ostream,Exception& _exception)
   _ostream << "\n\n";
 
   Exception *e = &_exception;
-  while (e != NULL)
+  while (e != nullptr)
   {
     _ostream << ANSI_FG_RED << ANSI_BOLD_ON << "EXCEPTION "  << ANSI_BOLD_OFF << e->message  << ANSI_FG_DEFAULT << "\n";
 

@@ -21,17 +21,25 @@ namespace GRIB2 {
 IrregularLatLon::IrregularLatLon() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+IrregularLatLon::IrregularLatLon(const IrregularLatLon &other) : GridDefinition(other) {
+  try {
+    mEarthShape = other.mEarthShape;
+    mLatitude = other.mLatitude;
+    mLongitude = other.mLongitude;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 IrregularLatLon::~IrregularLatLon() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +53,22 @@ void IrregularLatLon::read(MemoryReader &memoryReader) {
     mLatitude = memoryReader.read_Int32_opt();
     mLongitude = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void IrregularLatLon::write(DataWriter &dataWriter) {
+  try {
+    mEarthShape.write(dataWriter);
+    dataWriter << mLatitude;
+    dataWriter << mLongitude;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +88,7 @@ void IrregularLatLon::getAttributeList(std::string prefix, T::AttributeList &att
     sprintf(name, "%sIrregularLatLon.Longitude", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitude));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +106,7 @@ void IrregularLatLon::print(std::ostream &stream, uint level, uint optionFlags) 
     stream << space(level) << "- Latitude = " << toString(mLatitude) << "\n";
     stream << space(level) << "- Longitude = " << toString(mLongitude) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -99,17 +122,31 @@ T::Hash IrregularLatLon::countHash() {
     // boost::hash_combine(seed,mEarthShape.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint IrregularLatLon::getTemplateNumber() const {
+  return 130;
+}
+
+GridDefinition *IrregularLatLon::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new IrregularLatLon(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
-const EarthShapeSettings *IrregularLatLon::getEarthShape() const {
+EarthShapeSettings *IrregularLatLon::getEarthShape() const {
   try {
-    return &mEarthShape;
+    return (EarthShapeSettings *)&mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -119,7 +156,7 @@ const T::Int32_opt &IrregularLatLon::getLatitude() const {
   try {
     return mLatitude;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -129,15 +166,15 @@ const T::Int32_opt &IrregularLatLon::getLongitude() const {
   try {
     return mLongitude;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void IrregularLatLon::setEarthShape(EarthShapeSettings earthShape) {
+void IrregularLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -145,7 +182,7 @@ void IrregularLatLon::setLatitude(T::Int32_opt latitude) {
   try {
     mLatitude = latitude;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -153,7 +190,7 @@ void IrregularLatLon::setLongitude(T::Int32_opt longitude) {
   try {
     mLongitude = longitude;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

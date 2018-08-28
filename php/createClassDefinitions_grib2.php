@@ -215,6 +215,9 @@ else
 }
 
 
+
+
+
 function process_template($file, $name, $class, $outdir)
 {
   // We need to find class names for includes
@@ -272,6 +275,7 @@ function process_template($file, $name, $class, $outdir)
   // ********** generate the header **********
 
   $parentdecl = "";
+  $parent = "";
 
   $section = extract_section ( $name );
   if (isset ( $section ) && isset ( $parents [$section] ))
@@ -296,18 +300,26 @@ function process_template($file, $name, $class, $outdir)
   $body .= "class $class $parentdecl\n";
   $body .= "{ public:\n";
   $body .= "${class}();\n";
+  $body .= "${class}(const ${class}& other);\n";
   $body .= "virtual ~${class}();\n\n";
+   
+  $p = explode(".", $name);
+  if (($p[0] == "3" || $p[0] == "4" ||  $p[0] == "5"  || $p[0] == "7") &&  is_numeric($p[1]))
+  {  
+    $body .= "virtual uint getTemplateNumber() const;\n";
+    
+    if ($parent > " ")
+      $body .= "virtual ${parent}* create${parent}() const;\n";
+  }
 
   $body .= "virtual void read(MemoryReader& memoryReader);\n";
+  $body .= "virtual void write(DataWriter& dataWriter);\n";
   $body .= "virtual void getAttributeList(std::string prefix,T::AttributeList& attributeList) const;\n";
   $body .= "virtual void print(std::ostream& stream,uint level,uint optionFlags) const;\n";
   $body .= "virtual T::Hash countHash();\n\n";
 
   $protected = "\n\nprotected:\n\n";
-  
-  
-  
-
+ 
   $footer = "\n};\n\n} // namespace GRIB2\n} // namespace SmartMet\n";
 
   $rows = file ( $file );
@@ -338,13 +350,13 @@ function process_template($file, $name, $class, $outdir)
         $var = lcfirst ( $var );
         $Var = ucfirst ( $var );
 
-        $body .= "const $incclass * get$Var() const;";
+        $body .= "$incclass * get$Var() const;";
 
         $getters .= "\n/*! \brief The method returns the pointer to the {@link m${Var}} attribute. */\n\n";        
-        $getters .= "const $incclass * ${class}::get$Var() const { try { return &m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+        $getters .= "$incclass * ${class}::get$Var() const { try { return ($incclass*)&m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
 
-        $body .= "void set$Var($incclass $var);";
-        $setters .= "void ${class}::set$Var($incclass $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+        $body .= "void set$Var($incclass& $var);";
+        $setters .= "void ${class}::set$Var($incclass& $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
 
         $protected .= "$incclass m$Var;\n";
         $headers ["\"${incclass}.h\""] = 1;
@@ -376,8 +388,9 @@ function process_template($file, $name, $class, $outdir)
             $protected .= "$cpptype m$Var;\n";
 
             $cpptypes [$Var] = $cpptype;
-    	    $prefix = "";    	    
-    	    if (isset($nohash["m$Var"])) { $prefix = "//"; }
+    	      $prefix = "";    	    
+    	      
+    	      if (isset($nohash["m$Var"])) { $prefix = "//"; }
 
             if (substr ( $vartype, 0, 4 ) == "byte")
             {
@@ -450,6 +463,7 @@ function process_template($file, $name, $class, $outdir)
   }
 
   // Add unique includes
+  $headers ['"../../common/DataWriter.h"'] = true;
   $headers ['"../../common/MemoryReader.h"'] = true;
   $headers ['"../../common/AttributeList.h"'] = true;
   $headers ['"../../grid/Typedefs.h"'] = true;
@@ -490,6 +504,7 @@ function process_template($file, $name, $class, $outdir)
 
 
 
+
   // ##### Adding the constructor.
 
   $cpp .= "\n/*! \brief The constructor of the class. */\n\n";
@@ -517,10 +532,33 @@ function process_template($file, $name, $class, $outdir)
 
 
 
+
+  // ##### Adding the copy constructor.
+
+  $cpp .= "\n/*! \brief The copy constructor of the class. */\n\n";
+
+  $cpp .= "${class}::${class}(const ${class}& other)\n";
+  
+  if ($parent > " ")
+    $cpp .= ":${parent}(other)\n";  
+
+  $cpp .= "{ try {\n";
+
+  foreach ( $members as $Var => $type )
+  {
+    $cpp .= "m$Var = other.m$Var;\n";
+  }
+
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+
+
+
+
   // ##### Adding the destructor.
 
   $cpp .= "\n/*! \brief The destructor of the class. */\n\n";
-  $cpp .= "${class}::~${class}() { try { } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+  $cpp .= "${class}::~${class}() {\n}\n\n";
+
 
 
 
@@ -560,6 +598,28 @@ function process_template($file, $name, $class, $outdir)
 
 
 
+  // ##### Adding the writer method.
+  
+  $cpp .= "\n/*! \brief The method writes all data related to the current object.\n\n";
+  $cpp .= "        \param dataWriter  This object is used for writing the object data.\n";
+  $cpp .= "*/\n\n";
+  
+  $cpp .= "void ${class}::write(DataWriter& dataWriter) {\n try {\n";
+
+  foreach ( $members as $Var => $type )
+  {
+    $var = lcfirst ( $Var );
+
+    if ($type == "class")
+      $cpp .= "m$Var.write(dataWriter);\n";
+    else
+      $cpp .= "dataWriter << m$Var;\n";
+  }
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+
+
+
+
   // ##### Adding the getAttributeList method.
 
   $cpp .= "/*! \brief The method is used for collecting the current class attributeList.\n\n";
@@ -590,6 +650,7 @@ function process_template($file, $name, $class, $outdir)
     }
   }
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+
 
   
   
@@ -628,6 +689,7 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
 
 
+
   
   // ##### Adding the hash method.
 
@@ -636,10 +698,34 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "T::Hash ${class}::countHash() { try { std::size_t seed = 0;\n${hash} return seed;\n";
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
 
+
   
+  
+  if (($p[0] == "3" || $p[0] == "4" ||  $p[0] == "5"  || $p[0] == "7") &&  is_numeric($p[1]))
+  {    
+  // ##### Adding the getTemplateNumber method.
+ 
+    $cpp .= "\n/*! \brief The method return the template number of the current class. */\n\n";
+    $cpp .= "uint ${class}::getTemplateNumber() const {return ${p[1]};}\n\n";
+
+    
+    // ##### Adding the create method.
+    
+    if ($parent > " ")
+    {
+      $cpp .= "${parent}* ${class}::create${parent}() const\n";
+      $cpp .= "{ try { return (${parent}*)new ${class}(*this);\n";
+      $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+    }    
+  }
+
+
+
   // ##### Adding the getters.
 
   $cpp .= $getters;
+
+
 
 
   // ##### Adding the setters.
@@ -647,13 +733,19 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= $setters;
 
 
+
+
   // $cpp .= $extracode;
 
   $cpp .= "\n} // namespace GRIB2\n} // namespace SmartMet\n";
 
+
+
   file_put_contents ( $outfile, $cpp );
   system ( "clang-format -i -style=file $outfile" );
 }
+
+
 
 
 
@@ -663,6 +755,8 @@ function extract_include($line)
   preg_match ( '/\s*include\s+"template\.([\w.]+)\.def"/', $line, $matches );
   return $matches [1];
 }
+
+
 
 
 /*
@@ -682,6 +776,7 @@ function extract_include($line)
  * Why not just use ('4.15.table',masterDir,localDir) ???
  * To prevent local tables?
  */
+
 function extract_codetable($line)
 {
   preg_match ( "/\s*codetable\[\d+\]\s*\w+.*'(.*)\.table'/", $line, $matches );
@@ -694,10 +789,14 @@ function extract_codetable($line)
 }
 
 
+
+
+
 /*
  * Assuming lines similar to codetables but with "flags" instead of "codetable"
  * extract the table name.
  */
+
 function extract_flagtable($line)
 {
   preg_match ( "/\s*flags\s*\[\d+\]\s*\w+.*'(.*)\.table'/", $line, $matches );
@@ -710,10 +809,14 @@ function extract_flagtable($line)
 }
 
 
+
+
+
 /*
  * Extract section number from template name. For example "3.1" ==> "3".
  * Note that names such as 3.foo are not allowed
  */
+
 function extract_section($name)
 {
   $pos = strpos ( $name, "." );
@@ -722,11 +825,16 @@ function extract_section($name)
   return null;
 }
 
+
+
+
+
 // Phony line:
 //
 // codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
 //
 // because of assignment and transient (just guessing)
+
 function is_phony_data($line)
 {
   if (strpos ( $line, "transient" ) != 0 && strpos ( $line, "=" ) != 0)

@@ -8,12 +8,13 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "EarthShapeSettings.h"
 #include "GaussianSettings.h"
 #include "RotationSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,19 +23,23 @@ namespace GRIB2 {
 class RotatedGaussian : public GridDefinition {
 public:
   RotatedGaussian();
+  RotatedGaussian(const RotatedGaussian &other);
   virtual ~RotatedGaussian();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings earthShape);
-  const GaussianSettings *getGaussian() const;
-  void setGaussian(GaussianSettings gaussian);
-  const RotationSettings *getRotation() const;
-  void setRotation(RotationSettings rotation);
+  EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings &earthShape);
+  GaussianSettings *getGaussian() const;
+  void setGaussian(GaussianSettings &gaussian);
+  RotationSettings *getRotation() const;
+  void setRotation(RotationSettings &rotation);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

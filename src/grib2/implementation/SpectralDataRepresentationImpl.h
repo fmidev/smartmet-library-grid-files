@@ -15,6 +15,8 @@ class SpectralDataRepresentationImpl : public SpectralDataRepresentation
               SpectralDataRepresentationImpl(const SpectralDataRepresentationImpl& other);
     virtual   ~SpectralDataRepresentationImpl();
 
+    RepresentationDefinition* createRepresentationDefinition() const;
+
     void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
     void      read(MemoryReader& memoryReader);
 };

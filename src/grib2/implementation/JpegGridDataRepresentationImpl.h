@@ -15,7 +15,10 @@ class JpegGridDataRepresentationImpl : public JpegGridDataRepresentation
               JpegGridDataRepresentationImpl(const JpegGridDataRepresentationImpl& other);
     virtual   ~JpegGridDataRepresentationImpl();
 
+    RepresentationDefinition* createRepresentationDefinition() const;
+
     void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
+    void      encodeValues(Message *message,T::ParamValue_vec& values);
     void      read(MemoryReader& memoryReader);
 };
 
