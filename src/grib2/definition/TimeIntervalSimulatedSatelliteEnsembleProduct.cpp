@@ -21,17 +21,26 @@ namespace GRIB2 {
 TimeIntervalSimulatedSatelliteEnsembleProduct::TimeIntervalSimulatedSatelliteEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalSimulatedSatelliteEnsembleProduct::TimeIntervalSimulatedSatelliteEnsembleProduct(const TimeIntervalSimulatedSatelliteEnsembleProduct &other)
+    : ProductDefinition(other) {
+  try {
+    mSimulatedSatelliteProduct = other.mSimulatedSatelliteProduct;
+    mEps = other.mEps;
+    mStatistical = other.mStatistical;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 TimeIntervalSimulatedSatelliteEnsembleProduct::~TimeIntervalSimulatedSatelliteEnsembleProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +54,22 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::read(MemoryReader &memoryRea
     mEps.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void TimeIntervalSimulatedSatelliteEnsembleProduct::write(DataWriter &dataWriter) {
+  try {
+    mSimulatedSatelliteProduct.write(dataWriter);
+    mEps.write(dataWriter);
+    mStatistical.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +89,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::getAttributeList(std::string
     sprintf(name, "%sTimeIntervalSimulatedSatelliteEnsembleProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +107,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::print(std::ostream &stream, 
     mEps.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -97,61 +121,75 @@ T::Hash TimeIntervalSimulatedSatelliteEnsembleProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint TimeIntervalSimulatedSatelliteEnsembleProduct::getTemplateNumber() const {
+  return 34;
+}
+
+ProductDefinition *TimeIntervalSimulatedSatelliteEnsembleProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new TimeIntervalSimulatedSatelliteEnsembleProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mSimulatedSatelliteProduct} attribute. */
 
-const SimulatedSatelliteProduct *TimeIntervalSimulatedSatelliteEnsembleProduct::getSimulatedSatelliteProduct() const {
+SimulatedSatelliteProduct *TimeIntervalSimulatedSatelliteEnsembleProduct::getSimulatedSatelliteProduct() const {
   try {
-    return &mSimulatedSatelliteProduct;
+    return (SimulatedSatelliteProduct *)&mSimulatedSatelliteProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEps} attribute. */
 
-const EpsSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getEps() const {
+EpsSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getEps() const {
   try {
-    return &mEps;
+    return (EpsSettings *)&mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mStatistical} attribute. */
 
-const StatisticalSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getStatistical() const {
+StatisticalSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getStatistical() const {
   try {
-    return &mStatistical;
+    return (StatisticalSettings *)&mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalSimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSatelliteProduct simulatedSatelliteProduct) {
+void TimeIntervalSimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSatelliteProduct &simulatedSatelliteProduct) {
   try {
     mSimulatedSatelliteProduct = simulatedSatelliteProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalSimulatedSatelliteEnsembleProduct::setEps(EpsSettings eps) {
+void TimeIntervalSimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalSimulatedSatelliteEnsembleProduct::setStatistical(StatisticalSettings statistical) {
+void TimeIntervalSimulatedSatelliteEnsembleProduct::setStatistical(StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

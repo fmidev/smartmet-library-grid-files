@@ -16,7 +16,7 @@ GridValueList::GridValueList()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -31,13 +31,13 @@ GridValueList::GridValueList(const GridValueList& gridValueList)
     for (uint t=0; t<sz; t++)
     {
       GridValue *rec = gridValueList.getGridValueByIndex(t);
-      if (rec != NULL)
+      if (rec != nullptr)
         mList.push_back(new GridValue(*rec));
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -53,7 +53,8 @@ GridValueList::~GridValueList()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -70,13 +71,13 @@ void GridValueList::operator=(const GridValueList& gridValueList)
     for (uint t=0; t<sz; t++)
     {
       GridValue *rec = gridValueList.getGridValueByIndex(t);
-      if (rec != NULL)
+      if (rec != nullptr)
         mList.push_back(new GridValue(*rec));
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -92,7 +93,7 @@ void GridValueList::addGridValue(GridValue *gridValue)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -108,14 +109,14 @@ void GridValueList::clear()
     for (uint t=0; t<sz; t++)
     {
       GridValue *rec = mList[t];
-      if (rec != NULL)
+      if (rec != nullptr)
         delete rec;
     }
     mList.clear();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -128,13 +129,13 @@ GridValue* GridValueList::getGridValueByIndex(uint index) const
   try
   {
     if (index >= (uint)mList.size())
-      return NULL;
+      return nullptr;
 
     return mList[index];
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -151,11 +152,11 @@ GridValue* GridValueList::getGridValueByCoordinates(double x,double y) const
       if ((*it)->mX == x  &&  (*it)->mY == y)
         return (*it);
     }
-    return NULL;
+    return nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -171,7 +172,7 @@ uint GridValueList::getLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -194,7 +195,7 @@ T::ParamValue GridValueList::getMaxValue() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -217,7 +218,7 @@ T::ParamValue GridValueList::getMinValue() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -248,7 +249,7 @@ T::ParamValue GridValueList::getAverageValue() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -270,7 +271,7 @@ uint GridValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamVa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -289,13 +290,13 @@ void GridValueList::print(std::ostream& stream,uint level,uint optionFlags) cons
     for (uint t=0; t<sz; t++)
     {
       GridValue *rec = mList[t];
-      if (rec != NULL)
+      if (rec != nullptr)
         rec->print(stream,level+2,optionFlags);
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

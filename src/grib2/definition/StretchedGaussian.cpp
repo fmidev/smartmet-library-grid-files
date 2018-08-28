@@ -21,17 +21,25 @@ namespace GRIB2 {
 StretchedGaussian::StretchedGaussian() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+StretchedGaussian::StretchedGaussian(const StretchedGaussian &other) : GridDefinition(other) {
+  try {
+    mEarthShape = other.mEarthShape;
+    mGaussian = other.mGaussian;
+    mStretching = other.mStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 StretchedGaussian::~StretchedGaussian() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +53,22 @@ void StretchedGaussian::read(MemoryReader &memoryReader) {
     mGaussian.read(memoryReader);
     mStretching.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void StretchedGaussian::write(DataWriter &dataWriter) {
+  try {
+    mEarthShape.write(dataWriter);
+    mGaussian.write(dataWriter);
+    mStretching.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +88,7 @@ void StretchedGaussian::getAttributeList(std::string prefix, T::AttributeList &a
     sprintf(name, "%sStretchedGaussian.", prefix.c_str());
     mStretching.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +106,7 @@ void StretchedGaussian::print(std::ostream &stream, uint level, uint optionFlags
     mGaussian.print(stream, level + 1, optionFlags);
     mStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -97,61 +120,75 @@ T::Hash StretchedGaussian::countHash() {
     boost::hash_combine(seed, mStretching.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint StretchedGaussian::getTemplateNumber() const {
+  return 42;
+}
+
+GridDefinition *StretchedGaussian::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new StretchedGaussian(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
-const EarthShapeSettings *StretchedGaussian::getEarthShape() const {
+EarthShapeSettings *StretchedGaussian::getEarthShape() const {
   try {
-    return &mEarthShape;
+    return (EarthShapeSettings *)&mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mGaussian} attribute. */
 
-const GaussianSettings *StretchedGaussian::getGaussian() const {
+GaussianSettings *StretchedGaussian::getGaussian() const {
   try {
-    return &mGaussian;
+    return (GaussianSettings *)&mGaussian;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mStretching} attribute. */
 
-const StretchingSettings *StretchedGaussian::getStretching() const {
+StretchingSettings *StretchedGaussian::getStretching() const {
   try {
-    return &mStretching;
+    return (StretchingSettings *)&mStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedGaussian::setEarthShape(EarthShapeSettings earthShape) {
+void StretchedGaussian::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedGaussian::setGaussian(GaussianSettings gaussian) {
+void StretchedGaussian::setGaussian(GaussianSettings &gaussian) {
   try {
     mGaussian = gaussian;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedGaussian::setStretching(StretchingSettings stretching) {
+void StretchedGaussian::setStretching(StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

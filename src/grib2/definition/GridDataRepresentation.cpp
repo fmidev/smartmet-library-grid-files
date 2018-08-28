@@ -21,17 +21,24 @@ namespace GRIB2 {
 GridDataRepresentation::GridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+GridDataRepresentation::GridDataRepresentation(const GridDataRepresentation &other) : RepresentationDefinition(other) {
+  try {
+    mPacking = other.mPacking;
+    mOriginalValues = other.mOriginalValues;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 GridDataRepresentation::~GridDataRepresentation() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -44,7 +51,21 @@ void GridDataRepresentation::read(MemoryReader &memoryReader) {
     mPacking.read(memoryReader);
     mOriginalValues.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void GridDataRepresentation::write(DataWriter &dataWriter) {
+  try {
+    mPacking.write(dataWriter);
+    mOriginalValues.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -62,7 +83,7 @@ void GridDataRepresentation::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sGridDataRepresentation.", prefix.c_str());
     mOriginalValues.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -79,7 +100,7 @@ void GridDataRepresentation::print(std::ostream &stream, uint level, uint option
     mPacking.print(stream, level + 1, optionFlags);
     mOriginalValues.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -92,43 +113,57 @@ T::Hash GridDataRepresentation::countHash() {
     boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint GridDataRepresentation::getTemplateNumber() const {
+  return 0;
+}
+
+RepresentationDefinition *GridDataRepresentation::createRepresentationDefinition() const {
+  try {
+    return (RepresentationDefinition *)new GridDataRepresentation(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mPacking} attribute. */
 
-const PackingSettings *GridDataRepresentation::getPacking() const {
+PackingSettings *GridDataRepresentation::getPacking() const {
   try {
-    return &mPacking;
+    return (PackingSettings *)&mPacking;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mOriginalValues} attribute. */
 
-const OriginalValuesSettings *GridDataRepresentation::getOriginalValues() const {
+OriginalValuesSettings *GridDataRepresentation::getOriginalValues() const {
   try {
-    return &mOriginalValues;
+    return (OriginalValuesSettings *)&mOriginalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void GridDataRepresentation::setPacking(PackingSettings packing) {
+void GridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void GridDataRepresentation::setOriginalValues(OriginalValuesSettings originalValues) {
+void GridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalValues) {
   try {
     mOriginalValues = originalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

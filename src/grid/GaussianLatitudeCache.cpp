@@ -59,7 +59,7 @@ static void gauss_first_guess(long N, double* vals)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -130,7 +130,7 @@ int gaussian_getLatitudes(long N, double *lats)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -149,13 +149,13 @@ GaussianLatitudeCache::GaussianLatitudeCache()
     lastAccess = 0;
     for (uint t=0; t<GaussianLatitudeCacheSize; t++)
     {
-      mLatitudes[t] = NULL;
+      mLatitudes[t] = nullptr;
       mLatitudes_number[t] = 0;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -171,13 +171,14 @@ GaussianLatitudeCache::~GaussianLatitudeCache()
   {
     for (uint t=0; t<GaussianLatitudeCacheSize; t++)
     {
-      if (mLatitudes[t] != NULL)
+      if (mLatitudes[t] != nullptr)
         delete mLatitudes[t];
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -189,11 +190,11 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
 {
   try
   {
-    if (mLatitudes[lastAccess] != NULL  &&  mLatitudes_number[lastAccess] == nj)
+    if (mLatitudes[lastAccess] != nullptr  &&  mLatitudes_number[lastAccess] == nj)
       return mLatitudes[lastAccess];
 
     uint c = 0;
-    while (c < GaussianLatitudeCacheSize  &&  mLatitudes[c] != NULL)
+    while (c < GaussianLatitudeCacheSize  &&  mLatitudes[c] != nullptr)
     {
       if (mLatitudes_number[c] == nj)
       {
@@ -216,7 +217,7 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -273,7 +274,7 @@ int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,double lat,double&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

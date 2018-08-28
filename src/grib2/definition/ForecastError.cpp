@@ -21,17 +21,23 @@ namespace GRIB2 {
 ForecastError::ForecastError() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+ForecastError::ForecastError(const ForecastError &other) : ProductDefinition(other) {
+  try {
+    mNormalProduct = other.mNormalProduct;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 ForecastError::~ForecastError() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -43,7 +49,20 @@ void ForecastError::read(MemoryReader &memoryReader) {
   try {
     mNormalProduct.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void ForecastError::write(DataWriter &dataWriter) {
+  try {
+    mNormalProduct.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -59,7 +78,7 @@ void ForecastError::getAttributeList(std::string prefix, T::AttributeList &attri
     sprintf(name, "%sForecastError.", prefix.c_str());
     mNormalProduct.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -75,7 +94,7 @@ void ForecastError::print(std::ostream &stream, uint level, uint optionFlags) co
     stream << space(level) << "ForecastError\n";
     mNormalProduct.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -87,25 +106,39 @@ T::Hash ForecastError::countHash() {
     boost::hash_combine(seed, mNormalProduct.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint ForecastError::getTemplateNumber() const {
+  return 7;
+}
+
+ProductDefinition *ForecastError::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new ForecastError(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mNormalProduct} attribute. */
 
-const NormalProduct *ForecastError::getNormalProduct() const {
+NormalProduct *ForecastError::getNormalProduct() const {
   try {
-    return &mNormalProduct;
+    return (NormalProduct *)&mNormalProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void ForecastError::setNormalProduct(NormalProduct normalProduct) {
+void ForecastError::setNormalProduct(NormalProduct &normalProduct) {
   try {
     mNormalProduct = normalProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

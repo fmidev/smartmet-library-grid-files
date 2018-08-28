@@ -2,6 +2,7 @@
 
 #include "../grid/Typedefs.h"
 #include "../common/Dimensions.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 #include "../common/AttributeList.h"
 
@@ -26,15 +27,19 @@ enum class PackingMethod
 class DataDefinition
 {
   public:
-                  DataDefinition();
-    virtual       ~DataDefinition();
+                            DataDefinition();
+                            DataDefinition(const DataDefinition& other);
+    virtual                 ~DataDefinition();
 
-    virtual void  getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
-    virtual PackingMethod getPackingMethod() const;
-    virtual bool  getValueByIndex(Message *message,uint index,T::ParamValue& value) const;
-    virtual void  decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    virtual void  print(std::ostream& stream,uint level,uint optionFlags) const;
-    virtual void  read(MemoryReader& memoryReader);
+    virtual DataDefinition* createDataDefinition() const;
+    virtual void            getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    virtual PackingMethod   getPackingMethod() const;
+    virtual bool            getValueByIndex(Message *message,uint index,T::ParamValue& value) const;
+    virtual void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
+
+    virtual void            read(MemoryReader& memoryReader);
+    virtual void            write(DataWriter& dataWriter);
+    virtual void            print(std::ostream& stream,uint level,uint optionFlags) const;
 };
 
 

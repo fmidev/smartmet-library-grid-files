@@ -16,7 +16,7 @@ Log::Log()
 {
   try
   {
-    file = NULL;
+    file = nullptr;
     enabled = false;
     maxSize = 0;
     truncateSize = 0;
@@ -24,7 +24,7 @@ Log::Log()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -36,11 +36,17 @@ Log::~Log()
 {
   try
   {
-    close();
+    if (file != nullptr)
+    {
+      AutoThreadLock tLock(&threadLock);
+      fclose(file);
+      file = nullptr;
+    }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -52,9 +58,9 @@ void Log::init(bool _enabled,const char *_filename,uint _maxSize,uint _truncateS
 {
   try
   {
-    if (_filename == NULL)
+    if (_filename == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"The '_filename' parameter points to NULL!");
+      SmartMet::Spine::Exception exception(BCP,"The '_filename' parameter points to nullptr!");
       throw exception;
     }
 
@@ -76,7 +82,7 @@ void Log::init(bool _enabled,const char *_filename,uint _maxSize,uint _truncateS
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -94,11 +100,11 @@ void Log::open()
     if (filename.length() == 0)
       return;     // ### The log file name is empty.
 
-    if (file != NULL)
+    if (file != nullptr)
       return;    // ### The log file is already open.
 
     file = fopen(filename.c_str(),"w");
-    if (file == NULL)
+    if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open the file for writing!");
       exception.addParameter("filename",filename);
@@ -107,7 +113,7 @@ void Log::open()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -125,11 +131,11 @@ void Log::openForAppend()
     if (filename.length() == 0)
       return;     // ### The log file name is empty.
 
-    if (file != NULL)
+    if (file != nullptr)
       return;    // ### The log file is already open.
 
     file = fopen(filename.c_str(),"a");
-    if (file == NULL)
+    if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open the file for append!");
       exception.addParameter("filename",filename);
@@ -138,7 +144,7 @@ void Log::openForAppend()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -150,16 +156,16 @@ void Log::close()
 {
   try
   {
-    if (file != NULL)
+    if (file != nullptr)
     {
       AutoThreadLock tLock(&threadLock);
       fclose(file);
-      file = NULL;
+      file = nullptr;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -176,7 +182,7 @@ void Log::disable()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -193,7 +199,7 @@ void Log::enable()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -209,7 +215,7 @@ bool Log::isEnabled()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -225,7 +231,7 @@ FILE* Log::getFileHandle()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -241,7 +247,7 @@ std::string Log::getFileName()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -257,7 +263,7 @@ uint Log::getMaxSize()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -273,7 +279,7 @@ uint Log::getTruncateSize()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -290,7 +296,7 @@ UInt64 Log::getEventCounter()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -309,7 +315,7 @@ uint Log::getSize()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -325,7 +331,7 @@ void  Log::lock()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -341,7 +347,7 @@ void  Log::unlock()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -353,7 +359,7 @@ void Log::print(const char *_event)
 {
   try
   {
-    if (!enabled  ||  file == NULL  ||  _event == NULL)
+    if (!enabled  ||  file == nullptr  ||  _event == nullptr)
       return;
 
     AutoThreadLock tLock(&threadLock);
@@ -362,7 +368,7 @@ void Log::print(const char *_event)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -374,7 +380,7 @@ void Log::print(time_t _time,const char *_event)
 {
   try
   {
-    if (!enabled  ||  file == NULL  ||  _event == NULL)
+    if (!enabled  ||  file == nullptr  ||  _event == nullptr)
       return;
 
     struct tm x_tm;
@@ -385,7 +391,7 @@ void Log::print(time_t _time,const char *_event)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -397,7 +403,7 @@ void Log::print(time_t _time,const char *_filename,uint _line,const char *_funct
 {
   try
   {
-    if (!enabled  ||  file == NULL  ||  _event == NULL  ||  _filename == NULL  ||  _function == NULL)
+    if (!enabled  ||  file == nullptr  ||  _event == nullptr  ||  _filename == nullptr  ||  _function == nullptr)
       return;
 
     struct tm x_tm;
@@ -408,7 +414,7 @@ void Log::print(time_t _time,const char *_filename,uint _line,const char *_funct
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -420,7 +426,7 @@ void Log::print(void *_data,uint _size)
 {
   try
   {
-    if (!enabled  ||  file == NULL)
+    if (!enabled  ||  file == nullptr)
       return;
 
     AutoThreadLock tLock(&threadLock);
@@ -429,7 +435,7 @@ void Log::print(void *_data,uint _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -441,7 +447,7 @@ void Log::truncate()
 {
   try
   {
-    if (!enabled  ||  file == NULL)
+    if (!enabled  ||  file == nullptr)
       return;
 
     AutoThreadLock tLock(&threadLock);
@@ -466,7 +472,7 @@ void Log::truncate()
     // ### Closing and renaming the log file
 
     fclose(file);
-    file = NULL;
+    file = nullptr;
     rename(filename.c_str(),tmpFilename);
 
     // ### Opening a new log file
@@ -476,7 +482,7 @@ void Log::truncate()
     // ### Copying log information into the new log file
 
     FILE *oldfile = fopen(tmpFilename,"r");
-    if (oldfile == NULL)
+    if (oldfile == nullptr)
     {
       // ### ERROR
       return;
@@ -502,7 +508,7 @@ void Log::truncate()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

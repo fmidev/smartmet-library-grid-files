@@ -28,6 +28,10 @@ void time_usleep(int _sec,int _usec);
 uint stringToId(const char *str,uint len);
 uint stringToId(const char *str);
 
+float ibm2ieee(float ibmFloat);
+float ieee2ibm(float value);
+
+
 /*
 time_t      localTimeToTimeT(std::string localTime,const char *tzone);
 time_t      utcTimeToTimeT(std::string utcTime);

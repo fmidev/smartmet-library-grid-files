@@ -30,7 +30,7 @@ std::string get_fileTypeString(FileType fileType)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -44,6 +44,9 @@ std::string get_gridLayoutString(GridLayout layout)
   {
     switch (layout)
     {
+      case GridLayout::Unknown:
+        return "Unknown";
+
       case GridLayout::Regular:
         return "Reqular";
 
@@ -60,7 +63,7 @@ std::string get_gridLayoutString(GridLayout layout)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -99,7 +102,7 @@ std::string get_areaInterpolationMethodString(short interpolationMethod)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -138,7 +141,7 @@ std::string get_timeInterpolationMethodString(short interpolationMethod)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -180,7 +183,7 @@ std::string get_levelInterpolationMethodString(short interpolationMethod)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -268,7 +271,7 @@ std::string get_gridProjectionString(GridProjection gridType)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

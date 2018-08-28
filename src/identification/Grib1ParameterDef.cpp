@@ -21,7 +21,7 @@ Grib1ParameterDef::Grib1ParameterDef()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -45,7 +45,7 @@ Grib1ParameterDef::Grib1ParameterDef(const Grib1ParameterDef& parameter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -59,7 +59,8 @@ Grib1ParameterDef::~Grib1ParameterDef()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -90,7 +91,7 @@ void Grib1ParameterDef::print(std::ostream& stream,uint level,uint optionFlags) 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

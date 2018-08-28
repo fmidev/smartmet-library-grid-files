@@ -39,6 +39,24 @@ TimeSectionImpl::~TimeSectionImpl()
 
 
 
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* TimeSectionImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new TimeSectionImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -57,7 +75,7 @@ void TimeSectionImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -91,7 +109,7 @@ T::Coordinate_vec TimeSectionImpl::getGridCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt TimeSectionImpl::getGridDimensions() const
+T::Dimensions TimeSectionImpl::getGridDimensions() const
 {
   try
   {
@@ -99,7 +117,7 @@ T::Dimensions_opt TimeSectionImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -128,7 +146,7 @@ bool TimeSectionImpl::getGridPointByLatLonCoordinates(double lat,double lon,doub
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -151,7 +169,7 @@ void TimeSectionImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

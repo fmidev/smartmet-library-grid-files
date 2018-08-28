@@ -4,6 +4,7 @@
 #include "../common/Dimensions.h"
 #include "../common/Exception.h"
 #include "../common/GeneralFunctions.h"
+#include "../common/ShowFunction.h"
 
 #include "implementation/LatLonImpl.h"                             //  "3.0"
 #include "implementation/RotatedLatLonImpl.h"                      //  "3.1"
@@ -37,27 +38,65 @@
 
 #include <iostream>
 
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
+
+
+
 namespace SmartMet
 {
 namespace GRIB2
 {
 
 
-/*! \brief The constructor of the class.
+/*! \brief The constructor of the class. */
 
-        \param message  A pointer to the message object.
-*/
-
-GridSection::GridSection(Message *message)
+GridSection::GridSection()
 {
+  FUNCTION_TRACE
   try
   {
-    mMessage = message;
+    mMessage = nullptr;
     mFilePosition = 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+GridSection::GridSection(const GridSection& other)
+:GRID::MessageSection(other)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mMessage = nullptr;
+    mFilePosition = other.mFilePosition;
+    mSectionLength = other.mSectionLength;
+    mNumberOfSection = other.mNumberOfSection;
+    mSourceOfGridDefinition = other.mSourceOfGridDefinition;
+    mNumberOfGridPoints = other.mNumberOfGridPoints;
+    mNumberOfOctetsForNumberOfPoints = other.mNumberOfOctetsForNumberOfPoints;
+    mInterpretationOfNumberOfPoints = other.mInterpretationOfNumberOfPoints;
+    mGridDefinitionTemplateNumber = other.mGridDefinitionTemplateNumber;
+    mDataPoints = other.mDataPoints;
+
+    if (other.mGridDefinition)
+    {
+      GridDefinition *def = other.mGridDefinition->createGridDefinition();
+      mGridDefinition.reset(def);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",nullptr);
   }
 }
 
@@ -81,6 +120,7 @@ GridSection::~GridSection()
 
 void GridSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
 {
+  FUNCTION_TRACE
   try
   {
     char name[300];
@@ -116,7 +156,67 @@ void GridSection::getAttributeList(std::string prefix,T::AttributeList& attribut
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::setMessagePtr(Message *message)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mMessage = message;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridSection::setProperty(uint propertyId,long long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::SourceOfGridDefinition:
+        setSourceOfGridDefinition(value);
+        return true;
+
+      case Property::GridSection::NumberOfGridPoints:
+        setNumberOfGridPoints(value);
+        return true;
+
+      case Property::GridSection::NumberOfOctetsForNumberOfPoints:
+        setNumberOfOctetsForNumberOfPoints(value);
+        return true;
+
+      case Property::GridSection::InterpretationOfNumberOfPoints:
+        setInterpretationOfNumberOfPoints(value);
+        return true;
+
+      case Property::GridSection::GridDefinitionTemplateNumber:
+        setGridDefinition((std::uint16_t)value);
+        return true;
+    }
+
+    if (mGridDefinition)
+      return mGridDefinition->setProperty(propertyId,value);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -131,6 +231,7 @@ void GridSection::getAttributeList(std::string prefix,T::AttributeList& attribut
 
 void GridSection::read(MemoryReader& memoryReader)
 {
+  FUNCTION_TRACE
   try
   {
     mFilePosition = memoryReader.getGlobalReadPosition();
@@ -149,7 +250,7 @@ void GridSection::read(MemoryReader& memoryReader)
     memoryReader >> mNumberOfGridPoints;
     if (missing(mNumberOfGridPoints))
     {
-      SmartMet::Spine::Exception exception(BCP,"Section number of grid points cannot be MISSING");
+      SmartMet::Spine::Exception exception(BCP,"Number of grid points cannot be MISSING");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-4));
       throw exception;
     }
@@ -157,7 +258,7 @@ void GridSection::read(MemoryReader& memoryReader)
     memoryReader >> mNumberOfOctetsForNumberOfPoints;
     if (missing(mNumberOfOctetsForNumberOfPoints))
     {
-      SmartMet::Spine::Exception exception(BCP,"Section number of octets for number of points cannot be MISSING");
+      SmartMet::Spine::Exception exception(BCP,"Number of octets for number of points cannot be MISSING");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
     }
@@ -167,7 +268,7 @@ void GridSection::read(MemoryReader& memoryReader)
     if (missing(mInterpretationOfNumberOfPoints))
     {
       // A missing value makes no sense, the value should be zero if there are no points
-      SmartMet::Spine::Exception exception(BCP,"Section 3 interpretation of number of points cannot be missing");
+      SmartMet::Spine::Exception exception(BCP,"Interpretation of number of points cannot be missing");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
     }
@@ -178,13 +279,16 @@ void GridSection::read(MemoryReader& memoryReader)
 
     try
     {
-      auto gridDefinition = createGridDefinition(mGridDefinitionTemplateNumber);
-      mGridDefinition.reset(gridDefinition);
-      gridDefinition->read(memoryReader);
+      if (mGridDefinitionTemplateNumber)
+      {
+        auto gridDefinition = createGridDefinition(*mGridDefinitionTemplateNumber);
+        mGridDefinition.reset(gridDefinition);
+        gridDefinition->read(memoryReader);
+      }
     }
     catch (...)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot create a grid definition!",NULL);
+      SmartMet::Spine::Exception exception(BCP,"Cannot create a grid definition!",nullptr);
       exception.addParameter("Read position",uint64_toHex(rPos));
       throw exception;
     }
@@ -198,7 +302,7 @@ void GridSection::read(MemoryReader& memoryReader)
       // TODO: Read the datapoints
     }
 
-    if (mGridDefinition != NULL)
+    if (mGridDefinition != nullptr)
       mGridDefinition->initSpatialReference();
 
     getGridHash();
@@ -208,7 +312,59 @@ void GridSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Operation failed failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::write(DataWriter& dataWriter)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mNumberOfOctetsForNumberOfPoints = 0;
+    mInterpretationOfNumberOfPoints = 0;
+    /*
+    if (missing(mNumberOfOctetsForNumberOfPoints))
+      throw SmartMet::Spine::Exception(BCP,"Number of octets for number of points cannot be MISSING");
+
+    if (missing(mInterpretationOfNumberOfPoints))
+      throw SmartMet::Spine::Exception(BCP,"Section 3 interpretation of number of points cannot be missing");
+*/
+    if (!mGridDefinition)
+      throw SmartMet::Spine::Exception(BCP,"Grid definition missing");
+
+    mFilePosition = dataWriter.getWritePosition();
+
+    mSectionLength = 0;
+    mNumberOfSection = (std::uint8_t)Message::SectionNumber::grid_section;
+    mGridDefinitionTemplateNumber = mGridDefinition->getTemplateNumber();
+
+    dataWriter << mSectionLength;
+    dataWriter << mNumberOfSection;
+    dataWriter << mSourceOfGridDefinition;
+    dataWriter << mNumberOfGridPoints;
+    dataWriter << mNumberOfOctetsForNumberOfPoints;
+    dataWriter << mInterpretationOfNumberOfPoints;
+    dataWriter << mGridDefinitionTemplateNumber;
+
+    mGridDefinition->write(dataWriter);
+
+
+    // Updating the section length.
+
+    ulonglong fPos = dataWriter.getWritePosition();
+    mSectionLength = fPos - mFilePosition;
+    dataWriter.setWritePosition(mFilePosition);
+    dataWriter << mSectionLength;
+    dataWriter.setWritePosition(fPos);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -223,13 +379,14 @@ void GridSection::read(MemoryReader& memoryReader)
 
 T::FilePosition GridSection::getFilePosition() const
 {
+  FUNCTION_TRACE
   try
   {
     return mFilePosition;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -244,13 +401,17 @@ T::FilePosition GridSection::getFilePosition() const
 
 std::uint32_t GridSection::getSectionLength() const
 {
+  FUNCTION_TRACE
   try
   {
-    return *mSectionLength;
+    if (mSectionLength)
+      return *mSectionLength;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -262,13 +423,14 @@ std::uint32_t GridSection::getSectionLength() const
 
 std::string GridSection::getSectionName() const
 {
+  FUNCTION_TRACE
   try
   {
     return std::string("Grid");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -280,13 +442,14 @@ std::string GridSection::getSectionName() const
 
 std::uint8_t GridSection::getSectionNumber() const
 {
+  FUNCTION_TRACE
   try
   {
     return (std::uint8_t)Message::SectionNumber::grid_section;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -298,13 +461,17 @@ std::uint8_t GridSection::getSectionNumber() const
 
 std::uint8_t GridSection::getNumberOfSection() const
 {
+  FUNCTION_TRACE
   try
   {
-    return *mNumberOfSection;
+    if (mNumberOfSection)
+      return *mNumberOfSection;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -316,13 +483,14 @@ std::uint8_t GridSection::getNumberOfSection() const
 
 T::UInt8_opt GridSection::getSourceOfGridDefinition() const
 {
+  FUNCTION_TRACE
   try
   {
     return mSourceOfGridDefinition;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -337,13 +505,17 @@ T::UInt8_opt GridSection::getSourceOfGridDefinition() const
 
 std::uint32_t GridSection::getNumberOfGridPoints() const
 {
+  FUNCTION_TRACE
   try
   {
-    return *mNumberOfGridPoints;
+    if (mNumberOfGridPoints)
+      return *mNumberOfGridPoints;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -358,13 +530,17 @@ std::uint32_t GridSection::getNumberOfGridPoints() const
 
 std::uint8_t GridSection::getNumberOfOctetsForNumberOfPoints() const
 {
+  FUNCTION_TRACE
   try
   {
-    return *mNumberOfOctetsForNumberOfPoints;
+    if (mNumberOfOctetsForNumberOfPoints)
+      return *mNumberOfOctetsForNumberOfPoints;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -380,13 +556,17 @@ std::uint8_t GridSection::getNumberOfOctetsForNumberOfPoints() const
 
 std::uint8_t GridSection::getInterpretationOfNumberOfPoints() const
 {
+  FUNCTION_TRACE
   try
   {
-    return *mInterpretationOfNumberOfPoints;
+    if (mInterpretationOfNumberOfPoints)
+      return *mInterpretationOfNumberOfPoints;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -401,13 +581,14 @@ std::uint8_t GridSection::getInterpretationOfNumberOfPoints() const
 
 T::UInt16_opt GridSection::getGridDefinitionTemplateNumber() const
 {
+  FUNCTION_TRACE
   try
   {
     return mGridDefinitionTemplateNumber;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -425,8 +606,9 @@ T::UInt16_opt GridSection::getGridDefinitionTemplateNumber() const
       \return   The grid dimensions.
 */
 
-T::Dimensions_opt GridSection::getGridDimensions() const
+T::Dimensions GridSection::getGridDimensions() const
 {
+  FUNCTION_TRACE
   try
   {
     const auto source = getSourceOfGridDefinition();
@@ -438,8 +620,8 @@ T::Dimensions_opt GridSection::getGridDimensions() const
     if (!mGridDefinition)
       return {};
 
-    if (missing(source) || *source != 0)
-      return {};
+    //if (missing(source) || *source != 0)
+    //  return {};
 
     // Cannot handle irregular grids. Note that if interpretation=3, there is a separate list
     // of latitudes and hence it might be possible that the grid is regular, not just using
@@ -455,7 +637,7 @@ T::Dimensions_opt GridSection::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -465,6 +647,7 @@ T::Dimensions_opt GridSection::getGridDimensions() const
 
 T::GeometryId GridSection::getGridGeometryId() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition)
@@ -474,7 +657,7 @@ T::GeometryId GridSection::getGridGeometryId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -484,6 +667,7 @@ T::GeometryId GridSection::getGridGeometryId() const
 
 std::string GridSection::getGridGeometryString() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition)
@@ -494,24 +678,7 @@ std::string GridSection::getGridGeometryString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
-void GridSection::setGridGeometryId(T::GeometryId geometryId)
-{
-  try
-  {
-    if (mGridDefinition)
-      return mGridDefinition->setGridGeometryId(geometryId);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -529,16 +696,17 @@ void GridSection::setGridGeometryId(T::GeometryId geometryId)
 
 T::Coordinate_vec GridSection::getGridCoordinates() const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridCoordinates();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -548,16 +716,17 @@ T::Coordinate_vec GridSection::getGridCoordinates() const
 
 T::Coordinate_vec GridSection::getGridLatLonCoordinates() const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLatLonCoordinates();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -567,16 +736,17 @@ T::Coordinate_vec GridSection::getGridLatLonCoordinates() const
 
 bool GridSection::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLatLonCoordinatesByGridPoint(grid_i,grid_j,lat,lon);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -586,16 +756,17 @@ bool GridSection::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,do
 
 bool GridSection::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLatLonCoordinatesByGridPosition(grid_i,grid_j,lat,lon);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -605,16 +776,17 @@ bool GridSection::getGridLatLonCoordinatesByGridPosition(double grid_i,double gr
 
 bool GridSection::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -624,16 +796,17 @@ bool GridSection::getGridLatLonCoordinatesByOriginalCoordinates(double x,double 
 
 bool GridSection::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalCoordinatesByGridPoint(grid_i,grid_j,x,y);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -643,16 +816,17 @@ bool GridSection::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,
 
 bool GridSection::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -662,16 +836,17 @@ bool GridSection::getGridOriginalCoordinatesByGridPosition(double grid_i,double 
 
 bool GridSection::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -687,16 +862,17 @@ bool GridSection::getGridOriginalCoordinatesByLatLonCoordinates(double lat,doubl
 
 T::Hash GridSection::getGridHash() const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition != NULL)
+    if (mGridDefinition != nullptr)
       return mGridDefinition->getGridHash();
 
     return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -716,16 +892,17 @@ T::Hash GridSection::getGridHash() const
 
 bool GridSection::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -745,16 +922,17 @@ bool GridSection::getGridPointByLatLonCoordinates(double lat,double lon,double& 
 
 bool GridSection::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -770,6 +948,7 @@ bool GridSection::getGridPointByOriginalCoordinates(double x,double y,double& gr
 
 std::string GridSection::getGridProjectionString() const
 {
+  FUNCTION_TRACE
   try
   {
     std::uint8_t tablesVersion = mMessage->getTablesVersion();
@@ -777,7 +956,7 @@ std::string GridSection::getGridProjectionString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -792,16 +971,17 @@ std::string GridSection::getGridProjectionString() const
 
 T::GridLayout GridSection::getGridLayout() const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLayout();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -816,16 +996,17 @@ T::GridLayout GridSection::getGridLayout() const
 
 T::GridProjection GridSection::getGridProjection() const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridProjection();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -840,17 +1021,18 @@ T::GridProjection GridSection::getGridProjection() const
 
 std::size_t GridSection::getGridOriginalRowCount() const
 {
+  FUNCTION_TRACE
   try
   {
     auto d = getGridDimensions();
-    if (d)
-      return d->ny();
+    if (d.getDimensions() == 2)
+      return d.ny();
 
     return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -867,17 +1049,18 @@ std::size_t GridSection::getGridOriginalRowCount() const
 
 std::size_t GridSection::getGridOriginalColumnCount(std::size_t row) const
 {
+  FUNCTION_TRACE
   try
   {
     auto d = getGridDimensions();
-    if (d)
-      return d->nx();
+    if (d.getDimensions() == 2)
+      return d.nx();
 
     return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -893,17 +1076,18 @@ std::size_t GridSection::getGridOriginalColumnCount(std::size_t row) const
 
 std::size_t GridSection::getGridOriginalColumnCount() const
 {
+  FUNCTION_TRACE
   try
   {
     auto d = getGridDimensions();
-    if (d)
-      return d->nx();
+    if (d.getDimensions() == 2)
+      return d.nx();
 
     return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -918,17 +1102,18 @@ std::size_t GridSection::getGridOriginalColumnCount() const
 
 std::size_t GridSection::getGridOriginalValueCount() const
 {
+  FUNCTION_TRACE
   try
   {
     auto d = getGridDimensions();
-    if (d)
-      return d->ny() * d->nx();
+    if (d.getDimensions() == 2)
+      return d.ny() * d.nx();
 
     return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -952,24 +1137,25 @@ std::size_t GridSection::getGridOriginalValueCount() const
 
 int GridSection::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
     auto d = getGridDimensions();
-    if (d)
+    if (d.getDimensions() == 2)
     {
-      if (grid_j >= d->ny())
+      if (grid_j >= d.ny())
         return -1;
 
-      if (grid_i >= d->nx() &&  !isGridGlobal())
+      if (grid_i >= d.nx() &&  !isGridGlobal())
         return -1;
 
-      return (grid_j * d->nx() + (grid_i % d->nx()));
+      return (grid_j * d.nx() + (grid_i % d.nx()));
     }
     return -1;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -977,18 +1163,19 @@ int GridSection::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 
 
 
-T::SpatialReference* GridSection::getSpatialReference() const
+T::SpatialRef* GridSection::getSpatialReference() const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition != NULL)
+    if (mGridDefinition != nullptr)
       return mGridDefinition->getSpatialReference();
 
-    return NULL;
+    return nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -998,16 +1185,17 @@ T::SpatialReference* GridSection::getSpatialReference() const
 
 bool GridSection::reverseXDirection() const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition != NULL)
+    if (mGridDefinition != nullptr)
       return mGridDefinition->reverseXDirection();
 
-    return NULL;
+    return false;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1017,16 +1205,17 @@ bool GridSection::reverseXDirection() const
 
 bool GridSection::reverseYDirection() const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition != NULL)
+    if (mGridDefinition != nullptr)
       return mGridDefinition->reverseYDirection();
 
-    return NULL;
+    return false;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1044,19 +1233,144 @@ bool GridSection::reverseYDirection() const
 
 bool GridSection::isGridGlobal() const
 {
+  FUNCTION_TRACE
   try
   {
-    if (mGridDefinition == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to NULL!");
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->isGridGlobal();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
+
+
+
+
+void GridSection::setNumberOfSection(std::uint8_t section)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mNumberOfSection = section;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::setSourceOfGridDefinition(T::UInt8_opt source)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mSourceOfGridDefinition = source;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::setNumberOfGridPoints(std::uint32_t gridPoints)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mNumberOfGridPoints = gridPoints;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::setNumberOfOctetsForNumberOfPoints(std::uint8_t octets)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mNumberOfOctetsForNumberOfPoints = octets;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::setInterpretationOfNumberOfPoints(std::uint8_t points)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mInterpretationOfNumberOfPoints = points;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::setGridGeometryId(T::GeometryId geometryId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->setGridGeometryId(geometryId);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::setGridDefinition(std::uint16_t templateNumber)
+{
+  try
+  {
+    GridDefinition *gridDefinition = GridSection::createGridDefinition(templateNumber);
+
+    if (gridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"Grid definition creation failed!");
+
+    mGridDefinitionTemplateNumber = templateNumber;
+    mGridDefinition.reset(gridDefinition);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 
@@ -1067,15 +1381,12 @@ bool GridSection::isGridGlobal() const
       \return   The pointer to the created GridDefinition object.
 */
 
-GridDefinition* GridSection::createGridDefinition(T::UInt16_opt(number))
+GridDefinition* GridSection::createGridDefinition(std::uint16_t templateNumber)
 {
+  FUNCTION_TRACE
   try
   {
-    // Unknown grid?
-    if (missing(number))
-      return nullptr;
-
-    switch (*number)
+    switch (templateNumber)
     {
       case 0:
         return new LatLonImpl();
@@ -1137,12 +1448,12 @@ GridDefinition* GridSection::createGridDefinition(T::UInt16_opt(number))
         return new TimeSectionImpl();
       default:
         throw SmartMet::Spine::Exception(BCP,"Unknown grid definition template number '" +
-                                 std::to_string(static_cast<int>(*number)) + "'!");
+                                 std::to_string(templateNumber) + "'!");
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Creation of a grid definition failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Creation of a grid definition failed!",nullptr);
   }
 }
 
@@ -1193,7 +1504,7 @@ void GridSection::print(std::ostream& stream,uint level,uint optionFlags) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

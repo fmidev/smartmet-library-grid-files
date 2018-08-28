@@ -8,10 +8,11 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "GridSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -20,21 +21,23 @@ namespace GRIB2 {
 class GaussianSettings {
 public:
   GaussianSettings();
+  GaussianSettings(const GaussianSettings &other);
   virtual ~GaussianSettings();
 
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const GridSettings *getGrid() const;
-  void setGrid(GridSettings grid);
+  GridSettings *getGrid() const;
+  void setGrid(GridSettings &grid);
   const T::UInt32_opt &getIDirectionIncrement() const;
   void setIDirectionIncrement(T::UInt32_opt iDirectionIncrement);
   const T::UInt32_opt &getN() const;
   void setN(T::UInt32_opt n);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

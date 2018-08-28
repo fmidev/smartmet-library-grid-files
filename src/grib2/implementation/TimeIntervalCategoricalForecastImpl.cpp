@@ -18,10 +18,39 @@ TimeIntervalCategoricalForecastImpl::TimeIntervalCategoricalForecastImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalCategoricalForecastImpl::TimeIntervalCategoricalForecastImpl(const TimeIntervalCategoricalForecastImpl& other)
+:TimeIntervalCategoricalForecast(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 TimeIntervalCategoricalForecastImpl::~TimeIntervalCategoricalForecastImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* TimeIntervalCategoricalForecastImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new TimeIntervalCategoricalForecastImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void TimeIntervalCategoricalForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -70,7 +99,7 @@ T::ParamLevel TimeIntervalCategoricalForecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +123,7 @@ T::ParamLevelId TimeIntervalCategoricalForecastImpl::getGribParameterLevelId() c
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

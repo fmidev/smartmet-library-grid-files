@@ -8,10 +8,11 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../RepresentationDefinition.h"
 #include "PackingSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -20,15 +21,19 @@ namespace GRIB2 {
 class SpectralDataRepresentation : public RepresentationDefinition {
 public:
   SpectralDataRepresentation();
+  SpectralDataRepresentation(const SpectralDataRepresentation &other);
   virtual ~SpectralDataRepresentation();
 
+  virtual uint getTemplateNumber() const;
+  virtual RepresentationDefinition *createRepresentationDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const PackingSettings *getPacking() const;
-  void setPacking(PackingSettings packing);
+  PackingSettings *getPacking() const;
+  void setPacking(PackingSettings &packing);
   float getRealPartOf00() const;
   void setRealPartOf00(float realPartOf00);
 

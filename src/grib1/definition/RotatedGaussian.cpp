@@ -25,17 +25,29 @@ RotatedGaussian::RotatedGaussian() {
     mIDirectionIncrement = 0;
     mN = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+RotatedGaussian::RotatedGaussian(const RotatedGaussian &other) : GridDefinition(other) {
+  try {
+    mNi = other.mNi;
+    mNj = other.mNj;
+    mGridArea = other.mGridArea;
+    mIDirectionIncrement = other.mIDirectionIncrement;
+    mN = other.mN;
+    mScanningMode = other.mScanningMode;
+    mRotation = other.mRotation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 RotatedGaussian::~RotatedGaussian() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current section object.
@@ -53,7 +65,26 @@ void RotatedGaussian::read(MemoryReader &memoryReader) {
     mScanningMode.read(memoryReader);
     mRotation.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current section object.
+
+        \param dataWriter  This object controls the write stream.
+*/
+
+void RotatedGaussian::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mNi;
+    dataWriter << mNj;
+    mGridArea.write(dataWriter);
+    dataWriter << mIDirectionIncrement;
+    dataWriter << mN;
+    mScanningMode.write(dataWriter);
+    mRotation.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -81,7 +112,7 @@ void RotatedGaussian::getAttributeList(std::string prefix, T::AttributeList &att
     sprintf(name, "%sRotatedGaussian.", prefix.c_str());
     mRotation.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -103,7 +134,7 @@ void RotatedGaussian::print(std::ostream &stream, uint level, uint optionFlags) 
     mScanningMode.print(stream, level + 1, optionFlags);
     mRotation.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -121,7 +152,21 @@ T::Hash RotatedGaussian::countHash() {
     boost::hash_combine(seed, mRotation.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint RotatedGaussian::getTemplateNumber() const {
+  return 14;
+}
+
+GridDefinition *RotatedGaussian::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new RotatedGaussian(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -131,7 +176,7 @@ std::uint16_t RotatedGaussian::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -141,17 +186,17 @@ std::int16_t RotatedGaussian::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mGridArea} attribute. */
 
-const GridAreaSettings *RotatedGaussian::getGridArea() const {
+GridAreaSettings *RotatedGaussian::getGridArea() const {
   try {
-    return &mGridArea;
+    return (GridAreaSettings *)&mGridArea;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -161,7 +206,7 @@ std::uint16_t RotatedGaussian::getIDirectionIncrement() const {
   try {
     return mIDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -171,27 +216,27 @@ std::uint16_t RotatedGaussian::getN() const {
   try {
     return mN;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
-const ScanningModeSettings *RotatedGaussian::getScanningMode() const {
+ScanningModeSettings *RotatedGaussian::getScanningMode() const {
   try {
-    return &mScanningMode;
+    return (ScanningModeSettings *)&mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mRotation} attribute. */
 
-const RotationSettings *RotatedGaussian::getRotation() const {
+RotationSettings *RotatedGaussian::getRotation() const {
   try {
-    return &mRotation;
+    return (RotationSettings *)&mRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -199,7 +244,7 @@ void RotatedGaussian::setNi(std::uint16_t ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -207,15 +252,15 @@ void RotatedGaussian::setNj(std::int16_t nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void RotatedGaussian::setGridArea(GridAreaSettings gridArea) {
+void RotatedGaussian::setGridArea(GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -223,7 +268,7 @@ void RotatedGaussian::setIDirectionIncrement(std::uint16_t iDirectionIncrement) 
   try {
     mIDirectionIncrement = iDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -231,23 +276,23 @@ void RotatedGaussian::setN(std::uint16_t n) {
   try {
     mN = n;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void RotatedGaussian::setScanningMode(ScanningModeSettings scanningMode) {
+void RotatedGaussian::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void RotatedGaussian::setRotation(RotationSettings rotation) {
+void RotatedGaussian::setRotation(RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

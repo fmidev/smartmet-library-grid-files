@@ -113,7 +113,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -240,7 +240,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -253,6 +253,9 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
 {
   try
   {
+    if (polygonPath.size() == 0)
+      return;
+
     std::set<unsigned long long> cList;
 
     int minY = gridHeight-1;
@@ -324,7 +327,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
 
           if (c >= 200000)
           {
-            throw SmartMet::Spine::Exception(BCP,"Not enough space for the point list!",NULL);
+            throw SmartMet::Spine::Exception(BCP,"Not enough space for the point list!",nullptr);
           }
         }
 
@@ -396,7 +399,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -451,7 +454,7 @@ void getPointsInsideCircle(int gridWidth,int gridHeight,double origoX,double ori
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -505,7 +508,7 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,std::vector<std::vector<T:
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -531,7 +534,7 @@ std::string convertWktMultiPolygonToSvgString(const std::string& wktString)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -550,7 +553,7 @@ void convertWktMultipolygonToSvgPath(const std::string& wktString,NFmiSvgPath& s
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -571,7 +574,7 @@ void convertWktMultipolygonToPolygonPath(const std::string& wktString,std::vecto
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -621,7 +624,7 @@ bool getLineIntersection(double ax1, double ay1,double ax2, double ay2,double bx
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -643,7 +646,7 @@ bool getLineIntersection(std::pair<T::Coordinate,T::Coordinate> line1,std::pair<
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -733,7 +736,7 @@ void getPointMovement(double x1,double y1,double x2,double y2,double areaExtensi
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -823,7 +826,7 @@ void getPointMovementRev(double x1,double y1,double x2,double y2,double areaExte
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -885,7 +888,7 @@ std::vector<T::Coordinate> getEnlargedPolygon(std::vector<T::Coordinate>& oldCoo
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -913,7 +916,7 @@ double getPolygonLen(std::vector<T::Coordinate>& coordinates)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -949,7 +952,7 @@ std::vector<T::Coordinate> getEnlargedPolygon(std::vector<T::Coordinate>& oldCoo
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -973,7 +976,7 @@ std::vector<std::vector<T::Coordinate>> getEnlargedPolygonPath(std::vector<std::
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

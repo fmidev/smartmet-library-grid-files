@@ -100,7 +100,8 @@
 2;302;TB_LAR_016;126;151;2;-7.6;0.16;0.16;+x+y;0;-30;0;Testbed larger area 0.16 deg;
 2;303;TB_SMA_02;21;25;10.4;1;0.2;0.2;+x+y;0;-30;0;Testbed smaller area 0.2 deg;
 2;304;TB_SMA_008;51;61;10.4;1;0.08;0.08;+x+y;0;-30;0;Testbed smaller area 0.08 deg;
-2;401;ECEUR0125;529;461;-26;22.5;0.125;0.125;+x-y;0;-30;0;Europe, rotated 0,125 deg;
+2;401;ECEUR0125;529;461;-26;-22.5;0.125;0.125;+x-y;0;-30;0;Europe, rotated 0,125 deg;
+#2;401;ECEUR0125;529;461;-26;22.5;0.125;0.125;+x-y;0;-30;0;Europe, rotated 0,125 deg;
 2;402;MTEUR0125;465;461;-18;-35;0.125;0.125;+x+y;0;-30;0;Europe ,rotated 0.125 deg.;
 2;404;ECEDIT125;161;177;-10;13;0.125;0.125;+x-y;20;-30;0;EC editing area in 0.125 deg;
 2;405;MTEDIT125;161;177;-10;-9;0.125;0.125;+x+y;20;-30;0;EC MTA editing area in 0.125 deg;

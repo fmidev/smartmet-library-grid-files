@@ -14,15 +14,15 @@ class CImage
     {
       width = 0;
       height = 0;
-      pixel = NULL;
+      pixel = nullptr;
     }
 
     CImage(const CImage& image)
     {
       width = image.width;
       height = image.height;
-      pixel = NULL;
-      if (image.pixel != NULL  &&  width != 0  &&  height != 0)
+      pixel = nullptr;
+      if (image.pixel != nullptr  &&  width != 0  &&  height != 0)
       {
         int sz = width*height;
         pixel = new uint[sz];
@@ -32,20 +32,20 @@ class CImage
 
     virtual ~CImage()
     {
-      if (pixel != NULL)
+      if (pixel != nullptr)
         delete pixel;
     }
 
     void operator=(const CImage& image)
     {
-      if (pixel != NULL)
+      if (pixel != nullptr)
         delete pixel;
 
-      pixel = NULL;
+      pixel = nullptr;
       width = image.width;
       height = image.height;
 
-      if (image.pixel != NULL  &&  width != 0  &&  height != 0)
+      if (image.pixel != nullptr  &&  width != 0  &&  height != 0)
       {
         int sz = width*height;
         pixel = new uint[sz];

@@ -21,17 +21,25 @@ namespace GRIB2 {
 RotatedLatLon::RotatedLatLon() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+RotatedLatLon::RotatedLatLon(const RotatedLatLon &other) : GridDefinition(other) {
+  try {
+    mEarthShape = other.mEarthShape;
+    mLatLon = other.mLatLon;
+    mRotation = other.mRotation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 RotatedLatLon::~RotatedLatLon() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +53,22 @@ void RotatedLatLon::read(MemoryReader &memoryReader) {
     mLatLon.read(memoryReader);
     mRotation.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void RotatedLatLon::write(DataWriter &dataWriter) {
+  try {
+    mEarthShape.write(dataWriter);
+    mLatLon.write(dataWriter);
+    mRotation.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +88,7 @@ void RotatedLatLon::getAttributeList(std::string prefix, T::AttributeList &attri
     sprintf(name, "%sRotatedLatLon.", prefix.c_str());
     mRotation.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +106,7 @@ void RotatedLatLon::print(std::ostream &stream, uint level, uint optionFlags) co
     mLatLon.print(stream, level + 1, optionFlags);
     mRotation.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -97,61 +120,75 @@ T::Hash RotatedLatLon::countHash() {
     boost::hash_combine(seed, mRotation.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint RotatedLatLon::getTemplateNumber() const {
+  return 1;
+}
+
+GridDefinition *RotatedLatLon::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new RotatedLatLon(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
-const EarthShapeSettings *RotatedLatLon::getEarthShape() const {
+EarthShapeSettings *RotatedLatLon::getEarthShape() const {
   try {
-    return &mEarthShape;
+    return (EarthShapeSettings *)&mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mLatLon} attribute. */
 
-const LatLonSettings *RotatedLatLon::getLatLon() const {
+LatLonSettings *RotatedLatLon::getLatLon() const {
   try {
-    return &mLatLon;
+    return (LatLonSettings *)&mLatLon;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mRotation} attribute. */
 
-const RotationSettings *RotatedLatLon::getRotation() const {
+RotationSettings *RotatedLatLon::getRotation() const {
   try {
-    return &mRotation;
+    return (RotationSettings *)&mRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void RotatedLatLon::setEarthShape(EarthShapeSettings earthShape) {
+void RotatedLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void RotatedLatLon::setLatLon(LatLonSettings latLon) {
+void RotatedLatLon::setLatLon(LatLonSettings &latLon) {
   try {
     mLatLon = latLon;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void RotatedLatLon::setRotation(RotationSettings rotation) {
+void RotatedLatLon::setRotation(RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

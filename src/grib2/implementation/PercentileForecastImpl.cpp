@@ -18,10 +18,39 @@ PercentileForecastImpl::PercentileForecastImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+PercentileForecastImpl::PercentileForecastImpl(const PercentileForecastImpl& other)
+:PercentileForecast(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 PercentileForecastImpl::~PercentileForecastImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* PercentileForecastImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new PercentileForecastImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void PercentileForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -70,7 +99,7 @@ T::ParamLevel PercentileForecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +123,7 @@ T::ParamLevelId PercentileForecastImpl::getGribParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

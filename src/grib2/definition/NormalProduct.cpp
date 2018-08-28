@@ -21,17 +21,25 @@ namespace GRIB2 {
 NormalProduct::NormalProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+NormalProduct::NormalProduct(const NormalProduct &other) : ProductDefinition(other) {
+  try {
+    mParameter = other.mParameter;
+    mPointInTime = other.mPointInTime;
+    mHorizontal = other.mHorizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 NormalProduct::~NormalProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +53,22 @@ void NormalProduct::read(MemoryReader &memoryReader) {
     mPointInTime.read(memoryReader);
     mHorizontal.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void NormalProduct::write(DataWriter &dataWriter) {
+  try {
+    mParameter.write(dataWriter);
+    mPointInTime.write(dataWriter);
+    mHorizontal.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +88,7 @@ void NormalProduct::getAttributeList(std::string prefix, T::AttributeList &attri
     sprintf(name, "%sNormalProduct.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +106,7 @@ void NormalProduct::print(std::ostream &stream, uint level, uint optionFlags) co
     mPointInTime.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -97,61 +120,75 @@ T::Hash NormalProduct::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint NormalProduct::getTemplateNumber() const {
+  return 0;
+}
+
+ProductDefinition *NormalProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new NormalProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
-const ParameterSettings *NormalProduct::getParameter() const {
+ParameterSettings *NormalProduct::getParameter() const {
   try {
-    return &mParameter;
+    return (ParameterSettings *)&mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
 
-const PointInTimeSettings *NormalProduct::getPointInTime() const {
+PointInTimeSettings *NormalProduct::getPointInTime() const {
   try {
-    return &mPointInTime;
+    return (PointInTimeSettings *)&mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
-const HorizontalSettings *NormalProduct::getHorizontal() const {
+HorizontalSettings *NormalProduct::getHorizontal() const {
   try {
-    return &mHorizontal;
+    return (HorizontalSettings *)&mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void NormalProduct::setParameter(ParameterSettings parameter) {
+void NormalProduct::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void NormalProduct::setPointInTime(PointInTimeSettings pointInTime) {
+void NormalProduct::setPointInTime(PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void NormalProduct::setHorizontal(HorizontalSettings horizontal) {
+void NormalProduct::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

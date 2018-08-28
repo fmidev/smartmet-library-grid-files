@@ -15,6 +15,8 @@ class SphericalHarmonicsDataRepresentationImpl : public SphericalHarmonicsDataRe
               SphericalHarmonicsDataRepresentationImpl(const SphericalHarmonicsDataRepresentationImpl& other);
     virtual   ~SphericalHarmonicsDataRepresentationImpl();
 
+    RepresentationDefinition* createRepresentationDefinition() const;
+
     void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
     void      read(MemoryReader& memoryReader);
 };

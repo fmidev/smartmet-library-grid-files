@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../ProductDefinition.h"
 #include "EpsSettings.h"
 #include "SimulatedSatelliteProduct.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,17 +22,21 @@ namespace GRIB2 {
 class SimulatedSatelliteEnsembleProduct : public ProductDefinition {
 public:
   SimulatedSatelliteEnsembleProduct();
+  SimulatedSatelliteEnsembleProduct(const SimulatedSatelliteEnsembleProduct &other);
   virtual ~SimulatedSatelliteEnsembleProduct();
 
+  virtual uint getTemplateNumber() const;
+  virtual ProductDefinition *createProductDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const SimulatedSatelliteProduct *getSimulatedSatelliteProduct() const;
-  void setSimulatedSatelliteProduct(SimulatedSatelliteProduct simulatedSatelliteProduct);
-  const EpsSettings *getEps() const;
-  void setEps(EpsSettings eps);
+  SimulatedSatelliteProduct *getSimulatedSatelliteProduct() const;
+  void setSimulatedSatelliteProduct(SimulatedSatelliteProduct &simulatedSatelliteProduct);
+  EpsSettings *getEps() const;
+  void setEps(EpsSettings &eps);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

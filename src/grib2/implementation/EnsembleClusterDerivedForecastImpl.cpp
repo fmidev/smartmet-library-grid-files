@@ -18,10 +18,39 @@ EnsembleClusterDerivedForecastImpl::EnsembleClusterDerivedForecastImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+EnsembleClusterDerivedForecastImpl::EnsembleClusterDerivedForecastImpl(const EnsembleClusterDerivedForecastImpl& other)
+:EnsembleClusterDerivedForecast(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 EnsembleClusterDerivedForecastImpl::~EnsembleClusterDerivedForecastImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* EnsembleClusterDerivedForecastImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new EnsembleClusterDerivedForecastImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void EnsembleClusterDerivedForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -70,7 +99,7 @@ T::ParamLevel EnsembleClusterDerivedForecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +123,7 @@ T::ParamLevelId EnsembleClusterDerivedForecastImpl::getGribParameterLevelId() co
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

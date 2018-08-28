@@ -8,10 +8,11 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "RotationSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -20,13 +21,17 @@ namespace GRIB1 {
 class RotatedSphericalHarmonic : public GridDefinition {
 public:
   RotatedSphericalHarmonic();
+  RotatedSphericalHarmonic(const RotatedSphericalHarmonic &other);
   virtual ~RotatedSphericalHarmonic();
 
-  virtual void read(MemoryReader &memoryReader);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   std::uint16_t getJ() const;
   void setJ(std::uint16_t j);
   std::uint16_t getK() const;
@@ -37,8 +42,8 @@ public:
   void setRepresentationType(std::uint8_t representationType);
   std::uint8_t getRepresentationMode() const;
   void setRepresentationMode(std::uint8_t representationMode);
-  const RotationSettings *getRotation() const;
-  void setRotation(RotationSettings rotation);
+  RotationSettings *getRotation() const;
+  void setRotation(RotationSettings &rotation);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
@@ -54,7 +59,7 @@ protected:
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 51;
   //
-  // template commonBlock "../grid_definition_spherical_harmonics.def";
+  // template commonBlock "grib1/grid_definition_spherical_harmonics.def";
   // # Copyright 2005-2015 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0

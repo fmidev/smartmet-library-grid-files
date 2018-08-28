@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../grid/MessageSection.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 
 namespace SmartMet
@@ -69,7 +70,8 @@ class Message;
 class ProductSection : public GRID::MessageSection
 {
   public:
-                      ProductSection(Message *message);
+                      ProductSection();
+                      ProductSection(const ProductSection& other);
     virtual           ~ProductSection();
 
     // ### Common methods for all message sections
@@ -79,7 +81,6 @@ class ProductSection : public GRID::MessageSection
     std::uint32_t     getSectionLength() const;
     std::string       getSectionName() const;
     std::uint8_t      getSectionNumber() const;
-    void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
@@ -109,7 +110,38 @@ class ProductSection : public GRID::MessageSection
     T::TimeString     getForecastTime() const;
     short             getForecastType() const;
     short             getForecastNumber() const;
+
+    void              setTableVersion(std::uint8_t tableVersion);
+    void              setCentre(std::uint8_t centre);
+    void              setGeneratingProcessIdentifier(std::uint8_t generatingProcessIdentifier);
+    void              setGridDefinitionNumber(std::uint8_t gridDefinitionNumber);
+    void              setSectionFlags(std::uint8_t sectionFlags);
+    void              setIndicatorOfParameter(std::uint8_t indicatorOfParameter);
+    void              setIndicatorOfTypeOfLevel(std::uint8_t indicatorOfTypeOfLevel);
+    void              setLevel(std::uint16_t level);
+    void              setYearOfCentury(std::uint8_t yearOfCentury);
+    void              setMonth(std::uint8_t month);
+    void              setDay(std::uint8_t day);
+    void              setHour(std::uint8_t hour);
+    void              setMinute(std::uint8_t minute);
+    void              setUnitOfTimeRange(std::uint8_t unitOfTimeRange);
+    void              setP1(std::uint8_t p1);
+    void              setP2(std::uint8_t p2);
+    void              setTimeRangeIndicator(std::uint8_t timeRangeIndicator);
+    void              setNumberIncludedInAverage(std::uint16_t numberIncludeInAverage);
+    void              setNumberMissingFromAveragesOrAccumulations(std::uint8_t numberMissingFromAveragesOrAccumulations);
+    void              setCenturyOfReferenceTimeOfData(std::uint8_t centuryOfReferenceTimeOfData);
+    void              setSubCentre(std::uint8_t subCentre);
+    void              setDecimalScaleFactor(std::uint16_t decimalScaleFactor);
+    void              setForecastType(short forecastType);
+    void              setForecastNumber(short forecastNuber);
+    void              setMessagePtr(Message *message);
+
+    bool              setProperty(uint propertyId,long long value);
+
     void              read(MemoryReader& memoryReader);
+    void              write(DataWriter& dataWriter);
+    void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
@@ -192,10 +224,19 @@ class ProductSection : public GRID::MessageSection
 
     short             mForecastType;
     short             mForecastNumber;
+
+    /*! \brief  Optional extra data. */
+    T::Data_ptr       mDataPtr;
+
+    /*! \brief  The size of the optional extra data. */
+    uint              mDataSize;
+
+    bool              mReleaseData;
+
 };
 
 
-typedef std::unique_ptr<ProductSection> ProductSection_uptr;
+typedef std::shared_ptr<ProductSection> ProductSect_sptr;
 
 }  // namespace GRIB1
 }  // namespace SmartMet

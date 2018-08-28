@@ -11,12 +11,15 @@ namespace GRIB2
 class AggregateForecastImpl : public AggregateForecast
 {
   public:
-                      AggregateForecastImpl();
-    virtual           ~AggregateForecastImpl();
+                        AggregateForecastImpl();
+                        AggregateForecastImpl(const AggregateForecastImpl& other);
+     virtual             ~AggregateForecastImpl();
 
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

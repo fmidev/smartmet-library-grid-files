@@ -24,16 +24,25 @@ class GribFile : public GRID::PhysicalGridFile
   public:
 
                         GribFile();
+                        GribFile(const GribFile& other);
     virtual             ~GribFile();
 
+    GRID::GridFile*     createGridFile();
     void                deleteUsers();
     T::FileType         getFileType() const;
     std::string         getFileTypeString() const;
     GRID::Message*      getMessageByIndex(std::size_t index);
     std::size_t         getNumberOfMessages();
-    void                print(std::ostream& stream,uint level,uint optionFlags) const;
+
+    GRID::Message*      addMessage();
+    void                addMessage(GRID::Message *message);
+    void                addMessage(GRIB1::Message *message);
+
     void                read(std::string filename);
     void                read(MemoryReader& memoryReader);
+    void                write(std::string filename);
+    void                write(DataWriter& dataWriter);
+    void                print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 

@@ -21,17 +21,24 @@ namespace GRIB2 {
 ProcessedCrossSectionProduct::ProcessedCrossSectionProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+ProcessedCrossSectionProduct::ProcessedCrossSectionProduct(const ProcessedCrossSectionProduct &other) : ProductDefinition(other) {
+  try {
+    mParameter = other.mParameter;
+    mStatistical = other.mStatistical;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 ProcessedCrossSectionProduct::~ProcessedCrossSectionProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -44,7 +51,21 @@ void ProcessedCrossSectionProduct::read(MemoryReader &memoryReader) {
     mParameter.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void ProcessedCrossSectionProduct::write(DataWriter &dataWriter) {
+  try {
+    mParameter.write(dataWriter);
+    mStatistical.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -62,7 +83,7 @@ void ProcessedCrossSectionProduct::getAttributeList(std::string prefix, T::Attri
     sprintf(name, "%sProcessedCrossSectionProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -79,7 +100,7 @@ void ProcessedCrossSectionProduct::print(std::ostream &stream, uint level, uint 
     mParameter.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -92,43 +113,57 @@ T::Hash ProcessedCrossSectionProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint ProcessedCrossSectionProduct::getTemplateNumber() const {
+  return 1001;
+}
+
+ProductDefinition *ProcessedCrossSectionProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new ProcessedCrossSectionProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
-const ParameterSettings *ProcessedCrossSectionProduct::getParameter() const {
+ParameterSettings *ProcessedCrossSectionProduct::getParameter() const {
   try {
-    return &mParameter;
+    return (ParameterSettings *)&mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mStatistical} attribute. */
 
-const StatisticalSettings *ProcessedCrossSectionProduct::getStatistical() const {
+StatisticalSettings *ProcessedCrossSectionProduct::getStatistical() const {
   try {
-    return &mStatistical;
+    return (StatisticalSettings *)&mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void ProcessedCrossSectionProduct::setParameter(ParameterSettings parameter) {
+void ProcessedCrossSectionProduct::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void ProcessedCrossSectionProduct::setStatistical(StatisticalSettings statistical) {
+void ProcessedCrossSectionProduct::setStatistical(StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

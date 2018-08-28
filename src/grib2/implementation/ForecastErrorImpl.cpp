@@ -18,10 +18,39 @@ ForecastErrorImpl::ForecastErrorImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+ForecastErrorImpl::ForecastErrorImpl(const ForecastErrorImpl& other)
+:ForecastError(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 ForecastErrorImpl::~ForecastErrorImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* ForecastErrorImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new ForecastErrorImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void ForecastErrorImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

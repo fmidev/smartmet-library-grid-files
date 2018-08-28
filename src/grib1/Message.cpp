@@ -35,7 +35,7 @@ Message::Message()
   FUNCTION_TRACE
   try
   {
-    mGribFile = NULL;
+    mGribFile = nullptr;
     mFilePosition = 0;
     mGrib1ParameterLevelId = 0;
     mGrib2ParameterLevelId = 0;
@@ -55,7 +55,7 @@ Message::Message()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -63,37 +63,71 @@ Message::Message()
 
 
 
-/*! \brief The constructor of the class. */
-
-Message::Message(GribFile *gribFile)
+Message::Message(const Message& other)
+:GRID::Message(other)
 {
   FUNCTION_TRACE
   try
   {
-    mGribFile = gribFile;
-    mFilePosition = 0;
-    mGrib1ParameterLevelId = 0;
-    mGrib2ParameterLevelId = 0;
-    mFmiParameterLevelId = 0;
+    mGribFile = nullptr;
+    mFilePosition = other.mFilePosition;
+
+
+    if (other.mIndicatorSection)
+    {
+      mIndicatorSection.reset(new IndicatorSection(*(other.mIndicatorSection.get())));
+      mIndicatorSection->setMessagePtr(this);
+    }
+
+    if (other.mGridSection)
+    {
+      mGridSection.reset(new GridSection(*(other.mGridSection.get())));
+      mGridSection->setMessagePtr(this);
+    }
+
+    if (other.mProductSection)
+    {
+      mProductSection.reset(new ProductSection(*(other.mProductSection.get())));
+      mProductSection->setMessagePtr(this);
+    }
+    if (other.mBitmapSection)
+    {
+      mBitmapSection.reset(new BitmapSection(*(other.mBitmapSection.get())));
+      mBitmapSection->setMessagePtr(this);
+    }
+
+    if (other.mDataSection)
+    {
+      mDataSection.reset(new DataSection(*(other.mDataSection.get())));
+      mDataSection->setMessagePtr(this);
+    }
+
+
     mCacheKey = 0;
     mOrigCacheKey = 0;
-    mValueDecodingFailed = false;
-    mPointCachePosition = 0;
-    mPointCacheCoordinate = new uint[POINT_CACHE_SIZE];
-    mPointCacheValue = new T::ParamValue[POINT_CACHE_SIZE];
+    mValueDecodingFailed = other.mValueDecodingFailed;
+    mPointCacheCoordinate = nullptr;
+    mPointCacheValue = nullptr;
 
-    for (uint t=0; t<POINT_CACHE_SIZE; t++)
+    if (other.mPointCacheCoordinate != nullptr &&  other.mPointCacheValue != nullptr)
     {
-      mPointCacheCoordinate[t] = 0xFFFFFFFF;
-      mPointCacheValue[t] = 0;
+      mPointCacheCoordinate = new uint[POINT_CACHE_SIZE];
+      mPointCacheValue = new T::ParamValue[POINT_CACHE_SIZE];
+
+      for (uint t=0; t<POINT_CACHE_SIZE; t++)
+      {
+        mPointCacheCoordinate[t] = other.mPointCacheCoordinate[t];
+        mPointCacheValue[t] = other.mPointCacheValue[t];
+      }
+
+      mPointCachePosition = other.mPointCachePosition;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
-
 
 
 
@@ -110,7 +144,8 @@ Message::~Message()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -235,7 +270,24 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void Message::setGribFilePtr(GribFile *gribFile)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mGribFile = gribFile;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -258,13 +310,14 @@ void Message::read(MemoryReader& memoryReader)
     auto rPos = memoryReader.getGlobalReadPosition();
     try
     {
-      IndicatorSection *section = new IndicatorSection(this);
+      IndicatorSection *section = new IndicatorSection();
+      section->setMessagePtr(this);
       mIndicatorSection.reset(section);
       section->read(memoryReader);
     }
     catch (...)
     {
-      SmartMet::Spine::Exception exception(BCP,"Indicator section creation failed!",NULL);
+      SmartMet::Spine::Exception exception(BCP,"Indicator section creation failed!",nullptr);
       exception.addParameter("Section start position",uint64_toHex(rPos));
       throw exception;
     }
@@ -272,13 +325,14 @@ void Message::read(MemoryReader& memoryReader)
     rPos = memoryReader.getGlobalReadPosition();
     try
     {
-      ProductSection *section = new ProductSection(this);
+      ProductSection *section = new ProductSection();
+      section->setMessagePtr(this);
       mProductSection.reset(section);
       section->read(memoryReader);
     }
     catch (...)
     {
-      SmartMet::Spine::Exception exception(BCP,"Product section creation failed!",NULL);
+      SmartMet::Spine::Exception exception(BCP,"Product section creation failed!",nullptr);
       exception.addParameter("Section start position",uint64_toHex(rPos));
       throw exception;
     }
@@ -288,13 +342,14 @@ void Message::read(MemoryReader& memoryReader)
       rPos = memoryReader.getGlobalReadPosition();
       try
       {
-        GridSection *section = new GridSection(this);
+        GridSection *section = new GridSection();
+        section->setMessagePtr(this);
         mGridSection.reset(section);
         section->read(memoryReader);
       }
       catch (...)
       {
-        SmartMet::Spine::Exception exception(BCP,"Grid section creation failed!",NULL);
+        SmartMet::Spine::Exception exception(BCP,"Grid section creation failed!",nullptr);
         exception.addParameter("Section start position",uint64_toHex(rPos));
         throw exception;
       }
@@ -305,13 +360,14 @@ void Message::read(MemoryReader& memoryReader)
       rPos = memoryReader.getGlobalReadPosition();
       try
       {
-        BitmapSection *section = new BitmapSection(this);
+        BitmapSection *section = new BitmapSection();
+        section->setMessagePtr(this);
         mBitmapSection.reset(section);
         section->read(memoryReader);
       }
       catch (...)
       {
-        SmartMet::Spine::Exception exception(BCP,"Bitmap section creation failed!",NULL);
+        SmartMet::Spine::Exception exception(BCP,"Bitmap section creation failed!",nullptr);
         exception.addParameter("Section start position",uint64_toHex(rPos));
         throw exception;
       }
@@ -320,13 +376,14 @@ void Message::read(MemoryReader& memoryReader)
     rPos = memoryReader.getGlobalReadPosition();
     try
     {
-      DataSection *section = new DataSection(this);
+      DataSection *section = new DataSection();
+      section->setMessagePtr(this);
       mDataSection.reset(section);
       section->read(memoryReader);
     }
     catch (...)
     {
-      SmartMet::Spine::Exception exception(BCP,"Data section creation failed!",NULL);
+      SmartMet::Spine::Exception exception(BCP,"Data section creation failed!",nullptr);
       exception.addParameter("Section start position",uint64_toHex(rPos));
       throw exception;
     }
@@ -372,10 +429,160 @@ void Message::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     exception.addParameter("Message start position",uint64_toHex(memoryReader.getStartPtr()-memoryReader.getParentPtr()));
     throw exception;
+  }
+}
+
+
+
+
+
+void Message::write(DataWriter& dataWriter)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mIndicatorSection)
+      throw SmartMet::Spine::Exception(BCP,"The indicator section is missing!");
+
+    if (!mProductSection)
+      throw SmartMet::Spine::Exception(BCP,"The product section is missing!");
+
+    if (!mGridSection)
+      throw SmartMet::Spine::Exception(BCP,"The grid section is missing!");
+
+    if (!mDataSection)
+      throw SmartMet::Spine::Exception(BCP,"The data section is missing!");
+
+
+    mFilePosition = dataWriter.getWritePosition();
+
+    mIndicatorSection->write(dataWriter);
+    mProductSection->write(dataWriter);
+    mGridSection->write(dataWriter);
+
+    if (mBitmapSection)
+      mBitmapSection->write(dataWriter);  // ToDo: Set product section flags 0x40 to indicate that the bitmap is present
+
+    mDataSection->write(dataWriter);
+
+    dataWriter.write_nTimes('7',4);
+
+    // Updating the size of the message
+
+    ulonglong fPos = dataWriter.getWritePosition();
+    mIndicatorSection->setTotalLength((uint)(fPos-mFilePosition));
+    dataWriter.setWritePosition(mFilePosition);
+    mIndicatorSection->write(dataWriter);
+    dataWriter.setWritePosition(fPos);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+void Message::initGridSection()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+    {
+      GridSection *section = new GridSection();
+      section->setMessagePtr(this);
+      mGridSection.reset(section);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void Message::initProductSection()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mProductSection == nullptr)
+    {
+      ProductSection *section = new ProductSection();
+      section->setMessagePtr(this);
+      mProductSection.reset(section);
+    }
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+void Message::initDataSection()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mDataSection == nullptr)
+    {
+      DataSection *section = new DataSection();
+      section->setMessagePtr(this);
+      mDataSection.reset(section);
+    }
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::setProperty(uint propertyId,long long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (propertyId >= Property::ProductSection::FirstProperty  &&  propertyId <= Property::ProductSection::LastProperty)
+    {
+      initProductSection();
+      return mProductSection->setProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::DataSection::FirstProperty  &&  propertyId <= Property::DataSection::LastProperty)
+    {
+      initDataSection();
+      return mDataSection->setProperty(propertyId,value);
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -392,7 +599,7 @@ GribFile* Message::getGribFile() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -415,7 +622,7 @@ T::TimeString Message::getReferenceTime() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -440,9 +647,49 @@ T::TimeString Message::getForecastTime() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
+  }
+}
+
+
+
+
+
+uint Message::getGribCentre() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mProductSection)
+      return mProductSection->getCentre();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+uint Message::getGribSubCentre() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mProductSection)
+      return mProductSection->getSubCentre();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -455,14 +702,14 @@ T::Hash Message::getGridHash() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection != NULL)
+    if (mGridSection != nullptr)
       return mGridSection->getGridHash();
 
     return 0;
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -477,14 +724,14 @@ T::GeometryId Message::getGridGeometryId() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection != NULL)
+    if (mGridSection != nullptr)
       return mGridSection->getGridGeometryId();
 
     return 0;
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -500,7 +747,7 @@ std::string Message::getGridGeometryString() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection != NULL)
+    if (mGridSection != nullptr)
       return mGridSection->getGridGeometryString();
 
     std::string str;
@@ -508,7 +755,7 @@ std::string Message::getGridGeometryString() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -524,12 +771,34 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
   FUNCTION_TRACE
   try
   {
-    if (mGridSection != NULL)
-      return mGridSection->setGridGeometryId(geometryId);
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+    mGridSection->setGridGeometryId(geometryId);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void Message::setGridValueCompressionMethod(T::CompressionMethod compressionMethod)
+{
+  FUNCTION_TRACE
+  try
+  {
+    initDataSection();
+    mDataSection->setDataDefinition(compressionMethod);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
   }
 }
 
@@ -547,14 +816,14 @@ T::GridProjection Message::getGridProjection() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridProjection();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -574,14 +843,14 @@ T::GridLayout Message::getGridLayout() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridLayout();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -601,19 +870,19 @@ T::GridLayout Message::getGridLayout() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt Message::getGridDimensions() const
+T::Dimensions Message::getGridDimensions() const
 {
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridDimensions();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -628,19 +897,18 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridLatLonCoordinatesByGridPoint(grid_i,grid_j,lat,lon);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
 }
-
 
 
 
@@ -651,14 +919,14 @@ bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridLatLonCoordinatesByGridPosition(grid_i,grid_j,lat,lon);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -673,14 +941,14 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,do
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -695,14 +963,14 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,doub
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridOriginalCoordinatesByGridPoint(grid_i,grid_j,x,y);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -717,14 +985,14 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -747,14 +1015,14 @@ T::Coordinate_vec Message::getGridCoordinates() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridCoordinates();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -769,14 +1037,14 @@ T::Coordinate_vec Message::getGridLatLonCoordinates() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridLatLonCoordinates();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -791,14 +1059,14 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -813,14 +1081,14 @@ void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& a
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     mGridSection->getAttributeList(prefix,attributeList);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -835,14 +1103,14 @@ uint Message::getFileId() const
   {
     try
     {
-      if (mGribFile != NULL)
+      if (mGribFile != nullptr)
         return mGribFile->getFileId();
 
       return 0;
     }
     catch (...)
     {
-      throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+      throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
     }
   }
 }
@@ -866,7 +1134,7 @@ T::FilePosition Message::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -876,7 +1144,7 @@ T::FilePosition Message::getFilePosition() const
 
 /*! \brief The method returns a shared pointer to the BitmapSection object. */
 
-BitmapSection_sptr Message::getBitmapSection() const
+BitmapSect_sptr Message::getBitmapSection() const
 {
   FUNCTION_TRACE
   try
@@ -885,7 +1153,7 @@ BitmapSection_sptr Message::getBitmapSection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -895,7 +1163,7 @@ BitmapSection_sptr Message::getBitmapSection() const
 
 /*! \brief The method returns a shared pointer to the GridSection object. */
 
-GridSection_sptr Message::getGridSection() const
+GridSect_sptr Message::getGridSection() const
 {
   FUNCTION_TRACE
   try
@@ -904,7 +1172,7 @@ GridSection_sptr Message::getGridSection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -914,7 +1182,7 @@ GridSection_sptr Message::getGridSection() const
 
 /*! \brief The method returns a shared pointer to the IndicatorSection object. */
 
-IndicatorSection_sptr Message::getIndicatorSection() const
+IndicatorSect_sptr Message::getIndicatorSection() const
 {
   FUNCTION_TRACE
   try
@@ -923,7 +1191,7 @@ IndicatorSection_sptr Message::getIndicatorSection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -933,16 +1201,16 @@ IndicatorSection_sptr Message::getIndicatorSection() const
 
 /*! \brief The method returns a pointer to the ProductSection object. */
 
-const ProductSection* Message::getProductSection() const
+ProductSect_sptr Message::getProductSection() const
 {
   FUNCTION_TRACE
   try
   {
-    return mProductSection.get();
+    return mProductSection;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -952,16 +1220,16 @@ const ProductSection* Message::getProductSection() const
 
 /*! \brief The method returns a pointer to the DataSection object. */
 
-const DataSection* Message::getDataSection() const
+DataSect_sptr Message::getDataSection() const
 {
   FUNCTION_TRACE
   try
   {
-    return mDataSection.get();
+    return mDataSection;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -979,14 +1247,14 @@ std::string Message::getGridProjectionString() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridProjectionString();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1009,14 +1277,14 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1042,14 +1310,14 @@ bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1069,14 +1337,14 @@ std::size_t Message::getGridOriginalRowCount() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridOriginalRowCount();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1097,14 +1365,14 @@ std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridOriginalColumnCount(row);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1125,14 +1393,14 @@ std::size_t Message::getGridOriginalColumnCount() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridOriginalColumnCount();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1152,15 +1420,15 @@ std::size_t Message::getGridOriginalValueCount() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     //printf("COUNT %llu\n",(unsigned long long)mGridSection->getGridOriginalValueCount());
     return mGridSection->getGridOriginalValueCount();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1188,14 +1456,14 @@ int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridOriginalValueIndex(grid_i,grid_j);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1229,7 +1497,7 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1251,8 +1519,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   FUNCTION_TRACE
   try
   {
-    if (mDataSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mDataSection' attribute points to NULL!");
+    if (mDataSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mDataSection' attribute points to nullptr!");
 
 
     if (mValueDecodingFailed)
@@ -1278,7 +1546,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       return ParamValueMissing;
 
     T::ParamValue value = 0;
-    if (mBitmapSection == NULL  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
+    if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
     {
       if (mDataSection->getValueByIndex(idx,value))
         return value;
@@ -1364,7 +1632,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1412,7 +1680,7 @@ T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) 
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1434,8 +1702,8 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
   FUNCTION_TRACE
   try
   {
-    if (mDataSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mDataSection' attribute points to NULL!");
+    if (mDataSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mDataSection' attribute points to nullptr!");
 
     values.clear();
     if (mValueDecodingFailed)
@@ -1462,7 +1730,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
-      if (d  &&  n != (d->nx() * d->ny()))
+      if (d.getDimensions() == 2  &&  n != (d.nx() * d.ny()))
       {
         // Grid rows have different number of columns. Let's fill the rows so that they all have the same
         // number of columns.
@@ -1472,7 +1740,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
         auto maxCols = getGridOriginalColumnCount();
 
         T::ParamValue_vec valVector;
-        std::size_t rows = d->ny();
+        std::size_t rows = d.ny();
 
         for (std::size_t r=0; r<rows; r++)
         {
@@ -1499,7 +1767,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     }
     catch (...)
     {
-      SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+      SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
       exception.addParameter("Message index",std::to_string(mMessageIndex));
       exception.printError();
       mValueDecodingFailed = true;
@@ -1507,7 +1775,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1534,8 +1802,8 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
   FUNCTION_TRACE
   try
   {
-    if (mDataSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mDataSection' attribute points to NULL!");
+    if (mDataSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mDataSection' attribute points to nullptr!");
 
     values.clear();
     if (mValueDecodingFailed)
@@ -1575,8 +1843,8 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
         T::ParamValue_vec valVector;
         std::size_t rows = 0;
-        if (d)
-          rows = d->ny();
+        if (d.getDimensions() == 2)
+          rows = d.ny();
 
         for (std::size_t r=0; r<rows; r++)
         {
@@ -1597,7 +1865,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     }
     catch (...)
     {
-      SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+      SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
       exception.addParameter("Message index",std::to_string(mMessageIndex));
       exception.printError();
       mValueDecodingFailed = true;
@@ -1605,7 +1873,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1634,7 +1902,7 @@ T::ParamLevel Message::getGridParameterLevel() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1658,7 +1926,7 @@ T::ParamLevelId Message::getGridParameterLevelId() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1682,7 +1950,7 @@ std::string Message::getGridParameterLevelIdString() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1692,19 +1960,19 @@ std::string Message::getGridParameterLevelIdString() const
 
 
 
-T::SpatialReference* Message::getSpatialReference() const
+T::SpatialRef* Message::getSpatialReference() const
 {
   FUNCTION_TRACE
   try
   {
-    if (mGridSection != NULL)
+    if (mGridSection != nullptr)
       return mGridSection->getSpatialReference();
 
-    return NULL;
+    return nullptr;
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1726,10 +1994,10 @@ std::string Message::getWKT() const
   {
     std::string wkt;
 /*
-    T::SpatialReference *sr = getSpatialReference();
-    if (sr != NULL)
+    T::SpatialRef *sr = getSpatialReference();
+    if (sr != nullptr)
     {
-      char *res = NULL;
+      char *res = nullptr;
       if (sr->exportToWkt((char**)&res))
       {
         wkt = res;
@@ -1741,7 +2009,7 @@ std::string Message::getWKT() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1763,7 +2031,7 @@ short Message::getForecastType() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1785,7 +2053,7 @@ short Message::getForecastNumber() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1807,14 +2075,14 @@ bool Message::isGridGlobal() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->isGridGlobal();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1828,14 +2096,14 @@ bool Message::reverseXDirection() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->reverseXDirection();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1850,14 +2118,14 @@ bool Message::reverseYDirection() const
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to NULL!");
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->reverseYDirection();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1877,11 +2145,11 @@ T::Data_ptr Message::getBitmapDataPtr() const
     if (mBitmapSection)
       return mBitmapSection->getBitmapDataPtr();
 
-    return NULL;
+    return nullptr;
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1905,7 +2173,7 @@ std::size_t Message::getBitmapDataSizeInBytes() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1925,11 +2193,11 @@ T::Data_ptr Message::getDataPtr() const
     if (mDataSection)
       return mDataSection->getDataPtr();
 
-    return NULL;
+    return nullptr;
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1953,7 +2221,7 @@ std::size_t Message::getDataSize() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -1979,7 +2247,7 @@ std::size_t Message::getDataSizeMax() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -2003,7 +2271,7 @@ std::int16_t Message::getBinaryScaleFactor() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -2027,7 +2295,7 @@ std::uint16_t Message::getDecimalScaleFactor() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -2051,7 +2319,7 @@ std::float_t Message::getReferenceValue() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -2075,7 +2343,7 @@ std::uint8_t Message::getBitsPerValue() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -2099,7 +2367,7 @@ std::uint8_t Message::getFlags() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }
@@ -2205,7 +2473,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
   }

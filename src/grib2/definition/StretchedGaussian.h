@@ -8,12 +8,13 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "EarthShapeSettings.h"
 #include "GaussianSettings.h"
 #include "StretchingSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,19 +23,23 @@ namespace GRIB2 {
 class StretchedGaussian : public GridDefinition {
 public:
   StretchedGaussian();
+  StretchedGaussian(const StretchedGaussian &other);
   virtual ~StretchedGaussian();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings earthShape);
-  const GaussianSettings *getGaussian() const;
-  void setGaussian(GaussianSettings gaussian);
-  const StretchingSettings *getStretching() const;
-  void setStretching(StretchingSettings stretching);
+  EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings &earthShape);
+  GaussianSettings *getGaussian() const;
+  void setGaussian(GaussianSettings &gaussian);
+  StretchingSettings *getStretching() const;
+  void setStretching(StretchingSettings &stretching);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

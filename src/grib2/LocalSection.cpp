@@ -5,7 +5,6 @@
 
 #include <iostream>
 
-const std::size_t section_fixed_size = 5;  // section length + number
 
 namespace SmartMet
 {
@@ -13,26 +12,55 @@ namespace GRIB2
 {
 
 
-/*! \brief The constructor of the class.
+/*! \brief The constructor of the class.*/
 
-        \param message  A pointer to the message object.
-*/
-
-LocalSection::LocalSection(Message *message)
+LocalSection::LocalSection()
 {
   try
   {
-    mMessage = message;
+    mMessage = nullptr;
     mFilePosition = 0;
-    mData = NULL;
-    mDataLength = 0;
+    mDataPtr = nullptr;
+    mDataSize = 0;
+    mReleaseData = false;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+LocalSection::LocalSection(const LocalSection& other)
+:GRID::MessageSection(other)
+{
+  try
+  {
+    mMessage = nullptr;
+    mFilePosition = other.mFilePosition;
+    mSectionLength = other.mSectionLength;
+    mNumberOfSection = other.mNumberOfSection;
+    mDataSize = other.mDataSize;
+    mReleaseData = other.mReleaseData;
+    mDataPtr = nullptr;
+
+    if (mDataSize > 0  &&  other.mDataPtr != nullptr)
+    {
+      mDataPtr = new uchar[mDataSize];
+      memcpy(mDataPtr,other.mDataPtr,mDataSize);
+      mReleaseData = true;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+  }
+}
 
 
 
@@ -41,6 +69,20 @@ LocalSection::LocalSection(Message *message)
 
 LocalSection::~LocalSection()
 {
+  try
+  {
+    if (mReleaseData &&  mDataPtr != nullptr)
+      delete mDataPtr;
+
+    mDataPtr = nullptr;
+    mDataSize = 0;
+    mReleaseData = false;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
+  }
 }
 
 
@@ -58,7 +100,69 @@ void LocalSection::getAttributeList(std::string prefix,T::AttributeList& attribu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void LocalSection::setMessagePtr(Message *message)
+{
+  try
+  {
+    mMessage = message;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void LocalSection::setData(T::Data_ptr data,std::size_t size)
+{
+  try
+  {
+    if (mReleaseData &&  mDataPtr != nullptr)
+    {
+      delete mDataPtr;
+      mDataPtr = nullptr;
+      mDataSize = 0;
+    }
+
+    mDataPtr = data;
+    mDataSize = size;
+    mReleaseData = true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool LocalSection::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    /*
+    switch (propertyId)
+    {
+    }
+    */
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -75,6 +179,8 @@ void LocalSection::read(MemoryReader& memoryReader)
 {
   try
   {
+    const std::size_t section_fixed_size = 5;  // section length + number
+
     mFilePosition = memoryReader.getGlobalReadPosition();
 
     memoryReader >> mSectionLength;
@@ -89,14 +195,43 @@ void LocalSection::read(MemoryReader& memoryReader)
 
     if (*mSectionLength > section_fixed_size)
     {
-      mData = memoryReader.getReadPtr();
-      mDataLength = *mSectionLength - section_fixed_size;
-      memoryReader.read_null(mDataLength);
+      mDataPtr = memoryReader.getReadPtr();
+      mDataSize = *mSectionLength - section_fixed_size;
+      memoryReader.read_null(mDataSize);
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void LocalSection::write(DataWriter& dataWriter)
+{
+  try
+  {
+    const std::size_t section_fixed_size = 5;  // section length + number
+
+    mFilePosition = dataWriter.getWritePosition();
+
+    mSectionLength = section_fixed_size + mDataSize;
+    mNumberOfSection = (std::uint8_t)Message::SectionNumber::local_section;
+
+    dataWriter << mSectionLength;
+    dataWriter << mNumberOfSection;
+
+    if (mDataPtr != nullptr  &&  mDataSize > 0)
+    {
+      dataWriter.write_data(mDataPtr,mDataSize);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -117,7 +252,7 @@ T::FilePosition LocalSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -134,11 +269,14 @@ std::uint32_t LocalSection::getSectionLength() const
 {
   try
   {
-    return *mSectionLength;
+    if (mSectionLength)
+      return *mSectionLength;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -156,7 +294,7 @@ std::string LocalSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -174,7 +312,7 @@ std::uint8_t LocalSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -188,11 +326,14 @@ std::uint8_t LocalSection::getNumberOfSection() const
   try
   {
     // No missing check necessary here, we cannot know the section type without the number anyway
-    return *mNumberOfSection;
+    if (mNumberOfSection)
+      return *mNumberOfSection;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -204,11 +345,11 @@ T::Data_ptr LocalSection::getDataPtr() const
 {
   try
   {
-    return mData;
+    return mDataPtr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -219,11 +360,11 @@ std::size_t LocalSection::getDataSize() const
 {
   try
   {
-    return mDataLength;
+    return mDataSize;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -249,7 +390,7 @@ void LocalSection::print(std::ostream& stream,uint level,uint optionFlags) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

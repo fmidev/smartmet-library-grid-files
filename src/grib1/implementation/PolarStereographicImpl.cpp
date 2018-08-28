@@ -18,13 +18,13 @@ PolarStereographicImpl::PolarStereographicImpl()
   try
   {
     mGridProjection = T::GridProjection::PolarStereographic;
-    mSr_polarSterographic = NULL;
-    mCt_latlon2pst = NULL;
-    mCt_pst2latlon = NULL;
+    mSr_polarSterographic = nullptr;
+    mCt_latlon2pst = nullptr;
+    mCt_pst2latlon = nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -39,13 +39,13 @@ PolarStereographicImpl::PolarStereographicImpl(const PolarStereographicImpl& oth
 {
   try
   {
-    mSr_polarSterographic = NULL;
-    mCt_latlon2pst = NULL;
-    mCt_pst2latlon = NULL;
+    mSr_polarSterographic = nullptr;
+    mCt_latlon2pst = nullptr;
+    mCt_pst2latlon = nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -59,18 +59,37 @@ PolarStereographicImpl::~PolarStereographicImpl()
 {
   try
   {
-    if (mSr_polarSterographic != NULL)
+    if (mSr_polarSterographic != nullptr)
       mSpatialReference.DestroySpatialReference(mSr_polarSterographic);
 
-    if (mCt_latlon2pst != NULL)
+    if (mCt_latlon2pst != nullptr)
       OCTDestroyCoordinateTransformation(mCt_latlon2pst);
 
-    if (mCt_pst2latlon != NULL)
+    if (mCt_pst2latlon != nullptr)
       OCTDestroyCoordinateTransformation(mCt_pst2latlon);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
+  }
+}
+
+
+
+
+
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* PolarStereographicImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new PolarStereographicImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -96,7 +115,7 @@ void PolarStereographicImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -157,7 +176,7 @@ T::Coordinate_vec PolarStereographicImpl::getGridCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -207,7 +226,7 @@ std::string PolarStereographicImpl::getGridGeometryString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -223,15 +242,15 @@ std::string PolarStereographicImpl::getGridGeometryString() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt PolarStereographicImpl::getGridDimensions() const
+T::Dimensions PolarStereographicImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions{mNx,mNy};
+    return T::Dimensions(mNx,mNy);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -291,7 +310,7 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -312,7 +331,7 @@ bool PolarStereographicImpl::reverseXDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -333,7 +352,7 @@ bool PolarStereographicImpl::reverseYDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -364,8 +383,8 @@ void PolarStereographicImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double centerLat = dfCenterLat / 1000;
-    double centerLon = dfCenterLong / 1000;
+    double centerLat = (double)dfCenterLat / 1000;
+    double centerLon = (double)dfCenterLong / 1000;
     double dfScale = 1.0;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
@@ -393,16 +412,16 @@ void PolarStereographicImpl::initSpatialReference()
     mSr_polarSterographic = mSpatialReference.Clone();
 
     mCt_latlon2pst = OGRCreateCoordinateTransformation(&sr_latlon,mSr_polarSterographic);
-    if (mCt_latlon2pst == NULL)
+    if (mCt_latlon2pst == nullptr)
       throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
 
     mCt_pst2latlon = OGRCreateCoordinateTransformation(mSr_polarSterographic,&sr_latlon);
-    if (mCt_pst2latlon == NULL)
+    if (mCt_pst2latlon == nullptr)
       throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -460,7 +479,7 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

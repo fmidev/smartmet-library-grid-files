@@ -8,12 +8,12 @@ namespace SmartMet
 
 /*! \brief The constructor of the class. */
 
-MemoryReader::MemoryReader(unsigned char *_startPtr,unsigned long long _size)
+MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size)
 {
   try
   {
-    if (_startPtr == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The '_startPtr' parameter points to NULL!");
+    if (_startPtr == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The '_startPtr' parameter points to nullptr!");
 
     if (_size == 0)
       throw SmartMet::Spine::Exception(BCP,"The value of the '_size' parameter is 0!");
@@ -25,7 +25,7 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,unsigned long long _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -39,11 +39,11 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr)
 {
   try
   {
-    if (_startPtr == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The '_startPtr' parameter points to NULL!");
+    if (_startPtr == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The '_startPtr' parameter points to nullptr!");
 
-    if (_endPtr == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The '_endPtr' parameter points to NULL!");
+    if (_endPtr == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The '_endPtr' parameter points to nullptr!");
 
     if (_endPtr < _startPtr)
       throw SmartMet::Spine::Exception(BCP,"The value of the '_endPtr' parameter is smaller than '_startPtr'!");
@@ -55,7 +55,7 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -72,7 +72,8 @@ MemoryReader::~MemoryReader()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -80,15 +81,15 @@ MemoryReader::~MemoryReader()
 
 
 
-unsigned long long MemoryReader::getDataSize()
+ulonglong MemoryReader::getDataSize()
 {
   try
   {
-    return (unsigned long long)(endPtr-startPtr);
+    return (ulonglong)(endPtr-startPtr);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -104,7 +105,7 @@ void MemoryReader::setParentPtr(unsigned char *_parentPtr)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -120,7 +121,7 @@ unsigned char* MemoryReader::getParentPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -136,7 +137,7 @@ unsigned char* MemoryReader::getStartPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -152,7 +153,7 @@ unsigned char* MemoryReader::getEndPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -168,7 +169,7 @@ unsigned char* MemoryReader::getReadPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -180,15 +181,15 @@ void MemoryReader::setReadPtr(unsigned char *_readPtr)
 {
   try
   {
-    if (_readPtr == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The '_readPtr' parameter points to NULL!");
+    if (_readPtr == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The '_readPtr' parameter points to nullptr!");
 
     if (_readPtr < startPtr  ||  _readPtr > endPtr)
       throw SmartMet::Spine::Exception(BCP,"The value of the '_readPtr' parameter is out of the range!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -196,15 +197,15 @@ void MemoryReader::setReadPtr(unsigned char *_readPtr)
 
 
 
-unsigned long long MemoryReader::getReadPosition()
+ulonglong MemoryReader::getReadPosition()
 {
   try
   {
-    return (unsigned long long)(readPtr-startPtr);
+    return (ulonglong)(readPtr-startPtr);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -212,15 +213,15 @@ unsigned long long MemoryReader::getReadPosition()
 
 
 
-unsigned long long MemoryReader::getGlobalReadPosition()
+ulonglong MemoryReader::getGlobalReadPosition()
 {
   try
   {
-    return (unsigned long long)(readPtr-parentPtr);
+    return (ulonglong)(readPtr-parentPtr);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -228,7 +229,7 @@ unsigned long long MemoryReader::getGlobalReadPosition()
 
 
 
-void MemoryReader::setReadPosition(unsigned long long _pos)
+void MemoryReader::setReadPosition(ulonglong _pos)
 {
   try
   {
@@ -239,7 +240,7 @@ void MemoryReader::setReadPosition(unsigned long long _pos)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -247,7 +248,7 @@ void MemoryReader::setReadPosition(unsigned long long _pos)
 
 
 
-unsigned char MemoryReader::getByte(unsigned long long _pos)
+unsigned char MemoryReader::getByte(ulonglong _pos)
 {
   try
   {
@@ -263,7 +264,7 @@ unsigned char MemoryReader::getByte(unsigned long long _pos)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -282,7 +283,7 @@ unsigned char MemoryReader::getByte(unsigned char *_posPtr)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -294,10 +295,10 @@ bool MemoryReader::peek_string(const char *_str)
 {
   try
   {
-    if (_str == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The '_str' parameter points to NULL!");
+    if (_str == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The '_str' parameter points to nullptr!");
 
-    unsigned long long len = strlen(_str);
+    ulonglong len = strlen(_str);
     if ((readPtr + len) > endPtr)
       return false;
 
@@ -308,7 +309,7 @@ bool MemoryReader::peek_string(const char *_str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -331,7 +332,7 @@ std::uint8_t MemoryReader::read_uint8()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -356,7 +357,7 @@ std::uint16_t MemoryReader::read_uint16()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -382,7 +383,7 @@ std::uint32_t MemoryReader::read_uint24()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -409,7 +410,7 @@ std::uint32_t MemoryReader::read_uint32()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -424,15 +425,15 @@ std::uint64_t MemoryReader::read_uint64()
     if ((readPtr + 8) > endPtr)
       throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
 
-    unsigned long long a = readPtr[0];
-    unsigned long long b = readPtr[1];
-    unsigned long long c = readPtr[2];
-    unsigned long long d = readPtr[3];
-    unsigned long long e = readPtr[4];
-    unsigned long long f = readPtr[5];
-    unsigned long long g = readPtr[6];
-    unsigned long long h = readPtr[7];
-    unsigned long long val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
+    ulonglong a = readPtr[0];
+    ulonglong b = readPtr[1];
+    ulonglong c = readPtr[2];
+    ulonglong d = readPtr[3];
+    ulonglong e = readPtr[4];
+    ulonglong f = readPtr[5];
+    ulonglong g = readPtr[6];
+    ulonglong h = readPtr[7];
+    ulonglong val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
 
     readPtr += 8;
 
@@ -440,7 +441,7 @@ std::uint64_t MemoryReader::read_uint64()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -464,7 +465,7 @@ std::int8_t MemoryReader::read_int8()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -489,7 +490,7 @@ std::int16_t MemoryReader::read_int16()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -517,7 +518,7 @@ std::int32_t MemoryReader::read_int24()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -544,7 +545,7 @@ std::int32_t MemoryReader::read_int32()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -574,7 +575,7 @@ std::float_t MemoryReader::read_float()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -607,7 +608,7 @@ std::float_t MemoryReader::read_ibmFloat()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -632,7 +633,7 @@ std::array<char,16> MemoryReader::read_uuid()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -658,7 +659,7 @@ T::UInt8_opt MemoryReader::read_UInt8_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -686,7 +687,7 @@ T::UInt16_opt MemoryReader::read_UInt16_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -715,7 +716,7 @@ T::UInt32_opt MemoryReader::read_UInt24_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -745,7 +746,7 @@ T::UInt32_opt MemoryReader::read_UInt32_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -760,15 +761,15 @@ T::UInt64_opt MemoryReader::read_UInt64_opt()
     if ((readPtr + 8) > endPtr)
       throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
 
-    unsigned long long a = readPtr[0];
-    unsigned long long b = readPtr[1];
-    unsigned long long c = readPtr[2];
-    unsigned long long d = readPtr[3];
-    unsigned long long e = readPtr[4];
-    unsigned long long f = readPtr[5];
-    unsigned long long g = readPtr[6];
-    unsigned long long h = readPtr[7];
-    unsigned long long val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
+    ulonglong a = readPtr[0];
+    ulonglong b = readPtr[1];
+    ulonglong c = readPtr[2];
+    ulonglong d = readPtr[3];
+    ulonglong e = readPtr[4];
+    ulonglong f = readPtr[5];
+    ulonglong g = readPtr[6];
+    ulonglong h = readPtr[7];
+    ulonglong val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
 
     readPtr += 8;
 
@@ -779,7 +780,7 @@ T::UInt64_opt MemoryReader::read_UInt64_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -806,7 +807,7 @@ T::Int8_opt MemoryReader::read_Int8_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -834,7 +835,7 @@ T::Int16_opt MemoryReader::read_Int16_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -865,7 +866,7 @@ T::Int32_opt MemoryReader::read_Int24_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -895,7 +896,7 @@ T::Int32_opt MemoryReader::read_Int32_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -928,7 +929,7 @@ T::Float_opt MemoryReader::read_Float_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -936,7 +937,7 @@ T::Float_opt MemoryReader::read_Float_opt()
 
 
 
-void MemoryReader::read_data(unsigned char *_data,unsigned long long _size)
+void MemoryReader::read_data(unsigned char *_data,ulonglong _size)
 {
   try
   {
@@ -958,7 +959,7 @@ void MemoryReader::read_data(unsigned char *_data,unsigned long long _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -966,7 +967,7 @@ void MemoryReader::read_data(unsigned char *_data,unsigned long long _size)
 
 
 
-void MemoryReader::read_null(unsigned long long _size)
+void MemoryReader::read_null(ulonglong _size)
 {
   try
   {
@@ -984,7 +985,7 @@ void MemoryReader::read_null(unsigned long long _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1001,7 +1002,7 @@ MemoryReader& MemoryReader::operator>>(std::uint8_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1018,7 +1019,7 @@ MemoryReader& MemoryReader::operator>>(std::uint16_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1035,7 +1036,7 @@ MemoryReader& MemoryReader::operator>>(std::uint32_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1052,7 +1053,7 @@ MemoryReader& MemoryReader::operator>>(std::uint64_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1069,7 +1070,7 @@ MemoryReader& MemoryReader::operator>>(std::int8_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1086,7 +1087,7 @@ MemoryReader& MemoryReader::operator>>(std::int16_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1103,7 +1104,7 @@ MemoryReader& MemoryReader::operator>>(std::int32_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1120,7 +1121,7 @@ MemoryReader& MemoryReader::operator>>(std::float_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1137,7 +1138,7 @@ MemoryReader& MemoryReader::operator>>(T::UInt8_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1154,7 +1155,7 @@ MemoryReader& MemoryReader::operator>>(T::UInt16_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1171,7 +1172,7 @@ MemoryReader& MemoryReader::operator>>(T::UInt32_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1188,7 +1189,7 @@ MemoryReader& MemoryReader::operator>>(T::UInt64_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1205,7 +1206,7 @@ MemoryReader& MemoryReader::operator>>(T::Int8_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1222,7 +1223,7 @@ MemoryReader& MemoryReader::operator>>(T::Int16_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1239,7 +1240,7 @@ MemoryReader& MemoryReader::operator>>(T::Int32_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1256,7 +1257,7 @@ MemoryReader& MemoryReader::operator>>(T::Float_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

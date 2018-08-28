@@ -21,17 +21,22 @@ namespace GRIB2 {
 ComplexSphericalHarmonicsData::ComplexSphericalHarmonicsData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+ComplexSphericalHarmonicsData::ComplexSphericalHarmonicsData(const ComplexSphericalHarmonicsData &other) : DataDefinition(other) {
+  try {
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 ComplexSphericalHarmonicsData::~ComplexSphericalHarmonicsData() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -42,7 +47,19 @@ ComplexSphericalHarmonicsData::~ComplexSphericalHarmonicsData() {
 void ComplexSphericalHarmonicsData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void ComplexSphericalHarmonicsData::write(DataWriter &dataWriter) {
+  try {
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -55,7 +72,7 @@ void ComplexSphericalHarmonicsData::read(MemoryReader &memoryReader) {
 void ComplexSphericalHarmonicsData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -70,7 +87,7 @@ void ComplexSphericalHarmonicsData::print(std::ostream &stream, uint level, uint
   try {
     stream << space(level) << "ComplexSphericalHarmonicsData\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -81,7 +98,21 @@ T::Hash ComplexSphericalHarmonicsData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint ComplexSphericalHarmonicsData::getTemplateNumber() const {
+  return 50000;
+}
+
+DataDefinition *ComplexSphericalHarmonicsData::createDataDefinition() const {
+  try {
+    return (DataDefinition *)new ComplexSphericalHarmonicsData(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

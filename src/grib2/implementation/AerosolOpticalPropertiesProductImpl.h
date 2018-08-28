@@ -12,13 +12,16 @@ namespace GRIB2
 class AerosolOpticalPropertiesProductImpl : public AerosolOpticalPropertiesProduct
 {
   public:
-                      AerosolOpticalPropertiesProductImpl();
-    virtual           ~AerosolOpticalPropertiesProductImpl();
+                        AerosolOpticalPropertiesProductImpl();
+                        AerosolOpticalPropertiesProductImpl(const AerosolOpticalPropertiesProductImpl& other);
+    virtual             ~AerosolOpticalPropertiesProductImpl();
 
-    T::TimeString     getForecastTime(T::TimeString referenceTime) const;
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::TimeString       getForecastTime(T::TimeString referenceTime) const;
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

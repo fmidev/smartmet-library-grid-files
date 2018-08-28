@@ -117,7 +117,7 @@ class ValueCache
           return false;
         }
 
-        if (mValueList[idx] == NULL)
+        if (mValueList[idx] == nullptr)
         {
           // The value vector is not cache in the memory.
 
@@ -143,7 +143,7 @@ class ValueCache
       }
       catch (...)
       {
-        throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+        throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
       }
     }
 
@@ -167,11 +167,11 @@ class ValueCache
           return false;
         }
 
-        if (mValueList[idx] == NULL  &&  mCompressedData[idx] != NULL)
+        if (mValueList[idx] == nullptr  &&  mCompressedData[idx] != nullptr)
           decompressCachedValues(idx);
 
 
-        if (mValueList[idx] == NULL)
+        if (mValueList[idx] == nullptr)
         {
           // The value vector is not cache in the memory.
 
@@ -197,7 +197,7 @@ class ValueCache
       }
       catch (...)
       {
-        throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+        throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
       }
     }
 };

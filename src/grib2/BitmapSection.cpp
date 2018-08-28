@@ -14,24 +14,55 @@ namespace GRIB2
 {
 
 
-/*! \brief The constructor of the class.
+/*! \brief The constructor of the class. */
 
-        \param message  A pointer to the message object.
-*/
-
-BitmapSection::BitmapSection(Message *message)
+BitmapSection::BitmapSection()
 {
   try
   {
-    mMessage = message;
+    mMessage = nullptr;
     mFilePosition = 0;
-    mBitmapDataPtr = NULL;
+    mBitmapDataPtr = nullptr;
     mBitmapDataSizeInBytes = 0;
     mHash = 0;
+    mReleaseData = false;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+BitmapSection::BitmapSection(const BitmapSection& other)
+:GRID::MessageSection(other)
+{
+  try
+  {
+    mMessage = nullptr;
+    mFilePosition = other.mFilePosition;
+    mSectionLength = other.mSectionLength;
+    mBitmapIndicator = other.mBitmapIndicator;
+    mReleaseData = false;
+    mBitmapDataSizeInBytes = other.mBitmapDataSizeInBytes;
+    mHash = other.mHash;
+    mBitmapDataPtr = nullptr;
+
+    if (mBitmapDataSizeInBytes > 0  &&  other.mBitmapDataPtr != nullptr)
+    {
+      mBitmapDataPtr = new uchar[mBitmapDataSizeInBytes];
+      memcpy(mBitmapDataPtr,other.mBitmapDataPtr,mBitmapDataSizeInBytes);
+      mReleaseData = true;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -43,6 +74,20 @@ BitmapSection::BitmapSection(Message *message)
 
 BitmapSection::~BitmapSection()
 {
+  try
+  {
+    if (mReleaseData  &&  mBitmapDataPtr != nullptr)
+      delete mBitmapDataPtr;
+
+    mBitmapDataPtr = nullptr;
+    mBitmapDataSizeInBytes = 0;
+    mReleaseData = false;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
+  }
 }
 
 
@@ -71,7 +116,44 @@ void BitmapSection::getAttributeList(std::string prefix,T::AttributeList& attrib
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void BitmapSection::setMessagePtr(Message *message)
+{
+  try
+  {
+    mMessage = message;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool BitmapSection::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    /*
+    switch (propertyId)
+    {
+    }
+    */
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -120,9 +202,40 @@ void BitmapSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
+
+
+
+
+void BitmapSection::write(DataWriter& dataWriter)
+{
+  try
+  {
+    const std::size_t section_fixed_size = 6;
+
+    mFilePosition = dataWriter.getWritePosition();
+
+    mSectionLength = section_fixed_size + mBitmapDataSizeInBytes;
+    mNumberOfSection = (std::uint8_t)Message::SectionNumber::bitmap_section;
+
+    dataWriter << mSectionLength;
+    dataWriter << mNumberOfSection;
+    dataWriter << mBitmapIndicator;
+
+    if (mBitmapDataPtr != nullptr  &&  mBitmapDataSizeInBytes > 0)
+    {
+      dataWriter.write_data(mBitmapDataPtr,mBitmapDataSizeInBytes);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
 
 
 
@@ -141,7 +254,7 @@ T::FilePosition BitmapSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -158,11 +271,14 @@ std::uint32_t BitmapSection::getSectionLength() const
 {
   try
   {
-    return *mSectionLength;
+    if (mSectionLength)
+      return *mSectionLength;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -180,7 +296,7 @@ std::string BitmapSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -198,7 +314,7 @@ std::uint8_t BitmapSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -212,11 +328,14 @@ std::uint8_t BitmapSection::getNumberOfSection() const
   try
   {
     // No missing check necessary here, we cannot know the section type without the number anyway
-    return *mNumberOfSection;
+    if (mNumberOfSection)
+      return *mNumberOfSection;
+
+    return 0;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -238,7 +357,7 @@ T::UInt8_opt BitmapSection::getBitMapIndicator() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -259,7 +378,7 @@ T::Data_ptr BitmapSection::getBitmapDataPtr() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -280,7 +399,7 @@ std::size_t BitmapSection::getBitmapDataSizeInBytes() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -302,7 +421,7 @@ long long BitmapSection::getHash()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -331,7 +450,39 @@ void BitmapSection::getIndexVector(uint numOfValues,T::IndexVector& indexVector)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method sets the bitmap data. The data will be released when the object
+ * is distroyed.
+
+        \param data         Pointer to the bitmap data.
+        \param size         Size of the bitmap data in bytes.
+*/
+
+void BitmapSection::setBitmapData(T::Data_ptr data,std::size_t size)
+{
+  try
+  {
+    if (mReleaseData &&  mBitmapDataPtr != nullptr)
+    {
+      delete mBitmapDataPtr;
+      mBitmapDataPtr = nullptr;
+      mBitmapDataSizeInBytes = 0;
+    }
+
+    mBitmapDataPtr = data;
+    mBitmapDataSizeInBytes = size;
+    mReleaseData = true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -361,7 +512,7 @@ void BitmapSection::print(std::ostream& stream,uint level,uint optionFlags) cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

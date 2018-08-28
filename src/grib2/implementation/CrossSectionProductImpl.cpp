@@ -18,10 +18,39 @@ CrossSectionProductImpl::CrossSectionProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+CrossSectionProductImpl::CrossSectionProductImpl(const CrossSectionProductImpl& other)
+:CrossSectionProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 CrossSectionProductImpl::~CrossSectionProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* CrossSectionProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new CrossSectionProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void CrossSectionProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

@@ -40,7 +40,7 @@ Message::Message()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -59,14 +59,25 @@ Message::Message(const Message& message)
     mGribParameterId = message.mGribParameterId;
     mGrib1ParameterLevelId = message.mGrib1ParameterLevelId;
     mGrib2ParameterLevelId = message.mGrib2ParameterLevelId;
+    mGribParameterName = message.mGribParameterName;
+    mGribParameterDescription = message.mGribParameterDescription;
+    mGribParameterUnits = message.mGribParameterUnits;
     mFmiProducerName = message.mFmiProducerName;
     mFmiParameterId = message.mFmiParameterId;
     mFmiParameterLevelId = message.mFmiParameterLevelId;
+    mFmiParameterName = message.mFmiParameterName;
+    mFmiParameterDescription = message.mFmiParameterDescription;
+    mFmiParameterUnits = message.mFmiParameterUnits;
+    mCdmParameterId = message.mCdmParameterId;
+    mCdmParameterName = message.mCdmParameterName;
+    mNewbaseParameterId = message.mNewbaseParameterId;
+    mNewbaseParameterName = message.mNewbaseParameterName;
+    mVirtualFileId = message.mVirtualFileId;
     mDefaultInterpolationMethod = message.mDefaultInterpolationMethod;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -135,7 +146,7 @@ uint Message::getMessageIndex() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -152,7 +163,7 @@ void Message::setMessageIndex(uint index)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -167,6 +178,24 @@ void Message::setMessageIndex(uint index)
 */
 
 T::TimeString Message::getReferenceTime() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+uint Message::getGribCentre() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+uint Message::getGribSubCentre() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -281,7 +310,7 @@ T::Coordinate_vec Message::getGridLatLonCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt Message::getGridDimensions() const
+T::Dimensions Message::getGridDimensions() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -413,6 +442,15 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
 
 
 
+void Message::setGridValues(T::ParamValue_vec& values)
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
 bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -515,7 +553,7 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
 
       default:
       {
-        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",NULL);
+        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
         throw exception;
       }
@@ -524,7 +562,7 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -538,8 +576,8 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
   try
   {
     double PI = 3.1415926536;
-    T::Dimensions_opt d = getGridDimensions();
-    if (!d)
+    T::Dimensions d = getGridDimensions();
+    if (d.getDimensions() != 2)
       return 0;
 
     double grid_i1 = 0;
@@ -625,7 +663,7 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -638,8 +676,8 @@ void Message::getGridPointAngles(std::vector<float>& angles) const
   FUNCTION_TRACE
   try
   {
-    T::Dimensions_opt d = getGridDimensions();
-    if (!d)
+    T::Dimensions d = getGridDimensions();
+    if (d.getDimensions() != 2)
       return;
 
     int geometryId = getGridGeometryId();
@@ -654,10 +692,10 @@ void Message::getGridPointAngles(std::vector<float>& angles) const
     }
 
     angles.clear();
-    angles.reserve(d->ny() * d->nx());
-    for (uint y=0; y < d->ny(); y++)
+    angles.reserve(d.ny() * d.nx());
+    for (uint y=0; y < d.ny(); y++)
     {
-      for (uint x=0; x < d->nx(); x++)
+      for (uint x=0; x < d.nx(); x++)
       {
         float angle = getGridPointAngle(T::CoordinateType::GRID_COORDINATES,x,y);
         angles.push_back(angle);
@@ -669,7 +707,7 @@ void Message::getGridPointAngles(std::vector<float>& angles) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -754,7 +792,7 @@ T::ParamId Message::getGribParameterId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -771,7 +809,7 @@ std::string Message::getGribParameterName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -788,7 +826,7 @@ std::string Message::getGribParameterDescription() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -805,7 +843,7 @@ std::string Message::getGribParameterUnits() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -827,7 +865,7 @@ T::ParamLevelId Message::getGrib1ParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -850,7 +888,7 @@ T::ParamLevelId Message::getGrib2ParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -867,7 +905,7 @@ std::string Message::getFmiProducerName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -884,7 +922,7 @@ T::ParamId Message::getFmiParameterId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -901,7 +939,7 @@ T::ParamLevelId Message::getFmiParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -918,7 +956,7 @@ std::string Message::getFmiParameterName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -935,7 +973,7 @@ std::string Message::getFmiParameterDescription() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -952,7 +990,7 @@ std::string Message::getFmiParameterUnits() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -969,7 +1007,7 @@ std::string Message::getCdmParameterId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -986,7 +1024,7 @@ std::string Message::getCdmParameterName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1003,7 +1041,7 @@ std::string Message::getNewbaseParameterId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1020,7 +1058,7 @@ std::string Message::getNewbaseParameterName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1160,7 +1198,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
 
 
-T::SpatialReference* Message::getSpatialReference() const
+T::SpatialRef* Message::getSpatialReference() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1192,7 +1230,7 @@ short Message::getDefaultInterpolationMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1236,6 +1274,15 @@ short Message::getForecastNumber() const
 
 
 
+bool Message::setProperty(uint propertyId,long long value)
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
 void Message::setFmiParameterId(T::ParamId fmiParameterId)
 {
   FUNCTION_TRACE
@@ -1245,7 +1292,7 @@ void Message::setFmiParameterId(T::ParamId fmiParameterId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1262,7 +1309,7 @@ void Message::setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1279,7 +1326,7 @@ void Message::setFmiParameterName(std::string fmiParameterName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1296,7 +1343,7 @@ void Message::setFmiParameterDescription(std::string fmiParameterDescr)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1313,7 +1360,7 @@ void Message::setFmiParameterUnits(std::string fmiParameterUnits)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1330,7 +1377,7 @@ void Message::setGribParameterId(T::ParamId gribParameterId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1347,7 +1394,7 @@ void Message::setGribParameterName(std::string gribParameterName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1364,7 +1411,7 @@ void Message::setGribParameterDescription(std::string gribParameterDescr)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1381,7 +1428,7 @@ void Message::setGribParameterUnits(std::string gribParameterUnits)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1398,7 +1445,7 @@ void Message::setGrib1ParameterLevelId(T::ParamLevelId grib1ParameterLevelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1415,7 +1462,7 @@ void Message::setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1432,7 +1479,7 @@ void Message::setCdmParameterId(std::string cdmParameterId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1449,7 +1496,7 @@ void Message::setCdmParameterName(std::string cdmParameterName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1466,7 +1513,7 @@ void Message::setNewbaseParameterId(std::string newbaseParameterId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1483,7 +1530,7 @@ void Message::setNewbaseParameterName(std::string newbaseParameterName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1514,7 +1561,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
 
       default:
       {
-        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",NULL);
+        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
         throw exception;
       }
@@ -1522,7 +1569,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1552,7 +1599,7 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
 
       default:
       {
-        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",NULL);
+        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
         throw exception;
       }
@@ -1560,7 +1607,7 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1630,7 +1677,7 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1656,7 +1703,7 @@ void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint ve
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1669,9 +1716,9 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
   FUNCTION_TRACE
   try
   {
-    T::Dimensions_opt d = getGridDimensions();
-    uint cols = d->nx();
-    uint rows = d->ny();
+    T::Dimensions d = getGridDimensions();
+    uint cols = d.nx();
+    uint rows = d.ny();
 
     switch (coordinateType)
     {
@@ -1824,7 +1871,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1848,7 +1895,7 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1861,9 +1908,9 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
   FUNCTION_TRACE
   try
   {
-    T::Dimensions_opt d = getGridDimensions();
-    uint cols = d->nx();
-    uint rows = d->ny();
+    T::Dimensions d = getGridDimensions();
+    uint cols = d.nx();
+    uint rows = d.ny();
 
     switch (coordinateType)
     {
@@ -1963,7 +2010,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1977,9 +2024,9 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
   FUNCTION_TRACE
   try
   {
-    T::Dimensions_opt d = getGridDimensions();
-    uint cols = d->nx();
-    uint rows = d->ny();
+    T::Dimensions d = getGridDimensions();
+    uint cols = d.nx();
+    uint rows = d.ny();
 
     switch (coordinateType)
     {
@@ -2086,7 +2133,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2183,7 +2230,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
 
         default:
         {
-          SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",NULL);
+          SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
           exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
           throw exception;
         }
@@ -2192,7 +2239,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2214,7 +2261,7 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2270,7 +2317,7 @@ T::ParamValue Message::getGridValueByGridPoint(double grid_i,double grid_j,short
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2304,7 +2351,7 @@ T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,shor
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2339,7 +2386,7 @@ void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2374,7 +2421,7 @@ void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2398,7 +2445,7 @@ T::ParamValue Message::getGridValueByGridPoint_noInterpolation(double grid_i,dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2452,7 +2499,7 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2484,7 +2531,7 @@ T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2516,7 +2563,7 @@ T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -2557,7 +2604,7 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

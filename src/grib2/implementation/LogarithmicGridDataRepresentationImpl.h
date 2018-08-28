@@ -14,6 +14,8 @@ class LogarithmicGridDataRepresentationImpl : public LogarithmicGridDataRepresen
               LogarithmicGridDataRepresentationImpl(const LogarithmicGridDataRepresentationImpl& other);
     virtual   ~LogarithmicGridDataRepresentationImpl();
 
+    RepresentationDefinition* createRepresentationDefinition() const;
+
     void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
     void      read(MemoryReader& memoryReader);
 };

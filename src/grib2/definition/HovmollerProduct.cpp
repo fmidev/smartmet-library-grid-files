@@ -21,17 +21,24 @@ namespace GRIB2 {
 HovmollerProduct::HovmollerProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+HovmollerProduct::HovmollerProduct(const HovmollerProduct &other) : ProductDefinition(other) {
+  try {
+    mParameter = other.mParameter;
+    mHorizontal = other.mHorizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 HovmollerProduct::~HovmollerProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -44,7 +51,21 @@ void HovmollerProduct::read(MemoryReader &memoryReader) {
     mParameter.read(memoryReader);
     mHorizontal.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void HovmollerProduct::write(DataWriter &dataWriter) {
+  try {
+    mParameter.write(dataWriter);
+    mHorizontal.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -62,7 +83,7 @@ void HovmollerProduct::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sHovmollerProduct.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -79,7 +100,7 @@ void HovmollerProduct::print(std::ostream &stream, uint level, uint optionFlags)
     mParameter.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -92,43 +113,57 @@ T::Hash HovmollerProduct::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint HovmollerProduct::getTemplateNumber() const {
+  return 1100;
+}
+
+ProductDefinition *HovmollerProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new HovmollerProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
-const ParameterSettings *HovmollerProduct::getParameter() const {
+ParameterSettings *HovmollerProduct::getParameter() const {
   try {
-    return &mParameter;
+    return (ParameterSettings *)&mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
-const HorizontalSettings *HovmollerProduct::getHorizontal() const {
+HorizontalSettings *HovmollerProduct::getHorizontal() const {
   try {
-    return &mHorizontal;
+    return (HorizontalSettings *)&mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void HovmollerProduct::setParameter(ParameterSettings parameter) {
+void HovmollerProduct::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void HovmollerProduct::setHorizontal(HorizontalSettings horizontal) {
+void HovmollerProduct::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

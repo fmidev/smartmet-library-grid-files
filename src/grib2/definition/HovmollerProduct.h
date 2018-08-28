@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../ProductDefinition.h"
 #include "HorizontalSettings.h"
 #include "ParameterSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,17 +22,21 @@ namespace GRIB2 {
 class HovmollerProduct : public ProductDefinition {
 public:
   HovmollerProduct();
+  HovmollerProduct(const HovmollerProduct &other);
   virtual ~HovmollerProduct();
 
+  virtual uint getTemplateNumber() const;
+  virtual ProductDefinition *createProductDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const ParameterSettings *getParameter() const;
-  void setParameter(ParameterSettings parameter);
-  const HorizontalSettings *getHorizontal() const;
-  void setHorizontal(HorizontalSettings horizontal);
+  ParameterSettings *getParameter() const;
+  void setParameter(ParameterSettings &parameter);
+  HorizontalSettings *getHorizontal() const;
+  void setHorizontal(HorizontalSettings &horizontal);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
@@ -43,7 +48,7 @@ protected:
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # TEMPLATE 4.1100, Hovmï¿½ller-type grid with no averaging or other statistical processing
+  // # TEMPLATE 4.1100, Hovmöller-type grid with no averaging or other statistical processing
   //
   // include "template.4.parameter.def"
 

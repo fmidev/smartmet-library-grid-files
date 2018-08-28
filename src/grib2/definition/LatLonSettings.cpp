@@ -21,17 +21,26 @@ namespace GRIB2 {
 LatLonSettings::LatLonSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+LatLonSettings::LatLonSettings(const LatLonSettings &other) {
+  try {
+    mGrid = other.mGrid;
+    mIDirectionIncrement = other.mIDirectionIncrement;
+    mJDirectionIncrement = other.mJDirectionIncrement;
+    mScanningMode = other.mScanningMode;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 LatLonSettings::~LatLonSettings() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -46,7 +55,23 @@ void LatLonSettings::read(MemoryReader &memoryReader) {
     mJDirectionIncrement = memoryReader.read_UInt32_opt();
     mScanningMode.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void LatLonSettings::write(DataWriter &dataWriter) {
+  try {
+    mGrid.write(dataWriter);
+    dataWriter << mIDirectionIncrement;
+    dataWriter << mJDirectionIncrement;
+    mScanningMode.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -68,7 +93,7 @@ void LatLonSettings::getAttributeList(std::string prefix, T::AttributeList &attr
     sprintf(name, "%sLatLonSettings.", prefix.c_str());
     mScanningMode.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -87,7 +112,7 @@ void LatLonSettings::print(std::ostream &stream, uint level, uint optionFlags) c
     stream << space(level) << "- JDirectionIncrement = " << toString(mJDirectionIncrement) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -104,17 +129,17 @@ T::Hash LatLonSettings::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mGrid} attribute. */
 
-const GridSettings *LatLonSettings::getGrid() const {
+GridSettings *LatLonSettings::getGrid() const {
   try {
-    return &mGrid;
+    return (GridSettings *)&mGrid;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -124,7 +149,7 @@ const T::UInt32_opt &LatLonSettings::getIDirectionIncrement() const {
   try {
     return mIDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -134,25 +159,25 @@ const T::UInt32_opt &LatLonSettings::getJDirectionIncrement() const {
   try {
     return mJDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
-const ScanningModeSettings *LatLonSettings::getScanningMode() const {
+ScanningModeSettings *LatLonSettings::getScanningMode() const {
   try {
-    return &mScanningMode;
+    return (ScanningModeSettings *)&mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void LatLonSettings::setGrid(GridSettings grid) {
+void LatLonSettings::setGrid(GridSettings &grid) {
   try {
     mGrid = grid;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -160,7 +185,7 @@ void LatLonSettings::setIDirectionIncrement(T::UInt32_opt iDirectionIncrement) {
   try {
     mIDirectionIncrement = iDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -168,15 +193,15 @@ void LatLonSettings::setJDirectionIncrement(T::UInt32_opt jDirectionIncrement) {
   try {
     mJDirectionIncrement = jDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void LatLonSettings::setScanningMode(ScanningModeSettings scanningMode) {
+void LatLonSettings::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

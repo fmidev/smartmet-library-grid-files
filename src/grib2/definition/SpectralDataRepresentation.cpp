@@ -22,17 +22,24 @@ SpectralDataRepresentation::SpectralDataRepresentation() {
   try {
     mRealPartOf00 = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+SpectralDataRepresentation::SpectralDataRepresentation(const SpectralDataRepresentation &other) : RepresentationDefinition(other) {
+  try {
+    mPacking = other.mPacking;
+    mRealPartOf00 = other.mRealPartOf00;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 SpectralDataRepresentation::~SpectralDataRepresentation() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +52,21 @@ void SpectralDataRepresentation::read(MemoryReader &memoryReader) {
     mPacking.read(memoryReader);
     mRealPartOf00 = memoryReader.read_float();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void SpectralDataRepresentation::write(DataWriter &dataWriter) {
+  try {
+    mPacking.write(dataWriter);
+    dataWriter << mRealPartOf00;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -63,7 +84,7 @@ void SpectralDataRepresentation::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sSpectralDataRepresentation.RealPartOf00", prefix.c_str());
     attributeList.addAttribute(name, toString(mRealPartOf00));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -80,7 +101,7 @@ void SpectralDataRepresentation::print(std::ostream &stream, uint level, uint op
     mPacking.print(stream, level + 1, optionFlags);
     stream << space(level) << "- RealPartOf00 = " << toString(mRealPartOf00) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -93,17 +114,31 @@ T::Hash SpectralDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint SpectralDataRepresentation::getTemplateNumber() const {
+  return 50;
+}
+
+RepresentationDefinition *SpectralDataRepresentation::createRepresentationDefinition() const {
+  try {
+    return (RepresentationDefinition *)new SpectralDataRepresentation(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mPacking} attribute. */
 
-const PackingSettings *SpectralDataRepresentation::getPacking() const {
+PackingSettings *SpectralDataRepresentation::getPacking() const {
   try {
-    return &mPacking;
+    return (PackingSettings *)&mPacking;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -113,15 +148,15 @@ float SpectralDataRepresentation::getRealPartOf00() const {
   try {
     return mRealPartOf00;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void SpectralDataRepresentation::setPacking(PackingSettings packing) {
+void SpectralDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -129,7 +164,7 @@ void SpectralDataRepresentation::setRealPartOf00(float realPartOf00) {
   try {
     mRealPartOf00 = realPartOf00;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

@@ -12,13 +12,16 @@ namespace GRIB2
 class PartitionedEnsembleProductImpl : public PartitionedEnsembleProduct
 {
   public:
-                      PartitionedEnsembleProductImpl();
-    virtual           ~PartitionedEnsembleProductImpl();
+                        PartitionedEnsembleProductImpl();
+                        PartitionedEnsembleProductImpl(const PartitionedEnsembleProductImpl& other);
+    virtual             ~PartitionedEnsembleProductImpl();
 
-    T::TimeString     getForecastTime(T::TimeString referenceTime) const;
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::TimeString       getForecastTime(T::TimeString referenceTime) const;
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

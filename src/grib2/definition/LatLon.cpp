@@ -21,17 +21,24 @@ namespace GRIB2 {
 LatLon::LatLon() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+LatLon::LatLon(const LatLon &other) : GridDefinition(other) {
+  try {
+    mEarthShape = other.mEarthShape;
+    mLatLon = other.mLatLon;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 LatLon::~LatLon() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -44,7 +51,21 @@ void LatLon::read(MemoryReader &memoryReader) {
     mEarthShape.read(memoryReader);
     mLatLon.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void LatLon::write(DataWriter &dataWriter) {
+  try {
+    mEarthShape.write(dataWriter);
+    mLatLon.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -62,7 +83,7 @@ void LatLon::getAttributeList(std::string prefix, T::AttributeList &attributeLis
     sprintf(name, "%sLatLon.", prefix.c_str());
     mLatLon.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -79,7 +100,7 @@ void LatLon::print(std::ostream &stream, uint level, uint optionFlags) const {
     mEarthShape.print(stream, level + 1, optionFlags);
     mLatLon.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -92,43 +113,57 @@ T::Hash LatLon::countHash() {
     boost::hash_combine(seed, mLatLon.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint LatLon::getTemplateNumber() const {
+  return 0;
+}
+
+GridDefinition *LatLon::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new LatLon(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
-const EarthShapeSettings *LatLon::getEarthShape() const {
+EarthShapeSettings *LatLon::getEarthShape() const {
   try {
-    return &mEarthShape;
+    return (EarthShapeSettings *)&mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mLatLon} attribute. */
 
-const LatLonSettings *LatLon::getLatLon() const {
+LatLonSettings *LatLon::getLatLon() const {
   try {
-    return &mLatLon;
+    return (LatLonSettings *)&mLatLon;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void LatLon::setEarthShape(EarthShapeSettings earthShape) {
+void LatLon::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void LatLon::setLatLon(LatLonSettings latLon) {
+void LatLon::setLatLon(LatLonSettings &latLon) {
   try {
     mLatLon = latLon;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

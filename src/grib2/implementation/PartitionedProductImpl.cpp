@@ -18,10 +18,39 @@ PartitionedProductImpl::PartitionedProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+PartitionedProductImpl::PartitionedProductImpl(const PartitionedProductImpl& other)
+:PartitionedProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 PartitionedProductImpl::~PartitionedProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* PartitionedProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new PartitionedProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void PartitionedProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

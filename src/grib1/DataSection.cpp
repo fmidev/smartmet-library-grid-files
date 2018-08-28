@@ -16,29 +16,66 @@ namespace GRIB1
 
 
 
-/*! \brief The constructor of the class.
+/*! \brief The constructor of the class. */
 
-        \param message  A pointer to the message object.
-*/
-
-DataSection::DataSection(Message *message)
+DataSection::DataSection()
 {
   try
   {
-    mMessage = message;
+    mMessage = nullptr;
     mFilePosition = 0;
     mSectionLength = 0;
     mFlags = 0;
     mBinaryScaleFactor = 0;
     mReferenceValue = 0;
     mBitsPerValue = 0;
-    mDataPtr = NULL;
-    mDataLength = 0;
-    mDataLengthMax = 0;
+    mDataPtr = nullptr;
+    mDataSize = 0;
+    mDataSizeMax = 0;
+    mReleaseData = false;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+DataSection::DataSection(const DataSection& other)
+:GRID::MessageSection(other)
+{
+  try
+  {
+    mMessage = nullptr;
+    mFilePosition = other.mFilePosition;
+    mSectionLength = other.mSectionLength;
+    mFlags = other.mFlags;
+    mBinaryScaleFactor = other.mBinaryScaleFactor;
+    mReferenceValue = other.mReferenceValue;
+    mBitsPerValue = other.mBitsPerValue;
+    mDataSize = other.mDataSize;
+    mDataSizeMax = other.mDataSizeMax;
+    mReleaseData = false;
+    mDataPtr = nullptr;
+
+    if (mDataSize >  0  &&  other.mDataPtr != nullptr)
+    {
+      mDataPtr = new uchar[mDataSize];
+      memcpy(mDataPtr,other.mDataPtr,mDataSize);
+      mReleaseData = true;
+    }
+
+    if (other.mDataDefinition)
+      mDataDefinition.reset(other.mDataDefinition->createDataDefinition());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Copy constructor failed!",nullptr);
   }
 }
 
@@ -50,6 +87,73 @@ DataSection::DataSection(Message *message)
 
 DataSection::~DataSection()
 {
+  try
+  {
+    if (mReleaseData &&  mDataPtr != nullptr)
+    {
+      delete mDataPtr;
+      mDataPtr = nullptr;
+    }
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
+  }
+}
+
+
+
+
+
+void DataSection::setMessagePtr(Message *message)
+{
+  try
+  {
+    mMessage = message;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool DataSection::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::DataSection::Flags:
+        setFlags(value);
+        return true;
+
+      case Property::DataSection::BinaryScaleFactor:
+        setBinaryScaleFactor(value);
+        return true;
+
+      case Property::DataSection::ReferenceValue:
+        setReferenceValue(value);
+        return true;
+
+      case Property::DataSection::BitsPerValue:
+        setBitsPerValue(value);
+        return true;
+
+      case Property::DataSection::PackingMethod:
+        //setPackingMethod(value);
+        return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -76,7 +180,7 @@ void DataSection::getAttributeList(std::string prefix,T::AttributeList& attribut
     attributeList.addAttribute(name,toString(mBitsPerValue));
 
     sprintf(name,"%sdata.size",prefix.c_str());
-    attributeList.addAttribute(name,toString(mDataLength));
+    attributeList.addAttribute(name,toString(mDataSize));
 
     sprintf(name,"%sdata.flags",prefix.c_str());
     attributeList.addAttribute(name,toString(mFlags));
@@ -114,7 +218,7 @@ void DataSection::getAttributeList(std::string prefix,T::AttributeList& attribut
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -171,15 +275,142 @@ void DataSection::read(MemoryReader& memoryReader)
       }
     }
 
-    mDataLength = mSectionLength - (memoryReader.getReadPosition() - rPos);
-    mDataLengthMax = memoryReader.getDataSize() - (memoryReader.getReadPosition() - rPos);
+    mDataSize = mSectionLength - (memoryReader.getReadPosition() - rPos);
+    mDataSizeMax = memoryReader.getDataSize() - (memoryReader.getReadPosition() - rPos);
 
     mDataPtr = memoryReader.getReadPtr();
     memoryReader.setReadPosition(rPos + mSectionLength);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void DataSection::setDataDefinition(T::CompressionMethod compressionMethod)
+{
+  try
+  {
+    DataDefinition *dataDefinition = nullptr;
+
+    switch (compressionMethod)
+    {
+      case T::CompressionMethod::Undefined:
+        break;
+
+      case T::CompressionMethod::None:
+        break;
+
+      case T::CompressionMethod::GridPointData_SimplePacking:
+        dataDefinition = new SimplePacking();
+        mFlags = (mFlags & ~SphercicalHarmonicCoefficients);
+        mFlags = (mFlags & ~ComplexPacking);
+        break;
+
+      case T::CompressionMethod::GridPointData_SimplePackingWithPreprocessing:
+        break;
+
+      case T::CompressionMethod::GridPointData_SimplePackingWithLogarithmicPreprocessing:
+        break;
+
+      case T::CompressionMethod::GridPointData_ComplexPacking:
+        dataDefinition = new SecondOrderPacking();
+        mFlags = (mFlags & ~SphercicalHarmonicCoefficients);
+        mFlags = (mFlags | ComplexPacking);
+        break;
+
+      case T::CompressionMethod::GridPointData_ComplexPackingAndSpatialDifferencing:
+        break;
+
+      case T::CompressionMethod::GridPointData_IEEE_packing:
+        break;
+
+      case T::CompressionMethod::GridPointData_JPEG_2000:
+        break;
+
+      case T::CompressionMethod::GridPointData_PNG:
+        break;
+
+      case T::CompressionMethod::GridPointMatrixValues_SimplePacking:
+        break;
+
+      case T::CompressionMethod::SphericalHarmonics_SimplePacking:
+        dataDefinition = new SphericalHarmonicsSimplePacking();
+        mFlags = (mFlags | SphercicalHarmonicCoefficients);
+        mFlags = (mFlags & ~ComplexPacking);
+        break;
+
+      case T::CompressionMethod::SphericalHarmonics_ComplexPacking:
+        dataDefinition = new SphericalHarmonicsComplexPacking();
+        mFlags = (mFlags | SphercicalHarmonicCoefficients);
+        mFlags = (mFlags | ComplexPacking);
+        break;
+
+      case T::CompressionMethod::SpectralData_SimplePacking:
+        break;
+
+      case T::CompressionMethod::SpectralData_ComplexPacking:
+        break;
+    }
+
+    if (dataDefinition == nullptr)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Unsupported compression method!");
+      exception.addParameter("CompressionMethod",std::to_string((uint)compressionMethod));
+      throw exception;
+    }
+
+    mDataDefinition.reset(dataDefinition);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
+
+void DataSection::write(DataWriter& dataWriter)
+{
+  try
+  {
+    if (!mDataDefinition)
+      throw SmartMet::Spine::Exception(BCP,"The data definition is missing!");
+
+    mFilePosition = dataWriter.getWritePosition();
+
+    mSectionLength = 0;
+
+    dataWriter.write_uint24(mSectionLength);
+    dataWriter << mFlags;
+    dataWriter << mBinaryScaleFactor;
+    dataWriter.write_ibmFloat(mReferenceValue);
+    dataWriter << mBitsPerValue;
+
+    mDataDefinition->write(dataWriter);
+
+    if (mDataPtr != nullptr &&  mDataSize > 0)
+      dataWriter.write_data(mDataPtr,mDataSize);
+
+    // Updata the section length
+
+    ulonglong fPos = dataWriter.getWritePosition();
+    mSectionLength = fPos - mFilePosition;
+    dataWriter.setWritePosition(mFilePosition);
+    dataWriter.write_uint24(mSectionLength);
+    dataWriter.setWritePosition(fPos);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -200,7 +431,7 @@ T::FilePosition DataSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -221,7 +452,7 @@ std::uint32_t DataSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -239,7 +470,7 @@ std::string DataSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -257,7 +488,7 @@ std::uint8_t DataSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -273,7 +504,7 @@ T::Data_ptr DataSection::getDataPtr() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -288,7 +519,7 @@ std::uint8_t DataSection::getFlags() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -304,7 +535,7 @@ std::int16_t DataSection::getBinaryScaleFactor() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -320,7 +551,7 @@ std::float_t DataSection::getReferenceValue() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -336,7 +567,7 @@ std::uint8_t DataSection::getBitsPerValue() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -348,11 +579,11 @@ std::size_t DataSection::getDataSize() const
 {
   try
   {
-    return mDataLength;
+    return mDataSize;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -364,11 +595,11 @@ std::size_t DataSection::getDataSizeMax() const
 {
   try
   {
-    return mDataLengthMax;
+    return mDataSizeMax;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -387,7 +618,7 @@ bool DataSection::getValueByIndex(uint index,T::ParamValue& value) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -406,7 +637,7 @@ PackingMethod DataSection::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -422,7 +653,112 @@ void DataSection::decodeValues(T::ParamValue_vec& decodedValues) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void DataSection::setFlags(std::uint8_t flags)
+{
+  try
+  {
+    mFlags = flags;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void DataSection::setBinaryScaleFactor(std::int16_t binaryScaleFactor)
+{
+  try
+  {
+    mBinaryScaleFactor = binaryScaleFactor;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void DataSection::setReferenceValue(std::float_t referenceValue)
+{
+  try
+  {
+    mReferenceValue = referenceValue;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void DataSection::setBitsPerValue(std::uint8_t bitsPerValue)
+{
+  try
+  {
+    mBitsPerValue = bitsPerValue;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void DataSection::setData(T::Data_ptr data,std::size_t size)
+{
+  try
+  {
+    if (mReleaseData &&  mDataPtr != nullptr)
+    {
+      delete mDataPtr;
+      mDataPtr = nullptr;
+      mDataSize = 0;
+    }
+
+    mDataPtr = data;
+    mDataSize = size;
+    mReleaseData = true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void DataSection::setDataDefinition(DataDefinition *dataDefinition)
+{
+  try
+  {
+    mDataDefinition.reset(dataDefinition);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -469,14 +805,14 @@ void DataSection::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- binaryScaleFactor = " << toString(mBinaryScaleFactor) << "\n";
     stream << space(level) << "- referenceValue    = " << toString(mReferenceValue) << "\n";
     stream << space(level) << "- bitsPerValue      = " << toString(mBitsPerValue) << "\n";
-    stream << space(level) << "- dataLength        = " << toString(mDataLength) << "\n";
+    stream << space(level) << "- dataSize          = " << toString(mDataSize) << "\n";
 
     if (mDataDefinition)
       mDataDefinition->print(stream,level+1,optionFlags);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

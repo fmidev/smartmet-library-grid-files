@@ -21,17 +21,28 @@ namespace GRIB2 {
 TimeIntervalEnsembleClusterDerivedForecast::TimeIntervalEnsembleClusterDerivedForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalEnsembleClusterDerivedForecast::TimeIntervalEnsembleClusterDerivedForecast(const TimeIntervalEnsembleClusterDerivedForecast &other) : ProductDefinition(other) {
+  try {
+    mParameter = other.mParameter;
+    mHorizontal = other.mHorizontal;
+    mDerived = other.mDerived;
+    mRectangularCluster = other.mRectangularCluster;
+    mStatistical = other.mStatistical;
+    mEnsembleForecastNumbers = other.mEnsembleForecastNumbers;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 TimeIntervalEnsembleClusterDerivedForecast::~TimeIntervalEnsembleClusterDerivedForecast() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -48,7 +59,25 @@ void TimeIntervalEnsembleClusterDerivedForecast::read(MemoryReader &memoryReader
     mStatistical.read(memoryReader);
     mEnsembleForecastNumbers = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void TimeIntervalEnsembleClusterDerivedForecast::write(DataWriter &dataWriter) {
+  try {
+    mParameter.write(dataWriter);
+    mHorizontal.write(dataWriter);
+    mDerived.write(dataWriter);
+    mRectangularCluster.write(dataWriter);
+    mStatistical.write(dataWriter);
+    dataWriter << mEnsembleForecastNumbers;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -74,7 +103,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::getAttributeList(std::string pr
     sprintf(name, "%sTimeIntervalEnsembleClusterDerivedForecast.EnsembleForecastNumbers", prefix.c_str());
     attributeList.addAttribute(name, toString(mEnsembleForecastNumbers));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -95,7 +124,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::print(std::ostream &stream, uin
     mStatistical.print(stream, level + 1, optionFlags);
     stream << space(level) << "- EnsembleForecastNumbers = " << toString(mEnsembleForecastNumbers) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -113,57 +142,71 @@ T::Hash TimeIntervalEnsembleClusterDerivedForecast::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint TimeIntervalEnsembleClusterDerivedForecast::getTemplateNumber() const {
+  return 13;
+}
+
+ProductDefinition *TimeIntervalEnsembleClusterDerivedForecast::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new TimeIntervalEnsembleClusterDerivedForecast(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
-const ParameterSettings *TimeIntervalEnsembleClusterDerivedForecast::getParameter() const {
+ParameterSettings *TimeIntervalEnsembleClusterDerivedForecast::getParameter() const {
   try {
-    return &mParameter;
+    return (ParameterSettings *)&mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
-const HorizontalSettings *TimeIntervalEnsembleClusterDerivedForecast::getHorizontal() const {
+HorizontalSettings *TimeIntervalEnsembleClusterDerivedForecast::getHorizontal() const {
   try {
-    return &mHorizontal;
+    return (HorizontalSettings *)&mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mDerived} attribute. */
 
-const DerivedSettings *TimeIntervalEnsembleClusterDerivedForecast::getDerived() const {
+DerivedSettings *TimeIntervalEnsembleClusterDerivedForecast::getDerived() const {
   try {
-    return &mDerived;
+    return (DerivedSettings *)&mDerived;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mRectangularCluster} attribute. */
 
-const RectangularClusterSettings *TimeIntervalEnsembleClusterDerivedForecast::getRectangularCluster() const {
+RectangularClusterSettings *TimeIntervalEnsembleClusterDerivedForecast::getRectangularCluster() const {
   try {
-    return &mRectangularCluster;
+    return (RectangularClusterSettings *)&mRectangularCluster;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mStatistical} attribute. */
 
-const StatisticalSettings *TimeIntervalEnsembleClusterDerivedForecast::getStatistical() const {
+StatisticalSettings *TimeIntervalEnsembleClusterDerivedForecast::getStatistical() const {
   try {
-    return &mStatistical;
+    return (StatisticalSettings *)&mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -173,47 +216,47 @@ const T::UInt8_opt &TimeIntervalEnsembleClusterDerivedForecast::getEnsembleForec
   try {
     return mEnsembleForecastNumbers;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalEnsembleClusterDerivedForecast::setParameter(ParameterSettings parameter) {
+void TimeIntervalEnsembleClusterDerivedForecast::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalEnsembleClusterDerivedForecast::setHorizontal(HorizontalSettings horizontal) {
+void TimeIntervalEnsembleClusterDerivedForecast::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalEnsembleClusterDerivedForecast::setDerived(DerivedSettings derived) {
+void TimeIntervalEnsembleClusterDerivedForecast::setDerived(DerivedSettings &derived) {
   try {
     mDerived = derived;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalEnsembleClusterDerivedForecast::setRectangularCluster(RectangularClusterSettings rectangularCluster) {
+void TimeIntervalEnsembleClusterDerivedForecast::setRectangularCluster(RectangularClusterSettings &rectangularCluster) {
   try {
     mRectangularCluster = rectangularCluster;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalEnsembleClusterDerivedForecast::setStatistical(StatisticalSettings statistical) {
+void TimeIntervalEnsembleClusterDerivedForecast::setStatistical(StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -221,7 +264,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setEnsembleForecastNumbers(T::U
   try {
     mEnsembleForecastNumbers = ensembleForecastNumbers;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

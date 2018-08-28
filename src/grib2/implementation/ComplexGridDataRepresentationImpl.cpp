@@ -42,6 +42,24 @@ ComplexGridDataRepresentationImpl:: ~ComplexGridDataRepresentationImpl()
 
 
 
+/*! \brief The method creates a duplicate of the current object. */
+
+RepresentationDefinition* ComplexGridDataRepresentationImpl::createRepresentationDefinition() const
+{
+  try
+  {
+    return (RepresentationDefinition*) new ComplexGridDataRepresentationImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -60,7 +78,7 @@ void ComplexGridDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -78,8 +96,8 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
-    if (data == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to NULL!");
+    if (data == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
@@ -391,7 +409,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

@@ -15,6 +15,8 @@ class PreprocessedGridDataRepresentationImpl : public PreprocessedGridDataRepres
               PreprocessedGridDataRepresentationImpl(const PreprocessedGridDataRepresentationImpl& other);
     virtual   ~PreprocessedGridDataRepresentationImpl();
 
+    RepresentationDefinition* createRepresentationDefinition() const;
+
     void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
     void      read(MemoryReader& memoryReader);
 

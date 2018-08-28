@@ -21,17 +21,24 @@ namespace GRIB2 {
 VariableResolutionLatLon::VariableResolutionLatLon() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+VariableResolutionLatLon::VariableResolutionLatLon(const VariableResolutionLatLon &other) : GridDefinition(other) {
+  try {
+    mEarthShape = other.mEarthShape;
+    mVariableLatLon = other.mVariableLatLon;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 VariableResolutionLatLon::~VariableResolutionLatLon() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -44,7 +51,21 @@ void VariableResolutionLatLon::read(MemoryReader &memoryReader) {
     mEarthShape.read(memoryReader);
     mVariableLatLon.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void VariableResolutionLatLon::write(DataWriter &dataWriter) {
+  try {
+    mEarthShape.write(dataWriter);
+    mVariableLatLon.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -62,7 +83,7 @@ void VariableResolutionLatLon::getAttributeList(std::string prefix, T::Attribute
     sprintf(name, "%sVariableResolutionLatLon.", prefix.c_str());
     mVariableLatLon.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -79,7 +100,7 @@ void VariableResolutionLatLon::print(std::ostream &stream, uint level, uint opti
     mEarthShape.print(stream, level + 1, optionFlags);
     mVariableLatLon.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -92,43 +113,57 @@ T::Hash VariableResolutionLatLon::countHash() {
     boost::hash_combine(seed, mVariableLatLon.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint VariableResolutionLatLon::getTemplateNumber() const {
+  return 4;
+}
+
+GridDefinition *VariableResolutionLatLon::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new VariableResolutionLatLon(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
-const EarthShapeSettings *VariableResolutionLatLon::getEarthShape() const {
+EarthShapeSettings *VariableResolutionLatLon::getEarthShape() const {
   try {
-    return &mEarthShape;
+    return (EarthShapeSettings *)&mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mVariableLatLon} attribute. */
 
-const VariableLatLonSettings *VariableResolutionLatLon::getVariableLatLon() const {
+VariableLatLonSettings *VariableResolutionLatLon::getVariableLatLon() const {
   try {
-    return &mVariableLatLon;
+    return (VariableLatLonSettings *)&mVariableLatLon;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void VariableResolutionLatLon::setEarthShape(EarthShapeSettings earthShape) {
+void VariableResolutionLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void VariableResolutionLatLon::setVariableLatLon(VariableLatLonSettings variableLatLon) {
+void VariableResolutionLatLon::setVariableLatLon(VariableLatLonSettings &variableLatLon) {
   try {
     mVariableLatLon = variableLatLon;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

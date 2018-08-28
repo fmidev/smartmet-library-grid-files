@@ -18,10 +18,39 @@ TimeIntervalAggregateForecastImpl::TimeIntervalAggregateForecastImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalAggregateForecastImpl::TimeIntervalAggregateForecastImpl(const TimeIntervalAggregateForecastImpl& other)
+:TimeIntervalAggregateForecast(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 TimeIntervalAggregateForecastImpl::~TimeIntervalAggregateForecastImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* TimeIntervalAggregateForecastImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new TimeIntervalAggregateForecastImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void TimeIntervalAggregateForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -69,7 +98,7 @@ T::TimeString TimeIntervalAggregateForecastImpl::getForecastTime(T::TimeString r
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -93,7 +122,7 @@ T::ParamLevel TimeIntervalAggregateForecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -117,7 +146,7 @@ T::ParamLevelId TimeIntervalAggregateForecastImpl::getGribParameterLevelId() con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

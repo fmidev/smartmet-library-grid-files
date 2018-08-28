@@ -18,10 +18,39 @@ TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalAerosolEnsembleProductImpl::TimeIntervalAerosolEnsembleProductImpl(const TimeIntervalAerosolEnsembleProductImpl& other)
+:TimeIntervalAerosolEnsembleProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 TimeIntervalAerosolEnsembleProductImpl::~TimeIntervalAerosolEnsembleProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* TimeIntervalAerosolEnsembleProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new TimeIntervalAerosolEnsembleProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void TimeIntervalAerosolEnsembleProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

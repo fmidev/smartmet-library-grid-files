@@ -39,6 +39,24 @@ StretchedRotatedSphericalHarmonicImpl::~StretchedRotatedSphericalHarmonicImpl()
 
 
 
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* StretchedRotatedSphericalHarmonicImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new StretchedRotatedSphericalHarmonicImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -57,7 +75,7 @@ void StretchedRotatedSphericalHarmonicImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -90,7 +108,7 @@ T::Coordinate_vec StretchedRotatedSphericalHarmonicImpl::getGridCoordinates() co
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt StretchedRotatedSphericalHarmonicImpl::getGridDimensions() const
+T::Dimensions StretchedRotatedSphericalHarmonicImpl::getGridDimensions() const
 {
   try
   {
@@ -98,7 +116,7 @@ T::Dimensions_opt StretchedRotatedSphericalHarmonicImpl::getGridDimensions() con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -127,7 +145,7 @@ bool StretchedRotatedSphericalHarmonicImpl::getGridPointByLatLonCoordinates(doub
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -150,7 +168,7 @@ void StretchedRotatedSphericalHarmonicImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

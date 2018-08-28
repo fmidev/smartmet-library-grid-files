@@ -28,7 +28,31 @@ SecondOrderPacking::SecondOrderPacking()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+SecondOrderPacking::SecondOrderPacking(const SecondOrderPacking& other)
+:DataDefinition(other)
+{
+  try
+  {
+    mN1 = other.mN1;
+    mExtendedFlags = other.mExtendedFlags;
+    mN2 = other.mN2;
+    mP1 = other.mP1;
+    mP2 = other.mP2;
+    mExtraValues = other.mExtraValues;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -46,6 +70,22 @@ SecondOrderPacking::~SecondOrderPacking()
 
 
 
+DataDefinition* SecondOrderPacking::createDataDefinition() const
+{
+  try
+  {
+    return (DataDefinition*) new SecondOrderPacking(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 PackingMethod SecondOrderPacking::getPackingMethod() const
 {
   try
@@ -54,13 +94,9 @@ PackingMethod SecondOrderPacking::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
-
-
-
-
 
 
 
@@ -87,7 +123,22 @@ void SecondOrderPacking::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void SecondOrderPacking::write(DataWriter& dataWriter)
+{
+  try
+  {
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -100,7 +151,7 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
   try
   {
     std::size_t numOfValues = message->getGridOriginalValueCount();
-    T::Dimensions_opt dimensions = message->getGridDimensions();
+    T::Dimensions dimensions = message->getGridDimensions();
     T::Data_ptr data = message->getDataPtr();
     std::size_t dataSize = message->getDataSize();
     T::Data_ptr bitmap = message->getBitmapDataPtr();
@@ -111,8 +162,8 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
     std::uint8_t bitsPerValue = message->getBitsPerValue();
     std::uint8_t flags = message->getFlags();
 
-    if (data == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to NULL!");
+    if (data == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     // The documentation of this packing method is just terrible. The basic idea
     // of this packing method should be close to grib2 complex packing, but still
@@ -216,7 +267,7 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -226,7 +277,7 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
 
 void SecondOrderPacking::decodeValues_rowByRow(
     std::size_t numOfValues,
-    T::Dimensions_opt dimensions,
+    T::Dimensions dimensions,
     T::Data_ptr data,
     std::size_t dataSize,
     T::Data_ptr bitmap,
@@ -244,7 +295,7 @@ void SecondOrderPacking::decodeValues_rowByRow(
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -254,7 +305,7 @@ void SecondOrderPacking::decodeValues_rowByRow(
 
 void SecondOrderPacking::decodeValues_constantWidth(
     std::size_t numOfValues,
-    T::Dimensions_opt dimensions,
+    T::Dimensions dimensions,
     T::Data_ptr data,
     std::size_t dataSize,
     T::Data_ptr bitmap,
@@ -272,7 +323,7 @@ void SecondOrderPacking::decodeValues_constantWidth(
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -282,7 +333,7 @@ void SecondOrderPacking::decodeValues_constantWidth(
 
 void SecondOrderPacking::decodeValues_differentWidth(
     std::size_t numOfValues,
-    T::Dimensions_opt dimensions,
+    T::Dimensions dimensions,
     T::Data_ptr data,
     std::size_t dataSize,
     T::Data_ptr bitmap,
@@ -300,7 +351,7 @@ void SecondOrderPacking::decodeValues_differentWidth(
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -310,7 +361,7 @@ void SecondOrderPacking::decodeValues_differentWidth(
 
 void SecondOrderPacking::decodeValues_SPD(
     std::size_t numOfValues,
-    T::Dimensions_opt dimensions,
+    T::Dimensions dimensions,
     T::Data_ptr data,
     std::size_t dataSize,
     T::Data_ptr bitmap,
@@ -326,7 +377,7 @@ void SecondOrderPacking::decodeValues_SPD(
   try
   {
     // TODO: Check bitmap bits.
-    if (bitmap != NULL &&  bitmapSizeInBytes > 0)
+    if (bitmap != nullptr &&  bitmapSizeInBytes > 0)
       throw SmartMet::Spine::Exception(BCP,"Bitmap not yet supported!");
 
 
@@ -401,7 +452,7 @@ void SecondOrderPacking::decodeValues_SPD(
     }
     catch (...)
     {
-      throw SmartMet::Spine::Exception(BCP,"Reading group value widths failed!",NULL);
+      throw SmartMet::Spine::Exception(BCP,"Reading group value widths failed!",nullptr);
     }
 
 
@@ -420,7 +471,7 @@ void SecondOrderPacking::decodeValues_SPD(
     }
     catch (...)
     {
-      throw SmartMet::Spine::Exception(BCP,"Reading group lengths failed!",NULL);
+      throw SmartMet::Spine::Exception(BCP,"Reading group lengths failed!",nullptr);
     }
 
 
@@ -446,7 +497,7 @@ void SecondOrderPacking::decodeValues_SPD(
     }
     catch (...)
     {
-      throw SmartMet::Spine::Exception(BCP,"Reading group values failed!",NULL);
+      throw SmartMet::Spine::Exception(BCP,"Reading group values failed!",nullptr);
     }
 
     try
@@ -486,7 +537,7 @@ void SecondOrderPacking::decodeValues_SPD(
     }
     catch (...)
     {
-      throw SmartMet::Spine::Exception(BCP,"Reading second order values failed!",NULL);
+      throw SmartMet::Spine::Exception(BCP,"Reading second order values failed!",nullptr);
     }
 
 
@@ -544,7 +595,7 @@ void SecondOrderPacking::decodeValues_SPD(
 
     if (mExtendedFlags & BoustrophedonicOrdering)
     {
-      uint nx = (uint)dimensions->nx();
+      uint nx = (uint)dimensions.nx();
       uint inc = nx;
       uint count = nx;
 
@@ -574,7 +625,7 @@ void SecondOrderPacking::decodeValues_SPD(
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -640,7 +691,7 @@ void SecondOrderPacking::print(std::ostream& stream,uint level,uint optionFlags)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

@@ -21,17 +21,25 @@ namespace GRIB2 {
 StretchedRotatedSphericalHarmonic::StretchedRotatedSphericalHarmonic() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+StretchedRotatedSphericalHarmonic::StretchedRotatedSphericalHarmonic(const StretchedRotatedSphericalHarmonic &other) : GridDefinition(other) {
+  try {
+    mSphericalHarmonic = other.mSphericalHarmonic;
+    mRotation = other.mRotation;
+    mStretching = other.mStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 StretchedRotatedSphericalHarmonic::~StretchedRotatedSphericalHarmonic() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +53,22 @@ void StretchedRotatedSphericalHarmonic::read(MemoryReader &memoryReader) {
     mRotation.read(memoryReader);
     mStretching.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void StretchedRotatedSphericalHarmonic::write(DataWriter &dataWriter) {
+  try {
+    mSphericalHarmonic.write(dataWriter);
+    mRotation.write(dataWriter);
+    mStretching.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +88,7 @@ void StretchedRotatedSphericalHarmonic::getAttributeList(std::string prefix, T::
     sprintf(name, "%sStretchedRotatedSphericalHarmonic.", prefix.c_str());
     mStretching.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +106,7 @@ void StretchedRotatedSphericalHarmonic::print(std::ostream &stream, uint level, 
     mRotation.print(stream, level + 1, optionFlags);
     mStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -97,61 +120,75 @@ T::Hash StretchedRotatedSphericalHarmonic::countHash() {
     boost::hash_combine(seed, mStretching.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint StretchedRotatedSphericalHarmonic::getTemplateNumber() const {
+  return 53;
+}
+
+GridDefinition *StretchedRotatedSphericalHarmonic::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new StretchedRotatedSphericalHarmonic(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mSphericalHarmonic} attribute. */
 
-const SphericalHarmonicSettings *StretchedRotatedSphericalHarmonic::getSphericalHarmonic() const {
+SphericalHarmonicSettings *StretchedRotatedSphericalHarmonic::getSphericalHarmonic() const {
   try {
-    return &mSphericalHarmonic;
+    return (SphericalHarmonicSettings *)&mSphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mRotation} attribute. */
 
-const RotationSettings *StretchedRotatedSphericalHarmonic::getRotation() const {
+RotationSettings *StretchedRotatedSphericalHarmonic::getRotation() const {
   try {
-    return &mRotation;
+    return (RotationSettings *)&mRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mStretching} attribute. */
 
-const StretchingSettings *StretchedRotatedSphericalHarmonic::getStretching() const {
+StretchingSettings *StretchedRotatedSphericalHarmonic::getStretching() const {
   try {
-    return &mStretching;
+    return (StretchingSettings *)&mStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings sphericalHarmonic) {
+void StretchedRotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic) {
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setRotation(RotationSettings rotation) {
+void StretchedRotatedSphericalHarmonic::setRotation(RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedRotatedSphericalHarmonic::setStretching(StretchingSettings stretching) {
+void StretchedRotatedSphericalHarmonic::setStretching(StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

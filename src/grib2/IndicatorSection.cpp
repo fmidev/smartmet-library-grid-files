@@ -18,17 +18,46 @@ namespace GRIB2
         \param message  A pointer to the message object.
 */
 
-IndicatorSection::IndicatorSection(Message *message)
+IndicatorSection::IndicatorSection()
 {
   try
   {
-    mMessage = message;
+    mMessage = nullptr;
     mFilePosition = 0;
     mTotalLength = 0;
+    mIdentifier[0] = 'G';
+    mIdentifier[1] = 'R';
+    mIdentifier[2] = 'I';
+    mIdentifier[3] = 'B';
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+IndicatorSection::IndicatorSection(const IndicatorSection& other)
+:GRID::MessageSection(other)
+{
+  try
+  {
+    mMessage = nullptr;
+    mFilePosition = other.mFilePosition;
+    memcpy(mIdentifier,other.mIdentifier,4);
+    mReserved = other.mReserved;
+    mDiscipline = other.mDiscipline;
+    mEditionNumber = other.mEditionNumber;
+    mTotalLength = other.mTotalLength;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -70,7 +99,49 @@ void IndicatorSection::getAttributeList(std::string prefix,T::AttributeList& att
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void IndicatorSection::setMessagePtr(Message *message)
+{
+  try
+  {
+    mMessage = message;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool IndicatorSection::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::IndicatorSection::Discipline:
+        setDiscipline(value);
+        return true;
+
+      case Property::IndicatorSection::EditionNumber:
+        setEditionNumber(value);
+        return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -89,7 +160,7 @@ void IndicatorSection::read(MemoryReader& memoryReader)
   {
     mFilePosition = memoryReader.getGlobalReadPosition();
 
-    memoryReader >> mIdentifier;
+    memoryReader.read_data(mIdentifier,4);
     memoryReader >> mReserved;
 
     memoryReader >> mDiscipline;
@@ -112,7 +183,37 @@ void IndicatorSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void IndicatorSection::write(DataWriter& dataWriter)
+{
+  try
+  {
+    if (missing(mDiscipline))
+      throw SmartMet::Spine::Exception(BCP,"Discipline cannot be missing!");
+
+    mEditionNumber = 2;
+    //if (missing(mEditionNumber))
+    //  throw SmartMet::Spine::Exception(BCP,"GRIB edition number cannot be missing!");
+
+
+    mFilePosition = dataWriter.getWritePosition();
+
+    dataWriter.write_data(mIdentifier,4);
+    dataWriter << mReserved;
+    dataWriter << mDiscipline;
+    dataWriter << mEditionNumber;
+    dataWriter << mTotalLength;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -133,7 +234,7 @@ T::FilePosition IndicatorSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -154,7 +255,7 @@ std::uint32_t IndicatorSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -172,7 +273,7 @@ std::string IndicatorSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -190,23 +291,7 @@ std::uint8_t IndicatorSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
-  }
-}
-
-
-
-
-
-T::UInt32_opt IndicatorSection::getIdentifier() const
-{
-  try
-  {
-    return mIdentifier;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -222,7 +307,7 @@ T::UInt16_opt IndicatorSection::getReserved() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -230,15 +315,15 @@ T::UInt16_opt IndicatorSection::getReserved() const
 
 
 
-std::uint8_t IndicatorSection::getDiscipline() const
+T::UInt8_opt IndicatorSection::getDiscipline() const
 {
   try
   {
-    return *mDiscipline;
+    return mDiscipline;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -246,15 +331,15 @@ std::uint8_t IndicatorSection::getDiscipline() const
 
 
 
-std::uint8_t IndicatorSection::getEditionNumber() const
+T::UInt8_opt IndicatorSection::getEditionNumber() const
 {
   try
   {
-    return *mEditionNumber;
+    return mEditionNumber;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -270,7 +355,7 @@ std::uint64_t IndicatorSection::getTotalLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -286,7 +371,55 @@ std::string IndicatorSection::getDisciplineString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void IndicatorSection::setDiscipline(std::uint8_t discipline)
+{
+  try
+  {
+    mDiscipline = discipline;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void IndicatorSection::setEditionNumber(std::uint8_t editionNumber)
+{
+  try
+  {
+    mEditionNumber = editionNumber;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void IndicatorSection::setTotalLength(std::uint64_t totalLength)
+{
+  try
+  {
+    mTotalLength = totalLength;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -307,7 +440,6 @@ void IndicatorSection::print(std::ostream& stream,uint level,uint optionFlags) c
   {
     stream << space(level) << "SECTION ["<< toString(getSectionNumber()) << "] " << getSectionName() << "\n";
     stream << space(level) << "- filePosition     = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
-    stream << space(level) << "- identifier       = " << toString(getIdentifier()) << "\n";
     stream << space(level) << "- reserved         = " << toString(getReserved()) << "\n";
     stream << space(level) << "- discipline       = " << toString(getDiscipline()) << "\n";
     stream << space(level) << "- disciplineString = " << getDisciplineString() << "\n";
@@ -316,7 +448,7 @@ void IndicatorSection::print(std::ostream& stream,uint level,uint optionFlags) c
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

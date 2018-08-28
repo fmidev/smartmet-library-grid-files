@@ -8,6 +8,7 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
 #include "../../grid/Typedefs.h"
 
@@ -18,10 +19,12 @@ namespace GRIB1 {
 class GridStretchingSettings {
 public:
   GridStretchingSettings();
+  GridStretchingSettings(const GridStretchingSettings &other);
   virtual ~GridStretchingSettings();
 
-  virtual void read(MemoryReader &memoryReader);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 

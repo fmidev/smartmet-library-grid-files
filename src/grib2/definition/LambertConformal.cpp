@@ -22,17 +22,38 @@ LambertConformal::LambertConformal() {
   try {
     mProjectionCentreFlag = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+LambertConformal::LambertConformal(const LambertConformal &other) : GridDefinition(other) {
+  try {
+    mEarthShape = other.mEarthShape;
+    mNx = other.mNx;
+    mNy = other.mNy;
+    mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
+    mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
+    mResolution = other.mResolution;
+    mLaD = other.mLaD;
+    mLoV = other.mLoV;
+    mDx = other.mDx;
+    mDy = other.mDy;
+    mProjectionCentreFlag = other.mProjectionCentreFlag;
+    mScanningMode = other.mScanningMode;
+    mLatin1 = other.mLatin1;
+    mLatin2 = other.mLatin2;
+    mLatitudeOfSouthernPole = other.mLatitudeOfSouthernPole;
+    mLongitudeOfSouthernPole = other.mLongitudeOfSouthernPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 LambertConformal::~LambertConformal() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -59,7 +80,35 @@ void LambertConformal::read(MemoryReader &memoryReader) {
     mLatitudeOfSouthernPole = memoryReader.read_Int32_opt();
     mLongitudeOfSouthernPole = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void LambertConformal::write(DataWriter &dataWriter) {
+  try {
+    mEarthShape.write(dataWriter);
+    dataWriter << mNx;
+    dataWriter << mNy;
+    dataWriter << mLatitudeOfFirstGridPoint;
+    dataWriter << mLongitudeOfFirstGridPoint;
+    mResolution.write(dataWriter);
+    dataWriter << mLaD;
+    dataWriter << mLoV;
+    dataWriter << mDx;
+    dataWriter << mDy;
+    dataWriter << mProjectionCentreFlag;
+    mScanningMode.write(dataWriter);
+    dataWriter << mLatin1;
+    dataWriter << mLatin2;
+    dataWriter << mLatitudeOfSouthernPole;
+    dataWriter << mLongitudeOfSouthernPole;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -105,7 +154,7 @@ void LambertConformal::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sLambertConformal.LongitudeOfSouthernPole", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -136,7 +185,7 @@ void LambertConformal::print(std::ostream &stream, uint level, uint optionFlags)
     stream << space(level) << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole) << "\n";
     stream << space(level) << "- LongitudeOfSouthernPole = " << toString(mLongitudeOfSouthernPole) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -175,17 +224,31 @@ T::Hash LambertConformal::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint LambertConformal::getTemplateNumber() const {
+  return 30;
+}
+
+GridDefinition *LambertConformal::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new LambertConformal(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
-const EarthShapeSettings *LambertConformal::getEarthShape() const {
+EarthShapeSettings *LambertConformal::getEarthShape() const {
   try {
-    return &mEarthShape;
+    return (EarthShapeSettings *)&mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -195,7 +258,7 @@ const T::UInt32_opt &LambertConformal::getNx() const {
   try {
     return mNx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -205,7 +268,7 @@ const T::UInt32_opt &LambertConformal::getNy() const {
   try {
     return mNy;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -215,7 +278,7 @@ const T::Int32_opt &LambertConformal::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -225,17 +288,17 @@ const T::UInt32_opt &LambertConformal::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mResolution} attribute. */
 
-const ResolutionSettings *LambertConformal::getResolution() const {
+ResolutionSettings *LambertConformal::getResolution() const {
   try {
-    return &mResolution;
+    return (ResolutionSettings *)&mResolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -245,7 +308,7 @@ const T::Int32_opt &LambertConformal::getLaD() const {
   try {
     return mLaD;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -255,7 +318,7 @@ const T::UInt32_opt &LambertConformal::getLoV() const {
   try {
     return mLoV;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -265,7 +328,7 @@ const T::UInt32_opt &LambertConformal::getDx() const {
   try {
     return mDx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -275,7 +338,7 @@ const T::UInt32_opt &LambertConformal::getDy() const {
   try {
     return mDy;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -285,17 +348,17 @@ std::uint8_t LambertConformal::getProjectionCentreFlag() const {
   try {
     return mProjectionCentreFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
-const ScanningModeSettings *LambertConformal::getScanningMode() const {
+ScanningModeSettings *LambertConformal::getScanningMode() const {
   try {
-    return &mScanningMode;
+    return (ScanningModeSettings *)&mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -305,7 +368,7 @@ const T::Int32_opt &LambertConformal::getLatin1() const {
   try {
     return mLatin1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -315,7 +378,7 @@ const T::Int32_opt &LambertConformal::getLatin2() const {
   try {
     return mLatin2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -325,7 +388,7 @@ const T::Int32_opt &LambertConformal::getLatitudeOfSouthernPole() const {
   try {
     return mLatitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -335,15 +398,15 @@ const T::UInt32_opt &LambertConformal::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void LambertConformal::setEarthShape(EarthShapeSettings earthShape) {
+void LambertConformal::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -351,7 +414,7 @@ void LambertConformal::setNx(T::UInt32_opt nx) {
   try {
     mNx = nx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -359,7 +422,7 @@ void LambertConformal::setNy(T::UInt32_opt ny) {
   try {
     mNy = ny;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -367,7 +430,7 @@ void LambertConformal::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstG
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -375,15 +438,15 @@ void LambertConformal::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFir
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void LambertConformal::setResolution(ResolutionSettings resolution) {
+void LambertConformal::setResolution(ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -391,7 +454,7 @@ void LambertConformal::setLaD(T::Int32_opt laD) {
   try {
     mLaD = laD;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -399,7 +462,7 @@ void LambertConformal::setLoV(T::UInt32_opt loV) {
   try {
     mLoV = loV;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -407,7 +470,7 @@ void LambertConformal::setDx(T::UInt32_opt dx) {
   try {
     mDx = dx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -415,7 +478,7 @@ void LambertConformal::setDy(T::UInt32_opt dy) {
   try {
     mDy = dy;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -423,15 +486,15 @@ void LambertConformal::setProjectionCentreFlag(std::uint8_t projectionCentreFlag
   try {
     mProjectionCentreFlag = projectionCentreFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void LambertConformal::setScanningMode(ScanningModeSettings scanningMode) {
+void LambertConformal::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -439,7 +502,7 @@ void LambertConformal::setLatin1(T::Int32_opt latin1) {
   try {
     mLatin1 = latin1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -447,7 +510,7 @@ void LambertConformal::setLatin2(T::Int32_opt latin2) {
   try {
     mLatin2 = latin2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -455,7 +518,7 @@ void LambertConformal::setLatitudeOfSouthernPole(T::Int32_opt latitudeOfSouthern
   try {
     mLatitudeOfSouthernPole = latitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -463,7 +526,7 @@ void LambertConformal::setLongitudeOfSouthernPole(T::UInt32_opt longitudeOfSouth
   try {
     mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

@@ -8,12 +8,12 @@ namespace SmartMet
 
 /*! \brief The constructor of the class. */
 
-BitArrayReader::BitArrayReader(const unsigned char *data,unsigned long long numberOfBits)
+BitArrayReader::BitArrayReader(const unsigned char *data,ulonglong numberOfBits)
 {
   try
   {
-    if (data == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' parameter points to NULL!");
+    if (data == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'data' parameter points to nullptr!");
 
     mData = data;
     mNumberOfBits = numberOfBits;
@@ -21,7 +21,7 @@ BitArrayReader::BitArrayReader(const unsigned char *data,unsigned long long numb
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -38,7 +38,8 @@ BitArrayReader::~BitArrayReader()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -47,7 +48,7 @@ BitArrayReader::~BitArrayReader()
 
 /*! \brief The method returns the size of the bit array/stream counted in bits. */
 
-unsigned long long BitArrayReader::getNumberOfBits()
+ulonglong BitArrayReader::getNumberOfBits()
 {
   try
   {
@@ -55,7 +56,7 @@ unsigned long long BitArrayReader::getNumberOfBits()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -67,7 +68,7 @@ unsigned long long BitArrayReader::getNumberOfBits()
     The position is counted in bits from the beginning of the bit array/stream.
 */
 
-unsigned long long BitArrayReader::getReadPosition()
+ulonglong BitArrayReader::getReadPosition()
 {
   try
   {
@@ -75,7 +76,7 @@ unsigned long long BitArrayReader::getReadPosition()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -87,7 +88,7 @@ unsigned long long BitArrayReader::getReadPosition()
     The position is counted in bits from the beginning of the bit array/stream.
 */
 
-void BitArrayReader::setReadPosition(unsigned long long _readPosition)
+void BitArrayReader::setReadPosition(ulonglong _readPosition)
 {
   try
   {
@@ -103,7 +104,7 @@ void BitArrayReader::setReadPosition(unsigned long long _readPosition)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -121,8 +122,8 @@ bool BitArrayReader::readBit()
 {
   try
   {
-    if (mData == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to NULL!");
+    if (mData == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     if ((mReadPosition + 1) > mNumberOfBits)
     {
@@ -132,8 +133,8 @@ bool BitArrayReader::readBit()
       throw exception;
     }
 
-    unsigned long long byt = mReadPosition / 8;
-    unsigned long long bit = 7 - (mReadPosition % 8);
+    ulonglong byt = mReadPosition / 8;
+    ulonglong bit = 7 - (mReadPosition % 8);
 
     mReadPosition++;
 
@@ -144,7 +145,7 @@ bool BitArrayReader::readBit()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -167,8 +168,8 @@ bool BitArrayReader::readBitNoCheck()
 {
   try
   {
-    unsigned long long byt = mReadPosition / 8;
-    unsigned long long bit = 7 - (mReadPosition % 8);
+    ulonglong byt = mReadPosition / 8;
+    ulonglong bit = 7 - (mReadPosition % 8);
 
     mReadPosition++;
 
@@ -179,7 +180,7 @@ bool BitArrayReader::readBitNoCheck()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -198,8 +199,8 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int& value)
 {
   try
   {
-    if (mData == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to NULL!");
+    if (mData == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     if (numberOfBits > 32)
     {
@@ -228,7 +229,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -247,8 +248,8 @@ void BitArrayReader::readBits(unsigned int numberOfBits,unsigned int& value)
 {
   try
   {
-    if (mData == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to NULL!");
+    if (mData == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     if (numberOfBits > 32)
     {
@@ -277,7 +278,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,unsigned int& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -292,16 +293,16 @@ void BitArrayReader::readBits(unsigned int numberOfBits,unsigned int& value)
         \param value          The result value of the read bits.
 */
 
-void BitArrayReader::readBits(unsigned int numberOfBits,unsigned long long& value)
+void BitArrayReader::readBits(unsigned int numberOfBits,ulonglong& value)
 {
   try
   {
-    if (mData == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to NULL!");
+    if (mData == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     if (numberOfBits > 64)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot read more than 64 bits into 'unsigned long long'!");
+      SmartMet::Spine::Exception exception(BCP,"Cannot read more than 64 bits into 'ulonglong'!");
       exception.addParameter("Requested bits",std::to_string(numberOfBits));
       throw exception;
     }
@@ -326,7 +327,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,unsigned long long& valu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -346,8 +347,8 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int *array,unsigned int 
 {
   try
   {
-    if (mData == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to NULL!");
+    if (mData == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     for (unsigned int t=0; t<arraySize; t++)
     {
@@ -356,7 +357,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int *array,unsigned int 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

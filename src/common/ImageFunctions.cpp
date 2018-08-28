@@ -41,7 +41,7 @@ uint rgb(uint red, uint green, uint blue)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -57,7 +57,7 @@ uint rgb(uchar red, uchar green, uchar blue)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -115,7 +115,7 @@ uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -147,14 +147,14 @@ void jpeg_save(const char *filename, unsigned long *image, int image_height,int 
 
     struct jpeg_compress_struct cinfo;
     struct jpeg_error_mgr jerr;
-    FILE * outfile = NULL;
+    FILE * outfile = nullptr;
     JSAMPROW row_pointer[1];
     int row_stride = 0;
 
     cinfo.err = jpeg_std_error(&jerr);
     jpeg_create_compress(&cinfo);
 
-    if ((outfile = fopen(filename, "wb")) == NULL)
+    if ((outfile = fopen(filename, "wb")) == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot create the JPG file!");
       exception.addParameter("Filename",filename);
@@ -188,7 +188,7 @@ void jpeg_save(const char *filename, unsigned long *image, int image_height,int 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -251,7 +251,7 @@ int jpg_load(const char *_filename,CImage& _image)
   int row_stride;     // ###  physical row width in output buffer
 
   FILE *infile = fopen(_filename, "rb");
-  if (infile == NULL)
+  if (infile == nullptr)
   {
 //    fprintf(moutput, "ERROR; Cannot open file (%s)!\n", _filename);
     return - 1;
@@ -440,12 +440,12 @@ int jpg_load(const char *_filename,CImage& _image)
 
 
 
-static png_structp png_ptr = NULL;
-static png_infop info_ptr = NULL;
+static png_structp png_ptr = nullptr;
+static png_infop info_ptr = nullptr;
 
 png_uint_32 width = 0, height = 0;
 int bit_depth = 0, color_type = 0;
-uchar *image_data = NULL;
+uchar *image_data = nullptr;
 
 
 
@@ -469,20 +469,20 @@ int readpng_init(FILE *infile, uint *pWidth, uint *pHeight)
     return -1;   /* bad signature */
 
 
-  png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   if (!png_ptr)
     return -2;   /* out of memory */
 
   info_ptr = png_create_info_struct(png_ptr);
   if (!info_ptr)
   {
-    png_destroy_read_struct(&png_ptr, NULL, NULL);
+    png_destroy_read_struct(&png_ptr, nullptr, nullptr);
     return -3;   /* out of memory */
   }
 
   if (setjmp(png_jmpbuf(png_ptr)))
   {
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     return -4;
   }
 
@@ -492,7 +492,7 @@ int readpng_init(FILE *infile, uint *pWidth, uint *pHeight)
 
   png_read_info(png_ptr, info_ptr);
 
-  png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,NULL, NULL, NULL);
+  png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,nullptr, nullptr, nullptr);
 
   *pWidth = width;
   *pHeight = height;
@@ -510,7 +510,7 @@ int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
 
   if (setjmp(png_jmpbuf(png_ptr)))
   {
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     return 2;
   }
 
@@ -559,8 +559,8 @@ uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbyte
 
   if (setjmp(png_jmpbuf(png_ptr)))
   {
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-    return NULL;
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    return nullptr;
   }
 
   if (color_type == PNG_COLOR_TYPE_PALETTE)
@@ -587,19 +587,19 @@ uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbyte
   *pRowbytes = rowbytes = png_get_rowbytes(png_ptr, info_ptr);
   *pChannels = (int)png_get_channels(png_ptr, info_ptr);
 
-  if ((image_data = (uchar *)malloc(rowbytes*height)) == NULL)
+  if ((image_data = (uchar *)malloc(rowbytes*height)) == nullptr)
   {
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-    return NULL;
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    return nullptr;
   }
 
   png_bytepp row_pointers = (png_bytepp)malloc(height*sizeof(png_bytep));
-  if (row_pointers == NULL)
+  if (row_pointers == nullptr)
   {
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     free(image_data);
-    image_data = NULL;
-    return NULL;
+    image_data = nullptr;
+    return nullptr;
   }
 
   for (i = 0;  i < height;  ++i)
@@ -609,9 +609,9 @@ uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbyte
   png_read_image(png_ptr, row_pointers);
 
   free(row_pointers);
-  row_pointers = NULL;
+  row_pointers = nullptr;
 
-  png_read_end(png_ptr, NULL);
+  png_read_end(png_ptr, nullptr);
 
   return image_data;
 }
@@ -625,14 +625,14 @@ void readpng_cleanup(int free_image_data)
   if (free_image_data && image_data)
   {
     free(image_data);
-    image_data = NULL;
+    image_data = nullptr;
   }
 
   if (png_ptr && info_ptr)
   {
-    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-    png_ptr = NULL;
-    info_ptr = NULL;
+    png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    png_ptr = nullptr;
+    info_ptr = nullptr;
   }
 }
 
@@ -653,7 +653,7 @@ int png_load(const char *_filename,CImage& _image)
 
 
   FILE *infile = fopen(_filename, "rb");
-  if (infile == NULL)
+  if (infile == nullptr)
     return -1;
 
   if (readpng_init(infile, &width, &height) != 0)
@@ -663,7 +663,7 @@ int png_load(const char *_filename,CImage& _image)
   _image.height = height;
 
   uchar *pixel = readpng_get_image(display_exponent, &image_channels,&image_rowbytes);
-  if (pixel == NULL)
+  if (pixel == nullptr)
     return -3;
 
   int size = width * height;
@@ -696,7 +696,7 @@ int png_load(const char *_filename,CImage& _image)
     p2 = p2 + 4;
   }
 
-  delete pixel;
+  free(pixel);
 
   readpng_cleanup(0);
   fclose(infile);

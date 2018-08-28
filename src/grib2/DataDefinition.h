@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../grid/Typedefs.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 #include <ostream>
 
@@ -15,8 +16,10 @@ class DataDefinition
 {
   public:
                   DataDefinition();
+                  DataDefinition(const DataDefinition& other);
     virtual       ~DataDefinition();
 
+    virtual uint  getTemplateNumber() const;
     virtual void  print(std::ostream& stream,uint level,uint optionFlags) const;
 };
 

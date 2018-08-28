@@ -15,6 +15,8 @@ class SpectralGridDataRepresentationImpl : public SpectralGridDataRepresentation
               SpectralGridDataRepresentationImpl(const SpectralGridDataRepresentationImpl& other);
     virtual   ~SpectralGridDataRepresentationImpl();
 
+    RepresentationDefinition* createRepresentationDefinition() const;
+
     void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
     void      read(MemoryReader& memoryReader);
 };

@@ -22,7 +22,26 @@ PhysicalGridFile::PhysicalGridFile()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+PhysicalGridFile::PhysicalGridFile(const PhysicalGridFile& other)
+:GridFile(other)
+{
+  try
+  {
+    mIsMemoryMapped = false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Copy constructor failed!",nullptr);
   }
 }
 
@@ -41,7 +60,8 @@ PhysicalGridFile::~PhysicalGridFile()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -60,7 +80,7 @@ bool PhysicalGridFile::isMemoryMapped() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -82,7 +102,7 @@ void PhysicalGridFile::mapToMemory()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -98,7 +118,7 @@ bool PhysicalGridFile::isPhysical() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -114,7 +134,7 @@ bool PhysicalGridFile::isVirtual() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -197,12 +217,30 @@ void PhysicalGridFile::read(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Read failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,"Read failed!",nullptr);
     exception.addParameter("File name ",filename);
     throw exception;
   }
 }
 
+
+
+
+
+void PhysicalGridFile::write(std::string filename)
+{
+  try
+  {
+    if (mGridFile)
+      mGridFile->write(filename);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Read failed!",nullptr);
+    exception.addParameter("File name ",filename);
+    throw exception;
+  }
+}
 
 
 
@@ -242,7 +280,7 @@ T::FileType PhysicalGridFile::readFileType(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -280,7 +318,7 @@ ulonglong PhysicalGridFile::searchFileStartPosition(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Message search failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Message search failed!",nullptr);
   }
 }
 
@@ -304,7 +342,7 @@ void PhysicalGridFile::print(std::ostream& stream,uint level,uint optionFlags) c
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

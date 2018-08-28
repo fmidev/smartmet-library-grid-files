@@ -21,17 +21,27 @@ namespace GRIB2 {
 TimeIntervalEnsembleReforecast::TimeIntervalEnsembleReforecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalEnsembleReforecast::TimeIntervalEnsembleReforecast(const TimeIntervalEnsembleReforecast &other) : ProductDefinition(other) {
+  try {
+    mParameter = other.mParameter;
+    mHorizontal = other.mHorizontal;
+    mEps = other.mEps;
+    mReforecast = other.mReforecast;
+    mStatistical = other.mStatistical;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 TimeIntervalEnsembleReforecast::~TimeIntervalEnsembleReforecast() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -47,7 +57,24 @@ void TimeIntervalEnsembleReforecast::read(MemoryReader &memoryReader) {
     mReforecast.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void TimeIntervalEnsembleReforecast::write(DataWriter &dataWriter) {
+  try {
+    mParameter.write(dataWriter);
+    mHorizontal.write(dataWriter);
+    mEps.write(dataWriter);
+    mReforecast.write(dataWriter);
+    mStatistical.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -71,7 +98,7 @@ void TimeIntervalEnsembleReforecast::getAttributeList(std::string prefix, T::Att
     sprintf(name, "%sTimeIntervalEnsembleReforecast.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -91,7 +118,7 @@ void TimeIntervalEnsembleReforecast::print(std::ostream &stream, uint level, uin
     mReforecast.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -107,97 +134,111 @@ T::Hash TimeIntervalEnsembleReforecast::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint TimeIntervalEnsembleReforecast::getTemplateNumber() const {
+  return 61;
+}
+
+ProductDefinition *TimeIntervalEnsembleReforecast::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new TimeIntervalEnsembleReforecast(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
-const ParameterSettings *TimeIntervalEnsembleReforecast::getParameter() const {
+ParameterSettings *TimeIntervalEnsembleReforecast::getParameter() const {
   try {
-    return &mParameter;
+    return (ParameterSettings *)&mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
-const HorizontalSettings *TimeIntervalEnsembleReforecast::getHorizontal() const {
+HorizontalSettings *TimeIntervalEnsembleReforecast::getHorizontal() const {
   try {
-    return &mHorizontal;
+    return (HorizontalSettings *)&mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEps} attribute. */
 
-const EpsSettings *TimeIntervalEnsembleReforecast::getEps() const {
+EpsSettings *TimeIntervalEnsembleReforecast::getEps() const {
   try {
-    return &mEps;
+    return (EpsSettings *)&mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mReforecast} attribute. */
 
-const ReforecastSettings *TimeIntervalEnsembleReforecast::getReforecast() const {
+ReforecastSettings *TimeIntervalEnsembleReforecast::getReforecast() const {
   try {
-    return &mReforecast;
+    return (ReforecastSettings *)&mReforecast;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mStatistical} attribute. */
 
-const StatisticalSettings *TimeIntervalEnsembleReforecast::getStatistical() const {
+StatisticalSettings *TimeIntervalEnsembleReforecast::getStatistical() const {
   try {
-    return &mStatistical;
+    return (StatisticalSettings *)&mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalEnsembleReforecast::setParameter(ParameterSettings parameter) {
+void TimeIntervalEnsembleReforecast::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalEnsembleReforecast::setHorizontal(HorizontalSettings horizontal) {
+void TimeIntervalEnsembleReforecast::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalEnsembleReforecast::setEps(EpsSettings eps) {
+void TimeIntervalEnsembleReforecast::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalEnsembleReforecast::setReforecast(ReforecastSettings reforecast) {
+void TimeIntervalEnsembleReforecast::setReforecast(ReforecastSettings &reforecast) {
   try {
     mReforecast = reforecast;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TimeIntervalEnsembleReforecast::setStatistical(StatisticalSettings statistical) {
+void TimeIntervalEnsembleReforecast::setStatistical(StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

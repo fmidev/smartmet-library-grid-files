@@ -22,17 +22,23 @@ ResolutionSettings::ResolutionSettings() {
   try {
     mResolutionAndComponentFlags = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+ResolutionSettings::ResolutionSettings(const ResolutionSettings &other) {
+  try {
+    mResolutionAndComponentFlags = other.mResolutionAndComponentFlags;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 ResolutionSettings::~ResolutionSettings() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -44,7 +50,20 @@ void ResolutionSettings::read(MemoryReader &memoryReader) {
   try {
     mResolutionAndComponentFlags = memoryReader.read_uint8();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void ResolutionSettings::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mResolutionAndComponentFlags;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -60,7 +79,7 @@ void ResolutionSettings::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sResolutionSettings.ResolutionAndComponentFlags", prefix.c_str());
     attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -76,7 +95,7 @@ void ResolutionSettings::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "ResolutionSettings\n";
     stream << space(level) << "- ResolutionAndComponentFlags = " << toString(mResolutionAndComponentFlags) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -88,7 +107,7 @@ T::Hash ResolutionSettings::countHash() {
     boost::hash_combine(seed, mResolutionAndComponentFlags);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -98,7 +117,7 @@ std::uint8_t ResolutionSettings::getResolutionAndComponentFlags() const {
   try {
     return mResolutionAndComponentFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -106,7 +125,7 @@ void ResolutionSettings::setResolutionAndComponentFlags(std::uint8_t resolutionA
   try {
     mResolutionAndComponentFlags = resolutionAndComponentFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

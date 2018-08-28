@@ -12,12 +12,15 @@ namespace GRIB2
 class AreaProcessedCrossSectionProductImpl : public AreaProcessedCrossSectionProduct
 {
   public:
-                      AreaProcessedCrossSectionProductImpl();
-    virtual           ~AreaProcessedCrossSectionProductImpl();
+                        AreaProcessedCrossSectionProductImpl();
+                        AreaProcessedCrossSectionProductImpl(const AreaProcessedCrossSectionProductImpl& other);
+    virtual             ~AreaProcessedCrossSectionProductImpl();
 
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

@@ -12,12 +12,15 @@ namespace GRIB2
 class TimeIntervalEnsembleClusterDerivedForecastImpl : public TimeIntervalEnsembleClusterDerivedForecast
 {
   public:
-                      TimeIntervalEnsembleClusterDerivedForecastImpl();
-    virtual           ~TimeIntervalEnsembleClusterDerivedForecastImpl();
+                        TimeIntervalEnsembleClusterDerivedForecastImpl();
+                        TimeIntervalEnsembleClusterDerivedForecastImpl(const TimeIntervalEnsembleClusterDerivedForecastImpl& other);
+    virtual             ~TimeIntervalEnsembleClusterDerivedForecastImpl();
 
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

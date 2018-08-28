@@ -35,8 +35,11 @@ class GridFile
 {
   public:
                                 GridFile();
+                                GridFile(const GridFile& other);
                                 GridFile(GridFile *gridFile);
     virtual                     ~GridFile();
+
+    virtual GridFile*           createGridFile();
 
     virtual uint                getFileId() const;
     virtual uint                getGroupFlags() const;
@@ -69,13 +72,18 @@ class GridFile
     virtual void                setFileName(std::string  fileName);
     virtual void                setCheckTime(time_t checkTime);
     virtual void                setSourceId(uint sourceId);
+    virtual void                setGridFile(T::FileType fileType);
 
     std::shared_ptr<GridFile>   getGridFile();
     virtual Message*            getMessageByIndex(std::size_t index);
     virtual std::size_t         getNumberOfMessages();
 
+    virtual Message*            addMessage();
+    virtual void                addMessage(Message *message);
+
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
     virtual void                read(std::string filename);
+    virtual void                write(std::string filename);
 
   protected:
 

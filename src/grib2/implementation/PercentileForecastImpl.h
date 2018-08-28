@@ -12,12 +12,15 @@ namespace GRIB2
 class PercentileForecastImpl : public PercentileForecast
 {
   public:
-                      PercentileForecastImpl();
-    virtual           ~PercentileForecastImpl();
+                        PercentileForecastImpl();
+                        PercentileForecastImpl(const PercentileForecastImpl& other);
+    virtual             ~PercentileForecastImpl();
 
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

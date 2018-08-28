@@ -21,17 +21,26 @@ namespace GRIB2 {
 JpegGridDataRepresentation::JpegGridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+JpegGridDataRepresentation::JpegGridDataRepresentation(const JpegGridDataRepresentation &other) : RepresentationDefinition(other) {
+  try {
+    mPacking = other.mPacking;
+    mOriginalValues = other.mOriginalValues;
+    mTypeOfCompressionUsed = other.mTypeOfCompressionUsed;
+    mTargetCompressionRatio = other.mTargetCompressionRatio;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 JpegGridDataRepresentation::~JpegGridDataRepresentation() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -46,7 +55,23 @@ void JpegGridDataRepresentation::read(MemoryReader &memoryReader) {
     mTypeOfCompressionUsed = memoryReader.read_UInt8_opt();
     mTargetCompressionRatio = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void JpegGridDataRepresentation::write(DataWriter &dataWriter) {
+  try {
+    mPacking.write(dataWriter);
+    mOriginalValues.write(dataWriter);
+    dataWriter << mTypeOfCompressionUsed;
+    dataWriter << mTargetCompressionRatio;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -68,7 +93,7 @@ void JpegGridDataRepresentation::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sJpegGridDataRepresentation.TargetCompressionRatio", prefix.c_str());
     attributeList.addAttribute(name, toString(mTargetCompressionRatio));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -87,7 +112,7 @@ void JpegGridDataRepresentation::print(std::ostream &stream, uint level, uint op
     stream << space(level) << "- TypeOfCompressionUsed = " << toString(mTypeOfCompressionUsed) << "\n";
     stream << space(level) << "- TargetCompressionRatio = " << toString(mTargetCompressionRatio) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -104,27 +129,41 @@ T::Hash JpegGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint JpegGridDataRepresentation::getTemplateNumber() const {
+  return 40;
+}
+
+RepresentationDefinition *JpegGridDataRepresentation::createRepresentationDefinition() const {
+  try {
+    return (RepresentationDefinition *)new JpegGridDataRepresentation(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mPacking} attribute. */
 
-const PackingSettings *JpegGridDataRepresentation::getPacking() const {
+PackingSettings *JpegGridDataRepresentation::getPacking() const {
   try {
-    return &mPacking;
+    return (PackingSettings *)&mPacking;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mOriginalValues} attribute. */
 
-const OriginalValuesSettings *JpegGridDataRepresentation::getOriginalValues() const {
+OriginalValuesSettings *JpegGridDataRepresentation::getOriginalValues() const {
   try {
-    return &mOriginalValues;
+    return (OriginalValuesSettings *)&mOriginalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -134,7 +173,7 @@ const T::UInt8_opt &JpegGridDataRepresentation::getTypeOfCompressionUsed() const
   try {
     return mTypeOfCompressionUsed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -144,23 +183,23 @@ const T::UInt8_opt &JpegGridDataRepresentation::getTargetCompressionRatio() cons
   try {
     return mTargetCompressionRatio;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void JpegGridDataRepresentation::setPacking(PackingSettings packing) {
+void JpegGridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void JpegGridDataRepresentation::setOriginalValues(OriginalValuesSettings originalValues) {
+void JpegGridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalValues) {
   try {
     mOriginalValues = originalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -168,7 +207,7 @@ void JpegGridDataRepresentation::setTypeOfCompressionUsed(T::UInt8_opt typeOfCom
   try {
     mTypeOfCompressionUsed = typeOfCompressionUsed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -176,7 +215,7 @@ void JpegGridDataRepresentation::setTargetCompressionRatio(T::UInt8_opt targetCo
   try {
     mTargetCompressionRatio = targetCompressionRatio;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

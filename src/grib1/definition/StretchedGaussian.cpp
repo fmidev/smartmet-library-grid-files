@@ -25,17 +25,29 @@ StretchedGaussian::StretchedGaussian() {
     mIDirectionIncrement = 0;
     mN = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+StretchedGaussian::StretchedGaussian(const StretchedGaussian &other) : GridDefinition(other) {
+  try {
+    mNi = other.mNi;
+    mNj = other.mNj;
+    mGridArea = other.mGridArea;
+    mIDirectionIncrement = other.mIDirectionIncrement;
+    mN = other.mN;
+    mScanningMode = other.mScanningMode;
+    mGridStretching = other.mGridStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 StretchedGaussian::~StretchedGaussian() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current section object.
@@ -53,7 +65,26 @@ void StretchedGaussian::read(MemoryReader &memoryReader) {
     mScanningMode.read(memoryReader);
     mGridStretching.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current section object.
+
+        \param dataWriter  This object controls the write stream.
+*/
+
+void StretchedGaussian::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mNi;
+    dataWriter << mNj;
+    mGridArea.write(dataWriter);
+    dataWriter << mIDirectionIncrement;
+    dataWriter << mN;
+    mScanningMode.write(dataWriter);
+    mGridStretching.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -81,7 +112,7 @@ void StretchedGaussian::getAttributeList(std::string prefix, T::AttributeList &a
     sprintf(name, "%sStretchedGaussian.", prefix.c_str());
     mGridStretching.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -103,7 +134,7 @@ void StretchedGaussian::print(std::ostream &stream, uint level, uint optionFlags
     mScanningMode.print(stream, level + 1, optionFlags);
     mGridStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -121,7 +152,21 @@ T::Hash StretchedGaussian::countHash() {
     boost::hash_combine(seed, mGridStretching.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint StretchedGaussian::getTemplateNumber() const {
+  return 24;
+}
+
+GridDefinition *StretchedGaussian::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new StretchedGaussian(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -131,7 +176,7 @@ std::uint16_t StretchedGaussian::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -141,17 +186,17 @@ std::int16_t StretchedGaussian::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mGridArea} attribute. */
 
-const GridAreaSettings *StretchedGaussian::getGridArea() const {
+GridAreaSettings *StretchedGaussian::getGridArea() const {
   try {
-    return &mGridArea;
+    return (GridAreaSettings *)&mGridArea;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -161,7 +206,7 @@ std::uint16_t StretchedGaussian::getIDirectionIncrement() const {
   try {
     return mIDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -171,27 +216,27 @@ std::uint16_t StretchedGaussian::getN() const {
   try {
     return mN;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
-const ScanningModeSettings *StretchedGaussian::getScanningMode() const {
+ScanningModeSettings *StretchedGaussian::getScanningMode() const {
   try {
-    return &mScanningMode;
+    return (ScanningModeSettings *)&mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mGridStretching} attribute. */
 
-const GridStretchingSettings *StretchedGaussian::getGridStretching() const {
+GridStretchingSettings *StretchedGaussian::getGridStretching() const {
   try {
-    return &mGridStretching;
+    return (GridStretchingSettings *)&mGridStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -199,7 +244,7 @@ void StretchedGaussian::setNi(std::uint16_t ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -207,15 +252,15 @@ void StretchedGaussian::setNj(std::int16_t nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedGaussian::setGridArea(GridAreaSettings gridArea) {
+void StretchedGaussian::setGridArea(GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -223,7 +268,7 @@ void StretchedGaussian::setIDirectionIncrement(std::uint16_t iDirectionIncrement
   try {
     mIDirectionIncrement = iDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -231,23 +276,23 @@ void StretchedGaussian::setN(std::uint16_t n) {
   try {
     mN = n;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedGaussian::setScanningMode(ScanningModeSettings scanningMode) {
+void StretchedGaussian::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedGaussian::setGridStretching(GridStretchingSettings gridStretching) {
+void StretchedGaussian::setGridStretching(GridStretchingSettings &gridStretching) {
   try {
     mGridStretching = gridStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

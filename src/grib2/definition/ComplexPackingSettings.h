@@ -8,6 +8,7 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
 #include "../../grid/Typedefs.h"
 
@@ -18,9 +19,11 @@ namespace GRIB2 {
 class ComplexPackingSettings {
 public:
   ComplexPackingSettings();
+  ComplexPackingSettings(const ComplexPackingSettings &other);
   virtual ~ComplexPackingSettings();
 
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
@@ -90,7 +93,7 @@ protected:
   //
   // alias data.packedValues = codedValues;
   //
-  // template statistics "../../common/statistics_grid.def";
+  // template statistics "common/statistics_grid.def";
   //
   // # END   2/template.7.2 ----------------------------------------------------------------------
 };

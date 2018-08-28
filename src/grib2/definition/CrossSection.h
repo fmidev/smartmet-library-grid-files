@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "EarthShapeSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,15 +22,19 @@ namespace GRIB2 {
 class CrossSection : public GridDefinition {
 public:
   CrossSection();
+  CrossSection(const CrossSection &other);
   virtual ~CrossSection();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings earthShape);
+  EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings &earthShape);
   const T::UInt32_opt &getNumberOfHorizontalPoints() const;
   void setNumberOfHorizontalPoints(T::UInt32_opt numberOfHorizontalPoints);
   const T::UInt32_opt &getBasicAngleOfTheInitialProductionDomain() const;
@@ -40,8 +45,8 @@ public:
   void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::UInt32_opt &getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
   const T::Int32_opt &getLatitudeOfLastGridPoint() const;
   void setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint);
   const T::UInt32_opt &getLongitudeOfLastGridPoint() const;

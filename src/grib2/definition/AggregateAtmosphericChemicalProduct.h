@@ -8,12 +8,13 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../ProductDefinition.h"
 #include "HorizontalSettings.h"
 #include "ParameterChemicalSettings.h"
 #include "StatisticalSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,19 +23,23 @@ namespace GRIB2 {
 class AggregateAtmosphericChemicalProduct : public ProductDefinition {
 public:
   AggregateAtmosphericChemicalProduct();
+  AggregateAtmosphericChemicalProduct(const AggregateAtmosphericChemicalProduct &other);
   virtual ~AggregateAtmosphericChemicalProduct();
 
+  virtual uint getTemplateNumber() const;
+  virtual ProductDefinition *createProductDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const ParameterChemicalSettings *getParameterChemical() const;
-  void setParameterChemical(ParameterChemicalSettings parameterChemical);
-  const HorizontalSettings *getHorizontal() const;
-  void setHorizontal(HorizontalSettings horizontal);
-  const StatisticalSettings *getStatistical() const;
-  void setStatistical(StatisticalSettings statistical);
+  ParameterChemicalSettings *getParameterChemical() const;
+  void setParameterChemical(ParameterChemicalSettings &parameterChemical);
+  HorizontalSettings *getHorizontal() const;
+  void setHorizontal(HorizontalSettings &horizontal);
+  StatisticalSettings *getStatistical() const;
+  void setStatistical(StatisticalSettings &statistical);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

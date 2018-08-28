@@ -21,17 +21,25 @@ namespace GRIB2 {
 AggregateAerosolProduct::AggregateAerosolProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+AggregateAerosolProduct::AggregateAerosolProduct(const AggregateAerosolProduct &other) : ProductDefinition(other) {
+  try {
+    mParameterAerosol = other.mParameterAerosol;
+    mHorizontal = other.mHorizontal;
+    mStatistical = other.mStatistical;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 AggregateAerosolProduct::~AggregateAerosolProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +53,22 @@ void AggregateAerosolProduct::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void AggregateAerosolProduct::write(DataWriter &dataWriter) {
+  try {
+    mParameterAerosol.write(dataWriter);
+    mHorizontal.write(dataWriter);
+    mStatistical.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +88,7 @@ void AggregateAerosolProduct::getAttributeList(std::string prefix, T::AttributeL
     sprintf(name, "%sAggregateAerosolProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +106,7 @@ void AggregateAerosolProduct::print(std::ostream &stream, uint level, uint optio
     mHorizontal.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -97,61 +120,75 @@ T::Hash AggregateAerosolProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint AggregateAerosolProduct::getTemplateNumber() const {
+  return 46;
+}
+
+ProductDefinition *AggregateAerosolProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new AggregateAerosolProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameterAerosol} attribute. */
 
-const ParameterAerosolSettings *AggregateAerosolProduct::getParameterAerosol() const {
+ParameterAerosolSettings *AggregateAerosolProduct::getParameterAerosol() const {
   try {
-    return &mParameterAerosol;
+    return (ParameterAerosolSettings *)&mParameterAerosol;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
-const HorizontalSettings *AggregateAerosolProduct::getHorizontal() const {
+HorizontalSettings *AggregateAerosolProduct::getHorizontal() const {
   try {
-    return &mHorizontal;
+    return (HorizontalSettings *)&mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mStatistical} attribute. */
 
-const StatisticalSettings *AggregateAerosolProduct::getStatistical() const {
+StatisticalSettings *AggregateAerosolProduct::getStatistical() const {
   try {
-    return &mStatistical;
+    return (StatisticalSettings *)&mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void AggregateAerosolProduct::setParameterAerosol(ParameterAerosolSettings parameterAerosol) {
+void AggregateAerosolProduct::setParameterAerosol(ParameterAerosolSettings &parameterAerosol) {
   try {
     mParameterAerosol = parameterAerosol;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void AggregateAerosolProduct::setHorizontal(HorizontalSettings horizontal) {
+void AggregateAerosolProduct::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void AggregateAerosolProduct::setStatistical(StatisticalSettings statistical) {
+void AggregateAerosolProduct::setStatistical(StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

@@ -21,17 +21,32 @@ namespace GRIB2 {
 ParameterChemicalSettings::ParameterChemicalSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+ParameterChemicalSettings::ParameterChemicalSettings(const ParameterChemicalSettings &other) {
+  try {
+    mParameterCategory = other.mParameterCategory;
+    mParameterNumber = other.mParameterNumber;
+    mConstituentType = other.mConstituentType;
+    mTypeOfGeneratingProcess = other.mTypeOfGeneratingProcess;
+    mBackgroundProcess = other.mBackgroundProcess;
+    mGeneratingProcessIdentifier = other.mGeneratingProcessIdentifier;
+    mHoursAfterDataCutoff = other.mHoursAfterDataCutoff;
+    mMinutesAfterDataCutoff = other.mMinutesAfterDataCutoff;
+    mIndicatorOfUnitOfTimeRange = other.mIndicatorOfUnitOfTimeRange;
+    mStartStep = other.mStartStep;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 ParameterChemicalSettings::~ParameterChemicalSettings() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -52,7 +67,29 @@ void ParameterChemicalSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
     mStartStep = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void ParameterChemicalSettings::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mParameterCategory;
+    dataWriter << mParameterNumber;
+    dataWriter << mConstituentType;
+    dataWriter << mTypeOfGeneratingProcess;
+    dataWriter << mBackgroundProcess;
+    dataWriter << mGeneratingProcessIdentifier;
+    dataWriter << mHoursAfterDataCutoff;
+    dataWriter << mMinutesAfterDataCutoff;
+    dataWriter << mIndicatorOfUnitOfTimeRange;
+    dataWriter << mStartStep;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -86,7 +123,7 @@ void ParameterChemicalSettings::getAttributeList(std::string prefix, T::Attribut
     sprintf(name, "%sParameterChemicalSettings.StartStep", prefix.c_str());
     attributeList.addAttribute(name, toString(mStartStep));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -111,7 +148,7 @@ void ParameterChemicalSettings::print(std::ostream &stream, uint level, uint opt
     stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
     stream << space(level) << "- StartStep = " << toString(mStartStep) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -142,7 +179,7 @@ T::Hash ParameterChemicalSettings::countHash() {
       boost::hash_combine(seed, *mStartStep);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -152,7 +189,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -162,7 +199,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -172,7 +209,7 @@ const T::UInt16_opt &ParameterChemicalSettings::getConstituentType() const {
   try {
     return mConstituentType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -182,7 +219,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getTypeOfGeneratingProcess() cons
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -192,7 +229,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getBackgroundProcess() const {
   try {
     return mBackgroundProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -202,7 +239,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getGeneratingProcessIdentifier() 
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -212,7 +249,7 @@ const T::UInt16_opt &ParameterChemicalSettings::getHoursAfterDataCutoff() const 
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -222,7 +259,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getMinutesAfterDataCutoff() const
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -232,7 +269,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getIndicatorOfUnitOfTimeRange() c
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -242,7 +279,7 @@ const T::UInt32_opt &ParameterChemicalSettings::getStartStep() const {
   try {
     return mStartStep;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -250,7 +287,7 @@ void ParameterChemicalSettings::setParameterCategory(T::UInt8_opt parameterCateg
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -258,7 +295,7 @@ void ParameterChemicalSettings::setParameterNumber(T::UInt8_opt parameterNumber)
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -266,7 +303,7 @@ void ParameterChemicalSettings::setConstituentType(T::UInt16_opt constituentType
   try {
     mConstituentType = constituentType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -274,7 +311,7 @@ void ParameterChemicalSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGe
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -282,7 +319,7 @@ void ParameterChemicalSettings::setBackgroundProcess(T::UInt8_opt backgroundProc
   try {
     mBackgroundProcess = backgroundProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -290,7 +327,7 @@ void ParameterChemicalSettings::setGeneratingProcessIdentifier(T::UInt8_opt gene
   try {
     mGeneratingProcessIdentifier = generatingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -298,7 +335,7 @@ void ParameterChemicalSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfter
   try {
     mHoursAfterDataCutoff = hoursAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -306,7 +343,7 @@ void ParameterChemicalSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesAf
   try {
     mMinutesAfterDataCutoff = minutesAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -314,7 +351,7 @@ void ParameterChemicalSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indic
   try {
     mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -322,7 +359,7 @@ void ParameterChemicalSettings::setStartStep(T::UInt32_opt startStep) {
   try {
     mStartStep = startStep;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

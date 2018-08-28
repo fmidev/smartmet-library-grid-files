@@ -12,13 +12,16 @@ namespace GRIB2
 class TimeIntervalAerosolEnsembleProductImpl : public TimeIntervalAerosolEnsembleProduct
 {
   public:
-                      TimeIntervalAerosolEnsembleProductImpl();
-    virtual           ~TimeIntervalAerosolEnsembleProductImpl();
+                        TimeIntervalAerosolEnsembleProductImpl();
+                        TimeIntervalAerosolEnsembleProductImpl(const TimeIntervalAerosolEnsembleProductImpl& other);
+    virtual             ~TimeIntervalAerosolEnsembleProductImpl();
 
-    T::TimeString     getForecastTime(T::TimeString referenceTime) const;
-    T::ParamLevel     getGribParameterLevel() const;
-    T::ParamLevelId   getGribParameterLevelId() const;
-    void              read(MemoryReader& memoryReader);
+    ProductDefinition*  createProductDefinition() const;
+
+    T::TimeString       getForecastTime(T::TimeString referenceTime) const;
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

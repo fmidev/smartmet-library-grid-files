@@ -18,10 +18,38 @@ NormalProductImpl::NormalProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+NormalProductImpl::NormalProductImpl(const NormalProductImpl& other)
+:NormalProduct(other)
+{
+}
+
+
+
+
 /*! \brief The destructor of the class. */
 
 NormalProductImpl::~NormalProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* NormalProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new NormalProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +74,7 @@ void NormalProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -70,7 +98,7 @@ T::ParamLevel NormalProductImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +122,7 @@ T::ParamLevelId NormalProductImpl::getGribParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

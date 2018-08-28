@@ -8,13 +8,14 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "EarthShapeSettings.h"
 #include "LatLonSettings.h"
 #include "RotationSettings.h"
 #include "StretchingSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -23,21 +24,25 @@ namespace GRIB2 {
 class StretchedRotatedLatLon : public GridDefinition {
 public:
   StretchedRotatedLatLon();
+  StretchedRotatedLatLon(const StretchedRotatedLatLon &other);
   virtual ~StretchedRotatedLatLon();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const EarthShapeSettings *getEarthShape() const;
-  void setEarthShape(EarthShapeSettings earthShape);
-  const LatLonSettings *getLatLon() const;
-  void setLatLon(LatLonSettings latLon);
-  const RotationSettings *getRotation() const;
-  void setRotation(RotationSettings rotation);
-  const StretchingSettings *getStretching() const;
-  void setStretching(StretchingSettings stretching);
+  EarthShapeSettings *getEarthShape() const;
+  void setEarthShape(EarthShapeSettings &earthShape);
+  LatLonSettings *getLatLon() const;
+  void setLatLon(LatLonSettings &latLon);
+  RotationSettings *getRotation() const;
+  void setRotation(RotationSettings &rotation);
+  StretchingSettings *getStretching() const;
+  void setStretching(StretchingSettings &stretching);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

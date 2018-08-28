@@ -22,17 +22,38 @@ TransverseMercator::TransverseMercator() {
   try {
     mScaleFactorAtReferencePoint = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+TransverseMercator::TransverseMercator(const TransverseMercator &other) : GridDefinition(other) {
+  try {
+    mEarthShape = other.mEarthShape;
+    mNi = other.mNi;
+    mNj = other.mNj;
+    mLatitudeOfReferencePoint = other.mLatitudeOfReferencePoint;
+    mLongitudeOfReferencePoint = other.mLongitudeOfReferencePoint;
+    mResolution = other.mResolution;
+    mScaleFactorAtReferencePoint = other.mScaleFactorAtReferencePoint;
+    mXR = other.mXR;
+    mYR = other.mYR;
+    mScanningMode = other.mScanningMode;
+    mDi = other.mDi;
+    mDj = other.mDj;
+    mX1 = other.mX1;
+    mY1 = other.mY1;
+    mX2 = other.mX2;
+    mY2 = other.mY2;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 TransverseMercator::~TransverseMercator() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -59,7 +80,35 @@ void TransverseMercator::read(MemoryReader &memoryReader) {
     mX2 = memoryReader.read_Int32_opt();
     mY2 = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void TransverseMercator::write(DataWriter &dataWriter) {
+  try {
+    mEarthShape.write(dataWriter);
+    dataWriter << mNi;
+    dataWriter << mNj;
+    dataWriter << mLatitudeOfReferencePoint;
+    dataWriter << mLongitudeOfReferencePoint;
+    mResolution.write(dataWriter);
+    dataWriter << mScaleFactorAtReferencePoint;
+    dataWriter << mXR;
+    dataWriter << mYR;
+    mScanningMode.write(dataWriter);
+    dataWriter << mDi;
+    dataWriter << mDj;
+    dataWriter << mX1;
+    dataWriter << mY1;
+    dataWriter << mX2;
+    dataWriter << mY2;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -105,7 +154,7 @@ void TransverseMercator::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sTransverseMercator.Y2", prefix.c_str());
     attributeList.addAttribute(name, toString(mY2));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -136,7 +185,7 @@ void TransverseMercator::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "- X2 = " << toString(mX2) << "\n";
     stream << space(level) << "- Y2 = " << toString(mY2) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -175,17 +224,31 @@ T::Hash TransverseMercator::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint TransverseMercator::getTemplateNumber() const {
+  return 12;
+}
+
+GridDefinition *TransverseMercator::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new TransverseMercator(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
-const EarthShapeSettings *TransverseMercator::getEarthShape() const {
+EarthShapeSettings *TransverseMercator::getEarthShape() const {
   try {
-    return &mEarthShape;
+    return (EarthShapeSettings *)&mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -195,7 +258,7 @@ const T::UInt32_opt &TransverseMercator::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -205,7 +268,7 @@ const T::UInt32_opt &TransverseMercator::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -215,7 +278,7 @@ const T::Int32_opt &TransverseMercator::getLatitudeOfReferencePoint() const {
   try {
     return mLatitudeOfReferencePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -225,17 +288,17 @@ const T::Int32_opt &TransverseMercator::getLongitudeOfReferencePoint() const {
   try {
     return mLongitudeOfReferencePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mResolution} attribute. */
 
-const ResolutionSettings *TransverseMercator::getResolution() const {
+ResolutionSettings *TransverseMercator::getResolution() const {
   try {
-    return &mResolution;
+    return (ResolutionSettings *)&mResolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -245,7 +308,7 @@ float TransverseMercator::getScaleFactorAtReferencePoint() const {
   try {
     return mScaleFactorAtReferencePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -255,7 +318,7 @@ const T::Int32_opt &TransverseMercator::getXR() const {
   try {
     return mXR;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -265,17 +328,17 @@ const T::Int32_opt &TransverseMercator::getYR() const {
   try {
     return mYR;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
-const ScanningModeSettings *TransverseMercator::getScanningMode() const {
+ScanningModeSettings *TransverseMercator::getScanningMode() const {
   try {
-    return &mScanningMode;
+    return (ScanningModeSettings *)&mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -285,7 +348,7 @@ const T::UInt32_opt &TransverseMercator::getDi() const {
   try {
     return mDi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -295,7 +358,7 @@ const T::UInt32_opt &TransverseMercator::getDj() const {
   try {
     return mDj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -305,7 +368,7 @@ const T::Int32_opt &TransverseMercator::getX1() const {
   try {
     return mX1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -315,7 +378,7 @@ const T::Int32_opt &TransverseMercator::getY1() const {
   try {
     return mY1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -325,7 +388,7 @@ const T::Int32_opt &TransverseMercator::getX2() const {
   try {
     return mX2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -335,15 +398,15 @@ const T::Int32_opt &TransverseMercator::getY2() const {
   try {
     return mY2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TransverseMercator::setEarthShape(EarthShapeSettings earthShape) {
+void TransverseMercator::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -351,7 +414,7 @@ void TransverseMercator::setNi(T::UInt32_opt ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -359,7 +422,7 @@ void TransverseMercator::setNj(T::UInt32_opt nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -367,7 +430,7 @@ void TransverseMercator::setLatitudeOfReferencePoint(T::Int32_opt latitudeOfRefe
   try {
     mLatitudeOfReferencePoint = latitudeOfReferencePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -375,15 +438,15 @@ void TransverseMercator::setLongitudeOfReferencePoint(T::Int32_opt longitudeOfRe
   try {
     mLongitudeOfReferencePoint = longitudeOfReferencePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TransverseMercator::setResolution(ResolutionSettings resolution) {
+void TransverseMercator::setResolution(ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -391,7 +454,7 @@ void TransverseMercator::setScaleFactorAtReferencePoint(float scaleFactorAtRefer
   try {
     mScaleFactorAtReferencePoint = scaleFactorAtReferencePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -399,7 +462,7 @@ void TransverseMercator::setXR(T::Int32_opt xR) {
   try {
     mXR = xR;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -407,15 +470,15 @@ void TransverseMercator::setYR(T::Int32_opt yR) {
   try {
     mYR = yR;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void TransverseMercator::setScanningMode(ScanningModeSettings scanningMode) {
+void TransverseMercator::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -423,7 +486,7 @@ void TransverseMercator::setDi(T::UInt32_opt di) {
   try {
     mDi = di;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -431,7 +494,7 @@ void TransverseMercator::setDj(T::UInt32_opt dj) {
   try {
     mDj = dj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -439,7 +502,7 @@ void TransverseMercator::setX1(T::Int32_opt x1) {
   try {
     mX1 = x1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -447,7 +510,7 @@ void TransverseMercator::setY1(T::Int32_opt y1) {
   try {
     mY1 = y1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -455,7 +518,7 @@ void TransverseMercator::setX2(T::Int32_opt x2) {
   try {
     mX2 = x2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -463,7 +526,7 @@ void TransverseMercator::setY2(T::Int32_opt y2) {
   try {
     mY2 = y2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

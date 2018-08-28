@@ -28,7 +28,7 @@ ConfigurationFile::ConfigurationFile()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -47,7 +47,7 @@ ConfigurationFile::ConfigurationFile(const ConfigurationFile& configurationFile)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Copy constructor failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Copy constructor failed!",nullptr);
   }
 }
 
@@ -64,7 +64,7 @@ ConfigurationFile::ConfigurationFile(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Constructor failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,"Constructor failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -82,7 +82,8 @@ ConfigurationFile::~ConfigurationFile()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Destructor failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -114,7 +115,7 @@ void ConfigurationFile::addConfigurationFile(std::string filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Configuration file addition failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Configuration file addition failed!",nullptr);
   }
 }
 
@@ -132,7 +133,7 @@ void ConfigurationFile::clear()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Clear operation failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,"Clear operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -153,7 +154,7 @@ void ConfigurationFile::readFile(std::string filename)
 
     mCurrentFilename = filename;
     FILE *file = fopen(filename.c_str(),"r");
-    if (file == NULL)
+    if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open the configuration file!");
       exception.addParameter("Configuration file",filename);
@@ -201,7 +202,7 @@ void ConfigurationFile::readFile(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Configuration file reading failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,"Configuration file reading failed!",nullptr);
     if (mFilename != filename)
       exception.addParameter("Main configuration file",mFilename);
     exception.addParameter("Configuration file",filename);
@@ -219,7 +220,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilenam
   try
   {
     FILE *inFile = fopen(inputFilename.c_str(),"r");
-    if (inFile == NULL)
+    if (inFile == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open the input file!");
       exception.addParameter("Input file",inputFilename);
@@ -227,7 +228,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilenam
     }
 
     FILE *outFile = fopen(outputFilename.c_str(),"w");
-    if (outFile == NULL)
+    if (outFile == nullptr)
     {
       fclose(inFile);
       SmartMet::Spine::Exception exception(BCP,"Cannot open the output file!");
@@ -238,7 +239,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilenam
     char st[10000];
     while (!feof(inFile))
     {
-      if (fgets(st,10000,inFile) != NULL)
+      if (fgets(st,10000,inFile) != nullptr)
       {
         std::string newStr = parseValue(std::string(st));
         fprintf(outFile,"%s",newStr.c_str());
@@ -250,7 +251,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilenam
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",NULL);
+    SmartMet::Spine::Exception exception(BCP,"Operation failed!",nullptr);
     throw exception;
   }
 }
@@ -314,7 +315,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -365,7 +366,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -387,7 +388,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,char& attrib
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -409,7 +410,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,short& attri
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -431,7 +432,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,int& attribu
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -453,7 +454,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,long& attrib
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -504,7 +505,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,long long& a
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -526,7 +527,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned cha
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -548,7 +549,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned sho
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -570,7 +571,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned int
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -592,7 +593,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned lon
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -614,7 +615,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned lon
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -656,7 +657,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::string&
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -722,7 +723,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -770,7 +771,7 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -805,7 +806,7 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -832,7 +833,7 @@ void ConfigurationFile::setAttributeValue(const char *attributeName,std::string&
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -861,7 +862,7 @@ void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -894,7 +895,7 @@ std::string ConfigurationFile::parseValue(std::string value)
           {
             // Variable not defined in the configuration file. Maybe it is an environmental variable.
             char *env = getenv(var.c_str());
-            if (env == NULL)
+            if (env == nullptr)
             {
               SmartMet::Spine::Exception exception(BCP,"Unknown variable name!");
               exception.addParameter("VariableName",var);
@@ -922,7 +923,7 @@ std::string ConfigurationFile::parseValue(std::string value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -960,7 +961,7 @@ std::string ConfigurationFile::parseConstValue(std::string value)
           {
             // Variable not defined in the configuration file. Maybe it is an environmental variable.
             char *env = getenv(var.c_str());
-            if (env == NULL)
+            if (env == nullptr)
             {
               SmartMet::Spine::Exception exception(BCP,"Unknown variable name!");
               exception.addParameter("VariableName",var);
@@ -987,7 +988,7 @@ std::string ConfigurationFile::parseConstValue(std::string value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1085,7 +1086,7 @@ void ConfigurationFile::removeComments(char *st,unsigned long long *positions,ch
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1114,7 +1115,7 @@ void ConfigurationFile::setPositions(char *st,unsigned long long *positions,int 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1165,7 +1166,7 @@ void ConfigurationFile::getWords(char *st,unsigned long long *positions,std::vec
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1338,7 +1339,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1363,7 +1364,7 @@ void ConfigurationFile::removeAttributes(const char *pattern)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1465,7 +1466,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
       std::string attrName = parseValue(words[pos+1]);
       pos = pos + 1;
 
-      if (!findAttribute(attrName.c_str())  &&  getenv(attrName.c_str()) == NULL)
+      if (!findAttribute(attrName.c_str())  &&  getenv(attrName.c_str()) == nullptr)
       {
         // Attribute not defined. Ignoring the section.
         while (pos < len  &&  words[pos] != "@endif"  &&  words[pos] != "@else")
@@ -1507,7 +1508,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
       std::string attrName = parseValue(words[pos+1]);
       pos = pos + 1;
 
-      if (findAttribute(attrName.c_str())  ||  getenv(attrName.c_str()) != NULL)
+      if (findAttribute(attrName.c_str())  ||  getenv(attrName.c_str()) != nullptr)
       {
         // Attribute defined. Ignoring the section.
         while (pos < len  &&  words[pos] != "@endif"  &&  words[pos] != "@else")
@@ -1607,7 +1608,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

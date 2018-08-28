@@ -40,6 +40,24 @@ AlbersImpl::~AlbersImpl()
 
 
 
+/*! \brief The method returns a duplicate of the current object. */
+
+GridDefinition* AlbersImpl::createGridDefinition() const
+{
+  try
+  {
+    return (GridDefinition*)new AlbersImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
     in the parent class (which is automatically generated). This means in practice that
@@ -58,7 +76,7 @@ void AlbersImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -91,15 +109,15 @@ T::Coordinate_vec AlbersImpl::getGridCoordinates() const
         \return   The grid dimensions.
 */
 
-T::Dimensions_opt AlbersImpl::getGridDimensions() const
+T::Dimensions AlbersImpl::getGridDimensions() const
 {
   try
   {
-    return T::Dimensions{*mNx, *mNy};
+    return T::Dimensions(*mNx, *mNy);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -128,7 +146,7 @@ bool AlbersImpl::getGridPointByLatLonCoordinates(double lat,double lon,double& g
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -218,10 +236,10 @@ void AlbersImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double stdP1 = *dfStdP1 / 1000000;
-    double stdP2 = *dfStdP2 / 1000000;
-    double centerLat = *dfCenterLat / 1000000;
-    double centerLon = *dfCenterLong / 1000000;
+    double stdP1 = (double)(*dfStdP1 )/ 1000000;
+    double stdP2 = (double)(*dfStdP2) / 1000000;
+    double centerLat = (double)(*dfCenterLat) / 1000000;
+    double centerLon = (double)(*dfCenterLong) / 1000000;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
 
@@ -241,7 +259,7 @@ void AlbersImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

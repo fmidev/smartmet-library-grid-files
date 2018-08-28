@@ -8,9 +8,10 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
-#include "../GridDefinition.h"
 #include "../../grid/Typedefs.h"
+#include "../GridDefinition.h"
 #include <array>
 
 namespace SmartMet {
@@ -20,9 +21,13 @@ namespace GRIB2 {
 class Unstructured : public GridDefinition {
 public:
   Unstructured();
+  Unstructured(const Unstructured &other);
   virtual ~Unstructured();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();

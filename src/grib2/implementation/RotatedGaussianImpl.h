@@ -16,8 +16,11 @@ class RotatedGaussianImpl : public RotatedGaussian
                       RotatedGaussianImpl(const RotatedGaussianImpl& other);
     virtual           ~RotatedGaussianImpl();
 
+    GridDefinition*   createGridDefinition() const;
+
     T::Coordinate_vec getGridCoordinates() const;
-    T::Dimensions_opt getGridDimensions() const;
+    T::Dimensions     getGridDimensions() const;
+
     bool              getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     void              initSpatialReference();
     void              read(MemoryReader& memoryReader);

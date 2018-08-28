@@ -18,10 +18,39 @@ AtmosphericChemicalProductImpl::AtmosphericChemicalProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+AtmosphericChemicalProductImpl::AtmosphericChemicalProductImpl(const AtmosphericChemicalProductImpl& other)
+:AtmosphericChemicalProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 AtmosphericChemicalProductImpl::~AtmosphericChemicalProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* AtmosphericChemicalProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new AtmosphericChemicalProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void AtmosphericChemicalProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

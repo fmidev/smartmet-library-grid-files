@@ -16,8 +16,10 @@ class RotatedLatLonImpl : public RotatedLatLon
                       RotatedLatLonImpl(const RotatedLatLonImpl& other);
     virtual           ~RotatedLatLonImpl();
 
+    GridDefinition*   createGridDefinition() const;
+
     T::Coordinate_vec getGridCoordinates() const;
-    T::Dimensions_opt getGridDimensions() const;
+    T::Dimensions     getGridDimensions() const;
     std::string       getGridGeometryString() const;
     T::Coordinate_vec getGridLatLonCoordinates() const;
     bool              getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;

@@ -21,17 +21,24 @@ namespace GRIB2 {
 StretchedSphericalHarmonic::StretchedSphericalHarmonic() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+StretchedSphericalHarmonic::StretchedSphericalHarmonic(const StretchedSphericalHarmonic &other) : GridDefinition(other) {
+  try {
+    mSphericalHarmonic = other.mSphericalHarmonic;
+    mStretching = other.mStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 StretchedSphericalHarmonic::~StretchedSphericalHarmonic() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -44,7 +51,21 @@ void StretchedSphericalHarmonic::read(MemoryReader &memoryReader) {
     mSphericalHarmonic.read(memoryReader);
     mStretching.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void StretchedSphericalHarmonic::write(DataWriter &dataWriter) {
+  try {
+    mSphericalHarmonic.write(dataWriter);
+    mStretching.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -62,7 +83,7 @@ void StretchedSphericalHarmonic::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sStretchedSphericalHarmonic.", prefix.c_str());
     mStretching.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -79,7 +100,7 @@ void StretchedSphericalHarmonic::print(std::ostream &stream, uint level, uint op
     mSphericalHarmonic.print(stream, level + 1, optionFlags);
     mStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -92,43 +113,57 @@ T::Hash StretchedSphericalHarmonic::countHash() {
     boost::hash_combine(seed, mStretching.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint StretchedSphericalHarmonic::getTemplateNumber() const {
+  return 52;
+}
+
+GridDefinition *StretchedSphericalHarmonic::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new StretchedSphericalHarmonic(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mSphericalHarmonic} attribute. */
 
-const SphericalHarmonicSettings *StretchedSphericalHarmonic::getSphericalHarmonic() const {
+SphericalHarmonicSettings *StretchedSphericalHarmonic::getSphericalHarmonic() const {
   try {
-    return &mSphericalHarmonic;
+    return (SphericalHarmonicSettings *)&mSphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mStretching} attribute. */
 
-const StretchingSettings *StretchedSphericalHarmonic::getStretching() const {
+StretchingSettings *StretchedSphericalHarmonic::getStretching() const {
   try {
-    return &mStretching;
+    return (StretchingSettings *)&mStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings sphericalHarmonic) {
+void StretchedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &sphericalHarmonic) {
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedSphericalHarmonic::setStretching(StretchingSettings stretching) {
+void StretchedSphericalHarmonic::setStretching(StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

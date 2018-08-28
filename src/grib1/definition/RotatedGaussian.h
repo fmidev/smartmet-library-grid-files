@@ -8,12 +8,13 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "GridAreaSettings.h"
 #include "RotationSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -22,27 +23,31 @@ namespace GRIB1 {
 class RotatedGaussian : public GridDefinition {
 public:
   RotatedGaussian();
+  RotatedGaussian(const RotatedGaussian &other);
   virtual ~RotatedGaussian();
 
-  virtual void read(MemoryReader &memoryReader);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   std::uint16_t getNi() const;
   void setNi(std::uint16_t ni);
   std::int16_t getNj() const;
   void setNj(std::int16_t nj);
-  const GridAreaSettings *getGridArea() const;
-  void setGridArea(GridAreaSettings gridArea);
+  GridAreaSettings *getGridArea() const;
+  void setGridArea(GridAreaSettings &gridArea);
   std::uint16_t getIDirectionIncrement() const;
   void setIDirectionIncrement(std::uint16_t iDirectionIncrement);
   std::uint16_t getN() const;
   void setN(std::uint16_t n);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
-  const RotationSettings *getRotation() const;
-  void setRotation(RotationSettings rotation);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
+  RotationSettings *getRotation() const;
+  void setRotation(RotationSettings &rotation);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
@@ -58,7 +63,7 @@ protected:
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 41;
   //
-  // template commonBlock "../grid_definition_gaussian.def";
+  // template commonBlock "grib1/grid_definition_gaussian.def";
   // # Copyright 2005-2015 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0

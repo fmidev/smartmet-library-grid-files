@@ -23,17 +23,33 @@ Triangular::Triangular() {
     mNumberingOrderOfDiamonds = 0;
     mScanningModeForOneDiamond = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+Triangular::Triangular(const Triangular &other) : GridDefinition(other) {
+  try {
+    mN2 = other.mN2;
+    mN3 = other.mN3;
+    mNi = other.mNi;
+    mNd = other.mNd;
+    mLatitudeOfThePolePoint = other.mLatitudeOfThePolePoint;
+    mLongitudeOfThePolePoint = other.mLongitudeOfThePolePoint;
+    mLongitudeOfFirstDiamondCenterLine = other.mLongitudeOfFirstDiamondCenterLine;
+    mGridPointPosition = other.mGridPointPosition;
+    mNumberingOrderOfDiamonds = other.mNumberingOrderOfDiamonds;
+    mScanningModeForOneDiamond = other.mScanningModeForOneDiamond;
+    mTotalNumberOfGridPoints = other.mTotalNumberOfGridPoints;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 Triangular::~Triangular() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -55,7 +71,30 @@ void Triangular::read(MemoryReader &memoryReader) {
     mScanningModeForOneDiamond = memoryReader.read_uint8();
     mTotalNumberOfGridPoints = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void Triangular::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mN2;
+    dataWriter << mN3;
+    dataWriter << mNi;
+    dataWriter << mNd;
+    dataWriter << mLatitudeOfThePolePoint;
+    dataWriter << mLongitudeOfThePolePoint;
+    dataWriter << mLongitudeOfFirstDiamondCenterLine;
+    dataWriter << mGridPointPosition;
+    dataWriter << mNumberingOrderOfDiamonds;
+    dataWriter << mScanningModeForOneDiamond;
+    dataWriter << mTotalNumberOfGridPoints;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -91,7 +130,7 @@ void Triangular::getAttributeList(std::string prefix, T::AttributeList &attribut
     sprintf(name, "%sTriangular.TotalNumberOfGridPoints", prefix.c_str());
     attributeList.addAttribute(name, toString(mTotalNumberOfGridPoints));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -117,7 +156,7 @@ void Triangular::print(std::ostream &stream, uint level, uint optionFlags) const
     stream << space(level) << "- ScanningModeForOneDiamond = " << toString(mScanningModeForOneDiamond) << "\n";
     stream << space(level) << "- TotalNumberOfGridPoints = " << toString(mTotalNumberOfGridPoints) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -148,7 +187,21 @@ T::Hash Triangular::countHash() {
       boost::hash_combine(seed, *mTotalNumberOfGridPoints);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint Triangular::getTemplateNumber() const {
+  return 100;
+}
+
+GridDefinition *Triangular::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new Triangular(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -158,7 +211,7 @@ const T::UInt8_opt &Triangular::getN2() const {
   try {
     return mN2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -168,7 +221,7 @@ const T::UInt8_opt &Triangular::getN3() const {
   try {
     return mN3;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -178,7 +231,7 @@ const T::UInt16_opt &Triangular::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -188,7 +241,7 @@ const T::UInt8_opt &Triangular::getNd() const {
   try {
     return mNd;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -198,7 +251,7 @@ const T::Int32_opt &Triangular::getLatitudeOfThePolePoint() const {
   try {
     return mLatitudeOfThePolePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -208,7 +261,7 @@ const T::UInt32_opt &Triangular::getLongitudeOfThePolePoint() const {
   try {
     return mLongitudeOfThePolePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -218,7 +271,7 @@ const T::UInt32_opt &Triangular::getLongitudeOfFirstDiamondCenterLine() const {
   try {
     return mLongitudeOfFirstDiamondCenterLine;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -228,7 +281,7 @@ const T::UInt8_opt &Triangular::getGridPointPosition() const {
   try {
     return mGridPointPosition;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -238,7 +291,7 @@ std::uint8_t Triangular::getNumberingOrderOfDiamonds() const {
   try {
     return mNumberingOrderOfDiamonds;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -248,7 +301,7 @@ std::uint8_t Triangular::getScanningModeForOneDiamond() const {
   try {
     return mScanningModeForOneDiamond;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -258,7 +311,7 @@ const T::UInt32_opt &Triangular::getTotalNumberOfGridPoints() const {
   try {
     return mTotalNumberOfGridPoints;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -266,7 +319,7 @@ void Triangular::setN2(T::UInt8_opt n2) {
   try {
     mN2 = n2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -274,7 +327,7 @@ void Triangular::setN3(T::UInt8_opt n3) {
   try {
     mN3 = n3;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -282,7 +335,7 @@ void Triangular::setNi(T::UInt16_opt ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -290,7 +343,7 @@ void Triangular::setNd(T::UInt8_opt nd) {
   try {
     mNd = nd;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -298,7 +351,7 @@ void Triangular::setLatitudeOfThePolePoint(T::Int32_opt latitudeOfThePolePoint) 
   try {
     mLatitudeOfThePolePoint = latitudeOfThePolePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -306,7 +359,7 @@ void Triangular::setLongitudeOfThePolePoint(T::UInt32_opt longitudeOfThePolePoin
   try {
     mLongitudeOfThePolePoint = longitudeOfThePolePoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -314,7 +367,7 @@ void Triangular::setLongitudeOfFirstDiamondCenterLine(T::UInt32_opt longitudeOfF
   try {
     mLongitudeOfFirstDiamondCenterLine = longitudeOfFirstDiamondCenterLine;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -322,7 +375,7 @@ void Triangular::setGridPointPosition(T::UInt8_opt gridPointPosition) {
   try {
     mGridPointPosition = gridPointPosition;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -330,7 +383,7 @@ void Triangular::setNumberingOrderOfDiamonds(std::uint8_t numberingOrderOfDiamon
   try {
     mNumberingOrderOfDiamonds = numberingOrderOfDiamonds;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -338,7 +391,7 @@ void Triangular::setScanningModeForOneDiamond(std::uint8_t scanningModeForOneDia
   try {
     mScanningModeForOneDiamond = scanningModeForOneDiamond;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -346,7 +399,7 @@ void Triangular::setTotalNumberOfGridPoints(T::UInt32_opt totalNumberOfGridPoint
   try {
     mTotalNumberOfGridPoints = totalNumberOfGridPoints;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

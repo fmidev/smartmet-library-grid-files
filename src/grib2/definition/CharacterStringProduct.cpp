@@ -21,17 +21,25 @@ namespace GRIB2 {
 CharacterStringProduct::CharacterStringProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+CharacterStringProduct::CharacterStringProduct(const CharacterStringProduct &other) : ProductDefinition(other) {
+  try {
+    mParameterCategory = other.mParameterCategory;
+    mParameterNumber = other.mParameterNumber;
+    mNumberOfCharacters = other.mNumberOfCharacters;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 CharacterStringProduct::~CharacterStringProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +53,22 @@ void CharacterStringProduct::read(MemoryReader &memoryReader) {
     mParameterNumber = memoryReader.read_UInt8_opt();
     mNumberOfCharacters = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void CharacterStringProduct::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mParameterCategory;
+    dataWriter << mParameterNumber;
+    dataWriter << mNumberOfCharacters;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +88,7 @@ void CharacterStringProduct::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sCharacterStringProduct.NumberOfCharacters", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfCharacters));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +106,7 @@ void CharacterStringProduct::print(std::ostream &stream, uint level, uint option
     stream << space(level) << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
     stream << space(level) << "- NumberOfCharacters = " << toString(mNumberOfCharacters) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -100,7 +123,21 @@ T::Hash CharacterStringProduct::countHash() {
       boost::hash_combine(seed, *mNumberOfCharacters);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint CharacterStringProduct::getTemplateNumber() const {
+  return 254;
+}
+
+ProductDefinition *CharacterStringProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new CharacterStringProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -110,7 +147,7 @@ const T::UInt8_opt &CharacterStringProduct::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -120,7 +157,7 @@ const T::UInt8_opt &CharacterStringProduct::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -130,7 +167,7 @@ const T::UInt32_opt &CharacterStringProduct::getNumberOfCharacters() const {
   try {
     return mNumberOfCharacters;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -138,7 +175,7 @@ void CharacterStringProduct::setParameterCategory(T::UInt8_opt parameterCategory
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -146,7 +183,7 @@ void CharacterStringProduct::setParameterNumber(T::UInt8_opt parameterNumber) {
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -154,7 +191,7 @@ void CharacterStringProduct::setNumberOfCharacters(T::UInt32_opt numberOfCharact
   try {
     mNumberOfCharacters = numberOfCharacters;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

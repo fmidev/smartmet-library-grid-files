@@ -21,17 +21,35 @@ namespace GRIB2 {
 Mercator::Mercator() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+Mercator::Mercator(const Mercator &other) : GridDefinition(other) {
+  try {
+    mEarthShape = other.mEarthShape;
+    mNi = other.mNi;
+    mNj = other.mNj;
+    mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
+    mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
+    mResolution = other.mResolution;
+    mLaD = other.mLaD;
+    mLatitudeOfLastGridPoint = other.mLatitudeOfLastGridPoint;
+    mLongitudeOfLastGridPoint = other.mLongitudeOfLastGridPoint;
+    mScanningMode = other.mScanningMode;
+    mOrientationOfTheGrid = other.mOrientationOfTheGrid;
+    mDi = other.mDi;
+    mDj = other.mDj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 Mercator::~Mercator() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -55,7 +73,32 @@ void Mercator::read(MemoryReader &memoryReader) {
     mDi = memoryReader.read_UInt32_opt();
     mDj = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void Mercator::write(DataWriter &dataWriter) {
+  try {
+    mEarthShape.write(dataWriter);
+    dataWriter << mNi;
+    dataWriter << mNj;
+    dataWriter << mLatitudeOfFirstGridPoint;
+    dataWriter << mLongitudeOfFirstGridPoint;
+    mResolution.write(dataWriter);
+    dataWriter << mLaD;
+    dataWriter << mLatitudeOfLastGridPoint;
+    dataWriter << mLongitudeOfLastGridPoint;
+    mScanningMode.write(dataWriter);
+    dataWriter << mOrientationOfTheGrid;
+    dataWriter << mDi;
+    dataWriter << mDj;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -95,7 +138,7 @@ void Mercator::getAttributeList(std::string prefix, T::AttributeList &attributeL
     sprintf(name, "%sMercator.Dj", prefix.c_str());
     attributeList.addAttribute(name, toString(mDj));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -123,7 +166,7 @@ void Mercator::print(std::ostream &stream, uint level, uint optionFlags) const {
     stream << space(level) << "- Di = " << toString(mDi) << "\n";
     stream << space(level) << "- Dj = " << toString(mDj) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -155,17 +198,31 @@ T::Hash Mercator::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint Mercator::getTemplateNumber() const {
+  return 10;
+}
+
+GridDefinition *Mercator::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new Mercator(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
-const EarthShapeSettings *Mercator::getEarthShape() const {
+EarthShapeSettings *Mercator::getEarthShape() const {
   try {
-    return &mEarthShape;
+    return (EarthShapeSettings *)&mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -175,7 +232,7 @@ const T::UInt32_opt &Mercator::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -185,7 +242,7 @@ const T::UInt32_opt &Mercator::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -195,7 +252,7 @@ const T::Int32_opt &Mercator::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -205,17 +262,17 @@ const T::Int32_opt &Mercator::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mResolution} attribute. */
 
-const ResolutionSettings *Mercator::getResolution() const {
+ResolutionSettings *Mercator::getResolution() const {
   try {
-    return &mResolution;
+    return (ResolutionSettings *)&mResolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -225,7 +282,7 @@ const T::Int32_opt &Mercator::getLaD() const {
   try {
     return mLaD;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -235,7 +292,7 @@ const T::Int32_opt &Mercator::getLatitudeOfLastGridPoint() const {
   try {
     return mLatitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -245,17 +302,17 @@ const T::Int32_opt &Mercator::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
-const ScanningModeSettings *Mercator::getScanningMode() const {
+ScanningModeSettings *Mercator::getScanningMode() const {
   try {
-    return &mScanningMode;
+    return (ScanningModeSettings *)&mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -265,7 +322,7 @@ const T::UInt32_opt &Mercator::getOrientationOfTheGrid() const {
   try {
     return mOrientationOfTheGrid;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -275,7 +332,7 @@ const T::UInt32_opt &Mercator::getDi() const {
   try {
     return mDi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -285,15 +342,15 @@ const T::UInt32_opt &Mercator::getDj() const {
   try {
     return mDj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void Mercator::setEarthShape(EarthShapeSettings earthShape) {
+void Mercator::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -301,7 +358,7 @@ void Mercator::setNi(T::UInt32_opt ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -309,7 +366,7 @@ void Mercator::setNj(T::UInt32_opt nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -317,7 +374,7 @@ void Mercator::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -325,15 +382,15 @@ void Mercator::setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoi
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void Mercator::setResolution(ResolutionSettings resolution) {
+void Mercator::setResolution(ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -341,7 +398,7 @@ void Mercator::setLaD(T::Int32_opt laD) {
   try {
     mLaD = laD;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -349,7 +406,7 @@ void Mercator::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint) 
   try {
     mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -357,15 +414,15 @@ void Mercator::setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint
   try {
     mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void Mercator::setScanningMode(ScanningModeSettings scanningMode) {
+void Mercator::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -373,7 +430,7 @@ void Mercator::setOrientationOfTheGrid(T::UInt32_opt orientationOfTheGrid) {
   try {
     mOrientationOfTheGrid = orientationOfTheGrid;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -381,7 +438,7 @@ void Mercator::setDi(T::UInt32_opt di) {
   try {
     mDi = di;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -389,7 +446,7 @@ void Mercator::setDj(T::UInt32_opt dj) {
   try {
     mDj = dj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

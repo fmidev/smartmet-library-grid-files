@@ -9,15 +9,15 @@ AutoWriteLock::AutoWriteLock(ModificationLock *modificationLock)
 {
   try
   {
-    if (modificationLock == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'modificationLock' parameter points to NULL!");
+    if (modificationLock == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'modificationLock' parameter points to nullptr!");
 
     mModificationLock = modificationLock;
     mModificationLock->writeLock();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -29,15 +29,15 @@ AutoWriteLock::AutoWriteLock(ModificationLock *modificationLock,const char *file
 {
   try
   {
-    if (modificationLock == NULL)
-      throw SmartMet::Spine::Exception(BCP,"The 'modificationLock' parameter points to NULL!");
+    if (modificationLock == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'modificationLock' parameter points to nullptr!");
 
     mModificationLock = modificationLock;
     mModificationLock->writeLock(filename,line);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -49,12 +49,13 @@ AutoWriteLock::~AutoWriteLock()
 {
   try
   {
-    if (mModificationLock != NULL)
+    if (mModificationLock != nullptr)
       mModificationLock->writeUnlock();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 

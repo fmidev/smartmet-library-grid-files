@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../ProductDefinition.h"
 #include "EpsSettings.h"
 #include "PartitionedProduct.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,17 +22,21 @@ namespace GRIB2 {
 class PartitionedEnsembleProduct : public ProductDefinition {
 public:
   PartitionedEnsembleProduct();
+  PartitionedEnsembleProduct(const PartitionedEnsembleProduct &other);
   virtual ~PartitionedEnsembleProduct();
 
+  virtual uint getTemplateNumber() const;
+  virtual ProductDefinition *createProductDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const PartitionedProduct *getPartitionedProduct() const;
-  void setPartitionedProduct(PartitionedProduct partitionedProduct);
-  const EpsSettings *getEps() const;
-  void setEps(EpsSettings eps);
+  PartitionedProduct *getPartitionedProduct() const;
+  void setPartitionedProduct(PartitionedProduct &partitionedProduct);
+  EpsSettings *getEps() const;
+  void setEps(EpsSettings &eps);
 
 protected:
   // # Copyright 2005-2015 ECMWF.

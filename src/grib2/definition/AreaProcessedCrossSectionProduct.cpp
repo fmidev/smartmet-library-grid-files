@@ -21,17 +21,29 @@ namespace GRIB2 {
 AreaProcessedCrossSectionProduct::AreaProcessedCrossSectionProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+AreaProcessedCrossSectionProduct::AreaProcessedCrossSectionProduct(const AreaProcessedCrossSectionProduct &other) : ProductDefinition(other) {
+  try {
+    mParameter = other.mParameter;
+    mHorizontalDimensionProcessed = other.mHorizontalDimensionProcessed;
+    mTreatmentOfMissingData = other.mTreatmentOfMissingData;
+    mTypeOfStatisticalProcessing = other.mTypeOfStatisticalProcessing;
+    mStartOfRange = other.mStartOfRange;
+    mEndOfRange = other.mEndOfRange;
+    mNumberOfDataValues = other.mNumberOfDataValues;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 AreaProcessedCrossSectionProduct::~AreaProcessedCrossSectionProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -49,7 +61,26 @@ void AreaProcessedCrossSectionProduct::read(MemoryReader &memoryReader) {
     mEndOfRange = memoryReader.read_UInt32_opt();
     mNumberOfDataValues = memoryReader.read_UInt16_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void AreaProcessedCrossSectionProduct::write(DataWriter &dataWriter) {
+  try {
+    mParameter.write(dataWriter);
+    dataWriter << mHorizontalDimensionProcessed;
+    dataWriter << mTreatmentOfMissingData;
+    dataWriter << mTypeOfStatisticalProcessing;
+    dataWriter << mStartOfRange;
+    dataWriter << mEndOfRange;
+    dataWriter << mNumberOfDataValues;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -77,7 +108,7 @@ void AreaProcessedCrossSectionProduct::getAttributeList(std::string prefix, T::A
     sprintf(name, "%sAreaProcessedCrossSectionProduct.NumberOfDataValues", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfDataValues));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -99,7 +130,7 @@ void AreaProcessedCrossSectionProduct::print(std::ostream &stream, uint level, u
     stream << space(level) << "- EndOfRange = " << toString(mEndOfRange) << "\n";
     stream << space(level) << "- NumberOfDataValues = " << toString(mNumberOfDataValues) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -123,17 +154,31 @@ T::Hash AreaProcessedCrossSectionProduct::countHash() {
     boost::hash_combine(seed, mParameter.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint AreaProcessedCrossSectionProduct::getTemplateNumber() const {
+  return 1002;
+}
+
+ProductDefinition *AreaProcessedCrossSectionProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new AreaProcessedCrossSectionProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameter} attribute. */
 
-const ParameterSettings *AreaProcessedCrossSectionProduct::getParameter() const {
+ParameterSettings *AreaProcessedCrossSectionProduct::getParameter() const {
   try {
-    return &mParameter;
+    return (ParameterSettings *)&mParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -143,7 +188,7 @@ const T::UInt8_opt &AreaProcessedCrossSectionProduct::getHorizontalDimensionProc
   try {
     return mHorizontalDimensionProcessed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -153,7 +198,7 @@ const T::UInt8_opt &AreaProcessedCrossSectionProduct::getTreatmentOfMissingData(
   try {
     return mTreatmentOfMissingData;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -163,7 +208,7 @@ const T::UInt8_opt &AreaProcessedCrossSectionProduct::getTypeOfStatisticalProces
   try {
     return mTypeOfStatisticalProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -173,7 +218,7 @@ const T::UInt32_opt &AreaProcessedCrossSectionProduct::getStartOfRange() const {
   try {
     return mStartOfRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -183,7 +228,7 @@ const T::UInt32_opt &AreaProcessedCrossSectionProduct::getEndOfRange() const {
   try {
     return mEndOfRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -193,15 +238,15 @@ const T::UInt16_opt &AreaProcessedCrossSectionProduct::getNumberOfDataValues() c
   try {
     return mNumberOfDataValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void AreaProcessedCrossSectionProduct::setParameter(ParameterSettings parameter) {
+void AreaProcessedCrossSectionProduct::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -209,7 +254,7 @@ void AreaProcessedCrossSectionProduct::setHorizontalDimensionProcessed(T::UInt8_
   try {
     mHorizontalDimensionProcessed = horizontalDimensionProcessed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -217,7 +262,7 @@ void AreaProcessedCrossSectionProduct::setTreatmentOfMissingData(T::UInt8_opt tr
   try {
     mTreatmentOfMissingData = treatmentOfMissingData;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -225,7 +270,7 @@ void AreaProcessedCrossSectionProduct::setTypeOfStatisticalProcessing(T::UInt8_o
   try {
     mTypeOfStatisticalProcessing = typeOfStatisticalProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -233,7 +278,7 @@ void AreaProcessedCrossSectionProduct::setStartOfRange(T::UInt32_opt startOfRang
   try {
     mStartOfRange = startOfRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -241,7 +286,7 @@ void AreaProcessedCrossSectionProduct::setEndOfRange(T::UInt32_opt endOfRange) {
   try {
     mEndOfRange = endOfRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -249,7 +294,7 @@ void AreaProcessedCrossSectionProduct::setNumberOfDataValues(T::UInt16_opt numbe
   try {
     mNumberOfDataValues = numberOfDataValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

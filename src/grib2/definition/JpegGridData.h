@@ -8,9 +8,10 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
-#include "../DataDefinition.h"
 #include "../../grid/Typedefs.h"
+#include "../DataDefinition.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -19,9 +20,13 @@ namespace GRIB2 {
 class JpegGridData : public DataDefinition {
 public:
   JpegGridData();
+  JpegGridData(const JpegGridData &other);
   virtual ~JpegGridData();
 
+  virtual uint getTemplateNumber() const;
+  virtual DataDefinition *createDataDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
@@ -86,7 +91,7 @@ protected:
   //
   // alias data.packedValues = codedValues;
   //
-  // template statistics "../../common/statistics_grid.def";
+  // template statistics "common/statistics_grid.def";
 };
 
 } // namespace GRIB2

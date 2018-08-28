@@ -12,16 +12,13 @@ namespace GRIB1
 {
 
 
-/*! \brief The constructor of the class.
+/*! \brief The constructor of the class. */
 
-        \param message  A pointer to the message object.
-*/
-
-ProductSection::ProductSection(Message *message)
+ProductSection::ProductSection()
 {
   try
   {
-    mMessage = message;
+    mMessage = nullptr;
     mFilePosition = 0;
     mSectionLength = 0;
     mTableVersion = 0;
@@ -48,10 +45,68 @@ ProductSection::ProductSection(Message *message)
     mDecimalScaleFactor = 0;
     mForecastType = 1;
     mForecastNumber = -1;
+    mDataPtr = nullptr;
+    mDataSize = 0;
+    mReleaseData = false;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The copy constructor of the class. */
+
+ProductSection::ProductSection(const ProductSection& other)
+:GRID::MessageSection(other)
+{
+  try
+  {
+    mMessage = nullptr;
+    mFilePosition = other.mFilePosition;
+    mSectionLength = other.mSectionLength;
+    mTableVersion = other.mTableVersion;
+    mCentre = other.mCentre;
+    mGeneratingProcessIdentifier = other.mGeneratingProcessIdentifier;
+    mGridDefinitionNumber = other.mGridDefinitionNumber;
+    mSectionFlags = other.mSectionFlags;
+    mIndicatorOfParameter = other.mIndicatorOfParameter;
+    mIndicatorOfTypeOfLevel = other.mIndicatorOfTypeOfLevel;
+    mLevel = other.mLevel;
+    mYearOfCentury = other.mYearOfCentury;
+    mMonth = other.mMonth;
+    mDay = other.mDay;
+    mHour = other.mHour;
+    mMinute = other.mMinute;
+    mUnitOfTimeRange = other.mUnitOfTimeRange;
+    mP1 = other.mP1;
+    mP2 = other.mP2;
+    mTimeRangeIndicator = other.mTimeRangeIndicator;
+    mNumberIncludedInAverage = other.mNumberIncludedInAverage;
+    mNumberMissingFromAveragesOrAccumulations = other.mNumberMissingFromAveragesOrAccumulations;
+    mCenturyOfReferenceTimeOfData = other.mCenturyOfReferenceTimeOfData;
+    mSubCentre = other.mSubCentre;
+    mDecimalScaleFactor = other.mDecimalScaleFactor;
+    mForecastType = other.mForecastType;
+    mForecastNumber = other.mForecastNumber;
+    mDataSize = other.mDataSize;
+    mReleaseData = false;
+    mDataPtr = nullptr;
+
+    if (mDataSize >  0  &&  other.mDataPtr != nullptr)
+    {
+      mDataPtr = new uchar[mDataSize];
+      memcpy(mDataPtr,other.mDataPtr,mDataSize);
+      mReleaseData = true;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",nullptr);
   }
 }
 
@@ -63,6 +118,19 @@ ProductSection::ProductSection(Message *message)
 
 ProductSection::~ProductSection()
 {
+  try
+  {
+    if (mReleaseData &&  mDataPtr != nullptr)
+    {
+      delete mDataPtr;
+      mDataPtr = nullptr;
+    }
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
+  }
 }
 
 
@@ -156,9 +224,140 @@ void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
+
+
+
+
+void ProductSection::setMessagePtr(Message *message)
+{
+  try
+  {
+    mMessage = message;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool ProductSection::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::ProductSection::TableVersion:
+        setTableVersion(value);
+        return true;
+
+      case Property::ProductSection::Centre:
+        setCentre(value);
+        return true;
+
+      case Property::ProductSection::GeneratingProcessIdentifier:
+        setGeneratingProcessIdentifier(value);
+        return true;
+
+      case Property::ProductSection::GridDefinitionNumber:
+        setGridDefinitionNumber(value);
+        return true;
+
+      case Property::ProductSection::SectionFlags:
+        setSectionFlags(value);
+        return true;
+
+      case Property::ProductSection::IndicatorOfParameter:
+        setIndicatorOfParameter(value);
+        return true;
+
+      case Property::ProductSection::IndicatorOfTypeOfLevel:
+        setIndicatorOfTypeOfLevel(value);
+        return true;
+
+      case Property::ProductSection::Level:
+        setLevel(value);
+        return true;
+
+      case Property::ProductSection::YearOfCentury:
+        setYearOfCentury(value);
+        return true;
+
+      case Property::ProductSection::Month:
+        setMonth(value);
+        return true;
+
+      case Property::ProductSection::Day:
+        setDay(value);
+        return true;
+
+      case Property::ProductSection::Hour:
+        setHour(value);
+        return true;
+
+      case Property::ProductSection::Minute:
+        setMinute(value);
+        return true;
+
+      case Property::ProductSection::UnitOfTimeRange:
+        setUnitOfTimeRange(value);
+        return true;
+
+      case Property::ProductSection::P1:
+        setP1(value);
+        return true;
+
+      case Property::ProductSection::P2:
+        setP2(value);
+        return true;
+
+      case Property::ProductSection::TimeRangeIndicator:
+        setTimeRangeIndicator(value);
+        return true;
+
+      case Property::ProductSection::NumberIncludedInAverage:
+        setNumberIncludedInAverage(value);
+        return true;
+
+      case Property::ProductSection::NumberMissingFromAveragesOrAccumulations:
+        setNumberMissingFromAveragesOrAccumulations(value);
+        return true;
+
+      case Property::ProductSection::CenturyOfReferenceTimeOfData:
+        setCenturyOfReferenceTimeOfData(value);
+        return true;
+
+      case Property::ProductSection::SubCentre:
+        setSubCentre(value);
+        return true;
+
+      case Property::ProductSection::DecimalScaleFactor:
+        setDecimalScaleFactor(value);
+        return true;
+
+      case Property::ProductSection::ForecastType:
+        setForecastType(value);
+        return true;
+
+      case Property::ProductSection::ForecastNumber:
+        setForecastNumber(value);
+        return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
 
 
 
@@ -203,6 +402,9 @@ void ProductSection::read(MemoryReader& memoryReader)
     if (mSectionLength > 50)
     {
       memoryReader.setReadPosition(rPos + 40);
+      mDataPtr = memoryReader.getReadPtr();
+      mDataSize = mSectionLength - 40;
+
       if (memoryReader.read_uint8() == 0x1E)
       {
         memoryReader.setReadPosition(rPos + 49);
@@ -216,7 +418,59 @@ void ProductSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Operation failed failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::write(DataWriter& dataWriter)
+{
+  try
+  {
+    mFilePosition = dataWriter.getWritePosition();
+
+    if (mDataPtr == nullptr  ||  mDataSize == 0)
+      mSectionLength = 28;
+    else
+      mSectionLength = 40 + mDataSize;
+
+    dataWriter.write_uint24(mSectionLength);
+    dataWriter << mTableVersion;
+    dataWriter << mCentre;
+    dataWriter << mGeneratingProcessIdentifier;
+    dataWriter << mGridDefinitionNumber;
+    dataWriter << mSectionFlags;
+    dataWriter << mIndicatorOfParameter;
+    dataWriter << mIndicatorOfTypeOfLevel;
+    dataWriter << mLevel;
+    dataWriter << mYearOfCentury;
+    dataWriter << mMonth;
+    dataWriter << mDay;
+    dataWriter << mHour;
+    dataWriter << mMinute;
+    dataWriter << mUnitOfTimeRange;
+    dataWriter << mP1;
+    dataWriter << mP2;
+    dataWriter << mTimeRangeIndicator;
+    dataWriter << mNumberIncludedInAverage;
+    dataWriter << mNumberMissingFromAveragesOrAccumulations;
+    dataWriter << mCenturyOfReferenceTimeOfData;
+    dataWriter << mSubCentre;
+    dataWriter << mDecimalScaleFactor;
+
+    if (mDataPtr != nullptr  &&  mDataSize > 0)
+    {
+      ulonglong fPos = dataWriter.getWritePosition();
+      dataWriter.write_nTimes(0xFF,40-(fPos-mFilePosition));
+      dataWriter.write_data(mDataPtr,mDataSize);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -237,7 +491,7 @@ T::FilePosition ProductSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -258,7 +512,7 @@ std::uint32_t ProductSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -276,7 +530,7 @@ std::string ProductSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -294,7 +548,7 @@ std::uint8_t ProductSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -312,7 +566,7 @@ std::uint8_t ProductSection::getTableVersion() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -330,7 +584,7 @@ std::uint8_t ProductSection::getCentre() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -348,7 +602,7 @@ std::uint8_t ProductSection::getGeneratingProcessIdentifier() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -366,7 +620,7 @@ std::uint8_t ProductSection::getGridDefinitionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -384,7 +638,7 @@ std::uint8_t ProductSection::getSectionFlags() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -402,7 +656,7 @@ std::uint8_t ProductSection::getIndicatorOfParameter() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -420,7 +674,7 @@ std::uint8_t ProductSection::getIndicatorOfTypeOfLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -438,7 +692,7 @@ std::uint16_t ProductSection::getLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -456,7 +710,7 @@ std::uint8_t ProductSection::getYearOfCentury() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -474,7 +728,7 @@ std::uint8_t ProductSection::getMonth() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -492,7 +746,7 @@ std::uint8_t ProductSection::getDay() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -510,7 +764,7 @@ std::uint8_t ProductSection::getHour() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -528,7 +782,7 @@ std::uint8_t ProductSection::getMinute() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -546,7 +800,7 @@ std::uint8_t ProductSection::getUnitOfTimeRange() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -564,7 +818,7 @@ std::uint8_t ProductSection::getP1() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -584,7 +838,7 @@ std::uint8_t ProductSection::getP2() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -602,7 +856,7 @@ std::uint8_t ProductSection::getTimeRangeIndicator() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -622,7 +876,7 @@ std::uint16_t ProductSection::getNumberIncludedInAverage() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -639,7 +893,7 @@ std::uint8_t ProductSection::getNumberMissingFromAveragesOrAccumulations() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -656,7 +910,7 @@ std::uint8_t ProductSection::getCenturyOfReferenceTimeOfData() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -674,7 +928,7 @@ std::uint8_t ProductSection::getSubCentre() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -692,7 +946,7 @@ std::uint16_t ProductSection::getDecimalScaleFactor() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -715,7 +969,7 @@ T::TimeString ProductSection::getReferenceTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -731,7 +985,7 @@ short ProductSection::getForecastType() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -747,7 +1001,7 @@ short ProductSection::getForecastNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -886,7 +1140,7 @@ T::TimeString ProductSection::getForecastTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1024,10 +1278,429 @@ T::TimeString ProductSection::getForecastEndTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 #endif
+
+
+
+
+
+
+
+void ProductSection::setTableVersion(std::uint8_t tableVersion)
+{
+  try
+  {
+    mTableVersion = tableVersion;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setCentre(std::uint8_t centre)
+{
+  try
+  {
+    mCentre = centre;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setGeneratingProcessIdentifier(std::uint8_t generatingProcessIdentifier)
+{
+  try
+  {
+    mGeneratingProcessIdentifier = generatingProcessIdentifier;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setGridDefinitionNumber(std::uint8_t gridDefinitionNumber)
+{
+  try
+  {
+    mGridDefinitionNumber = gridDefinitionNumber;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setSectionFlags(std::uint8_t sectionFlags)
+{
+  try
+  {
+    mSectionFlags = sectionFlags;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setIndicatorOfParameter(std::uint8_t indicatorOfParameter)
+{
+  try
+  {
+    mIndicatorOfParameter = indicatorOfParameter;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setIndicatorOfTypeOfLevel(std::uint8_t indicatorOfTypeOfLevel)
+{
+  try
+  {
+    mIndicatorOfTypeOfLevel = indicatorOfTypeOfLevel;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setLevel(std::uint16_t level)
+{
+  try
+  {
+    mLevel = level;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setYearOfCentury(std::uint8_t yearOfCentury)
+{
+  try
+  {
+    mYearOfCentury = yearOfCentury;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setMonth(std::uint8_t month)
+{
+  try
+  {
+    if (month < 1 ||  month > 12)
+    {
+      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      exception.addParameter("Value",std::to_string(month));
+      exception.addParameter("Value Range","1..12");
+      throw exception;
+    }
+
+    mMonth = month;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setDay(std::uint8_t day)
+{
+  try
+  {
+    if (day < 1 ||  day > 31)
+    {
+      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      exception.addParameter("Value",std::to_string(day));
+      exception.addParameter("Value Range","1..31");
+      throw exception;
+    }
+
+    mDay = day;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setHour(std::uint8_t hour)
+{
+  try
+  {
+    if (hour > 23)
+    {
+      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      exception.addParameter("Value",std::to_string(hour));
+      exception.addParameter("Value Range","0..23");
+      throw exception;
+    }
+
+    mHour = hour;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setMinute(std::uint8_t minute)
+{
+  try
+  {
+    if (minute > 59)
+    {
+      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      exception.addParameter("Value",std::to_string(minute));
+      exception.addParameter("Value Range","0..59");
+      throw exception;
+    }
+
+    mMinute = minute;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setUnitOfTimeRange(std::uint8_t unitOfTimeRange)
+{
+  try
+  {
+    mUnitOfTimeRange = unitOfTimeRange;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setP1(std::uint8_t p1)
+{
+  try
+  {
+    mP1 = p1;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setP2(std::uint8_t p2)
+{
+  try
+  {
+    mP2 = p2;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setTimeRangeIndicator(std::uint8_t timeRangeIndicator)
+{
+  try
+  {
+    mTimeRangeIndicator = timeRangeIndicator;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setNumberIncludedInAverage(std::uint16_t numberIncludeInAverage)
+{
+  try
+  {
+    mNumberIncludedInAverage = numberIncludeInAverage;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setNumberMissingFromAveragesOrAccumulations(std::uint8_t numberMissingFromAveragesOrAccumulations)
+{
+  try
+  {
+    mNumberMissingFromAveragesOrAccumulations = numberMissingFromAveragesOrAccumulations;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setCenturyOfReferenceTimeOfData(std::uint8_t centuryOfReferenceTimeOfData)
+{
+  try
+  {
+    mCenturyOfReferenceTimeOfData = centuryOfReferenceTimeOfData;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setSubCentre(std::uint8_t subCentre)
+{
+  try
+  {
+    mSubCentre = subCentre;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setDecimalScaleFactor(std::uint16_t decimalScaleFactor)
+{
+  try
+  {
+    mDecimalScaleFactor = decimalScaleFactor;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setForecastType(short forecastType)
+{
+  try
+  {
+    mForecastType = forecastType;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ProductSection::setForecastNumber(short forecastNuber)
+{
+  try
+  {
+    mForecastNumber = forecastNuber;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
 
 
 
@@ -1073,7 +1746,7 @@ void ProductSection::print(std::ostream& stream,uint level,uint optionFlags) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

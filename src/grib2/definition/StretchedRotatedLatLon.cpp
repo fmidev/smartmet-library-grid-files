@@ -21,17 +21,26 @@ namespace GRIB2 {
 StretchedRotatedLatLon::StretchedRotatedLatLon() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+StretchedRotatedLatLon::StretchedRotatedLatLon(const StretchedRotatedLatLon &other) : GridDefinition(other) {
+  try {
+    mEarthShape = other.mEarthShape;
+    mLatLon = other.mLatLon;
+    mRotation = other.mRotation;
+    mStretching = other.mStretching;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 StretchedRotatedLatLon::~StretchedRotatedLatLon() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -46,7 +55,23 @@ void StretchedRotatedLatLon::read(MemoryReader &memoryReader) {
     mRotation.read(memoryReader);
     mStretching.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void StretchedRotatedLatLon::write(DataWriter &dataWriter) {
+  try {
+    mEarthShape.write(dataWriter);
+    mLatLon.write(dataWriter);
+    mRotation.write(dataWriter);
+    mStretching.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -68,7 +93,7 @@ void StretchedRotatedLatLon::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
     mStretching.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -87,7 +112,7 @@ void StretchedRotatedLatLon::print(std::ostream &stream, uint level, uint option
     mRotation.print(stream, level + 1, optionFlags);
     mStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -102,79 +127,93 @@ T::Hash StretchedRotatedLatLon::countHash() {
     boost::hash_combine(seed, mStretching.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint StretchedRotatedLatLon::getTemplateNumber() const {
+  return 3;
+}
+
+GridDefinition *StretchedRotatedLatLon::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new StretchedRotatedLatLon(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
-const EarthShapeSettings *StretchedRotatedLatLon::getEarthShape() const {
+EarthShapeSettings *StretchedRotatedLatLon::getEarthShape() const {
   try {
-    return &mEarthShape;
+    return (EarthShapeSettings *)&mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mLatLon} attribute. */
 
-const LatLonSettings *StretchedRotatedLatLon::getLatLon() const {
+LatLonSettings *StretchedRotatedLatLon::getLatLon() const {
   try {
-    return &mLatLon;
+    return (LatLonSettings *)&mLatLon;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mRotation} attribute. */
 
-const RotationSettings *StretchedRotatedLatLon::getRotation() const {
+RotationSettings *StretchedRotatedLatLon::getRotation() const {
   try {
-    return &mRotation;
+    return (RotationSettings *)&mRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mStretching} attribute. */
 
-const StretchingSettings *StretchedRotatedLatLon::getStretching() const {
+StretchingSettings *StretchedRotatedLatLon::getStretching() const {
   try {
-    return &mStretching;
+    return (StretchingSettings *)&mStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedRotatedLatLon::setEarthShape(EarthShapeSettings earthShape) {
+void StretchedRotatedLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedRotatedLatLon::setLatLon(LatLonSettings latLon) {
+void StretchedRotatedLatLon::setLatLon(LatLonSettings &latLon) {
   try {
     mLatLon = latLon;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedRotatedLatLon::setRotation(RotationSettings rotation) {
+void StretchedRotatedLatLon::setRotation(RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void StretchedRotatedLatLon::setStretching(StretchingSettings stretching) {
+void StretchedRotatedLatLon::setStretching(StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

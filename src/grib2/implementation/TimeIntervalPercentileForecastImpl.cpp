@@ -18,10 +18,39 @@ TimeIntervalPercentileForecastImpl::TimeIntervalPercentileForecastImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalPercentileForecastImpl::TimeIntervalPercentileForecastImpl(const TimeIntervalPercentileForecastImpl& other)
+:TimeIntervalPercentileForecast(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 TimeIntervalPercentileForecastImpl::~TimeIntervalPercentileForecastImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* TimeIntervalPercentileForecastImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new TimeIntervalPercentileForecastImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void TimeIntervalPercentileForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -70,7 +99,7 @@ T::ParamLevel TimeIntervalPercentileForecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +123,7 @@ T::ParamLevelId TimeIntervalPercentileForecastImpl::getGribParameterLevelId() co
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

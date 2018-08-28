@@ -18,10 +18,39 @@ EnsembleReforecastImpl::EnsembleReforecastImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+EnsembleReforecastImpl::EnsembleReforecastImpl(const EnsembleReforecastImpl& other)
+:EnsembleReforecast(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 EnsembleReforecastImpl::~EnsembleReforecastImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* EnsembleReforecastImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new EnsembleReforecastImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void EnsembleReforecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -70,7 +99,7 @@ T::ParamLevel EnsembleReforecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +123,7 @@ T::ParamLevelId EnsembleReforecastImpl::getGribParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

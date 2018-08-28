@@ -1,5 +1,6 @@
 #include "GribFile.h"
 #include "../common/Exception.h"
+#include "../common/FileWriter.h"
 #include "../common/GeneralFunctions.h"
 #include "../grid/PrintOptions.h"
 
@@ -18,7 +19,29 @@ GribFile::GribFile()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+  }
+}
+
+
+
+
+
+GribFile::GribFile(const GribFile& other)
+:GRID::PhysicalGridFile(other)
+{
+  try
+  {
+    for (auto msg = other.mMessages.begin(); msg != other.mMessages.end(); ++msg)
+    {
+      Message *message = new Message(*(*msg));
+      message->setGribFilePtr(this);
+      mMessages.push_back(message);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Copy constructor failed!",nullptr);
   }
 }
 
@@ -32,16 +55,15 @@ GribFile::~GribFile()
 {
   try
   {
-    std::size_t messageCount = mMessages.size();
-
-    for (std::size_t t=0; t<messageCount; t++)
+    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
     {
-      delete mMessages[t];
+      delete (*msg);
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -83,7 +105,7 @@ void GribFile::read(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("File name ",filename);
     throw exception;
   }
@@ -128,7 +150,60 @@ void GribFile::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GribFile::write(std::string filename)
+{
+  try
+  {
+    FileWriter dataWriter;
+    dataWriter.createFile(filename.c_str());
+    write(dataWriter);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GribFile::write(DataWriter& dataWriter)
+{
+  try
+  {
+    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+    {
+      (*msg)->write(dataWriter);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+GRID::GridFile* GribFile::createGridFile()
+{
+  try
+  {
+    return (GRID::GridFile*)new GribFile(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -144,7 +219,77 @@ void GribFile::deleteUsers()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+GRID::Message* GribFile::addMessage()
+{
+  try
+  {
+    GRIB2::Message *msg = new GRIB2::Message();
+
+    msg->setBitmapSection(new BitmapSection());
+    msg->setIdentificationSection(new IdentificationSection());
+    msg->setGridSection(new GridSection());
+    msg->setRepresentationSection(new RepresentationSection());
+    msg->setIndicatorSection(new IndicatorSection());
+    msg->setLocalSection(new LocalSection());
+    msg->setProductSection(new ProductSection());
+    msg->setDataSection(new DataSection());
+
+    addMessage(msg);
+    return msg;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GribFile::addMessage(GRID::Message *message)
+{
+  try
+  {
+    if (message == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'message' parameter points to nullptr!");
+
+
+    GRIB2::Message *msg = (GRIB2::Message*)message;
+    addMessage(msg);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GribFile::addMessage(GRIB2::Message *message)
+{
+  try
+  {
+    if (message == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'message' parameter points to nullptr!");
+
+    message->setGribFilePtr(this);
+    message->setMessageIndex(mMessages.size());
+    mMessages.push_back(message);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -165,7 +310,7 @@ T::FileType GribFile::getFileType() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -186,7 +331,7 @@ std::string GribFile::getFileTypeString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -211,7 +356,7 @@ std::size_t GribFile::getNumberOfMessages()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -234,7 +379,7 @@ GRID::Message* GribFile::getMessageByIndex(std::size_t index)
       mapToMemory();
 
     if (index >= mMessages.size())
-      return NULL;
+      return nullptr;
     /*
     {
       SmartMet::Spine::Exception exception(BCP,"Index out of the range!");
@@ -248,7 +393,7 @@ GRID::Message* GribFile::getMessageByIndex(std::size_t index)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -349,7 +494,7 @@ T::Data_ptr_vec GribFile::searchMessageLocations(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Message search failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Message search failed!",nullptr);
   }
 }
 
@@ -388,7 +533,7 @@ void GribFile::readMessage(MemoryReader& memoryReader, uint messageIndex)
   {
     // Scan messages one by one until the end section is encountered
 
-    boost::shared_ptr<BitmapSection> last_real_bitmap;
+    std::shared_ptr<BitmapSection> last_real_bitmap;
 
     while (true)
     {
@@ -404,7 +549,8 @@ void GribFile::readMessage(MemoryReader& memoryReader, uint messageIndex)
         break;
       }
 
-      Message *message = new Message(this);
+      Message *message = new Message();
+      message->setGribFilePtr(this);
       message->setMessageIndex(messageIndex);
       message->read(memoryReader);
 
@@ -423,6 +569,7 @@ void GribFile::readMessage(MemoryReader& memoryReader, uint messageIndex)
         delete message;
         SmartMet::Spine::Exception exception(BCP,"Incomplete message in the GRIB2 file!");
         exception.addParameter("Message index",std::to_string(messageIndex));
+        throw exception;
       }
 
       message->initParameterInfo();
@@ -432,7 +579,7 @@ void GribFile::readMessage(MemoryReader& memoryReader, uint messageIndex)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Message addition failed!",NULL);
+    throw SmartMet::Spine::Exception(BCP,"Message addition failed!",nullptr);
   }
 }
 
@@ -464,14 +611,14 @@ void GribFile::print(std::ostream& stream,uint level,uint optionFlags) const
     if (optionFlags & GRID::PrintFlag::no_messages)
       return;
 
-    for (std::size_t t=0; t<messageCount; t++)
+    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
     {
-      mMessages[t]->print(stream,level+1,optionFlags);
+      (*msg)->print(stream,level+1,optionFlags);
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

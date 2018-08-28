@@ -21,17 +21,25 @@ namespace GRIB2 {
 AtmosphericChemicalProduct::AtmosphericChemicalProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+AtmosphericChemicalProduct::AtmosphericChemicalProduct(const AtmosphericChemicalProduct &other) : ProductDefinition(other) {
+  try {
+    mParameterChemical = other.mParameterChemical;
+    mPointInTime = other.mPointInTime;
+    mHorizontal = other.mHorizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 AtmosphericChemicalProduct::~AtmosphericChemicalProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +53,22 @@ void AtmosphericChemicalProduct::read(MemoryReader &memoryReader) {
     mPointInTime.read(memoryReader);
     mHorizontal.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void AtmosphericChemicalProduct::write(DataWriter &dataWriter) {
+  try {
+    mParameterChemical.write(dataWriter);
+    mPointInTime.write(dataWriter);
+    mHorizontal.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +88,7 @@ void AtmosphericChemicalProduct::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sAtmosphericChemicalProduct.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +106,7 @@ void AtmosphericChemicalProduct::print(std::ostream &stream, uint level, uint op
     mPointInTime.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -97,61 +120,75 @@ T::Hash AtmosphericChemicalProduct::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint AtmosphericChemicalProduct::getTemplateNumber() const {
+  return 40;
+}
+
+ProductDefinition *AtmosphericChemicalProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new AtmosphericChemicalProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameterChemical} attribute. */
 
-const ParameterChemicalSettings *AtmosphericChemicalProduct::getParameterChemical() const {
+ParameterChemicalSettings *AtmosphericChemicalProduct::getParameterChemical() const {
   try {
-    return &mParameterChemical;
+    return (ParameterChemicalSettings *)&mParameterChemical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
 
-const PointInTimeSettings *AtmosphericChemicalProduct::getPointInTime() const {
+PointInTimeSettings *AtmosphericChemicalProduct::getPointInTime() const {
   try {
-    return &mPointInTime;
+    return (PointInTimeSettings *)&mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
-const HorizontalSettings *AtmosphericChemicalProduct::getHorizontal() const {
+HorizontalSettings *AtmosphericChemicalProduct::getHorizontal() const {
   try {
-    return &mHorizontal;
+    return (HorizontalSettings *)&mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void AtmosphericChemicalProduct::setParameterChemical(ParameterChemicalSettings parameterChemical) {
+void AtmosphericChemicalProduct::setParameterChemical(ParameterChemicalSettings &parameterChemical) {
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void AtmosphericChemicalProduct::setPointInTime(PointInTimeSettings pointInTime) {
+void AtmosphericChemicalProduct::setPointInTime(PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void AtmosphericChemicalProduct::setHorizontal(HorizontalSettings horizontal) {
+void AtmosphericChemicalProduct::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

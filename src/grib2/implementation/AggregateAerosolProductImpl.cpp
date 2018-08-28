@@ -18,10 +18,39 @@ AggregateAerosolProductImpl::AggregateAerosolProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+AggregateAerosolProductImpl::AggregateAerosolProductImpl(const AggregateAerosolProductImpl& other)
+:AggregateAerosolProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 AggregateAerosolProductImpl::~AggregateAerosolProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* AggregateAerosolProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new AggregateAerosolProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void AggregateAerosolProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

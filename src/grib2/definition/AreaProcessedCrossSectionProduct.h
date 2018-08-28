@@ -8,10 +8,11 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../ProductDefinition.h"
 #include "ParameterSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -20,15 +21,19 @@ namespace GRIB2 {
 class AreaProcessedCrossSectionProduct : public ProductDefinition {
 public:
   AreaProcessedCrossSectionProduct();
+  AreaProcessedCrossSectionProduct(const AreaProcessedCrossSectionProduct &other);
   virtual ~AreaProcessedCrossSectionProduct();
 
+  virtual uint getTemplateNumber() const;
+  virtual ProductDefinition *createProductDefinition() const;
   virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  const ParameterSettings *getParameter() const;
-  void setParameter(ParameterSettings parameter);
+  ParameterSettings *getParameter() const;
+  void setParameter(ParameterSettings &parameter);
   const T::UInt8_opt &getHorizontalDimensionProcessed() const;
   void setHorizontalDimensionProcessed(T::UInt8_opt horizontalDimensionProcessed);
   const T::UInt8_opt &getTreatmentOfMissingData() const;

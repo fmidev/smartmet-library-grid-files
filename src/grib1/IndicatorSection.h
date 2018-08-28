@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 #include "../grid/MessageSection.h"
 
@@ -40,7 +41,8 @@ class IndicatorSection : public GRID::MessageSection
 {
   public:
 
-                  IndicatorSection(Message *message);
+                  IndicatorSection();
+                  IndicatorSection(const IndicatorSection& other);
     virtual       ~IndicatorSection();
 
     // ### Common methods for all message sections
@@ -50,15 +52,18 @@ class IndicatorSection : public GRID::MessageSection
     std::uint32_t   getSectionLength() const;
     std::string     getSectionName() const;
     std::uint8_t    getSectionNumber() const;
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
-    std::uint32_t   getIdentifier() const;
     std::uint8_t    getEditionNumber() const;
     std::uint32_t   getTotalLength() const;
 
+    void            setMessagePtr(Message *message);
+    void            setTotalLength(std::uint32_t length);
+
     void            read(MemoryReader& memoryReader);
+    void            write(DataWriter& dataWriter);
+    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
@@ -68,13 +73,13 @@ class IndicatorSection : public GRID::MessageSection
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;
 
-    std::uint32_t   mIdentifier;
+    uchar           mIdentifier[4];
     std::uint32_t   mTotalLength;
     std::uint8_t    mEditionNumber;
 };
 
 
-typedef std::shared_ptr<IndicatorSection> IndicatorSection_sptr;
+typedef std::shared_ptr<IndicatorSection> IndicatorSect_sptr;
 
 }  // namespace GRIB1
 }  // namespace SmartMet

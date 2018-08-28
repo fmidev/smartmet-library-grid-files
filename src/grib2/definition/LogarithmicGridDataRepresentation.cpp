@@ -22,17 +22,24 @@ LogarithmicGridDataRepresentation::LogarithmicGridDataRepresentation() {
   try {
     mPreProcessingParameter = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+LogarithmicGridDataRepresentation::LogarithmicGridDataRepresentation(const LogarithmicGridDataRepresentation &other) : RepresentationDefinition(other) {
+  try {
+    mPacking = other.mPacking;
+    mPreProcessingParameter = other.mPreProcessingParameter;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 LogarithmicGridDataRepresentation::~LogarithmicGridDataRepresentation() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +52,21 @@ void LogarithmicGridDataRepresentation::read(MemoryReader &memoryReader) {
     mPacking.read(memoryReader);
     mPreProcessingParameter = memoryReader.read_float();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void LogarithmicGridDataRepresentation::write(DataWriter &dataWriter) {
+  try {
+    mPacking.write(dataWriter);
+    dataWriter << mPreProcessingParameter;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -63,7 +84,7 @@ void LogarithmicGridDataRepresentation::getAttributeList(std::string prefix, T::
     sprintf(name, "%sLogarithmicGridDataRepresentation.PreProcessingParameter", prefix.c_str());
     attributeList.addAttribute(name, toString(mPreProcessingParameter));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -80,7 +101,7 @@ void LogarithmicGridDataRepresentation::print(std::ostream &stream, uint level, 
     mPacking.print(stream, level + 1, optionFlags);
     stream << space(level) << "- PreProcessingParameter = " << toString(mPreProcessingParameter) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -93,17 +114,31 @@ T::Hash LogarithmicGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint LogarithmicGridDataRepresentation::getTemplateNumber() const {
+  return 61;
+}
+
+RepresentationDefinition *LogarithmicGridDataRepresentation::createRepresentationDefinition() const {
+  try {
+    return (RepresentationDefinition *)new LogarithmicGridDataRepresentation(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mPacking} attribute. */
 
-const PackingSettings *LogarithmicGridDataRepresentation::getPacking() const {
+PackingSettings *LogarithmicGridDataRepresentation::getPacking() const {
   try {
-    return &mPacking;
+    return (PackingSettings *)&mPacking;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -113,15 +148,15 @@ float LogarithmicGridDataRepresentation::getPreProcessingParameter() const {
   try {
     return mPreProcessingParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void LogarithmicGridDataRepresentation::setPacking(PackingSettings packing) {
+void LogarithmicGridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -129,7 +164,7 @@ void LogarithmicGridDataRepresentation::setPreProcessingParameter(float preProce
   try {
     mPreProcessingParameter = preProcessingParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

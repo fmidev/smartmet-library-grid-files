@@ -18,10 +18,29 @@ DataDefinition::DataDefinition()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+DataDefinition::DataDefinition(const DataDefinition& other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 DataDefinition::~DataDefinition()
 {
+}
+
+
+
+
+
+uint DataDefinition::getTemplateNumber() const
+{
+  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
 }
 
 

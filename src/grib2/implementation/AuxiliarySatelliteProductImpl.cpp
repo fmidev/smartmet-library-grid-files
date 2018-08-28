@@ -18,10 +18,39 @@ AuxiliarySatelliteProductImpl::AuxiliarySatelliteProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+AuxiliarySatelliteProductImpl::AuxiliarySatelliteProductImpl(const AuxiliarySatelliteProductImpl& other)
+:AuxiliarySatelliteProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 AuxiliarySatelliteProductImpl::~AuxiliarySatelliteProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* AuxiliarySatelliteProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new AuxiliarySatelliteProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void AuxiliarySatelliteProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

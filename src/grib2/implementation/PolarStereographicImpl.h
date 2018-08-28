@@ -17,16 +17,21 @@ class PolarStereographicImpl : public PolarStereographic
                       PolarStereographicImpl(const PolarStereographicImpl& other);
     virtual           ~PolarStereographicImpl();
 
+    GridDefinition*   createGridDefinition() const;
+
     T::Coordinate_vec getGridCoordinates() const;
-    T::Dimensions_opt getGridDimensions() const;
+    T::Dimensions     getGridDimensions() const;
     std::string       getGridGeometryString() const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     bool              getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
+    bool              reverseXDirection() const;
+    bool              reverseYDirection() const;
+
+    bool              setProperty(uint propertyId,long long value);
+
     void              initSpatialReference();
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
     void              read(MemoryReader& memoryReader);
-    bool              reverseXDirection() const;
-    bool              reverseYDirection() const;
 
   protected:
 

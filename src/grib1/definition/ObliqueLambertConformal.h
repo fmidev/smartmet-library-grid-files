@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "ResolutionFlagsSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -21,13 +22,17 @@ namespace GRIB1 {
 class ObliqueLambertConformal : public GridDefinition {
 public:
   ObliqueLambertConformal();
+  ObliqueLambertConformal(const ObliqueLambertConformal &other);
   virtual ~ObliqueLambertConformal();
 
-  virtual void read(MemoryReader &memoryReader);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   std::uint16_t getNx() const;
   void setNx(std::uint16_t nx);
   std::uint16_t getNy() const;
@@ -36,8 +41,8 @@ public:
   void setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint);
   std::int24_t getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint);
-  const ResolutionFlagsSettings *getResolutionFlags() const;
-  void setResolutionFlags(ResolutionFlagsSettings resolutionFlags);
+  ResolutionFlagsSettings *getResolutionFlags() const;
+  void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
   std::int24_t getLoV() const;
   void setLoV(std::int24_t loV);
   std::uint24_t getDxInMetres() const;
@@ -46,8 +51,8 @@ public:
   void setDyInMetres(std::uint24_t dyInMetres);
   std::uint8_t getProjectionCentreFlag() const;
   void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
   std::int24_t getLatin1() const;
   void setLatin1(std::int24_t latin1);
   std::int24_t getLatin2() const;
@@ -71,7 +76,7 @@ protected:
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 30;
   //
-  // template commonBlock "../grid_definition_lambert.def";// # Copyright 2005-2015 ECMWF.
+  // template commonBlock "grib1/grid_definition_lambert.def";// # Copyright 2005-2015 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.

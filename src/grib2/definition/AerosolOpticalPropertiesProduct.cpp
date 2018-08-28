@@ -21,17 +21,25 @@ namespace GRIB2 {
 AerosolOpticalPropertiesProduct::AerosolOpticalPropertiesProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+AerosolOpticalPropertiesProduct::AerosolOpticalPropertiesProduct(const AerosolOpticalPropertiesProduct &other) : ProductDefinition(other) {
+  try {
+    mParameterAerosolOptical = other.mParameterAerosolOptical;
+    mPointInTime = other.mPointInTime;
+    mHorizontal = other.mHorizontal;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 AerosolOpticalPropertiesProduct::~AerosolOpticalPropertiesProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -45,7 +53,22 @@ void AerosolOpticalPropertiesProduct::read(MemoryReader &memoryReader) {
     mPointInTime.read(memoryReader);
     mHorizontal.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void AerosolOpticalPropertiesProduct::write(DataWriter &dataWriter) {
+  try {
+    mParameterAerosolOptical.write(dataWriter);
+    mPointInTime.write(dataWriter);
+    mHorizontal.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +88,7 @@ void AerosolOpticalPropertiesProduct::getAttributeList(std::string prefix, T::At
     sprintf(name, "%sAerosolOpticalPropertiesProduct.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +106,7 @@ void AerosolOpticalPropertiesProduct::print(std::ostream &stream, uint level, ui
     mPointInTime.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -97,61 +120,75 @@ T::Hash AerosolOpticalPropertiesProduct::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint AerosolOpticalPropertiesProduct::getTemplateNumber() const {
+  return 48;
+}
+
+ProductDefinition *AerosolOpticalPropertiesProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new AerosolOpticalPropertiesProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mParameterAerosolOptical} attribute. */
 
-const ParameterAerosolOpticalSettings *AerosolOpticalPropertiesProduct::getParameterAerosolOptical() const {
+ParameterAerosolOpticalSettings *AerosolOpticalPropertiesProduct::getParameterAerosolOptical() const {
   try {
-    return &mParameterAerosolOptical;
+    return (ParameterAerosolOpticalSettings *)&mParameterAerosolOptical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
 
-const PointInTimeSettings *AerosolOpticalPropertiesProduct::getPointInTime() const {
+PointInTimeSettings *AerosolOpticalPropertiesProduct::getPointInTime() const {
   try {
-    return &mPointInTime;
+    return (PointInTimeSettings *)&mPointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
-const HorizontalSettings *AerosolOpticalPropertiesProduct::getHorizontal() const {
+HorizontalSettings *AerosolOpticalPropertiesProduct::getHorizontal() const {
   try {
-    return &mHorizontal;
+    return (HorizontalSettings *)&mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void AerosolOpticalPropertiesProduct::setParameterAerosolOptical(ParameterAerosolOpticalSettings parameterAerosolOptical) {
+void AerosolOpticalPropertiesProduct::setParameterAerosolOptical(ParameterAerosolOpticalSettings &parameterAerosolOptical) {
   try {
     mParameterAerosolOptical = parameterAerosolOptical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void AerosolOpticalPropertiesProduct::setPointInTime(PointInTimeSettings pointInTime) {
+void AerosolOpticalPropertiesProduct::setPointInTime(PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void AerosolOpticalPropertiesProduct::setHorizontal(HorizontalSettings horizontal) {
+void AerosolOpticalPropertiesProduct::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

@@ -59,11 +59,11 @@ class Log
 
 
 #define PRINT_EVENT(_xLog,_xfileName,_xLine,_xFunction,_xargs...) \
-  if (_xLog != NULL  &&  _xLog->isEnabled())\
+  if (_xLog != nullptr  &&  _xLog->isEnabled())\
   {\
     _xLog->lock();\
     FILE *file = _xLog->getFileHandle();\
-    if (file != NULL)\
+    if (file != nullptr)\
     {\
       time_t x_time = time(0);\
       struct tm x_tm;\
@@ -82,11 +82,11 @@ class Log
 
 
 #define PRINT_EVENT_LINE(_xLog,_xargs...) \
-  if (_xLog != NULL  &&  _xLog->isEnabled())\
+  if (_xLog != nullptr  &&  _xLog->isEnabled())\
   {\
     _xLog->lock();\
     FILE *file = _xLog->getFileHandle();\
-    if (file != NULL)\
+    if (file != nullptr)\
     {\
       time_t x_time = time(0);\
       struct tm x_tm;\
@@ -105,11 +105,11 @@ class Log
 
 
 #define PRINT_DATA(_xLog,_xargs...) \
-  if (_xLog != NULL  &&  _xLog->isEnabled())\
+  if (_xLog != nullptr  &&  _xLog->isEnabled())\
   {\
     _xLog->lock();\
     FILE *file = _xLog->getFileHandle();\
-    if (file != NULL)\
+    if (file != nullptr)\
     {\
       fprintf(file,_xargs);\
       fflush(file); \
@@ -122,7 +122,7 @@ class Log
 
 
 #define PRINT_FILE(_lFile,_xargs...) \
-  if (_lFile != NULL)\
+  if (_lFile != nullptr)\
   {\
       fprintf(_lFile,_xargs);\
       fflush(_lFile); \

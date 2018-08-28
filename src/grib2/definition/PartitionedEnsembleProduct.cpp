@@ -21,17 +21,24 @@ namespace GRIB2 {
 PartitionedEnsembleProduct::PartitionedEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+PartitionedEnsembleProduct::PartitionedEnsembleProduct(const PartitionedEnsembleProduct &other) : ProductDefinition(other) {
+  try {
+    mPartitionedProduct = other.mPartitionedProduct;
+    mEps = other.mEps;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 PartitionedEnsembleProduct::~PartitionedEnsembleProduct() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -44,7 +51,21 @@ void PartitionedEnsembleProduct::read(MemoryReader &memoryReader) {
     mPartitionedProduct.read(memoryReader);
     mEps.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void PartitionedEnsembleProduct::write(DataWriter &dataWriter) {
+  try {
+    mPartitionedProduct.write(dataWriter);
+    mEps.write(dataWriter);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -62,7 +83,7 @@ void PartitionedEnsembleProduct::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sPartitionedEnsembleProduct.", prefix.c_str());
     mEps.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -79,7 +100,7 @@ void PartitionedEnsembleProduct::print(std::ostream &stream, uint level, uint op
     mPartitionedProduct.print(stream, level + 1, optionFlags);
     mEps.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -92,43 +113,57 @@ T::Hash PartitionedEnsembleProduct::countHash() {
     boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint PartitionedEnsembleProduct::getTemplateNumber() const {
+  return 54;
+}
+
+ProductDefinition *PartitionedEnsembleProduct::createProductDefinition() const {
+  try {
+    return (ProductDefinition *)new PartitionedEnsembleProduct(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mPartitionedProduct} attribute. */
 
-const PartitionedProduct *PartitionedEnsembleProduct::getPartitionedProduct() const {
+PartitionedProduct *PartitionedEnsembleProduct::getPartitionedProduct() const {
   try {
-    return &mPartitionedProduct;
+    return (PartitionedProduct *)&mPartitionedProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEps} attribute. */
 
-const EpsSettings *PartitionedEnsembleProduct::getEps() const {
+EpsSettings *PartitionedEnsembleProduct::getEps() const {
   try {
-    return &mEps;
+    return (EpsSettings *)&mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void PartitionedEnsembleProduct::setPartitionedProduct(PartitionedProduct partitionedProduct) {
+void PartitionedEnsembleProduct::setPartitionedProduct(PartitionedProduct &partitionedProduct) {
   try {
     mPartitionedProduct = partitionedProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void PartitionedEnsembleProduct::setEps(EpsSettings eps) {
+void PartitionedEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

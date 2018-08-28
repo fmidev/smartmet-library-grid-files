@@ -18,10 +18,39 @@ TimeIntervalEnsembleClusterDerivedForecastImpl::TimeIntervalEnsembleClusterDeriv
 
 
 
+/*! \brief The copy constructor of the class. */
+
+TimeIntervalEnsembleClusterDerivedForecastImpl::TimeIntervalEnsembleClusterDerivedForecastImpl(const TimeIntervalEnsembleClusterDerivedForecastImpl& other)
+:TimeIntervalEnsembleClusterDerivedForecast(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 TimeIntervalEnsembleClusterDerivedForecastImpl::~TimeIntervalEnsembleClusterDerivedForecastImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* TimeIntervalEnsembleClusterDerivedForecastImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new TimeIntervalEnsembleClusterDerivedForecastImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void TimeIntervalEnsembleClusterDerivedForecastImpl::read(MemoryReader& memoryRe
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -70,7 +99,7 @@ T::ParamLevel TimeIntervalEnsembleClusterDerivedForecastImpl::getGribParameterLe
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +123,7 @@ T::ParamLevelId TimeIntervalEnsembleClusterDerivedForecastImpl::getGribParameter
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

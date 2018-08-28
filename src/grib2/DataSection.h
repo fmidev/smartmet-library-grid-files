@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../grid/MessageSection.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 
 
@@ -43,7 +44,8 @@ class DataSection : public GRID::MessageSection
 {
   public:
 
-                    DataSection(Message *message);
+                    DataSection();
+                    DataSection(const DataSection& other);
     virtual         ~DataSection();
 
     // ### Common methods for all message sections
@@ -53,14 +55,21 @@ class DataSection : public GRID::MessageSection
     std::uint32_t   getSectionLength() const;
     std::string     getSectionName() const;
     std::uint8_t    getSectionNumber() const;
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
     // ### Section specific methods
 
     std::uint8_t    getNumberOfSection() const;
     T::Data_ptr     getDataPtr() const;
     std::size_t     getDataSize() const;
+
+    void            setData(T::Data_ptr data,std::size_t size);
+    void            setMessagePtr(Message *message);
+
+    bool            setProperty(uint propertyId,long long value);
+
     void            read(MemoryReader& memoryReader);
+    void            write(DataWriter& dataWriter);
+    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
@@ -81,11 +90,12 @@ class DataSection : public GRID::MessageSection
 
     /*! \brief The size of the grid data. */
     std::size_t     mDataSize;
+
+    bool            mReleaseData;
 };
 
 
-typedef std::unique_ptr<DataSection> DataSection_uptr;
-typedef const DataSection* DataSection_cptr;
+typedef std::shared_ptr<DataSection> DataSect_sptr;
 
 
 }  // namespace GRIB2

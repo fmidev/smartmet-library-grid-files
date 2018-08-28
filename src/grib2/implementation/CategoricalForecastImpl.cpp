@@ -18,10 +18,39 @@ CategoricalForecastImpl::CategoricalForecastImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+CategoricalForecastImpl::CategoricalForecastImpl(const CategoricalForecastImpl& other)
+:CategoricalForecast(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 CategoricalForecastImpl::~CategoricalForecastImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* CategoricalForecastImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new CategoricalForecastImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -46,7 +75,7 @@ void CategoricalForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -70,7 +99,7 @@ T::ParamLevel CategoricalForecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +123,7 @@ T::ParamLevelId CategoricalForecastImpl::getGribParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

@@ -8,11 +8,12 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
+#include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "GridAreaSettings.h"
 #include "ScanningModeSettings.h"
-#include "../../grid/Typedefs.h"
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -21,23 +22,27 @@ namespace GRIB1 {
 class Mercator : public GridDefinition {
 public:
   Mercator();
+  Mercator(const Mercator &other);
   virtual ~Mercator();
 
-  virtual void read(MemoryReader &memoryReader);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   std::int16_t getNi() const;
   void setNi(std::int16_t ni);
   std::int16_t getNj() const;
   void setNj(std::int16_t nj);
-  const GridAreaSettings *getGridArea() const;
-  void setGridArea(GridAreaSettings gridArea);
+  GridAreaSettings *getGridArea() const;
+  void setGridArea(GridAreaSettings &gridArea);
   std::int24_t getLatin() const;
   void setLatin(std::int24_t latin);
-  const ScanningModeSettings *getScanningMode() const;
-  void setScanningMode(ScanningModeSettings scanningMode);
+  ScanningModeSettings *getScanningMode() const;
+  void setScanningMode(ScanningModeSettings &scanningMode);
   std::int24_t getDiInMetres() const;
   void setDiInMetres(std::int24_t diInMetres);
   std::int24_t getDjInMetres() const;

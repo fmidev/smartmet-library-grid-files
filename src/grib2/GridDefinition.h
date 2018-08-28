@@ -3,9 +3,12 @@
 #include "../common/Coordinate.h"
 #include "../common/Dimensions.h"
 #include "../grid/Typedefs.h"
+#include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 #include "../common/AttributeList.h"
 #include "definition/EarthShapeSettings.h"
+#include "definition/LatLonSettings.h"
+#include "definition/RotationSettings.h"
 
 #include <gdal/ogr_spatialref.h>
 #include <map>
@@ -22,17 +25,19 @@ class GridDefinition
 {
   public:
 
-    GridDefinition();
-    virtual ~GridDefinition();
+                                GridDefinition();
+                                GridDefinition(const GridDefinition& other);
+    virtual                     ~GridDefinition();
 
     virtual T::Hash             countHash(); // Do not call this, call getGridHash() instead.
+    virtual GridDefinition*     createGridDefinition() const;
     virtual void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
     virtual std::string         getGridGeometryName();
     virtual void                getGridCellAverageSize(double& width,double& height);
     virtual T::Coordinate_vec   getGridCoordinates() const;
-    virtual T::Dimensions_opt   getGridDimensions() const;
+    virtual T::Dimensions       getGridDimensions() const;
     T::Hash                     getGridHash();
     virtual bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual T::Coordinate_vec   getGridLatLonCoordinates() const;
@@ -46,16 +51,30 @@ class GridDefinition
     virtual bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     T::GridProjection           getGridProjection();
+    virtual uint                getTemplateNumber() const;
+    T::SpatialRef*              getSpatialReference();
+    virtual void                initSpatialReference();
+    bool                        isGridGlobal() const;
     virtual bool                reverseXDirection() const;
     virtual bool                reverseYDirection() const;
 
-    T::SpatialReference*        getSpatialReference();
-    virtual void                initSpatialReference();
-    bool                        isGridGlobal() const;
-    virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
+    virtual EarthShapeSettings* getEarthShape() const;
+    virtual LatLonSettings *    getLatLon() const;
+    virtual RotationSettings*   getRotation() const;
+
     virtual void                setGridGeometryId(T::GeometryId geometryId);
     virtual void                setGridGeometryName(std::string geometryName);
-    virtual void                read(MemoryReader& memoryReader) {}
+
+
+    virtual bool                setProperty(uint propertyId,long long value);
+    virtual bool                setProperty_EarthShape(uint propertyId,long long value);
+    virtual bool                setProperty_Grid(uint propertyId,long long value);
+    virtual bool                setProperty_Rotation(uint propertyId,long long value);
+    virtual bool                setProperty_LatLon(uint propertyId,long long value);
+
+    virtual void                read(MemoryReader& memoryReader);
+    virtual void                write(DataWriter& dataWriter);
+    virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
 
   protected:
 
@@ -65,7 +84,7 @@ class GridDefinition
 
 
     /*! \brief The spatial reference. */
-    T::SpatialReference         mSpatialReference;
+    T::SpatialRef               mSpatialReference;
 
     /*! \brief The grid layout. */
     T::GridLayout               mGridLayout;
@@ -99,7 +118,6 @@ class GridDefinition
 };
 
 typedef GridDefinition* GridDef_ptr;
-typedef std::unique_ptr<GridDefinition> GridDefinition_uptr;
 typedef std::vector<GridDefinition*> GridDef_pvec;
 typedef std::map<uint,GridDefinition*> GridDefinition_pmap;
 typedef std::shared_ptr<GridDefinition> GridDefinition_sptr;

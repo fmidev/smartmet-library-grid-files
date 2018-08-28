@@ -8,9 +8,10 @@
 
 #pragma once
 #include "../../common/AttributeList.h"
+#include "../../common/DataWriter.h"
 #include "../../common/MemoryReader.h"
-#include "../GridDefinition.h"
 #include "../../grid/Typedefs.h"
+#include "../GridDefinition.h"
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -19,13 +20,17 @@ namespace GRIB1 {
 class SphericalHarmonic : public GridDefinition {
 public:
   SphericalHarmonic();
+  SphericalHarmonic(const SphericalHarmonic &other);
   virtual ~SphericalHarmonic();
 
-  virtual void read(MemoryReader &memoryReader);
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   std::uint16_t getJ() const;
   void setJ(std::uint16_t j);
   std::uint16_t getK() const;
@@ -51,7 +56,7 @@ protected:
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 50;
   //
-  // template commonBlock "../grid_definition_spherical_harmonics.def";
+  // template commonBlock "grib1/grid_definition_spherical_harmonics.def";
   // # Copyright 2005-2015 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0

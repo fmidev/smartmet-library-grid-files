@@ -17,10 +17,39 @@ AggregateForecastImpl::AggregateForecastImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+AggregateForecastImpl::AggregateForecastImpl(const AggregateForecastImpl& other)
+:AggregateForecast(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 AggregateForecastImpl::~AggregateForecastImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* AggregateForecastImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new AggregateForecastImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -45,7 +74,7 @@ void AggregateForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -69,7 +98,7 @@ T::ParamLevel AggregateForecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -93,7 +122,7 @@ T::ParamLevelId AggregateForecastImpl::getGribParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

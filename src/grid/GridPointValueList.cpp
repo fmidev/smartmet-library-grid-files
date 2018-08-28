@@ -20,7 +20,7 @@ GridPointValue::ComparisonMethod gridPointValue_comparisonMethod = GridPointValu
 
 int gridPointValue_compare(const void *_val1,const void *_val2)
 {
-  if (_val1 != NULL  &&  _val2 != NULL)
+  if (_val1 != nullptr  &&  _val2 != nullptr)
   {
     GridPointValuePtr *obj1 = const_cast<GridPointValuePtr*>(reinterpret_cast<const GridPointValuePtr *>(_val1));
     GridPointValuePtr *obj2 = const_cast<GridPointValuePtr*>(reinterpret_cast<const GridPointValuePtr *>(_val2));
@@ -45,12 +45,12 @@ GridPointValueList::GridPointValueList()
 
     for (uint t=0; t<100; t++)
     {
-      mArray[t] = NULL;
+      mArray[t] = nullptr;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -69,16 +69,16 @@ GridPointValueList::GridPointValueList(GridPointValueList& gridPointValueList)
     for (uint t=0; t<mSize; t++)
     {
       GridPointValue *info = gridPointValueList.mArray[t];
-      if (info != NULL)
+      if (info != nullptr)
         mArray[t] = info->duplicate();
       else
-        mArray[t] = NULL;
+        mArray[t] = nullptr;
     }
     mComparisonMethod = gridPointValueList.mComparisonMethod;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -97,16 +97,16 @@ GridPointValueList::GridPointValueList(const GridPointValueList& gridPointValueL
     for (uint t=0; t<mSize; t++)
     {
       GridPointValue *info = gridPointValueList.mArray[t];
-      if (info != NULL)
+      if (info != nullptr)
         mArray[t] = info->duplicate();
       else
-        mArray[t] = NULL;
+        mArray[t] = nullptr;
     }
     mComparisonMethod = gridPointValueList.mComparisonMethod;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -122,7 +122,8 @@ GridPointValueList::~GridPointValueList()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
   }
 }
 
@@ -145,7 +146,7 @@ void GridPointValueList::operator=(GridPointValueList& gridPointValueList)
     for (uint t=0; t<mSize; t++)
     {
       GridPointValue *info = gridPointValueList.mArray[t];
-      if (info != NULL  &&  mReleaseObjects)
+      if (info != nullptr  &&  mReleaseObjects)
         mArray[t] = info->duplicate();
       else
         mArray[t] = info;
@@ -154,7 +155,7 @@ void GridPointValueList::operator=(GridPointValueList& gridPointValueList)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -177,7 +178,7 @@ void GridPointValueList::operator=(const GridPointValueList& gridPointValueList)
     for (uint t=0; t<mSize; t++)
     {
       GridPointValue *info = gridPointValueList.mArray[t];
-      if (info != NULL  &&  mReleaseObjects)
+      if (info != nullptr  &&  mReleaseObjects)
         mArray[t] = info->duplicate();
       else
         mArray[t] = info;
@@ -186,7 +187,7 @@ void GridPointValueList::operator=(const GridPointValueList& gridPointValueList)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -198,7 +199,7 @@ void GridPointValueList::addGridPointValue(GridPointValue *gridPointValue)
 {
   try
   {
-    if (mArray == NULL  ||  mLength == mSize)
+    if (mArray == nullptr  ||  mLength == mSize)
     {
       increaseSize(mSize + mSize/5 + 10);
     }
@@ -212,7 +213,7 @@ void GridPointValueList::addGridPointValue(GridPointValue *gridPointValue)
 
     int idx = getClosestIndex(mComparisonMethod,*gridPointValue);
 
-    while (idx < (int)mLength  &&  mArray[idx] != NULL  &&   mArray[idx]->compare(mComparisonMethod,gridPointValue) < 0)
+    while (idx < (int)mLength  &&  mArray[idx] != nullptr  &&   mArray[idx]->compare(mComparisonMethod,gridPointValue) < 0)
     {
       idx++;
     }
@@ -232,7 +233,7 @@ void GridPointValueList::addGridPointValue(GridPointValue *gridPointValue)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -244,14 +245,14 @@ void GridPointValueList::clear()
 {
   try
   {
-    if (mArray != NULL)
+    if (mArray != nullptr)
     {
       for (uint t=0; t<mLength; t++)
       {
-        if (mArray[t] != NULL  &&  mReleaseObjects)
+        if (mArray[t] != nullptr  &&  mReleaseObjects)
         {
           delete(mArray[t]);
-          mArray[t] = NULL;
+          mArray[t] = nullptr;
         }
       }
       delete mArray;
@@ -263,12 +264,12 @@ void GridPointValueList::clear()
 
     for (uint t=0; t<100; t++)
     {
-      mArray[t] = NULL;
+      mArray[t] = nullptr;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -279,7 +280,7 @@ void GridPointValueList::increaseSize(uint newSize)
 {
   try
   {
-    if (mArray == NULL)
+    if (mArray == nullptr)
     {
       mSize = newSize;
       mLength = 0;
@@ -287,7 +288,7 @@ void GridPointValueList::increaseSize(uint newSize)
 
       for (uint t=0; t<mSize; t++)
       {
-        mArray[t] = NULL;
+        mArray[t] = nullptr;
       }
       return;
     }
@@ -301,7 +302,7 @@ void GridPointValueList::increaseSize(uint newSize)
       }
       else
       {
-        newArray[t] = NULL;
+        newArray[t] = nullptr;
       }
     }
 
@@ -311,7 +312,7 @@ void GridPointValueList::increaseSize(uint newSize)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -323,14 +324,14 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
 {
   try
   {
-    if (mArray == NULL  ||  mLength == 0)
+    if (mArray == nullptr  ||  mLength == 0)
           return 0;
 
     if (comparisonMethod != mComparisonMethod)
     {
       for (uint t=0; t<mLength; t++)
       {
-        if (mArray[t] != NULL)
+        if (mArray[t] != nullptr)
         {
           int res = mArray[t]->compare(comparisonMethod,&gridPointValue);
           if (res == 0)
@@ -365,18 +366,18 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
         high = mid - 1;
     }
 
-    if (mid >= 0  &&  mid < (int)mLength)
+    if (mid >= 0  &&  mid < (int)mLength  &&  mArray[mid] != nullptr)
     {
       if (mArray[mid]->compare(comparisonMethod,&gridPointValue) < 0)
       {
-        while (mid < (int)mSize  &&  mArray[mid] != NULL  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) < 0)
+        while (mid < (int)mSize  &&  mArray[mid] != nullptr  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) < 0)
           mid++;
 
         return mid-1;
       }
       else
       {
-        while (mid > 0  &&  mArray[mid] != NULL  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) > 0)
+        while (mid > 0  &&  mArray[mid] != nullptr  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) > 0)
           mid--;
 
         return mid;
@@ -386,7 +387,7 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -399,13 +400,13 @@ GridPointValue* GridPointValueList::getGridPointValueByIndex(uint index)
   try
   {
     if (index > mLength)
-      return NULL;
+      return nullptr;
 
     return mArray[index];
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -421,7 +422,7 @@ GridPointValue* GridPointValueList::getGridPointValueByIndexNoCheck(uint index)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -440,11 +441,11 @@ GridPointValue* GridPointValueList::getGridPointValueByFileMessageAndPoint(uint 
         return mArray[t];
       }
     }
-    return NULL;
+    return nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -462,11 +463,11 @@ GridPointValue* GridPointValueList::getGridPointValueByPointAndTime(double x,dou
         return mArray[t];
       }
     }
-    return NULL;
+    return nullptr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -478,13 +479,13 @@ GridPointValue* GridPointValueList::getPreviousGridPointValueByPointAndTime(doub
 {
   try
   {
-    GridPointValue *point = NULL;
+    GridPointValue *point = nullptr;
 
     for (uint t=0; t<mLength; t++)
     {
       if (mArray[t]->mX == x  &&  mArray[t]->mY == y  &&  mArray[t]->mLevel == level  &&  mArray[t]->mTime < time)
       {
-        if (point == NULL  ||  mArray[t]->mTime > point->mTime)
+        if (point == nullptr  ||  mArray[t]->mTime > point->mTime)
           point = mArray[t];
       }
     }
@@ -492,7 +493,7 @@ GridPointValue* GridPointValueList::getPreviousGridPointValueByPointAndTime(doub
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -504,13 +505,13 @@ GridPointValue* GridPointValueList::getNextGridPointValueByPointAndTime(double x
 {
   try
   {
-    GridPointValue *point = NULL;
+    GridPointValue *point = nullptr;
 
     for (uint t=0; t<mLength; t++)
     {
       if (mArray[t]->mX == x  &&  mArray[t]->mY == y  &&  mArray[t]->mLevel == level  &&  mArray[t]->mTime > time)
       {
-        if (point == NULL  ||  mArray[t]->mTime < point->mTime)
+        if (point == nullptr  ||  mArray[t]->mTime < point->mTime)
           point = mArray[t];
       }
     }
@@ -518,7 +519,7 @@ GridPointValue* GridPointValueList::getNextGridPointValueByPointAndTime(double x
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -540,7 +541,7 @@ void GridPointValueList::getGridPointValueListByPoint(double x,double y,T::Param
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -564,7 +565,7 @@ void GridPointValueList::getGridPointValueListByArea(double minX,double minY,dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -586,7 +587,7 @@ void GridPointValueList::getGridPointValueListByTime(T::TimeString time,GridPoin
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -608,7 +609,7 @@ void GridPointValueList::getGridPointValueListByTimeRange(T::TimeString startTim
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -630,7 +631,7 @@ void GridPointValueList::getGridPointValueListByValueRange(T::ParamValue minValu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -646,7 +647,7 @@ uint GridPointValueList::getLength()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -666,7 +667,7 @@ bool GridPointValueList::deleteGridPointValueByIndex(uint index)
     for (uint t=(uint)index+1; t<mSize; t++)
     {
       mArray[t-1] = mArray[t];
-      mArray[t] = NULL;
+      mArray[t] = nullptr;
     }
 
     if (mReleaseObjects)
@@ -677,7 +678,7 @@ bool GridPointValueList::deleteGridPointValueByIndex(uint index)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -693,7 +694,7 @@ bool GridPointValueList::getReleaseObjects()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -708,7 +709,7 @@ void GridPointValueList::setReleaseObjects(bool releaseObjects)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -730,7 +731,7 @@ void GridPointValueList::setComparisonMethod(GridPointValue::ComparisonMethod co
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -752,7 +753,7 @@ void GridPointValueList::sort(GridPointValue::ComparisonMethod comparisonMethod)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -778,7 +779,7 @@ T::ParamValue GridPointValueList::getMaxValue()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -808,7 +809,7 @@ T::ParamValue GridPointValueList::getMaxValueByTime(T::TimeString time)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -834,7 +835,7 @@ T::ParamValue GridPointValueList::getMinValue()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -864,7 +865,7 @@ T::ParamValue GridPointValueList::getMinValueByTime(T::TimeString time)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -890,7 +891,7 @@ T::ParamValue GridPointValueList::getAverageValue()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -921,7 +922,7 @@ T::ParamValue GridPointValueList::getAverageValueByTime(T::TimeString time)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -948,7 +949,7 @@ uint GridPointValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::Pa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -961,21 +962,21 @@ T::ParamValue GridPointValueList::getTimeInterpolatedValue(double x,double y,T::
   try
   {
     T::GridPointValue *point = getGridPointValueByPointAndTime(x,y,level,time);
-    if (point != NULL)
+    if (point != nullptr)
     {
       // Exact time match - no interpolation needed.
       return point->mValue;
     }
 
     T::GridPointValue *prevPoint = getPreviousGridPointValueByPointAndTime(x,y,level,time);
-    if (prevPoint == NULL)
+    if (prevPoint == nullptr)
     {
       // The current time is outside of the time range
       return ParamValueMissing;
     }
 
     T::GridPointValue *nextPoint = getNextGridPointValueByPointAndTime(x,y,level,time);
-    if (nextPoint == NULL)
+    if (nextPoint == nullptr)
     {
       // The current time is outside of the time range
       return ParamValueMissing;
@@ -998,7 +999,7 @@ T::ParamValue GridPointValueList::getTimeInterpolatedValue(double x,double y,T::
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1022,7 +1023,7 @@ void GridPointValueList::getGridPointValueListByTimeSteps(double x,double y,T::P
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -1040,7 +1041,7 @@ void GridPointValueList::print(std::ostream& stream,uint level,uint optionFlags)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

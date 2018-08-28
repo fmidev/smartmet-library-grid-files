@@ -21,17 +21,36 @@ namespace GRIB2 {
 CrossSection::CrossSection() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+CrossSection::CrossSection(const CrossSection &other) : GridDefinition(other) {
+  try {
+    mEarthShape = other.mEarthShape;
+    mNumberOfHorizontalPoints = other.mNumberOfHorizontalPoints;
+    mBasicAngleOfTheInitialProductionDomain = other.mBasicAngleOfTheInitialProductionDomain;
+    mSubdivisionsOfBasicAngle = other.mSubdivisionsOfBasicAngle;
+    mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
+    mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
+    mScanningMode = other.mScanningMode;
+    mLatitudeOfLastGridPoint = other.mLatitudeOfLastGridPoint;
+    mLongitudeOfLastGridPoint = other.mLongitudeOfLastGridPoint;
+    mTypeOfHorizontalLine = other.mTypeOfHorizontalLine;
+    mNumberOfVerticalPoints = other.mNumberOfVerticalPoints;
+    mMeaningOfVerticalCoordinate = other.mMeaningOfVerticalCoordinate;
+    mVerticalCoordinate = other.mVerticalCoordinate;
+    mNC = other.mNC;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 CrossSection::~CrossSection() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -56,7 +75,33 @@ void CrossSection::read(MemoryReader &memoryReader) {
     mVerticalCoordinate = memoryReader.read_UInt8_opt();
     mNC = memoryReader.read_UInt16_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void CrossSection::write(DataWriter &dataWriter) {
+  try {
+    mEarthShape.write(dataWriter);
+    dataWriter << mNumberOfHorizontalPoints;
+    dataWriter << mBasicAngleOfTheInitialProductionDomain;
+    dataWriter << mSubdivisionsOfBasicAngle;
+    dataWriter << mLatitudeOfFirstGridPoint;
+    dataWriter << mLongitudeOfFirstGridPoint;
+    mScanningMode.write(dataWriter);
+    dataWriter << mLatitudeOfLastGridPoint;
+    dataWriter << mLongitudeOfLastGridPoint;
+    dataWriter << mTypeOfHorizontalLine;
+    dataWriter << mNumberOfVerticalPoints;
+    dataWriter << mMeaningOfVerticalCoordinate;
+    dataWriter << mVerticalCoordinate;
+    dataWriter << mNC;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -98,7 +143,7 @@ void CrossSection::getAttributeList(std::string prefix, T::AttributeList &attrib
     sprintf(name, "%sCrossSection.NC", prefix.c_str());
     attributeList.addAttribute(name, toString(mNC));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -127,7 +172,7 @@ void CrossSection::print(std::ostream &stream, uint level, uint optionFlags) con
     stream << space(level) << "- VerticalCoordinate = " << toString(mVerticalCoordinate) << "\n";
     stream << space(level) << "- NC = " << toString(mNC) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -160,17 +205,31 @@ T::Hash CrossSection::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method return the template number of the current class. */
+
+uint CrossSection::getTemplateNumber() const {
+  return 1000;
+}
+
+GridDefinition *CrossSection::createGridDefinition() const {
+  try {
+    return (GridDefinition *)new CrossSection(*this);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mEarthShape} attribute. */
 
-const EarthShapeSettings *CrossSection::getEarthShape() const {
+EarthShapeSettings *CrossSection::getEarthShape() const {
   try {
-    return &mEarthShape;
+    return (EarthShapeSettings *)&mEarthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -180,7 +239,7 @@ const T::UInt32_opt &CrossSection::getNumberOfHorizontalPoints() const {
   try {
     return mNumberOfHorizontalPoints;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -190,7 +249,7 @@ const T::UInt32_opt &CrossSection::getBasicAngleOfTheInitialProductionDomain() c
   try {
     return mBasicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -200,7 +259,7 @@ const T::UInt32_opt &CrossSection::getSubdivisionsOfBasicAngle() const {
   try {
     return mSubdivisionsOfBasicAngle;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -210,7 +269,7 @@ const T::Int32_opt &CrossSection::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -220,17 +279,17 @@ const T::UInt32_opt &CrossSection::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The method returns the pointer to the {@link mScanningMode} attribute. */
 
-const ScanningModeSettings *CrossSection::getScanningMode() const {
+ScanningModeSettings *CrossSection::getScanningMode() const {
   try {
-    return &mScanningMode;
+    return (ScanningModeSettings *)&mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -240,7 +299,7 @@ const T::Int32_opt &CrossSection::getLatitudeOfLastGridPoint() const {
   try {
     return mLatitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -250,7 +309,7 @@ const T::UInt32_opt &CrossSection::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -260,7 +319,7 @@ const T::UInt8_opt &CrossSection::getTypeOfHorizontalLine() const {
   try {
     return mTypeOfHorizontalLine;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -270,7 +329,7 @@ const T::UInt16_opt &CrossSection::getNumberOfVerticalPoints() const {
   try {
     return mNumberOfVerticalPoints;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -280,7 +339,7 @@ const T::UInt8_opt &CrossSection::getMeaningOfVerticalCoordinate() const {
   try {
     return mMeaningOfVerticalCoordinate;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -290,7 +349,7 @@ const T::UInt8_opt &CrossSection::getVerticalCoordinate() const {
   try {
     return mVerticalCoordinate;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -300,15 +359,15 @@ const T::UInt16_opt &CrossSection::getNC() const {
   try {
     return mNC;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void CrossSection::setEarthShape(EarthShapeSettings earthShape) {
+void CrossSection::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -316,7 +375,7 @@ void CrossSection::setNumberOfHorizontalPoints(T::UInt32_opt numberOfHorizontalP
   try {
     mNumberOfHorizontalPoints = numberOfHorizontalPoints;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -324,7 +383,7 @@ void CrossSection::setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basic
   try {
     mBasicAngleOfTheInitialProductionDomain = basicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -332,7 +391,7 @@ void CrossSection::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasic
   try {
     mSubdivisionsOfBasicAngle = subdivisionsOfBasicAngle;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -340,7 +399,7 @@ void CrossSection::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridP
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -348,15 +407,15 @@ void CrossSection::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGr
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-void CrossSection::setScanningMode(ScanningModeSettings scanningMode) {
+void CrossSection::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -364,7 +423,7 @@ void CrossSection::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoi
   try {
     mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -372,7 +431,7 @@ void CrossSection::setLongitudeOfLastGridPoint(T::UInt32_opt longitudeOfLastGrid
   try {
     mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -380,7 +439,7 @@ void CrossSection::setTypeOfHorizontalLine(T::UInt8_opt typeOfHorizontalLine) {
   try {
     mTypeOfHorizontalLine = typeOfHorizontalLine;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -388,7 +447,7 @@ void CrossSection::setNumberOfVerticalPoints(T::UInt16_opt numberOfVerticalPoint
   try {
     mNumberOfVerticalPoints = numberOfVerticalPoints;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -396,7 +455,7 @@ void CrossSection::setMeaningOfVerticalCoordinate(T::UInt8_opt meaningOfVertical
   try {
     mMeaningOfVerticalCoordinate = meaningOfVerticalCoordinate;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -404,7 +463,7 @@ void CrossSection::setVerticalCoordinate(T::UInt8_opt verticalCoordinate) {
   try {
     mVerticalCoordinate = verticalCoordinate;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -412,7 +471,7 @@ void CrossSection::setNC(T::UInt16_opt nC) {
   try {
     mNC = nC;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

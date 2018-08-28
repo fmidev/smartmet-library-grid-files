@@ -17,10 +17,39 @@ DeprecatedSatelliteProductImpl::DeprecatedSatelliteProductImpl()
 
 
 
+/*! \brief The copy constructor of the class. */
+
+DeprecatedSatelliteProductImpl::DeprecatedSatelliteProductImpl(const DeprecatedSatelliteProductImpl& other)
+:DeprecatedSatelliteProduct(other)
+{
+}
+
+
+
+
+
 /*! \brief The destructor of the class. */
 
 DeprecatedSatelliteProductImpl::~DeprecatedSatelliteProductImpl()
 {
+}
+
+
+
+
+
+/*! \brief The method creates a duplicate of the current object. */
+
+ProductDefinition* DeprecatedSatelliteProductImpl::createProductDefinition() const
+{
+  try
+  {
+    return (ProductDefinition*)new DeprecatedSatelliteProductImpl(*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -45,7 +74,7 @@ void DeprecatedSatelliteProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 

@@ -22,17 +22,25 @@ RotationSettings::RotationSettings() {
   try {
     mAngleOfRotation = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The copy constructor of the class. */
+
+RotationSettings::RotationSettings(const RotationSettings &other) {
+  try {
+    mLatitudeOfSouthernPole = other.mLatitudeOfSouthernPole;
+    mLongitudeOfSouthernPole = other.mLongitudeOfSouthernPole;
+    mAngleOfRotation = other.mAngleOfRotation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
 /*! \brief The destructor of the class. */
 
 RotationSettings::~RotationSettings() {
-  try {
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
-  }
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
@@ -46,7 +54,22 @@ void RotationSettings::read(MemoryReader &memoryReader) {
     mLongitudeOfSouthernPole = memoryReader.read_UInt32_opt();
     mAngleOfRotation = memoryReader.read_float();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method writes all data related to the current object.
+
+        \param dataWriter  This object is used for writing the object data.
+*/
+
+void RotationSettings::write(DataWriter &dataWriter) {
+  try {
+    dataWriter << mLatitudeOfSouthernPole;
+    dataWriter << mLongitudeOfSouthernPole;
+    dataWriter << mAngleOfRotation;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -66,7 +89,7 @@ void RotationSettings::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sRotationSettings.AngleOfRotation", prefix.c_str());
     attributeList.addAttribute(name, toString(mAngleOfRotation));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -84,7 +107,7 @@ void RotationSettings::print(std::ostream &stream, uint level, uint optionFlags)
     stream << space(level) << "- LongitudeOfSouthernPole = " << toString(mLongitudeOfSouthernPole) << "\n";
     stream << space(level) << "- AngleOfRotation = " << toString(mAngleOfRotation) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -100,7 +123,7 @@ T::Hash RotationSettings::countHash() {
     boost::hash_combine(seed, mAngleOfRotation);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -110,7 +133,7 @@ const T::Int32_opt &RotationSettings::getLatitudeOfSouthernPole() const {
   try {
     return mLatitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -120,7 +143,7 @@ const T::UInt32_opt &RotationSettings::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -130,7 +153,7 @@ float RotationSettings::getAngleOfRotation() const {
   try {
     return mAngleOfRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -138,7 +161,7 @@ void RotationSettings::setLatitudeOfSouthernPole(T::Int32_opt latitudeOfSouthern
   try {
     mLatitudeOfSouthernPole = latitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -146,7 +169,7 @@ void RotationSettings::setLongitudeOfSouthernPole(T::UInt32_opt longitudeOfSouth
   try {
     mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -154,7 +177,7 @@ void RotationSettings::setAngleOfRotation(float angleOfRotation) {
   try {
     mAngleOfRotation = angleOfRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
