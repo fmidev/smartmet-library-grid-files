@@ -85,7 +85,7 @@ ulonglong MemoryReader::getDataSize()
 {
   try
   {
-    return (ulonglong)(endPtr-startPtr);
+    return C_UINT64(endPtr-startPtr);
   }
   catch (...)
   {
@@ -201,7 +201,7 @@ ulonglong MemoryReader::getReadPosition()
 {
   try
   {
-    return (ulonglong)(readPtr-startPtr);
+    return C_UINT64(readPtr-startPtr);
   }
   catch (...)
   {
@@ -217,7 +217,7 @@ ulonglong MemoryReader::getGlobalReadPosition()
 {
   try
   {
-    return (ulonglong)(readPtr-parentPtr);
+    return C_UINT64(readPtr-parentPtr);
   }
   catch (...)
   {

@@ -9,41 +9,44 @@ namespace SmartMet
 namespace GRIB2
 {
 
+typedef std::vector<Message*> Message_pvec;
+
+
 class GribFile : public GRID::PhysicalGridFile
 {
   public:
 
-                        GribFile();
-                        GribFile(const GribFile& other);
-    virtual             ~GribFile();
+                    GribFile();
+                    GribFile(const GribFile& other);
+    virtual         ~GribFile();
 
     // ### Common methods for all file types
 
-    GRID::GridFile*     createGridFile();
-    void                deleteUsers();
-    T::FileType         getFileType() const;
-    std::string         getFileTypeString() const;
-    GRID::Message*      getMessageByIndex(std::size_t index);
-    std::size_t         getNumberOfMessages();
+    GRID::GridFile* createGridFile();
+    void            deleteUsers();
+    T::FileType     getFileType() const;
+    std::string     getFileTypeString() const;
+    GRID::Message*  getMessageByIndex(std::size_t index);
+    std::size_t     getNumberOfMessages();
 
-    GRID::Message*      addMessage();
-    void                addMessage(GRID::Message *message);
-    void                addMessage(GRIB2::Message *message);
+    GRID::Message*  addMessage();
+    void            addMessage(GRID::Message *message);
+    void            addMessage(GRIB2::Message *message);
 
-    void                print(std::ostream& stream,uint level,uint optionFlags) const;
-    void                read(std::string filename);
-    void                read(MemoryReader& memoryReader);
-    void                write(std::string filename);
-    void                write(DataWriter& dataWriter);
+    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void            read(std::string filename);
+    void            read(MemoryReader& memoryReader);
+    void            write(std::string filename);
+    void            write(DataWriter& dataWriter);
 
   private:
 
-    T::Data_ptr_vec     searchMessageLocations(MemoryReader& memoryReader);
-    void                readMessage(MemoryReader& memoryReader,uint messageIndex);
+    T::Data_ptr_vec searchMessageLocations(MemoryReader& memoryReader);
+    void            readMessage(MemoryReader& memoryReader,uint messageIndex);
 
     /*! \brief  The message object pointers. */
-    std::vector<Message*> mMessages;
+    Message_pvec    mMessages;
 };
 
-}  // namespace GRID
+}  // namespace GRIB2
 }  // namespace SmartMet

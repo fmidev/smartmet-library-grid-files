@@ -393,12 +393,12 @@ double grib_power(long s,long n)
     double divisor = 1.0;
     while (s < 0)
     {
-      divisor = divisor / (double)n;
+      divisor = divisor / C_DOUBLE(n);
       s++;
     }
     while (s > 0)
     {
-      divisor = divisor * (double)n;
+      divisor = divisor * C_DOUBLE(n);
       s--;
     }
     return divisor;
@@ -500,11 +500,11 @@ uint stringToId(const char *str,uint len)
 
     while (str[idx] != '\0'  &&  idx < len)
     {
-      id = id + (uint)str[idx]*(idx+123) + (uint)str[idx];
+      id = id + C_UINT(str[idx])*(idx+123) + str[idx];
       //printf("%u:%c:%llu\n",idx,str[idx],id);
       idx++;
     }
-    return (uint)(id & 0xFFFFFFFF);
+    return C_UINT(id & 0xFFFFFFFF);
   }
   catch (...)
   {
@@ -542,7 +542,7 @@ int getInt(const char *str,uint startIdx,uint len)
     char buf[100];
     strncpy(buf,str+startIdx,len);
     buf[len] = '\0';
-    return atoi(buf);
+    return toInt64(buf);
   }
   catch (...)
   {
@@ -799,6 +799,44 @@ time_t toTimeT(boost::posix_time::ptime tim)
 
 
 
+long long toInt64(const char *str)
+{
+  try
+  {
+    if (str == nullptr)
+      return 0;
+
+    return atoll(str);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+double toDouble(const char *str)
+{
+  try
+  {
+    if (str == nullptr)
+      return 0.0;
+
+    return atof(str);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 std::string toString(std::array<char,16> value)
 {
   try
@@ -820,7 +858,7 @@ std::string toString(std::int8_t value)
 {
   try
   {
-    return std::to_string((int)value);
+    return std::to_string(C_INT(value));
   }
   catch (...)
   {
@@ -836,7 +874,7 @@ std::string toString(std::int16_t value)
 {
   try
   {
-    return std::to_string((int)value);
+    return std::to_string(value);
   }
   catch (...)
   {
@@ -852,7 +890,7 @@ std::string toString(std::int32_t value)
 {
   try
   {
-    return std::to_string((int)value);
+    return std::to_string(value);
   }
   catch (...)
   {
@@ -868,7 +906,7 @@ std::string toString(std::int64_t value)
 {
   try
   {
-    return std::to_string((int)value);
+    return std::to_string(value);
   }
   catch (...)
   {
@@ -884,7 +922,7 @@ std::string toString(std::uint8_t value)
 {
   try
   {
-    return std::to_string((uint)value);
+    return std::to_string(C_UINT(value));
   }
   catch (...)
   {
@@ -900,7 +938,7 @@ std::string toString(std::uint16_t value)
 {
   try
   {
-    return std::to_string((uint)value);
+    return std::to_string(value);
   }
   catch (...)
   {
@@ -916,7 +954,7 @@ std::string toString(std::uint32_t value)
 {
   try
   {
-    return std::to_string((uint)value);
+    return std::to_string(value);
   }
   catch (...)
   {
@@ -932,7 +970,7 @@ std::string toString(std::uint64_t value)
 {
   try
   {
-    return std::to_string((uint)value);
+    return std::to_string(value);
   }
   catch (...)
   {
@@ -1003,7 +1041,7 @@ std::string toString(T::UInt8_opt value)
     if (!value)
       return std::string("");
 
-    return std::to_string((uint)(*value));
+    return std::to_string(C_UINT(*value));
   }
   catch (...)
   {
@@ -1022,7 +1060,7 @@ std::string toString(T::UInt16_opt value)
     if (!value)
       return std::string("");
 
-    return std::to_string((uint)(*value));
+    return std::to_string(*value);
   }
   catch (...)
   {
@@ -1041,7 +1079,7 @@ std::string toString(T::UInt32_opt value)
     if (!value)
       return std::string("");
 
-    return std::to_string((uint)(*value));
+    return std::to_string(*value);
   }
   catch (...)
   {
@@ -1060,7 +1098,7 @@ std::string toString(T::UInt64_opt value)
     if (!value)
       return std::string("");
 
-    return std::to_string((uint)(*value));
+    return std::to_string(*value);
   }
   catch (...)
   {
@@ -1079,7 +1117,7 @@ std::string toString(T::Int8_opt value)
     if (!value)
       return std::string("");
 
-    return std::to_string((int)(*value));
+    return std::to_string(C_INT(*value));
   }
   catch (...)
   {
@@ -1098,7 +1136,7 @@ std::string toString(T::Int16_opt value)
     if (!value)
       return std::string("");
 
-    return std::to_string((int)(*value));
+    return std::to_string(*value);
   }
   catch (...)
   {
@@ -1117,7 +1155,7 @@ std::string toString(T::Int32_opt value)
     if (!value)
       return std::string("");
 
-    return std::to_string((int)(*value));
+    return std::to_string(*value);
   }
   catch (...)
   {
@@ -1136,7 +1174,7 @@ std::string toString(T::Int64_opt value)
     if (!value)
       return std::string("");
 
-    return std::to_string((int)(*value));
+    return std::to_string(*value);
   }
   catch (...)
   {
@@ -1286,7 +1324,7 @@ void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordin
     {
       for (uint t = 0; t<c; t = t + 2)
       {
-        coordinates.push_back(T::Coordinate(atof(field[t+1]),atof(field[t])));
+        coordinates.push_back(T::Coordinate(toDouble(field[t+1]),toDouble(field[t])));
       }
     }
   }
@@ -1434,7 +1472,7 @@ void splitString(const char *str,char separator,std::vector<double>& partList)
       if (*p == separator  &&  !ind)
       {
         buf[c] = '\0';
-        partList.push_back(atof(buf));
+        partList.push_back(toDouble(buf));
         c = 0;
       }
       else
@@ -1447,7 +1485,7 @@ void splitString(const char *str,char separator,std::vector<double>& partList)
     if (c > 0)
     {
       buf[c] = '\0';
-      partList.push_back(atof(buf));
+      partList.push_back(toDouble(buf));
     }
   }
   catch (...)
@@ -1493,7 +1531,7 @@ void splitString(const char *str,char separator,std::vector<float>& partList)
       if (*p == separator  &&  !ind)
       {
         buf[c] = '\0';
-        partList.push_back(atof(buf));
+        partList.push_back(toDouble(buf));
         c = 0;
       }
       else
@@ -1506,7 +1544,7 @@ void splitString(const char *str,char separator,std::vector<float>& partList)
     if (c > 0)
     {
       buf[c] = '\0';
-      partList.push_back(atof(buf));
+      partList.push_back(toDouble(buf));
     }
   }
   catch (...)

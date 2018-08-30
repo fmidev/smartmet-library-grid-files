@@ -12,7 +12,7 @@ namespace GRIB2
 
 IrregularLatLonImpl::IrregularLatLonImpl()
 {
-  mGridProjection = T::GridProjection::IrregularLatLon;
+  mGridProjection = T::GridProjectionValue::IrregularLatLon;
 }
 
 
@@ -113,7 +113,7 @@ T::Dimensions IrregularLatLonImpl::getGridDimensions() const
 {
   try
   {
-    return {};
+    return T::Dimensions();
   }
   catch (...)
   {

@@ -153,7 +153,7 @@ void ConfigurationFile::readFile(std::string filename)
       mFilename = filename;
 
     mCurrentFilename = filename;
-    FILE *file = fopen(filename.c_str(),"r");
+    FILE *file = fopen(filename.c_str(),"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open the configuration file!");
@@ -219,7 +219,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilenam
   FUNCTION_TRACE
   try
   {
-    FILE *inFile = fopen(inputFilename.c_str(),"r");
+    FILE *inFile = fopen(inputFilename.c_str(),"re");
     if (inFile == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open the input file!");
@@ -227,7 +227,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilenam
       throw exception;
     }
 
-    FILE *outFile = fopen(outputFilename.c_str(),"w");
+    FILE *outFile = fopen(outputFilename.c_str(),"we");
     if (outFile == nullptr)
     {
       fclose(inFile);
@@ -351,7 +351,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
           throw exception;
         }
 
-        attributeValue = atof(val.c_str());
+        attributeValue = toDouble(val.c_str());
         return true;
       }
     }
@@ -427,7 +427,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,int& attribu
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = (int)val;
+    attributeValue = val;
     return result;
   }
   catch (...)
@@ -490,7 +490,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,long long& a
           throw exception;
         }
 
-        attributeValue = atoll(val.c_str());
+        attributeValue = toInt64(val.c_str());
         return true;
       }
     }
@@ -1377,7 +1377,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
   FUNCTION_TRACE
   try
   {
-    //printf("READ ATTR [%d: %d,%d] : %s\n",pos,(int)(wordPositions[pos] >> 32),(int)(wordPositions[pos] & 0xFFFFFFFF),words[pos].c_str());
+    //printf("READ ATTR [%d: %d,%d] : %s\n",pos,(wordPositions[pos] >> 32),(int)(wordPositions[pos] & 0xFFFFFFFF),words[pos].c_str());
     if (pos >= len)
       return pos;
 
@@ -1446,7 +1446,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
     else
     if ((pos+1) < len  &&  words[pos] == "@location")
     {
-      printf("*** %s [%d:%d]\n",mCurrentFilename.c_str(),(int)(wordPositions[pos] >> 32),(int)(wordPositions[pos] & 0xFFFFFFFF));
+      printf("*** %s [%d:%d]\n",mCurrentFilename.c_str(),C_INT(wordPositions[pos] >> 32),C_INT(wordPositions[pos] & 0xFFFFFFFF));
     }
     else
     if ((pos+1) < len  &&  words[pos] == "@throw")

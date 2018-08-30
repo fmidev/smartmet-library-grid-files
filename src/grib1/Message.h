@@ -102,7 +102,7 @@ class Message : public GRID::Message
     bool                setProperty(uint propertyId,long long value);
 
     void                setGridGeometryId(T::GeometryId geometryId);
-    void                setGridValueCompressionMethod(T::CompressionMethod compressionMethod);
+    void                setGridValueCompressionMethod(ushort compressionMethod);
 
     void                setGribFilePtr(GribFile *gribFile);
 
@@ -176,14 +176,15 @@ class Message : public GRID::Message
 
   public:
 
-    enum SectionNumber
+    class SectionNumber
     {
-      indicator_section = 0,
-      product_section   = 1,
-      grid_section      = 2,
-      bitmap_section    = 3,
-      data_section      = 4,
-      end_section       = 5
+      public:
+        static const uchar indicator_section = 0;
+        static const uchar product_section   = 1;
+        static const uchar grid_section      = 2;
+        static const uchar bitmap_section    = 3;
+        static const uchar data_section      = 4;
+        static const uchar end_section       = 5;
     };
 };
 

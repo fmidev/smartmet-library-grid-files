@@ -291,7 +291,7 @@ void DataSection::read(MemoryReader& memoryReader)
 
 
 
-void DataSection::setDataDefinition(T::CompressionMethod compressionMethod)
+void DataSection::setDataDefinition(ushort compressionMethod)
 {
   try
   {
@@ -360,7 +360,7 @@ void DataSection::setDataDefinition(T::CompressionMethod compressionMethod)
     if (dataDefinition == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Unsupported compression method!");
-      exception.addParameter("CompressionMethod",std::to_string((uint)compressionMethod));
+      exception.addParameter("CompressionMethod",std::to_string(compressionMethod));
       throw exception;
     }
 

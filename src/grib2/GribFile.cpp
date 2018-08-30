@@ -133,7 +133,7 @@ void GribFile::read(MemoryReader& memoryReader)
     auto endAddr = memoryReader.getEndPtr();
 
     // Scan the messages
-    uint sz = (uint)gribs.size();
+    uint sz = gribs.size();
     for (uint i = 0; i < sz; i++)
     {
       auto ptr = gribs[i];
@@ -306,7 +306,7 @@ T::FileType GribFile::getFileType() const
 {
   try
   {
-    return T::FileType::Grib2;
+    return T::FileTypeValue::Grib2;
   }
   catch (...)
   {

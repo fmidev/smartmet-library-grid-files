@@ -14,16 +14,16 @@ std::string get_fileTypeString(FileType fileType)
   {
     switch (fileType)
     {
-      case FileType::Unknown:
+      case FileTypeValue::Unknown:
         return "Unknown";
 
-      case FileType::Grib1:
+      case FileTypeValue::Grib1:
         return "GRIB 1";
 
-      case FileType::Grib2:
+      case FileTypeValue::Grib2:
         return "GRIB 2";
 
-      case FileType::Virtual:
+      case FileTypeValue::Virtual:
         return "Virtual";
     }
     return "Undefined";
@@ -44,19 +44,19 @@ std::string get_gridLayoutString(GridLayout layout)
   {
     switch (layout)
     {
-      case GridLayout::Unknown:
+      case GridLayoutValue::Unknown:
         return "Unknown";
 
-      case GridLayout::Regular:
+      case GridLayoutValue::Regular:
         return "Reqular";
 
-      case GridLayout::Irregular:
+      case GridLayoutValue::Irregular:
         return "Irregular";
 
-      case GridLayout::Points:
+      case GridLayoutValue::Points:
         return "Points";
 
-      case GridLayout::Data:
+      case GridLayoutValue::Data:
         return "Data";
     }
     return "Undefined";
@@ -191,79 +191,79 @@ std::string get_levelInterpolationMethodString(short interpolationMethod)
 
 
 
-std::string get_gridProjectionString(GridProjection gridType)
+std::string get_gridProjectionString(GridProjection projection)
 {
   try
   {
-    switch (gridType)
+    switch (projection)
     {
-      case GridProjection::Unknown:
+      case GridProjectionValue::Unknown:
         return "Unknown";
-      case GridProjection::LatLon:
+      case GridProjectionValue::LatLon:
         return "LatLon";
-      case GridProjection::RotatedLatLon:
+      case GridProjectionValue::RotatedLatLon:
         return "RotatedLatLon";
-      case GridProjection::StretchedLatLon:
+      case GridProjectionValue::StretchedLatLon:
         return "StretchedLatLon";
-      case GridProjection::StretchedRotatedLatLon:
+      case GridProjectionValue::StretchedRotatedLatLon:
         return "StretchedRotatedLatLon";
-      case GridProjection::VariableResolutionLatLon:
+      case GridProjectionValue::VariableResolutionLatLon:
         return "VariableResolutionLatLon";
-      case GridProjection::VariableResolutionRotatedLatLon:
+      case GridProjectionValue::VariableResolutionRotatedLatLon:
         return "VariableResolutionRotatedLatLon";
-      case GridProjection::Mercator:
+      case GridProjectionValue::Mercator:
         return "Mercator";
-      case GridProjection::TransverseMercator:
+      case GridProjectionValue::TransverseMercator:
         return "TransverseMercator";
-      case GridProjection::PolarStereographic:
+      case GridProjectionValue::PolarStereographic:
         return "PolarStereographic";
-      case GridProjection::LambertConformal:
+      case GridProjectionValue::LambertConformal:
         return "LambertConformal";
-      case GridProjection::ObliqueLambertConformal:
+      case GridProjectionValue::ObliqueLambertConformal:
         return "ObliqueLambertConformal";
-      case GridProjection::Albers:
+      case GridProjectionValue::Albers:
         return "Albers";
-      case GridProjection::Gaussian:
+      case GridProjectionValue::Gaussian:
         return "Gaussian";
-      case GridProjection::RotatedGaussian:
+      case GridProjectionValue::RotatedGaussian:
         return "RotatedGaussian";
-      case GridProjection::StretchedGaussian:
+      case GridProjectionValue::StretchedGaussian:
         return "StretchedGaussian";
-      case GridProjection::StretchedRotatedGaussian:
+      case GridProjectionValue::StretchedRotatedGaussian:
         return "StretchedRotatedGaussian";
-      case GridProjection::SphericalHarmonic:
+      case GridProjectionValue::SphericalHarmonic:
         return "SphericalHarmonic";
-      case GridProjection::RotatedSphericalHarmonic:
+      case GridProjectionValue::RotatedSphericalHarmonic:
         return "RotatedSphericalHarmonic";
-      case GridProjection::StretchedSphericalHarmonic:
+      case GridProjectionValue::StretchedSphericalHarmonic:
         return "StretchedSphericalHarmonic";
-      case GridProjection::StretchedRotatedSphericalHarmonic:
+      case GridProjectionValue::StretchedRotatedSphericalHarmonic:
         return "StretchedRotatedSphericalHarmonic";
-      case GridProjection::SpaceView:
+      case GridProjectionValue::SpaceView:
         return "SpaceView";
-      case GridProjection::Triangular:
+      case GridProjectionValue::Triangular:
         return "Triangular";
-      case GridProjection::Unstructured:
+      case GridProjectionValue::Unstructured:
         return "Unstructured";
-      case GridProjection::EquatorialAzimuthalEquidistant:
+      case GridProjectionValue::EquatorialAzimuthalEquidistant:
         return "EquatorialAzimuthalEquidistant";
-      case GridProjection::AzimuthRange:
+      case GridProjectionValue::AzimuthRange:
         return "AzimuthRange";
-      case GridProjection::IrregularLatLon:
+      case GridProjectionValue::IrregularLatLon:
         return "IrregularLatLon";
-      case GridProjection::LambertAzimuthalEqualArea:
+      case GridProjectionValue::LambertAzimuthalEqualArea:
         return "LambertAzimuthalEqualArea";
-      case GridProjection::CrossSection:
+      case GridProjectionValue::CrossSection:
         return "CrossSection";
-      case GridProjection::Hovmoller:
+      case GridProjectionValue::Hovmoller:
         return "Hovmoller";
-      case GridProjection::TimeSection:
+      case GridProjectionValue::TimeSection:
         return "TimeSection";
-      case GridProjection::GnomonicProjection:
+      case GridProjectionValue::GnomonicProjection:
         return "GnomonicProjection";
-      case GridProjection::SimplePolyconicProjection:
+      case GridProjectionValue::SimplePolyconicProjection:
         return "SimplePolyconicProjection";
-      case GridProjection::MillersCylindricalProjection:
+      case GridProjectionValue::MillersCylindricalProjection:
         return "MillersCylindricalProjection";
     }
 

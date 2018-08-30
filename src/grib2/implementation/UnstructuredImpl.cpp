@@ -11,7 +11,7 @@ namespace GRIB2
 
 UnstructuredImpl::UnstructuredImpl()
 {
-  mGridProjection = T::GridProjection::Unstructured;
+  mGridProjection = T::GridProjectionValue::Unstructured;
 }
 
 
@@ -112,7 +112,7 @@ T::Dimensions UnstructuredImpl::getGridDimensions() const
 {
   try
   {
-    return {};
+    return T::Dimensions();
   }
   catch (...)
   {

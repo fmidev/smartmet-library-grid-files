@@ -48,7 +48,7 @@ void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
 {
   try
   {
-    //printf("IndexCacheSize = %u\n",(uint)mHashVector.size());
+    //printf("IndexCacheSize = %u\n",mHashVector.size());
     AutoThreadLock lock(&mThreadLock);
 
     if (mHashVector.size() == 0)
@@ -84,7 +84,7 @@ void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
     mTimeVector.insert(mTimeVector.begin()+idx+1,time(0));
     mVector.insert(mVector.begin()+idx+1,indexVector);
 
-    if ((uint)mVector.size() >  mMaxSize)
+    if (mVector.size() >  mMaxSize)
       removeOldest();
   }
   catch (...)
@@ -220,7 +220,7 @@ void IndexCache::removeOldest()
 {
   try
   {
-    uint sz = (uint)mTimeVector.size();
+    uint sz = mTimeVector.size();
     if (sz == 0)
       return;
 

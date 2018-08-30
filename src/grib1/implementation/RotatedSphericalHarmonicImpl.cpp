@@ -11,7 +11,7 @@ namespace GRIB1
 
 RotatedSphericalHarmonicImpl::RotatedSphericalHarmonicImpl()
 {
-  mGridProjection = T::GridProjection::RotatedSphericalHarmonic;
+  mGridProjection = T::GridProjectionValue::RotatedSphericalHarmonic;
 }
 
 
@@ -112,7 +112,7 @@ T::Dimensions RotatedSphericalHarmonicImpl::getGridDimensions() const
 {
   try
   {
-    return {};
+    return T::Dimensions();
   }
   catch (...)
   {

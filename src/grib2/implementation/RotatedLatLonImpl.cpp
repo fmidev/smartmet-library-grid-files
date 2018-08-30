@@ -17,7 +17,7 @@ namespace GRIB2
 
 RotatedLatLonImpl::RotatedLatLonImpl()
 {
-  mGridProjection = T::GridProjection::RotatedLatLon;
+  mGridProjection = T::GridProjectionValue::RotatedLatLon;
 }
 
 
@@ -103,15 +103,18 @@ T::Coordinate_vec RotatedLatLonImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
+      return coordinateList;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
-    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
-    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+    uint ni = (*mLatLon.getGrid()->getNi());
+    uint nj = (*mLatLon.getGrid()->getNj());
 
-    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -157,18 +160,21 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    double southPoleLat = (double)(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double southPoleLon = (double)(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
+      return coordinateList;
 
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
+    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
 
-    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
-    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
-    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+    uint ni = (*mLatLon.getGrid()->getNi());
+    uint nj = (*mLatLon.getGrid()->getNj());
 
-    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -223,21 +229,24 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
 {
   try
   {
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    uint nj = (uint)(*mLatLon.getGrid()->getNj());
-
-    if ((double)grid_i > (double)ni)
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return false;
 
-    if ((double)grid_j > (double)nj)
+    uint ni = (*mLatLon.getGrid()->getNi());
+    uint nj = (*mLatLon.getGrid()->getNj());
+
+    if (grid_i > ni)
       return false;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
-    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
-    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+    if (grid_j > nj)
+      return false;
 
-    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -254,8 +263,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     double rotated_lon = x/1000000;
     double rotated_lat = y/1000000;
 
-    double southPoleLat = (double)(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double southPoleLon = (double)(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
+    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
 
     rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
 
@@ -275,21 +284,24 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
 {
   try
   {
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    uint nj = (uint)(*mLatLon.getGrid()->getNj());
-
-    if ((double)grid_i > (double)ni)
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return false;
 
-    if ((double)grid_j > (double)nj)
+    uint ni = (*mLatLon.getGrid()->getNi());
+    uint nj = (*mLatLon.getGrid()->getNj());
+
+    if (grid_i > C_DOUBLE(ni))
       return false;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
-    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
-    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+    if (grid_j > C_DOUBLE(nj))
+      return false;
 
-    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -306,8 +318,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     double rotated_lon = x/1000000;
     double rotated_lat = y/1000000;
 
-    double southPoleLat = (double)(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double southPoleLon = (double)(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
+    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
 
     rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
 
@@ -327,21 +339,24 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
 {
   try
   {
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    uint nj = (uint)(*mLatLon.getGrid()->getNj());
-
-    if ((double)grid_i > (double)ni)
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return false;
 
-    if ((double)grid_j > (double)nj)
+    uint ni = (*mLatLon.getGrid()->getNi());
+    uint nj = (*mLatLon.getGrid()->getNj());
+
+    if (grid_i > ni)
       return false;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
-    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
-    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+    if (grid_j > nj)
+      return false;
 
-    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -374,21 +389,24 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,d
 {
   try
   {
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    uint nj = (uint)(*mLatLon.getGrid()->getNj());
-
-    if ((double)grid_i > (double)ni)
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return false;
 
-    if ((double)grid_j > (double)nj)
+    uint ni = (*mLatLon.getGrid()->getNi());
+    uint nj = (*mLatLon.getGrid()->getNj());
+
+    if (grid_i > C_DOUBLE(ni))
       return false;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
-    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
-    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+    if (grid_j > C_DOUBLE(nj))
+      return false;
 
-    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -421,21 +439,24 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
 {
   try
   {
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
+      return std::string("");
+
     char buf[1000];
 
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    uint nj = (uint)(*mLatLon.getGrid()->getNj());
-    double y = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
-    double x = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
-    double dx = (double)(*mLatLon.getIDirectionIncrement());
-    double dy = (double)(*mLatLon.getJDirectionIncrement());
+    uint ni = (*mLatLon.getGrid()->getNi());
+    uint nj = (*mLatLon.getGrid()->getNj());
+    double y = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
+    double x = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
+    double dx = C_DOUBLE(*mLatLon.getIDirectionIncrement());
+    double dy = C_DOUBLE(*mLatLon.getJDirectionIncrement());
 
-    double sy = (double)(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double sx = (double)(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double sy = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
+    double sx = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
 
-    double angle = (double)mRotation.getAngleOfRotation();
+    double angle = C_DOUBLE(mRotation.getAngleOfRotation());
 
-    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     char sm[100];
     char *p = sm;
@@ -460,7 +481,7 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     }
 
     sprintf(buf,"%d;id;name;%u;%u;%f;%f;%f;%f;%s;%f;%f;%f;description",
-        (int)T::GridProjection::RotatedLatLon,ni,nj,x,y,fabs(dx),fabs(dy),sm,sx,sy,angle);
+        (int)T::GridProjectionValue::RotatedLatLon,ni,nj,x,y,fabs(dx),fabs(dy),sm,sx,sy,angle);
 
     return std::string(buf);
   }
@@ -486,10 +507,10 @@ T::Dimensions RotatedLatLonImpl::getGridDimensions() const
 {
   try
   {
-    const auto defs = mLatLon.getGrid();
-    uint nx = *defs->getNi();
-    uint ny = *defs->getNj();
-    return T::Dimensions(nx, ny);
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
+      return T::Dimensions();
+
+    return T::Dimensions(*mLatLon.getGrid()->getNi(), *mLatLon.getGrid()->getNj());
   }
   catch (...)
   {
@@ -515,8 +536,8 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
 {
   try
   {
-    double southPoleLat = (double)(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double southPoleLon = (double)(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
+    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
 
     latlon_to_rotatedLatlon(lat,lon,southPoleLat,southPoleLon,y,x);
     return true;
@@ -544,8 +565,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
 {
   try
   {
-    double southPoleLat = (double)(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double southPoleLon = (double)(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
+    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
 
     rotatedLatlon_to_latlon(y,x,southPoleLat,southPoleLon,lat,lon);
 
@@ -575,13 +596,16 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
 {
   try
   {
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
+      return false;
 
-    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement()) / 1000000;
-    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement()) / 1000000;
+    uint ni = (*mLatLon.getGrid()->getNi());
+    uint nj = (*mLatLon.getGrid()->getNj());
 
-    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
+    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement()) / 1000000;
+
+    unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -589,8 +613,8 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
     if ((scanningMode & 0x40) == 0)
       jDirectionIncrement = -jDirectionIncrement;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
-    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
 
     if (longitudeOfFirstGridPoint >= 180)
       longitudeOfFirstGridPoint -= 360;
@@ -607,7 +631,7 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
     double i = lonDiff / iDirectionIncrement;
     double j = latDiff / jDirectionIncrement;
 
-    if (i < 0 ||  j < 0  ||  i >= (double)ni ||  j >= (double)nj)
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j >= C_DOUBLE(nj))
       return false;
 
     grid_i = i;
@@ -629,7 +653,7 @@ bool RotatedLatLonImpl::reverseXDirection() const
 {
   try
   {
-    unsigned char scanMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanMode & 0x80) != 0)
       return true;
@@ -650,7 +674,7 @@ bool RotatedLatLonImpl::reverseYDirection() const
 {
   try
   {
-    unsigned char scanMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanMode & 0x40) == 0)
       return true;
@@ -730,8 +754,8 @@ void RotatedLatLonImpl::initSpatialReference()
 
     // ### Test if the grid is global
 
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement()) / 1000000;
+    uint ni = (*mLatLon.getGrid()->getNi());
+    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
     double len = (ni+1)* iDirectionIncrement;
 
     if (len >= 360)

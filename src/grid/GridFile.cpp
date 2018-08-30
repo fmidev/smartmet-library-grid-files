@@ -627,24 +627,24 @@ void GridFile::addMessage(Message *message)
 
 
 
-void GridFile::setGridFile(T::FileType fileType)
+void GridFile::setGridFile(uchar fileType)
 {
   try
   {
     switch (fileType)
     {
-      case T::FileType::Unknown:
+      case T::FileTypeValue::Unknown:
         break;
 
-      case T::FileType::Grib1:
+      case T::FileTypeValue::Grib1:
         mGridFile.reset(new GRIB1::GribFile());
         break;
 
-      case T::FileType::Grib2:
+      case T::FileTypeValue::Grib2:
         mGridFile.reset(new GRIB2::GribFile());
         break;
 
-      case T::FileType::Virtual:
+      case T::FileTypeValue::Virtual:
         break;
     };
   }
@@ -782,7 +782,7 @@ T::FileType GridFile::getFileType() const
   try
   {
     if (!mGridFile)
-      return T::FileType::Unknown;
+      return T::FileTypeValue::Unknown;
 
     return mGridFile->getFileType();
   }

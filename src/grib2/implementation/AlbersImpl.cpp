@@ -12,7 +12,7 @@ namespace GRIB2
 
 AlbersImpl::AlbersImpl()
 {
-  mGridProjection = T::GridProjection::Albers;
+  mGridProjection = T::GridProjectionValue::Albers;
 }
 
 
@@ -113,6 +113,9 @@ T::Dimensions AlbersImpl::getGridDimensions() const
 {
   try
   {
+    if (!mNx || !mNy)
+      return T::Dimensions();
+
     return T::Dimensions(*mNx, *mNy);
   }
   catch (...)
@@ -236,10 +239,10 @@ void AlbersImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double stdP1 = (double)(*dfStdP1 )/ 1000000;
-    double stdP2 = (double)(*dfStdP2) / 1000000;
-    double centerLat = (double)(*dfCenterLat) / 1000000;
-    double centerLon = (double)(*dfCenterLong) / 1000000;
+    double stdP1 = C_DOUBLE(*dfStdP1)/ 1000000;
+    double stdP2 = C_DOUBLE(*dfStdP2)/ 1000000;
+    double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
+    double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
 

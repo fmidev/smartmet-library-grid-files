@@ -14,7 +14,7 @@ namespace GRIB1
 
 GaussianImpl::GaussianImpl()
 {
-  mGridProjection = T::GridProjection::Gaussian;
+  mGridProjection = T::GridProjectionValue::Gaussian;
 }
 
 
@@ -100,22 +100,22 @@ T::Coordinate_vec GaussianImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    uint ni = (uint)mNi;
-    uint nj = (uint)mNj;
-    long n = (long)mN;
+    uint ni = mNi;
+    uint nj = mNj;
+    long n = mN;
 
-    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint();
-    double longitudeOfLastGridPoint = (double)mGridArea.getLongitudeOfLastGridPoint();
+    double longitudeOfFirstGridPoint = mGridArea.getLongitudeOfFirstGridPoint();
+    double longitudeOfLastGridPoint = mGridArea.getLongitudeOfLastGridPoint();
 
     if (longitudeOfLastGridPoint < 0)
       longitudeOfLastGridPoint += 360000;
 
     if (ni == 0xFFFF)
-      ni = (uint)getGridOriginalColumnCount();
+      ni = getGridOriginalColumnCount();
 
-    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / (double)(ni-1);
+    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / C_DOUBLE(ni-1);
 
-    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanningMode = mScanningMode.getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -161,16 +161,7 @@ T::Dimensions GaussianImpl::getGridDimensions() const
 {
   try
   {
-    uint ni = (uint)mNi;
-    uint nj = (uint)mNj;
-
-    if (ni == 0xFFFF)
-      ni = 0;
-
-    if (nj == 0xFFFF)
-      nj = 0;
-
-    return T::Dimensions(ni,nj);
+    return T::Dimensions(mNi,mNj);
   }
   catch (...)
   {
@@ -222,12 +213,12 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
 {
   try
   {
-    uint ni = (uint)mNi;
-    uint nj = (uint)mNj;
+    uint ni = mNi;
+    uint nj = mNj;
     long n = (long)mN;
 
-    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint() / 1000;
-    double longitudeOfLastGridPoint = (double)mGridArea.getLongitudeOfLastGridPoint() / 1000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
+    double longitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint()) / 1000;
 
     if (longitudeOfFirstGridPoint < 0)
       longitudeOfFirstGridPoint += 360;
@@ -236,11 +227,11 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
       longitudeOfLastGridPoint += 360;
 
     if (ni == 0xFFFF)
-      ni = (uint)getGridOriginalColumnCount();
+      ni = getGridOriginalColumnCount();
 
-    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / (double)(ni-1);
+    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / C_DOUBLE(ni-1);
 
-    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanningMode = mScanningMode.getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -257,7 +248,7 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double lonDiff = aLon - longitudeOfFirstGridPoint;
     double i = lonDiff / iDirectionIncrement;
 
-    if (i < 0 || i >= (double)ni)
+    if (i < 0 || i >= C_DOUBLE(ni))
       return false;
 
     double latLow = 0;
@@ -273,7 +264,7 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double latDiff = aLat-latLow;
     double j = t + latDiff / (latHigh-latLow);
 
-    if (j < 0  ||  j > (double)nj)
+    if (j < 0  ||  j > C_DOUBLE(nj))
       return false;
 
     grid_i = i;
@@ -321,12 +312,12 @@ void GaussianImpl::initSpatialReference()
 
     // ### Test if the grid is global
 
-    uint ni = (uint)mNi;
+    uint ni = mNi;
     if (ni == 0xFFFF)
-      ni = (uint)getGridOriginalColumnCount();
+      ni = getGridOriginalColumnCount();
 
-    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint() / 1000;
-    double longitudeOfLastGridPoint = (double)mGridArea.getLongitudeOfLastGridPoint() / 1000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
+    double longitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint()) / 1000;
 
     if (longitudeOfFirstGridPoint < 0)
       longitudeOfFirstGridPoint += 360;
@@ -334,7 +325,7 @@ void GaussianImpl::initSpatialReference()
     if (longitudeOfLastGridPoint < 0)
       longitudeOfLastGridPoint += 360;
 
-    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / (double)(ni-1);
+    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / C_DOUBLE(ni-1);
 
     if ((ni*iDirectionIncrement) >= 360)
       mGlobal = true;
@@ -372,10 +363,10 @@ void GaussianImpl::print(std::ostream& stream,uint level,uint optionFlags) const
 
       // ### Printing coordinates close to the grid corners.
 
-      uint nx = (uint)mNi;
-      uint ny = (uint)mNj;
+      uint nx = mNi;
+      uint ny = mNj;
       if (nx == 0xFFFF)
-        nx = (uint)getGridOriginalColumnCount();
+        nx = getGridOriginalColumnCount();
 
       uint c = 0;
 

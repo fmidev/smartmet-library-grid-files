@@ -531,11 +531,11 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
   {
     switch (coordinateType)
     {
-      case T::CoordinateType::UNKNOWN:
-      case T::CoordinateType::LATLON_COORDINATES:
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
         return getGridPointAngleByLatLonCoordinates(y,x);
 
-      case T::CoordinateType::GRID_COORDINATES:
+      case T::CoordinateTypeValue::GRID_COORDINATES:
       {
         double lat = 0, lon = 0;
         getGridLatLonCoordinatesByGridPosition(x,y,lat,lon);
@@ -543,7 +543,7 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
       }
       break;
 
-      case T::CoordinateType::ORIGINAL_COORDINATES:
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
       {
         double lat = 0, lon = 0;
         getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
@@ -697,7 +697,7 @@ void Message::getGridPointAngles(std::vector<float>& angles) const
     {
       for (uint x=0; x < d.nx(); x++)
       {
-        float angle = getGridPointAngle(T::CoordinateType::GRID_COORDINATES,x,y);
+        float angle = getGridPointAngle(T::CoordinateTypeValue::GRID_COORDINATES,x,y);
         angles.push_back(angle);
       }
     }
@@ -1546,16 +1546,16 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
     value = ParamValueMissing;
     switch (coordinateType)
     {
-      case T::CoordinateType::UNKNOWN:
-      case T::CoordinateType::LATLON_COORDINATES:
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
         value = getGridValueByLatLonCoordinate(y,x,interpolationMethod);
         break;
 
-      case T::CoordinateType::GRID_COORDINATES:
+      case T::CoordinateTypeValue::GRID_COORDINATES:
         value = getGridValueByGridPoint(x,y,interpolationMethod);
         break;
 
-      case T::CoordinateType::ORIGINAL_COORDINATES:
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
          // TODO: Implementation required
          break;
 
@@ -1584,16 +1584,16 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
   {
     switch (coordinateType)
     {
-      case T::CoordinateType::UNKNOWN:
-      case T::CoordinateType::LATLON_COORDINATES:
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
         getGridValueVectorByLatLonCoordinate(y,x,vectorType,valueVector);
         break;
 
-      case T::CoordinateType::GRID_COORDINATES:
+      case T::CoordinateTypeValue::GRID_COORDINATES:
         getGridValueVectorByGridPoint(x,y,vectorType,valueVector);
         break;
 
-      case T::CoordinateType::ORIGINAL_COORDINATES:
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
          // TODO: Implementation required
          break;
 
@@ -1622,8 +1622,8 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
     double x = grid_i;
     double y = grid_j;
 
-    uint x1 = (uint)floor(x);
-    uint y1 = (uint)floor(y);
+    uint x1 = C_UINT(floor(x));
+    uint y1 = C_UINT(floor(y));
     uint x2 = x1+1;
     uint y2 = y1+1;
 
@@ -1651,8 +1651,8 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
 
       case T::AreaInterpolationMethod::List:
         valueVector.push_back(2);
-        valueVector.push_back(x-(double)x1);
-        valueVector.push_back(y-(double)y1);
+        valueVector.push_back(x-C_DOUBLE(x1));
+        valueVector.push_back(y-C_DOUBLE(y1));
         valueVector.push_back(getGridValueByGridPoint(x1,y1));
         valueVector.push_back(getGridValueByGridPoint(x2,y1));
         valueVector.push_back(getGridValueByGridPoint(x2,y2));
@@ -1661,13 +1661,13 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
 
       case T::AreaInterpolationMethod::ListWithAngles:
         valueVector.push_back(7);
-        valueVector.push_back(x-(double)x1);
-        valueVector.push_back(y-(double)y1);
-        valueVector.push_back(getGridPointAngle(T::CoordinateType::GRID_COORDINATES,grid_i,grid_j));
-        valueVector.push_back(getGridPointAngle(T::CoordinateType::GRID_COORDINATES,(double)x1,(double)y1));
-        valueVector.push_back(getGridPointAngle(T::CoordinateType::GRID_COORDINATES,(double)x2,(double)y1));
-        valueVector.push_back(getGridPointAngle(T::CoordinateType::GRID_COORDINATES,(double)x2,(double)y2));
-        valueVector.push_back(getGridPointAngle(T::CoordinateType::GRID_COORDINATES,(double)x1,(double)y2));
+        valueVector.push_back(x-C_DOUBLE(x1));
+        valueVector.push_back(y-C_DOUBLE(y1));
+        valueVector.push_back(getGridPointAngle(T::CoordinateTypeValue::GRID_COORDINATES,grid_i,grid_j));
+        valueVector.push_back(getGridPointAngle(T::CoordinateTypeValue::GRID_COORDINATES,C_DOUBLE(x1),C_DOUBLE(y1)));
+        valueVector.push_back(getGridPointAngle(T::CoordinateTypeValue::GRID_COORDINATES,C_DOUBLE(x2),C_DOUBLE(y1)));
+        valueVector.push_back(getGridPointAngle(T::CoordinateTypeValue::GRID_COORDINATES,C_DOUBLE(x2),C_DOUBLE(y2)));
+        valueVector.push_back(getGridPointAngle(T::CoordinateTypeValue::GRID_COORDINATES,C_DOUBLE(x1),C_DOUBLE(y2)));
         valueVector.push_back(getGridValueByGridPoint(x1,y1));
         valueVector.push_back(getGridValueByGridPoint(x2,y1));
         valueVector.push_back(getGridValueByGridPoint(x2,y2));
@@ -1722,8 +1722,8 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
     switch (coordinateType)
     {
-      case T::CoordinateType::UNKNOWN:
-      case T::CoordinateType::LATLON_COORDINATES:
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
       {
         double x1 = origoX;
         double dist = 0;
@@ -1778,7 +1778,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
       return;
 
 
-      case T::CoordinateType::GRID_COORDINATES:
+      case T::CoordinateTypeValue::GRID_COORDINATES:
       {
         std::vector<T::Point> gridPoints;
 
@@ -1796,7 +1796,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
       return;
 
 
-      case T::CoordinateType::ORIGINAL_COORDINATES:
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
       {
         double newOrigoX = 0;
         double newOrigoY = 0;
@@ -1914,8 +1914,8 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
     switch (coordinateType)
     {
-      case T::CoordinateType::UNKNOWN:
-      case T::CoordinateType::LATLON_COORDINATES:
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
       {
         std::vector<T::Coordinate> newPolygonPoints;
 
@@ -1950,7 +1950,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
       return;
 
 
-      case T::CoordinateType::GRID_COORDINATES:
+      case T::CoordinateTypeValue::GRID_COORDINATES:
       {
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygon(cols,rows,polygonPoints,gridPoints);
@@ -1973,7 +1973,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
       return;
 
 
-      case T::CoordinateType::ORIGINAL_COORDINATES:
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
       {
         std::vector<T::Coordinate> newPolygonPoints;
 
@@ -2030,8 +2030,8 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
     switch (coordinateType)
     {
-      case T::CoordinateType::UNKNOWN:
-      case T::CoordinateType::LATLON_COORDINATES:
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
       {
         std::vector<std::vector<T::Coordinate>> newPolygonPath;
 
@@ -2072,7 +2072,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
       return;
 
 
-      case T::CoordinateType::GRID_COORDINATES:
+      case T::CoordinateTypeValue::GRID_COORDINATES:
       {
         std::vector<T::Point> gridPoints;
         getPointsInsidePolygonPath(cols,rows,polygonPath,gridPoints);
@@ -2090,7 +2090,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
       return;
 
 
-      case T::CoordinateType::ORIGINAL_COORDINATES:
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
       {
         std::vector<std::vector<T::Coordinate>> newPolygonPath;
 
@@ -2168,8 +2168,8 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
 
       switch (coordinateType)
       {
-        case T::CoordinateType::UNKNOWN:
-        case T::CoordinateType::LATLON_COORDINATES:
+        case T::CoordinateTypeValue::UNKNOWN:
+        case T::CoordinateTypeValue::LATLON_COORDINATES:
         {
           double gx1 = 0;
           double gy1 = 0;
@@ -2194,11 +2194,11 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
 
           //printf("GRID AREA %f,%f  %f,%f  %f,%f  %f,%f\n",gx1,gy1,gx1,gy2,gx2,gy2,gx2,gy1);
 
-          getGridValueListByPolygon(T::CoordinateType::GRID_COORDINATES,polygonPoints,valueList);
+          getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,valueList);
         }
         break;
 
-        case T::CoordinateType::GRID_COORDINATES:
+        case T::CoordinateTypeValue::GRID_COORDINATES:
         {
           std::vector<T::Coordinate> polygonPoints;
           polygonPoints.push_back(T::Coordinate(x1,y1));
@@ -2206,11 +2206,11 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
           polygonPoints.push_back(T::Coordinate(x2,y2));
           polygonPoints.push_back(T::Coordinate(x2,y1));
           polygonPoints.push_back(T::Coordinate(x1,y1));
-          getGridValueListByPolygon(T::CoordinateType::GRID_COORDINATES,polygonPoints,valueList);
+          getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,valueList);
         }
         break;
 
-        case T::CoordinateType::ORIGINAL_COORDINATES:
+        case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         {
           double gx1 = 0;
           double gy1 = 0;
@@ -2224,7 +2224,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
           polygonPoints.push_back(T::Coordinate(gx2,gy2));
           polygonPoints.push_back(T::Coordinate(gx2,gy1));
           polygonPoints.push_back(T::Coordinate(gx1,gy1));
-          getGridValueListByPolygon(T::CoordinateType::GRID_COORDINATES,polygonPoints,valueList);
+          getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,valueList);
         }
         break;
 
@@ -2468,15 +2468,15 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
     double x = grid_i;
     double y = grid_j;
 
-    uint x1 = (uint)floor(x);
-    uint y1 = (uint)floor(y);
+    uint x1 = C_UINT(floor(x));
+    uint y1 = C_UINT(floor(y));
     uint x2 = x1+1;
     uint y2 = y1+1;
 
-    double dist_x1 = x-(double)x1;
-    double dist_x2 = (double)x2-x;
-    double dist_y1 = y-(double)y1;
-    double dist_y2 = (double)y2-y;
+    double dist_x1 = x - C_DOUBLE(x1);
+    double dist_x2 = C_DOUBLE(x2) - x;
+    double dist_y1 = y - C_DOUBLE(y1);
+    double dist_y2 = C_DOUBLE(y2) - y;
 
     if (dist_x1 == 0  &&  dist_y1 == 0)
       return getGridValueByGridPoint(round(grid_i),round(grid_j));
@@ -2515,16 +2515,16 @@ T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) 
     double x = grid_i;
     double y = grid_j;
 
-    double x1 = floor(x);
-    double y1 = floor(y);
-    double x2 = x1+1;
-    double y2 = y1+1;
+    uint x1 = C_UINT(floor(x));
+    uint y1 = C_UINT(floor(y));
+    uint x2 = C_UINT(x1+1);
+    uint y2 = C_UINT(y1+1);
 
     std::set<T::ParamValue> values;
-    values.insert(getGridValueByGridPoint((uint)x1,(uint)y1));
-    values.insert(getGridValueByGridPoint((uint)x2,(uint)y1));
-    values.insert(getGridValueByGridPoint((uint)x1,(uint)y2));
-    values.insert(getGridValueByGridPoint((uint)x2,(uint)y2));
+    values.insert(getGridValueByGridPoint(x1,y1));
+    values.insert(getGridValueByGridPoint(x2,y1));
+    values.insert(getGridValueByGridPoint(x1,y2));
+    values.insert(getGridValueByGridPoint(x2,y2));
 
     return *values.begin();
 
@@ -2547,16 +2547,16 @@ T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) 
     double x = grid_i;
     double y = grid_j;
 
-    double x1 = floor(x);
-    double y1 = floor(y);
-    double x2 = x1+1;
-    double y2 = y1+1;
+    uint x1 = C_UINT(floor(x));
+    uint y1 = C_UINT(floor(y));
+    uint x2 = C_UINT(x1+1);
+    uint y2 = C_UINT(y1+1);
 
     std::set<T::ParamValue> values;
-    values.insert(getGridValueByGridPoint((uint)x1,(uint)y1));
-    values.insert(getGridValueByGridPoint((uint)x2,(uint)y1));
-    values.insert(getGridValueByGridPoint((uint)x1,(uint)y2));
-    values.insert(getGridValueByGridPoint((uint)x2,(uint)y2));
+    values.insert(getGridValueByGridPoint(x1,y1));
+    values.insert(getGridValueByGridPoint(x2,y1));
+    values.insert(getGridValueByGridPoint(x1,y2));
+    values.insert(getGridValueByGridPoint(x2,y2));
 
     return *values.rbegin();
 
@@ -2588,17 +2588,17 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
     double x = grid_i;
     double y = grid_j;
 
-    double x1 = floor(x);
-    double y1 = floor(y);
-    double x2 = x1+1;
-    double y2 = y1+1;
+    uint x1 = C_UINT(floor(x));
+    uint y1 = C_UINT(floor(y));
+    uint x2 = C_UINT(x1+1);
+    uint y2 = C_UINT(y1+1);
 
     // Reading values of the corner grid points
 
-    auto val_q11 = getGridValueByGridPoint((uint)x1,(uint)y1);
-    auto val_q21 = getGridValueByGridPoint((uint)x2,(uint)y1);
-    auto val_q12 = getGridValueByGridPoint((uint)x1,(uint)y2);
-    auto val_q22 = getGridValueByGridPoint((uint)x2,(uint)y2);
+    auto val_q11 = getGridValueByGridPoint(x1,y1);
+    auto val_q21 = getGridValueByGridPoint(x2,y1);
+    auto val_q12 = getGridValueByGridPoint(x1,y2);
+    auto val_q22 = getGridValueByGridPoint(x2,y2);
 
     return linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12);
   }

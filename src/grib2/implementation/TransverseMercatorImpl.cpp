@@ -11,7 +11,7 @@ namespace GRIB2
 
 TransverseMercatorImpl::TransverseMercatorImpl()
 {
-  mGridProjection = T::GridProjection::TransverseMercator;
+  mGridProjection = T::GridProjectionValue::TransverseMercator;
 }
 
 
@@ -113,6 +113,9 @@ T::Dimensions TransverseMercatorImpl::getGridDimensions() const
 {
   try
   {
+    if (!mNi || !mNj)
+      return T::Dimensions();
+
     return T::Dimensions(*mNi, *mNj);
   }
   catch (...)
@@ -224,11 +227,11 @@ void TransverseMercatorImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double centerLat = (double)(*dfCenterLat) / 1000000;
-    double centerLon = (double)(*dfCenterLong) / 1000000;
-    double falseEasting = *dfFalseEasting / 1000;
-    double falseNorthing = *dfFalseNorthing / 1000;
-    double scale = (double)(dfScale);
+    double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
+    double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
+    double falseEasting = C_DOUBLE(*dfFalseEasting) / 1000;
+    double falseNorthing = C_DOUBLE(*dfFalseNorthing) / 1000;
+    double scale = C_DOUBLE(dfScale);
 
     mSpatialReference.SetTM(centerLat, centerLon, scale, falseEasting,
                             falseNorthing);

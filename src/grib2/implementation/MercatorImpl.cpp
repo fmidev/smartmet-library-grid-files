@@ -18,7 +18,7 @@ MercatorImpl::MercatorImpl()
 {
   try
   {
-    mGridProjection = T::GridProjection::Mercator;
+    mGridProjection = T::GridProjectionValue::Mercator;
     mSr_mercator = nullptr;
     mCt_latlon2mercator = nullptr;
     mCt_mercator2latlon = nullptr;
@@ -138,16 +138,19 @@ T::Coordinate_vec MercatorImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    uint ni = (uint)(*mNi);
-    uint nj = (uint)(*mNj);
+    if (!mNi || !mNj)
+      return coordinateList;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatitudeOfFirstGridPoint) / 1000000;
-    double longitudeOfFirstGridPoint = (double)(*mLongitudeOfFirstGridPoint) / 1000000;
+    uint ni = (*mNi);
+    uint nj = (*mNj);
 
-    double di = (double)(*mDi) / 1000;
-    double dj = (double)(*mDj) / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
 
-    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+    double di = C_DOUBLE(*mDi) / 1000;
+    double dj = C_DOUBLE(*mDj) / 1000;
+
+    unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
       di = -di;
 
@@ -194,6 +197,9 @@ T::Dimensions MercatorImpl::getGridDimensions() const
 {
   try
   {
+    if (!mNi || !mNj)
+      return T::Dimensions();
+
     return T::Dimensions(*mNi, *mNj);
   }
   catch (...)
@@ -220,16 +226,19 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
 {
   try
   {
-    uint ni = (uint)(*mNi);
-    uint nj = (uint)(*mNj);
+    if (!mNi || !mNj)
+      return false;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatitudeOfFirstGridPoint) / 1000000;
-    double longitudeOfFirstGridPoint = (double)(*mLongitudeOfFirstGridPoint) / 1000000;
+    uint ni = (*mNi);
+    uint nj = (*mNj);
 
-    double di = (double)(*mDi) / 1000;
-    double dj = (double)(*mDj) / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
 
-    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+    double di = C_DOUBLE(*mDi) / 1000;
+    double dj = C_DOUBLE(*mDj) / 1000;
+
+    unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
       di = -di;
 
@@ -247,7 +256,7 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double i = xDiff / di;
     double j = yDiff / dj;
 
-    if (i < 0 ||  j < 0  ||  i >= (double)ni ||  j > (double)nj)
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
       return false;
 
     grid_i = i;
@@ -326,8 +335,8 @@ void MercatorImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double centerLat = (double)(*dfCenterLat) / 1000000;
-    double centerLon = (double)(*dfCenterLong) / 1000000;
+    double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
+    double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
 
@@ -393,6 +402,9 @@ void MercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
       T::Coordinate_vec coordinateList = getGridCoordinates();
 
       // ### Printing coordinates close to the grid corners.
+
+      if (!mNi || !mNj)
+        return;
 
       int nx = (int)(*mNi);
       int ny = (int)(*mNj);

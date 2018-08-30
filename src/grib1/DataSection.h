@@ -80,7 +80,7 @@ class DataSection : public GRID::MessageSection
     void              setReferenceValue(std::float_t referenceValue);
     void              setBitsPerValue(std::uint8_t bitsPerValue);
     void              setData(T::Data_ptr data,std::size_t size);
-    void              setDataDefinition(T::CompressionMethod compressionMethod);
+    void              setDataDefinition(ushort compressionMethod);
     void              setDataDefinition(DataDefinition *dataDefinition);
     void              setMessagePtr(Message *message);
 

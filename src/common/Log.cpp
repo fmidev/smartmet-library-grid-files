@@ -103,7 +103,7 @@ void Log::open()
     if (file != nullptr)
       return;    // ### The log file is already open.
 
-    file = fopen(filename.c_str(),"w");
+    file = fopen(filename.c_str(),"we");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open the file for writing!");
@@ -309,7 +309,7 @@ uint Log::getSize()
   {
     long long size = getFileSize(filename.c_str());
     if (size > 0)
-      return (uint)size;
+      return C_UINT(size);
 
     return 0;
   }
@@ -481,7 +481,7 @@ void Log::truncate()
 
     // ### Copying log information into the new log file
 
-    FILE *oldfile = fopen(tmpFilename,"r");
+    FILE *oldfile = fopen(tmpFilename,"re");
     if (oldfile == nullptr)
     {
       // ### ERROR

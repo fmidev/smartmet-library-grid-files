@@ -962,7 +962,7 @@ T::TimeString ProductSection::getReferenceTime() const
     char ts[100];
     if (mYearOfCentury != 0xFF  &&  mMonth != 0xFF  &&  mDay != 0xFF)
     {
-      sprintf(ts,"%04u%02u%02uT%02u%02u00",(uint)(2000+mYearOfCentury),(uint)mMonth,(uint)mDay,(uint)mHour,(uint)mMinute);
+      sprintf(ts,"%04u%02u%02uT%02u%02u00",C_UINT(2000+mYearOfCentury),mMonth,mDay,mHour,mMinute);
       return std::string(ts);
     }
     return std::string("19000101T000000");
@@ -1067,7 +1067,7 @@ T::TimeString ProductSection::getForecastTime() const
 
     T::TimeStamp tt = refTime;
 
-    uint p12 = (((uint)mP1) << 8) + mP2;
+    uint p12 = ((C_UINT(mP1)) << 8) + mP2;
 
     switch (mTimeRangeIndicator)
     {

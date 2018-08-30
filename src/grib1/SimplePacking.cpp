@@ -127,7 +127,7 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
     else
       value = Y;
 
-    // value = (T::ParamValue)(RDfac + X * EDfac);
+    // value = (RDfac + X * EDfac);
     return true;
   }
   catch (...)
@@ -264,7 +264,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
         if (round(Y) == 9999)
           decodedValues.push_back(ParamValueMissing);
         else
-          decodedValues.push_back((T::ParamValue)Y);
+          decodedValues.push_back(Y);
       }
     }
   }

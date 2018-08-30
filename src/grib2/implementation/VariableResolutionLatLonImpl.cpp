@@ -11,7 +11,7 @@ namespace GRIB2
 
 VariableResolutionLatLonImpl::VariableResolutionLatLonImpl()
 {
-  mGridProjection = T::GridProjection::VariableResolutionLatLon;
+  mGridProjection = T::GridProjectionValue::VariableResolutionLatLon;
 }
 
 
@@ -112,9 +112,10 @@ T::Dimensions VariableResolutionLatLonImpl::getGridDimensions() const
 {
   try
   {
-    uint nx = *mVariableLatLon.getNi();
-    uint ny = *mVariableLatLon.getNj();
-    return T::Dimensions(nx, ny);
+    if (!mVariableLatLon.getNi() || !mVariableLatLon.getNj())
+      return T::Dimensions();
+
+    return T::Dimensions(*mVariableLatLon.getNi(),*mVariableLatLon.getNj());
   }
   catch (...)
   {

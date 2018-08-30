@@ -46,7 +46,7 @@ void FileWriter::createFile(const char *_filename)
   try
   {
     mFilename = _filename;
-    mFileHandle = fopen(_filename,"w");
+    mFileHandle = fopen(_filename,"we");
     if (mFileHandle)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot create a file!");

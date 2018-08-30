@@ -11,7 +11,7 @@ namespace GRIB2
 
 StretchedRotatedSphericalHarmonicImpl::StretchedRotatedSphericalHarmonicImpl()
 {
-  mGridProjection = T::GridProjection::StretchedRotatedSphericalHarmonic;
+  mGridProjection = T::GridProjectionValue::StretchedRotatedSphericalHarmonic;
 }
 
 
@@ -112,7 +112,7 @@ T::Dimensions StretchedRotatedSphericalHarmonicImpl::getGridDimensions() const
 {
   try
   {
-    return {};
+    return T::Dimensions();
   }
   catch (...)
   {

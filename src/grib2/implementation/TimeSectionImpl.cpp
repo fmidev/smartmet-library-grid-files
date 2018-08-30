@@ -11,7 +11,7 @@ namespace GRIB2
 
 TimeSectionImpl::TimeSectionImpl()
 {
-  mGridProjection = T::GridProjection::TimeSection;
+  mGridProjection = T::GridProjectionValue::TimeSection;
 }
 
 
@@ -113,7 +113,7 @@ T::Dimensions TimeSectionImpl::getGridDimensions() const
 {
   try
   {
-    return {};
+    return T::Dimensions();
   }
   catch (...)
   {

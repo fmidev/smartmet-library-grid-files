@@ -296,7 +296,7 @@ void ValueCache::getSizeInBytes(std::size_t& memorySize,std::size_t& compressedS
       {
         if (mValueList[t] != nullptr)
         {
-          std::size_t s = mValueList[t]->size() * sizeof (T::ParamValue);
+          std::size_t s = mValueList[t]->size() * sizeof(T::ParamValue) ;
           memorySize += s;
 
           if (mCompressedData[t] != nullptr)
@@ -438,8 +438,8 @@ bool ValueCache::compressCachedValues(uint index)
     if (mCompressedData[index] != nullptr  ||  mValueList[index] == nullptr)
       return false;
 
-    std::size_t len = mValueList[index]->size();
-    uint size = (uint)(len*sizeof(T::ParamValue));
+    uint len = mValueList[index]->size();
+    uint size = (len*sizeof(T::ParamValue));
 
     T::ParamValue data[len];
     uchar compressedData[size];
@@ -447,7 +447,7 @@ bool ValueCache::compressCachedValues(uint index)
     for (uint t=0; t<len; t++)
       data[t] = mValueList[index]->at(t);
 
-    uint compressedDataSize = (uint)size;
+    uint compressedDataSize = size;
 
     int res = compressData(data,size,compressedData,compressedDataSize);
     if (res == 0)

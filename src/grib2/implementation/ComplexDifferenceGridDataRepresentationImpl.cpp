@@ -104,8 +104,8 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
 
     std::size_t numberOfValues = numOfValues;
     T::ParamValue ref = mPacking.getReferenceValue();
-    T::ParamValue bscale = (T::ParamValue)int_power(2.0,(int)(*mPacking.getBinaryScaleFactor()));
-    T::ParamValue dscale = (T::ParamValue)int_power(10.0,-(int)(*mPacking.getDecimalScaleFactor()));
+    T::ParamValue bscale = int_power(2.0,(int)(*mPacking.getBinaryScaleFactor()));
+    T::ParamValue dscale = int_power(10.0,-(int)(*mPacking.getDecimalScaleFactor()));
     int groupRefBits = *mPacking.getBitsPerValue();
     int numberOfGroups = *mNumberOfGroupsOfDataValues;
     int groupValueSizeBits = *mNumberOfBitsUsedForTheGroupWidths;
@@ -155,12 +155,12 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
     T::ParamValue missingValue2 = 0;
 
     if (*mMissingValueManagementUsed == 1)
-      missingValue1 = (T::ParamValue)*mPrimaryMissingValueSubstitute;
+      missingValue1 = *mPrimaryMissingValueSubstitute;
 
     if (*mMissingValueManagementUsed == 2)
     {
-      missingValue1 = (T::ParamValue)*mPrimaryMissingValueSubstitute;
-      missingValue2 = (T::ParamValue)*mSecondaryMissingValueSubstitute;
+      missingValue1 = *mPrimaryMissingValueSubstitute;
+      missingValue2 = *mSecondaryMissingValueSubstitute;
     }
 */
 

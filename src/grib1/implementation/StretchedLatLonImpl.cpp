@@ -11,7 +11,7 @@ namespace GRIB1
 
 StretchedLatLonImpl::StretchedLatLonImpl()
 {
-  mGridProjection = T::GridProjection::StretchedLatLon;
+  mGridProjection = T::GridProjectionValue::StretchedLatLon;
 }
 
 
@@ -103,15 +103,15 @@ T::Coordinate_vec StretchedLatLonImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    uint ni = (uint)mNi;
-    uint nj = (uint)mNj;
+    uint ni = mNi;
+    uint nj = mNj;
 
-    double latitudeOfFirstGridPoint = (double)mGridArea.getLatitudeOfFirstGridPoint();
-    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint();
-    double iDirectionIncrement = (double)mIDirectionIncrement;
-    double jDirectionIncrement = (double)mJDirectionIncrement;
+    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
+    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
 
-    unsigned char scanMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -188,15 +188,15 @@ bool StretchedLatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,
 {
   try
   {
-    uint ni = (uint)mNi;
-    uint nj = (uint)mNj;
+    uint ni = mNi;
+    uint nj = mNj;
 
-    double latitudeOfFirstGridPoint = (double)mGridArea.getLatitudeOfFirstGridPoint() / 1000 + 90;
-    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint() / 1000;
-    double iDirectionIncrement = (double)mIDirectionIncrement / 1000;
-    double jDirectionIncrement = (double)mJDirectionIncrement / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000 + 90;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
+    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement) / 1000;
+    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement) / 1000;
 
-    unsigned char scanMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -223,7 +223,7 @@ bool StretchedLatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,
     double i = lonDiff / iDirectionIncrement;
     double j = latDiff / jDirectionIncrement;
 
-    if (i < 0 ||  j < 0  ||  i >= (double)ni ||  j > (double)nj)
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
       return false;
 
     grid_i = i;

@@ -12,7 +12,7 @@ namespace GRIB2
 
 StretchedLatLonImpl::StretchedLatLonImpl()
 {
-  mGridProjection = T::GridProjection::StretchedLatLon;
+  mGridProjection = T::GridProjectionValue::StretchedLatLon;
 }
 
 
@@ -98,15 +98,18 @@ T::Coordinate_vec StretchedLatLonImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
+      return coordinateList;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
-    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement());
-    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement());
+    uint ni = (*mLatLon.getGrid()->getNi());
+    uint nj = (*mLatLon.getGrid()->getNj());
 
-    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
+    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
+
+    unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -157,10 +160,10 @@ T::Dimensions StretchedLatLonImpl::getGridDimensions() const
 {
   try
   {
-    const auto defs = mLatLon.getGrid();
-    uint nx = *defs->getNi();
-    uint ny = *defs->getNj();
-    return T::Dimensions(nx, ny);
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
+      return T::Dimensions();
+
+    return T::Dimensions(*mLatLon.getGrid()->getNi(), *mLatLon.getGrid()->getNj());
   }
   catch (...)
   {
@@ -212,13 +215,16 @@ bool StretchedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,do
 {
   try
   {
-    uint ni = (uint)(*mLatLon.getGrid()->getNi());
-    uint nj = (uint)(*mLatLon.getGrid()->getNj());
+    if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
+      return false;
 
-    double iDirectionIncrement = (double)(*mLatLon.getIDirectionIncrement()) / 1000000;
-    double jDirectionIncrement = (double)(*mLatLon.getJDirectionIncrement()) / 1000000;
+    uint ni = (*mLatLon.getGrid()->getNi());
+    uint nj = (*mLatLon.getGrid()->getNj());
 
-    unsigned char scanningMode = (unsigned char)(mLatLon.getScanningMode()->getScanningMode());
+    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
+    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement()) / 1000000;
+
+    unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -226,8 +232,8 @@ bool StretchedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,do
     if ((scanningMode & 0x40) == 0)
       jDirectionIncrement = -jDirectionIncrement;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000 + 90;
-    double longitudeOfFirstGridPoint = (double)(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000 + 90;
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
 
     if (longitudeOfFirstGridPoint > 180)
       longitudeOfFirstGridPoint -= 360;
@@ -248,7 +254,7 @@ bool StretchedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,do
     double i = lonDiff / iDirectionIncrement;
     double j = latDiff / jDirectionIncrement;
 
-    if (i < 0 ||  j < 0  ||  i >= (double)ni ||  j > (double)nj)
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
       return false;
 
     grid_i = i;

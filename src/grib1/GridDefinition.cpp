@@ -25,14 +25,14 @@ GridDefinition::GridDefinition()
   FUNCTION_TRACE
   try
   {
-    mGridLayout = T::GridLayout::Regular;
+    mGridLayout = T::GridLayoutValue::Regular;
     mHash = 0;
     mOrigSpatialReference = nullptr;
     mCoordinateTranformation_latlon2orig = nullptr;
     mCoordinateTranformation_orig2latlon = nullptr;
     mGlobal = false;
     mGeometryId = 0;
-    mGridProjection = T::GridProjection::Unknown;
+    mGridProjection = T::GridProjectionValue::Unknown;
     getGridHash();
   }
   catch (...)
@@ -308,7 +308,7 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
 
     T::Coordinate_vec originalCoordinates = getGridCoordinates();
     uint c = grid_j * d.nx() + grid_i;
-    if (c >= (uint)originalCoordinates.size())
+    if (c >= C_UINT(originalCoordinates.size()))
       return false;
 
     x = originalCoordinates[c].x();
@@ -597,7 +597,7 @@ void GridDefinition::initRowPositions(std::vector<std::uint32_t>& rowPositions)
   try
   {
     mRowPositions = rowPositions;
-    mGridLayout = T::GridLayout::Irregular;
+    mGridLayout = T::GridLayoutValue::Irregular;
   }
   catch (...)
   {

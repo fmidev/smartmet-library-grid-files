@@ -11,7 +11,7 @@ namespace GRIB2
 
 EquatorialAzimuthalEquidistantImpl::EquatorialAzimuthalEquidistantImpl()
 {
-  mGridProjection = T::GridProjection::EquatorialAzimuthalEquidistant;
+  mGridProjection = T::GridProjectionValue::EquatorialAzimuthalEquidistant;
 }
 
 
@@ -112,9 +112,10 @@ T::Dimensions EquatorialAzimuthalEquidistantImpl::getGridDimensions() const
 {
   try
   {
-    uint nx = *mNumberOfPointsAlongXAxis;
-    uint ny = *mNumberOfPointsAlongYAxis;
-    return T::Dimensions(nx, ny);
+    if (!mNumberOfPointsAlongXAxis || ! mNumberOfPointsAlongYAxis)
+      return T::Dimensions();
+
+    return T::Dimensions(*mNumberOfPointsAlongXAxis,*mNumberOfPointsAlongYAxis);
   }
   catch (...)
   {

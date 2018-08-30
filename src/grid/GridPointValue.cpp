@@ -138,7 +138,7 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         res = double_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        res = uint_compare((uint)mLevel,(uint)gridPointValue->mLevel);
+        res = uint_compare(mLevel,gridPointValue->mLevel);
         if (res != 0)
           return res;
         return double_compare(mValue,gridPointValue->mValue);
@@ -150,7 +150,7 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         res = double_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        res = uint_compare((uint)mLevel,(uint)gridPointValue->mLevel);
+        res = uint_compare(mLevel,gridPointValue->mLevel);
         if (res != 0)
           return res;
         res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
@@ -165,7 +165,7 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         res = double_compare(mX,gridPointValue->mX);
         if (res != 0)
           return res;
-        res = uint_compare((uint)mLevel,(uint)gridPointValue->mLevel);
+        res = uint_compare(mLevel,gridPointValue->mLevel);
         if (res != 0)
           return res;
         res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
@@ -186,13 +186,13 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         res = double_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        return uint_compare((uint)mLevel,(uint)gridPointValue->mLevel);
+        return uint_compare(mLevel,gridPointValue->mLevel);
 
       case ComparisonMethod::file_message_x_y_level:
-        res = uint_compare(mFileId,(uint)gridPointValue->mFileId);
+        res = uint_compare(mFileId,gridPointValue->mFileId);
         if (res != 0)
           return res;
-        res = uint_compare(mMessageIndex,(uint)gridPointValue->mMessageIndex);
+        res = uint_compare(mMessageIndex,gridPointValue->mMessageIndex);
         if (res != 0)
           return res;
         res = double_compare(mX,gridPointValue->mX);
@@ -201,7 +201,7 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         res = double_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        return uint_compare((uint)mLevel,(uint)gridPointValue->mLevel);
+        return uint_compare(mLevel,gridPointValue->mLevel);
 
       default:
         res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
@@ -213,7 +213,7 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         res = double_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        res = uint_compare((uint)mLevel,(uint)gridPointValue->mLevel);
+        res = uint_compare(mLevel,gridPointValue->mLevel);
         if (res != 0)
           return res;
         return double_compare(mValue,gridPointValue->mValue);
@@ -261,7 +261,7 @@ void GridPointValue::print(std::ostream& stream,uint level,uint optionFlags) con
     stream << space(level) << "- mMessageIndex = " << toString(mMessageIndex) << "\n";
     stream << space(level) << "- mX            = " << toString(mX) << "\n";
     stream << space(level) << "- mY            = " << toString(mY) << "\n";
-    stream << space(level) << "- mLevel        = " << toString((uint)mLevel) << "\n";
+    stream << space(level) << "- mLevel        = " << toString(mLevel) << "\n";
     stream << space(level) << "- mTime         = " << toString(mTime) << "\n";
     stream << space(level) << "- mValue        = " << toString(mValue) << "\n";
   }

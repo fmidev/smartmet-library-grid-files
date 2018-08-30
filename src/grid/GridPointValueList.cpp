@@ -664,7 +664,7 @@ bool GridPointValueList::deleteGridPointValueByIndex(uint index)
 
     GridPointValue *info = mArray[index];
 
-    for (uint t=(uint)index+1; t<mSize; t++)
+    for (uint t=index+1; t<mSize; t++)
     {
       mArray[t-1] = mArray[t];
       mArray[t] = nullptr;
@@ -887,7 +887,7 @@ T::ParamValue GridPointValueList::getAverageValue()
       total = total + mArray[t]->mValue;
     }
 
-    return (T::ParamValue)(total / (double)mLength);
+    return (total / C_DOUBLE(mLength));
   }
   catch (...)
   {
@@ -918,7 +918,7 @@ T::ParamValue GridPointValueList::getAverageValueByTime(T::TimeString time)
       }
     }
 
-    return (T::ParamValue)(total / (double)count);
+    return (total / C_DOUBLE(count));
   }
   catch (...)
   {
@@ -990,9 +990,9 @@ T::ParamValue GridPointValueList::getTimeInterpolatedValue(double x,double y,T::
     time_t ttDiff = toTimeT(ttNext) - toTimeT(ttPrev);
 
     T::ParamValue valueDiff = nextPoint->mValue - prevPoint->mValue;
-    T::ParamValue valueStep = valueDiff / (T::ParamValue)ttDiff;
+    T::ParamValue valueStep = valueDiff / ttDiff;
 
-    T::ParamValue value = prevPoint->mValue + (T::ParamValue)diff * valueStep;
+    T::ParamValue value = prevPoint->mValue + diff * valueStep;
 
     //time_t toTimeT(boost::posix_time::ptime tim);
     return value;

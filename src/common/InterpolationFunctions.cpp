@@ -61,7 +61,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
     {
       // Linear interpolation x1,y1 - x1,y2
       if (val_q11 != ParamValueMissing  &&  val_q12 != ParamValueMissing)
-        return (double)(dist_y1*val_q11 + dist_y2*val_q12);
+        return (dist_y1*val_q11 + dist_y2*val_q12);
 
       return ParamValueMissing;
     }
@@ -70,7 +70,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
     {
       // Linear interpolation x2,y1 - x2,y2
       if (val_q21 != ParamValueMissing  &&  val_q22 != ParamValueMissing)
-        return (double)(dist_y1*val_q21 + dist_y2*val_q22);
+        return (dist_y1*val_q21 + dist_y2*val_q22);
 
       return ParamValueMissing;
     }
@@ -79,7 +79,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
     {
       // Linear interpolation x1,y1 - x2,y1
       if (val_q11 != ParamValueMissing  &&  val_q21 != ParamValueMissing)
-        return (double)(dist_x1*val_q11 + dist_x2*val_q21);
+        return (dist_x1*val_q11 + dist_x2*val_q21);
 
       return ParamValueMissing;
     }
@@ -88,7 +88,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
     {
       // Linear interpolation x1,y2 - x2,y2
       if (val_q12 != ParamValueMissing  &&  val_q22 != ParamValueMissing)
-        return (T::ParamValue)(dist_x1*val_q12 + dist_x2*val_q22);
+        return (dist_x1*val_q12 + dist_x2*val_q22);
 
       return ParamValueMissing;
     }
@@ -103,7 +103,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
       double fy1 = dist_x2*val_q11 + dist_x1*val_q21;
       double fy2 = dist_x2*val_q12 + dist_x1*val_q22;
       double f = dist_y2*fy1 + dist_y1*fy2;
-      return (double)f;
+      return f;
     }
 
     // Three corners have a value (triangular interpolation).
@@ -112,7 +112,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
         val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
     {
       double wsum = (dist_x2 * dist_y1 + dist_x1 * dist_y1 + dist_x1 * dist_y2);
-      return (double)((dist_x1 * dist_y2 * val_q21 + dist_x2 * dist_y1 * val_q12 +
+      return ((dist_x1 * dist_y2 * val_q21 + dist_x2 * dist_y1 * val_q12 +
           dist_x1 * dist_y1 * val_q22) / wsum);
     }
 
@@ -120,7 +120,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
         val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
     {
       double wsum = (dist_x2 * dist_y2 + dist_x2 * dist_y1 + dist_x1 * dist_y1);
-      return (double)((dist_x2 * dist_y2 * val_q11 + dist_x2 * dist_y1 * val_q12 +
+      return ((dist_x2 * dist_y2 * val_q11 + dist_x2 * dist_y1 * val_q12 +
           dist_x1 * dist_y1 * val_q22) / wsum);
     }
 
@@ -128,7 +128,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
         val_q12 == ParamValueMissing &&  val_q22 != ParamValueMissing)
     {
       double wsum = (dist_x1 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
-      return (double)((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
+      return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
         dist_x1 * dist_y1 * val_q22) / wsum);
     }
 
@@ -136,7 +136,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
         val_q12 != ParamValueMissing &&  val_q22 == ParamValueMissing)
     {
       double wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
-      return (double)((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
+      return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
         dist_x2 * dist_y2 * val_q12) / wsum);
     }
 

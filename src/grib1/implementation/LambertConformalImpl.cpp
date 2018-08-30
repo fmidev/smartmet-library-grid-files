@@ -13,7 +13,7 @@ LambertConformalImpl::LambertConformalImpl()
 {
   try
   {
-    mGridProjection = T::GridProjection::LambertConformal;
+    mGridProjection = T::GridProjectionValue::LambertConformal;
     mSr_lambertConformal = nullptr;
     mCt_latlon2lambert = nullptr;
     mCt_lambert2latlon = nullptr;
@@ -135,18 +135,18 @@ T::Coordinate_vec LambertConformalImpl::getGridCoordinates() const
     if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return coordinateList;
 
-    uint nx = (uint)mNx;
-    uint ny = (uint)mNy;
+    uint nx = mNx;
+    uint ny = mNy;
 
     coordinateList.reserve(nx*ny);
 
-    double latitudeOfFirstGridPoint = (double)mLatitudeOfFirstGridPoint / 1000;
-    double longitudeOfFirstGridPoint = (double)mLongitudeOfFirstGridPoint / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
 
-    double dx = (double)mDxInMetres;
-    double dy = (double)mDyInMetres;
+    double dx = C_DOUBLE(mDxInMetres);
+    double dy = C_DOUBLE(mDyInMetres);
 
-    unsigned char scanningMode = (unsigned char)mScanningMode.getScanningMode();
+    unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
       dx = -dx;
 
@@ -187,17 +187,17 @@ std::string LambertConformalImpl::getGridGeometryString() const
   {
     char buf[1000];
 
-    double y = (double)mLatitudeOfFirstGridPoint / 1000;
-    double x = (double)mLongitudeOfFirstGridPoint / 1000;
-    double loV = (double)mLoV / 1000;
-    double latin1 = (double)mLatin1 / 1000;
-    double latin2 = (double)mLatin2 / 1000;
-    double sx = (double)mLongitudeOfSouthernPole / 1000;
-    double sy = (double)mLatitudeOfSouthernPole / 1000;
-    double dx = (double)mDxInMetres;
-    double dy = (double)mDyInMetres;
+    double y = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
+    double x = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
+    double loV = C_DOUBLE(mLoV) / 1000;
+    double latin1 = C_DOUBLE(mLatin1) / 1000;
+    double latin2 = C_DOUBLE(mLatin2) / 1000;
+    double sx = C_DOUBLE(mLongitudeOfSouthernPole) / 1000;
+    double sy = C_DOUBLE(mLatitudeOfSouthernPole) / 1000;
+    double dx = C_DOUBLE(mDxInMetres);
+    double dy = C_DOUBLE(mDyInMetres);
 
-    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanningMode = mScanningMode.getScanningMode();
 
     char sm[100];
     char *p = sm;
@@ -223,7 +223,7 @@ std::string LambertConformalImpl::getGridGeometryString() const
 
 
     sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s,%f;%f;%f;%f;%f;60.0;description",
-      (int)T::GridProjection::LambertConformal,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy);
+      (int)T::GridProjectionValue::LambertConformal,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy);
 
     return std::string(buf);
   }
@@ -268,19 +268,19 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
     if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return false;
 
-    uint nx = (uint)mNx;
-    uint ny = (uint)mNy;
+    uint nx = mNx;
+    uint ny = mNy;
 
     if (grid_i < 0  ||  grid_j < 0  ||  grid_i >= nx  ||  grid_j >= ny)
       return false;
 
-    double latitudeOfFirstGridPoint = (double)mLatitudeOfFirstGridPoint / 1000;
-    double longitudeOfFirstGridPoint = (double)mLongitudeOfFirstGridPoint / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
 
-    double dx = (double)mDxInMetres;
-    double dy = (double)mDyInMetres;
+    double dx = C_DOUBLE(mDxInMetres);
+    double dy = C_DOUBLE(mDyInMetres);
 
-    unsigned char scanningMode = (unsigned char)mScanningMode.getScanningMode();
+    unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
       dx = -dx;
 
@@ -323,16 +323,16 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
     if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return false;
 
-    uint nx = (uint)mNx;
-    uint ny = (uint)mNy;
+    uint nx = mNx;
+    uint ny = mNy;
 
-    double latitudeOfFirstGridPoint = (double)mLatitudeOfFirstGridPoint / 1000;
-    double longitudeOfFirstGridPoint = (double)mLongitudeOfFirstGridPoint / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
 
-    double dx = (double)mDxInMetres;
-    double dy = (double)mDyInMetres;
+    double dx = C_DOUBLE(mDxInMetres);
+    double dy = C_DOUBLE(mDyInMetres);
 
-    unsigned char scanningMode = (unsigned char)mScanningMode.getScanningMode();
+    unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
       dx = -dx;
 
@@ -350,7 +350,7 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
     double i = xDiff / dx;
     double j = yDiff / dy;
 
-    if (i < 0 ||  j < 0  ||  i >= (double)nx ||  j > (double)ny)
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(nx) ||  j > C_DOUBLE(ny))
       return false;
 
     grid_i = i;
@@ -371,7 +371,7 @@ bool LambertConformalImpl::reverseXDirection() const
 {
   try
   {
-    unsigned char scanMode = (unsigned char)mScanningMode.getScanningMode();
+    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x80) != 0)
       return true;
@@ -392,7 +392,7 @@ bool LambertConformalImpl::reverseYDirection() const
 {
   try
   {
-    unsigned char scanMode = (unsigned char)mScanningMode.getScanningMode();
+    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x40) == 0)
       return true;
@@ -434,10 +434,10 @@ void LambertConformalImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double stdP1 = (double)dfStdP1 / 1000;
-    double stdP2 = (double)dfStdP2 / 1000;
-    double centerLat = (double)dfCenterLat / 1000;
-    double centerLon = (double)dfCenterLong / 1000;
+    double stdP1 = C_DOUBLE(dfStdP1) / 1000;
+    double stdP2 = C_DOUBLE(dfStdP2) / 1000;
+    double centerLat = C_DOUBLE(dfCenterLat) / 1000;
+    double centerLon = C_DOUBLE(dfCenterLong) / 1000;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
 

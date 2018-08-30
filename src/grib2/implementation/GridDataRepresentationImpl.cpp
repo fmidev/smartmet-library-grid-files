@@ -127,7 +127,7 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
     bitArrayReader.setReadPosition(index*bitsPerValue);
     bitArrayReader.readBits(bitsPerValue,X);
 
-    value = (T::ParamValue)(RDfac + X * EDfac);
+    value = (RDfac + X * EDfac);
     // printf("VAL %f\n",value);
     return true;
   }
@@ -178,7 +178,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
         }
         else
         {
-          decodedValues.push_back((T::ParamValue)R);
+          decodedValues.push_back(R);
         }
       }
       return;
@@ -217,7 +217,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
 
         // Output the caclulated value
         double Y = RDfac + X * EDfac;
-        decodedValues.push_back((T::ParamValue)Y);
+        decodedValues.push_back(Y);
       }
     }
 
@@ -270,7 +270,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
         // Output the caclulated value
         double Y = RDfac + X * EDfac;
 
-        decodedValues.push_back((T::ParamValue)Y);
+        decodedValues.push_back(Y);
       }
     }
 #endif
@@ -324,8 +324,10 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
 {
   try
   {
-    auto binaryScaleFactor = mPacking.getBinaryScaleFactor();
-    auto decimalScaleFactor = mPacking.getDecimalScaleFactor();
+    T::Int16_opt binaryScaleFactor = 0;
+    T::Int16_opt decimalScaleFactor = 0;
+    binaryScaleFactor = mPacking.getBinaryScaleFactor();
+    decimalScaleFactor = mPacking.getDecimalScaleFactor();
     auto referenceValue = mPacking.getReferenceValue();
     auto bitsPerValue = mPacking.getBitsPerValue();
 
@@ -373,9 +375,9 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     if (!bitsPerValue)
     {
       T::ParamValue diff = maxValue - minValue;
-      ulonglong valuesInRange = diff / (ulonglong)std::pow(2.0, E);
+      ulonglong valuesInRange = diff / std::pow(2.0, E);
 
-      while ((ulonglong)(1 << bits) < valuesInRange)
+      while (C_UINT64(1 << bits) < valuesInRange)
         (bits)++;
     }
     else
@@ -445,7 +447,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
         double Y = *it;
         double X = (Y - RDfac) / EDfac;
 
-        ulonglong v = (ulonglong)round(X);
+        ulonglong v = C_UINT64(round(X));
         bitArrayWriter.writeBits(bits,v);
       }
     }
@@ -475,7 +477,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
 
     char filename[100];
     sprintf(filename,"/tmp/data_%04d.dat",idx);
-    FILE *file = fopen(filename,"w");
+    FILE *file = fopen(filename,"we");
     fwrite(data,dataSize,1,file);
     fclose(file);
     delete data;

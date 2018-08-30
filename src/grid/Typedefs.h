@@ -75,46 +75,60 @@ typedef short ForecastNumber;
 typedef int   GeometryId;
 
 
-enum class ParamKeyType
-{
-  UNKNOWN      = 0,
-  FMI_ID       = 1,
-  FMI_NAME     = 2,
-  GRIB_ID      = 3,
-  NEWBASE_ID   = 4,
-  NEWBASE_NAME = 5,
-  CDM_ID       = 6,
-  CDM_NAME     = 7,
-  BUILD_IN     = 100
-};
+typedef uchar ParamKeyType;
 
-enum class ParamLevelIdType
+class ParamKeyTypeValue
 {
-  ANY       = 0,
-  FMI       = 1,
-  GRIB1     = 2,
-  GRIB2     = 3,
-  IGNORE    = 100
-};
-
-
-enum class FileType
-{
-  Unknown = 0,
-  Grib1   = 1,
-  Grib2   = 2,
-  Virtual = 3
+  public:
+    static const ParamKeyType UNKNOWN      = 0;
+    static const ParamKeyType FMI_ID       = 1;
+    static const ParamKeyType FMI_NAME     = 2;
+    static const ParamKeyType GRIB_ID      = 3;
+    static const ParamKeyType NEWBASE_ID   = 4;
+    static const ParamKeyType NEWBASE_NAME = 5;
+    static const ParamKeyType CDM_ID       = 6;
+    static const ParamKeyType CDM_NAME     = 7;
+    static const ParamKeyType BUILD_IN     = 100;
 };
 
 
 
-enum class GridLayout
+typedef uchar ParamLevelIdType;
+
+class ParamLevelIdTypeValue
 {
-  Unknown   = 0,
-  Regular   = 1,
-  Irregular = 2,
-  Points    = 3,   // No 'shapeOfEarth'; no coordinate transformations
-  Data      = 4    // No coordinates
+  public:
+    static const ParamLevelIdType ANY       = 0;
+    static const ParamLevelIdType FMI       = 1;
+    static const ParamLevelIdType GRIB1     = 2;
+    static const ParamLevelIdType GRIB2     = 3;
+    static const ParamLevelIdType IGNORE    = 100;
+};
+
+
+
+typedef uchar FileType;
+
+class FileTypeValue
+{
+  public:
+    static const FileType Unknown = 0;
+    static const FileType Grib1   = 1;
+    static const FileType Grib2   = 2;
+    static const FileType Virtual = 3;
+};
+
+
+typedef uchar GridLayout;
+
+class GridLayoutValue
+{
+  public:
+    static const GridLayout Unknown   = 0;
+    static const GridLayout Regular   = 1;
+    static const GridLayout Irregular = 2;
+    static const GridLayout Points    = 3;   // No 'shapeOfEarth'; no coordinate transformations
+    static const GridLayout Data      = 4;   // No coordinates
 };
 
 
@@ -161,78 +175,82 @@ class LevelInterpolationMethod
 };
 
 
+typedef uchar CoordinateType;
 
-enum CoordinateType
+class CoordinateTypeValue
 {
-  UNKNOWN               = 0,
-  LATLON_COORDINATES    = 1,
-  GRID_COORDINATES      = 2,
-  ORIGINAL_COORDINATES  = 3
+  public:
+    static const CoordinateType UNKNOWN               = 0;
+    static const CoordinateType LATLON_COORDINATES    = 1;
+    static const CoordinateType GRID_COORDINATES      = 2;
+    static const CoordinateType ORIGINAL_COORDINATES  = 3;
 };
 
 
 
+typedef ushort GridProjection;
 
-enum class GridProjection
+class GridProjectionValue
 {
-  Unknown                             = 0,
-  LatLon                              = 1,
-  RotatedLatLon                       = 2,
-  StretchedLatLon                     = 3,
-  StretchedRotatedLatLon              = 4,
-  VariableResolutionLatLon            = 5,
-  VariableResolutionRotatedLatLon     = 6,
-  Mercator                            = 7,
-  TransverseMercator                  = 8,
-  PolarStereographic                  = 9,
-  LambertConformal                    = 10,
-  ObliqueLambertConformal             = 11,
-  Albers                              = 12,
-  Gaussian                            = 13,
-  RotatedGaussian                     = 14,
-  StretchedGaussian                   = 15,
-  StretchedRotatedGaussian            = 16,
-  SphericalHarmonic                   = 17,
-  RotatedSphericalHarmonic            = 18,
-  StretchedSphericalHarmonic          = 19,
-  StretchedRotatedSphericalHarmonic   = 20,
-  SpaceView                           = 21,
-  Triangular                          = 22,
-  Unstructured                        = 23,
-  EquatorialAzimuthalEquidistant      = 24,
-  AzimuthRange                        = 25,
-  IrregularLatLon                     = 26,
-  LambertAzimuthalEqualArea           = 27,
-  CrossSection                        = 28,
-  Hovmoller                           = 29,
-  TimeSection                         = 30,
-  GnomonicProjection                  = 31,
-  SimplePolyconicProjection           = 32,
-  MillersCylindricalProjection        = 33
+  public:
+    static const GridProjection Unknown                             = 0;
+    static const GridProjection LatLon                              = 1;
+    static const GridProjection RotatedLatLon                       = 2;
+    static const GridProjection StretchedLatLon                     = 3;
+    static const GridProjection StretchedRotatedLatLon              = 4;
+    static const GridProjection VariableResolutionLatLon            = 5;
+    static const GridProjection VariableResolutionRotatedLatLon     = 6;
+    static const GridProjection Mercator                            = 7;
+    static const GridProjection TransverseMercator                  = 8;
+    static const GridProjection PolarStereographic                  = 9;
+    static const GridProjection LambertConformal                    = 10;
+    static const GridProjection ObliqueLambertConformal             = 11;
+    static const GridProjection Albers                              = 12;
+    static const GridProjection Gaussian                            = 13;
+    static const GridProjection RotatedGaussian                     = 14;
+    static const GridProjection StretchedGaussian                   = 15;
+    static const GridProjection StretchedRotatedGaussian            = 16;
+    static const GridProjection SphericalHarmonic                   = 17;
+    static const GridProjection RotatedSphericalHarmonic            = 18;
+    static const GridProjection StretchedSphericalHarmonic          = 19;
+    static const GridProjection StretchedRotatedSphericalHarmonic   = 20;
+    static const GridProjection SpaceView                           = 21;
+    static const GridProjection Triangular                          = 22;
+    static const GridProjection Unstructured                        = 23;
+    static const GridProjection EquatorialAzimuthalEquidistant      = 24;
+    static const GridProjection AzimuthRange                        = 25;
+    static const GridProjection IrregularLatLon                     = 26;
+    static const GridProjection LambertAzimuthalEqualArea           = 27;
+    static const GridProjection CrossSection                        = 28;
+    static const GridProjection Hovmoller                           = 29;
+    static const GridProjection TimeSection                         = 30;
+    static const GridProjection GnomonicProjection                  = 31;
+    static const GridProjection SimplePolyconicProjection           = 32;
+    static const GridProjection MillersCylindricalProjection        = 33;
 };
 
 
-enum class CompressionMethod
+class CompressionMethod
 {
-  Undefined                                               = 0,
-  None                                                    = 1,
+  public:
+    static const ushort Undefined                                               = 0;
+    static const ushort None                                                    = 1;
 
-  GridPointData_SimplePacking                             = 10,
-  GridPointData_SimplePackingWithPreprocessing            = 11,
-  GridPointData_SimplePackingWithLogarithmicPreprocessing = 12,
-  GridPointData_ComplexPacking                            = 13,  // = SecondOrderPacking
-  GridPointData_ComplexPackingAndSpatialDifferencing      = 14,
-  GridPointData_IEEE_packing                              = 15,
-  GridPointData_JPEG_2000                                 = 16,
-  GridPointData_PNG                                       = 17,
+    static const ushort GridPointData_SimplePacking                             = 10;
+    static const ushort GridPointData_SimplePackingWithPreprocessing            = 11;
+    static const ushort GridPointData_SimplePackingWithLogarithmicPreprocessing = 12;
+    static const ushort GridPointData_ComplexPacking                            = 13;  // = SecondOrderPacking
+    static const ushort GridPointData_ComplexPackingAndSpatialDifferencing      = 14;
+    static const ushort GridPointData_IEEE_packing                              = 15;
+    static const ushort GridPointData_JPEG_2000                                 = 16;
+    static const ushort GridPointData_PNG                                       = 17;
+    static const ushort GridPointMatrixValues_SimplePacking                     = 30;
 
-  GridPointMatrixValues_SimplePacking                     = 30,
+    static const ushort SphericalHarmonics_SimplePacking                        = 40;
+    static const ushort SphericalHarmonics_ComplexPacking                       = 41;
 
-  SphericalHarmonics_SimplePacking                        = 40,
-  SphericalHarmonics_ComplexPacking                       = 41,
-
-  SpectralData_SimplePacking                              = 50,
-  SpectralData_ComplexPacking                             = 51
+    static const ushort SpectralData_SimplePacking                              = 50;
+    static const ushort SpectralData_ComplexPacking                             = 51;
 };
 
 
@@ -242,7 +260,7 @@ std::string get_gridLayoutString(GridLayout layout);
 std::string get_areaInterpolationMethodString(short interpolationMethod);
 std::string get_timeInterpolationMethodString(short interpolationMethod);
 std::string get_levelInterpolationMethodString(short interpolationMethod);
-std::string get_gridProjectionString(GridProjection gridType);
+std::string get_gridProjectionString(GridProjection projection);
 
 
 }
