@@ -77,13 +77,14 @@ int gaussian_getLatitudes(long N, double *lats)
     double denom = 0.0;
     double precision = 1.0E-14;
     long  nlat = N*2;
+    double dnlat = C_DOUBLE(nlat);
 
     rad2deg = 180.0/M_PI;
 
     convval   = (1.0 - ((2.0 / M_PI)*(2.0 / M_PI)) * 0.25);
 
     gauss_first_guess(N, lats);
-    denom = sqrt( ((((double)nlat)+0.5)*(((double)nlat)+0.5)) + convval );
+    denom = sqrt( ((dnlat+0.5)*(dnlat+0.5)) + convval );
 
     for (jlat = 0; jlat < N; jlat++)
     {
@@ -102,13 +103,13 @@ int gaussian_getLatitudes(long N, double *lats)
         /*  Compute Legendre polynomial  */
         for (legi = 0; legi < nlat; legi++)
         {
-          legfonc = ( (2.0 * ((double)legi+1) - 1.0) * root * mem1 - (double)legi * mem2) / ((double)((double)legi+1));
+          legfonc = ( (2.0 * (C_DOUBLE(legi)+1) - 1.0) * root * mem1 - C_DOUBLE(legi) * mem2) / ((C_DOUBLE(legi)+1));
           mem2 = mem1;
           mem1 = legfonc;
         }
 
         /*  Perform Newton iteration  */
-        conv = legfonc / ((((double)nlat) * (mem2 - root * legfonc) ) / (1.0 - (root *root)));
+        conv = legfonc / ((dnlat * (mem2 - root * legfonc) ) / (1.0 - (root *root)));
         root -= conv;
 
         /*  Routine fails if no convergence after MAXITER iterations  */

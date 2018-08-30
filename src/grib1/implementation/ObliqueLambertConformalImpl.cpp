@@ -13,7 +13,7 @@ ObliqueLambertConformalImpl::ObliqueLambertConformalImpl()
 {
   try
   {
-    mGridProjection = T::GridProjection::ObliqueLambertConformal;
+    mGridProjection = T::GridProjectionValue::ObliqueLambertConformal;
     mSr_lambertConformal = nullptr;
     mCt_latlon2lambert = nullptr;
     mCt_lambert2latlon = nullptr;
@@ -133,16 +133,16 @@ T::Coordinate_vec ObliqueLambertConformalImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    uint nx = (uint)mNx;
-    uint ny = (uint)mNy;
+    uint nx = mNx;
+    uint ny = mNy;
 
-    double latitudeOfFirstGridPoint = (double)mLatitudeOfFirstGridPoint / 1000;
-    double longitudeOfFirstGridPoint = (double)mLongitudeOfFirstGridPoint / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
 
-    double dx = (double)mDxInMetres;
-    double dy = (double)mDyInMetres;
+    double dx = C_DOUBLE(mDxInMetres);
+    double dy = C_DOUBLE(mDyInMetres);
 
-    unsigned char scanningMode = (unsigned char)mScanningMode.getScanningMode();
+    unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
       dx = -dx;
 
@@ -256,10 +256,10 @@ void ObliqueLambertConformalImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double stdP1 = (double)dfStdP1 / 1000;
-    double stdP2 = (double)dfStdP2 / 1000;
-    double centerLat = (double)dfCenterLat / 1000;
-    double centerLon = (double)dfCenterLong / 1000;
+    double stdP1 = C_DOUBLE(dfStdP1) / 1000;
+    double stdP2 = C_DOUBLE(dfStdP2) / 1000;
+    double centerLat = C_DOUBLE(dfCenterLat) / 1000;
+    double centerLon = C_DOUBLE(dfCenterLong) / 1000;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
 

@@ -655,7 +655,7 @@ uint GridDef::getGrib1ParameterDefCount()
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    return (uint)mGrib1_parameterDef_records.size();
+    return mGrib1_parameterDef_records.size();
   }
   catch (...)
   {
@@ -700,7 +700,7 @@ bool GridDef::getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    if (index >= (uint)mGrib1_parameterDef_records.size())
+    if (index >= C_UINT(mGrib1_parameterDef_records.size()))
       return false;
 
     paramDef = mGrib1_parameterDef_records[index];
@@ -840,7 +840,7 @@ uint GridDef::getGrib2ParameterDefCount()
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    return (uint)mGrib2_parameterDef_records.size();
+    return mGrib2_parameterDef_records.size();
   }
   catch (...)
   {
@@ -935,7 +935,7 @@ bool GridDef::getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    if (index >= (uint)mGrib2_parameterDef_records.size())
+    if (index >= C_UINT(mGrib2_parameterDef_records.size()))
       return false;
 
     paramDef = mGrib2_parameterDef_records[index];
@@ -1025,7 +1025,7 @@ void GridDef::loadGribTableValues(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -1067,16 +1067,16 @@ void GridDef::loadGribTableValues(const char *filename)
           GribTableValue rec;
 
           if (field[0][0] != '\0')
-            rec.mGribVersion = (std::uint8_t)atoll(field[0]);
+            rec.mGribVersion = (std::uint8_t)toInt64(field[0]);
 
           if (field[1][0] != '\0')
-            rec.mTableVersion = (std::uint8_t)atoll(field[1]);
+            rec.mTableVersion = (std::uint8_t)toInt64(field[1]);
 
           if (field[2][0] != '\0')
             rec.mTable = field[2];
 
           if (field[3][0] != '\0')
-            rec.mNumber = (std::uint32_t)atoll(field[3]);
+            rec.mNumber = (std::uint32_t)toInt64(field[3]);
 
           if (field[4][0] != '\0')
             rec.mName = field[4];
@@ -1106,7 +1106,7 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -1149,13 +1149,13 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
           rec.mGribParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mDiscipline = (uint)atoll(field[1]);
+            rec.mDiscipline = toInt64(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mParameterCategory = (uint)atoll(field[2]);
+            rec.mParameterCategory = toInt64(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mParameterNumber = (uint)atoll(field[3]);
+            rec.mParameterNumber = toInt64(field[3]);
 
           rec.mParameterName = field[4];
           rec.mParameterDescription = field[5];
@@ -1559,7 +1559,7 @@ void GridDef::loadGribUnitDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -1601,7 +1601,7 @@ void GridDef::loadGribUnitDefinitions(const char *filename)
           UnitDefinition rec;
           rec.mOriginalUnits = field[0];
           rec.mPreferredUnits = field[1];
-          rec.mPreferredAreaInterpolationMethod = (short)atoi(field[2]);
+          rec.mPreferredAreaInterpolationMethod = (short)toInt64(field[2]);
 
           mGrib_unitDef_records.push_back(rec);
         }
@@ -1625,7 +1625,7 @@ void GridDef::loadGrib1LevelDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -1667,7 +1667,7 @@ void GridDef::loadGrib1LevelDefinitions(const char *filename)
           LevelDef rec;
 
           if (field[0][0] != '\0')
-            rec.mLevelId = (uint)atoll(field[0]);
+            rec.mLevelId = toInt64(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -1696,7 +1696,7 @@ void GridDef::loadGrib2LevelDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -1738,7 +1738,7 @@ void GridDef::loadGrib2LevelDefinitions(const char *filename)
           LevelDef rec;
 
           if (field[0][0] != '\0')
-            rec.mLevelId = (uint)atoll(field[0]);
+            rec.mLevelId = toInt64(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -1767,7 +1767,7 @@ void GridDef::loadGrib1TimeRangeDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -1809,7 +1809,7 @@ void GridDef::loadGrib1TimeRangeDefinitions(const char *filename)
           TimeRangeDef rec;
 
           if (field[0][0] != '\0')
-            rec.mTimeRangeId = (uint)atoll(field[0]);
+            rec.mTimeRangeId = toInt64(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -1838,7 +1838,7 @@ void GridDef::loadGrib2TimeRangeDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -1880,7 +1880,7 @@ void GridDef::loadGrib2TimeRangeDefinitions(const char *filename)
           TimeRangeDef rec;
 
           if (field[0][0] != '\0')
-            rec.mTimeRangeId = (uint)atoll(field[0]);
+            rec.mTimeRangeId = toInt64(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -1909,7 +1909,7 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -1954,19 +1954,19 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
             rec.mGribParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mTable2Version = (std::uint8_t)atoll(field[1]);
+            rec.mTable2Version = (std::uint8_t)toInt64(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mCentre = (std::uint8_t)atoll(field[2]);
+            rec.mCentre = (std::uint8_t)toInt64(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mIndicatorOfParameter = (std::uint8_t)atoll(field[3]);
+            rec.mIndicatorOfParameter = (std::uint8_t)toInt64(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mIndicatorOfTypeOfLevel = (std::uint8_t)atoll(field[4]);
+            rec.mIndicatorOfTypeOfLevel = (std::uint8_t)toInt64(field[4]);
 
           if (field[5][0] != '\0')
-            rec.mParameterLevel = (std::uint16_t)atoll(field[5]);
+            rec.mParameterLevel = (std::uint16_t)toInt64(field[5]);
 
           if (field[6][0] != '\0')
             rec.mParameterUnits = field[6];
@@ -1999,7 +1999,7 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2044,67 +2044,67 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
             rec.mGribParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mDiscipline = (std::uint8_t)atoll(field[1]);
+            rec.mDiscipline = (std::uint8_t)toInt64(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mCentre = (std::uint16_t)atoll(field[2]);
+            rec.mCentre = (std::uint16_t)toInt64(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mParameterCategory = (std::uint8_t)atoll(field[3]);
+            rec.mParameterCategory = (std::uint8_t)toInt64(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mParameterNumber = (std::uint8_t)atoll(field[4]);
+            rec.mParameterNumber = (std::uint8_t)toInt64(field[4]);
 
           if (field[5][0] != '\0')
-            rec.mProbabilityType = (std::uint8_t)atoll(field[5]);
+            rec.mProbabilityType = (std::uint8_t)toInt64(field[5]);
 
           if (field[6][0] != '\0')
-            rec.mProductDefinitionTemplateNumber = (std::uint16_t)atoll(field[6]);
+            rec.mProductDefinitionTemplateNumber = (std::uint16_t)toInt64(field[6]);
 
           if (field[7][0] != '\0')
-            rec.mTypeOfFirstFixedSurface = (std::uint8_t)atoll(field[7]);
+            rec.mTypeOfFirstFixedSurface = (std::uint8_t)toInt64(field[7]);
 
           if (field[8][0] != '\0')
-            rec.mTypeOfSecondFixedSurface = (std::uint8_t)atoll(field[8]);
+            rec.mTypeOfSecondFixedSurface = (std::uint8_t)toInt64(field[8]);
 
           if (field[9][0] != '\0')
-            rec.mTypeOfStatisticalProcessing = (std::uint8_t)atoll(field[9]);
+            rec.mTypeOfStatisticalProcessing = (std::uint8_t)toInt64(field[9]);
 
           if (field[10][0] != '\0')
-            rec.mScaledValueOfLowerLimit = (std::uint8_t)atoll(field[10]);
+            rec.mScaledValueOfLowerLimit = (std::uint8_t)toInt64(field[10]);
 
           if (field[11][0] != '\0')
-            rec.mScaledValueOfFirstFixedSurface = (std::uint32_t)atoll(field[11]);
+            rec.mScaledValueOfFirstFixedSurface = (std::uint32_t)toInt64(field[11]);
 
           if (field[12][0] != '\0')
-            rec.mScaledValueOfSecondFixedSurface =(std::uint32_t)atoll(field[12]);
+            rec.mScaledValueOfSecondFixedSurface =(std::uint32_t)toInt64(field[12]);
 
           if (field[13][0] != '\0')
-            rec.mScaleFactorOfLowerLimit = (std::uint8_t)atoll(field[13]);
+            rec.mScaleFactorOfLowerLimit = (std::uint8_t)toInt64(field[13]);
 
           if (field[14][0] != '\0')
-            rec.mScaleFactorOfFirstFixedSurface = (std::uint8_t)atoll(field[14]);
+            rec.mScaleFactorOfFirstFixedSurface = (std::uint8_t)toInt64(field[14]);
 
           if (field[15][0] != '\0')
-            rec.mScaleFactorOfSecondFixedSurface = (std::int8_t)atoll(field[15]);
+            rec.mScaleFactorOfSecondFixedSurface = (std::int8_t)toInt64(field[15]);
 
           if (field[16][0] != '\0')
-            rec.mIs_tigge = (std::uint8_t)atoll(field[16]);
+            rec.mIs_tigge = (std::uint8_t)toInt64(field[16]);
 
           if (field[17][0] != '\0')
-            rec.mTypeOfGeneratingProcess = (std::uint8_t)atoll(field[17]);
+            rec.mTypeOfGeneratingProcess = (std::uint8_t)toInt64(field[17]);
 
           if (field[18][0] != '\0')
-            rec.mConstituentType = (std::uint16_t)atoll(field[18]);
+            rec.mConstituentType = (std::uint16_t)toInt64(field[18]);
 
           if (field[19][0] != '\0')
-            rec.mLengthOfTimeRange = (std::uint8_t)atoll(field[19]);
+            rec.mLengthOfTimeRange = (std::uint8_t)toInt64(field[19]);
 
           if (field[20][0] != '\0')
-            rec.mLocalTablesVersion = (std::uint8_t)atoll(field[20]);
+            rec.mLocalTablesVersion = (std::uint8_t)toInt64(field[20]);
 
           if (field[21][0] != '\0')
-            rec.mAerosolType = (std::uint16_t)atoll(field[21]);
+            rec.mAerosolType = (std::uint16_t)toInt64(field[21]);
 
           if (field[22][0] != '\0')
             rec.mParameterUnits = field[22];
@@ -2137,7 +2137,7 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2179,7 +2179,7 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
           LevelDef rec;
 
           if (field[0][0] != '\0')
-            rec. mLevelId = (uint)atoll(field[0]);
+            rec. mLevelId = toInt64(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -2208,7 +2208,7 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2279,7 +2279,7 @@ void GridDef::loadFmiParameterId_grib1(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2324,31 +2324,31 @@ void GridDef::loadFmiParameterId_grib1(const char *filename)
             rec. mFmiParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mFmiProducerId = (uint)atoll(field[1]);
+            rec.mFmiProducerId = toInt64(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mGeneratingProcessIdentifier = (uint)atoll(field[2]);
+            rec.mGeneratingProcessIdentifier = toInt64(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mCentre = (uint)atoll(field[3]);
+            rec.mCentre = toInt64(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mGribTableVersion = (uint)atoll(field[4]);
+            rec.mGribTableVersion = toInt64(field[4]);
 
           if (field[5][0] != '\0')
-            rec.mGribParameterNumber = (uint)atoll(field[5]);
+            rec.mGribParameterNumber = toInt64(field[5]);
 
           if (field[6][0] != '\0')
-            rec.mGribTimerangeIndicator = (uint)atoll(field[6]);
+            rec.mGribTimerangeIndicator = toInt64(field[6]);
 
           if (field[7][0] != '\0')
-            rec.mFmiParameterLevelId = (uint)atoll(field[7]);
+            rec.mFmiParameterLevelId = toInt64(field[7]);
 
           if (field[8][0] != '\0')
-            rec.mGribParameterLevelId = (uint)atoll(field[8]);
+            rec.mGribParameterLevelId = toInt64(field[8]);
 
           if (field[9][0] != '\0')
-            rec.mParameterLevel = (uint)atoll(field[9]);
+            rec.mParameterLevel = toInt64(field[9]);
 
           mFmi_parametersFromGrib1_records.push_back(rec);
         }
@@ -2371,7 +2371,7 @@ void GridDef::loadFmiParameterId_grib2(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2416,31 +2416,31 @@ void GridDef::loadFmiParameterId_grib2(const char *filename)
             rec.mFmiParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mFmiProducerId = (uint)atoll(field[1]);
+            rec.mFmiProducerId = toInt64(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mGeneratingProcessIdentifier = (uint)atoll(field[2]);
+            rec.mGeneratingProcessIdentifier = toInt64(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mCentre = (uint)atoll(field[3]);
+            rec.mCentre = toInt64(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mDiscipline = (uint)atoll(field[4]);
+            rec.mDiscipline = toInt64(field[4]);
 
           if (field[5][0] != '\0')
-            rec.mParameterCategory = (uint)atoll(field[5]);
+            rec.mParameterCategory = toInt64(field[5]);
 
           if (field[6][0] != '\0')
-            rec.mParameterNumber = (uint)atoll(field[6]);
+            rec.mParameterNumber = toInt64(field[6]);
 
           if (field[7][0] != '\0')
-            rec.mFmiParameterLevelId = (uint)atoll(field[7]);
+            rec.mFmiParameterLevelId = toInt64(field[7]);
 
           if (field[8][0] != '\0')
-            rec.mGribParameterLevelId = (uint)atoll(field[8]);
+            rec.mGribParameterLevelId = toInt64(field[8]);
 
           if (field[9][0] != '\0')
-            rec.mParameterLevel = (uint)atoll(field[9]);
+            rec.mParameterLevel = toInt64(field[9]);
 
           mFmi_parametersFromGrib2_records.push_back(rec);
         }
@@ -2463,7 +2463,7 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2534,7 +2534,7 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2579,7 +2579,7 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
             rec.mFmiParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mVersion = (uint)atoll(field[1]);
+            rec.mVersion = toInt64(field[1]);
 
           if (field[2][0] != '\0')
             rec.mParameterName = field[2];
@@ -2591,13 +2591,13 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
             rec.mParameterDescription = field[4];
 
           if (field[5][0] != '\0')
-            rec.mAreaInterpolationMethod = (short)atoll(field[5]);
+            rec.mAreaInterpolationMethod = (short)toInt64(field[5]);
 
           if (field[6][0] != '\0')
-            rec.mTimeInterpolationMethod = (short)atoll(field[6]);
+            rec.mTimeInterpolationMethod = (short)toInt64(field[6]);
 
           if (field[7][0] != '\0')
-            rec.mLevelInterpolationMethod = (short)atoll(field[7]);
+            rec.mLevelInterpolationMethod = (short)toInt64(field[7]);
 
           mFmi_parameterDef_records.push_back(rec);
         }
@@ -2620,7 +2620,7 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2662,19 +2662,19 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
           FmiLevelId_grib rec;
 
           if (field[0][0] != '\0')
-            rec.mFmiLevelId = (uint)atoll(field[0]);
+            rec.mFmiLevelId = toInt64(field[0]);
 
           if (field[1][0] != '\0')
-            rec.mFmiProducerId = (uint)atoll(field[1]);
+            rec.mFmiProducerId = toInt64(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mGeneratingProcessIdentifier = (uint)atoll(field[2]);
+            rec.mGeneratingProcessIdentifier = toInt64(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mCentre = (uint)atoll(field[3]);
+            rec.mCentre = toInt64(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mGribLevelId = (uint)atoll(field[4]);
+            rec.mGribLevelId = toInt64(field[4]);
 
           mFmi_levelsFromGrib1_records.push_back(rec);
         }
@@ -2697,7 +2697,7 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2739,19 +2739,19 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
           FmiLevelId_grib rec;
 
           if (field[0][0] != '\0')
-            rec.mFmiLevelId = (uint)atoll(field[0]);
+            rec.mFmiLevelId = toInt64(field[0]);
 
           if (field[1][0] != '\0')
-            rec.mFmiProducerId = (uint)atoll(field[1]);
+            rec.mFmiProducerId = toInt64(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mGeneratingProcessIdentifier = (uint)atoll(field[2]);
+            rec.mGeneratingProcessIdentifier = toInt64(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mCentre = (uint)atoll(field[3]);
+            rec.mCentre = toInt64(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mGribLevelId = (uint)atoll(field[4]);
+            rec.mGribLevelId = toInt64(field[4]);
 
           mFmi_levelsFromGrib2_records.push_back(rec);
         }
@@ -2774,7 +2774,7 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2842,7 +2842,7 @@ void GridDef::loadFmiProducerId_grib(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -2884,16 +2884,16 @@ void GridDef::loadFmiProducerId_grib(const char *filename)
           FmiProducerId_grib rec;
 
           if (field[0][0] != '\0')
-            rec.mProducerId = (uint)atoll(field[0]);
+            rec.mProducerId = toInt64(field[0]);
 
           if (field[1][0] != '\0')
-            rec.mType = (uint)atoll(field[1]);
+            rec.mType = toInt64(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mCentre = (uint)atoll(field[2]);
+            rec.mCentre = toInt64(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mIdent = (uint)atoll(field[3]);
+            rec.mIdent = toInt64(field[3]);
 
           if (field[4][0] != '\0')
             rec.mProducerName = field[4];
@@ -3282,7 +3282,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
         {
           double grid_i = 0;
           double grid_j = 0;
-          if (def2->getGridPointByLatLonCoordinates((double)lat,((double)lon)/10,grid_i,grid_j))
+          if (def2->getGridPointByLatLonCoordinates(C_DOUBLE(lat),C_DOUBLE(lon)/10,grid_i,grid_j))
           {
             coordinates.push_back(T::Coordinate(grid_i,grid_j));
           }
@@ -3295,7 +3295,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
         {
           double grid_i = 0;
           double grid_j = 0;
-          if (def2->getGridPointByLatLonCoordinates(((double)lat)/10,(double)lon,grid_i,grid_j))
+          if (def2->getGridPointByLatLonCoordinates(C_DOUBLE(lat)/10,C_DOUBLE(lon),grid_i,grid_j))
           {
             coordinates.push_back(T::Coordinate(grid_i,grid_j));
           }
@@ -3313,7 +3313,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
         {
           double grid_i = 0;
           double grid_j = 0;
-          if (def1->getGridPointByLatLonCoordinates((double)lat,((double)lon)/10,grid_i,grid_j))
+          if (def1->getGridPointByLatLonCoordinates(C_DOUBLE(lat),C_DOUBLE(lon)/10,grid_i,grid_j))
           {
             coordinates.push_back(T::Coordinate(grid_i,grid_j));
           }
@@ -3326,7 +3326,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
         {
           double grid_i = 0;
           double grid_j = 0;
-          if (def1->getGridPointByLatLonCoordinates(((double)lat)/10,(double)lon,grid_i,grid_j))
+          if (def1->getGridPointByLatLonCoordinates(C_DOUBLE(lat)/10,C_DOUBLE(lon),grid_i,grid_j))
           {
             coordinates.push_back(T::Coordinate(grid_i,grid_j));
           }
@@ -3501,7 +3501,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
   FUNCTION_TRACE
   try
   {
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
@@ -3540,25 +3540,25 @@ void GridDef::loadGeometryDefinitions(const char *filename)
 
         if (c > 1)
         {
-          T::GridProjection gridProjection = (T::GridProjection)atoll(field[0]);
+          ushort gridProjection = (ushort)toInt64(field[0]);
           switch (gridProjection)
           {
-            case T::GridProjection::Unknown:
+            case T::GridProjectionValue::Unknown:
               break;
 
-            case T::GridProjection::LatLon:
+            case T::GridProjectionValue::LatLon:
             {
               if (c < 10)
                 return;
 
-              uint geometryId = (uint)atoll(field[1]);
+              uint geometryId = toInt64(field[1]);
               char *geometryName = field[2];
-              int ni = atoll(field[3]);
-              int nj = atoll(field[4]);
-              int longitude = (int)round(atof(field[5])*1000000);
-              int latitude = (int)round(atof(field[6])*1000000);
-              int iInc = (int)round(atof(field[7]) * 1000000);
-              int jInc = (int)round(atof(field[8]) * 1000000);
+              int ni = toInt64(field[3]);
+              int nj = toInt64(field[4]);
+              int longitude = (int)round(toDouble(field[5])*1000000);
+              int latitude = (int)round(toDouble(field[6])*1000000);
+              int iInc = (int)round(toDouble(field[7]) * 1000000);
+              int jInc = (int)round(toDouble(field[8]) * 1000000);
               char *scanningMode = field[9];
               int lastLongitude = longitude + ni*iInc - iInc;
               int lastLatitude = latitude + nj*jInc - jInc;
@@ -3669,25 +3669,25 @@ void GridDef::loadGeometryDefinitions(const char *filename)
             }
             break;
 
-            case T::GridProjection::RotatedLatLon:
+            case T::GridProjectionValue::RotatedLatLon:
             {
               if (c < 13)
                 return;
 
-              uint geometryId = (uint)atoll(field[1]);
+              uint geometryId = toInt64(field[1]);
               char *geometryName = field[2];
-              int ni = atoll(field[3]);
-              int nj = atoll(field[4]);
-              int longitude = (int)round(atof(field[5])*1000000);
-              int latitude = (int)round(atof(field[6])*1000000);
-              int iInc = (int)round(atof(field[7]) * 1000000);
-              int jInc = (int)round(atof(field[8]) * 1000000);
+              int ni = toInt64(field[3]);
+              int nj = toInt64(field[4]);
+              int longitude = (int)round(toDouble(field[5])*1000000);
+              int latitude = (int)round(toDouble(field[6])*1000000);
+              int iInc = (int)round(toDouble(field[7]) * 1000000);
+              int jInc = (int)round(toDouble(field[8]) * 1000000);
               char *scanningMode = field[9];
-              int longitudeOfSouthernPole = (int)round(atof(field[10])*1000000);
-              int latitudeOfSouthernPole = (int)round(atof(field[11])*1000000);
+              int longitudeOfSouthernPole = (int)round(toDouble(field[10])*1000000);
+              int latitudeOfSouthernPole = (int)round(toDouble(field[11])*1000000);
               int lastLongitude = longitude + ni*iInc - iInc;
               int lastLatitude = latitude + nj*jInc - jInc;
-              int angle = round(atof(field[12]));
+              int angle = round(toDouble(field[12]));
               //std::uint8_t resolutionAndComponentFlags = 48;
 
               if (lastLongitude > 360000000)
@@ -3800,40 +3800,40 @@ void GridDef::loadGeometryDefinitions(const char *filename)
             }
             break;
 
-            case T::GridProjection::StretchedLatLon:
+            case T::GridProjectionValue::StretchedLatLon:
               break;
 
-            case T::GridProjection::StretchedRotatedLatLon:
+            case T::GridProjectionValue::StretchedRotatedLatLon:
               break;
 
-            case T::GridProjection::VariableResolutionLatLon:
+            case T::GridProjectionValue::VariableResolutionLatLon:
               break;
 
-            case T::GridProjection::VariableResolutionRotatedLatLon:
+            case T::GridProjectionValue::VariableResolutionRotatedLatLon:
               break;
 
-            case T::GridProjection::Mercator:
+            case T::GridProjectionValue::Mercator:
               break;
 
-            case T::GridProjection::TransverseMercator:
+            case T::GridProjectionValue::TransverseMercator:
               break;
 
-            case T::GridProjection::PolarStereographic:
+            case T::GridProjectionValue::PolarStereographic:
             {
               if (c < 12)
                 return;
 
-              uint geometryId = (uint)atoll(field[1]);
+              uint geometryId = toInt64(field[1]);
               char *geometryName = field[2];
-              int ni = atoll(field[3]);
-              int nj = atoll(field[4]);
-              int longitude = (int)round(atof(field[5])*1000000);
-              int latitude = (int)round(atof(field[6])*1000000);
-              int iInc = (int)round(atof(field[7]) * 1000);
-              int jInc = (int)round(atof(field[8]) * 1000);
+              int ni = toInt64(field[3]);
+              int nj = toInt64(field[4]);
+              int longitude = (int)round(toDouble(field[5])*1000000);
+              int latitude = (int)round(toDouble(field[6])*1000000);
+              int iInc = (int)round(toDouble(field[7]) * 1000);
+              int jInc = (int)round(toDouble(field[8]) * 1000);
               char *scanningMode = field[9];
-              int orientation = (int)round(atof(field[10])*1000000);
-              int laD = (int)round(atof(field[11]) * 1000000);
+              int orientation = (int)round(toDouble(field[10])*1000000);
+              int laD = (int)round(toDouble(field[11]) * 1000000);
 
               // ******* GRIB 2 ********
 
@@ -3922,25 +3922,25 @@ void GridDef::loadGeometryDefinitions(const char *filename)
             }
             break;
 
-            case T::GridProjection::LambertConformal:
+            case T::GridProjectionValue::LambertConformal:
             {
               if (c < 15)
                 return;
 
-              uint geometryId = (uint)atoll(field[1]);
+              uint geometryId = toInt64(field[1]);
               char *geometryName = field[2];
-              int ni = atoll(field[3]);
-              int nj = atoll(field[4]);
-              int longitude = (int)round(atof(field[5])*1000000);
-              int latitude = (int)round(atof(field[6])*1000000);
-              int iInc = (int)(atoll(field[7]));
-              int jInc = (int)(atoll(field[8]));
+              int ni = toInt64(field[3]);
+              int nj = toInt64(field[4]);
+              int longitude = (int)round(toDouble(field[5])*1000000);
+              int latitude = (int)round(toDouble(field[6])*1000000);
+              int iInc = (int)(toInt64(field[7]));
+              int jInc = (int)(toInt64(field[8]));
               char *scanningMode = field[9];
-              int orientation = (int)round(atof(field[10])*1000000);
-              int latin1 = (int)round(atof(field[11])*1000000);
-              int latin2 = (int)round(atof(field[12])*1000000);
-              int longitudeOfSouthernPole = (int)round(atof(field[13])*1000000);
-              int latitudeOfSouthernPole = (int)round(atof(field[14])*1000000);
+              int orientation = (int)round(toDouble(field[10])*1000000);
+              int latin1 = (int)round(toDouble(field[11])*1000000);
+              int latin2 = (int)round(toDouble(field[12])*1000000);
+              int longitudeOfSouthernPole = (int)round(toDouble(field[13])*1000000);
+              int latitudeOfSouthernPole = (int)round(toDouble(field[14])*1000000);
 
               // ******* GRIB 2 ********
 
@@ -4027,73 +4027,73 @@ void GridDef::loadGeometryDefinitions(const char *filename)
             }
             break;
 
-            case T::GridProjection::ObliqueLambertConformal:
+            case T::GridProjectionValue::ObliqueLambertConformal:
               break;
 
-            case T::GridProjection::Albers:
+            case T::GridProjectionValue::Albers:
               break;
 
-            case T::GridProjection::Gaussian:
+            case T::GridProjectionValue::Gaussian:
               break;
 
-            case T::GridProjection::RotatedGaussian:
+            case T::GridProjectionValue::RotatedGaussian:
               break;
 
-            case T::GridProjection::StretchedGaussian:
+            case T::GridProjectionValue::StretchedGaussian:
               break;
 
-            case T::GridProjection::StretchedRotatedGaussian:
+            case T::GridProjectionValue::StretchedRotatedGaussian:
               break;
 
-            case T::GridProjection::SphericalHarmonic:
+            case T::GridProjectionValue::SphericalHarmonic:
               break;
 
-            case T::GridProjection::RotatedSphericalHarmonic:
+            case T::GridProjectionValue::RotatedSphericalHarmonic:
               break;
 
-            case T::GridProjection::StretchedSphericalHarmonic:
+            case T::GridProjectionValue::StretchedSphericalHarmonic:
               break;
 
-            case T::GridProjection::StretchedRotatedSphericalHarmonic:
+            case T::GridProjectionValue::StretchedRotatedSphericalHarmonic:
               break;
 
-            case T::GridProjection::SpaceView:
+            case T::GridProjectionValue::SpaceView:
               break;
 
-            case T::GridProjection::Triangular:
+            case T::GridProjectionValue::Triangular:
               break;
 
-            case T::GridProjection::Unstructured:
+            case T::GridProjectionValue::Unstructured:
               break;
 
-            case T::GridProjection::EquatorialAzimuthalEquidistant:
+            case T::GridProjectionValue::EquatorialAzimuthalEquidistant:
               break;
 
-            case T::GridProjection::AzimuthRange:
+            case T::GridProjectionValue::AzimuthRange:
               break;
 
-            case T::GridProjection::IrregularLatLon:
+            case T::GridProjectionValue::IrregularLatLon:
               break;
 
-            case T::GridProjection::LambertAzimuthalEqualArea:
+            case T::GridProjectionValue::LambertAzimuthalEqualArea:
               break;
 
-            case T::GridProjection::CrossSection:
+            case T::GridProjectionValue::CrossSection:
               break;
 
-            case T::GridProjection::Hovmoller:
+            case T::GridProjectionValue::Hovmoller:
               break;
 
-            case T::GridProjection::TimeSection:
+            case T::GridProjectionValue::TimeSection:
               break;
 
-            case T::GridProjection::GnomonicProjection:
+            case T::GridProjectionValue::GnomonicProjection:
               break;
 
-            case T::GridProjection::SimplePolyconicProjection:
+            case T::GridProjectionValue::SimplePolyconicProjection:
               break;
 
-            case T::GridProjection::MillersCylindricalProjection:
+            case T::GridProjectionValue::MillersCylindricalProjection:
               break;
           };
         }
@@ -4369,7 +4369,7 @@ T::ParamLevelId GridDef::getGrib2LevelId(GRIB1::Message& message)
       {
         if (it->mFmiLevelId == fmiLevelId)
         {
-          return (T::ParamLevelId)it->mGribLevelId;
+          return it->mGribLevelId;
         }
       }
     }
@@ -4398,7 +4398,7 @@ T::ParamLevelId GridDef::getGrib1LevelId(GRIB2::Message& message)
       {
         if (it->mFmiLevelId == fmiLevelId)
         {
-          return (T::ParamLevelId)it->mGribLevelId;
+          return it->mGribLevelId;
         }
       }
     }
@@ -4997,7 +4997,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
           it->mCentre == productSection->getCentre() &&
           it->mGribLevelId == productSection->getIndicatorOfTypeOfLevel())
       {
-        return (T::ParamLevelId)it->mFmiLevelId;
+        return it->mFmiLevelId;
       }
     }
 
@@ -5005,7 +5005,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
     {
       if (it->mGribLevelId == productSection->getIndicatorOfTypeOfLevel())
       {
-        return (T::ParamLevelId)it->mFmiLevelId;
+        return it->mFmiLevelId;
       }
     }
     return 0;
@@ -5042,7 +5042,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
           it->mCentre == *identificationSection->getCentre() &&
           it->mGribLevelId == message.getGridParameterLevelId())
       {
-        return (T::ParamLevelId)it->mFmiLevelId;
+        return it->mFmiLevelId;
       }
     }
 
@@ -5050,7 +5050,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
     {
       if (it->mGribLevelId == message.getGridParameterLevelId())
       {
-        return (T::ParamLevelId)it->mFmiLevelId;
+        return it->mFmiLevelId;
       }
     }
     return 0;

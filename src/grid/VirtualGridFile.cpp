@@ -248,7 +248,7 @@ T::FileType VirtualGridFile::getFileType() const
 {
   try
   {
-    return T::FileType::Virtual;
+    return T::FileTypeValue::Virtual;
   }
   catch (...)
   {

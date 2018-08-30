@@ -179,11 +179,11 @@ void PhysicalGridFile::read(std::string filename)
 
     MemoryReader memoryReader((unsigned char*)startAddr,(unsigned char*)endAddr);
 
-    T::FileType fileType = readFileType(memoryReader);
+    uchar fileType = readFileType(memoryReader);
 
     switch (fileType)
     {
-      case T::FileType::Grib1:
+      case T::FileTypeValue::Grib1:
       {
         auto file = new GRIB1::GribFile();
         file->setFileName(filename);
@@ -197,7 +197,7 @@ void PhysicalGridFile::read(std::string filename)
       }
       break;
 
-      case T::FileType::Grib2:
+      case T::FileTypeValue::Grib2:
       {
         auto file = new GRIB2::GribFile();
         file->setFileName(filename);
@@ -252,7 +252,7 @@ void PhysicalGridFile::write(std::string filename)
         \param memoryReader  This object controls the access to the memory mapped file.
 */
 
-T::FileType PhysicalGridFile::readFileType(MemoryReader& memoryReader)
+uchar PhysicalGridFile::readFileType(MemoryReader& memoryReader)
 {
   try
   {
@@ -270,13 +270,13 @@ T::FileType PhysicalGridFile::readFileType(MemoryReader& memoryReader)
       // This is a grib file.
 
       if (d[7] == 1)
-        return T::FileType::Grib1;
+        return T::FileTypeValue::Grib1;
 
       if (d[7] == 2)
-        return T::FileType::Grib2;
+        return T::FileTypeValue::Grib2;
 
     }
-    return T::FileType::Unknown;
+    return T::FileTypeValue::Unknown;
   }
   catch (...)
   {

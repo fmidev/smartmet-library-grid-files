@@ -174,7 +174,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
 /*
     char filename[100];
     sprintf(filename,"/tmp/smartmet-library-grid_jpg2000_decoding_%llu.jpg",getTime());
-    FILE *file = fopen(filename,"w");
+    FILE *file = fopen(filename,"we");
     fwrite(data,dataSize,1,file);
     fclose(file);
     jas_stream_t *instream = jas_stream_fopen(filename, "rb");
@@ -273,7 +273,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
         {
           int X = matrix->data_[pos];
           double Y = RDfac + X * EDfac;
-          decodedValues.push_back((T::ParamValue)Y);
+          decodedValues.push_back(Y);
           pos++;
         }
         else
@@ -288,7 +288,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
       {
         int X = matrix->data_[i];
         double Y = RDfac + X * EDfac;
-        decodedValues.push_back((T::ParamValue)Y);
+        decodedValues.push_back(Y);
       }
     }
 
@@ -446,7 +446,7 @@ void decode_raw_jpeg_values(T::ParamValue_vec& values,
         {
           int X = comps.data[pos];
           double Y = RDfac + X * EDfac;
-          values.push_back((T::ParamValue)Y);
+          values.push_back(Y);
           pos++;
         }
         else
@@ -461,7 +461,7 @@ void decode_raw_jpeg_values(T::ParamValue_vec& values,
       {
         int X = comps.data[i];
         double Y = RDfac + X * EDfac;
-        values.push_back((T::ParamValue)Y);
+        values.push_back(Y);
       }
     }
 
@@ -544,7 +544,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
         {
           if (bitmapReader.readBit())
           {
-            decodedValues.push_back((T::ParamValue)R);
+            decodedValues.push_back(R);
           }
           else
           {
@@ -558,7 +558,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
         // All values are set to "reference_value".
         for (std::uint32_t i=0; i<numOfValues; i++)
         {
-          decodedValues.push_back((T::ParamValue)R);
+          decodedValues.push_back(R);
         }
         return;
       }

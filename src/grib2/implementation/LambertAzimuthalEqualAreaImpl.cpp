@@ -11,7 +11,7 @@ namespace GRIB2
 
 LambertAzimuthalEqualAreaImpl::LambertAzimuthalEqualAreaImpl()
 {
-  mGridProjection = T::GridProjection::LambertAzimuthalEqualArea;
+  mGridProjection = T::GridProjectionValue::LambertAzimuthalEqualArea;
 }
 
 
@@ -112,9 +112,10 @@ T::Dimensions LambertAzimuthalEqualAreaImpl::getGridDimensions() const
 {
   try
   {
-    uint nx = *mNumberOfPointsAlongXAxis;
-    uint ny = *mNumberOfPointsAlongYAxis;
-    return T::Dimensions(nx, ny);
+    if (!mNumberOfPointsAlongXAxis || !mNumberOfPointsAlongYAxis)
+      return T::Dimensions();
+
+    return T::Dimensions(*mNumberOfPointsAlongXAxis,*mNumberOfPointsAlongYAxis);
   }
   catch (...)
   {

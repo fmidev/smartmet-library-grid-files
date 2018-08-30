@@ -259,92 +259,92 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 
     //const GRID::ParameterDefinition *paramDef = SmartMet::GRID::gridDef.getParameterDefById(getGribParameterId());
 
-    sprintf(name,"%smessage[%u].fmiProducerName",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].fmiProducerName",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mFmiProducerName);
 
-    sprintf(name,"%smessage[%u].gribParameterId",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].gribParameterId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGribParameterId()));
 
-    sprintf(name,"%smessage[%u].gribParameterName",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].gribParameterName",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mGribParameterName);
 
-    sprintf(name,"%smessage[%u].gribParameterDescription",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].gribParameterDescription",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mGribParameterDescription);
 
-    sprintf(name,"%smessage[%u].gribParameterUnits",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].gribParameterUnits",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mGribParameterUnits);
 
-    sprintf(name,"%smessage[%u].grib1ParameterLevelId",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].grib1ParameterLevelId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGrib1ParameterLevelId()));
 
-    sprintf(name,"%smessage[%u].grib2ParameterLevelId",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].grib2ParameterLevelId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGrib2ParameterLevelId()));
 
-    sprintf(name,"%smessage[%u].fmiParameterId",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].fmiParameterId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getFmiParameterId()));
 
-    sprintf(name,"%smessage[%u].fmiParameterLevelId",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,toString((uint)getFmiParameterLevelId()));
+    sprintf(name,"%smessage[%u].fmiParameterLevelId",prefix.c_str(),mMessageIndex);
+    attributeList.addAttribute(name,toString(getFmiParameterLevelId()));
 
-    sprintf(name,"%smessage[%u].fmiParameterName",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].fmiParameterName",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mFmiParameterName);
 
-    sprintf(name,"%smessage[%u].fmiParameterDescription",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].fmiParameterDescription",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mFmiParameterDescription);
 
-    sprintf(name,"%smessage[%u].fmiParameterUnits",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].fmiParameterUnits",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mFmiParameterUnits);
 
-    sprintf(name,"%smessage[%u].newbaseParameterId",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].newbaseParameterId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mNewbaseParameterId);
 
-    sprintf(name,"%smessage[%u].newbaseParameterName",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].newbaseParameterName",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mNewbaseParameterName);
 
-    sprintf(name,"%smessage[%u].cdmParameterId",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].cdmParameterId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mCdmParameterId);
 
-    sprintf(name,"%smessage[%u].cdmParameterName",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].cdmParameterName",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mCdmParameterName);
 
-    sprintf(name,"%smessage[%u].parameterLevel",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].parameterLevel",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGridParameterLevel()));
 
-    sprintf(name,"%smessage[%u].parameterLevelId",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].parameterLevelId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGridParameterLevelId()));
 
-    sprintf(name,"%smessage[%u].parameterLevelIdString",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].parameterLevelIdString",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getGridParameterLevelIdString());
 
-    sprintf(name,"%smessage[%u].foracastTime",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].foracastTime",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getForecastTime());
 
-    sprintf(name,"%smessage[%u].referenceTime",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].referenceTime",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getReferenceTime());
 
-    sprintf(name,"%smessage[%u].gridGeometryId",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].gridGeometryId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGridGeometryId()));
 
-    sprintf(name,"%smessage[%u].gridType",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,toString((uint)getGridProjection()));
+    sprintf(name,"%smessage[%u].gridType",prefix.c_str(),mMessageIndex);
+    attributeList.addAttribute(name,toString(getGridProjection()));
 
-    sprintf(name,"%smessage[%u].gridTypeString",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].gridTypeString",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getGridProjectionString());
 
-    sprintf(name,"%smessage[%u].gridLayout",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,toString((uint)getGridLayout()));
+    sprintf(name,"%smessage[%u].gridLayout",prefix.c_str(),mMessageIndex);
+    attributeList.addAttribute(name,toString(getGridLayout()));
 
-    sprintf(name,"%smessage[%u].gridLayoutString",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,get_gridLayoutString(getGridLayout()));
+    sprintf(name,"%smessage[%u].gridLayoutString",prefix.c_str(),mMessageIndex);
+    attributeList.addAttribute(name,T::get_gridLayoutString(getGridLayout()));
 
-    sprintf(name,"%smessage[%u].gridRows",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,toString((uint)getGridOriginalRowCount()));
+    sprintf(name,"%smessage[%u].gridRows",prefix.c_str(),mMessageIndex);
+    attributeList.addAttribute(name,toString(getGridOriginalRowCount()));
 
-    sprintf(name,"%smessage[%u].gridColumns",prefix.c_str(),(uint)mMessageIndex);
-    attributeList.addAttribute(name,toString((uint)getGridOriginalColumnCount()));
+    sprintf(name,"%smessage[%u].gridColumns",prefix.c_str(),mMessageIndex);
+    attributeList.addAttribute(name,toString(getGridOriginalColumnCount()));
 
 
-    sprintf(name,"%smessage[%u].",prefix.c_str(),(uint)mMessageIndex);
+    sprintf(name,"%smessage[%u].",prefix.c_str(),mMessageIndex);
 
 
     if (mIndicatorSection)
@@ -613,7 +613,7 @@ void Message::setGridParameterLevel(T::ParamLevel level)
 
 
 
-void Message::setGridProjection(T::GridProjection projection)
+void Message::setGridProjection(ushort projection)
 {
   FUNCTION_TRACE
   try
@@ -2360,7 +2360,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       else
       {
         T::IndexVector indexVector;
-        mBitmapSection->getIndexVector((uint)(d.nx()*d.ny()),indexVector);
+        mBitmapSection->getIndexVector((d.nx()*d.ny()),indexVector);
         GRID::indexCache.addIndexVector(hash,indexVector);
         if (indexVector[idx] < 0)
           return ParamValueMissing;
@@ -2395,9 +2395,10 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     if (endp >= POINT_CACHE_SIZE)
       endp = POINT_CACHE_SIZE;
 
+    uint i = C_UINT(idx);
     for (uint t=0; t<endp; t++)
     {
-      if (mPointCacheCoordinate[t] == (uint)idx)
+      if (mPointCacheCoordinate[t] == i)
         return mPointCacheValue[t];
     }
 
@@ -2936,7 +2937,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- parameterLevelIdString   = " << getGridParameterLevelIdString() << "\n";
     stream << space(level) << "- fmiProducerName          = " << mFmiProducerName << "\n";
     stream << space(level) << "- fmiParameterId           = " << toString(mFmiParameterId) << "\n";
-    stream << space(level) << "- fmiParameterLevelId      = " << toString((uint)mFmiParameterLevelId) << "\n";
+    stream << space(level) << "- fmiParameterLevelId      = " << toString(mFmiParameterLevelId) << "\n";
     stream << space(level) << "- fmiParameterName         = " << mFmiParameterName << "\n";
     stream << space(level) << "- fmiParameterDescription  = " << mFmiParameterDescription << "\n";
     stream << space(level) << "- fmiParameterUnits        = " << mFmiParameterUnits << "\n";
@@ -3043,7 +3044,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
               {
                 auto val = values[c];
                 if (val != ParamValueMissing)
-                  sprintf(st,"[%u,%u] %f",y+1,x+1,(double)(val));
+                  sprintf(st,"[%u,%u] %f",y+1,x+1,val);
                 else
                   sprintf(st,"[%u,%u] NA",y+1,x+1);
 

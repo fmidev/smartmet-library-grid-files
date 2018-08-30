@@ -105,7 +105,7 @@ void GridValueList::clear()
 {
   try
   {
-    uint sz = (uint)mList.size();
+    uint sz = mList.size();
     for (uint t=0; t<sz; t++)
     {
       GridValue *rec = mList[t];
@@ -128,7 +128,7 @@ GridValue* GridValueList::getGridValueByIndex(uint index) const
 {
   try
   {
-    if (index >= (uint)mList.size())
+    if (index >= mList.size())
       return nullptr;
 
     return mList[index];
@@ -168,7 +168,7 @@ uint GridValueList::getLength() const
 {
   try
   {
-    return (uint)mList.size();
+    return mList.size();
   }
   catch (...)
   {
@@ -243,7 +243,7 @@ T::ParamValue GridValueList::getAverageValue() const
     }
 
     if (cnt != 0)
-      return (T::ParamValue)(total / (double)cnt);
+      return (total / C_DOUBLE(cnt));
 
     return ParamValueMissing;
   }
@@ -286,7 +286,7 @@ void GridValueList::print(std::ostream& stream,uint level,uint optionFlags) cons
     stream << space(level) << "GridValueList\n";
     stream << space(level) << "- mList = \n";
 
-    uint sz = (uint)mList.size();
+    uint sz = mList.size();
     for (uint t=0; t<sz; t++)
     {
       GridValue *rec = mList[t];

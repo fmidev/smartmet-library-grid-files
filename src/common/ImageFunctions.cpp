@@ -53,7 +53,7 @@ uint rgb(uchar red, uchar green, uchar blue)
 {
   try
   {
-    return rgb((uint)red,(uint)green,(uint)blue);
+    return rgb(C_UINT(red),C_UINT(green),C_UINT(blue));
   }
   catch (...)
   {
@@ -70,7 +70,7 @@ uint cmyk2rgb(double _c, double _m, double _y, double _k)
   double g = (255.0 - _m*255) * (1.0 - _k);
   double b = (255.0 - _y*255) * (1.0 - _k);
 
-  return rgb((uint)r,(uint)g,(uint)b);
+  return rgb(C_UINT(r),C_UINT(g),C_UINT(b));
 }
 
 
@@ -96,21 +96,23 @@ uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value
     uint q = (value * (255 - ((saturation * fpart) >> 8))) >> 8;
     uint t = (value * (255 - ((saturation * (255 - fpart)) >> 8))) >> 8;
 
+    uint val = C_UINT(value);
+
     /* assign temp vars based on color cone region */
     switch(region)
     {
       case 0:
-        return rgb((uint)value,t,p);
+        return rgb(val,t,p);
       case 1:
-        return rgb(q,(uint)value,p);
+        return rgb(q,val,p);
       case 2:
-        return rgb(p,(uint)value,t);
+        return rgb(p,val,t);
       case 3:
-        return rgb(p,q,(uint)value);
+        return rgb(p,q,val);
       case 4:
-        return rgb(t,p,(uint)value);
+        return rgb(t,p,val);
       default:
-        return rgb((uint)value,p,q);
+        return rgb(val,p,q);
     }
   }
   catch (...)

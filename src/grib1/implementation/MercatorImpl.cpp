@@ -13,7 +13,7 @@ MercatorImpl::MercatorImpl()
 {
   try
   {
-    mGridProjection = T::GridProjection::Mercator;
+    mGridProjection = T::GridProjectionValue::Mercator;
     mSr_mercator = nullptr;
     mCt_latlon2mercator = nullptr;
     mCt_mercator2latlon = nullptr;
@@ -133,16 +133,16 @@ T::Coordinate_vec MercatorImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    uint ni = (uint)mNi;
-    uint nj = (uint)mNj;
+    uint ni = mNi;
+    uint nj = mNj;
 
-    double latitudeOfFirstGridPoint = (double)mGridArea.getLatitudeOfFirstGridPoint() / 1000;
-    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint() / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
 
-    double di = (double)mDiInMetres;
-    double dj = (double)mDjInMetres;
+    double di = C_DOUBLE(mDiInMetres);
+    double dj = C_DOUBLE(mDjInMetres);
 
-    unsigned char scanningMode = (unsigned char)mScanningMode.getScanningMode();
+    unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
       di = -di;
 
@@ -189,9 +189,7 @@ T::Dimensions MercatorImpl::getGridDimensions() const
 {
   try
   {
-    uint ni = (uint)mNi;
-    uint nj = (uint)mNj;
-    return T::Dimensions(ni,nj);
+    return T::Dimensions(mNi,mNj);
   }
   catch (...)
   {
@@ -217,16 +215,16 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
 {
   try
   {
-    uint ni = (uint)mNi;
-    uint nj = (uint)mNj;
+    uint ni = mNi;
+    uint nj = mNj;
 
-    double latitudeOfFirstGridPoint = (double)mGridArea.getLatitudeOfFirstGridPoint() / 1000;
-    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint() / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
 
-    double di = (double)mDiInMetres;
-    double dj = (double)mDjInMetres;
+    double di = C_DOUBLE(mDiInMetres);
+    double dj = C_DOUBLE(mDjInMetres);
 
-    unsigned char scanningMode = (unsigned char)mScanningMode.getScanningMode();
+    unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
       di = -di;
 
@@ -246,7 +244,7 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double i = xDiff / di;
     double j = yDiff / dj;
 
-    if (i < 0 ||  j < 0  ||  i >= (double)ni ||  j > (double)nj)
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
       return false;
 
     grid_i = i;
@@ -268,7 +266,7 @@ bool MercatorImpl::reverseXDirection() const
 {
   try
   {
-    unsigned char scanMode = (unsigned char)mScanningMode.getScanningMode();
+    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x80) != 0)
       return true;
@@ -289,7 +287,7 @@ bool MercatorImpl::reverseYDirection() const
 {
   try
   {
-    unsigned char scanMode = (unsigned char)mScanningMode.getScanningMode();
+    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x40) == 0)
       return true;

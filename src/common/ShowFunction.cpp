@@ -39,11 +39,11 @@ ShowFunction::~ShowFunction()
 
   if (globalTraceLog != nullptr)
   {
-    PRINT_DATA(globalTraceLog,"[%04u][%.06f] %sEND\n",line,(double)(endTime-startTime)/1000000,space(globalTraceLevel).c_str());
+    PRINT_DATA(globalTraceLog,"[%04u][%.06f] %sEND\n",line,C_DOUBLE(endTime-startTime)/1000000,space(globalTraceLevel).c_str());
   }
   else
   {
-    printf("[%04u][%.06f] %sEND\n",line,(double)(endTime-startTime)/1000000,space(globalTraceLevel).c_str());
+    printf("[%04u][%.06f] %sEND\n",line,C_DOUBLE(endTime-startTime)/1000000,space(globalTraceLevel).c_str());
     fflush(stdout);
   }
 }

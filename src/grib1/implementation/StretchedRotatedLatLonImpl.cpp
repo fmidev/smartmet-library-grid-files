@@ -10,7 +10,7 @@ namespace GRIB1
 
 StretchedRotatedLatLonImpl::StretchedRotatedLatLonImpl()
 {
-  mGridProjection = T::GridProjection::StretchedRotatedLatLon;
+  mGridProjection = T::GridProjectionValue::StretchedRotatedLatLon;
 }
 
 
@@ -102,15 +102,15 @@ T::Coordinate_vec StretchedRotatedLatLonImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    uint ni = (uint)mNi;
-    uint nj = (uint)mNj;
+    uint ni = mNi;
+    uint nj = mNj;
 
-    double latitudeOfFirstGridPoint = (double)mGridArea.getLatitudeOfFirstGridPoint();
-    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint();
-    double iDirectionIncrement = (double)mIDirectionIncrement;
-    double jDirectionIncrement = (double)mJDirectionIncrement;
+    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
+    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
 
-    unsigned char scanMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -187,15 +187,15 @@ bool StretchedRotatedLatLonImpl::getGridPointByLatLonCoordinates(double lat,doub
 {
   try
   {
-    uint ni = (uint)mNi;
-    uint nj = (uint)mNj;
+    uint ni = mNi;
+    uint nj = mNj;
 
-    double latitudeOfFirstGridPoint = (double)mGridArea.getLatitudeOfFirstGridPoint() / 1000 + 90;
-    double longitudeOfFirstGridPoint = (double)mGridArea.getLongitudeOfFirstGridPoint() / 1000;
-    double iDirectionIncrement = (double)mIDirectionIncrement / 1000;
-    double jDirectionIncrement = (double)mJDirectionIncrement / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000 + 90;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
+    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement) / 1000;
+    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement) / 1000;
 
-    unsigned char scanMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -222,7 +222,7 @@ bool StretchedRotatedLatLonImpl::getGridPointByLatLonCoordinates(double lat,doub
     double i = lonDiff / iDirectionIncrement;
     double j = latDiff / jDirectionIncrement;
 
-    if (i < 0 ||  j < 0  ||  i >= (double)ni ||  j > (double)nj)
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
       return false;
 
     grid_i = i;
@@ -256,8 +256,8 @@ void StretchedRotatedLatLonImpl::initSpatialReference()
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 
-    mSpatialReference.SetProjParm("latitude_of_origin",((double)mRotation.getLatitudeOfSouthernPole()/1000));
-    mSpatialReference.SetProjParm("central_meridian",((double)mRotation.getLongitudeOfSouthernPole()/1000));
+    mSpatialReference.SetProjParm("latitude_of_origin",(C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000));
+    mSpatialReference.SetProjParm("central_meridian",(C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000));
 
     // ### Validate the spatial reference.
 
@@ -271,8 +271,8 @@ void StretchedRotatedLatLonImpl::initSpatialReference()
 
     // ### Test if the grid is global
 
-    uint ni = (uint)mNi;
-    double iDirectionIncrement = (double)mIDirectionIncrement / 1000;
+    uint ni = mNi;
+    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement) / 1000;
     double len = (ni+1)* iDirectionIncrement;
 
     if (len >= 360)

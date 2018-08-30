@@ -21,7 +21,7 @@ PolarStereographicImpl::PolarStereographicImpl()
 {
   try
   {
-    mGridProjection = T::GridProjection::PolarStereographic;
+    mGridProjection = T::GridProjectionValue::PolarStereographic;
     mSr_polarSterographic = nullptr;
     mCt_latlon2pst = nullptr;
     mCt_pst2latlon = nullptr;
@@ -43,7 +43,7 @@ PolarStereographicImpl::PolarStereographicImpl(const PolarStereographicImpl& oth
 {
   try
   {
-    mGridProjection = T::GridProjection::PolarStereographic;
+    mGridProjection = T::GridProjectionValue::PolarStereographic;
     mSr_polarSterographic = nullptr;
     mCt_latlon2pst = nullptr;
     mCt_pst2latlon = nullptr;
@@ -211,18 +211,21 @@ T::Coordinate_vec PolarStereographicImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    uint nx = (uint)(*mNx);
-    uint ny = (uint)(*mNy);
+    if (!mNx || !mNy)
+      return coordinateList;
+
+    uint nx = (*mNx);
+    uint ny = (*mNy);
 
 
-    double latitudeOfFirstGridPoint = (double)(*mLatitudeOfFirstGridPoint) / 1000000;
-    double longitudeOfFirstGridPoint = (double)(*mLongitudeOfFirstGridPoint) / 1000000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
 
-    double dx = (double)(*mDx) / 1000;
-    double dy = (double)(*mDy) / 1000;
+    double dx = C_DOUBLE(*mDx) / 1000;
+    double dy = C_DOUBLE(*mDy) / 1000;
 
 
-    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanningMode = mScanningMode.getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       dx = -dx;
@@ -262,16 +265,19 @@ std::string PolarStereographicImpl::getGridGeometryString() const
 {
   try
   {
+    if (!mNx || !mNy)
+      return std::string("");
+
     char buf[1000];
 
-    double y = (double)(*mLatitudeOfFirstGridPoint) / 1000000;
-    double x = (double)(*mLongitudeOfFirstGridPoint) / 1000000;
-    double laD = (double)(*mLaD) / 1000000;
-    double dx = (double)(*mDx) / 1000;
-    double dy = (double)(*mDy) / 1000;
-    double orientation = (double)(*mOrientationOfTheGrid) / 1000000;
+    double y = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
+    double x = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
+    double laD = C_DOUBLE(*mLaD) / 1000000;
+    double dx = C_DOUBLE(*mDx) / 1000;
+    double dy = C_DOUBLE(*mDy) / 1000;
+    double orientation = C_DOUBLE(*mOrientationOfTheGrid) / 1000000;
 
-    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanningMode = mScanningMode.getScanningMode();
 
     char sm[100];
     char *p = sm;
@@ -296,7 +302,7 @@ std::string PolarStereographicImpl::getGridGeometryString() const
     }
 
     sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;%f;description",
-        (int)T::GridProjection::PolarStereographic,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,orientation,laD);
+        (int)T::GridProjectionValue::PolarStereographic,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,orientation,laD);
 
     return std::string(buf);
   }
@@ -322,6 +328,9 @@ T::Dimensions PolarStereographicImpl::getGridDimensions() const
 {
   try
   {
+    if (!mNx || !mNy)
+      return T::Dimensions();
+
     return T::Dimensions(*mNx, *mNy);
   }
   catch (...)
@@ -348,16 +357,19 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
 {
   try
   {
-    uint nx = (uint)(*mNx);
-    uint ny = (uint)(*mNy);
+    if (!mNx || !mNy)
+      return false;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatitudeOfFirstGridPoint) / 1000000;
-    double longitudeOfFirstGridPoint = (double)(*mLongitudeOfFirstGridPoint) / 1000000;
+    uint nx = (*mNx);
+    uint ny = (*mNy);
 
-    double dx = (double)(*mDx) / 1000;
-    double dy = (double)(*mDy) / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
 
-    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+    double dx = C_DOUBLE(*mDx) / 1000;
+    double dy = C_DOUBLE(*mDy) / 1000;
+
+    unsigned char scanningMode = mScanningMode.getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       dx = -dx;
@@ -376,7 +388,7 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
     double i = xDiff / dx;
     double j = yDiff / dy;
 
-    if (i < 0 ||  j < 0  ||  i >= (double)nx ||  j > (double)ny)
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(nx) ||  j > C_DOUBLE(ny))
       return false;
 
     grid_i = i;
@@ -398,23 +410,26 @@ bool PolarStereographicImpl::getGridOriginalCoordinatesByGridPosition(double gri
 {
   try
   {
-    uint nx = (uint)(*mNx);
-    uint ny = (uint)(*mNy);
-
-    if (grid_i < 0 ||  grid_i >= (double)nx)
+    if (!mNx || !mNy)
       return false;
 
-    if (grid_j < 0 ||  grid_j >= (double)ny)
+    uint nx = (*mNx);
+    uint ny = (*mNy);
+
+    if (grid_i < 0 ||  grid_i >= C_DOUBLE(nx))
       return false;
 
-    double latitudeOfFirstGridPoint = (double)(*mLatitudeOfFirstGridPoint) / 1000000;
-    double longitudeOfFirstGridPoint = (double)(*mLongitudeOfFirstGridPoint) / 1000000;
+    if (grid_j < 0 ||  grid_j >= C_DOUBLE(ny))
+      return false;
 
-    double dx = (double)(*mDx) / 1000;
-    double dy = (double)(*mDy) / 1000;
+    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
+
+    double dx = C_DOUBLE(*mDx) / 1000;
+    double dy = C_DOUBLE(*mDy) / 1000;
 
 
-    unsigned char scanningMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanningMode = mScanningMode.getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       dx = -dx;
@@ -445,7 +460,7 @@ bool PolarStereographicImpl::reverseXDirection() const
 {
   try
   {
-    unsigned char scanMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x80) != 0)
       return true;
@@ -466,7 +481,7 @@ bool PolarStereographicImpl::reverseYDirection() const
 {
   try
   {
-    unsigned char scanMode = (unsigned char)(mScanningMode.getScanningMode());
+    unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x40) == 0)
       return true;
@@ -545,8 +560,8 @@ void PolarStereographicImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double centerLat = (double)(*dfCenterLat) / 1000000;
-    double centerLon = (double)(*dfCenterLong) / 1000000;
+    double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
+    double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
     double dfScale = 1.0;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
@@ -608,6 +623,9 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
       T::Coordinate_vec coordinateList = getGridCoordinates();
+
+      if (!mNx || !mNy)
+        return;
 
       int nx = (int)(*mNx);
       int ny = (int)(*mNy);

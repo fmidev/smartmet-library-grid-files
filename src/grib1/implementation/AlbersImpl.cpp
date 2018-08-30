@@ -11,7 +11,7 @@ namespace GRIB1
 
 AlbersImpl::AlbersImpl()
 {
-  mGridProjection = T::GridProjection::Albers;
+  mGridProjection = T::GridProjectionValue::Albers;
 }
 
 
@@ -185,10 +185,10 @@ void AlbersImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    double stdP1 = (double)dfStdP1 / 1000000;
-    double stdP2 = dfStdP2 / 1000000;
-    double centerLat = dfCenterLat / 1000000;
-    double centerLon = dfCenterLong / 1000000;
+    double stdP1 = C_DOUBLE(dfStdP1) / 1000000;
+    double stdP2 = C_DOUBLE(dfStdP2) / 1000000;
+    double centerLat = C_DOUBLE(dfCenterLat) / 1000000;
+    double centerLon = C_DOUBLE(dfCenterLong) / 1000000;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
 

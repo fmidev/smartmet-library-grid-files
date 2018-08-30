@@ -19,7 +19,7 @@ namespace GRIB2
 
 GaussianImpl::GaussianImpl()
 {
-  mGridProjection = T::GridProjection::Gaussian;
+  mGridProjection = T::GridProjectionValue::Gaussian;
 }
 
 
@@ -111,16 +111,16 @@ T::Coordinate_vec GaussianImpl::getGridCoordinates() const
     if (!mGaussian.getGrid()->getNj())
       throw SmartMet::Spine::Exception(BCP,"j-coordinated does not exist!");
 
-    uint ni = (uint)(*mGaussian.getGrid()->getNi());
-    uint nj = (uint)(*mGaussian.getGrid()->getNj());
+    uint ni = (*mGaussian.getGrid()->getNi());
+    uint nj = (*mGaussian.getGrid()->getNj());
     long n = (long)(*mGaussian.getN());
 
-    double longitudeOfFirstGridPoint = (double)(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint());
-    double longitudeOfLastGridPoint = (double)(*mGaussian.getGrid()->getLongitudeOfLastGridPoint());
-    //double iDirectionIncrement = (double)(*mGaussian.iDirectionIncrement());
-    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / (double)(ni-1);
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint());
+    double longitudeOfLastGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfLastGridPoint());
+    //double iDirectionIncrement = C_DOUBLE(*mGaussian.iDirectionIncrement());
+    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / C_DOUBLE(ni-1);
 
-    unsigned char scanningMode = (unsigned char)(mGaussian.getScanningMode()->getScanningMode());
+    unsigned char scanningMode = mGaussian.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -166,10 +166,10 @@ T::Dimensions GaussianImpl::getGridDimensions() const
 {
   try
   {
-    const auto defs = mGaussian.getGrid();
-    uint nx = *defs->getNi();
-    uint ny = *defs->getNj();
-    return T::Dimensions(nx, ny);
+    if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
+      return T::Dimensions();
+
+    return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNi());
   }
   catch (...)
   {
@@ -221,18 +221,15 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
 {
   try
   {
-    if (!mGaussian.getGrid()->getNi())
-      throw SmartMet::Spine::Exception(BCP,"i-coordinated does not exist!");
+    if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
+      return false;
 
-    if (!mGaussian.getGrid()->getNj())
-      throw SmartMet::Spine::Exception(BCP,"j-coordinated does not exist!");
-
-    uint ni = (uint)(*mGaussian.getGrid()->getNi());
-    uint nj = (uint)(*mGaussian.getGrid()->getNj());
+    uint ni = (*mGaussian.getGrid()->getNi());
+    uint nj = (*mGaussian.getGrid()->getNj());
     long n = (long)(*mGaussian.getN());
 
-    double longitudeOfFirstGridPoint = (double)(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
-    double longitudeOfLastGridPoint = (double)(*mGaussian.getGrid()->getLongitudeOfLastGridPoint()) / 1000000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
+    double longitudeOfLastGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfLastGridPoint()) / 1000000;
 
     if (longitudeOfFirstGridPoint < 0)
       longitudeOfFirstGridPoint += 360;
@@ -240,9 +237,9 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     if (longitudeOfLastGridPoint < 0)
       longitudeOfLastGridPoint += 360;
 
-    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / (double)(ni-1);
+    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / C_DOUBLE(ni-1);
 
-    unsigned char scanningMode = (unsigned char)(mGaussian.getScanningMode()->getScanningMode());
+    unsigned char scanningMode = mGaussian.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
       iDirectionIncrement = -iDirectionIncrement;
@@ -260,7 +257,7 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double lonDiff = aLon - longitudeOfFirstGridPoint;
     double i = lonDiff / iDirectionIncrement;
 
-    if (i < 0 || i >= (double)ni)
+    if (i < 0 || i >= C_DOUBLE(ni))
       return false;
 
 
@@ -277,7 +274,7 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double latDiff = aLat-latLow;
     double j = t + latDiff / (latHigh-latLow);
 
-    if (j < 0  ||  j > (double)nj)
+    if (j < 0  ||  j > C_DOUBLE(nj))
       return false;
 
     grid_i = i;
@@ -356,9 +353,9 @@ void GaussianImpl::initSpatialReference()
 
     // ### Test if the grid is global
 
-    uint ni = (uint)(*mGaussian.getGrid()->getNi());
-    double longitudeOfFirstGridPoint = (double)(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
-    double longitudeOfLastGridPoint = (double)(*mGaussian.getGrid()->getLongitudeOfLastGridPoint()) / 1000000;
+    uint ni = (*mGaussian.getGrid()->getNi());
+    double longitudeOfFirstGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
+    double longitudeOfLastGridPoint = C_DOUBLE(*mGaussian.getGrid()->getLongitudeOfLastGridPoint()) / 1000000;
 
     if (longitudeOfFirstGridPoint < 0)
       longitudeOfFirstGridPoint += 360;
@@ -366,7 +363,7 @@ void GaussianImpl::initSpatialReference()
     if (longitudeOfLastGridPoint < 0)
       longitudeOfLastGridPoint += 360;
 
-    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / (double)(ni-1);
+    double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / C_DOUBLE(ni-1);
 
     if ((ni*iDirectionIncrement) >= 360)
       mGlobal = true;
@@ -403,6 +400,9 @@ void GaussianImpl::print(std::ostream& stream,uint level,uint optionFlags) const
       T::Coordinate_vec coordinateList = getGridCoordinates();
 
       // ### Printing coordinates close to the grid corners.
+
+      if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
+        return;
 
       int nx = (int)(*mGaussian.getGrid()->getNi());
       int ny = (int)(*mGaussian.getGrid()->getNj());

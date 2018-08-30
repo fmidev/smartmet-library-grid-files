@@ -11,7 +11,7 @@ namespace GRIB2
 
 CrossSectionImpl::CrossSectionImpl()
 {
-  mGridProjection = T::GridProjection::CrossSection;
+  mGridProjection = T::GridProjectionValue::CrossSection;
 }
 
 
@@ -112,9 +112,10 @@ T::Dimensions CrossSectionImpl::getGridDimensions() const
 {
   try
   {
-    uint nx = *mNumberOfHorizontalPoints;
-    uint ny = *mNumberOfVerticalPoints;
-    return T::Dimensions(nx, ny);
+    if (!mNumberOfHorizontalPoints || !mNumberOfVerticalPoints)
+      return T::Dimensions();
+
+    return T::Dimensions(*mNumberOfHorizontalPoints, *mNumberOfVerticalPoints);
   }
   catch (...)
   {

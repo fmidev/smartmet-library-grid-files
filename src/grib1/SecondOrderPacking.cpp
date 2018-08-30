@@ -430,7 +430,7 @@ void SecondOrderPacking::decodeValues_SPD(
     double bias = SPD[orderOfSPD];
     uint max = 1 << (widthOfSPD-1);
     if (SPD[orderOfSPD] > max)
-      bias = -((double)SPD[orderOfSPD] - (double)max);
+      bias = -(C_DOUBLE(SPD[orderOfSPD]) - C_DOUBLE(max));
 
     //printf("BIAS = %f (%u)\n",bias,max);
 
@@ -484,7 +484,7 @@ void SecondOrderPacking::decodeValues_SPD(
     try
     {
       uint dd = (bitArrayReader.getReadPosition()/8) % 65536;
-      N1 = mN1 + (uint)((bitArrayReader.getReadPosition()/8)-dd);
+      N1 = mN1 + ((bitArrayReader.getReadPosition()/8)-dd);
 
       bitArrayReader.setReadPosition((N1-22)*8);
       //printf("GROUPVAL POS %llu\n",bitArrayReader.getReadPosition()/8);
@@ -503,7 +503,7 @@ void SecondOrderPacking::decodeValues_SPD(
     try
     {
       uint dd = (bitArrayReader.getReadPosition()/8) % 65536;
-      N2 = mN2 + (uint)((bitArrayReader.getReadPosition()/8)-dd);
+      N2 = mN2 + ((bitArrayReader.getReadPosition()/8)-dd);
 
       uint c = orderOfSPD;
       bitArrayReader.setReadPosition((N2-22)*8);
@@ -589,13 +589,13 @@ void SecondOrderPacking::decodeValues_SPD(
 
     for (uint t=0; t<numOfValues; t++)
     {
-      dataValues[t] = (double) (((dataValues[t]*s)+referenceValue)*d);
+      dataValues[t] = (((dataValues[t]*s)+referenceValue)*d);
       //printf("[%u] eval %f \n",t,dataValues[t]);
     }
 
     if (mExtendedFlags & BoustrophedonicOrdering)
     {
-      uint nx = (uint)dimensions.nx();
+      uint nx = dimensions.nx();
       uint inc = nx;
       uint count = nx;
 
@@ -619,7 +619,7 @@ void SecondOrderPacking::decodeValues_SPD(
 
     for (uint t=0; t<numOfValues; t++)
     {
-      decodedValues.push_back((T::ParamValue)dataValues[t]);
+      decodedValues.push_back(dataValues[t]);
       //printf("[%u] eval %f \n",t,dataValues[t]);
     }
   }

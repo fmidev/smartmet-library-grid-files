@@ -11,7 +11,7 @@ namespace GRIB2
 
 RotatedGaussianImpl::RotatedGaussianImpl()
 {
-  mGridProjection = T::GridProjection::RotatedGaussian;
+  mGridProjection = T::GridProjectionValue::RotatedGaussian;
 }
 
 
@@ -112,10 +112,10 @@ T::Dimensions RotatedGaussianImpl::getGridDimensions() const
 {
   try
   {
-    const auto defs = mGaussian.getGrid();
-    uint nx = *defs->getNi();
-    uint ny = *defs->getNj();
-    return T::Dimensions(nx, ny);
+    if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
+      return T::Dimensions();
+
+    return T::Dimensions(*mGaussian.getGrid()->getNi(),*mGaussian.getGrid()->getNi());
   }
   catch (...)
   {

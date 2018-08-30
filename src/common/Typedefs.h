@@ -37,3 +37,15 @@ namespace std
   typedef int32_t int24_t;
   typedef uint32_t uint24_t;
 };
+
+
+#define C_CHAR(x) static_cast<char>(x)
+#define C_SHORT(x) static_cast<short>(x)
+#define C_INT(x) static_cast<int>(x)
+#define C_INT64(x) static_cast<long long>(x)
+#define C_UCHAR(x) static_cast<uchar>(x)
+#define C_USHORT(x) static_cast<ushort>(x)
+#define C_UINT(x) static_cast<uint>(x)
+#define C_UINT64(x) static_cast<unsigned long long>(x)
+#define C_DOUBLE(x) static_cast<double>(x)
+#define C_FLOAT(x) static_cast<float>(x)

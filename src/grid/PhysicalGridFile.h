@@ -43,7 +43,7 @@ class PhysicalGridFile : public GridFile
 
   private:
 
-    T::FileType     readFileType(MemoryReader& memoryReader);
+    uchar           readFileType(MemoryReader& memoryReader);
     ulonglong       searchFileStartPosition(MemoryReader& memoryReader);
 
   protected:

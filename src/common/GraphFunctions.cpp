@@ -1,5 +1,6 @@
 #include "GraphFunctions.h"
 #include "Exception.h"
+#include "Typedefs.h"
 #include <math.h>
 #include <sstream>
 
@@ -99,10 +100,10 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
 
     for (int y=yStart; y<yEnd; y++)
     {
-      double diff = (double)y - y1;
+      double diff = C_DOUBLE(y) - y1;
       double xx = x1 + diff * dd;
 
-      if ((xx - (int)xx) == 0)
+      if ((xx - C_INT(xx)) == 0)
       {
         //printf("LinePoint %d,%d\n",(int)xx,y);
         unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)xx;
@@ -126,7 +127,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
   try
   {
     std::set<unsigned long long> cList;
-    uint numOfPoints = (uint)polygonPoints.size();
+    uint numOfPoints = polygonPoints.size();
     if (numOfPoints == 0)
       return;
 
@@ -185,10 +186,12 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
         double xj = polygonPoints[j].x();
         double yj = polygonPoints[j].y();
 
-        if ((yi < (double)(y)  &&  yj >= (double)(y))  ||  (yj < (double)(y) &&  yi >= (double)(y)))
+        double dy = C_DOUBLE(y);
+
+        if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
         {
-          double xx = (double)(xi + (y - yi)/(yj - yi)*(xj - xi));
-          nodeX[nodes++] = (double)xx;
+          double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+          nodeX[nodes++] = C_DOUBLE(xx);
         }
         j = i;
       }
@@ -212,10 +215,10 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
           int xStart = (int)nodeX[i];
           int xEnd = (int)nodeX[i+1];
 
-          if (((double)nodeX[i] - xStart) > 0)
+          if ((nodeX[i] - xStart) > 0)
             xStart++;
 
-          if ((xEnd - (double)nodeX[i+1]) > 0)
+          if ((xEnd - nodeX[i+1]) > 0)
             xEnd--;
 
           for (int x=xStart; x<=xEnd; x++)
@@ -268,7 +271,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
 
     for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
     {
-      uint numOfPoints = (uint)polygonPoints->size();
+      uint numOfPoints = polygonPoints->size();
 
       if (numOfPoints > 0)
       {
@@ -316,7 +319,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
       int nodes = 0;
       for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
       {
-        uint numOfPoints = (uint)polygonPoints->size();
+        uint numOfPoints = polygonPoints->size();
 
         uint c = 0;
         for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
@@ -341,10 +344,12 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
           double xj = pointsX[j];
           double yj = pointsY[j];
 
-          if ((yi < (double)(y)  &&  yj >= (double)(y))  ||  (yj < (double)(y) &&  yi >= (double)(y)))
+          double dy = C_DOUBLE(y);
+
+          if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
           {
-            double xx = (double)(xi + (y - yi)/(yj - yi)*(xj - xi));
-            nodeX[nodes++] = (double)xx;
+            double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+            nodeX[nodes++] = C_DOUBLE(xx);
           }
           j = i;
         }
@@ -371,10 +376,10 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
           int xStart = (int)nodeX[i];
           int xEnd = (int)nodeX[i+1];
 
-          if (((double)nodeX[i] - xStart) > 0)
+          if ((nodeX[i] - xStart) > 0)
             xStart++;
 
-          if ((xEnd - (double)nodeX[i+1]) > 0)
+          if ((xEnd - nodeX[i+1]) > 0)
             xEnd--;
 
           for (int x=xStart; x<=xEnd; x++)
@@ -438,10 +443,10 @@ void getPointsInsideCircle(int gridWidth,int gridHeight,double origoX,double ori
 
     for (int y=yy1; y<=yy2; y++)
     {
-      double dy = (double)y-origoY;
+      double dy = C_DOUBLE(y)-origoY;
       for (int x=xx1; x<=xx2; x++)
       {
-        double dx = (double)x-origoX;
+        double dx = C_DOUBLE(x)-origoX;
         double r2 = dx*dx + dy*dy;
 
         if (r2 <= rr)

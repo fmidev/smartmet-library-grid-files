@@ -11,7 +11,7 @@ namespace GRIB1
 
 SpaceViewImpl::SpaceViewImpl()
 {
-  mGridProjection = T::GridProjection::SpaceView;
+  mGridProjection = T::GridProjectionValue::SpaceView;
 }
 
 
@@ -112,7 +112,7 @@ T::Dimensions SpaceViewImpl::getGridDimensions() const
 {
   try
   {
-    return {};
+    return T::Dimensions();
   }
   catch (...)
   {

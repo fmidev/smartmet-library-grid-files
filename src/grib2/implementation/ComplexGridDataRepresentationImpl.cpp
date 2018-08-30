@@ -104,8 +104,8 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
 
     std::size_t numberOfValues = numOfValues;
     T::ParamValue ref = mPacking.getReferenceValue();
-    T::ParamValue bscale = (T::ParamValue)int_power(2.0,(int)(*mPacking.getBinaryScaleFactor()));
-    T::ParamValue dscale = (T::ParamValue)int_power(10.0,-(int)(*mPacking.getDecimalScaleFactor()));
+    T::ParamValue bscale = int_power(2.0,(int)(*mPacking.getBinaryScaleFactor()));
+    T::ParamValue dscale = int_power(10.0,-(int)(*mPacking.getDecimalScaleFactor()));
     int groupRefBits = *mPacking.getBitsPerValue();
     int numberOfGroups = *mNumberOfGroupsOfDataValues;
     int groupValueSizeBits = *mNumberOfBitsUsedForTheGroupWidths;

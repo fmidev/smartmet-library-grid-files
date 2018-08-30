@@ -11,7 +11,7 @@ namespace GRIB2
 
 HovmollerImpl::HovmollerImpl()
 {
-  mGridProjection = T::GridProjection::Hovmoller;
+  mGridProjection = T::GridProjectionValue::Hovmoller;
 }
 
 
@@ -112,7 +112,7 @@ T::Dimensions HovmollerImpl::getGridDimensions() const
 {
   try
   {
-    return {};
+    return T::Dimensions();
   }
   catch (...)
   {

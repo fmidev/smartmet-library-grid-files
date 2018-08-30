@@ -11,7 +11,7 @@ namespace GRIB1
 
 StretchedRotatedGaussianImpl::StretchedRotatedGaussianImpl()
 {
-  mGridProjection = T::GridProjection::StretchedRotatedGaussian;
+  mGridProjection = T::GridProjectionValue::StretchedRotatedGaussian;
 }
 
 
@@ -169,8 +169,8 @@ void StretchedRotatedGaussianImpl::initSpatialReference()
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 
-    mSpatialReference.SetProjParm("latitude_of_origin",((double)mRotation.getLatitudeOfSouthernPole()/1000));
-    mSpatialReference.SetProjParm("central_meridian",((double)mRotation.getLongitudeOfSouthernPole()/1000));
+    mSpatialReference.SetProjParm("latitude_of_origin",(C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000));
+    mSpatialReference.SetProjParm("central_meridian",(C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000));
 
     // ### Validate the spatial reference.
 

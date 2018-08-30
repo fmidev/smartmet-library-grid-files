@@ -671,7 +671,7 @@ void ProductSection::setProductDefinition(std::uint16_t productTemplateId)
     if (productDefintion == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot create product definition!");
-      exception.addParameter("Product",std::to_string((uint)productTemplateId));
+      exception.addParameter("Product",std::to_string(productTemplateId));
       throw exception;
     }
 

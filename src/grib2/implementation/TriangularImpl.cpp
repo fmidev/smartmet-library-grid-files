@@ -11,7 +11,7 @@ namespace GRIB2
 
 TriangularImpl::TriangularImpl()
 {
-  mGridProjection = T::GridProjection::Triangular;
+  mGridProjection = T::GridProjectionValue::Triangular;
 }
 
 
@@ -112,7 +112,7 @@ T::Dimensions TriangularImpl::getGridDimensions() const
 {
   try
   {
-    return {};
+    return T::Dimensions();
   }
   catch (...)
   {

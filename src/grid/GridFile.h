@@ -72,7 +72,7 @@ class GridFile
     virtual void                setFileName(std::string  fileName);
     virtual void                setCheckTime(time_t checkTime);
     virtual void                setSourceId(uint sourceId);
-    virtual void                setGridFile(T::FileType fileType);
+    virtual void                setGridFile(uchar fileType);
 
     std::shared_ptr<GridFile>   getGridFile();
     virtual Message*            getMessageByIndex(std::size_t index);
