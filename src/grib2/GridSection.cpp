@@ -611,7 +611,7 @@ T::Dimensions GridSection::getGridDimensions() const
   FUNCTION_TRACE
   try
   {
-    const auto source = getSourceOfGridDefinition();
+    //const auto source = getSourceOfGridDefinition();
     const auto noctets = getNumberOfOctetsForNumberOfPoints();
     const auto interpretation = getInterpretationOfNumberOfPoints();
 
