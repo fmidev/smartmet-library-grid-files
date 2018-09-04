@@ -56,15 +56,15 @@ protected:
   //
   // include "template.4.parameter_chemical.def"
 
-  ParameterChemicalSettings mParameterChemical;
+  mutable ParameterChemicalSettings mParameterChemical;
 
   // include "template.4.horizontal.def"
 
-  HorizontalSettings mHorizontal;
+  mutable HorizontalSettings mHorizontal;
 
   // include "template.4.statistical.def"
 
-  StatisticalSettings mStatistical;
+  mutable StatisticalSettings mStatistical;
 };
 
 } // namespace GRIB2

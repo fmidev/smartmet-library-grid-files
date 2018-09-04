@@ -125,7 +125,7 @@ protected:
   //
   // include "template.3.resolution_flags.def"
 
-  ResolutionSettings mResolution;
+  mutable ResolutionSettings mResolution;
 
   //
   // #  La2 - latitude of last grid point

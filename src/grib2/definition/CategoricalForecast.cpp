@@ -21,7 +21,7 @@ namespace GRIB2 {
 CategoricalForecast::CategoricalForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -34,7 +34,7 @@ CategoricalForecast::CategoricalForecast(const CategoricalForecast &other) : Pro
     mHorizontal = other.mHorizontal;
     mCategorical = other.mCategorical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -55,7 +55,7 @@ void CategoricalForecast::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mCategorical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -71,7 +71,7 @@ void CategoricalForecast::write(DataWriter &dataWriter) {
     mHorizontal.write(dataWriter);
     mCategorical.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -93,7 +93,7 @@ void CategoricalForecast::getAttributeList(std::string prefix, T::AttributeList 
     sprintf(name, "%sCategoricalForecast.", prefix.c_str());
     mCategorical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ void CategoricalForecast::print(std::ostream &stream, uint level, uint optionFla
     mHorizontal.print(stream, level + 1, optionFlags);
     mCategorical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -127,7 +127,7 @@ T::Hash CategoricalForecast::countHash() {
     boost::hash_combine(seed, mCategorical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -139,9 +139,9 @@ uint CategoricalForecast::getTemplateNumber() const {
 
 ProductDefinition *CategoricalForecast::createProductDefinition() const {
   try {
-    return (ProductDefinition *)new CategoricalForecast(*this);
+    return static_cast<ProductDefinition *>(new CategoricalForecast(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -149,9 +149,9 @@ ProductDefinition *CategoricalForecast::createProductDefinition() const {
 
 ParameterSettings *CategoricalForecast::getParameter() const {
   try {
-    return (ParameterSettings *)&mParameter;
+    return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -159,9 +159,9 @@ ParameterSettings *CategoricalForecast::getParameter() const {
 
 PointInTimeSettings *CategoricalForecast::getPointInTime() const {
   try {
-    return (PointInTimeSettings *)&mPointInTime;
+    return static_cast<PointInTimeSettings *>(&mPointInTime);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -169,9 +169,9 @@ PointInTimeSettings *CategoricalForecast::getPointInTime() const {
 
 HorizontalSettings *CategoricalForecast::getHorizontal() const {
   try {
-    return (HorizontalSettings *)&mHorizontal;
+    return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -179,9 +179,9 @@ HorizontalSettings *CategoricalForecast::getHorizontal() const {
 
 CategoricalSettings *CategoricalForecast::getCategorical() const {
   try {
-    return (CategoricalSettings *)&mCategorical;
+    return static_cast<CategoricalSettings *>(&mCategorical);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -189,7 +189,7 @@ void CategoricalForecast::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -197,7 +197,7 @@ void CategoricalForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -205,7 +205,7 @@ void CategoricalForecast::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -213,7 +213,7 @@ void CategoricalForecast::setCategorical(CategoricalSettings &categorical) {
   try {
     mCategorical = categorical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

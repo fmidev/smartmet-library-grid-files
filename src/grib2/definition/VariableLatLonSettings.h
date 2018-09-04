@@ -105,12 +105,12 @@ protected:
   //
   // include "template.3.resolution_flags.def"
 
-  ResolutionSettings mResolution;
+  mutable ResolutionSettings mResolution;
 
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // longitudesList list(Ni) {

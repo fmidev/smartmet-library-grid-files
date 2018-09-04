@@ -128,7 +128,7 @@ protected:
   // #  Resolution and component flags
   // include "resolution_flags.def";
 
-  ResolutionFlagsSettings mResolutionFlags;
+  mutable ResolutionFlagsSettings mResolutionFlags;
 
   //
   // #  LoV - orientation of the grid; i.e.  the east longitude value of the meridian which is parallel to the Y-axis
@@ -176,7 +176,7 @@ protected:
   //
   // include "scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // #  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere

@@ -21,7 +21,7 @@ namespace GRIB2 {
 PartitionedProduct::PartitionedProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -33,7 +33,7 @@ PartitionedProduct::PartitionedProduct(const PartitionedProduct &other) : Produc
     mPointInTime = other.mPointInTime;
     mHorizontal = other.mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -53,7 +53,7 @@ void PartitionedProduct::read(MemoryReader &memoryReader) {
     mPointInTime.read(memoryReader);
     mHorizontal.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void PartitionedProduct::write(DataWriter &dataWriter) {
     mPointInTime.write(dataWriter);
     mHorizontal.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -88,7 +88,7 @@ void PartitionedProduct::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sPartitionedProduct.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -106,7 +106,7 @@ void PartitionedProduct::print(std::ostream &stream, uint level, uint optionFlag
     mPointInTime.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -120,7 +120,7 @@ T::Hash PartitionedProduct::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,9 +132,9 @@ uint PartitionedProduct::getTemplateNumber() const {
 
 ProductDefinition *PartitionedProduct::createProductDefinition() const {
   try {
-    return (ProductDefinition *)new PartitionedProduct(*this);
+    return static_cast<ProductDefinition *>(new PartitionedProduct(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,9 +142,9 @@ ProductDefinition *PartitionedProduct::createProductDefinition() const {
 
 ParameterPartitionSettings *PartitionedProduct::getParameterPartition() const {
   try {
-    return (ParameterPartitionSettings *)&mParameterPartition;
+    return static_cast<ParameterPartitionSettings *>(&mParameterPartition);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -152,9 +152,9 @@ ParameterPartitionSettings *PartitionedProduct::getParameterPartition() const {
 
 PointInTimeSettings *PartitionedProduct::getPointInTime() const {
   try {
-    return (PointInTimeSettings *)&mPointInTime;
+    return static_cast<PointInTimeSettings *>(&mPointInTime);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -162,9 +162,9 @@ PointInTimeSettings *PartitionedProduct::getPointInTime() const {
 
 HorizontalSettings *PartitionedProduct::getHorizontal() const {
   try {
-    return (HorizontalSettings *)&mHorizontal;
+    return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -172,7 +172,7 @@ void PartitionedProduct::setParameterPartition(ParameterPartitionSettings &param
   try {
     mParameterPartition = parameterPartition;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -180,7 +180,7 @@ void PartitionedProduct::setPointInTime(PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -188,7 +188,7 @@ void PartitionedProduct::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

@@ -80,7 +80,7 @@ protected:
   // # TEMPLATE 3.30, Lambert conformal
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   //
   // unsigned[4] Nx  : dump;
@@ -123,7 +123,7 @@ protected:
   //
   // include "template.3.resolution_flags.def";
 
-  ResolutionSettings mResolution;
+  mutable ResolutionSettings mResolution;
 
   //
   // #  LaD - Latitude where Dx and Dy are specified
@@ -169,7 +169,7 @@ protected:
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // #  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere

@@ -55,15 +55,15 @@ protected:
   //
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   // include "template.3.latlon_vares.def";
 
-  VariableLatLonSettings mVariableLatLon;
+  mutable VariableLatLonSettings mVariableLatLon;
 
   // include "template.3.rotation.def";
 
-  RotationSettings mRotation;
+  mutable RotationSettings mRotation;
 };
 
 } // namespace GRIB2

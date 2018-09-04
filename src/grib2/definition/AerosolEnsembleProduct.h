@@ -58,19 +58,19 @@ protected:
   //
   // include "template.4.parameter_aerosol.def"
 
-  ParameterAerosolSettings mParameterAerosol;
+  mutable ParameterAerosolSettings mParameterAerosol;
 
   // include "template.4.point_in_time.def";
 
-  PointInTimeSettings mPointInTime;
+  mutable PointInTimeSettings mPointInTime;
 
   // include "template.4.horizontal.def"
 
-  HorizontalSettings mHorizontal;
+  mutable HorizontalSettings mHorizontal;
 
   // include "template.4.eps.def"
 
-  EpsSettings mEps;
+  mutable EpsSettings mEps;
 };
 
 } // namespace GRIB2

@@ -22,7 +22,7 @@ SpectralDataRepresentation::SpectralDataRepresentation() {
   try {
     mRealPartOf00 = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -33,7 +33,7 @@ SpectralDataRepresentation::SpectralDataRepresentation(const SpectralDataReprese
     mPacking = other.mPacking;
     mRealPartOf00 = other.mRealPartOf00;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -52,7 +52,7 @@ void SpectralDataRepresentation::read(MemoryReader &memoryReader) {
     mPacking.read(memoryReader);
     mRealPartOf00 = memoryReader.read_float();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -66,7 +66,7 @@ void SpectralDataRepresentation::write(DataWriter &dataWriter) {
     mPacking.write(dataWriter);
     dataWriter << mRealPartOf00;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -84,7 +84,7 @@ void SpectralDataRepresentation::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sSpectralDataRepresentation.RealPartOf00", prefix.c_str());
     attributeList.addAttribute(name, toString(mRealPartOf00));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -101,7 +101,7 @@ void SpectralDataRepresentation::print(std::ostream &stream, uint level, uint op
     mPacking.print(stream, level + 1, optionFlags);
     stream << space(level) << "- RealPartOf00 = " << toString(mRealPartOf00) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -114,7 +114,7 @@ T::Hash SpectralDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -126,9 +126,9 @@ uint SpectralDataRepresentation::getTemplateNumber() const {
 
 RepresentationDefinition *SpectralDataRepresentation::createRepresentationDefinition() const {
   try {
-    return (RepresentationDefinition *)new SpectralDataRepresentation(*this);
+    return static_cast<RepresentationDefinition *>(new SpectralDataRepresentation(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -136,9 +136,9 @@ RepresentationDefinition *SpectralDataRepresentation::createRepresentationDefini
 
 PackingSettings *SpectralDataRepresentation::getPacking() const {
   try {
-    return (PackingSettings *)&mPacking;
+    return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -148,7 +148,7 @@ float SpectralDataRepresentation::getRealPartOf00() const {
   try {
     return mRealPartOf00;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -156,7 +156,7 @@ void SpectralDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -164,7 +164,7 @@ void SpectralDataRepresentation::setRealPartOf00(float realPartOf00) {
   try {
     mRealPartOf00 = realPartOf00;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

@@ -21,7 +21,7 @@ namespace GRIB2 {
 TimeIntervalProbabilityForecast::TimeIntervalProbabilityForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -34,7 +34,7 @@ TimeIntervalProbabilityForecast::TimeIntervalProbabilityForecast(const TimeInter
     mProbability = other.mProbability;
     mStatistical = other.mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -55,7 +55,7 @@ void TimeIntervalProbabilityForecast::read(MemoryReader &memoryReader) {
     mProbability.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -71,7 +71,7 @@ void TimeIntervalProbabilityForecast::write(DataWriter &dataWriter) {
     mProbability.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -93,7 +93,7 @@ void TimeIntervalProbabilityForecast::getAttributeList(std::string prefix, T::At
     sprintf(name, "%sTimeIntervalProbabilityForecast.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -112,7 +112,7 @@ void TimeIntervalProbabilityForecast::print(std::ostream &stream, uint level, ui
     mProbability.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -127,7 +127,7 @@ T::Hash TimeIntervalProbabilityForecast::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -139,9 +139,9 @@ uint TimeIntervalProbabilityForecast::getTemplateNumber() const {
 
 ProductDefinition *TimeIntervalProbabilityForecast::createProductDefinition() const {
   try {
-    return (ProductDefinition *)new TimeIntervalProbabilityForecast(*this);
+    return static_cast<ProductDefinition *>(new TimeIntervalProbabilityForecast(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -149,9 +149,9 @@ ProductDefinition *TimeIntervalProbabilityForecast::createProductDefinition() co
 
 ParameterSettings *TimeIntervalProbabilityForecast::getParameter() const {
   try {
-    return (ParameterSettings *)&mParameter;
+    return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -159,9 +159,9 @@ ParameterSettings *TimeIntervalProbabilityForecast::getParameter() const {
 
 HorizontalSettings *TimeIntervalProbabilityForecast::getHorizontal() const {
   try {
-    return (HorizontalSettings *)&mHorizontal;
+    return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -169,9 +169,9 @@ HorizontalSettings *TimeIntervalProbabilityForecast::getHorizontal() const {
 
 ProbabilitySettings *TimeIntervalProbabilityForecast::getProbability() const {
   try {
-    return (ProbabilitySettings *)&mProbability;
+    return static_cast<ProbabilitySettings *>(&mProbability);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -179,9 +179,9 @@ ProbabilitySettings *TimeIntervalProbabilityForecast::getProbability() const {
 
 StatisticalSettings *TimeIntervalProbabilityForecast::getStatistical() const {
   try {
-    return (StatisticalSettings *)&mStatistical;
+    return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -189,7 +189,7 @@ void TimeIntervalProbabilityForecast::setParameter(ParameterSettings &parameter)
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -197,7 +197,7 @@ void TimeIntervalProbabilityForecast::setHorizontal(HorizontalSettings &horizont
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -205,7 +205,7 @@ void TimeIntervalProbabilityForecast::setProbability(ProbabilitySettings &probab
   try {
     mProbability = probability;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -213,7 +213,7 @@ void TimeIntervalProbabilityForecast::setStatistical(StatisticalSettings &statis
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

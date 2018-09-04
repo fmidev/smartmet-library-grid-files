@@ -68,7 +68,7 @@ protected:
   // # TEMPLATE 3.110, Equatorial azimuthal equidistant projection
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   //
   // #  Nx - number of points along X-axis
@@ -126,7 +126,7 @@ protected:
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
 };

@@ -21,7 +21,7 @@ namespace GRIB2 {
 ParameterAerosolOpticalSettings::ParameterAerosolOpticalSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -50,7 +50,7 @@ ParameterAerosolOpticalSettings::ParameterAerosolOpticalSettings(const Parameter
     mIndicatorOfUnitOfTimeRange = other.mIndicatorOfUnitOfTimeRange;
     mForecastTime = other.mForecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -87,7 +87,7 @@ void ParameterAerosolOpticalSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
     mForecastTime = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -119,7 +119,7 @@ void ParameterAerosolOpticalSettings::write(DataWriter &dataWriter) {
     dataWriter << mIndicatorOfUnitOfTimeRange;
     dataWriter << mForecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -173,7 +173,7 @@ void ParameterAerosolOpticalSettings::getAttributeList(std::string prefix, T::At
     sprintf(name, "%sParameterAerosolOpticalSettings.ForecastTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastTime));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -208,7 +208,7 @@ void ParameterAerosolOpticalSettings::print(std::ostream &stream, uint level, ui
     stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
     stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -259,7 +259,7 @@ T::Hash ParameterAerosolOpticalSettings::countHash() {
       boost::hash_combine(seed, *mForecastTime);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -269,7 +269,7 @@ const T::UInt8_opt &ParameterAerosolOpticalSettings::getParameterCategory() cons
   try {
     return mParameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -279,7 +279,7 @@ const T::UInt8_opt &ParameterAerosolOpticalSettings::getParameterNumber() const 
   try {
     return mParameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -289,7 +289,7 @@ const T::UInt16_opt &ParameterAerosolOpticalSettings::getAerosolType() const {
   try {
     return mAerosolType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -299,7 +299,7 @@ const T::UInt8_opt &ParameterAerosolOpticalSettings::getTypeOfSizeInterval() con
   try {
     return mTypeOfSizeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -309,7 +309,7 @@ const T::Int8_opt &ParameterAerosolOpticalSettings::getScaleFactorOfFirstSize() 
   try {
     return mScaleFactorOfFirstSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -319,7 +319,7 @@ const T::Int32_opt &ParameterAerosolOpticalSettings::getScaledValueOfFirstSize()
   try {
     return mScaledValueOfFirstSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -329,7 +329,7 @@ const T::Int8_opt &ParameterAerosolOpticalSettings::getScaleFactorOfSecondSize()
   try {
     return mScaleFactorOfSecondSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -339,7 +339,7 @@ const T::Int32_opt &ParameterAerosolOpticalSettings::getScaledValueOfSecondSize(
   try {
     return mScaledValueOfSecondSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -349,7 +349,7 @@ const T::UInt8_opt &ParameterAerosolOpticalSettings::getTypeOfWavelengthInterval
   try {
     return mTypeOfWavelengthInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -359,7 +359,7 @@ const T::Int8_opt &ParameterAerosolOpticalSettings::getScaleFactorOfFirstWavelen
   try {
     return mScaleFactorOfFirstWavelength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -369,7 +369,7 @@ const T::Int32_opt &ParameterAerosolOpticalSettings::getScaledValueOfFirstWavele
   try {
     return mScaledValueOfFirstWavelength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -379,7 +379,7 @@ const T::Int8_opt &ParameterAerosolOpticalSettings::getScaleFactorOfSecondWavele
   try {
     return mScaleFactorOfSecondWavelength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -389,7 +389,7 @@ const T::Int32_opt &ParameterAerosolOpticalSettings::getScaledValueOfSecondWavel
   try {
     return mScaledValueOfSecondWavelength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -399,7 +399,7 @@ const T::UInt8_opt &ParameterAerosolOpticalSettings::getTypeOfGeneratingProcess(
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -409,7 +409,7 @@ const T::UInt8_opt &ParameterAerosolOpticalSettings::getBackgroundProcess() cons
   try {
     return mBackgroundProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -419,7 +419,7 @@ const T::UInt8_opt &ParameterAerosolOpticalSettings::getGeneratingProcessIdentif
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -429,7 +429,7 @@ const T::UInt16_opt &ParameterAerosolOpticalSettings::getHoursAfterDataCutoff() 
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -439,7 +439,7 @@ const T::UInt8_opt &ParameterAerosolOpticalSettings::getMinutesAfterDataCutoff()
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -449,7 +449,7 @@ const T::UInt8_opt &ParameterAerosolOpticalSettings::getIndicatorOfUnitOfTimeRan
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -459,7 +459,7 @@ const T::UInt32_opt &ParameterAerosolOpticalSettings::getForecastTime() const {
   try {
     return mForecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -467,7 +467,7 @@ void ParameterAerosolOpticalSettings::setParameterCategory(T::UInt8_opt paramete
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -475,7 +475,7 @@ void ParameterAerosolOpticalSettings::setParameterNumber(T::UInt8_opt parameterN
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -483,7 +483,7 @@ void ParameterAerosolOpticalSettings::setAerosolType(T::UInt16_opt aerosolType) 
   try {
     mAerosolType = aerosolType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -491,7 +491,7 @@ void ParameterAerosolOpticalSettings::setTypeOfSizeInterval(T::UInt8_opt typeOfS
   try {
     mTypeOfSizeInterval = typeOfSizeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -499,7 +499,7 @@ void ParameterAerosolOpticalSettings::setScaleFactorOfFirstSize(T::Int8_opt scal
   try {
     mScaleFactorOfFirstSize = scaleFactorOfFirstSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -507,7 +507,7 @@ void ParameterAerosolOpticalSettings::setScaledValueOfFirstSize(T::Int32_opt sca
   try {
     mScaledValueOfFirstSize = scaledValueOfFirstSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -515,7 +515,7 @@ void ParameterAerosolOpticalSettings::setScaleFactorOfSecondSize(T::Int8_opt sca
   try {
     mScaleFactorOfSecondSize = scaleFactorOfSecondSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -523,7 +523,7 @@ void ParameterAerosolOpticalSettings::setScaledValueOfSecondSize(T::Int32_opt sc
   try {
     mScaledValueOfSecondSize = scaledValueOfSecondSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -531,7 +531,7 @@ void ParameterAerosolOpticalSettings::setTypeOfWavelengthInterval(T::UInt8_opt t
   try {
     mTypeOfWavelengthInterval = typeOfWavelengthInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -539,7 +539,7 @@ void ParameterAerosolOpticalSettings::setScaleFactorOfFirstWavelength(T::Int8_op
   try {
     mScaleFactorOfFirstWavelength = scaleFactorOfFirstWavelength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -547,7 +547,7 @@ void ParameterAerosolOpticalSettings::setScaledValueOfFirstWavelength(T::Int32_o
   try {
     mScaledValueOfFirstWavelength = scaledValueOfFirstWavelength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -555,7 +555,7 @@ void ParameterAerosolOpticalSettings::setScaleFactorOfSecondWavelength(T::Int8_o
   try {
     mScaleFactorOfSecondWavelength = scaleFactorOfSecondWavelength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -563,7 +563,7 @@ void ParameterAerosolOpticalSettings::setScaledValueOfSecondWavelength(T::Int32_
   try {
     mScaledValueOfSecondWavelength = scaledValueOfSecondWavelength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -571,7 +571,7 @@ void ParameterAerosolOpticalSettings::setTypeOfGeneratingProcess(T::UInt8_opt ty
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -579,7 +579,7 @@ void ParameterAerosolOpticalSettings::setBackgroundProcess(T::UInt8_opt backgrou
   try {
     mBackgroundProcess = backgroundProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -587,7 +587,7 @@ void ParameterAerosolOpticalSettings::setGeneratingProcessIdentifier(T::UInt8_op
   try {
     mGeneratingProcessIdentifier = generatingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -595,7 +595,7 @@ void ParameterAerosolOpticalSettings::setHoursAfterDataCutoff(T::UInt16_opt hour
   try {
     mHoursAfterDataCutoff = hoursAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -603,7 +603,7 @@ void ParameterAerosolOpticalSettings::setMinutesAfterDataCutoff(T::UInt8_opt min
   try {
     mMinutesAfterDataCutoff = minutesAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -611,7 +611,7 @@ void ParameterAerosolOpticalSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt
   try {
     mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -619,7 +619,7 @@ void ParameterAerosolOpticalSettings::setForecastTime(T::UInt32_opt forecastTime
   try {
     mForecastTime = forecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

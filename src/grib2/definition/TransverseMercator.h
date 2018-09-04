@@ -81,7 +81,7 @@ protected:
   //
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   //
   // unsigned[4] Ni : dump;
@@ -118,7 +118,7 @@ protected:
   //
   // include "template.3.resolution_flags.def";
 
-  ResolutionSettings mResolution;
+  mutable ResolutionSettings mResolution;
 
   //
   // # m - scale factor at reference point ratio of distance on map to distance on spheroid
@@ -148,7 +148,7 @@ protected:
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // # Di - i-direction increment length in units of 10-2 m

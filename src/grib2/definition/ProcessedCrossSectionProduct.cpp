@@ -21,7 +21,7 @@ namespace GRIB2 {
 ProcessedCrossSectionProduct::ProcessedCrossSectionProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -32,7 +32,7 @@ ProcessedCrossSectionProduct::ProcessedCrossSectionProduct(const ProcessedCrossS
     mParameter = other.mParameter;
     mStatistical = other.mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -51,7 +51,7 @@ void ProcessedCrossSectionProduct::read(MemoryReader &memoryReader) {
     mParameter.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -65,7 +65,7 @@ void ProcessedCrossSectionProduct::write(DataWriter &dataWriter) {
     mParameter.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void ProcessedCrossSectionProduct::getAttributeList(std::string prefix, T::Attri
     sprintf(name, "%sProcessedCrossSectionProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -100,7 +100,7 @@ void ProcessedCrossSectionProduct::print(std::ostream &stream, uint level, uint 
     mParameter.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -113,7 +113,7 @@ T::Hash ProcessedCrossSectionProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -125,9 +125,9 @@ uint ProcessedCrossSectionProduct::getTemplateNumber() const {
 
 ProductDefinition *ProcessedCrossSectionProduct::createProductDefinition() const {
   try {
-    return (ProductDefinition *)new ProcessedCrossSectionProduct(*this);
+    return static_cast<ProductDefinition *>(new ProcessedCrossSectionProduct(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -135,9 +135,9 @@ ProductDefinition *ProcessedCrossSectionProduct::createProductDefinition() const
 
 ParameterSettings *ProcessedCrossSectionProduct::getParameter() const {
   try {
-    return (ParameterSettings *)&mParameter;
+    return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -145,9 +145,9 @@ ParameterSettings *ProcessedCrossSectionProduct::getParameter() const {
 
 StatisticalSettings *ProcessedCrossSectionProduct::getStatistical() const {
   try {
-    return (StatisticalSettings *)&mStatistical;
+    return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -155,7 +155,7 @@ void ProcessedCrossSectionProduct::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -163,7 +163,7 @@ void ProcessedCrossSectionProduct::setStatistical(StatisticalSettings &statistic
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

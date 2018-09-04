@@ -57,11 +57,11 @@ protected:
   //
   // include "template.5.packing.def";
 
-  PackingSettings mPacking;
+  mutable PackingSettings mPacking;
 
   // include "template.5.original_values.def";
 
-  OriginalValuesSettings mOriginalValues;
+  mutable OriginalValuesSettings mOriginalValues;
 
   //
   // # Octet 22 : Type of Compression used. (see Code Table 5.40)

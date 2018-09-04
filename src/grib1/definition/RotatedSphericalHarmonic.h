@@ -123,7 +123,7 @@ protected:
   // # Rotation parameters
   // include "grid_rotation.def"
 
-  RotationSettings mRotation;
+  mutable RotationSettings mRotation;
 };
 
 } // namespace GRIB1

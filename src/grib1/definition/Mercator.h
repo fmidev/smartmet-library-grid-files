@@ -80,7 +80,7 @@ protected:
   //
   // include "grid_first_last_resandcomp.def";
 
-  GridAreaSettings mGridArea;
+  mutable GridAreaSettings mGridArea;
 
   //
   // signed[3] Latin : edition_specific,no_copy;
@@ -99,7 +99,7 @@ protected:
   //
   // include "scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // signed[3] DiInMetres   : dump;

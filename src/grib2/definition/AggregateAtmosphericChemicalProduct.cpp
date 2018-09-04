@@ -21,7 +21,7 @@ namespace GRIB2 {
 AggregateAtmosphericChemicalProduct::AggregateAtmosphericChemicalProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -33,7 +33,7 @@ AggregateAtmosphericChemicalProduct::AggregateAtmosphericChemicalProduct(const A
     mHorizontal = other.mHorizontal;
     mStatistical = other.mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -53,7 +53,7 @@ void AggregateAtmosphericChemicalProduct::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void AggregateAtmosphericChemicalProduct::write(DataWriter &dataWriter) {
     mHorizontal.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -88,7 +88,7 @@ void AggregateAtmosphericChemicalProduct::getAttributeList(std::string prefix, T
     sprintf(name, "%sAggregateAtmosphericChemicalProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -106,7 +106,7 @@ void AggregateAtmosphericChemicalProduct::print(std::ostream &stream, uint level
     mHorizontal.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -120,7 +120,7 @@ T::Hash AggregateAtmosphericChemicalProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,9 +132,9 @@ uint AggregateAtmosphericChemicalProduct::getTemplateNumber() const {
 
 ProductDefinition *AggregateAtmosphericChemicalProduct::createProductDefinition() const {
   try {
-    return (ProductDefinition *)new AggregateAtmosphericChemicalProduct(*this);
+    return static_cast<ProductDefinition *>(new AggregateAtmosphericChemicalProduct(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,9 +142,9 @@ ProductDefinition *AggregateAtmosphericChemicalProduct::createProductDefinition(
 
 ParameterChemicalSettings *AggregateAtmosphericChemicalProduct::getParameterChemical() const {
   try {
-    return (ParameterChemicalSettings *)&mParameterChemical;
+    return static_cast<ParameterChemicalSettings *>(&mParameterChemical);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -152,9 +152,9 @@ ParameterChemicalSettings *AggregateAtmosphericChemicalProduct::getParameterChem
 
 HorizontalSettings *AggregateAtmosphericChemicalProduct::getHorizontal() const {
   try {
-    return (HorizontalSettings *)&mHorizontal;
+    return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -162,9 +162,9 @@ HorizontalSettings *AggregateAtmosphericChemicalProduct::getHorizontal() const {
 
 StatisticalSettings *AggregateAtmosphericChemicalProduct::getStatistical() const {
   try {
-    return (StatisticalSettings *)&mStatistical;
+    return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -172,7 +172,7 @@ void AggregateAtmosphericChemicalProduct::setParameterChemical(ParameterChemical
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -180,7 +180,7 @@ void AggregateAtmosphericChemicalProduct::setHorizontal(HorizontalSettings &hori
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -188,7 +188,7 @@ void AggregateAtmosphericChemicalProduct::setStatistical(StatisticalSettings &st
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

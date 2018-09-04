@@ -90,7 +90,7 @@ protected:
   // # TEMPLATE 3.1100, Hovmoller diagram grid with points equally spaced on the horizontal
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   //
   // #  Number of horizontal points
@@ -129,7 +129,7 @@ protected:
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // #  La2 - latitude of last grid point

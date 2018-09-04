@@ -21,7 +21,7 @@ namespace GRIB2 {
 ReforecastSettings::ReforecastSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -36,7 +36,7 @@ ReforecastSettings::ReforecastSettings(const ReforecastSettings &other) {
     mMinuteOfModelVersion = other.mMinuteOfModelVersion;
     mSecondOfModelVersion = other.mSecondOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -59,7 +59,7 @@ void ReforecastSettings::read(MemoryReader &memoryReader) {
     mMinuteOfModelVersion = memoryReader.read_UInt8_opt();
     mSecondOfModelVersion = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -77,7 +77,7 @@ void ReforecastSettings::write(DataWriter &dataWriter) {
     dataWriter << mMinuteOfModelVersion;
     dataWriter << mSecondOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -103,7 +103,7 @@ void ReforecastSettings::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sReforecastSettings.SecondOfModelVersion", prefix.c_str());
     attributeList.addAttribute(name, toString(mSecondOfModelVersion));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -124,7 +124,7 @@ void ReforecastSettings::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "- MinuteOfModelVersion = " << toString(mMinuteOfModelVersion) << "\n";
     stream << space(level) << "- SecondOfModelVersion = " << toString(mSecondOfModelVersion) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -147,7 +147,7 @@ T::Hash ReforecastSettings::countHash() {
       boost::hash_combine(seed, *mSecondOfModelVersion);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -157,7 +157,7 @@ const T::UInt16_opt &ReforecastSettings::getYearOfModelVersion() const {
   try {
     return mYearOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -167,7 +167,7 @@ const T::UInt8_opt &ReforecastSettings::getMonthOfModelVersion() const {
   try {
     return mMonthOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -177,7 +177,7 @@ const T::UInt8_opt &ReforecastSettings::getDayOfModelVersion() const {
   try {
     return mDayOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -187,7 +187,7 @@ const T::UInt8_opt &ReforecastSettings::getHourOfModelVersion() const {
   try {
     return mHourOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -197,7 +197,7 @@ const T::UInt8_opt &ReforecastSettings::getMinuteOfModelVersion() const {
   try {
     return mMinuteOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -207,7 +207,7 @@ const T::UInt8_opt &ReforecastSettings::getSecondOfModelVersion() const {
   try {
     return mSecondOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -215,7 +215,7 @@ void ReforecastSettings::setYearOfModelVersion(T::UInt16_opt yearOfModelVersion)
   try {
     mYearOfModelVersion = yearOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -223,7 +223,7 @@ void ReforecastSettings::setMonthOfModelVersion(T::UInt8_opt monthOfModelVersion
   try {
     mMonthOfModelVersion = monthOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -231,7 +231,7 @@ void ReforecastSettings::setDayOfModelVersion(T::UInt8_opt dayOfModelVersion) {
   try {
     mDayOfModelVersion = dayOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -239,7 +239,7 @@ void ReforecastSettings::setHourOfModelVersion(T::UInt8_opt hourOfModelVersion) 
   try {
     mHourOfModelVersion = hourOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -247,7 +247,7 @@ void ReforecastSettings::setMinuteOfModelVersion(T::UInt8_opt minuteOfModelVersi
   try {
     mMinuteOfModelVersion = minuteOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -255,7 +255,7 @@ void ReforecastSettings::setSecondOfModelVersion(T::UInt8_opt secondOfModelVersi
   try {
     mSecondOfModelVersion = secondOfModelVersion;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

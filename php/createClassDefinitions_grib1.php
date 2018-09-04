@@ -286,12 +286,12 @@ function process_template($file, $name, $class, $outdir)
         $body .= "$incclass * get$Var() const;\n";
     
         $getters .= "\n/*! \brief The method returns the pointer to the {@link m${Var}} attribute. */\n\n";        
-        $getters .= "$incclass * ${class}::get$Var() const { try { return ($incclass*)&m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+        $getters .= "$incclass * ${class}::get$Var() const { try { return static_cast<${incclass}*>(&m${Var}); } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
 
         $body .= "void set$Var($incclass& $var);\n";
         $setters .= "void ${class}::set$Var($incclass& $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
         
-        $protected .= "$incclass m$Var;\n";
+        $protected .= "mutable $incclass m$Var;\n";
         $headers ["\"${incclass}.h\""] = 1;
 
         $members [$Var] = "class";
@@ -645,7 +645,7 @@ function process_template($file, $name, $class, $outdir)
     if ($parent > " ")
     {
       $cpp .= "${parent}* ${class}::create${parent}() const\n";
-      $cpp .= "{ try { return (${parent}*)new ${class}(*this);\n";
+      $cpp .= "{ try { return static_cast<${parent}*>(new ${class}(*this));\n";
       $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
     }    
   }

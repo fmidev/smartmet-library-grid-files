@@ -229,7 +229,7 @@ void GribFile::deleteUsers()
 
 
 
-GRID::Message* GribFile::addMessage()
+GRID::Message* GribFile::newMessage()
 {
   try
   {

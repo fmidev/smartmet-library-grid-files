@@ -21,7 +21,7 @@ namespace GRIB2 {
 EpsSettings::EpsSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -33,7 +33,7 @@ EpsSettings::EpsSettings(const EpsSettings &other) {
     mPerturbationNumber = other.mPerturbationNumber;
     mNumberOfForecastsInEnsemble = other.mNumberOfForecastsInEnsemble;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -53,7 +53,7 @@ void EpsSettings::read(MemoryReader &memoryReader) {
     mPerturbationNumber = memoryReader.read_UInt8_opt();
     mNumberOfForecastsInEnsemble = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void EpsSettings::write(DataWriter &dataWriter) {
     dataWriter << mPerturbationNumber;
     dataWriter << mNumberOfForecastsInEnsemble;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -88,7 +88,7 @@ void EpsSettings::getAttributeList(std::string prefix, T::AttributeList &attribu
     sprintf(name, "%sEpsSettings.NumberOfForecastsInEnsemble", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -106,7 +106,7 @@ void EpsSettings::print(std::ostream &stream, uint level, uint optionFlags) cons
     stream << space(level) << "- PerturbationNumber = " << toString(mPerturbationNumber) << "\n";
     stream << space(level) << "- NumberOfForecastsInEnsemble = " << toString(mNumberOfForecastsInEnsemble) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -123,7 +123,7 @@ T::Hash EpsSettings::countHash() {
       boost::hash_combine(seed, *mNumberOfForecastsInEnsemble);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -133,7 +133,7 @@ const T::UInt8_opt &EpsSettings::getTypeOfEnsembleForecast() const {
   try {
     return mTypeOfEnsembleForecast;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -143,7 +143,7 @@ const T::UInt8_opt &EpsSettings::getPerturbationNumber() const {
   try {
     return mPerturbationNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -153,7 +153,7 @@ const T::UInt8_opt &EpsSettings::getNumberOfForecastsInEnsemble() const {
   try {
     return mNumberOfForecastsInEnsemble;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -161,7 +161,7 @@ void EpsSettings::setTypeOfEnsembleForecast(T::UInt8_opt typeOfEnsembleForecast)
   try {
     mTypeOfEnsembleForecast = typeOfEnsembleForecast;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -169,7 +169,7 @@ void EpsSettings::setPerturbationNumber(T::UInt8_opt perturbationNumber) {
   try {
     mPerturbationNumber = perturbationNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -177,7 +177,7 @@ void EpsSettings::setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForecastsI
   try {
     mNumberOfForecastsInEnsemble = numberOfForecastsInEnsemble;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

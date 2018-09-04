@@ -68,7 +68,7 @@ protected:
   //
   // include "resolution_flags.def";
 
-  ResolutionFlagsSettings mResolutionFlags;
+  mutable ResolutionFlagsSettings mResolutionFlags;
 
   //
   // #  La2 - latitude of last grid point

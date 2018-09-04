@@ -51,7 +51,7 @@ protected:
   //
   // include "template.3.grid.def";
 
-  GridSettings mGrid;
+  mutable GridSettings mGrid;
 
   //
   // #  Di - i direction increment
@@ -71,7 +71,7 @@ protected:
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // modify Ni : can_be_missing,dump;

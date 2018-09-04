@@ -76,11 +76,11 @@ protected:
   //
   // include "template.5.packing.def";
 
-  PackingSettings mPacking;
+  mutable PackingSettings mPacking;
 
   // include "template.5.original_values.def";
 
-  OriginalValuesSettings mOriginalValues;
+  mutable OriginalValuesSettings mOriginalValues;
 
   //
   // #  Group splitting method used

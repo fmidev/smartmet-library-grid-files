@@ -21,7 +21,7 @@ namespace GRIB2 {
 SimulatedSatelliteEnsembleProduct::SimulatedSatelliteEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -32,7 +32,7 @@ SimulatedSatelliteEnsembleProduct::SimulatedSatelliteEnsembleProduct(const Simul
     mSimulatedSatelliteProduct = other.mSimulatedSatelliteProduct;
     mEps = other.mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -51,7 +51,7 @@ void SimulatedSatelliteEnsembleProduct::read(MemoryReader &memoryReader) {
     mSimulatedSatelliteProduct.read(memoryReader);
     mEps.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -65,7 +65,7 @@ void SimulatedSatelliteEnsembleProduct::write(DataWriter &dataWriter) {
     mSimulatedSatelliteProduct.write(dataWriter);
     mEps.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -83,7 +83,7 @@ void SimulatedSatelliteEnsembleProduct::getAttributeList(std::string prefix, T::
     sprintf(name, "%sSimulatedSatelliteEnsembleProduct.", prefix.c_str());
     mEps.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -100,7 +100,7 @@ void SimulatedSatelliteEnsembleProduct::print(std::ostream &stream, uint level, 
     mSimulatedSatelliteProduct.print(stream, level + 1, optionFlags);
     mEps.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -113,7 +113,7 @@ T::Hash SimulatedSatelliteEnsembleProduct::countHash() {
     boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -125,9 +125,9 @@ uint SimulatedSatelliteEnsembleProduct::getTemplateNumber() const {
 
 ProductDefinition *SimulatedSatelliteEnsembleProduct::createProductDefinition() const {
   try {
-    return (ProductDefinition *)new SimulatedSatelliteEnsembleProduct(*this);
+    return static_cast<ProductDefinition *>(new SimulatedSatelliteEnsembleProduct(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -135,9 +135,9 @@ ProductDefinition *SimulatedSatelliteEnsembleProduct::createProductDefinition() 
 
 SimulatedSatelliteProduct *SimulatedSatelliteEnsembleProduct::getSimulatedSatelliteProduct() const {
   try {
-    return (SimulatedSatelliteProduct *)&mSimulatedSatelliteProduct;
+    return static_cast<SimulatedSatelliteProduct *>(&mSimulatedSatelliteProduct);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -145,9 +145,9 @@ SimulatedSatelliteProduct *SimulatedSatelliteEnsembleProduct::getSimulatedSatell
 
 EpsSettings *SimulatedSatelliteEnsembleProduct::getEps() const {
   try {
-    return (EpsSettings *)&mEps;
+    return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -155,7 +155,7 @@ void SimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSa
   try {
     mSimulatedSatelliteProduct = simulatedSatelliteProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -163,7 +163,7 @@ void SimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

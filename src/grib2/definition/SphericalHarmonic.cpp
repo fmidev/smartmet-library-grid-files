@@ -21,7 +21,7 @@ namespace GRIB2 {
 SphericalHarmonic::SphericalHarmonic() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -31,7 +31,7 @@ SphericalHarmonic::SphericalHarmonic(const SphericalHarmonic &other) : GridDefin
   try {
     mSphericalHarmonic = other.mSphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -49,7 +49,7 @@ void SphericalHarmonic::read(MemoryReader &memoryReader) {
   try {
     mSphericalHarmonic.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -62,7 +62,7 @@ void SphericalHarmonic::write(DataWriter &dataWriter) {
   try {
     mSphericalHarmonic.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -78,7 +78,7 @@ void SphericalHarmonic::getAttributeList(std::string prefix, T::AttributeList &a
     sprintf(name, "%sSphericalHarmonic.", prefix.c_str());
     mSphericalHarmonic.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -94,7 +94,7 @@ void SphericalHarmonic::print(std::ostream &stream, uint level, uint optionFlags
     stream << space(level) << "SphericalHarmonic\n";
     mSphericalHarmonic.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -106,7 +106,7 @@ T::Hash SphericalHarmonic::countHash() {
     boost::hash_combine(seed, mSphericalHarmonic.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -118,9 +118,9 @@ uint SphericalHarmonic::getTemplateNumber() const {
 
 GridDefinition *SphericalHarmonic::createGridDefinition() const {
   try {
-    return (GridDefinition *)new SphericalHarmonic(*this);
+    return static_cast<GridDefinition *>(new SphericalHarmonic(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -128,9 +128,9 @@ GridDefinition *SphericalHarmonic::createGridDefinition() const {
 
 SphericalHarmonicSettings *SphericalHarmonic::getSphericalHarmonic() const {
   try {
-    return (SphericalHarmonicSettings *)&mSphericalHarmonic;
+    return static_cast<SphericalHarmonicSettings *>(&mSphericalHarmonic);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -138,7 +138,7 @@ void SphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &spherica
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

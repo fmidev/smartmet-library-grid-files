@@ -52,11 +52,11 @@ protected:
   //
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   // include "template.3.gaussian.def";
 
-  GaussianSettings mGaussian;
+  mutable GaussianSettings mGaussian;
 };
 
 } // namespace GRIB2

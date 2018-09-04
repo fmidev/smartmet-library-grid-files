@@ -55,15 +55,15 @@ protected:
   //
   // include "template.4.parameter_chemical.def";
 
-  ParameterChemicalSettings mParameterChemical;
+  mutable ParameterChemicalSettings mParameterChemical;
 
   // include "template.4.point_in_time.def";
 
-  PointInTimeSettings mPointInTime;
+  mutable PointInTimeSettings mPointInTime;
 
   // include "template.4.horizontal.def";
 
-  HorizontalSettings mHorizontal;
+  mutable HorizontalSettings mHorizontal;
 };
 
 } // namespace GRIB2

@@ -56,15 +56,15 @@ protected:
   //
   // include "template.4.32.def"
 
-  SimulatedSatelliteProduct mSimulatedSatelliteProduct;
+  mutable SimulatedSatelliteProduct mSimulatedSatelliteProduct;
 
   // include "template.4.eps.def"
 
-  EpsSettings mEps;
+  mutable EpsSettings mEps;
 
   // include "template.4.statistical.def"
 
-  StatisticalSettings mStatistical;
+  mutable StatisticalSettings mStatistical;
 
   //
   // alias instrument = instrumentType;

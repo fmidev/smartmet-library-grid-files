@@ -69,11 +69,11 @@ protected:
   //
   // include "template.4.parameter.def"
 
-  ParameterSettings mParameter;
+  mutable ParameterSettings mParameter;
 
   // include "template.4.point_in_time.def";
 
-  PointInTimeSettings mPointInTime;
+  mutable PointInTimeSettings mPointInTime;
 
   //
   // # Required for interpolation and MARS. The level type is used to decide whether to apply the Land Sea Mask

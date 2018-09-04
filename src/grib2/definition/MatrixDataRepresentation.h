@@ -75,7 +75,7 @@ protected:
   //
   // include "template.5.packing.def";
 
-  PackingSettings mPacking;
+  mutable PackingSettings mPacking;
 
   //
   //

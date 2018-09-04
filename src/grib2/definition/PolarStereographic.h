@@ -73,7 +73,7 @@ protected:
   // # TEMPLATE 3.20, Polar stereographic projection
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   // transient oneThousand=1000;
   //
@@ -166,7 +166,7 @@ protected:
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   //

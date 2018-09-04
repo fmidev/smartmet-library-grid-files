@@ -21,7 +21,7 @@ namespace GRIB2 {
 FloatingPointGridDataRepresentation::FloatingPointGridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -31,7 +31,7 @@ FloatingPointGridDataRepresentation::FloatingPointGridDataRepresentation(const F
   try {
     mPrecision = other.mPrecision;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -49,7 +49,7 @@ void FloatingPointGridDataRepresentation::read(MemoryReader &memoryReader) {
   try {
     mPrecision = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -62,7 +62,7 @@ void FloatingPointGridDataRepresentation::write(DataWriter &dataWriter) {
   try {
     dataWriter << mPrecision;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -78,7 +78,7 @@ void FloatingPointGridDataRepresentation::getAttributeList(std::string prefix, T
     sprintf(name, "%sFloatingPointGridDataRepresentation.Precision", prefix.c_str());
     attributeList.addAttribute(name, toString(mPrecision));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -94,7 +94,7 @@ void FloatingPointGridDataRepresentation::print(std::ostream &stream, uint level
     stream << space(level) << "FloatingPointGridDataRepresentation\n";
     stream << space(level) << "- Precision = " << toString(mPrecision) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -107,7 +107,7 @@ T::Hash FloatingPointGridDataRepresentation::countHash() {
       boost::hash_combine(seed, *mPrecision);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -119,9 +119,9 @@ uint FloatingPointGridDataRepresentation::getTemplateNumber() const {
 
 RepresentationDefinition *FloatingPointGridDataRepresentation::createRepresentationDefinition() const {
   try {
-    return (RepresentationDefinition *)new FloatingPointGridDataRepresentation(*this);
+    return static_cast<RepresentationDefinition *>(new FloatingPointGridDataRepresentation(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -131,7 +131,7 @@ const T::UInt8_opt &FloatingPointGridDataRepresentation::getPrecision() const {
   try {
     return mPrecision;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -139,7 +139,7 @@ void FloatingPointGridDataRepresentation::setPrecision(T::UInt8_opt precision) {
   try {
     mPrecision = precision;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

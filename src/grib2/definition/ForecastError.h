@@ -49,7 +49,7 @@ protected:
   // # Same as 4.0 Should not be used
   //
   // include "template.4.0.def"
-  NormalProduct mNormalProduct;
+  mutable NormalProduct mNormalProduct;
 };
 
 } // namespace GRIB2

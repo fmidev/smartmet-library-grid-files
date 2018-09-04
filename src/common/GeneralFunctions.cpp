@@ -231,7 +231,7 @@ double int_power(double x, int y)
 
 
 
-void ieee2ibm(void *to, const void *from, int len)
+void ieee2ibm(void *to, void *from, int len)
 {
   register unsigned fr; /* fraction */
   register int exp; /* exponent */
@@ -799,6 +799,63 @@ time_t toTimeT(boost::posix_time::ptime tim)
 
 
 
+char toInt8(const char *str)
+{
+  try
+  {
+    if (str == nullptr)
+      return 0;
+
+    return static_cast<char>(atoll(str));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+short toInt16(const char *str)
+{
+  try
+  {
+    if (str == nullptr)
+      return 0;
+
+    return static_cast<short>(atoll(str));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+int toInt32(const char *str)
+{
+  try
+  {
+    if (str == nullptr)
+      return 0;
+
+    return static_cast<int>(atoll(str));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 long long toInt64(const char *str)
 {
   try
@@ -807,6 +864,82 @@ long long toInt64(const char *str)
       return 0;
 
     return atoll(str);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+uchar toUInt8(const char *str)
+{
+  try
+  {
+    if (str == nullptr)
+      return 0;
+
+    return static_cast<uchar>(atoll(str));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+ushort toUInt16(const char *str)
+{
+  try
+  {
+    if (str == nullptr)
+      return 0;
+
+    return static_cast<ushort>(atoll(str));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+uint toUInt32(const char *str)
+{
+  try
+  {
+    if (str == nullptr)
+      return 0;
+
+    return static_cast<uint>(atoll(str));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+ulonglong toUInt64(const char *str)
+{
+  try
+  {
+    if (str == nullptr)
+      return 0;
+
+    return static_cast<unsigned long long>(atoll(str));
   }
   catch (...)
   {

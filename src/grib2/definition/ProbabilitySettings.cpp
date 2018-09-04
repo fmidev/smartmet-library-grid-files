@@ -21,7 +21,7 @@ namespace GRIB2 {
 ProbabilitySettings::ProbabilitySettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -37,7 +37,7 @@ ProbabilitySettings::ProbabilitySettings(const ProbabilitySettings &other) {
     mScaleFactorOfUpperLimit = other.mScaleFactorOfUpperLimit;
     mScaledValueOfUpperLimit = other.mScaledValueOfUpperLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -61,7 +61,7 @@ void ProbabilitySettings::read(MemoryReader &memoryReader) {
     mScaleFactorOfUpperLimit = memoryReader.read_Int8_opt();
     mScaledValueOfUpperLimit = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -80,7 +80,7 @@ void ProbabilitySettings::write(DataWriter &dataWriter) {
     dataWriter << mScaleFactorOfUpperLimit;
     dataWriter << mScaledValueOfUpperLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -108,7 +108,7 @@ void ProbabilitySettings::getAttributeList(std::string prefix, T::AttributeList 
     sprintf(name, "%sProbabilitySettings.ScaledValueOfUpperLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfUpperLimit));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -130,7 +130,7 @@ void ProbabilitySettings::print(std::ostream &stream, uint level, uint optionFla
     stream << space(level) << "- ScaleFactorOfUpperLimit = " << toString(mScaleFactorOfUpperLimit) << "\n";
     stream << space(level) << "- ScaledValueOfUpperLimit = " << toString(mScaledValueOfUpperLimit) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -155,7 +155,7 @@ T::Hash ProbabilitySettings::countHash() {
       boost::hash_combine(seed, *mScaledValueOfUpperLimit);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -165,7 +165,7 @@ const T::UInt8_opt &ProbabilitySettings::getForecastProbabilityNumber() const {
   try {
     return mForecastProbabilityNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -175,7 +175,7 @@ const T::UInt8_opt &ProbabilitySettings::getTotalNumberOfForecastProbabilities()
   try {
     return mTotalNumberOfForecastProbabilities;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -185,7 +185,7 @@ const T::UInt8_opt &ProbabilitySettings::getProbabilityType() const {
   try {
     return mProbabilityType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -195,7 +195,7 @@ const T::Int8_opt &ProbabilitySettings::getScaleFactorOfLowerLimit() const {
   try {
     return mScaleFactorOfLowerLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -205,7 +205,7 @@ const T::Int32_opt &ProbabilitySettings::getScaledValueOfLowerLimit() const {
   try {
     return mScaledValueOfLowerLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -215,7 +215,7 @@ const T::Int8_opt &ProbabilitySettings::getScaleFactorOfUpperLimit() const {
   try {
     return mScaleFactorOfUpperLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -225,7 +225,7 @@ const T::Int32_opt &ProbabilitySettings::getScaledValueOfUpperLimit() const {
   try {
     return mScaledValueOfUpperLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -233,7 +233,7 @@ void ProbabilitySettings::setForecastProbabilityNumber(T::UInt8_opt forecastProb
   try {
     mForecastProbabilityNumber = forecastProbabilityNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -241,7 +241,7 @@ void ProbabilitySettings::setTotalNumberOfForecastProbabilities(T::UInt8_opt tot
   try {
     mTotalNumberOfForecastProbabilities = totalNumberOfForecastProbabilities;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -249,7 +249,7 @@ void ProbabilitySettings::setProbabilityType(T::UInt8_opt probabilityType) {
   try {
     mProbabilityType = probabilityType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -257,7 +257,7 @@ void ProbabilitySettings::setScaleFactorOfLowerLimit(T::Int8_opt scaleFactorOfLo
   try {
     mScaleFactorOfLowerLimit = scaleFactorOfLowerLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -265,7 +265,7 @@ void ProbabilitySettings::setScaledValueOfLowerLimit(T::Int32_opt scaledValueOfL
   try {
     mScaledValueOfLowerLimit = scaledValueOfLowerLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -273,7 +273,7 @@ void ProbabilitySettings::setScaleFactorOfUpperLimit(T::Int8_opt scaleFactorOfUp
   try {
     mScaleFactorOfUpperLimit = scaleFactorOfUpperLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -281,7 +281,7 @@ void ProbabilitySettings::setScaledValueOfUpperLimit(T::Int32_opt scaledValueOfU
   try {
     mScaledValueOfUpperLimit = scaledValueOfUpperLimit;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

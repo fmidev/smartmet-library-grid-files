@@ -94,7 +94,7 @@ protected:
   // # Resolution and component flags
   // include "grid_first_last_resandcomp.def";
 
-  GridAreaSettings mGridArea;
+  mutable GridAreaSettings mGridArea;
 
   //
   // unsigned[2] iDirectionIncrement : can_be_missing, edition_specific;
@@ -112,7 +112,7 @@ protected:
   //
   // include "scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // meta  geography.jDirectionIncrementInDegrees latlon_increment(ijDirectionIncrementGiven,jDirectionIncrement,
@@ -165,7 +165,7 @@ protected:
   //
   // # Rotation parameters
   // include "grid_rotation.def"
-  RotationSettings mRotation;
+  mutable RotationSettings mRotation;
 };
 
 } // namespace GRIB1

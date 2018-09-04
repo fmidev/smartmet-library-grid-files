@@ -21,7 +21,7 @@ namespace GRIB2 {
 ComplexSphericalHarmonicsDataRepresentation::ComplexSphericalHarmonicsDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -35,7 +35,7 @@ ComplexSphericalHarmonicsDataRepresentation::ComplexSphericalHarmonicsDataRepres
     mTS = other.mTS;
     mUnpackedSubsetPrecision = other.mUnpackedSubsetPrecision;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -56,7 +56,7 @@ void ComplexSphericalHarmonicsDataRepresentation::read(MemoryReader &memoryReade
     mTS = memoryReader.read_UInt32_opt();
     mUnpackedSubsetPrecision = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -72,7 +72,7 @@ void ComplexSphericalHarmonicsDataRepresentation::write(DataWriter &dataWriter) 
     dataWriter << mTS;
     dataWriter << mUnpackedSubsetPrecision;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -94,7 +94,7 @@ void ComplexSphericalHarmonicsDataRepresentation::getAttributeList(std::string p
     sprintf(name, "%sComplexSphericalHarmonicsDataRepresentation.UnpackedSubsetPrecision", prefix.c_str());
     attributeList.addAttribute(name, toString(mUnpackedSubsetPrecision));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -113,7 +113,7 @@ void ComplexSphericalHarmonicsDataRepresentation::print(std::ostream &stream, ui
     stream << space(level) << "- TS = " << toString(mTS) << "\n";
     stream << space(level) << "- UnpackedSubsetPrecision = " << toString(mUnpackedSubsetPrecision) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -131,7 +131,7 @@ T::Hash ComplexSphericalHarmonicsDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -143,9 +143,9 @@ uint ComplexSphericalHarmonicsDataRepresentation::getTemplateNumber() const {
 
 RepresentationDefinition *ComplexSphericalHarmonicsDataRepresentation::createRepresentationDefinition() const {
   try {
-    return (RepresentationDefinition *)new ComplexSphericalHarmonicsDataRepresentation(*this);
+    return static_cast<RepresentationDefinition *>(new ComplexSphericalHarmonicsDataRepresentation(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -153,9 +153,9 @@ RepresentationDefinition *ComplexSphericalHarmonicsDataRepresentation::createRep
 
 PackingSettings *ComplexSphericalHarmonicsDataRepresentation::getPacking() const {
   try {
-    return (PackingSettings *)&mPacking;
+    return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -165,7 +165,7 @@ const T::Int32_opt &ComplexSphericalHarmonicsDataRepresentation::getLaplacianSca
   try {
     return mLaplacianScalingFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -175,7 +175,7 @@ const T::UInt32_opt &ComplexSphericalHarmonicsDataRepresentation::getTS() const 
   try {
     return mTS;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -185,7 +185,7 @@ const T::UInt8_opt &ComplexSphericalHarmonicsDataRepresentation::getUnpackedSubs
   try {
     return mUnpackedSubsetPrecision;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -193,7 +193,7 @@ void ComplexSphericalHarmonicsDataRepresentation::setPacking(PackingSettings &pa
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -201,7 +201,7 @@ void ComplexSphericalHarmonicsDataRepresentation::setLaplacianScalingFactor(T::I
   try {
     mLaplacianScalingFactor = laplacianScalingFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -209,7 +209,7 @@ void ComplexSphericalHarmonicsDataRepresentation::setTS(T::UInt32_opt tS) {
   try {
     mTS = tS;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -217,7 +217,7 @@ void ComplexSphericalHarmonicsDataRepresentation::setUnpackedSubsetPrecision(T::
   try {
     mUnpackedSubsetPrecision = unpackedSubsetPrecision;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

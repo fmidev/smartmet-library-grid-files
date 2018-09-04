@@ -22,7 +22,7 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea() {
   try {
     mResolutionAndComponentFlag = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -42,7 +42,7 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const LambertAzimuthalEqual
     mYDirectionGridLengthInMillimetres = other.mYDirectionGridLengthInMillimetres;
     mScanningMode = other.mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -70,7 +70,7 @@ void LambertAzimuthalEqualArea::read(MemoryReader &memoryReader) {
     mYDirectionGridLengthInMillimetres = memoryReader.read_UInt32_opt();
     mScanningMode.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -93,7 +93,7 @@ void LambertAzimuthalEqualArea::write(DataWriter &dataWriter) {
     dataWriter << mYDirectionGridLengthInMillimetres;
     mScanningMode.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -129,7 +129,7 @@ void LambertAzimuthalEqualArea::getAttributeList(std::string prefix, T::Attribut
     sprintf(name, "%sLambertAzimuthalEqualArea.", prefix.c_str());
     mScanningMode.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -155,7 +155,7 @@ void LambertAzimuthalEqualArea::print(std::ostream &stream, uint level, uint opt
     stream << space(level) << "- YDirectionGridLengthInMillimetres = " << toString(mYDirectionGridLengthInMillimetres) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -185,7 +185,7 @@ T::Hash LambertAzimuthalEqualArea::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -197,9 +197,9 @@ uint LambertAzimuthalEqualArea::getTemplateNumber() const {
 
 GridDefinition *LambertAzimuthalEqualArea::createGridDefinition() const {
   try {
-    return (GridDefinition *)new LambertAzimuthalEqualArea(*this);
+    return static_cast<GridDefinition *>(new LambertAzimuthalEqualArea(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -207,9 +207,9 @@ GridDefinition *LambertAzimuthalEqualArea::createGridDefinition() const {
 
 EarthShapeSettings *LambertAzimuthalEqualArea::getEarthShape() const {
   try {
-    return (EarthShapeSettings *)&mEarthShape;
+    return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -219,7 +219,7 @@ const T::UInt32_opt &LambertAzimuthalEqualArea::getNumberOfPointsAlongXAxis() co
   try {
     return mNumberOfPointsAlongXAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -229,7 +229,7 @@ const T::UInt32_opt &LambertAzimuthalEqualArea::getNumberOfPointsAlongYAxis() co
   try {
     return mNumberOfPointsAlongYAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -239,7 +239,7 @@ const T::Int32_opt &LambertAzimuthalEqualArea::getLatitudeOfFirstGridPoint() con
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -249,7 +249,7 @@ const T::Int32_opt &LambertAzimuthalEqualArea::getLongitudeOfFirstGridPoint() co
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -259,7 +259,7 @@ const T::Int32_opt &LambertAzimuthalEqualArea::getStandardParallelInMicrodegrees
   try {
     return mStandardParallelInMicrodegrees;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -269,7 +269,7 @@ const T::Int32_opt &LambertAzimuthalEqualArea::getCentralLongitudeInMicrodegrees
   try {
     return mCentralLongitudeInMicrodegrees;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -279,7 +279,7 @@ std::uint8_t LambertAzimuthalEqualArea::getResolutionAndComponentFlag() const {
   try {
     return mResolutionAndComponentFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -289,7 +289,7 @@ const T::UInt32_opt &LambertAzimuthalEqualArea::getXDirectionGridLengthInMillime
   try {
     return mXDirectionGridLengthInMillimetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -299,7 +299,7 @@ const T::UInt32_opt &LambertAzimuthalEqualArea::getYDirectionGridLengthInMillime
   try {
     return mYDirectionGridLengthInMillimetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -307,9 +307,9 @@ const T::UInt32_opt &LambertAzimuthalEqualArea::getYDirectionGridLengthInMillime
 
 ScanningModeSettings *LambertAzimuthalEqualArea::getScanningMode() const {
   try {
-    return (ScanningModeSettings *)&mScanningMode;
+    return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -317,7 +317,7 @@ void LambertAzimuthalEqualArea::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -325,7 +325,7 @@ void LambertAzimuthalEqualArea::setNumberOfPointsAlongXAxis(T::UInt32_opt number
   try {
     mNumberOfPointsAlongXAxis = numberOfPointsAlongXAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -333,7 +333,7 @@ void LambertAzimuthalEqualArea::setNumberOfPointsAlongYAxis(T::UInt32_opt number
   try {
     mNumberOfPointsAlongYAxis = numberOfPointsAlongYAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -341,7 +341,7 @@ void LambertAzimuthalEqualArea::setLatitudeOfFirstGridPoint(T::Int32_opt latitud
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -349,7 +349,7 @@ void LambertAzimuthalEqualArea::setLongitudeOfFirstGridPoint(T::Int32_opt longit
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -357,7 +357,7 @@ void LambertAzimuthalEqualArea::setStandardParallelInMicrodegrees(T::Int32_opt s
   try {
     mStandardParallelInMicrodegrees = standardParallelInMicrodegrees;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -365,7 +365,7 @@ void LambertAzimuthalEqualArea::setCentralLongitudeInMicrodegrees(T::Int32_opt c
   try {
     mCentralLongitudeInMicrodegrees = centralLongitudeInMicrodegrees;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -373,7 +373,7 @@ void LambertAzimuthalEqualArea::setResolutionAndComponentFlag(std::uint8_t resol
   try {
     mResolutionAndComponentFlag = resolutionAndComponentFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -381,7 +381,7 @@ void LambertAzimuthalEqualArea::setXDirectionGridLengthInMillimetres(T::UInt32_o
   try {
     mXDirectionGridLengthInMillimetres = xDirectionGridLengthInMillimetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -389,7 +389,7 @@ void LambertAzimuthalEqualArea::setYDirectionGridLengthInMillimetres(T::UInt32_o
   try {
     mYDirectionGridLengthInMillimetres = yDirectionGridLengthInMillimetres;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -397,7 +397,7 @@ void LambertAzimuthalEqualArea::setScanningMode(ScanningModeSettings &scanningMo
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

@@ -80,7 +80,7 @@ protected:
   // # TEMPLATE 3.90, Space view perspective or orthographic
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   //
   // unsigned[4] Nx  : dump;
@@ -116,7 +116,7 @@ protected:
   //
   // include "template.3.resolution_flags.def";
 
-  ResolutionSettings mResolution;
+  mutable ResolutionSettings mResolution;
 
   //
   // #  dx - apparent diameter of Earth in grid lengths, in X-direction
@@ -153,7 +153,7 @@ protected:
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // #  Orientation of the grid; i.e., the angle between the increasing Y-axis and the meridian of the sub-satellite point in the direction of increasing latitude

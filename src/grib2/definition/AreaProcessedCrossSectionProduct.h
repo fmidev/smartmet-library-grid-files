@@ -61,7 +61,7 @@ protected:
   //
   // include "template.4.parameter.def"
 
-  ParameterSettings mParameter;
+  mutable ParameterSettings mParameter;
 
   //
   //

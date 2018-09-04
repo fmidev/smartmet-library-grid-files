@@ -51,11 +51,11 @@ protected:
   //
   // include "template.4.53.def"
 
-  PartitionedProduct mPartitionedProduct;
+  mutable PartitionedProduct mPartitionedProduct;
 
   // include "template.4.eps.def"
 
-  EpsSettings mEps;
+  mutable EpsSettings mEps;
 
   //
   // constant cat="cat";

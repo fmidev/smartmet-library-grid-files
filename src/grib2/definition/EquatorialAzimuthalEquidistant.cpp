@@ -22,7 +22,7 @@ EquatorialAzimuthalEquidistant::EquatorialAzimuthalEquidistant() {
   try {
     mResolutionAndComponentFlag = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -41,7 +41,7 @@ EquatorialAzimuthalEquidistant::EquatorialAzimuthalEquidistant(const EquatorialA
     mProjectionCenterFlag = other.mProjectionCenterFlag;
     mScanningMode = other.mScanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -68,7 +68,7 @@ void EquatorialAzimuthalEquidistant::read(MemoryReader &memoryReader) {
     mProjectionCenterFlag = memoryReader.read_UInt8_opt();
     mScanningMode.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -90,7 +90,7 @@ void EquatorialAzimuthalEquidistant::write(DataWriter &dataWriter) {
     dataWriter << mProjectionCenterFlag;
     mScanningMode.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -124,7 +124,7 @@ void EquatorialAzimuthalEquidistant::getAttributeList(std::string prefix, T::Att
     sprintf(name, "%sEquatorialAzimuthalEquidistant.", prefix.c_str());
     mScanningMode.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -149,7 +149,7 @@ void EquatorialAzimuthalEquidistant::print(std::ostream &stream, uint level, uin
     stream << space(level) << "- ProjectionCenterFlag = " << toString(mProjectionCenterFlag) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -177,7 +177,7 @@ T::Hash EquatorialAzimuthalEquidistant::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -189,9 +189,9 @@ uint EquatorialAzimuthalEquidistant::getTemplateNumber() const {
 
 GridDefinition *EquatorialAzimuthalEquidistant::createGridDefinition() const {
   try {
-    return (GridDefinition *)new EquatorialAzimuthalEquidistant(*this);
+    return static_cast<GridDefinition *>(new EquatorialAzimuthalEquidistant(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -199,9 +199,9 @@ GridDefinition *EquatorialAzimuthalEquidistant::createGridDefinition() const {
 
 EarthShapeSettings *EquatorialAzimuthalEquidistant::getEarthShape() const {
   try {
-    return (EarthShapeSettings *)&mEarthShape;
+    return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -211,7 +211,7 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getNumberOfPointsAlongXAxis
   try {
     return mNumberOfPointsAlongXAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -221,7 +221,7 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getNumberOfPointsAlongYAxis
   try {
     return mNumberOfPointsAlongYAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -231,7 +231,7 @@ const T::Int32_opt &EquatorialAzimuthalEquidistant::getLatitudeOfTangencyPoint()
   try {
     return mLatitudeOfTangencyPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -241,7 +241,7 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getLongitudeOfTangencyPoint
   try {
     return mLongitudeOfTangencyPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -251,7 +251,7 @@ std::uint8_t EquatorialAzimuthalEquidistant::getResolutionAndComponentFlag() con
   try {
     return mResolutionAndComponentFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -261,7 +261,7 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getDx() const {
   try {
     return mDx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -271,7 +271,7 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getDy() const {
   try {
     return mDy;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -281,7 +281,7 @@ const T::UInt8_opt &EquatorialAzimuthalEquidistant::getProjectionCenterFlag() co
   try {
     return mProjectionCenterFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -289,9 +289,9 @@ const T::UInt8_opt &EquatorialAzimuthalEquidistant::getProjectionCenterFlag() co
 
 ScanningModeSettings *EquatorialAzimuthalEquidistant::getScanningMode() const {
   try {
-    return (ScanningModeSettings *)&mScanningMode;
+    return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -299,7 +299,7 @@ void EquatorialAzimuthalEquidistant::setEarthShape(EarthShapeSettings &earthShap
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -307,7 +307,7 @@ void EquatorialAzimuthalEquidistant::setNumberOfPointsAlongXAxis(T::UInt32_opt n
   try {
     mNumberOfPointsAlongXAxis = numberOfPointsAlongXAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -315,7 +315,7 @@ void EquatorialAzimuthalEquidistant::setNumberOfPointsAlongYAxis(T::UInt32_opt n
   try {
     mNumberOfPointsAlongYAxis = numberOfPointsAlongYAxis;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -323,7 +323,7 @@ void EquatorialAzimuthalEquidistant::setLatitudeOfTangencyPoint(T::Int32_opt lat
   try {
     mLatitudeOfTangencyPoint = latitudeOfTangencyPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -331,7 +331,7 @@ void EquatorialAzimuthalEquidistant::setLongitudeOfTangencyPoint(T::UInt32_opt l
   try {
     mLongitudeOfTangencyPoint = longitudeOfTangencyPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -339,7 +339,7 @@ void EquatorialAzimuthalEquidistant::setResolutionAndComponentFlag(std::uint8_t 
   try {
     mResolutionAndComponentFlag = resolutionAndComponentFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -347,7 +347,7 @@ void EquatorialAzimuthalEquidistant::setDx(T::UInt32_opt dx) {
   try {
     mDx = dx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -355,7 +355,7 @@ void EquatorialAzimuthalEquidistant::setDy(T::UInt32_opt dy) {
   try {
     mDy = dy;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -363,7 +363,7 @@ void EquatorialAzimuthalEquidistant::setProjectionCenterFlag(T::UInt8_opt projec
   try {
     mProjectionCenterFlag = projectionCenterFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -371,7 +371,7 @@ void EquatorialAzimuthalEquidistant::setScanningMode(ScanningModeSettings &scann
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

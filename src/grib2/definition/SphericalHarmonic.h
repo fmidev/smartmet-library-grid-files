@@ -49,7 +49,7 @@ protected:
   //
   // include "template.3.spherical_harmonics.def";
 
-  SphericalHarmonicSettings mSphericalHarmonic;
+  mutable SphericalHarmonicSettings mSphericalHarmonic;
 };
 
 } // namespace GRIB2

@@ -108,7 +108,7 @@ protected:
   //
   // include "resolution_flags.def";
 
-  ResolutionFlagsSettings mResolutionFlags;
+  mutable ResolutionFlagsSettings mResolutionFlags;
 
   //
   // unsigned[3] dx  : dump;
@@ -138,7 +138,7 @@ protected:
   //
   // include "scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // unsigned[3] orientationOfTheGrid : edition_specific ;

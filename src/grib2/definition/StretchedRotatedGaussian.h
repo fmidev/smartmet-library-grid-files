@@ -58,19 +58,19 @@ protected:
   //
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   // include "template.3.gaussian.def";
 
-  GaussianSettings mGaussian;
+  mutable GaussianSettings mGaussian;
 
   // include "template.3.rotation.def";
 
-  RotationSettings mRotation;
+  mutable RotationSettings mRotation;
 
   // include "template.3.stretching.def";
 
-  StretchingSettings mStretching;
+  mutable StretchingSettings mStretching;
 };
 
 } // namespace GRIB2

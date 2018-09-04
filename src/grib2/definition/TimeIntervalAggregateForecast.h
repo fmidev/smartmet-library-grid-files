@@ -62,15 +62,15 @@ protected:
   //
   // include "template.4.parameter.def";
 
-  ParameterSettings mParameter;
+  mutable ParameterSettings mParameter;
 
   // include "template.4.point_in_time.def";
 
-  PointInTimeSettings mPointInTime;
+  mutable PointInTimeSettings mPointInTime;
 
   // include "template.4.horizontal.def";
 
-  HorizontalSettings mHorizontal;
+  mutable HorizontalSettings mHorizontal;
 
   // codetable[1] statisticalProcess 'grib2/tables/[tablesVersion]/4.10.table';
 

@@ -78,7 +78,7 @@ class GridFile
     virtual Message*            getMessageByIndex(std::size_t index);
     virtual std::size_t         getNumberOfMessages();
 
-    virtual Message*            addMessage();
+    virtual Message*            newMessage();
     virtual void                addMessage(Message *message);
 
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;

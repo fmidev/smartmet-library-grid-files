@@ -127,13 +127,13 @@ protected:
   // # Rotation parameters
   // include "grid_rotation.def"
 
-  RotationSettings mRotation;
+  mutable RotationSettings mRotation;
 
   //
   // # Stretching parameters
   // include "grid_stretching.def"
 
-  GridStretchingSettings mGridStretching;
+  mutable GridStretchingSettings mGridStretching;
 };
 
 } // namespace GRIB1

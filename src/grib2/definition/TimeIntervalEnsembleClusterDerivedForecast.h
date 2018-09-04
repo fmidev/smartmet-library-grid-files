@@ -64,23 +64,23 @@ protected:
   //
   // include "template.4.parameter.def"
 
-  ParameterSettings mParameter;
+  mutable ParameterSettings mParameter;
 
   // include "template.4.horizontal.def"
 
-  HorizontalSettings mHorizontal;
+  mutable HorizontalSettings mHorizontal;
 
   // include "template.4.derived.def"
 
-  DerivedSettings mDerived;
+  mutable DerivedSettings mDerived;
 
   // include "template.4.rectangular_cluster.def"
 
-  RectangularClusterSettings mRectangularCluster;
+  mutable RectangularClusterSettings mRectangularCluster;
 
   // include "template.4.statistical.def"
 
-  StatisticalSettings mStatistical;
+  mutable StatisticalSettings mStatistical;
 
   //
   // ensembleForecastNumbersList list(numberOfForecastsInTheCluster) {

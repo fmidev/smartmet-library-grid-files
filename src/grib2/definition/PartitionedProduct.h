@@ -54,15 +54,15 @@ protected:
   //
   // include "template.4.parameter_partition.def"
 
-  ParameterPartitionSettings mParameterPartition;
+  mutable ParameterPartitionSettings mParameterPartition;
 
   // include "template.4.point_in_time.def";
 
-  PointInTimeSettings mPointInTime;
+  mutable PointInTimeSettings mPointInTime;
 
   // include "template.4.horizontal.def";
 
-  HorizontalSettings mHorizontal;
+  mutable HorizontalSettings mHorizontal;
 
   // constant cat="cat";
   // alias mars.levtype=cat;

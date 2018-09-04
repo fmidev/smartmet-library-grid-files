@@ -58,19 +58,19 @@ protected:
   //
   // include "template.4.parameter.def"
 
-  ParameterSettings mParameter;
+  mutable ParameterSettings mParameter;
 
   // include "template.4.horizontal.def"
 
-  HorizontalSettings mHorizontal;
+  mutable HorizontalSettings mHorizontal;
 
   // include "template.4.probability.def"
 
-  ProbabilitySettings mProbability;
+  mutable ProbabilitySettings mProbability;
 
   // include "template.4.statistical.def"
 
-  StatisticalSettings mStatistical;
+  mutable StatisticalSettings mStatistical;
 };
 
 } // namespace GRIB2

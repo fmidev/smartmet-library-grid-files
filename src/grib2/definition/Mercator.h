@@ -75,7 +75,7 @@ protected:
   //
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   //
   // unsigned[4] Ni : dump;
@@ -112,7 +112,7 @@ protected:
   //
   // include "template.3.resolution_flags.def";
 
-  ResolutionSettings mResolution;
+  mutable ResolutionSettings mResolution;
 
   //
   // # LaD - Latitude(s) at which the Mercator projection intersects the Earth
@@ -141,7 +141,7 @@ protected:
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // # Orientation of the grid, angle between i direction on the map and the equator

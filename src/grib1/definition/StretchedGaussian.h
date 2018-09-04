@@ -91,7 +91,7 @@ protected:
   // # Resolution and component flags
   // include "grid_first_last_resandcomp.def";
 
-  GridAreaSettings mGridArea;
+  mutable GridAreaSettings mGridArea;
 
   //
   // #  Di - i direction increment
@@ -118,7 +118,7 @@ protected:
   //
   // include "scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // pad padding_grid4_1(4);
@@ -182,7 +182,7 @@ protected:
   // # Stretching parameters
   // include "grid_stretching.def"
 
-  GridStretchingSettings mGridStretching;
+  mutable GridStretchingSettings mGridStretching;
 };
 
 } // namespace GRIB1

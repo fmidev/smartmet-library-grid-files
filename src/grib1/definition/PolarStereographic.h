@@ -100,7 +100,7 @@ protected:
   //
   // include "resolution_flags.def";
 
-  ResolutionFlagsSettings mResolutionFlags;
+  mutable ResolutionFlagsSettings mResolutionFlags;
 
   //
   // #  LoV - orientation of the grid; i.e.  the longitude value of the meridian which is parallel to the Y-axis
@@ -153,7 +153,7 @@ protected:
   //
   // include "scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // pad padding_grid5_1(4);

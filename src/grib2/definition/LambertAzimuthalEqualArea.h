@@ -71,7 +71,7 @@ protected:
   // # TEMPLATE 3.140, Lambert azimuthal equal area projection
   // include "template.3.shape_of_the_earth.def";
 
-  EarthShapeSettings mEarthShape;
+  mutable EarthShapeSettings mEarthShape;
 
   //
   // #  Nx - number of points along X-axis
@@ -142,7 +142,7 @@ protected:
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // iterator lambert_azimuthal_equal_area(numberOfPoints,missingValue,values,

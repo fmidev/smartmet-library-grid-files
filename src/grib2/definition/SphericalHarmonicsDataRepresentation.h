@@ -63,7 +63,7 @@ protected:
   //
   // include "template.5.packing.def";
 
-  PackingSettings mPacking;
+  mutable PackingSettings mPacking;
 
   //
   // if (gribex_mode_on()) {

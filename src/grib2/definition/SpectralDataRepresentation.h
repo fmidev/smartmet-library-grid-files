@@ -50,7 +50,7 @@ protected:
   // # TEMPLATE 5.50, Spectral data - simple packing
   // include "template.5.packing.def";
 
-  PackingSettings mPacking;
+  mutable PackingSettings mPacking;
 
   //
   // #  Real part of (0,0)

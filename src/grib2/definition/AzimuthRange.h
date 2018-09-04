@@ -112,7 +112,7 @@ protected:
   //
   // include "template.3.scanning_mode.def";
 
-  ScanningModeSettings mScanningMode;
+  mutable ScanningModeSettings mScanningMode;
 
   //
   // # Octets 40-(39+4Nr) : For each of Nr radials:

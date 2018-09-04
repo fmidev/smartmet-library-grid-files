@@ -23,7 +23,7 @@ GridStretchingSettings::GridStretchingSettings() {
     mLatitudeOfStretchingPole = 0;
     mLongitudeOfStretchingPole = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -35,7 +35,7 @@ GridStretchingSettings::GridStretchingSettings(const GridStretchingSettings &oth
     mLongitudeOfStretchingPole = other.mLongitudeOfStretchingPole;
     mStretchingFactor = other.mStretchingFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -55,7 +55,7 @@ void GridStretchingSettings::read(MemoryReader &memoryReader) {
     mLongitudeOfStretchingPole = memoryReader.read_int24();
     mStretchingFactor = memoryReader.read_ibmFloat();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -70,7 +70,7 @@ void GridStretchingSettings::write(DataWriter &dataWriter) {
     dataWriter << mLongitudeOfStretchingPole;
     dataWriter << mStretchingFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -90,7 +90,7 @@ void GridStretchingSettings::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sGridStretchingSettings.StretchingFactor", prefix.c_str());
     attributeList.addAttribute(name, toString(mStretchingFactor));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -108,7 +108,7 @@ void GridStretchingSettings::print(std::ostream &stream, uint level, uint option
     stream << space(level) << "- LongitudeOfStretchingPole = " << toString(mLongitudeOfStretchingPole) << "\n";
     stream << space(level) << "- StretchingFactor = " << toString(mStretchingFactor) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -122,7 +122,7 @@ T::Hash GridStretchingSettings::countHash() {
     boost::hash_combine(seed, mStretchingFactor);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -132,7 +132,7 @@ std::int24_t GridStretchingSettings::getLatitudeOfStretchingPole() const {
   try {
     return mLatitudeOfStretchingPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -142,7 +142,7 @@ std::int24_t GridStretchingSettings::getLongitudeOfStretchingPole() const {
   try {
     return mLongitudeOfStretchingPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -152,7 +152,7 @@ ibmfloat GridStretchingSettings::getStretchingFactor() const {
   try {
     return mStretchingFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -160,7 +160,7 @@ void GridStretchingSettings::setLatitudeOfStretchingPole(std::int24_t latitudeOf
   try {
     mLatitudeOfStretchingPole = latitudeOfStretchingPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -168,7 +168,7 @@ void GridStretchingSettings::setLongitudeOfStretchingPole(std::int24_t longitude
   try {
     mLongitudeOfStretchingPole = longitudeOfStretchingPole;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 
@@ -176,7 +176,7 @@ void GridStretchingSettings::setStretchingFactor(ibmfloat stretchingFactor) {
   try {
     mStretchingFactor = stretchingFactor;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
   }
 }
 

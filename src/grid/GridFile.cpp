@@ -589,14 +589,14 @@ void GridFile::setSourceId(uint sourceId)
 
 
 
-Message* GridFile::addMessage()
+Message* GridFile::newMessage()
 {
   try
   {
     if (!mGridFile)
       throw SmartMet::Spine::Exception(BCP,"No grid file defined!");
 
-    return mGridFile->addMessage();
+    return mGridFile->newMessage();
   }
   catch (...)
   {

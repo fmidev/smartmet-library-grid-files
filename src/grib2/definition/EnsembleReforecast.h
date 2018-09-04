@@ -61,23 +61,23 @@ protected:
   //
   // include "template.4.parameter.def"
 
-  ParameterSettings mParameter;
+  mutable ParameterSettings mParameter;
 
   // include "template.4.point_in_time.def";
 
-  PointInTimeSettings mPointInTime;
+  mutable PointInTimeSettings mPointInTime;
 
   // include "template.4.horizontal.def"
 
-  HorizontalSettings mHorizontal;
+  mutable HorizontalSettings mHorizontal;
 
   // include "template.4.eps.def"
 
-  EpsSettings mEps;
+  mutable EpsSettings mEps;
 
   // include "template.4.reforecast.def"
 
-  ReforecastSettings mReforecast;
+  mutable ReforecastSettings mReforecast;
 };
 
 } // namespace GRIB2

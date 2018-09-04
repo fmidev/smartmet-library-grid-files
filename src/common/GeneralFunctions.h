@@ -52,7 +52,16 @@ std::string getFileDir(std::string filename);
 
 std::string space(uint size);
 
+char        toInt8(const char *str);
+short       toInt16(const char *str);
+int         toInt32(const char *str);
 long long   toInt64(const char *str);
+
+uchar       toUInt8(const char *str);
+ushort      toUInt16(const char *str);
+uint        toUInt32(const char *str);
+ulonglong   toUInt64(const char *str);
+
 double      toDouble(const char *str);
 
 std::string toString(std::int8_t value);

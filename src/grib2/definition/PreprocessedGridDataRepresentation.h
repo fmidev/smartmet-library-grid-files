@@ -55,7 +55,7 @@ protected:
   //
   // include "template.5.packing.def";
 
-  PackingSettings mPacking;
+  mutable PackingSettings mPacking;
 
   //
   // codetable[1] typeOfPreProcessing   ('5.9.table',masterDir,localDir)  :edition_specific;

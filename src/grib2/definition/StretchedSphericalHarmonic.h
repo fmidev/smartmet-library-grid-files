@@ -52,11 +52,11 @@ protected:
   //
   // include "template.3.spherical_harmonics.def";
 
-  SphericalHarmonicSettings mSphericalHarmonic;
+  mutable SphericalHarmonicSettings mSphericalHarmonic;
 
   // include "template.3.stretching.def";
 
-  StretchingSettings mStretching;
+  mutable StretchingSettings mStretching;
 };
 
 } // namespace GRIB2
