@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 18.8.28
+Version: 18.8.30
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -12,7 +12,7 @@ Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 18.8.28
-BuildRequires: smartmet-library-spine-devel >= 18.8.20
+BuildRequires: smartmet-library-spine-devel >= 18.8.30
 BuildRequires: boost-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal-devel
@@ -33,7 +33,7 @@ Requires: gdal
 Requires: openjpeg
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 18.8.28
-Requires: smartmet-library-spine >= 18.8.20
+Requires: smartmet-library-spine >= 18.8.30
 
 %description
 FMI Grid File handling library
@@ -72,6 +72,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Aug 30 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.8.30-1.fmi
+- Silenced CodeChecker warnings
 * Tue Aug 28 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.8.28-1.fmi
 - Package latest version
 * Mon Aug 27 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.8.27-1.fmi
