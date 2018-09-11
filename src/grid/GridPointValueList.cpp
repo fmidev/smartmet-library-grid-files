@@ -131,12 +131,12 @@ GridPointValueList::~GridPointValueList()
 
 
 
-void GridPointValueList::operator=(GridPointValueList& gridPointValueList)
+GridPointValueList& GridPointValueList::operator=(GridPointValueList& gridPointValueList)
 {
   try
   {
     if (&gridPointValueList == this)
-      return;
+      return *this;
 
     clear();
 
@@ -152,6 +152,8 @@ void GridPointValueList::operator=(GridPointValueList& gridPointValueList)
         mArray[t] = info;
     }
     mComparisonMethod = gridPointValueList.mComparisonMethod;
+
+    return *this;
   }
   catch (...)
   {
@@ -163,12 +165,12 @@ void GridPointValueList::operator=(GridPointValueList& gridPointValueList)
 
 
 
-void GridPointValueList::operator=(const GridPointValueList& gridPointValueList)
+GridPointValueList& GridPointValueList::operator=(const GridPointValueList& gridPointValueList)
 {
   try
   {
     if (&gridPointValueList == this)
-      return;
+      return *this;
 
     clear();
 
@@ -184,6 +186,7 @@ void GridPointValueList::operator=(const GridPointValueList& gridPointValueList)
         mArray[t] = info;
     }
     mComparisonMethod = gridPointValueList.mComparisonMethod;
+    return *this;
   }
   catch (...)
   {
@@ -213,19 +216,21 @@ void GridPointValueList::addGridPointValue(GridPointValue *gridPointValue)
 
     int idx = getClosestIndex(mComparisonMethod,*gridPointValue);
 
-    while (idx < (int)mLength  &&  mArray[idx] != nullptr  &&   mArray[idx]->compare(mComparisonMethod,gridPointValue) < 0)
+    int len = C_INT(mLength);
+
+    while (idx < len  &&  mArray[idx] != nullptr  &&   mArray[idx]->compare(mComparisonMethod,gridPointValue) < 0)
     {
       idx++;
     }
 
-    if (idx == (int)mLength)
+    if (idx == len)
     {
       mArray[mLength] = gridPointValue;
       mLength++;
       return;
     }
 
-    if (idx < (int)mLength)
+    if (idx < len)
       memmove(&mArray[idx+1],&mArray[idx],sizeof(void*)*(mLength-idx));
 
     mArray[idx] = gridPointValue;
@@ -255,7 +260,7 @@ void GridPointValueList::clear()
           mArray[t] = nullptr;
         }
       }
-      delete mArray;
+      delete[] mArray;
     }
 
     mSize = 100;
@@ -306,7 +311,7 @@ void GridPointValueList::increaseSize(uint newSize)
       }
     }
 
-    delete mArray;
+    delete[] mArray;
     mArray = newArray;
     mSize = newSize;
   }
@@ -344,7 +349,9 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
     }
 
     int low = 0;
-    int high = (int)mLength - 1;
+    int len = C_INT(mLength);
+    int sz = C_INT(mSize);
+    int high = len - 1;
     int mid = 0;
 
     while (low <= high)
@@ -366,11 +373,11 @@ int GridPointValueList::getClosestIndex(GridPointValue::ComparisonMethod compari
         high = mid - 1;
     }
 
-    if (mid >= 0  &&  mid < (int)mLength  &&  mArray[mid] != nullptr)
+    if (mid >= 0  &&  mid < len  &&  mArray[mid] != nullptr)
     {
       if (mArray[mid]->compare(comparisonMethod,&gridPointValue) < 0)
       {
-        while (mid < (int)mSize  &&  mArray[mid] != nullptr  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) < 0)
+        while (mid < sz  &&  mArray[mid] != nullptr  &&   mArray[mid]->compare(comparisonMethod,&gridPointValue) < 0)
           mid++;
 
         return mid-1;

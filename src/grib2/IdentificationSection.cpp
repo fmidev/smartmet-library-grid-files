@@ -88,7 +88,7 @@ IdentificationSection::~IdentificationSection()
   try
   {
     if (mReleaseData &&  mDataPtr != nullptr)
-      delete mDataPtr;
+      delete[] mDataPtr;
 
     mDataPtr = nullptr;
     mDataSize = 0;

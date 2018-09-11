@@ -156,7 +156,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
 
     for (auto it = polygonPoints.begin(); it != polygonPoints.end(); ++it)
     {
-      double yp = (int)it->y();
+      double yp = round(it->y());
 
       if (yp < minY)
         minY = yp;
@@ -212,8 +212,8 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
             nodeX[i+1] = maxX;
 
           //printf("Line %f,%d - %f,%d\n",nodeX[i],y,nodeX[i+1],y);
-          int xStart = (int)nodeX[i];
-          int xEnd = (int)nodeX[i+1];
+          int xStart = C_INT(nodeX[i]);
+          int xEnd = C_INT(nodeX[i+1]);
 
           if ((nodeX[i] - xStart) > 0)
             xStart++;
@@ -223,7 +223,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
 
           for (int x=xStart; x<=xEnd; x++)
           {
-            unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)x;
+            unsigned long long p = (C_UINT64(y) << 32) + (unsigned long long)x;
             if (cList.find(p) == cList.end())
               cList.insert(p);
           }
@@ -235,8 +235,8 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
 
     for (auto it = cList.begin(); it != cList.end(); ++it)
     {
-      int y = (int)((*it) >> 32);
-      int x = (int)((*it) & 0xFFFFFFFF);
+      int y = C_INT((*it) >> 32);
+      int x = C_INT((*it) & 0xFFFFFFFF);
 
       gridPoints.push_back(T::Point(x,y));
     }
@@ -294,7 +294,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
 
         for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
         {
-          double yp = (int)it->y();
+          double yp = round(it->y());
 
           if (yp < minY)
             minY = yp;
@@ -373,8 +373,8 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
             nodeX[i+1] = maxX;
 
           //printf("Line %f,%d - %f,%d\n",nodeX[i],y,nodeX[i+1],y);
-          int xStart = (int)nodeX[i];
-          int xEnd = (int)nodeX[i+1];
+          int xStart = C_INT(nodeX[i]);
+          int xEnd = C_INT(nodeX[i+1]);
 
           if ((nodeX[i] - xStart) > 0)
             xStart++;
@@ -384,7 +384,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
 
           for (int x=xStart; x<=xEnd; x++)
           {
-            unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)x;
+            unsigned long long p = (C_UINT64(y) << 32) + x;
             if (cList.find(p) == cList.end())
               cList.insert(p);
           }
@@ -396,8 +396,8 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::ve
 
     for (auto it = cList.begin(); it != cList.end(); ++it)
     {
-      int y = (int)((*it) >> 32);
-      int x = (int)((*it) & 0xFFFFFFFF);
+      int y = C_INT((*it) >> 32);
+      int x = C_INT((*it) & 0xFFFFFFFF);
 
       gridPoints.push_back(T::Point(x,y));
     }
@@ -436,10 +436,10 @@ void getPointsInsideCircle(int gridWidth,int gridHeight,double origoX,double ori
       y2 = gridHeight - 1;
 
 
-    int xx1 = (int)x1;
-    int xx2 = (int)x2;
-    int yy1 = (int)y1;
-    int yy2 = (int)y2;
+    int xx1 = C_INT(x1);
+    int xx2 = C_INT(x2);
+    int yy1 = C_INT(y1);
+    int yy2 = C_INT(y2);
 
     for (int y=yy1; y<=yy2; y++)
     {
@@ -489,7 +489,7 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,std::vector<std::vector<T:
         case NFmiSvgPath::kElementClosePath:
           if (polygonPoints.size() > 0)
           {
-            int t = (int)polygonPoints.size() -1;
+            int t = C_INT(polygonPoints.size()) -1;
             if (t > 0  &&  (polygonPoints[0].x() != polygonPoints[t].x() || polygonPoints[0].y() != polygonPoints[t].y()))
               polygonPoints.push_back(polygonPoints[0]);
 
@@ -846,7 +846,7 @@ std::vector<T::Coordinate> getEnlargedPolygon(std::vector<T::Coordinate>& oldCoo
     std::vector<T::Coordinate> newCoordinates;
 
     std::vector<std::pair<T::Coordinate,T::Coordinate>> tmpLines;
-    int points = (int)oldCoordinates.size();
+    int points = C_INT(oldCoordinates.size());
     for (int t = 0; t < points-1; t++)
     {
       auto p1 = oldCoordinates[t];
@@ -869,7 +869,7 @@ std::vector<T::Coordinate> getEnlargedPolygon(std::vector<T::Coordinate>& oldCoo
       tmpLines.push_back(std::pair<T::Coordinate,T::Coordinate>(n1,n2));
     }
 
-    int lines = (int)tmpLines.size();
+    int lines = C_INT(tmpLines.size());
     for (int t=0; t<lines; t++)
     {
       T::Coordinate point;
@@ -905,7 +905,7 @@ double getPolygonLen(std::vector<T::Coordinate>& coordinates)
 {
   try
   {
-    int points = (int)coordinates.size();
+    int points = C_INT(coordinates.size());
     double len = 0;
     for (int t = 0; t < points-1; t++)
     {

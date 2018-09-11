@@ -383,7 +383,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,char& attrib
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = (char)val;
+    attributeValue = C_CHAR(val);
     return result;
   }
   catch (...)
@@ -405,7 +405,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,short& attri
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = (short)val;
+    attributeValue = C_SHORT(val);
     return result;
   }
   catch (...)
@@ -522,7 +522,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned cha
   {
     unsigned long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = (unsigned char)val;
+    attributeValue = C_UCHAR(val);
     return result;
   }
   catch (...)
@@ -544,7 +544,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned sho
   {
     unsigned long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = (unsigned short)val;
+    attributeValue = C_USHORT(val);
     return result;
   }
   catch (...)
@@ -566,7 +566,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned int
   {
     unsigned long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = (unsigned int)val;
+    attributeValue = C_UINT(val);
     return result;
   }
   catch (...)
@@ -588,7 +588,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned lon
   {
     unsigned long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = (unsigned long)val;
+    attributeValue = C_ULONG(val);
     return result;
   }
   catch (...)
@@ -610,7 +610,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned lon
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = (unsigned long long)val;
+    attributeValue = C_UINT64(val);
     return result;
   }
   catch (...)
@@ -1047,6 +1047,7 @@ void ConfigurationFile::removeComments(char *st,unsigned long long *positions,ch
             a++;
         }
         else
+        if (a < len)
         {
           newst[b] = st[a];
           newpositions[b] = positions[a];

@@ -163,8 +163,8 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return coordinateList;
 
-    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
+    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000;
 
     uint ni = (*mLatLon.getGrid()->getNi());
     uint nj = (*mLatLon.getGrid()->getNj());
@@ -263,8 +263,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     double rotated_lon = x/1000000;
     double rotated_lat = y/1000000;
 
-    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
+    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000;
 
     rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
 
@@ -318,8 +318,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     double rotated_lon = x/1000000;
     double rotated_lat = y/1000000;
 
-    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
+    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000;
 
     rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
 
@@ -451,8 +451,8 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     double dx = C_DOUBLE(*mLatLon.getIDirectionIncrement());
     double dy = C_DOUBLE(*mLatLon.getJDirectionIncrement());
 
-    double sy = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double sx = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double sy = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
+    double sx = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000;
 
     double angle = C_DOUBLE(mRotation.getAngleOfRotation());
 
@@ -481,7 +481,7 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     }
 
     sprintf(buf,"%d;id;name;%u;%u;%f;%f;%f;%f;%s;%f;%f;%f;description",
-        (int)T::GridProjectionValue::RotatedLatLon,ni,nj,x,y,fabs(dx),fabs(dy),sm,sx,sy,angle);
+        T::GridProjectionValue::RotatedLatLon,ni,nj,x,y,fabs(dx),fabs(dy),sm,sx,sy,angle);
 
     return std::string(buf);
   }
@@ -536,8 +536,8 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
 {
   try
   {
-    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
+    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000;
 
     latlon_to_rotatedLatlon(lat,lon,southPoleLat,southPoleLon,y,x);
     return true;
@@ -565,8 +565,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
 {
   try
   {
-    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000);
-    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000);
+    double southPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
+    double southPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000;
 
     rotatedLatlon_to_latlon(y,x,southPoleLat,southPoleLon,lat,lon);
 
@@ -737,8 +737,8 @@ void RotatedLatLonImpl::initSpatialReference()
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 
-    //mSpatialReference.SetProjParm("latitude_of_origin",(double)(*rotation().latitudeOfSouthernPole()/1000000));
-    //mSpatialReference.SetProjParm("central_meridian",(double)(*rotation().longitudeOfSouthernPole()/1000000));
+    //mSpatialReference.SetProjParm("latitude_of_origin",(double)(*rotation().latitudeOfSouthernPole())/1000000);
+    //mSpatialReference.SetProjParm("central_meridian",(double)(*rotation().longitudeOfSouthernPole())/1000000);
 
 
     // ### Validate the spatial reference.
@@ -794,8 +794,8 @@ void RotatedLatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) 
 
       // ### Printing coordinates close to the grid corners.
 
-      int nx = (int)(*mLatLon.getGrid()->getNi());
-      int ny = (int)(*mLatLon.getGrid()->getNj());
+      int nx = C_INT(*mLatLon.getGrid()->getNi());
+      int ny = C_INT(*mLatLon.getGrid()->getNj());
 
       char str[200];
       uint c = 0;

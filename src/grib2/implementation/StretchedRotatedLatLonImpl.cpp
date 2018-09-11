@@ -318,8 +318,8 @@ void StretchedRotatedLatLonImpl::initSpatialReference()
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 
-    mSpatialReference.SetProjParm("latitude_of_origin",C_DOUBLE(*mRotation.getLatitudeOfSouthernPole()/1000000));
-    mSpatialReference.SetProjParm("central_meridian",C_DOUBLE(*mRotation.getLongitudeOfSouthernPole()/1000000));
+    mSpatialReference.SetProjParm("latitude_of_origin",C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000);
+    mSpatialReference.SetProjParm("central_meridian",C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000);
 
 
     // ### Validate the spatial reference.

@@ -21,7 +21,7 @@ namespace GRIB2 {
 EnsembleForecast::EnsembleForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -34,7 +34,7 @@ EnsembleForecast::EnsembleForecast(const EnsembleForecast &other) : ProductDefin
     mHorizontal = other.mHorizontal;
     mEps = other.mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -55,7 +55,7 @@ void EnsembleForecast::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mEps.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -71,7 +71,7 @@ void EnsembleForecast::write(DataWriter &dataWriter) {
     mHorizontal.write(dataWriter);
     mEps.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -93,7 +93,7 @@ void EnsembleForecast::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sEnsembleForecast.", prefix.c_str());
     mEps.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -112,7 +112,7 @@ void EnsembleForecast::print(std::ostream &stream, uint level, uint optionFlags)
     mHorizontal.print(stream, level + 1, optionFlags);
     mEps.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -127,7 +127,7 @@ T::Hash EnsembleForecast::countHash() {
     boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -141,7 +141,7 @@ ProductDefinition *EnsembleForecast::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new EnsembleForecast(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -151,7 +151,7 @@ ParameterSettings *EnsembleForecast::getParameter() const {
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -161,7 +161,7 @@ PointInTimeSettings *EnsembleForecast::getPointInTime() const {
   try {
     return static_cast<PointInTimeSettings *>(&mPointInTime);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -171,7 +171,7 @@ HorizontalSettings *EnsembleForecast::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -181,7 +181,7 @@ EpsSettings *EnsembleForecast::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -189,7 +189,7 @@ void EnsembleForecast::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -197,7 +197,7 @@ void EnsembleForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -205,7 +205,7 @@ void EnsembleForecast::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -213,7 +213,7 @@ void EnsembleForecast::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

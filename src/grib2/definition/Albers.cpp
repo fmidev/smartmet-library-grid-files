@@ -22,7 +22,7 @@ Albers::Albers() {
   try {
     mProjectionCentreFlag = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -47,7 +47,7 @@ Albers::Albers(const Albers &other) : GridDefinition(other) {
     mLatitudeOfTheSouthernPoleOfProjection = other.mLatitudeOfTheSouthernPoleOfProjection;
     mLongitudeOfTheSouthernPoleOfProjection = other.mLongitudeOfTheSouthernPoleOfProjection;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -80,7 +80,7 @@ void Albers::read(MemoryReader &memoryReader) {
     mLatitudeOfTheSouthernPoleOfProjection = memoryReader.read_Int32_opt();
     mLongitudeOfTheSouthernPoleOfProjection = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -108,7 +108,7 @@ void Albers::write(DataWriter &dataWriter) {
     dataWriter << mLatitudeOfTheSouthernPoleOfProjection;
     dataWriter << mLongitudeOfTheSouthernPoleOfProjection;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -154,7 +154,7 @@ void Albers::getAttributeList(std::string prefix, T::AttributeList &attributeLis
     sprintf(name, "%sAlbers.LongitudeOfTheSouthernPoleOfProjection", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfTheSouthernPoleOfProjection));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -185,7 +185,7 @@ void Albers::print(std::ostream &stream, uint level, uint optionFlags) const {
     stream << space(level) << "- LatitudeOfTheSouthernPoleOfProjection = " << toString(mLatitudeOfTheSouthernPoleOfProjection) << "\n";
     stream << space(level) << "- LongitudeOfTheSouthernPoleOfProjection = " << toString(mLongitudeOfTheSouthernPoleOfProjection) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -224,7 +224,7 @@ T::Hash Albers::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -238,7 +238,7 @@ GridDefinition *Albers::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new Albers(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -248,7 +248,7 @@ EarthShapeSettings *Albers::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -258,7 +258,7 @@ const T::UInt32_opt &Albers::getNx() const {
   try {
     return mNx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -268,7 +268,7 @@ const T::UInt32_opt &Albers::getNy() const {
   try {
     return mNy;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -278,7 +278,7 @@ const T::Int32_opt &Albers::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -288,7 +288,7 @@ const T::UInt32_opt &Albers::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -298,7 +298,7 @@ ResolutionSettings *Albers::getResolution() const {
   try {
     return static_cast<ResolutionSettings *>(&mResolution);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -308,7 +308,7 @@ const T::Int32_opt &Albers::getLaD() const {
   try {
     return mLaD;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -318,7 +318,7 @@ const T::UInt32_opt &Albers::getLoV() const {
   try {
     return mLoV;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -328,7 +328,7 @@ const T::UInt32_opt &Albers::getXDirectionGridLength() const {
   try {
     return mXDirectionGridLength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -338,7 +338,7 @@ const T::UInt32_opt &Albers::getYDirectionGridLength() const {
   try {
     return mYDirectionGridLength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -348,7 +348,7 @@ std::uint8_t Albers::getProjectionCentreFlag() const {
   try {
     return mProjectionCentreFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -358,7 +358,7 @@ ScanningModeSettings *Albers::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -368,7 +368,7 @@ const T::Int32_opt &Albers::getLatin1() const {
   try {
     return mLatin1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -378,7 +378,7 @@ const T::UInt32_opt &Albers::getLatin2() const {
   try {
     return mLatin2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -388,7 +388,7 @@ const T::Int32_opt &Albers::getLatitudeOfTheSouthernPoleOfProjection() const {
   try {
     return mLatitudeOfTheSouthernPoleOfProjection;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -398,7 +398,7 @@ const T::UInt32_opt &Albers::getLongitudeOfTheSouthernPoleOfProjection() const {
   try {
     return mLongitudeOfTheSouthernPoleOfProjection;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -406,7 +406,7 @@ void Albers::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -414,7 +414,7 @@ void Albers::setNx(T::UInt32_opt nx) {
   try {
     mNx = nx;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -422,7 +422,7 @@ void Albers::setNy(T::UInt32_opt ny) {
   try {
     mNy = ny;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -430,7 +430,7 @@ void Albers::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint) 
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -438,7 +438,7 @@ void Albers::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoin
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -446,7 +446,7 @@ void Albers::setResolution(ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -454,7 +454,7 @@ void Albers::setLaD(T::Int32_opt laD) {
   try {
     mLaD = laD;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -462,7 +462,7 @@ void Albers::setLoV(T::UInt32_opt loV) {
   try {
     mLoV = loV;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -470,7 +470,7 @@ void Albers::setXDirectionGridLength(T::UInt32_opt xDirectionGridLength) {
   try {
     mXDirectionGridLength = xDirectionGridLength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -478,7 +478,7 @@ void Albers::setYDirectionGridLength(T::UInt32_opt yDirectionGridLength) {
   try {
     mYDirectionGridLength = yDirectionGridLength;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -486,7 +486,7 @@ void Albers::setProjectionCentreFlag(std::uint8_t projectionCentreFlag) {
   try {
     mProjectionCentreFlag = projectionCentreFlag;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -494,7 +494,7 @@ void Albers::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -502,7 +502,7 @@ void Albers::setLatin1(T::Int32_opt latin1) {
   try {
     mLatin1 = latin1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -510,7 +510,7 @@ void Albers::setLatin2(T::UInt32_opt latin2) {
   try {
     mLatin2 = latin2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -518,7 +518,7 @@ void Albers::setLatitudeOfTheSouthernPoleOfProjection(T::Int32_opt latitudeOfThe
   try {
     mLatitudeOfTheSouthernPoleOfProjection = latitudeOfTheSouthernPoleOfProjection;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -526,7 +526,7 @@ void Albers::setLongitudeOfTheSouthernPoleOfProjection(T::UInt32_opt longitudeOf
   try {
     mLongitudeOfTheSouthernPoleOfProjection = longitudeOfTheSouthernPoleOfProjection;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

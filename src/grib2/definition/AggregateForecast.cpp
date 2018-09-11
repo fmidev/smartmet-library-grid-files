@@ -21,7 +21,7 @@ namespace GRIB2 {
 AggregateForecast::AggregateForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -33,7 +33,7 @@ AggregateForecast::AggregateForecast(const AggregateForecast &other) : ProductDe
     mHorizontal = other.mHorizontal;
     mStatistical = other.mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -53,7 +53,7 @@ void AggregateForecast::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -68,7 +68,7 @@ void AggregateForecast::write(DataWriter &dataWriter) {
     mHorizontal.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -88,7 +88,7 @@ void AggregateForecast::getAttributeList(std::string prefix, T::AttributeList &a
     sprintf(name, "%sAggregateForecast.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -106,7 +106,7 @@ void AggregateForecast::print(std::ostream &stream, uint level, uint optionFlags
     mHorizontal.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -120,7 +120,7 @@ T::Hash AggregateForecast::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -134,7 +134,7 @@ ProductDefinition *AggregateForecast::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new AggregateForecast(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -144,7 +144,7 @@ ParameterSettings *AggregateForecast::getParameter() const {
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -154,7 +154,7 @@ HorizontalSettings *AggregateForecast::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -164,7 +164,7 @@ StatisticalSettings *AggregateForecast::getStatistical() const {
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -172,7 +172,7 @@ void AggregateForecast::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -180,7 +180,7 @@ void AggregateForecast::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -188,7 +188,7 @@ void AggregateForecast::setStatistical(StatisticalSettings &statistical) {
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

@@ -406,8 +406,8 @@ void MercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
       if (!mNi || !mNj)
         return;
 
-      int nx = (int)(*mNi);
-      int ny = (int)(*mNj);
+      int nx = C_INT(*mNi);
+      int ny = C_INT(*mNj);
 
       char str[200];
       uint c = 0;

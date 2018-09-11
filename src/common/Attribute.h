@@ -19,7 +19,7 @@ class Attribute
                     Attribute(std::string name,std::string value);
      virtual        ~Attribute();
 
-     void           operator=(const Attribute& attribute);
+     Attribute&     operator=(const Attribute& attribute);
      Attribute*     duplicate();
      void           print(std::ostream& stream,uint level,uint optionFlags);
 

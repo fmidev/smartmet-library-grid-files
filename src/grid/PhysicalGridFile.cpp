@@ -177,7 +177,7 @@ void PhysicalGridFile::read(std::string filename)
     auto startAddr = const_cast<char*>(mMappedFile->const_data());
     auto endAddr = startAddr + fsize;
 
-    MemoryReader memoryReader((unsigned char*)startAddr,(unsigned char*)endAddr);
+    MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
 
     uchar fileType = readFileType(memoryReader);
 

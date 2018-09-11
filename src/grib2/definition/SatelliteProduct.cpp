@@ -21,7 +21,7 @@ namespace GRIB2 {
 SatelliteProduct::SatelliteProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -40,7 +40,7 @@ SatelliteProduct::SatelliteProduct(const SatelliteProduct &other) : ProductDefin
     mScaleFactorOfCentralWaveNumber = other.mScaleFactorOfCentralWaveNumber;
     mScaledValueOfCentralWaveNumber = other.mScaledValueOfCentralWaveNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -67,7 +67,7 @@ void SatelliteProduct::read(MemoryReader &memoryReader) {
     mScaleFactorOfCentralWaveNumber = memoryReader.read_UInt8_opt();
     mScaledValueOfCentralWaveNumber = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -89,7 +89,7 @@ void SatelliteProduct::write(DataWriter &dataWriter) {
     dataWriter << mScaleFactorOfCentralWaveNumber;
     dataWriter << mScaledValueOfCentralWaveNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -123,7 +123,7 @@ void SatelliteProduct::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sSatelliteProduct.ScaledValueOfCentralWaveNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfCentralWaveNumber));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -148,7 +148,7 @@ void SatelliteProduct::print(std::ostream &stream, uint level, uint optionFlags)
     stream << space(level) << "- ScaleFactorOfCentralWaveNumber = " << toString(mScaleFactorOfCentralWaveNumber) << "\n";
     stream << space(level) << "- ScaledValueOfCentralWaveNumber = " << toString(mScaledValueOfCentralWaveNumber) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -179,7 +179,7 @@ T::Hash SatelliteProduct::countHash() {
       boost::hash_combine(seed, *mScaledValueOfCentralWaveNumber);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -193,7 +193,7 @@ ProductDefinition *SatelliteProduct::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new SatelliteProduct(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -203,7 +203,7 @@ const T::UInt8_opt &SatelliteProduct::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -213,7 +213,7 @@ const T::UInt8_opt &SatelliteProduct::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -223,7 +223,7 @@ const T::UInt8_opt &SatelliteProduct::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -233,7 +233,7 @@ const T::UInt8_opt &SatelliteProduct::getObservationGeneratingProcessIdentifier(
   try {
     return mObservationGeneratingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -243,7 +243,7 @@ const T::UInt8_opt &SatelliteProduct::getNB() const {
   try {
     return mNB;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -253,7 +253,7 @@ const T::UInt16_opt &SatelliteProduct::getSatelliteSeries() const {
   try {
     return mSatelliteSeries;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -263,7 +263,7 @@ const T::UInt16_opt &SatelliteProduct::getSatelliteNumber() const {
   try {
     return mSatelliteNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -273,7 +273,7 @@ const T::UInt16_opt &SatelliteProduct::getInstrumentType() const {
   try {
     return mInstrumentType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -283,7 +283,7 @@ const T::UInt8_opt &SatelliteProduct::getScaleFactorOfCentralWaveNumber() const 
   try {
     return mScaleFactorOfCentralWaveNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -293,7 +293,7 @@ const T::UInt32_opt &SatelliteProduct::getScaledValueOfCentralWaveNumber() const
   try {
     return mScaledValueOfCentralWaveNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -301,7 +301,7 @@ void SatelliteProduct::setParameterCategory(T::UInt8_opt parameterCategory) {
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -309,7 +309,7 @@ void SatelliteProduct::setParameterNumber(T::UInt8_opt parameterNumber) {
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -317,7 +317,7 @@ void SatelliteProduct::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGeneratingP
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -325,7 +325,7 @@ void SatelliteProduct::setObservationGeneratingProcessIdentifier(T::UInt8_opt ob
   try {
     mObservationGeneratingProcessIdentifier = observationGeneratingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -333,7 +333,7 @@ void SatelliteProduct::setNB(T::UInt8_opt nB) {
   try {
     mNB = nB;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -341,7 +341,7 @@ void SatelliteProduct::setSatelliteSeries(T::UInt16_opt satelliteSeries) {
   try {
     mSatelliteSeries = satelliteSeries;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -349,7 +349,7 @@ void SatelliteProduct::setSatelliteNumber(T::UInt16_opt satelliteNumber) {
   try {
     mSatelliteNumber = satelliteNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -357,7 +357,7 @@ void SatelliteProduct::setInstrumentType(T::UInt16_opt instrumentType) {
   try {
     mInstrumentType = instrumentType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -365,7 +365,7 @@ void SatelliteProduct::setScaleFactorOfCentralWaveNumber(T::UInt8_opt scaleFacto
   try {
     mScaleFactorOfCentralWaveNumber = scaleFactorOfCentralWaveNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -373,7 +373,7 @@ void SatelliteProduct::setScaledValueOfCentralWaveNumber(T::UInt32_opt scaledVal
   try {
     mScaledValueOfCentralWaveNumber = scaledValueOfCentralWaveNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

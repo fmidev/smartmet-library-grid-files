@@ -22,7 +22,7 @@ PreprocessedGridDataRepresentation::PreprocessedGridDataRepresentation() {
   try {
     mPreProcessingParameter = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -34,7 +34,7 @@ PreprocessedGridDataRepresentation::PreprocessedGridDataRepresentation(const Pre
     mTypeOfPreProcessing = other.mTypeOfPreProcessing;
     mPreProcessingParameter = other.mPreProcessingParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -54,7 +54,7 @@ void PreprocessedGridDataRepresentation::read(MemoryReader &memoryReader) {
     mTypeOfPreProcessing = memoryReader.read_UInt8_opt();
     mPreProcessingParameter = memoryReader.read_float();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -69,7 +69,7 @@ void PreprocessedGridDataRepresentation::write(DataWriter &dataWriter) {
     dataWriter << mTypeOfPreProcessing;
     dataWriter << mPreProcessingParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -89,7 +89,7 @@ void PreprocessedGridDataRepresentation::getAttributeList(std::string prefix, T:
     sprintf(name, "%sPreprocessedGridDataRepresentation.PreProcessingParameter", prefix.c_str());
     attributeList.addAttribute(name, toString(mPreProcessingParameter));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -107,7 +107,7 @@ void PreprocessedGridDataRepresentation::print(std::ostream &stream, uint level,
     stream << space(level) << "- TypeOfPreProcessing = " << toString(mTypeOfPreProcessing) << "\n";
     stream << space(level) << "- PreProcessingParameter = " << toString(mPreProcessingParameter) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -122,7 +122,7 @@ T::Hash PreprocessedGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -136,7 +136,7 @@ RepresentationDefinition *PreprocessedGridDataRepresentation::createRepresentati
   try {
     return static_cast<RepresentationDefinition *>(new PreprocessedGridDataRepresentation(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -146,7 +146,7 @@ PackingSettings *PreprocessedGridDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -156,7 +156,7 @@ const T::UInt8_opt &PreprocessedGridDataRepresentation::getTypeOfPreProcessing()
   try {
     return mTypeOfPreProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -166,7 +166,7 @@ float PreprocessedGridDataRepresentation::getPreProcessingParameter() const {
   try {
     return mPreProcessingParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -174,7 +174,7 @@ void PreprocessedGridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -182,7 +182,7 @@ void PreprocessedGridDataRepresentation::setTypeOfPreProcessing(T::UInt8_opt typ
   try {
     mTypeOfPreProcessing = typeOfPreProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -190,7 +190,7 @@ void PreprocessedGridDataRepresentation::setPreProcessingParameter(float preProc
   try {
     mPreProcessingParameter = preProcessingParameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

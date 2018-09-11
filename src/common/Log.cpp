@@ -134,7 +134,7 @@ void Log::openForAppend()
     if (file != nullptr)
       return;    // ### The log file is already open.
 
-    file = fopen(filename.c_str(),"a");
+    file = fopen(filename.c_str(),"ae");
     if (file == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot open the file for append!");

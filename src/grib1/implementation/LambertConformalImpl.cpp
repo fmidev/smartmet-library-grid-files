@@ -223,7 +223,7 @@ std::string LambertConformalImpl::getGridGeometryString() const
 
 
     sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s,%f;%f;%f;%f;%f;60.0;description",
-      (int)T::GridProjectionValue::LambertConformal,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy);
+      T::GridProjectionValue::LambertConformal,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy);
 
     return std::string(buf);
   }

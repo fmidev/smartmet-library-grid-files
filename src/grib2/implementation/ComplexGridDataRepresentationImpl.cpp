@@ -104,8 +104,8 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
 
     std::size_t numberOfValues = numOfValues;
     T::ParamValue ref = mPacking.getReferenceValue();
-    T::ParamValue bscale = int_power(2.0,(int)(*mPacking.getBinaryScaleFactor()));
-    T::ParamValue dscale = int_power(10.0,-(int)(*mPacking.getDecimalScaleFactor()));
+    T::ParamValue bscale = int_power(2.0,C_INT(*mPacking.getBinaryScaleFactor()));
+    T::ParamValue dscale = int_power(10.0,-C_INT(*mPacking.getDecimalScaleFactor()));
     int groupRefBits = *mPacking.getBitsPerValue();
     int numberOfGroups = *mNumberOfGroupsOfDataValues;
     int groupValueSizeBits = *mNumberOfBitsUsedForTheGroupWidths;
@@ -282,7 +282,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
         {
           // The following values are used for indicating that the actual value is missing.
 
-          int missingValueIndicator1 = (int)int_power(2.0,groupValueSize[g])-1;
+          int missingValueIndicator1 = C_INT(int_power(2.0,groupValueSize[g])-1);
           int missingValueIndicator2 = missingValueIndicator1-1;
 
           dataReader.setReadPosition(readPosition);
@@ -313,7 +313,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
         {
           // The following values are used for indicating that the actual value is missing.
 
-          int missingValueIndicator1 = (int)int_power(2.0,groupRefBits)-1;
+          int missingValueIndicator1 = C_INT(int_power(2.0,groupRefBits)-1);
           int missingValueIndicator2 = missingValueIndicator1 - 1;
 
           if (groupReference[g] == missingValueIndicator1)

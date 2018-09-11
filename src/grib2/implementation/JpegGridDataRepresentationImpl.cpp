@@ -267,7 +267,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
       BitArrayReader bitmapReader(bmap,bitmapSizeInBytes*8);
 
       uint pos = 0;
-      for (int i = 0; i < (int)numOfValues; i++)
+      for (int i = 0; i < C_INT(numOfValues); i++)
       {
         if (bitmapReader.readBit())
         {
@@ -284,7 +284,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     }
     else
     {
-      for (int i = 0; i < (int)numOfValues; i++)
+      for (int i = 0; i < C_INT(numOfValues); i++)
       {
         int X = matrix->data_[i];
         double Y = RDfac + X * EDfac;

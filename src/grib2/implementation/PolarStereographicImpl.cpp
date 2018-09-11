@@ -302,7 +302,7 @@ std::string PolarStereographicImpl::getGridGeometryString() const
     }
 
     sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;%f;description",
-        (int)T::GridProjectionValue::PolarStereographic,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,orientation,laD);
+        T::GridProjectionValue::PolarStereographic,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,orientation,laD);
 
     return std::string(buf);
   }
@@ -627,8 +627,8 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
       if (!mNx || !mNy)
         return;
 
-      int nx = (int)(*mNx);
-      int ny = (int)(*mNy);
+      int nx = C_INT(*mNx);
+      int ny = C_INT(*mNy);
 
       char str[200];
       uint c = 0;

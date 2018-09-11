@@ -353,10 +353,10 @@ function process_template($file, $name, $class, $outdir)
         $body .= "$incclass * get$Var() const;";
 
         $getters .= "\n/*! \brief The method returns the pointer to the {@link m${Var}} attribute. */\n\n";        
-        $getters .= "$incclass * ${class}::get$Var() const { try { return static_cast<${incclass}*>(&m${Var}); } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+        $getters .= "$incclass * ${class}::get$Var() const { try { return static_cast<${incclass}*>(&m${Var}); } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}\n}\n\n";
 
         $body .= "void set$Var($incclass& $var);";
-        $setters .= "void ${class}::set$Var($incclass& $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+        $setters .= "void ${class}::set$Var($incclass& $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}\n}\n\n";
 
         $protected .= "mutable $incclass m$Var;\n";
         $headers ["\"${incclass}.h\""] = 1;
@@ -396,10 +396,10 @@ function process_template($file, $name, $class, $outdir)
             {
               $body .= "$realtype get$Var() const;\n";
               $getters .= "\n/*! \brief The method returns the value of the {@link m${Var}} attribute. */\n\n";        
-              $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+              $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}\n}\n\n";
 
               $body .= "void set$Var($cpptype $var);\n";
-              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}\n}\n\n";
 
               $headers ["<array>"] = 1;
               $members [$Var] = "normal";
@@ -412,10 +412,10 @@ function process_template($file, $name, $class, $outdir)
             {
               $body .= "$realtype get$Var() const;\n";
               $getters .= "\n/*! \brief The method returns the value of the {@link m${Var}} attribute. */\n\n";        
-              $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+              $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}\n}\n\n";
 
               $body .= "void set$Var($cpptype $var);\n";
-              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}\n}\n\n";
 
               $members [$Var] = "codetable";
               $codetables [$var] = extract_codetable ( $row );
@@ -428,10 +428,10 @@ function process_template($file, $name, $class, $outdir)
             {
               $body .= "$realtype get$Var() const;\n";
               $getters .= "\n/*! \brief The method returns the value of the {@link m${Var}} attribute. */\n\n";        
-              $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+              $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}\n}\n\n";
 
               $body .= "void set$Var($cpptype $var);\n";
-              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}\n}\n\n";
 
               $members [$Var] = "flagtable";
               $flagtables [$var] = extract_flagtable ( $row );
@@ -444,10 +444,10 @@ function process_template($file, $name, $class, $outdir)
             {
               $body .= "$realtype get$Var() const;\n";
               $getters .= "\n/*! \brief The method returns the value of the {@link m${Var}} attribute. */\n\n";        
-              $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+              $getters .= "$realtype ${class}::get$Var() const { try { return m${Var}; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}\n}\n\n";
 
               $body .= "void set$Var($cpptype $var);\n";
-              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}\n}\n\n";
+              $setters .= "void ${class}::set$Var($cpptype $var) { try { m${Var} = $var; } catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}\n}\n\n";
 
               $members [$Var] = "normal";
               if (strpos ( $realtype, "boost::optional" ) > 0  or strpos($realtype, "_opt") > 0)
@@ -528,7 +528,7 @@ function process_template($file, $name, $class, $outdir)
 	    $cpp .= "m$Var = {0};";
     }
   }
-  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}}\n\n";
 
 
 
@@ -549,7 +549,7 @@ function process_template($file, $name, $class, $outdir)
     $cpp .= "m$Var = other.m$Var;\n";
   }
 
-  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}}\n\n";
 
 
 
@@ -593,7 +593,7 @@ function process_template($file, $name, $class, $outdir)
         $cpp .= "SHIT";
     }
   }
-  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}}\n\n";
 
 
 
@@ -615,7 +615,7 @@ function process_template($file, $name, $class, $outdir)
     else
       $cpp .= "dataWriter << m$Var;\n";
   }
-  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}}\n\n";
 
 
 
@@ -649,7 +649,7 @@ function process_template($file, $name, $class, $outdir)
       $cpp .= "attributeList.addAttribute(name,toString(m${member}));\n";
     }
   }
-  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}}\n\n";
 
 
   
@@ -686,7 +686,7 @@ function process_template($file, $name, $class, $outdir)
       $cpp .= "stream << space(level) << \"- $member = \" << toString(m${member}) << \"\\n\";\n";
     }
   }
-  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}}\n\n";
 
 
 
@@ -696,7 +696,7 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "\n/*! \brief The method counts the hash value of the current object. */\n\n";
 
   $cpp .= "T::Hash ${class}::countHash() { try { std::size_t seed = 0;\n${hash} return seed;\n";
-  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+  $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}}\n\n";
 
 
   
@@ -715,7 +715,7 @@ function process_template($file, $name, $class, $outdir)
     {
       $cpp .= "${parent}* ${class}::create${parent}() const\n";
       $cpp .= "{ try { return static_cast<${parent}*>(new ${class}(*this));\n";
-      $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,NULL);}}\n\n";
+      $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}}\n\n";
     }    
   }
 

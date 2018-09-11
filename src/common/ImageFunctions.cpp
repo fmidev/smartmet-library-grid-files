@@ -140,9 +140,9 @@ void jpeg_save(const char *filename, unsigned long *image, int image_height,int 
       for (int x=0; x<image_width; x++)
       {
         unsigned long col = image[c];
-        image_buffer[p++] = (unsigned char)((col & 0xFF0000) >> 16);
-        image_buffer[p++] = (unsigned char)((col & 0x00FF00) >> 8);
-        image_buffer[p++] = (unsigned char)(col & 0xFF);
+        image_buffer[p++] = C_UCHAR((col & 0xFF0000) >> 16);
+        image_buffer[p++] = C_UCHAR((col & 0x00FF00) >> 8);
+        image_buffer[p++] = C_UCHAR(col & 0xFF);
         c++;
       }
     }
@@ -156,7 +156,7 @@ void jpeg_save(const char *filename, unsigned long *image, int image_height,int 
     cinfo.err = jpeg_std_error(&jerr);
     jpeg_create_compress(&cinfo);
 
-    if ((outfile = fopen(filename, "wb")) == nullptr)
+    if ((outfile = fopen(filename, "wbe")) == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot create the JPG file!");
       exception.addParameter("Filename",filename);
@@ -186,7 +186,7 @@ void jpeg_save(const char *filename, unsigned long *image, int image_height,int 
     fclose(outfile);
 
     jpeg_destroy_compress(&cinfo);
-    delete image_buffer;
+    delete[] image_buffer;
   }
   catch (...)
   {
@@ -252,7 +252,7 @@ int jpg_load(const char *_filename,CImage& _image)
   JSAMPARRAY buffer;  // ### Output row buffer
   int row_stride;     // ###  physical row width in output buffer
 
-  FILE *infile = fopen(_filename, "rb");
+  FILE *infile = fopen(_filename, "rbe");
   if (infile == nullptr)
   {
 //    fprintf(moutput, "ERROR; Cannot open file (%s)!\n", _filename);
@@ -378,7 +378,7 @@ int jpg_load(const char *_filename,CImage& _image)
 
       if (cinfo.jpeg_color_space == JCS_CMYK  &&  cinfo.num_components == 4)
       {
-        color = cmyk2rgb(cc[0]/255,cc[1]/255,cc[2]/255,cc[3]/255);
+        color = cmyk2rgb(C_DOUBLE(cc[0])/255,C_DOUBLE(cc[1])/255,C_DOUBLE(cc[2])/255,C_DOUBLE(cc[3])/255);
       }
 
       if (cinfo.jpeg_color_space == JCS_YCCK  &&  cinfo.num_components == 4)
@@ -541,9 +541,9 @@ int readpng_get_bgcolor(uchar *red, uchar *green, uchar *blue)
   }
   else
   {
-    *red   = (uchar)pBackground->red;
-    *green = (uchar)pBackground->green;
-    *blue  = (uchar)pBackground->blue;
+    *red   = C_UCHAR(pBackground->red);
+    *green = C_UCHAR(pBackground->green);
+    *blue  = C_UCHAR(pBackground->blue);
   }
   return 0;
 }
@@ -587,7 +587,7 @@ uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbyte
   png_read_update_info(png_ptr,info_ptr);
 
   *pRowbytes = rowbytes = png_get_rowbytes(png_ptr, info_ptr);
-  *pChannels = (int)png_get_channels(png_ptr, info_ptr);
+  *pChannels = C_INT(png_get_channels(png_ptr, info_ptr));
 
   if ((image_data = (uchar *)malloc(rowbytes*height)) == nullptr)
   {
@@ -654,7 +654,7 @@ int png_load(const char *_filename,CImage& _image)
   uint height = 0;
 
 
-  FILE *infile = fopen(_filename, "rb");
+  FILE *infile = fopen(_filename, "rbe");
   if (infile == nullptr)
     return -1;
 
@@ -673,12 +673,12 @@ int png_load(const char *_filename,CImage& _image)
 
   _image.pixel = new uint[size];
 
-  register int p1 = 0;
-  register int p2 = 0;
+  int p1 = 0;
+  int p2 = 0;
 
   uchar *ptr = (uchar*)_image.pixel;
 
-  for (register int t=0; t<size; t++)
+  for (int t=0; t<size; t++)
   {
     ptr[p2+0] = pixel[p1+2];
     ptr[p2+1] = pixel[p1+1];

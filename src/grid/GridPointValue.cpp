@@ -93,12 +93,12 @@ GridPointValue::~GridPointValue()
 
 
 
-void GridPointValue::operator=(const GridPointValue& gridPointValue)
+GridPointValue& GridPointValue::operator=(const GridPointValue& gridPointValue)
 {
   try
   {
     if (&gridPointValue == this)
-      return;
+      return *this;
 
     mFileId = gridPointValue.mFileId;
     mMessageIndex = gridPointValue.mMessageIndex;
@@ -107,6 +107,8 @@ void GridPointValue::operator=(const GridPointValue& gridPointValue)
     mLevel = gridPointValue.mLevel;
     mTime = gridPointValue.mTime;
     mValue = gridPointValue.mValue;
+
+    return *this;
   }
   catch (...)
   {

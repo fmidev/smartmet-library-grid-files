@@ -55,11 +55,11 @@ void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
     {
       mHashVector.push_back(hash);
       mVector.push_back(indexVector);
-      mTimeVector.push_back(time(0));
+      mTimeVector.push_back(time(nullptr));
       return;
     }
 
-    int sz = (int)mHashVector.size();
+    int sz = C_INT(mHashVector.size());
     int idx = getClosestIndexByHashNoLock(hash);
     if (idx >= 0  &&  idx < sz  &&  mHashVector[idx] == hash)
       return;  // Already in cache
@@ -67,21 +67,21 @@ void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
     if (idx < 0)
     {
       mHashVector.insert(mHashVector.begin(),hash);
-      mTimeVector.insert(mTimeVector.begin(),time(0));
+      mTimeVector.insert(mTimeVector.begin(),time(nullptr));
       mVector.insert(mVector.begin(),indexVector);
       return;
     }
 
-    if (idx >= (int)mHashVector.size())
+    if (idx >= C_INT(mHashVector.size()))
     {
       mHashVector.push_back(hash);
-      mTimeVector.push_back(time(0));
+      mTimeVector.push_back(time(nullptr));
       mVector.push_back(indexVector);
       return;
     }
 
     mHashVector.insert(mHashVector.begin()+idx+1,hash);
-    mTimeVector.insert(mTimeVector.begin()+idx+1,time(0));
+    mTimeVector.insert(mTimeVector.begin()+idx+1,time(nullptr));
     mVector.insert(mVector.begin()+idx+1,indexVector);
 
     if (mVector.size() >  mMaxSize)
@@ -103,13 +103,13 @@ bool IndexCache::getIndexVector(long long hash,T::IndexVector& indexVector)
   {
     AutoThreadLock lock(&mThreadLock);
 
-    int sz = (int)mHashVector.size();
+    int sz = C_INT(mHashVector.size());
     int idx = getClosestIndexByHashNoLock(hash);
 
     if (idx >= 0  &&  idx < sz  &&  mHashVector[idx] == hash)
     {
       indexVector = mVector[idx];
-      mTimeVector[idx] = time(0);
+      mTimeVector[idx] = time(nullptr);
       return true;
     }
     return false;
@@ -129,7 +129,7 @@ bool IndexCache::getIndex(long long hash,uint pos,int& index)
   try
   {
     AutoThreadLock lock(&mThreadLock);
-    int sz = (int)mHashVector.size();
+    int sz = C_INT(mHashVector.size());
     int idx = getClosestIndexByHashNoLock(hash);
 
     if (idx >= 0  &&  idx < sz  &&  mHashVector[idx] == hash)
@@ -137,7 +137,7 @@ bool IndexCache::getIndex(long long hash,uint pos,int& index)
       if (mVector[idx].size() > pos)
       {
         index = mVector[idx][pos];
-        mTimeVector[idx] = time(0);
+        mTimeVector[idx] = time(nullptr);
         return true;
       }
     }
@@ -157,7 +157,7 @@ int IndexCache::getClosestIndexByHash(long long hash)
   try
   {
     AutoThreadLock lock(&mThreadLock);
-    return getClosestIndexByHash(hash);
+    return getClosestIndexByHashNoLock(hash);
   }
   catch (...)
   {
@@ -172,7 +172,7 @@ int IndexCache::getClosestIndexByHashNoLock(long long hash)
 {
   try
   {
-    int high = (int)mHashVector.size()-1;
+    int high = C_INT(mHashVector.size())-1;
     if (high < 0)
       return -1;
 
@@ -224,7 +224,7 @@ void IndexCache::removeOldest()
     if (sz == 0)
       return;
 
-    time_t oldest = time(0);
+    time_t oldest = time(nullptr);
     uint idx = 0;
 
     AutoThreadLock lock(&mThreadLock);

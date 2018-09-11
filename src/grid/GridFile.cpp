@@ -557,7 +557,7 @@ void GridFile::setFileName(std::string fileName)
   try
   {
     mFileName = fileName;
-    mFileModificationTime = time(0); //getFileModificationTime(fileName.c_str());
+    mFileModificationTime = time(nullptr); //getFileModificationTime(fileName.c_str());
     if (mGridFile)
       mGridFile->setFileName(fileName);
   }

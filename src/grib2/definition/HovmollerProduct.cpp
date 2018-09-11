@@ -21,7 +21,7 @@ namespace GRIB2 {
 HovmollerProduct::HovmollerProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -32,7 +32,7 @@ HovmollerProduct::HovmollerProduct(const HovmollerProduct &other) : ProductDefin
     mParameter = other.mParameter;
     mHorizontal = other.mHorizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -51,7 +51,7 @@ void HovmollerProduct::read(MemoryReader &memoryReader) {
     mParameter.read(memoryReader);
     mHorizontal.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +65,7 @@ void HovmollerProduct::write(DataWriter &dataWriter) {
     mParameter.write(dataWriter);
     mHorizontal.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +83,7 @@ void HovmollerProduct::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sHovmollerProduct.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -100,7 +100,7 @@ void HovmollerProduct::print(std::ostream &stream, uint level, uint optionFlags)
     mParameter.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -113,7 +113,7 @@ T::Hash HovmollerProduct::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -127,7 +127,7 @@ ProductDefinition *HovmollerProduct::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new HovmollerProduct(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -137,7 +137,7 @@ ParameterSettings *HovmollerProduct::getParameter() const {
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -147,7 +147,7 @@ HorizontalSettings *HovmollerProduct::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -155,7 +155,7 @@ void HovmollerProduct::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -163,7 +163,7 @@ void HovmollerProduct::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

@@ -84,9 +84,9 @@ void UnitDefinition::print(std::ostream& stream,uint level,uint optionFlags) con
     stream << space(level) << "UnitDefinition\n";
     stream << space(level) << "- OriginalUnits                     = " << mOriginalUnits << "\n";
     stream << space(level) << "- PreferredUnits                    = " << mPreferredUnits << "\n";
-    stream << space(level) << "- PreferredAreaInterpolationMethod  = " << toString((int)mPreferredAreaInterpolationMethod) << "\n";
-    stream << space(level) << "- PreferredTimeInterpolationMethod  = " << toString((int)mPreferredTimeInterpolationMethod) << "\n";
-    stream << space(level) << "- PreferredLevelInterpolationMethod = " << toString((int)mPreferredLevelInterpolationMethod) << "\n";
+    stream << space(level) << "- PreferredAreaInterpolationMethod  = " << toString(mPreferredAreaInterpolationMethod) << "\n";
+    stream << space(level) << "- PreferredTimeInterpolationMethod  = " << toString(mPreferredTimeInterpolationMethod) << "\n";
+    stream << space(level) << "- PreferredLevelInterpolationMethod = " << toString(mPreferredLevelInterpolationMethod) << "\n";
   }
   catch (...)
   {

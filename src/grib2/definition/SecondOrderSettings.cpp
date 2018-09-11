@@ -21,7 +21,7 @@ namespace GRIB2 {
 SecondOrderSettings::SecondOrderSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -41,7 +41,7 @@ SecondOrderSettings::SecondOrderSettings(const SecondOrderSettings &other) {
     mTrueLengthOfLastGroup = other.mTrueLengthOfLastGroup;
     mWidthOfLengths = other.mWidthOfLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -69,7 +69,7 @@ void SecondOrderSettings::read(MemoryReader &memoryReader) {
     mTrueLengthOfLastGroup = memoryReader.read_UInt32_opt();
     mWidthOfLengths = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -92,7 +92,7 @@ void SecondOrderSettings::write(DataWriter &dataWriter) {
     dataWriter << mTrueLengthOfLastGroup;
     dataWriter << mWidthOfLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -128,7 +128,7 @@ void SecondOrderSettings::getAttributeList(std::string prefix, T::AttributeList 
     sprintf(name, "%sSecondOrderSettings.WidthOfLengths", prefix.c_str());
     attributeList.addAttribute(name, toString(mWidthOfLengths));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -154,7 +154,7 @@ void SecondOrderSettings::print(std::ostream &stream, uint level, uint optionFla
     stream << space(level) << "- TrueLengthOfLastGroup = " << toString(mTrueLengthOfLastGroup) << "\n";
     stream << space(level) << "- WidthOfLengths = " << toString(mWidthOfLengths) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -187,7 +187,7 @@ T::Hash SecondOrderSettings::countHash() {
       boost::hash_combine(seed, *mWidthOfLengths);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -197,7 +197,7 @@ const T::UInt8_opt &SecondOrderSettings::getGroupSplitting() const {
   try {
     return mGroupSplitting;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -207,7 +207,7 @@ const T::UInt8_opt &SecondOrderSettings::getMissingValueManagement() const {
   try {
     return mMissingValueManagement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -217,7 +217,7 @@ const T::UInt32_opt &SecondOrderSettings::getPrimaryMissingValue() const {
   try {
     return mPrimaryMissingValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -227,7 +227,7 @@ const T::UInt32_opt &SecondOrderSettings::getSecondaryMissingValue() const {
   try {
     return mSecondaryMissingValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -237,7 +237,7 @@ const T::UInt32_opt &SecondOrderSettings::getNumberOfGroups() const {
   try {
     return mNumberOfGroups;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -247,7 +247,7 @@ const T::UInt8_opt &SecondOrderSettings::getReferenceOfWidths() const {
   try {
     return mReferenceOfWidths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -257,7 +257,7 @@ const T::UInt8_opt &SecondOrderSettings::getWidthOfWidths() const {
   try {
     return mWidthOfWidths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -267,7 +267,7 @@ const T::UInt32_opt &SecondOrderSettings::getReferenceOfLengths() const {
   try {
     return mReferenceOfLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -277,7 +277,7 @@ const T::UInt8_opt &SecondOrderSettings::getIncrementOfLengths() const {
   try {
     return mIncrementOfLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -287,7 +287,7 @@ const T::UInt32_opt &SecondOrderSettings::getTrueLengthOfLastGroup() const {
   try {
     return mTrueLengthOfLastGroup;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -297,7 +297,7 @@ const T::UInt8_opt &SecondOrderSettings::getWidthOfLengths() const {
   try {
     return mWidthOfLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -305,7 +305,7 @@ void SecondOrderSettings::setGroupSplitting(T::UInt8_opt groupSplitting) {
   try {
     mGroupSplitting = groupSplitting;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -313,7 +313,7 @@ void SecondOrderSettings::setMissingValueManagement(T::UInt8_opt missingValueMan
   try {
     mMissingValueManagement = missingValueManagement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -321,7 +321,7 @@ void SecondOrderSettings::setPrimaryMissingValue(T::UInt32_opt primaryMissingVal
   try {
     mPrimaryMissingValue = primaryMissingValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -329,7 +329,7 @@ void SecondOrderSettings::setSecondaryMissingValue(T::UInt32_opt secondaryMissin
   try {
     mSecondaryMissingValue = secondaryMissingValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -337,7 +337,7 @@ void SecondOrderSettings::setNumberOfGroups(T::UInt32_opt numberOfGroups) {
   try {
     mNumberOfGroups = numberOfGroups;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -345,7 +345,7 @@ void SecondOrderSettings::setReferenceOfWidths(T::UInt8_opt referenceOfWidths) {
   try {
     mReferenceOfWidths = referenceOfWidths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -353,7 +353,7 @@ void SecondOrderSettings::setWidthOfWidths(T::UInt8_opt widthOfWidths) {
   try {
     mWidthOfWidths = widthOfWidths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -361,7 +361,7 @@ void SecondOrderSettings::setReferenceOfLengths(T::UInt32_opt referenceOfLengths
   try {
     mReferenceOfLengths = referenceOfLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -369,7 +369,7 @@ void SecondOrderSettings::setIncrementOfLengths(T::UInt8_opt incrementOfLengths)
   try {
     mIncrementOfLengths = incrementOfLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -377,7 +377,7 @@ void SecondOrderSettings::setTrueLengthOfLastGroup(T::UInt32_opt trueLengthOfLas
   try {
     mTrueLengthOfLastGroup = trueLengthOfLastGroup;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -385,7 +385,7 @@ void SecondOrderSettings::setWidthOfLengths(T::UInt8_opt widthOfLengths) {
   try {
     mWidthOfLengths = widthOfLengths;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

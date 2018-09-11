@@ -21,7 +21,7 @@ namespace GRIB2 {
 PointInTimeSettings::PointInTimeSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -30,7 +30,7 @@ PointInTimeSettings::PointInTimeSettings() {
 PointInTimeSettings::PointInTimeSettings(const PointInTimeSettings &other) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -47,7 +47,7 @@ PointInTimeSettings::~PointInTimeSettings() {
 void PointInTimeSettings::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -59,7 +59,7 @@ void PointInTimeSettings::read(MemoryReader &memoryReader) {
 void PointInTimeSettings::write(DataWriter &dataWriter) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -72,7 +72,7 @@ void PointInTimeSettings::write(DataWriter &dataWriter) {
 void PointInTimeSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -87,7 +87,7 @@ void PointInTimeSettings::print(std::ostream &stream, uint level, uint optionFla
   try {
     stream << space(level) << "PointInTimeSettings\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -98,7 +98,7 @@ T::Hash PointInTimeSettings::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

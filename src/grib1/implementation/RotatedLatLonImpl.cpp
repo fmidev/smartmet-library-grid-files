@@ -507,7 +507,7 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     }
 
     sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;%f;%f;description",
-        (int)T::GridProjectionValue::RotatedLatLon,mNi,mNj,x,y,fabs(dx),fabs(dy),sm,sx,sy,angle);
+        T::GridProjectionValue::RotatedLatLon,mNi,mNj,x,y,fabs(dx),fabs(dy),sm,sx,sy,angle);
 
     return std::string(buf);
   }
@@ -783,8 +783,8 @@ void RotatedLatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) 
 
       // ### Printing coordinates close to the grid corners.
 
-      int nx = (int)mNi;
-      int ny = (int)mNj;
+      int nx = C_INT(mNi);
+      int ny = C_INT(mNj);
 
       char str[200];
       uint c = 0;

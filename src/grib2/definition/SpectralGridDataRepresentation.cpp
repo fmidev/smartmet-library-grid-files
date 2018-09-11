@@ -21,7 +21,7 @@ namespace GRIB2 {
 SpectralGridDataRepresentation::SpectralGridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -35,7 +35,7 @@ SpectralGridDataRepresentation::SpectralGridDataRepresentation(const SpectralGri
     mCcsdsBlockSize = other.mCcsdsBlockSize;
     mCcsdsRsi = other.mCcsdsRsi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -57,7 +57,7 @@ void SpectralGridDataRepresentation::read(MemoryReader &memoryReader) {
     mCcsdsBlockSize = memoryReader.read_UInt8_opt();
     mCcsdsRsi = memoryReader.read_UInt16_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -74,7 +74,7 @@ void SpectralGridDataRepresentation::write(DataWriter &dataWriter) {
     dataWriter << mCcsdsBlockSize;
     dataWriter << mCcsdsRsi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -98,7 +98,7 @@ void SpectralGridDataRepresentation::getAttributeList(std::string prefix, T::Att
     sprintf(name, "%sSpectralGridDataRepresentation.CcsdsRsi", prefix.c_str());
     attributeList.addAttribute(name, toString(mCcsdsRsi));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -118,7 +118,7 @@ void SpectralGridDataRepresentation::print(std::ostream &stream, uint level, uin
     stream << space(level) << "- CcsdsBlockSize = " << toString(mCcsdsBlockSize) << "\n";
     stream << space(level) << "- CcsdsRsi = " << toString(mCcsdsRsi) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -137,7 +137,7 @@ T::Hash SpectralGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -151,7 +151,7 @@ RepresentationDefinition *SpectralGridDataRepresentation::createRepresentationDe
   try {
     return static_cast<RepresentationDefinition *>(new SpectralGridDataRepresentation(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -161,7 +161,7 @@ PackingSettings *SpectralGridDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -171,7 +171,7 @@ OriginalValuesSettings *SpectralGridDataRepresentation::getOriginalValues() cons
   try {
     return static_cast<OriginalValuesSettings *>(&mOriginalValues);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -181,7 +181,7 @@ const T::UInt8_opt &SpectralGridDataRepresentation::getCcsdsFlags() const {
   try {
     return mCcsdsFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -191,7 +191,7 @@ const T::UInt8_opt &SpectralGridDataRepresentation::getCcsdsBlockSize() const {
   try {
     return mCcsdsBlockSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -201,7 +201,7 @@ const T::UInt16_opt &SpectralGridDataRepresentation::getCcsdsRsi() const {
   try {
     return mCcsdsRsi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -209,7 +209,7 @@ void SpectralGridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -217,7 +217,7 @@ void SpectralGridDataRepresentation::setOriginalValues(OriginalValuesSettings &o
   try {
     mOriginalValues = originalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -225,7 +225,7 @@ void SpectralGridDataRepresentation::setCcsdsFlags(T::UInt8_opt ccsdsFlags) {
   try {
     mCcsdsFlags = ccsdsFlags;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -233,7 +233,7 @@ void SpectralGridDataRepresentation::setCcsdsBlockSize(T::UInt8_opt ccsdsBlockSi
   try {
     mCcsdsBlockSize = ccsdsBlockSize;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -241,7 +241,7 @@ void SpectralGridDataRepresentation::setCcsdsRsi(T::UInt16_opt ccsdsRsi) {
   try {
     mCcsdsRsi = ccsdsRsi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

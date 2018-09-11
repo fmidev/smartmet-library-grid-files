@@ -88,8 +88,8 @@ void DataWriter::write_uint16(std::uint16_t _value)
   try
   {
     uchar v[2];
-    v[0] = (uchar)((_value & 0xFF00) >> 8);
-    v[1] = (uchar)((_value & 0xFF));
+    v[0] = C_UCHAR((_value & 0xFF00) >> 8);
+    v[1] = C_UCHAR((_value & 0xFF));
 
     write_data(v,2);
   }
@@ -108,9 +108,9 @@ void DataWriter::write_uint24(std::uint32_t _value)
   try
   {
     uchar v[3];
-    v[0] = (uchar)((_value & 0xFF0000) >> 16);
-    v[1] = (uchar)((_value & 0xFF00) >> 8);
-    v[2] = (uchar)((_value & 0xFF));
+    v[0] = C_UCHAR((_value & 0xFF0000) >> 16);
+    v[1] = C_UCHAR((_value & 0xFF00) >> 8);
+    v[2] = C_UCHAR((_value & 0xFF));
 
     write_data(v,3);
   }
@@ -129,10 +129,10 @@ void DataWriter::write_uint32(std::uint32_t _value)
   try
   {
     uchar v[4];
-    v[0] = (uchar)((_value & 0xFF000000) >> 24);
-    v[1] = (uchar)((_value & 0xFF0000) >> 16);
-    v[2] = (uchar)((_value & 0xFF00) >> 8);
-    v[3] = (uchar)((_value & 0xFF));
+    v[0] = C_UCHAR((_value & 0xFF000000) >> 24);
+    v[1] = C_UCHAR((_value & 0xFF0000) >> 16);
+    v[2] = C_UCHAR((_value & 0xFF00) >> 8);
+    v[3] = C_UCHAR((_value & 0xFF));
 
     write_data(v,4);
   }
@@ -151,14 +151,14 @@ void DataWriter::write_uint64(std::uint64_t _value)
   try
   {
     uchar v[8];
-    v[0] = (uchar)((_value & 0xFF000000) >> 56);
-    v[1] = (uchar)((_value & 0xFF000000) >> 48);
-    v[2] = (uchar)((_value & 0xFF000000) >> 40);
-    v[3] = (uchar)((_value & 0xFF000000) >> 32);
-    v[4] = (uchar)((_value & 0xFF000000) >> 24);
-    v[5] = (uchar)((_value & 0xFF0000) >> 16);
-    v[6] = (uchar)((_value & 0xFF00) >> 8);
-    v[7] = (uchar)((_value & 0xFF));
+    v[0] = C_UCHAR((_value & 0xFF000000) >> 56);
+    v[1] = C_UCHAR((_value & 0xFF000000) >> 48);
+    v[2] = C_UCHAR((_value & 0xFF000000) >> 40);
+    v[3] = C_UCHAR((_value & 0xFF000000) >> 32);
+    v[4] = C_UCHAR((_value & 0xFF000000) >> 24);
+    v[5] = C_UCHAR((_value & 0xFF0000) >> 16);
+    v[6] = C_UCHAR((_value & 0xFF00) >> 8);
+    v[7] = C_UCHAR((_value & 0xFF));
 
     write_data(v,8);
   }
@@ -204,8 +204,8 @@ void DataWriter::write_int16(std::int16_t _value)
       val = -val;
 
     uchar v[2];
-    v[0] = (uchar)((val & 0xFF00) >> 8);
-    v[1] = (uchar)((val & 0xFF));
+    v[0] = C_UCHAR((val & 0xFF00) >> 8);
+    v[1] = C_UCHAR((val & 0xFF));
 
     if (_value < 0)
       v[0] = v[0] | 0x80;
@@ -231,9 +231,9 @@ void DataWriter::write_int24(std::int32_t _value)
       val = -val;
 
     uchar v[3];
-    v[0] = (uchar)((val & 0xFF0000) >> 16);
-    v[1] = (uchar)((val & 0xFF00) >> 8);
-    v[2] = (uchar)((val & 0xFF));
+    v[0] = C_UCHAR((val & 0xFF0000) >> 16);
+    v[1] = C_UCHAR((val & 0xFF00) >> 8);
+    v[2] = C_UCHAR((val & 0xFF));
 
     if (_value < 0)
       v[0] = v[0] | 0x80;
@@ -259,10 +259,10 @@ void DataWriter::write_int32(std::int32_t _value)
       val = -val;
 
     uchar v[4];
-    v[0] = (uchar)((val & 0xFF000000) >> 24);
-    v[1] = (uchar)((val & 0xFF0000) >> 16);
-    v[2] = (uchar)((val & 0xFF00) >> 8);
-    v[3] = (uchar)((val & 0xFF));
+    v[0] = C_UCHAR((val & 0xFF000000) >> 24);
+    v[1] = C_UCHAR((val & 0xFF0000) >> 16);
+    v[2] = C_UCHAR((val & 0xFF00) >> 8);
+    v[3] = C_UCHAR((val & 0xFF));
 
     if (_value < 0)
       v[0] = v[0] | 0x80;
@@ -283,7 +283,7 @@ void DataWriter::write_float(std::float_t _value)
 {
   try
   {
-    unsigned char* f = (unsigned char*)(&_value);
+    unsigned char* f = reinterpret_cast<unsigned char*>(&_value);
 
     write_data(&f[3],1);
     write_data(&f[2],1);

@@ -129,7 +129,7 @@ Dimensions::~Dimensions()
   try
   {
     if (mSizes != nullptr)
-      delete mSizes;
+      delete[] mSizes;
   }
   catch (...)
   {

@@ -238,25 +238,25 @@ void ValueCache::clear()
           mValueList[t] = nullptr;
         }
       }
-      delete mValueList;
+      delete[] mValueList;
       mValueList = nullptr;
     }
 
     if (mKeyList != nullptr)
     {
-      delete mKeyList;
+      delete[] mKeyList;
       mKeyList = nullptr;
     }
 
     if (mAccessCounterList)
     {
-      delete mAccessCounterList;
+      delete[] mAccessCounterList;
       mAccessCounterList = nullptr;
     }
 
     if (mCompressedDataSize != nullptr)
     {
-      delete mCompressedDataSize;
+      delete[] mCompressedDataSize;
       mCompressedDataSize = nullptr;
     }
 
@@ -267,7 +267,7 @@ void ValueCache::clear()
         if (mCompressedData[t] != nullptr)
           delete mCompressedData[t];
       }
-      delete mCompressedData;
+      delete[] mCompressedData;
       mCompressedData = nullptr;
     }
   }
@@ -502,7 +502,7 @@ bool ValueCache::decompressCachedValues(uint index)
       {
         mValueList[index]->push_back(data[t]);
       }
-      delete data;
+      delete[] data;
 
       //delete mCompressedData[index];
       //mCompressedData[index] = nullptr;
@@ -513,7 +513,7 @@ bool ValueCache::decompressCachedValues(uint index)
       return true;
     }
 
-    delete data;
+    delete[] data;
     return false;
   }
   catch (...)

@@ -139,8 +139,8 @@ Message::~Message()
   FUNCTION_TRACE
   try
   {
-    delete mPointCacheCoordinate;
-    delete mPointCacheValue;
+    delete[] mPointCacheCoordinate;
+    delete[] mPointCacheValue;
   }
   catch (...)
   {
@@ -1540,7 +1540,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     if (grid_i >= cols &&  !isGridGlobal())
       return ParamValueMissing;
 
-    idx = (int)((grid_j * cols) + (grid_i % cols));
+    idx = C_INT((grid_j * cols) + (grid_i % cols));
 
     if (idx < 0)
       return ParamValueMissing;
@@ -1750,7 +1750,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
           for (std::size_t c=0; c<maxCols; c++)
           {
             uint cc = C_UINT(C_DOUBLE(c) / step);
-            int idx = (int)getGridOriginalValueIndex(cc,r);
+            int idx = C_INT(getGridOriginalValueIndex(cc,r));
             T::ParamValue val = values[idx];
             valVector.push_back(val);
           }
@@ -1854,7 +1854,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
           for (uint c=0; c<maxCols; c++)
           {
             uint cc = C_UINT(C_DOUBLE(c) / step);
-            int idx = (int)getGridOriginalValueIndex(cc,r);
+            int idx = C_INT(getGridOriginalValueIndex(cc,r));
             T::ParamValue val = values[idx];
             valVector.push_back(val);
           }

@@ -21,7 +21,7 @@ namespace GRIB2 {
 PartitionedEnsembleProduct::PartitionedEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -32,7 +32,7 @@ PartitionedEnsembleProduct::PartitionedEnsembleProduct(const PartitionedEnsemble
     mPartitionedProduct = other.mPartitionedProduct;
     mEps = other.mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -51,7 +51,7 @@ void PartitionedEnsembleProduct::read(MemoryReader &memoryReader) {
     mPartitionedProduct.read(memoryReader);
     mEps.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +65,7 @@ void PartitionedEnsembleProduct::write(DataWriter &dataWriter) {
     mPartitionedProduct.write(dataWriter);
     mEps.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +83,7 @@ void PartitionedEnsembleProduct::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sPartitionedEnsembleProduct.", prefix.c_str());
     mEps.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -100,7 +100,7 @@ void PartitionedEnsembleProduct::print(std::ostream &stream, uint level, uint op
     mPartitionedProduct.print(stream, level + 1, optionFlags);
     mEps.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -113,7 +113,7 @@ T::Hash PartitionedEnsembleProduct::countHash() {
     boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -127,7 +127,7 @@ ProductDefinition *PartitionedEnsembleProduct::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new PartitionedEnsembleProduct(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -137,7 +137,7 @@ PartitionedProduct *PartitionedEnsembleProduct::getPartitionedProduct() const {
   try {
     return static_cast<PartitionedProduct *>(&mPartitionedProduct);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -147,7 +147,7 @@ EpsSettings *PartitionedEnsembleProduct::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -155,7 +155,7 @@ void PartitionedEnsembleProduct::setPartitionedProduct(PartitionedProduct &parti
   try {
     mPartitionedProduct = partitionedProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -163,7 +163,7 @@ void PartitionedEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

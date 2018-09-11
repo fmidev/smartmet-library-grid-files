@@ -21,7 +21,7 @@ namespace GRIB2 {
 PreprocessedGridData::PreprocessedGridData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -30,7 +30,7 @@ PreprocessedGridData::PreprocessedGridData() {
 PreprocessedGridData::PreprocessedGridData(const PreprocessedGridData &other) : DataDefinition(other) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -47,7 +47,7 @@ PreprocessedGridData::~PreprocessedGridData() {
 void PreprocessedGridData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -59,7 +59,7 @@ void PreprocessedGridData::read(MemoryReader &memoryReader) {
 void PreprocessedGridData::write(DataWriter &dataWriter) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -72,7 +72,7 @@ void PreprocessedGridData::write(DataWriter &dataWriter) {
 void PreprocessedGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -87,7 +87,7 @@ void PreprocessedGridData::print(std::ostream &stream, uint level, uint optionFl
   try {
     stream << space(level) << "PreprocessedGridData\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -98,7 +98,7 @@ T::Hash PreprocessedGridData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -112,7 +112,7 @@ DataDefinition *PreprocessedGridData::createDataDefinition() const {
   try {
     return static_cast<DataDefinition *>(new PreprocessedGridData(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

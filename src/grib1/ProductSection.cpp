@@ -122,7 +122,7 @@ ProductSection::~ProductSection()
   {
     if (mReleaseData &&  mDataPtr != nullptr)
     {
-      delete mDataPtr;
+      delete[] mDataPtr;
       mDataPtr = nullptr;
     }
   }

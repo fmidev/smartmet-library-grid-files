@@ -21,7 +21,7 @@ namespace GRIB2 {
 TimeIntervalEnsembleReforecast::TimeIntervalEnsembleReforecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -35,7 +35,7 @@ TimeIntervalEnsembleReforecast::TimeIntervalEnsembleReforecast(const TimeInterva
     mReforecast = other.mReforecast;
     mStatistical = other.mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -57,7 +57,7 @@ void TimeIntervalEnsembleReforecast::read(MemoryReader &memoryReader) {
     mReforecast.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -74,7 +74,7 @@ void TimeIntervalEnsembleReforecast::write(DataWriter &dataWriter) {
     mReforecast.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -98,7 +98,7 @@ void TimeIntervalEnsembleReforecast::getAttributeList(std::string prefix, T::Att
     sprintf(name, "%sTimeIntervalEnsembleReforecast.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -118,7 +118,7 @@ void TimeIntervalEnsembleReforecast::print(std::ostream &stream, uint level, uin
     mReforecast.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -134,7 +134,7 @@ T::Hash TimeIntervalEnsembleReforecast::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -148,7 +148,7 @@ ProductDefinition *TimeIntervalEnsembleReforecast::createProductDefinition() con
   try {
     return static_cast<ProductDefinition *>(new TimeIntervalEnsembleReforecast(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -158,7 +158,7 @@ ParameterSettings *TimeIntervalEnsembleReforecast::getParameter() const {
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -168,7 +168,7 @@ HorizontalSettings *TimeIntervalEnsembleReforecast::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -178,7 +178,7 @@ EpsSettings *TimeIntervalEnsembleReforecast::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -188,7 +188,7 @@ ReforecastSettings *TimeIntervalEnsembleReforecast::getReforecast() const {
   try {
     return static_cast<ReforecastSettings *>(&mReforecast);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -198,7 +198,7 @@ StatisticalSettings *TimeIntervalEnsembleReforecast::getStatistical() const {
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -206,7 +206,7 @@ void TimeIntervalEnsembleReforecast::setParameter(ParameterSettings &parameter) 
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -214,7 +214,7 @@ void TimeIntervalEnsembleReforecast::setHorizontal(HorizontalSettings &horizonta
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -222,7 +222,7 @@ void TimeIntervalEnsembleReforecast::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -230,7 +230,7 @@ void TimeIntervalEnsembleReforecast::setReforecast(ReforecastSettings &reforecas
   try {
     mReforecast = reforecast;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -238,7 +238,7 @@ void TimeIntervalEnsembleReforecast::setStatistical(StatisticalSettings &statist
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

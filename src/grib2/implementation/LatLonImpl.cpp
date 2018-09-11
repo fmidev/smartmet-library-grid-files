@@ -214,7 +214,7 @@ std::string LatLonImpl::getGridGeometryString() const
 
 
     sprintf(buf,"%d;id;name;%u;%u;%f;%f;%f;%f;%s;description",
-      (int)T::GridProjectionValue::LatLon,ni,nj,x,y,fabs(dx),fabs(dy),sm);
+      T::GridProjectionValue::LatLon,ni,nj,x,y,fabs(dx),fabs(dy),sm);
 
     return std::string(buf);
   }
@@ -705,8 +705,8 @@ void LatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) const
       if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
         return;
 
-      int nx = (int)(*mLatLon.getGrid()->getNi());
-      int ny = (int)(*mLatLon.getGrid()->getNj());
+      int nx = C_INT(*mLatLon.getGrid()->getNi());
+      int ny = C_INT(*mLatLon.getGrid()->getNj());
 
       char str[200];
       uint c = 0;

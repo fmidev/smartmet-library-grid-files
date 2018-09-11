@@ -404,8 +404,8 @@ void GaussianImpl::print(std::ostream& stream,uint level,uint optionFlags) const
       if (!mGaussian.getGrid()->getNi() || !mGaussian.getGrid()->getNj())
         return;
 
-      int nx = (int)(*mGaussian.getGrid()->getNi());
-      int ny = (int)(*mGaussian.getGrid()->getNj());
+      int nx = C_INT(*mGaussian.getGrid()->getNi());
+      int ny = C_INT(*mGaussian.getGrid()->getNj());
 
       char str[200];
       uint c = 0;

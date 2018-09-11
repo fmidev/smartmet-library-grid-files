@@ -21,7 +21,7 @@ namespace GRIB2 {
 ComplexSphericalHarmonicsData::ComplexSphericalHarmonicsData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -30,7 +30,7 @@ ComplexSphericalHarmonicsData::ComplexSphericalHarmonicsData() {
 ComplexSphericalHarmonicsData::ComplexSphericalHarmonicsData(const ComplexSphericalHarmonicsData &other) : DataDefinition(other) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -47,7 +47,7 @@ ComplexSphericalHarmonicsData::~ComplexSphericalHarmonicsData() {
 void ComplexSphericalHarmonicsData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -59,7 +59,7 @@ void ComplexSphericalHarmonicsData::read(MemoryReader &memoryReader) {
 void ComplexSphericalHarmonicsData::write(DataWriter &dataWriter) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -72,7 +72,7 @@ void ComplexSphericalHarmonicsData::write(DataWriter &dataWriter) {
 void ComplexSphericalHarmonicsData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -87,7 +87,7 @@ void ComplexSphericalHarmonicsData::print(std::ostream &stream, uint level, uint
   try {
     stream << space(level) << "ComplexSphericalHarmonicsData\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -98,7 +98,7 @@ T::Hash ComplexSphericalHarmonicsData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -112,7 +112,7 @@ DataDefinition *ComplexSphericalHarmonicsData::createDataDefinition() const {
   try {
     return static_cast<DataDefinition *>(new ComplexSphericalHarmonicsData(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

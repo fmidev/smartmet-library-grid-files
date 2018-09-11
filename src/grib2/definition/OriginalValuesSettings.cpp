@@ -21,7 +21,7 @@ namespace GRIB2 {
 OriginalValuesSettings::OriginalValuesSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -31,7 +31,7 @@ OriginalValuesSettings::OriginalValuesSettings(const OriginalValuesSettings &oth
   try {
     mTypeOfOriginalFieldValues = other.mTypeOfOriginalFieldValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -49,7 +49,7 @@ void OriginalValuesSettings::read(MemoryReader &memoryReader) {
   try {
     mTypeOfOriginalFieldValues = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -62,7 +62,7 @@ void OriginalValuesSettings::write(DataWriter &dataWriter) {
   try {
     dataWriter << mTypeOfOriginalFieldValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -78,7 +78,7 @@ void OriginalValuesSettings::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sOriginalValuesSettings.TypeOfOriginalFieldValues", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfOriginalFieldValues));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +94,7 @@ void OriginalValuesSettings::print(std::ostream &stream, uint level, uint option
     stream << space(level) << "OriginalValuesSettings\n";
     stream << space(level) << "- TypeOfOriginalFieldValues = " << toString(mTypeOfOriginalFieldValues) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -107,7 +107,7 @@ T::Hash OriginalValuesSettings::countHash() {
       boost::hash_combine(seed, *mTypeOfOriginalFieldValues);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -117,7 +117,7 @@ const T::UInt8_opt &OriginalValuesSettings::getTypeOfOriginalFieldValues() const
   try {
     return mTypeOfOriginalFieldValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -125,7 +125,7 @@ void OriginalValuesSettings::setTypeOfOriginalFieldValues(T::UInt8_opt typeOfOri
   try {
     mTypeOfOriginalFieldValues = typeOfOriginalFieldValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

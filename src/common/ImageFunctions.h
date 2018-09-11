@@ -34,13 +34,13 @@ class CImage
     virtual ~CImage()
     {
       if (pixel != nullptr)
-        delete pixel;
+        delete[] pixel;
     }
 
-    void operator=(const CImage& image)
+    CImage& operator=(const CImage& image)
     {
       if (pixel != nullptr)
-        delete pixel;
+        delete[] pixel;
 
       pixel = nullptr;
       width = image.width;
@@ -52,6 +52,7 @@ class CImage
         pixel = new uint[sz];
         memcpy(pixel,image.pixel,sz*sizeof(uint));
       }
+      return *this;
     }
 
     int       width;

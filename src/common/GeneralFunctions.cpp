@@ -361,7 +361,7 @@ float ibm2ieee(float ibmFloat)
 {
   try
   {
-    unsigned char *v = (unsigned char *)&ibmFloat;
+    unsigned char *v = reinterpret_cast<unsigned char*>(&ibmFloat);
     unsigned char a = v[0];
     unsigned char b = v[1];
     unsigned char c = v[2];

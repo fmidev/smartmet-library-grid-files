@@ -220,7 +220,7 @@ std::string PolarStereographicImpl::getGridGeometryString() const
     }
 
     sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;60.0;description",
-        (int)T::GridProjectionValue::PolarStereographic,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,orientation);
+        T::GridProjectionValue::PolarStereographic,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,orientation);
 
     return std::string(buf);
   }
@@ -448,8 +448,8 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
       T::Coordinate_vec coordinateList = getGridCoordinates();
 
-      int nx = (int)(mNx);
-      int ny = (int)(mNy);
+      int nx = C_INT(mNx);
+      int ny = C_INT(mNy);
 
       char str[200];
       uint c = 0;

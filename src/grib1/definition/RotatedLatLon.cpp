@@ -26,7 +26,7 @@ RotatedLatLon::RotatedLatLon() {
     mJDirectionIncrement = 0;
     mZero = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -43,7 +43,7 @@ RotatedLatLon::RotatedLatLon(const RotatedLatLon &other) : GridDefinition(other)
     mZero = other.mZero;
     mRotation = other.mRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -68,7 +68,7 @@ void RotatedLatLon::read(MemoryReader &memoryReader) {
     mZero = memoryReader.read_uint32();
     mRotation.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -88,7 +88,7 @@ void RotatedLatLon::write(DataWriter &dataWriter) {
     dataWriter << mZero;
     mRotation.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -118,7 +118,7 @@ void RotatedLatLon::getAttributeList(std::string prefix, T::AttributeList &attri
     sprintf(name, "%sRotatedLatLon.", prefix.c_str());
     mRotation.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -141,7 +141,7 @@ void RotatedLatLon::print(std::ostream &stream, uint level, uint optionFlags) co
     stream << space(level) << "- Zero = " << toString(mZero) << "\n";
     mRotation.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -160,7 +160,7 @@ T::Hash RotatedLatLon::countHash() {
     boost::hash_combine(seed, mRotation.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -174,7 +174,7 @@ GridDefinition *RotatedLatLon::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new RotatedLatLon(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -184,7 +184,7 @@ std::uint16_t RotatedLatLon::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -194,7 +194,7 @@ std::uint16_t RotatedLatLon::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -204,7 +204,7 @@ GridAreaSettings *RotatedLatLon::getGridArea() const {
   try {
     return static_cast<GridAreaSettings *>(&mGridArea);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -214,7 +214,7 @@ std::uint16_t RotatedLatLon::getIDirectionIncrement() const {
   try {
     return mIDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -224,7 +224,7 @@ std::uint16_t RotatedLatLon::getJDirectionIncrement() const {
   try {
     return mJDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -234,7 +234,7 @@ ScanningModeSettings *RotatedLatLon::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -244,7 +244,7 @@ std::uint32_t RotatedLatLon::getZero() const {
   try {
     return mZero;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -254,7 +254,7 @@ RotationSettings *RotatedLatLon::getRotation() const {
   try {
     return static_cast<RotationSettings *>(&mRotation);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -262,7 +262,7 @@ void RotatedLatLon::setNi(std::uint16_t ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -270,7 +270,7 @@ void RotatedLatLon::setNj(std::uint16_t nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -278,7 +278,7 @@ void RotatedLatLon::setGridArea(GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -286,7 +286,7 @@ void RotatedLatLon::setIDirectionIncrement(std::uint16_t iDirectionIncrement) {
   try {
     mIDirectionIncrement = iDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -294,7 +294,7 @@ void RotatedLatLon::setJDirectionIncrement(std::uint16_t jDirectionIncrement) {
   try {
     mJDirectionIncrement = jDirectionIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -302,7 +302,7 @@ void RotatedLatLon::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -310,7 +310,7 @@ void RotatedLatLon::setZero(std::uint32_t zero) {
   try {
     mZero = zero;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -318,7 +318,7 @@ void RotatedLatLon::setRotation(RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

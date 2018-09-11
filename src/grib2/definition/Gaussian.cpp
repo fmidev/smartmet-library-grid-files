@@ -21,7 +21,7 @@ namespace GRIB2 {
 Gaussian::Gaussian() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -32,7 +32,7 @@ Gaussian::Gaussian(const Gaussian &other) : GridDefinition(other) {
     mEarthShape = other.mEarthShape;
     mGaussian = other.mGaussian;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -51,7 +51,7 @@ void Gaussian::read(MemoryReader &memoryReader) {
     mEarthShape.read(memoryReader);
     mGaussian.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +65,7 @@ void Gaussian::write(DataWriter &dataWriter) {
     mEarthShape.write(dataWriter);
     mGaussian.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +83,7 @@ void Gaussian::getAttributeList(std::string prefix, T::AttributeList &attributeL
     sprintf(name, "%sGaussian.", prefix.c_str());
     mGaussian.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -100,7 +100,7 @@ void Gaussian::print(std::ostream &stream, uint level, uint optionFlags) const {
     mEarthShape.print(stream, level + 1, optionFlags);
     mGaussian.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -113,7 +113,7 @@ T::Hash Gaussian::countHash() {
     boost::hash_combine(seed, mGaussian.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -127,7 +127,7 @@ GridDefinition *Gaussian::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new Gaussian(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -137,7 +137,7 @@ EarthShapeSettings *Gaussian::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -147,7 +147,7 @@ GaussianSettings *Gaussian::getGaussian() const {
   try {
     return static_cast<GaussianSettings *>(&mGaussian);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -155,7 +155,7 @@ void Gaussian::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -163,7 +163,7 @@ void Gaussian::setGaussian(GaussianSettings &gaussian) {
   try {
     mGaussian = gaussian;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

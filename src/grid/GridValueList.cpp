@@ -62,10 +62,13 @@ GridValueList::~GridValueList()
 
 
 
-void GridValueList::operator=(const GridValueList& gridValueList)
+GridValueList& GridValueList::operator=(const GridValueList& gridValueList)
 {
   try
   {
+    if (&gridValueList == this)
+      return *this;
+
     clear();
     uint sz = gridValueList.getLength();
     for (uint t=0; t<sz; t++)
@@ -74,6 +77,7 @@ void GridValueList::operator=(const GridValueList& gridValueList)
       if (rec != nullptr)
         mList.push_back(new GridValue(*rec));
     }
+    return *this;
   }
   catch (...)
   {

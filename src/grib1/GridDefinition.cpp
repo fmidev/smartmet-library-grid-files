@@ -33,7 +33,6 @@ GridDefinition::GridDefinition()
     mGlobal = false;
     mGeometryId = 0;
     mGridProjection = T::GridProjectionValue::Unknown;
-    getGridHash();
   }
   catch (...)
   {

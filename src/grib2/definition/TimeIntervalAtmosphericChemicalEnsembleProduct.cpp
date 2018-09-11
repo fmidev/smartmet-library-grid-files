@@ -21,7 +21,7 @@ namespace GRIB2 {
 TimeIntervalAtmosphericChemicalEnsembleProduct::TimeIntervalAtmosphericChemicalEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -35,7 +35,7 @@ TimeIntervalAtmosphericChemicalEnsembleProduct::TimeIntervalAtmosphericChemicalE
     mEps = other.mEps;
     mStatistical = other.mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -56,7 +56,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::read(MemoryReader &memoryRe
     mEps.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -72,7 +72,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::write(DataWriter &dataWrite
     mEps.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +94,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::getAttributeList(std::strin
     sprintf(name, "%sTimeIntervalAtmosphericChemicalEnsembleProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -113,7 +113,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::print(std::ostream &stream,
     mEps.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -128,7 +128,7 @@ T::Hash TimeIntervalAtmosphericChemicalEnsembleProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -142,7 +142,7 @@ ProductDefinition *TimeIntervalAtmosphericChemicalEnsembleProduct::createProduct
   try {
     return static_cast<ProductDefinition *>(new TimeIntervalAtmosphericChemicalEnsembleProduct(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -152,7 +152,7 @@ ParameterChemicalSettings *TimeIntervalAtmosphericChemicalEnsembleProduct::getPa
   try {
     return static_cast<ParameterChemicalSettings *>(&mParameterChemical);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -162,7 +162,7 @@ HorizontalSettings *TimeIntervalAtmosphericChemicalEnsembleProduct::getHorizonta
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -172,7 +172,7 @@ EpsSettings *TimeIntervalAtmosphericChemicalEnsembleProduct::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -182,7 +182,7 @@ StatisticalSettings *TimeIntervalAtmosphericChemicalEnsembleProduct::getStatisti
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -190,7 +190,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setParameterChemical(Parame
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -198,7 +198,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setHorizontal(HorizontalSet
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -206,7 +206,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -214,7 +214,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setStatistical(StatisticalS
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

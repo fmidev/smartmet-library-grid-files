@@ -21,7 +21,7 @@ namespace GRIB2 {
 PercentileSettings::PercentileSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -31,7 +31,7 @@ PercentileSettings::PercentileSettings(const PercentileSettings &other) {
   try {
     mPercentileValue = other.mPercentileValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -49,7 +49,7 @@ void PercentileSettings::read(MemoryReader &memoryReader) {
   try {
     mPercentileValue = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -62,7 +62,7 @@ void PercentileSettings::write(DataWriter &dataWriter) {
   try {
     dataWriter << mPercentileValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -78,7 +78,7 @@ void PercentileSettings::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sPercentileSettings.PercentileValue", prefix.c_str());
     attributeList.addAttribute(name, toString(mPercentileValue));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -94,7 +94,7 @@ void PercentileSettings::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "PercentileSettings\n";
     stream << space(level) << "- PercentileValue = " << toString(mPercentileValue) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -107,7 +107,7 @@ T::Hash PercentileSettings::countHash() {
       boost::hash_combine(seed, *mPercentileValue);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -117,7 +117,7 @@ const T::UInt8_opt &PercentileSettings::getPercentileValue() const {
   try {
     return mPercentileValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -125,7 +125,7 @@ void PercentileSettings::setPercentileValue(T::UInt8_opt percentileValue) {
   try {
     mPercentileValue = percentileValue;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

@@ -17,7 +17,7 @@ class GridValueList
                       GridValueList(const GridValueList& gridValueList);
      virtual          ~GridValueList();
 
-     void             operator=(const GridValueList& gridValueList);
+     GridValueList&   operator=(const GridValueList& gridValueList);
 
      void             addGridValue(GridValue *gridValue);
      void             clear();

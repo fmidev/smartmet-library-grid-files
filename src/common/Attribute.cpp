@@ -73,15 +73,17 @@ Attribute::~Attribute()
 
 
 
-void Attribute::operator=(const Attribute& attribute)
+Attribute& Attribute::operator=(const Attribute& attribute)
 {
   try
   {
     if (&attribute == this)
-      return;
+      return *this;
 
     mName = attribute.mName;
     mValue = attribute.mValue;
+
+    return *this;
   }
   catch (...)
   {

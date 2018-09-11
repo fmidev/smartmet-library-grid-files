@@ -234,7 +234,7 @@ int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,double lat,double&
       return -1;
 
     double *lats = getLatitudes(nj,n);
-    int endp = (int)nj-1;
+    int endp = C_INT(nj-1);
 
     if (lat > lats[0] || lat < lats[endp])
       return -1;

@@ -226,7 +226,7 @@ std::string LatLonImpl::getGridGeometryString() const
 
 
     sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;description",
-      (int)T::GridProjectionValue::LatLon,mNi,mNj,x,y,fabs(dx),fabs(dy),sm);
+      T::GridProjectionValue::LatLon,mNi,mNj,x,y,fabs(dx),fabs(dy),sm);
 
     return std::string(buf);
   }
@@ -714,8 +714,8 @@ void LatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) const
 
       // ### Printing coordinates close to the grid corners.
 
-      int nx = (int)mNi;
-      int ny = (int)mNj;
+      int nx = C_INT(mNi);
+      int ny = C_INT(mNj);
 
       char str[200];
       uint c = 0;

@@ -167,8 +167,8 @@ Message::~Message()
   FUNCTION_TRACE
   try
   {
-    delete mPointCacheCoordinate;
-    delete mPointCacheValue;
+    delete[] mPointCacheCoordinate;
+    delete[] mPointCacheValue;
   }
   catch (...)
   {

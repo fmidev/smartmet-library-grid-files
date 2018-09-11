@@ -71,7 +71,7 @@ DataSection::~DataSection()
   try
   {
     if (mReleaseData &&  mDataPtr != nullptr)
-      delete mDataPtr;
+      delete[] mDataPtr;
 
     mDataPtr = nullptr;
     mDataSize = 0;
@@ -117,7 +117,7 @@ void DataSection::setData(T::Data_ptr data,std::size_t size)
   {
     if (mReleaseData &&  mDataPtr != nullptr)
     {
-      delete mDataPtr;
+      delete[] mDataPtr;
       mDataPtr = nullptr;
       mDataSize = 0;
     }

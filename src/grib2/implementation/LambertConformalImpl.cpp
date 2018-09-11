@@ -327,7 +327,7 @@ std::string LambertConformalImpl::getGridGeometryString() const
 
 
     sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s,%f;%f;%f;%f;%f;60.0;description",
-      (int)T::GridProjectionValue::LambertConformal,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy);
+      T::GridProjectionValue::LambertConformal,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy);
 
     return std::string(buf);
   }
@@ -670,8 +670,8 @@ void LambertConformalImpl::print(std::ostream& stream,uint level,uint optionFlag
 
       // ### Printing coordinates close to the grid corners.
 
-      int nx = (int)(*mNx);
-      int ny = (int)(*mNy);
+      int nx = C_INT(*mNx);
+      int ny = C_INT(*mNy);
 
       char str[200];
       uint c = 0;

@@ -65,7 +65,7 @@ class Log
     FILE *file = _xLog->getFileHandle();\
     if (file != nullptr)\
     {\
-      time_t x_time = time(0);\
+      time_t x_time = time(nullptr);\
       struct tm x_tm;\
       localtime_r(&x_time,&x_tm);\
       fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u][%llu][",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_xLog->getEventCounter());\
@@ -88,7 +88,7 @@ class Log
     FILE *file = _xLog->getFileHandle();\
     if (file != nullptr)\
     {\
-      time_t x_time = time(0);\
+      time_t x_time = time(nullptr);\
       struct tm x_tm;\
       localtime_r(&x_time,&x_tm);\
       fprintf(file,"[%04u-%02u-%02u/%02u:%02u:%02u][%llu][",x_tm.tm_year+1900,x_tm.tm_mon+1,x_tm.tm_mday,x_tm.tm_hour,x_tm.tm_min,x_tm.tm_sec,_xLog->getEventCounter());\

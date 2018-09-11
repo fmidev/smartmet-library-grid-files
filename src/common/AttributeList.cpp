@@ -61,12 +61,12 @@ AttributeList::~AttributeList()
 
 
 
-void AttributeList::operator=(AttributeList& attributeList)
+AttributeList& AttributeList::operator=(AttributeList& attributeList)
 {
   try
   {
     if (&attributeList == this)
-      return;
+      return *this;
 
     clear();
 
@@ -76,6 +76,7 @@ void AttributeList::operator=(AttributeList& attributeList)
       Attribute *attr = attributeList.getAttributeByIndex(t);
       attributeVector.push_back(attr->duplicate());
     }
+    return *this;
   }
   catch (...)
   {

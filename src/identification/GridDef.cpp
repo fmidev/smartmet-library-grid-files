@@ -233,11 +233,11 @@ void GridDef::updateCheck()
     if (!mInitialized)
       throw SmartMet::Spine::Exception(BCP,"The 'GridDef' object is not initialized! Call init() first!");
 
-    if ((mLastCheckTime + 30) < time(0))
+    if ((mLastCheckTime + 30) < time(nullptr))
     {
       AutoThreadLock lock(&mThreadLock);
 
-      mLastCheckTime = time(0);
+      mLastCheckTime = time(nullptr);
 
       updateGrib();
       updateGrib1();
@@ -1601,7 +1601,7 @@ void GridDef::loadGribUnitDefinitions(const char *filename)
           UnitDefinition rec;
           rec.mOriginalUnits = field[0];
           rec.mPreferredUnits = field[1];
-          rec.mPreferredAreaInterpolationMethod = (short)toInt64(field[2]);
+          rec.mPreferredAreaInterpolationMethod = C_SHORT(toInt64(field[2]));
 
           mGrib_unitDef_records.push_back(rec);
         }
@@ -2591,13 +2591,13 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
             rec.mParameterDescription = field[4];
 
           if (field[5][0] != '\0')
-            rec.mAreaInterpolationMethod = (short)toInt64(field[5]);
+            rec.mAreaInterpolationMethod = C_SHORT(toInt64(field[5]));
 
           if (field[6][0] != '\0')
-            rec.mTimeInterpolationMethod = (short)toInt64(field[6]);
+            rec.mTimeInterpolationMethod = C_SHORT(toInt64(field[6]));
 
           if (field[7][0] != '\0')
-            rec.mLevelInterpolationMethod = (short)toInt64(field[7]);
+            rec.mLevelInterpolationMethod = C_SHORT(toInt64(field[7]));
 
           mFmi_parameterDef_records.push_back(rec);
         }
@@ -3540,7 +3540,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
 
         if (c > 1)
         {
-          ushort gridProjection = (ushort)toInt64(field[0]);
+          ushort gridProjection = C_USHORT(toInt64(field[0]));
           switch (gridProjection)
           {
             case T::GridProjectionValue::Unknown:
@@ -3555,10 +3555,10 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               char *geometryName = field[2];
               int ni = toInt64(field[3]);
               int nj = toInt64(field[4]);
-              int longitude = (int)round(toDouble(field[5])*1000000);
-              int latitude = (int)round(toDouble(field[6])*1000000);
-              int iInc = (int)round(toDouble(field[7]) * 1000000);
-              int jInc = (int)round(toDouble(field[8]) * 1000000);
+              int longitude = C_INT(round(toDouble(field[5])*1000000));
+              int latitude = C_INT(round(toDouble(field[6])*1000000));
+              int iInc = C_INT(round(toDouble(field[7]) * 1000000));
+              int jInc = C_INT(round(toDouble(field[8]) * 1000000));
               char *scanningMode = field[9];
               int lastLongitude = longitude + ni*iInc - iInc;
               int lastLatitude = latitude + nj*jInc - jInc;
@@ -3678,13 +3678,13 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               char *geometryName = field[2];
               int ni = toInt64(field[3]);
               int nj = toInt64(field[4]);
-              int longitude = (int)round(toDouble(field[5])*1000000);
-              int latitude = (int)round(toDouble(field[6])*1000000);
-              int iInc = (int)round(toDouble(field[7]) * 1000000);
-              int jInc = (int)round(toDouble(field[8]) * 1000000);
+              int longitude = C_INT(round(toDouble(field[5])*1000000));
+              int latitude = C_INT(round(toDouble(field[6])*1000000));
+              int iInc = C_INT(round(toDouble(field[7]) * 1000000));
+              int jInc = C_INT(round(toDouble(field[8]) * 1000000));
               char *scanningMode = field[9];
-              int longitudeOfSouthernPole = (int)round(toDouble(field[10])*1000000);
-              int latitudeOfSouthernPole = (int)round(toDouble(field[11])*1000000);
+              int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000000));
+              int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000000));
               int lastLongitude = longitude + ni*iInc - iInc;
               int lastLatitude = latitude + nj*jInc - jInc;
               int angle = round(toDouble(field[12]));
@@ -3827,13 +3827,13 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               char *geometryName = field[2];
               int ni = toInt64(field[3]);
               int nj = toInt64(field[4]);
-              int longitude = (int)round(toDouble(field[5])*1000000);
-              int latitude = (int)round(toDouble(field[6])*1000000);
-              int iInc = (int)round(toDouble(field[7]) * 1000);
-              int jInc = (int)round(toDouble(field[8]) * 1000);
+              int longitude = C_INT(round(toDouble(field[5])*1000000));
+              int latitude = C_INT(round(toDouble(field[6])*1000000));
+              int iInc = C_INT(round(toDouble(field[7]) * 1000));
+              int jInc = C_INT(round(toDouble(field[8]) * 1000));
               char *scanningMode = field[9];
-              int orientation = (int)round(toDouble(field[10])*1000000);
-              int laD = (int)round(toDouble(field[11]) * 1000000);
+              int orientation = C_INT(round(toDouble(field[10])*1000000));
+              int laD = C_INT(round(toDouble(field[11]) * 1000000));
 
               // ******* GRIB 2 ********
 
@@ -3931,16 +3931,16 @@ void GridDef::loadGeometryDefinitions(const char *filename)
               char *geometryName = field[2];
               int ni = toInt64(field[3]);
               int nj = toInt64(field[4]);
-              int longitude = (int)round(toDouble(field[5])*1000000);
-              int latitude = (int)round(toDouble(field[6])*1000000);
-              int iInc = (int)(toInt64(field[7]));
-              int jInc = (int)(toInt64(field[8]));
+              int longitude = C_INT(round(toDouble(field[5])*1000000));
+              int latitude = C_INT(round(toDouble(field[6])*1000000));
+              int iInc = C_INT(toInt64(field[7]));
+              int jInc = C_INT(toInt64(field[8]));
               char *scanningMode = field[9];
-              int orientation = (int)round(toDouble(field[10])*1000000);
-              int latin1 = (int)round(toDouble(field[11])*1000000);
-              int latin2 = (int)round(toDouble(field[12])*1000000);
-              int longitudeOfSouthernPole = (int)round(toDouble(field[13])*1000000);
-              int latitudeOfSouthernPole = (int)round(toDouble(field[14])*1000000);
+              int orientation = C_INT(round(toDouble(field[10])*1000000));
+              int latin1 = C_INT(round(toDouble(field[11])*1000000));
+              int latin2 = C_INT(round(toDouble(field[12])*1000000));
+              int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000000));
+              int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000000));
 
               // ******* GRIB 2 ********
 

@@ -554,7 +554,7 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
       default:
       {
         SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
-        exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
+        exception.addParameter("Coordinate Type",std::to_string(coordinateType));
         throw exception;
       }
     }
@@ -1562,7 +1562,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
       default:
       {
         SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
-        exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
+        exception.addParameter("Coordinate Type",std::to_string(coordinateType));
         throw exception;
       }
     }
@@ -1600,7 +1600,7 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
       default:
       {
         SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
-        exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
+        exception.addParameter("Coordinate Type",std::to_string(coordinateType));
         throw exception;
       }
     }
@@ -2231,7 +2231,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
         default:
         {
           SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
-          exception.addParameter("Coordinate Type",std::to_string((int)coordinateType));
+          exception.addParameter("Coordinate Type",std::to_string(coordinateType));
           throw exception;
         }
       }

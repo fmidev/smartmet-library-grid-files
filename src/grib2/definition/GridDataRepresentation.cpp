@@ -21,7 +21,7 @@ namespace GRIB2 {
 GridDataRepresentation::GridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -32,7 +32,7 @@ GridDataRepresentation::GridDataRepresentation(const GridDataRepresentation &oth
     mPacking = other.mPacking;
     mOriginalValues = other.mOriginalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -51,7 +51,7 @@ void GridDataRepresentation::read(MemoryReader &memoryReader) {
     mPacking.read(memoryReader);
     mOriginalValues.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -65,7 +65,7 @@ void GridDataRepresentation::write(DataWriter &dataWriter) {
     mPacking.write(dataWriter);
     mOriginalValues.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -83,7 +83,7 @@ void GridDataRepresentation::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sGridDataRepresentation.", prefix.c_str());
     mOriginalValues.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -100,7 +100,7 @@ void GridDataRepresentation::print(std::ostream &stream, uint level, uint option
     mPacking.print(stream, level + 1, optionFlags);
     mOriginalValues.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -113,7 +113,7 @@ T::Hash GridDataRepresentation::countHash() {
     boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -127,7 +127,7 @@ RepresentationDefinition *GridDataRepresentation::createRepresentationDefinition
   try {
     return static_cast<RepresentationDefinition *>(new GridDataRepresentation(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -137,7 +137,7 @@ PackingSettings *GridDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -147,7 +147,7 @@ OriginalValuesSettings *GridDataRepresentation::getOriginalValues() const {
   try {
     return static_cast<OriginalValuesSettings *>(&mOriginalValues);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -155,7 +155,7 @@ void GridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
@@ -163,7 +163,7 @@ void GridDataRepresentation::setOriginalValues(OriginalValuesSettings &originalV
   try {
     mOriginalValues = originalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, NULL);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 

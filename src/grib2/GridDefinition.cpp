@@ -38,7 +38,6 @@ GridDefinition::GridDefinition()
     mCoordinateTranformation_orig2latlon = nullptr;
     mGlobal = false;
     mGeometryId = 0;
-    getGridHash();
   }
   catch (...)
   {
@@ -1160,7 +1159,7 @@ double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
         return 0;
 
       case 1: // Earth assumed spherical with radius specified by data producer
-        return (1.0 / (1.0 - (*earthSettings.getScaledValueOfEarthMinorAxis() / (*earthSettings.getScaledValueOfEarthMajorAxis()))));
+        return (1.0 / (1.0 - (C_DOUBLE(*earthSettings.getScaledValueOfEarthMinorAxis()) / C_DOUBLE(*earthSettings.getScaledValueOfEarthMajorAxis()))));
 
         return (*earthSettings.getScaledValueOfEarthMinorAxis());
 
@@ -1168,7 +1167,7 @@ double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
         return 1000000 * 1/297.0;
 
       case 3: // Earth assumed oblate spheroid with major and minor axes specified by data producer
-        return (1.0 / (1.0 - (*earthSettings.getScaledValueOfEarthMinorAxis() / (*earthSettings.getScaledValueOfEarthMajorAxis()))));
+        return (1.0 / (1.0 - (C_DOUBLE(*earthSettings.getScaledValueOfEarthMinorAxis()) / C_DOUBLE(*earthSettings.getScaledValueOfEarthMajorAxis()))));
 
       case 4: // Earth assumed oblate spheroid as defined in IAG-GRS80 model (major axis = 6,378,137.0 m, minor axis = 6,356,752.314 m, f = 1/298.257222101)
         return 6356752.314;

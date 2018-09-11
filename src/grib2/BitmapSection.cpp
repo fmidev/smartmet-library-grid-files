@@ -77,7 +77,7 @@ BitmapSection::~BitmapSection()
   try
   {
     if (mReleaseData  &&  mBitmapDataPtr != nullptr)
-      delete mBitmapDataPtr;
+      delete[] mBitmapDataPtr;
 
     mBitmapDataPtr = nullptr;
     mBitmapDataSizeInBytes = 0;
@@ -471,7 +471,7 @@ void BitmapSection::setBitmapData(T::Data_ptr data,std::size_t size)
   {
     if (mReleaseData &&  mBitmapDataPtr != nullptr)
     {
-      delete mBitmapDataPtr;
+      delete[] mBitmapDataPtr;
       mBitmapDataPtr = nullptr;
       mBitmapDataSizeInBytes = 0;
     }
