@@ -227,7 +227,6 @@ void IndexCache::removeOldest()
     time_t oldest = time(nullptr);
     uint idx = 0;
 
-    AutoThreadLock lock(&mThreadLock);
     for (uint t=0; t<sz; t++)
     {
       time_t tt = mTimeVector[t];
