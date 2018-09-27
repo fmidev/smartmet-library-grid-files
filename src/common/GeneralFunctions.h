@@ -34,11 +34,12 @@ float ieee2ibm(float value);
 
 /*
 time_t      localTimeToTimeT(std::string localTime,const char *tzone);
-time_t      utcTimeToTimeT(std::string utcTime);
 std::string utcTimeFromTimeT(time_t t);
 std::string localTimeToUtcTime(std::string localTime,const char *tzone);
 std::string utcTimeToLocalTime(std::string utcTime,const char *tzone);
 */
+
+time_t      utcTimeToTimeT(std::string utcTime);
 std::string localTimeFromTimeT(time_t t,const char *tzone);
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
 std::string localTimeToUtc(std::string localTime,boost::local_time::time_zone_ptr tz);
