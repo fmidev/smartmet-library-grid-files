@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 18.9.26
+Version: 18.10.1
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,8 +11,8 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 18.8.28
-BuildRequires: smartmet-library-spine-devel >= 18.8.30
+BuildRequires: smartmet-library-newbase-devel >= 18.9.29
+BuildRequires: smartmet-library-spine-devel >= 18.9.29
 BuildRequires: boost-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal-devel
@@ -32,8 +32,8 @@ Requires: boost-thread
 Requires: gdal
 Requires: openjpeg
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 18.8.28
-Requires: smartmet-library-spine >= 18.8.30
+Requires: smartmet-library-newbase >= 18.9.29
+Requires: smartmet-library-spine >= 18.9.29
 
 %description
 FMI Grid File handling library
@@ -72,6 +72,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Oct  1 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.10.1-1.fmi
+- New release
 * Wed Sep 26 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.9.26-1.fmi
 - New release
 * Mon Sep 10 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.9.10-1.fmi
