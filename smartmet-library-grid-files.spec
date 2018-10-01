@@ -13,6 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 18.9.29
 BuildRequires: smartmet-library-spine-devel >= 18.9.29
+BuildRequires: smartmet-library-macgyver >= 1.0
 BuildRequires: boost-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal-devel
@@ -33,6 +34,7 @@ Requires: gdal
 Requires: openjpeg
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 18.9.29
+Requires: smartmet-library-macgyver >= 1.0
 Requires: smartmet-library-spine >= 18.9.29
 
 %description

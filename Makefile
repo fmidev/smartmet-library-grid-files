@@ -78,6 +78,7 @@ LIBS = -L$(libdir) \
 	-L/usr/local/lib -lopenjpeg \
 	-lsmartmet-newbase \
 	-lsmartmet-spine \
+	-lsmartmet-macgyver \
 	-lboost_date_time \
 	-lboost_filesystem \
 	-lboost_iostreams \
