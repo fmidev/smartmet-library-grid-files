@@ -1,4 +1,4 @@
-Grid File Library
+Grid Files Library
 ====================
 ## Introduction
 
@@ -10,7 +10,7 @@ The point is that in this way upper libraries, different services and applicatio
 
 
 ## Licence
-The Grid File Library is a part of the SmartMet Server (https://github.com/fmidev/smartmet-server), which is published with MIT-license.
+The Grid Files Library is a part of the SmartMet Server (https://github.com/fmidev/smartmet-server), which is published with MIT-license.
 
 ## How to contribute
 Found a bug? Want to implement a new feature? Your contribution is very welcome!
