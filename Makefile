@@ -86,6 +86,7 @@ LIBS = -L$(libdir) \
 	-lgdal \
 	-lpng \
 	-ljpeg \
+	-laec \
 	-lz
 
 # What to install
