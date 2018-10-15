@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 18.10.1
+Version: 18.10.15
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -12,8 +12,8 @@ Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 18.9.29
-BuildRequires: smartmet-library-spine-devel >= 18.9.29
-BuildRequires: smartmet-library-macgyver >= 1.0
+BuildRequires: smartmet-library-spine-devel >= 18.11.1
+BuildRequires: smartmet-library-macgyver >= 18.9.29
 BuildRequires: boost-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal-devel
@@ -34,8 +34,8 @@ Requires: gdal
 Requires: openjpeg
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 18.9.29
-Requires: smartmet-library-macgyver >= 1.0
-Requires: smartmet-library-spine >= 18.9.29
+Requires: smartmet-library-macgyver >= 18.9.29
+Requires: smartmet-library-spine >= 18.11.1
 
 %description
 FMI Grid File handling library
@@ -74,6 +74,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Oct 15 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.10.15-1.fmi
+- Implemented CCSDS packing
 * Mon Oct  1 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.10.1-1.fmi
 - New release
 * Wed Sep 26 2018 Mika Heiskanen <mika.heiskanen@fmi.fi> - 18.9.26-1.fmi
