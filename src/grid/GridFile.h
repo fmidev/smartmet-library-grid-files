@@ -47,6 +47,7 @@ class GridFile
     virtual uint                getGenerationId() const;
     virtual std::string         getFileName() const;
     virtual time_t              getModificationTime() const;
+    virtual std::string         getDeletionTime() const;
     virtual T::FileType         getFileType() const;
     virtual std::string         getFileTypeString() const;
     virtual time_t              getCheckTime() const;
@@ -73,6 +74,7 @@ class GridFile
     virtual void                setCheckTime(time_t checkTime);
     virtual void                setSourceId(uint sourceId);
     virtual void                setGridFile(uchar fileType);
+    virtual void                setDeletionTime(std::string deletionTime);
 
     std::shared_ptr<GridFile>   getGridFile();
     virtual Message*            getMessageByIndex(std::size_t index);
@@ -87,10 +89,11 @@ class GridFile
 
   protected:
 
-    std::shared_ptr<GridFile>   mGridFile;    // The actual implementation of GRIB1/GRIB2/Virtual-file.
+    std::shared_ptr<GridFile>   mGridFile;              // The actual implementation of GRIB1/GRIB2/Virtual-file.
     std::string                 mFileName;
     uint                        mFileId;
     time_t                      mFileModificationTime;
+    std::string                 mFileDeletionTime;      // The file should not be accessed after this time
     uint                        mGroupFlags;
     uint                        mProducerId;
     uint                        mGenerationId;

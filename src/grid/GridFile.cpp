@@ -46,6 +46,7 @@ GridFile::GridFile(const GridFile& other)
     mFileName = other.mFileName;
     mFileId = other.mFileId;
     mFileModificationTime = other.mFileModificationTime;
+    mFileDeletionTime = other.mFileDeletionTime;
     mGroupFlags = other.mGroupFlags;
     mProducerId = other.mProducerId;
     mGenerationId = other.mGenerationId;
@@ -238,6 +239,25 @@ time_t GridFile::getModificationTime() const
       return mGridFile->getModificationTime();
 
     return mFileModificationTime;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+std::string GridFile::getDeletionTime() const
+{
+  try
+  {
+    if (mGridFile)
+      return mGridFile->getDeletionTime();
+
+    return mFileDeletionTime;
   }
   catch (...)
   {
@@ -486,6 +506,24 @@ void GridFile::setFileId(uint fileId)
     mFileId = fileId;
     if (mGridFile)
       mGridFile->setFileId(fileId);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridFile::setDeletionTime(std::string deletionTime)
+{
+  try
+  {
+    mFileDeletionTime = deletionTime;
+    if (mGridFile)
+      mGridFile->setDeletionTime(deletionTime);
   }
   catch (...)
   {

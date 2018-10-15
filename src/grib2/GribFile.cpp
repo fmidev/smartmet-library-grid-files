@@ -603,6 +603,7 @@ void GribFile::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "GribFile (version 2)\n";
     stream << space(level) << "- fileName         = " << getFileName() << "\n";
     stream << space(level) << "- fileId           = " << mFileId << "\n";
+    stream << space(level) << "- deletionTime     = " << mFileDeletionTime << "\n";
     stream << space(level) << "- groupFlags       = " << mGroupFlags << "\n";
     stream << space(level) << "- producerId       = " << mProducerId << "\n";
     stream << space(level) << "- generationId     = " << mGenerationId << "\n";
