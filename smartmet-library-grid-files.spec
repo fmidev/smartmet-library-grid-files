@@ -18,6 +18,7 @@ BuildRequires: boost-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal-devel
 BuildRequires: make
+BuildRequires: libaec-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libjpeg-turbo-devel
 BuildRequires: openjpeg-devel
@@ -32,6 +33,7 @@ Requires: boost-system
 Requires: boost-thread
 Requires: gdal
 Requires: openjpeg
+Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 18.9.29
 Requires: smartmet-library-macgyver >= 18.9.29
