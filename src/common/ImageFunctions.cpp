@@ -713,4 +713,80 @@ int png_load(const char *_filename,CImage& _image)
 
 
 
+void paintPixel(unsigned long *_image,int _width,int _height,int _x,int _y,uint _color)
+{
+  if (_x >= 0  &&  _x < _width  &&  _y >=0  &&  _y < _height)
+    _image[_y*_width + _x] = _color;
+}
+
+
+
+
+
+void paintLine(unsigned long *_image,int _width,int _height,int _x1,int _y1,int _x2,int _y2,uint _color)
+{
+  int x1 = (int)_x1;
+  int y1 = (int)_y1;
+  int x2 = (int)_x2;
+  int y2 = (int)_y2;
+
+  int dy = (y2 - y1);
+  int dx = (x2 - x1);
+  int stepx = 1;
+  int stepy = 1;
+
+  if (dy < 0)
+  {
+    dy = -dy;
+    stepy = -1;
+  }
+
+  if (dx < 0)
+  {
+    dx = -dx;
+    stepx = -1;
+  }
+
+  dy <<= 1;
+  dx <<= 1;
+
+
+  paintPixel(_image,_width,_height,x1,y1,_color);
+
+  if (dx > dy)
+  {
+    int fraction = dy - (dx >> 1);
+    while (x1 != x2)
+    {
+      if (fraction >= 0)
+      {
+        y1 += stepy;
+        fraction -= dx;
+      }
+      x1 += stepx;
+      fraction += dy;
+      paintPixel(_image,_width,_height,x1,y1,_color);
+    }
+  }
+  else
+  {
+    int fraction = dx - (dy >> 1);
+    while (y1 != y2)
+    {
+      if (fraction >= 0)
+      {
+        x1 += stepx;
+        fraction -= dy;
+      }
+      y1 += stepy;
+      fraction += dx;
+      paintPixel(_image,_width,_height,x1,y1,_color);
+    }
+  }
+}
+
+
+
+
+
 }

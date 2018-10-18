@@ -98,6 +98,7 @@ class GridDef
     bool              getGrib2ParameterDefByName(std::string gribParamName,Grib2ParameterDef& paramDef);
     bool              getGrib2TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef);
 
+    void              getGeometryIdList(std::set<T::GeometryId>& geometryIdList);
     void              getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList);
     bool              getGeometryNameById(T::GeometryId  geometryId,std::string& name);
 

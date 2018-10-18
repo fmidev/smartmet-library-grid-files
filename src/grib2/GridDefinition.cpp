@@ -596,6 +596,8 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
     T::Coordinate_vec originalCoordinates = getGridCoordinates();
     T::Coordinate_vec latLonCoordinates;
 
+    latLonCoordinates.reserve(originalCoordinates.size());
+
     for (auto it = originalCoordinates.begin(); it != originalCoordinates.end(); ++it)
     {
       double lat = it->y();

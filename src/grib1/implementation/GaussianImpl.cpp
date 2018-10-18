@@ -122,6 +122,8 @@ T::Coordinate_vec GaussianImpl::getGridCoordinates() const
 
     double *lats = GRID::gaussianLatitudeCache.getLatitudes(nj,n);
 
+    coordinateList.reserve(ni*nj);
+
     for (uint j=0; j < nj; j++)
     {
       double y = lats[j];

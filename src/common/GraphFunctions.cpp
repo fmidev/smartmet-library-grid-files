@@ -9,6 +9,17 @@ namespace SmartMet
 {
 
 
+#ifndef MIN
+  #define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
+
+#ifndef MAX
+  #define MAX(a,b) (((a)>(b))?(a):(b))
+#endif
+
+
+
+
 static int compare_points(const void *p1, const void *p2)
 {
   const double *v1 = (const double*)p1;
@@ -985,4 +996,555 @@ std::vector<std::vector<T::Coordinate>> getEnlargedPolygonPath(std::vector<std::
   }
 }
 
+
+
+
+
+uint getIsolines(std::vector<float>& d,int width,int height,int ilb,int iub,int jlb,int jub,std::vector<float>& z,T::ContourLine *line,uint maxLines)
+{
+#define xsect(p1,p2) (h[p2]*xh[p1]-h[p1]*xh[p2])/(h[p2]-h[p1])
+#define ysect(p1,p2) (h[p2]*yh[p1]-h[p1]*yh[p2])/(h[p2]-h[p1])
+#define pos(xx,yy) ((yy)*width+(xx))
+
+  try
+  {
+    uint lineCount = 0;
+    int nc = (int)z.size();
+    double x1=0,x2=0,y1=0,y2=0;
+    int m1 = 0;
+    int m2 = 0;
+    int m3 = 0;
+    int case_value = 0;
+
+    double h[5];
+    int sh[5];
+    double xh[5],yh[5];
+    int im[4] = {0,1,1,0},jm[4]={0,0,1,1};
+    int castab[3][3][3] = {
+      { {0,0,8},{0,2,5},{7,6,9} },
+      { {0,3,4},{1,3,1},{4,3,0} },
+      { {9,6,7},{5,2,0},{8,0,0} }
+    };
+
+    for (int j=(jub-1);j>=jlb;j--)
+    {
+      for (int i=ilb;i<=iub-1;i++)
+      {
+        double temp1 = MIN(d[pos(i,j)],d[pos(i,j+1)]);
+        double temp2 = MIN(d[pos(i+1,j)],d[pos(i+1,j+1)]);
+        double dmin  = MIN(temp1,temp2);
+        temp1 = MAX(d[pos(i,j)],d[pos(i,j+1)]);
+        temp2 = MAX(d[pos(i+1,j)],d[pos(i+1,j+1)]);
+        double  dmax  = MAX(temp1,temp2);
+        if (dmax < z[0] || dmin > z[nc-1])
+          continue;
+
+        for (int k=0; k<nc; k++)
+        {
+          if (z[k] < dmin || z[k] > dmax)
+            continue;
+
+          for (int m=4; m>=0; m--)
+          {
+            if (m > 0)
+            {
+              h[m]  = d[pos(i+im[m-1],j+jm[m-1])]-z[k];
+              xh[m] = i+im[m-1];
+              yh[m] = j+jm[m-1];
+            }
+            else
+            {
+              h[0]  = 0.25 * (h[1]+h[2]+h[3]+h[4]);
+              xh[0] = 0.50 * (i+i+1);
+              yh[0] = 0.50 * (j+j+1);
+            }
+
+            if (h[m] > 0.0)
+              sh[m] = 1;
+            else
+            if (h[m] < 0.0)
+              sh[m] = -1;
+            else
+              sh[m] = 0;
+          }
+
+          for (int m=1; m<=4; m++)
+          {
+            m1 = m;
+            m2 = 0;
+
+            if (m != 4)
+              m3 = m + 1;
+            else
+              m3 = 1;
+
+            if ((case_value = castab[sh[m1]+1][sh[m2]+1][sh[m3]+1]) == 0)
+              continue;
+
+            switch (case_value)
+            {
+              case 1:
+                x1 = xh[m1];
+                y1 = yh[m1];
+                x2 = xh[m2];
+                y2 = yh[m2];
+                break;
+
+              case 2:
+                x1 = xh[m2];
+                y1 = yh[m2];
+                x2 = xh[m3];
+                y2 = yh[m3];
+                break;
+
+              case 3:
+                x1 = xh[m3];
+                y1 = yh[m3];
+                x2 = xh[m1];
+                y2 = yh[m1];
+                break;
+
+              case 4:
+                x1 = xh[m1];
+                y1 = yh[m1];
+                x2 = xsect(m2,m3);
+                y2 = ysect(m2,m3);
+                break;
+
+              case 5:
+                x1 = xh[m2];
+                y1 = yh[m2];
+                x2 = xsect(m3,m1);
+                y2 = ysect(m3,m1);
+                break;
+
+              case 6:
+                x1 = xh[m3];
+                y1 = yh[m3];
+                x2 = xsect(m1,m2);
+                y2 = ysect(m1,m2);
+                break;
+
+              case 7:
+                x1 = xsect(m1,m2);
+                y1 = ysect(m1,m2);
+                x2 = xsect(m2,m3);
+                y2 = ysect(m2,m3);
+                break;
+
+              case 8:
+                x1 = xsect(m2,m3);
+                y1 = ysect(m2,m3);
+                x2 = xsect(m3,m1);
+                y2 = ysect(m3,m1);
+                break;
+
+              case 9:
+                x1 = xsect(m3,m1);
+                y1 = ysect(m3,m1);
+                x2 = xsect(m1,m2);
+                y2 = ysect(m1,m2);
+                break;
+
+              default:
+                break;
+            }
+
+            /* Finally draw the line */
+
+            line[lineCount].mX1 = x1;
+            line[lineCount].mY1 = y1;
+            line[lineCount].mX2 = x2;
+            line[lineCount].mY2 = y2;
+
+            //line[lineCount].mLevel = k;
+            //line[lineCount].mValue = z[k];
+            lineCount++;
+
+            if (lineCount == maxLines)
+              return lineCount;
+
+            //lineVectorVector[k].push_back(T::Line(x1,y1,x2,y2));
+            //drawLine(x1,y1,x2,y2,z[k]);
+          }
+        }
+      }
+    }
+    return lineCount;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
+
+
+
+
+
+uint getIsolines(std::vector<double>& d,int width,int height,int ilb,int iub,int jlb,int jub,std::vector<double>& z,T::ContourLine *line,uint maxLines)
+{
+#define xsect(p1,p2) (h[p2]*xh[p1]-h[p1]*xh[p2])/(h[p2]-h[p1])
+#define ysect(p1,p2) (h[p2]*yh[p1]-h[p1]*yh[p2])/(h[p2]-h[p1])
+#define pos(xx,yy) ((yy)*width+(xx))
+
+  try
+  {
+    uint lineCount = 0;
+    int nc = (int)z.size();
+    double x1=0,x2=0,y1=0,y2=0;
+    int m1 = 0;
+    int m2 = 0;
+    int m3 = 0;
+    int case_value = 0;
+    double h[5];
+    int sh[5];
+    double xh[5],yh[5];
+
+    int im[4] = {0,1,1,0},jm[4]={0,0,1,1};
+    int castab[3][3][3] = {
+      { {0,0,8},{0,2,5},{7,6,9} },
+      { {0,3,4},{1,3,1},{4,3,0} },
+      { {9,6,7},{5,2,0},{8,0,0} }
+    };
+
+    for (int j=(jub-1);j>=jlb;j--)
+    {
+      for (int i=ilb;i<=iub-1;i++)
+      {
+        double temp1 = MIN(d[pos(i,j)],d[pos(i,j+1)]);
+        double temp2 = MIN(d[pos(i+1,j)],d[pos(i+1,j+1)]);
+        double dmin  = MIN(temp1,temp2);
+        temp1 = MAX(d[pos(i,j)],d[pos(i,j+1)]);
+        temp2 = MAX(d[pos(i+1,j)],d[pos(i+1,j+1)]);
+        double  dmax  = MAX(temp1,temp2);
+        if (dmax < z[0] || dmin > z[nc-1])
+          continue;
+
+        for (int k=0; k<nc; k++)
+        {
+          if (z[k] < dmin || z[k] > dmax)
+            continue;
+
+          for (int m=4; m>=0; m--)
+          {
+            if (m > 0)
+            {
+              h[m]  = d[pos(i+im[m-1],j+jm[m-1])]-z[k];
+              xh[m] = i+im[m-1];
+              yh[m] = j+jm[m-1];
+            }
+            else
+            {
+              h[0]  = 0.25 * (h[1]+h[2]+h[3]+h[4]);
+              xh[0] = 0.50 * (i+i+1);
+              yh[0] = 0.50 * (j+j+1);
+            }
+
+            if (h[m] > 0.0)
+              sh[m] = 1;
+            else
+            if (h[m] < 0.0)
+              sh[m] = -1;
+            else
+              sh[m] = 0;
+          }
+
+          for (int m=1; m<=4; m++)
+          {
+            m1 = m;
+            m2 = 0;
+
+            if (m != 4)
+              m3 = m + 1;
+            else
+              m3 = 1;
+
+            if ((case_value = castab[sh[m1]+1][sh[m2]+1][sh[m3]+1]) == 0)
+              continue;
+
+            switch (case_value)
+            {
+              case 1:
+                x1 = xh[m1];
+                y1 = yh[m1];
+                x2 = xh[m2];
+                y2 = yh[m2];
+                break;
+
+              case 2:
+                x1 = xh[m2];
+                y1 = yh[m2];
+                x2 = xh[m3];
+                y2 = yh[m3];
+                break;
+
+              case 3:
+                x1 = xh[m3];
+                y1 = yh[m3];
+                x2 = xh[m1];
+                y2 = yh[m1];
+                break;
+
+              case 4:
+                x1 = xh[m1];
+                y1 = yh[m1];
+                x2 = xsect(m2,m3);
+                y2 = ysect(m2,m3);
+                break;
+
+              case 5:
+                x1 = xh[m2];
+                y1 = yh[m2];
+                x2 = xsect(m3,m1);
+                y2 = ysect(m3,m1);
+                break;
+
+              case 6:
+                x1 = xh[m3];
+                y1 = yh[m3];
+                x2 = xsect(m1,m2);
+                y2 = ysect(m1,m2);
+                break;
+
+              case 7:
+                x1 = xsect(m1,m2);
+                y1 = ysect(m1,m2);
+                x2 = xsect(m2,m3);
+                y2 = ysect(m2,m3);
+                break;
+
+              case 8:
+                x1 = xsect(m2,m3);
+                y1 = ysect(m2,m3);
+                x2 = xsect(m3,m1);
+                y2 = ysect(m3,m1);
+                break;
+
+              case 9:
+                x1 = xsect(m3,m1);
+                y1 = ysect(m3,m1);
+                x2 = xsect(m1,m2);
+                y2 = ysect(m1,m2);
+                break;
+
+              default:
+                break;
+            }
+
+            /* Finally draw the line */
+
+            line[lineCount].mX1 = x1;
+            line[lineCount].mY1 = y1;
+            line[lineCount].mX2 = x2;
+            line[lineCount].mY2 = y2;
+            //line[lineCount].mLevel = k;
+            //line[lineCount].mValue = z[k];
+            lineCount++;
+
+            if (lineCount == maxLines)
+              return lineCount;
+
+            //lineVectorVector[k].push_back(T::Line(x1,y1,x2,y2));
+            //drawLine(x1,y1,x2,y2,z[k]);
+          }
+        }
+      }
+    }
+    return lineCount;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
+uint getIsolines(std::vector<float>& d,int width,int height,int ilb,int iub,int jlb,int jub,std::vector<float>& z,std::vector<T::ContourLine_vec>& lineVecVec)
+{
+#define xsect(p1,p2) (h[p2]*xh[p1]-h[p1]*xh[p2])/(h[p2]-h[p1])
+#define ysect(p1,p2) (h[p2]*yh[p1]-h[p1]*yh[p2])/(h[p2]-h[p1])
+#define pos(xx,yy) ((yy)*width+(xx))
+
+  try
+  {
+    uint lineCount = 0;
+    int nc = (int)z.size();
+    for (int t=0; t<nc; t++)
+    {
+      T::ContourLine_vec vec;
+      lineVecVec.push_back(vec);
+    }
+
+    double x1=0,x2=0,y1=0,y2=0;
+    int m1 = 0;
+    int m2 = 0;
+    int m3 = 0;
+    int case_value = 0;
+
+    double h[5];
+    int sh[5];
+    double xh[5],yh[5];
+    int im[4] = {0,1,1,0},jm[4]={0,0,1,1};
+    int castab[3][3][3] = {
+      { {0,0,8},{0,2,5},{7,6,9} },
+      { {0,3,4},{1,3,1},{4,3,0} },
+      { {9,6,7},{5,2,0},{8,0,0} }
+    };
+
+    for (int j=(jub-1);j>=jlb;j--)
+    {
+      for (int i=ilb;i<=iub-1;i++)
+      {
+        double temp1 = MIN(d[pos(i,j)],d[pos(i,j+1)]);
+        double temp2 = MIN(d[pos(i+1,j)],d[pos(i+1,j+1)]);
+        double dmin  = MIN(temp1,temp2);
+        temp1 = MAX(d[pos(i,j)],d[pos(i,j+1)]);
+        temp2 = MAX(d[pos(i+1,j)],d[pos(i+1,j+1)]);
+        double  dmax  = MAX(temp1,temp2);
+        if (dmax < z[0] || dmin > z[nc-1])
+          continue;
+
+        for (int k=0; k<nc; k++)
+        {
+          if (z[k] < dmin || z[k] > dmax)
+            continue;
+
+          for (int m=4; m>=0; m--)
+          {
+            if (m > 0)
+            {
+              h[m]  = d[pos(i+im[m-1],j+jm[m-1])]-z[k];
+              xh[m] = i+im[m-1];
+              yh[m] = j+jm[m-1];
+            }
+            else
+            {
+              h[0]  = 0.25 * (h[1]+h[2]+h[3]+h[4]);
+              xh[0] = 0.50 * (i+i+1);
+              yh[0] = 0.50 * (j+j+1);
+            }
+
+            if (h[m] > 0.0)
+              sh[m] = 1;
+            else
+            if (h[m] < 0.0)
+              sh[m] = -1;
+            else
+              sh[m] = 0;
+          }
+
+          for (int m=1; m<=4; m++)
+          {
+            m1 = m;
+            m2 = 0;
+
+            if (m != 4)
+              m3 = m + 1;
+            else
+              m3 = 1;
+
+            if ((case_value = castab[sh[m1]+1][sh[m2]+1][sh[m3]+1]) == 0)
+              continue;
+
+            switch (case_value)
+            {
+              case 1:
+                x1 = xh[m1];
+                y1 = yh[m1];
+                x2 = xh[m2];
+                y2 = yh[m2];
+                break;
+
+              case 2:
+                x1 = xh[m2];
+                y1 = yh[m2];
+                x2 = xh[m3];
+                y2 = yh[m3];
+                break;
+
+              case 3:
+                x1 = xh[m3];
+                y1 = yh[m3];
+                x2 = xh[m1];
+                y2 = yh[m1];
+                break;
+
+              case 4:
+                x1 = xh[m1];
+                y1 = yh[m1];
+                x2 = xsect(m2,m3);
+                y2 = ysect(m2,m3);
+                break;
+
+              case 5:
+                x1 = xh[m2];
+                y1 = yh[m2];
+                x2 = xsect(m3,m1);
+                y2 = ysect(m3,m1);
+                break;
+
+              case 6:
+                x1 = xh[m3];
+                y1 = yh[m3];
+                x2 = xsect(m1,m2);
+                y2 = ysect(m1,m2);
+                break;
+
+              case 7:
+                x1 = xsect(m1,m2);
+                y1 = ysect(m1,m2);
+                x2 = xsect(m2,m3);
+                y2 = ysect(m2,m3);
+                break;
+
+              case 8:
+                x1 = xsect(m2,m3);
+                y1 = ysect(m2,m3);
+                x2 = xsect(m3,m1);
+                y2 = ysect(m3,m1);
+                break;
+
+              case 9:
+                x1 = xsect(m3,m1);
+                y1 = ysect(m3,m1);
+                x2 = xsect(m1,m2);
+                y2 = ysect(m1,m2);
+                break;
+
+              default:
+                break;
+            }
+
+            /* Finally draw the line */
+
+            T::ContourLine line;
+            line.mX1 = x1;
+            line.mY1 = y1;
+            line.mX2 = x2;
+            line.mY2 = y2;
+            //line.mLevel = k;
+            //line.mValue = z[k];
+            lineVecVec[k].push_back(line);
+            lineCount++;
+
+            //lineVectorVector[k].push_back(T::Line(x1,y1,x2,y2));
+            //drawLine(x1,y1,x2,y2,z[k]);
+          }
+        }
+      }
+    }
+    return lineCount;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+}
+

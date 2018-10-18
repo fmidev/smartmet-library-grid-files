@@ -3452,6 +3452,38 @@ bool GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::
 
 
 
+void GridDef::getGeometryIdList(std::set<T::GeometryId>& geometryIdList)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    for (auto it=mGridDefinitions2.begin(); it!=mGridDefinitions2.end(); ++it)
+    {
+      T::GeometryId geometryId = (*it)->getGridGeometryId();
+      if (geometryIdList.find(geometryId) == geometryIdList.end())
+        geometryIdList.insert(geometryId);
+    }
+
+    for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
+    {
+      T::GeometryId geometryId = (*it)->getGridGeometryId();
+      if (geometryIdList.find(geometryId) == geometryIdList.end())
+        geometryIdList.insert(geometryId);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::GeometryId>& geometryIdList)
 {
   FUNCTION_TRACE

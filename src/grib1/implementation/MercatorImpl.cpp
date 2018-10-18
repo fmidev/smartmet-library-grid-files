@@ -151,6 +151,8 @@ T::Coordinate_vec MercatorImpl::getGridCoordinates() const
 
     mCt_latlon2mercator->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
 
+    coordinateList.reserve(ni*nj);
+
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < nj; j++)
     {

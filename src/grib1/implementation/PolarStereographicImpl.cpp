@@ -158,6 +158,8 @@ T::Coordinate_vec PolarStereographicImpl::getGridCoordinates() const
 
     mCt_latlon2pst->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
 
+    coordinateList.reserve(nx*ny);
+
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < ny; j++)
     {

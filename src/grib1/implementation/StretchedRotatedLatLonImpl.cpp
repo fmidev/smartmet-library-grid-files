@@ -118,6 +118,7 @@ T::Coordinate_vec StretchedRotatedLatLonImpl::getGridCoordinates() const
     if ((scanMode & 0x40) == 0)
       jDirectionIncrement = -jDirectionIncrement;
 
+    coordinateList.reserve(ni*nj);
 
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < nj; j++)

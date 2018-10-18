@@ -86,5 +86,10 @@ uint rgb(uint red, uint green, uint blue);
 
 uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value);
 
+
+void paintPixel(unsigned long *_image,int _width,int _height,int _x,int _y,uint _color);
+
+void paintLine(unsigned long *_image,int _width,int _height,int _x1,int _y1,int _x2,int _y2,uint _color);
+
 }
 

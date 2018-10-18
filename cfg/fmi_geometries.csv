@@ -13,15 +13,15 @@
 1;17;EGRR145073;145;73;-180;-90;2.5;2.5;+x+y;Bracknell global grid;
 1;18;NOAA200200;200;200;5;52;0.2;0.1;+x+y;Cloud parameters from NOAA satellite;
 1;21;GFS0500;720;361;0;90;0.5;0.5;+x-y;Washington global 0,5 degree resolution;
-1;22;GFSMT0500;720;361;0;9;0.5;0.5;+x+y;MTA for Washington global 0,5 degree resolution;
+#1;22;GFSMT0500;720;361;0;9;0.5;0.5;+x+y;MTA for Washington global 0,5 degree resolution;
 1;23;MES7681323;768;1323;19;59;0.018;0.009;+x+y;Dense Meso Analysis Area over Finland;
 1;24;GEM0240;1500;751;180;-90;0.24;0.24;+x+y;Canadian global 0.24 degree resolution forecast;
 1;25;EGRR432325;432;325;0;-90;0.833;0.555;+x+y;Seasonal global forecast model of UK Met-office.;
 1;26;GFS0250;1440;721;0;90;0.25;0.25;+x-y;Washington global 0.25 degree resolution;
 1;33;MES141241;140;240;19;59;0.1;0.05;+x+y;Suomi 5x5 km;
-1;52;ENFUSORHKI;2631;2018;24.58;60.368;0.000235652;0.000116947;+x-y;Enfusor Hki metropolitan area;
-1;53;ENFUSORTAM;1790;1001;23.597;61.535;0.000188268;0.0000899086;+x-y;Enfusor Tampere area;
-1;54;ENFUSORTUR;1926;1212;22.06;60.5;0.000182243;0.0000899336;+x-y;Enfusor Turku area;
+#1;52;ENFUSORHKI;2631;2018;24.58;60.368;0.000235652;0.000116947;+x-y;Enfusor Hki metropolitan area;
+#1;53;ENFUSORTAM;1790;1001;23.597;61.535;0.000188268;0.0000899086;+x-y;Enfusor Tampere area;
+#1;54;ENFUSORTUR;1926;1212;22.06;60.5;0.000182243;0.0000899336;+x-y;Enfusor Turku area;
 1;112;EC0730175000;73;17;180;90;5;5;+x-y;ECM 73x17_5000;
 1;123;EPSORG12144;121;44;-90;90;1.5;1.5;+x-y;ECMWF original EPS-fields;
 1;124;EPS121441500;121;44;-90;25.5;1.5;1.5;+x+y;ECMWF EPS-fields;
@@ -59,7 +59,6 @@
 1;1007;ECGLO0100;3600;1801;0;90;0.1;0.1;+x-y; ECMWF global 0.1 degrees;
 1;1047;MOSKRIGING;1414;533;-61.66;78.24;0.0999985;0.0999985;+x-y;Mos Kriging area over Europe;
 1;1048;ECERAINTERIM;500;251;0;90;0.72;0.72;+x-y;ERA-Interim Global Analysis 500 x 251 0.72 deg;
-1;1052;EGRR432324;432;324;-89.7222;0.416667;0.833;0.555;+x+y;Seasonal global forecast model of UK Met-office.;
 1;1056;ECEUR075;91;65;-22.5;75;0.75;0.75;+x-y;ECMWF europe 0.75 degrees;
 1;1059;VANADIS;2640;3120;9.00417;53.0021;0.00833333;0.00416667;+x+y;Vanadis (icemap2) geometry from 2016;
 1;1060;SILAMAQEUR;700;420;-24.95;30.05;0.1;0.1;+x+y;Silam AQ Europe 0.1;
@@ -74,7 +73,7 @@
 1;1089;ECEURSEASON075;169;95;-45.75;80.25;0.75;0.75;+x-y;ECMWF seasonal forecast for europe;
 
 # ROTATED LATLON : projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,south_pole.x,south_pole.y,angle,description
-2;14;SMHIMESAN;246;268;-0.4;-11.5;0.1;0.1;+x+y;-0.01;-0.03;0;SMHI mesoanalysis area;
+#2;14;SMHIMESAN;246;268;-0.4;-11.5;0.1;0.1;+x+y;-0.01;-0.03;0;SMHI mesoanalysis area;
 2;51;ANAL1210200;121;121;-3;-7.8;0.2;0.2;+x+y;0;-30;0;Mesoanalyysi Fennoskandia;
 2;100;EUR194140200;194;140;-9;-11.4;0.2;0.2;+x+y;0;-30;0;Mesohirlam, EUR;
 2;101;EUU194140200;194;140;-8.9;-11.4;0.2;0.2;+x+y;0;-30;0;Mesohirlam, EUR, shift for u wind;
@@ -132,23 +131,23 @@
 13;1094;O80;80;0;90;+x-y;80;{20,24,28,32,36,40,44,48,52,56,60,64,68,72,76,80,84,88,92,96,100,104,108,112,116,120,124,128,132,136,140,144,148,152,156,160,164,168,172,176,180,184,188,192,196,200,204,208,212,216,220,224,228,232,236,240,244,248,252,256,260,264,268,272,276,280,284,288,292,296,300,304,308,312,316,320,324,328,332,336,336,332,328,324,320,316,312,308,304,300,296,292,288,284,280,276,272,268,264,260,256,252,248,244,240,236,232,228,224,220,216,212,208,204,200,196,192,188,184,180,176,172,168,164,160,156,152,148,144,140,136,132,128,124,120,116,112,108,104,100,96,92,88,84,80,76,72,68,64,60,56,52,48,44,40,36,32,28,24,20};Octahedral test grid with 80 latitude lines between pole and equator;
 
 # POLAR STEREOGRAPHIC : projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,orientation,laD,description
-9;20;MTSKAPS22;94;109;6;51.3;22;22;+x+y;20;60.0;Polaaristereografinen Fennoskandian alue 22 km;
+#9;20;MTSKAPS22;94;109;6;51.3;22;22;+x+y;20;60.0;Polaaristereografinen Fennoskandian alue 22 km;
 9;39;LAPS1000;400;300;20.744;59.736;1000;1000;+x+y;20;60.0;LAPS Analysis Area over Finland;
 9;40;LAPS3000;270;400;17.8051;59.3791;3000;3000;+x+y;20;60.0;LAPS Analysis Area over Finland;
 9;41;LAPSSCAN;490;560;7.17828;54.2871;3000;3000;+x+y;20;60.0;LAPS Analysis Area over Scandinavia;
-9;42;KALLAPS3;685;765;5.941;51.058;3;3;+x+y;20;60.0;Suomi 3x3 km;
+#9;42;KALLAPS3;685;765;5.941;51.058;3;3;+x+y;20;60.0;Suomi 3x3 km;
 9;211;MTHIPS50;144;120;-35.7;25.6;50;50;+x+y;0;60.0;Polar stereographic area covering most of HIR;
 9;212;MTEUPS20;175;135;-12.4;49;20;20;+x+y;0;60.0;Polar stereographic area covering most of EUR;
 9;213;MTHIPS25;290;225;-19.3;24.9;25000;25000;+x+y;10;60.0;Polar stereographic area covering most of RCR;
 9;214;MTHIPS125;58;45;-19.3;24.9;125;125;+x+y;10;60.0;Polar stereographic area covering most of RCR;
-9;238;MTSKAPS33;63;73;6;51.3;33;33;+x+y;20;60.0;Polaaristereografinen Fennoskandian alue 33 km;
-9;239;MTSKAPS66;32;37;6;51.3;66;66;+x+y;20;60.0;Polaaristereografinen Fennoskandian alue 66 km;
-9;281;ILA50500400;50;50;24.729;60.14;0.4;0.4;+x+y;0;60.0;ILA 50x50 400m;
-9;505;NETE1000;775;665;17.53;57.93;1;1;+x+y;0;60.0;Nordrad Etela2 665x775;
+#9;238;MTSKAPS33;63;73;6;51.3;33;33;+x+y;20;60.0;Polaaristereografinen Fennoskandian alue 33 km;
+#9;239;MTSKAPS66;32;37;6;51.3;66;66;+x+y;20;60.0;Polaaristereografinen Fennoskandian alue 66 km;
+#9;281;ILA50500400;50;50;24.729;60.14;0.4;0.4;+x+y;0;60.0;ILA 50x50 400m;
+#9;505;NETE1000;775;665;17.53;57.93;1;1;+x+y;0;60.0;Nordrad Etela2 665x775;
 9;506;NKESKI1000;775;565;17.3;61.16;1;1;+x+y;0;60.0;Nordrad Keski2 565x775;
 9;507;NPOHJO2000;275;290;18.55;64.04;2;2;+x+y;0;60.0;Nordrad Pohjo2 290x275;
 9;508;NNORDEN4000;374;431;9;52.4;4;4;+x+y;0;60.0;Nordrad Finorden 431x374;
-9;610;NEMO609719;609;719;-85.9766;41.1385;12.5;12.5;+x+y;-45;60.0;Polar stereographic area;
+#9;610;NEMO609719;609;719;-85.9766;41.1385;12.5;12.5;+x+y;-45;60.0;Polar stereographic area;
 9;901;OSI_NO_AHL;1260;900;-40.173;37.345;5000;5000;+x+y;0;60.0;OSI North Atlantic from met.no;
 9;1043;MOSLAPS;980;840;354.093;30.3273;5000;5000;+x+y;20;60.0;MOS ECMWF LAPS gridded dataset;
 9;1057;ERASCAND;28;31;6;51.3;76000;76000;+x+y;20;60.0;ERA Interim area for Smartmet Scandinavia editor;

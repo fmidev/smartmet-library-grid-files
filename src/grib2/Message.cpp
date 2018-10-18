@@ -343,6 +343,8 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
     sprintf(name,"%smessage[%u].gridColumns",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGridOriginalColumnCount()));
 
+    sprintf(name,"%smessage[%u].WKT",prefix.c_str(),mMessageIndex);
+    attributeList.addAttribute(name,getWKT());
 
     sprintf(name,"%smessage[%u].",prefix.c_str(),mMessageIndex);
 
@@ -2095,18 +2097,14 @@ std::string Message::getWKT() const
   try
   {
     std::string wkt;
-/*
     T::SpatialRef *sr = getSpatialReference();
     if (sr != nullptr)
     {
-      char *res = nullptr;
-      if (sr->exportToWkt((char**)&res))
-      {
-        wkt = res;
-        CPLFree(res);
-      }
+      char *out = nullptr;
+      sr->exportToWkt(&out);
+      wkt = out;
+      OGRFree(out);
     }
-*/
     return wkt;
   }
   catch (...)
@@ -2954,6 +2952,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- gridLayout               = " << T::get_gridLayoutString(getGridLayout()) << "\n";
     stream << space(level) << "- gridOriginalRowCount     = " << toString(getGridOriginalRowCount()) << "\n";
     stream << space(level) << "- gridOriginalColumnCount  = " << toString(getGridOriginalColumnCount()) << "\n";
+    stream << space(level) << "- WKT                      = " << getWKT() << "\n";
 
     if (mIndicatorSection)
       mIndicatorSection->print(stream,level+1,optionFlags);
