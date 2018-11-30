@@ -20,6 +20,7 @@ class FmiParameterId_grib
     T::ParamId      mFmiParameterId;
     T::ParamId      mGribParameterId;
     std::string     mConversionFunction;
+    std::string     mReverseConversionFunction;
 };
 
 

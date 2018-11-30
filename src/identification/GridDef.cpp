@@ -2258,6 +2258,9 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
           if (field[2][0] != '\0')
             rec.mConversionFunction = field[2];
 
+          if (c > 3 && field[3][0] != '\0')
+            rec.mReverseConversionFunction = field[3];
+
           mFmi_parametersFromGrib_records.push_back(rec);
         }
       }
@@ -2512,6 +2515,9 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
 
           if (field[2][0] != '\0')
             rec.mConversionFunction = field[2];
+
+          if (c > 3 && field[3][0] != '\0')
+            rec.mReverseConversionFunction = field[3];
 
           mFmi_parametersFromNewbase_records.push_back(rec);
         }
@@ -2920,6 +2926,7 @@ void GridDef::loadFmiProducerId_grib(const char *filename)
 
 bool GridDef::getGridLatLonAreaByGeometryId(T::GeometryId geometryId,T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
+  FUNCTION_TRACE
   try
   {
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
@@ -2948,6 +2955,7 @@ bool GridDef::getGridLatLonAreaByGeometryId(T::GeometryId geometryId,T::Coordina
 
 bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double& width,double& height)
 {
+  FUNCTION_TRACE
   try
   {
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
@@ -2980,6 +2988,7 @@ bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double
 
 T::Coordinate_vec GridDef::getGridCoordinatesByGeometryId(T::GeometryId  geometryId)
 {
+  FUNCTION_TRACE
   try
   {
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
@@ -3007,6 +3016,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  g
 {
   try
   {
+    FUNCTION_TRACE
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
     if (g2 != nullptr)
     {
@@ -3503,6 +3513,11 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
         if (geometryIdList.find(geometryId) == geometryIdList.end())
           geometryIdList.insert(geometryId);
       }
+      else
+      {
+        //if ((*it)->getGridGeometryId() == 1078)
+        //  printf("*** Not found %f,%f\n",lat,lon);
+      }
     }
 
     for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
@@ -3515,6 +3530,11 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
         T::GeometryId geometryId = (*it)->getGridGeometryId();
         if (geometryIdList.find(geometryId) == geometryIdList.end())
           geometryIdList.insert(geometryId);
+      }
+      else
+      {
+        //if ((*it)->getGridGeometryId() == 1078)
+        //  printf("*** NOT FOUND %f,%f\n",lat,lon);
       }
     }
   }

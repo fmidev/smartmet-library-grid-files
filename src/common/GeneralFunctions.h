@@ -31,9 +31,10 @@ uint stringToId(const char *str);
 float ibm2ieee(float ibmFloat);
 float ieee2ibm(float value);
 
+int timePeriodToSeconds(const char *timePeriod);
 
+time_t localTimeToTimeT(std::string localTime,const char *tzone);
 /*
-time_t      localTimeToTimeT(std::string localTime,const char *tzone);
 std::string utcTimeFromTimeT(time_t t);
 std::string localTimeToUtcTime(std::string localTime,const char *tzone);
 std::string utcTimeToLocalTime(std::string utcTime,const char *tzone);
@@ -103,6 +104,17 @@ void splitString(const char *str,char separator,std::vector<std::string>& partLi
 void splitString(std::string str,char separator,std::vector<std::string>& partList);
 void splitString(const char *str,char separator,std::set<std::string>& partList);
 void splitString(std::string str,char separator,std::set<std::string>& partList);
+void splitString(const char *str,char separator,std::set<float>& partList);
+void splitString(std::string str,char separator,std::set<float>& partList);
+void splitString(const char *str,char separator,std::set<double>& partList);
+void splitString(std::string str,char separator,std::set<double>& partList);
+
+std::string toString(std::list<std::string>& parts,char separator);
+std::string toString(std::set<int>& parts,char separator);
+std::string toString(std::set<float>& parts,char separator);
+std::string toString(T::AreaCoordinates& coordinates,char separator1,char separator2);
+
+void parseCoordinates(std::string coordinateStr,char separator1,char separator2,T::AreaCoordinates& coordinates);
 
 
 bool patternMatch(const char *str,std::vector<std::string>& patterns);

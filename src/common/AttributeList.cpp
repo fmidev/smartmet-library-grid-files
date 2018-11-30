@@ -13,6 +13,7 @@ AttributeList::AttributeList()
 {
   try
   {
+    mCaseSensitive = true;
   }
   catch (...)
   {
@@ -23,7 +24,8 @@ AttributeList::AttributeList()
 
 
 
-AttributeList::AttributeList(AttributeList& attributeList)
+
+AttributeList::AttributeList(const AttributeList& attributeList)
 {
   try
   {
@@ -31,7 +33,7 @@ AttributeList::AttributeList(AttributeList& attributeList)
     for (uint t=0; t<size; t++)
     {
       Attribute *attr = attributeList.getAttributeByIndex(t);
-      attributeVector.push_back(attr->duplicate());
+      mAttributeVector.push_back(attr->duplicate());
     }
   }
   catch (...)
@@ -48,7 +50,13 @@ AttributeList::~AttributeList()
 {
   try
   {
-    clear();
+    uint size = getLength();
+    for (uint t=0; t<size; t++)
+    {
+      Attribute *attr = mAttributeVector.at(t);
+      delete attr;
+    }
+    mAttributeVector.clear();
   }
   catch (...)
   {
@@ -61,7 +69,7 @@ AttributeList::~AttributeList()
 
 
 
-AttributeList& AttributeList::operator=(AttributeList& attributeList)
+AttributeList& AttributeList::operator=(const AttributeList& attributeList)
 {
   try
   {
@@ -74,7 +82,7 @@ AttributeList& AttributeList::operator=(AttributeList& attributeList)
     for (uint t=0; t<size; t++)
     {
       Attribute *attr = attributeList.getAttributeByIndex(t);
-      attributeVector.push_back(attr->duplicate());
+      mAttributeVector.push_back(attr->duplicate());
     }
     return *this;
   }
@@ -91,7 +99,7 @@ void  AttributeList::addAttribute(Attribute *attribute)
 {
   try
   {
-    attributeVector.push_back(attribute);
+    mAttributeVector.push_back(attribute);
   }
   catch (...)
   {
@@ -134,6 +142,76 @@ void AttributeList::addAttribute(std::string name,std::string value)
 
 
 
+void AttributeList::setAttribute(const char *name,std::string value)
+{
+  try
+  {
+    uint size = getLength();
+    for (uint t=0; t<size; t++)
+    {
+      Attribute *attr = mAttributeVector.at(t);
+      if ((mCaseSensitive  &&  attr->mName == name) || (!mCaseSensitive  &&  strcasecmp(attr->mName.c_str(),name) == 0))
+      {
+        attr->mValue = value;
+        return;
+      }
+    }
+
+    addAttribute(new Attribute(std::string(name),value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void AttributeList::setAttribute(std::string name,std::string value)
+{
+  try
+  {
+    uint size = getLength();
+    for (uint t=0; t<size; t++)
+    {
+      Attribute *attr = mAttributeVector.at(t);
+      if ((mCaseSensitive  &&  attr->mName == name) || (!mCaseSensitive  &&  strcasecmp(attr->mName.c_str(),name.c_str()) == 0))
+      {
+        attr->mValue = value;
+        return;
+      }
+    }
+
+    addAttribute(new Attribute(std::string(name),value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void AttributeList::setCaseSensitive(bool caseSensitive)
+{
+  try
+  {
+    mCaseSensitive = caseSensitive;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void AttributeList::clear()
 {
   try
@@ -141,10 +219,10 @@ void AttributeList::clear()
     uint size = getLength();
     for (uint t=0; t<size; t++)
     {
-      Attribute *attr = attributeVector.at(t);
+      Attribute *attr = mAttributeVector.at(t);
       delete attr;
     }
-    attributeVector.clear();
+    mAttributeVector.clear();
   }
   catch (...)
   {
@@ -155,11 +233,12 @@ void AttributeList::clear()
 
 
 
-unsigned int AttributeList::getLength()
+
+unsigned int AttributeList::getLength() const
 {
   try
   {
-    return (unsigned int)attributeVector.size();
+    return (unsigned int)mAttributeVector.size();
   }
   catch (...)
   {
@@ -171,15 +250,15 @@ unsigned int AttributeList::getLength()
 
 
 
-Attribute* AttributeList::getAttribute(const char *name)
+Attribute* AttributeList::getAttribute(const char *name) const
 {
   try
   {
     uint size = getLength();
     for (uint t=0; t<size; t++)
     {
-      Attribute *attr = attributeVector.at(t);
-      if (attr->mName == name)
+      Attribute *attr = mAttributeVector.at(t);
+      if ((mCaseSensitive  &&  attr->mName == name) || (!mCaseSensitive  &&  strcasecmp(attr->mName.c_str(),name) == 0))
         return attr;
     }
     return nullptr;
@@ -193,13 +272,37 @@ Attribute* AttributeList::getAttribute(const char *name)
 
 
 
-Attribute* AttributeList::getAttributeByIndex(unsigned int index)
+
+size_t AttributeList::getAttributeValues(const char *name,std::vector<std::string>& values) const
+{
+  try
+  {
+    uint size = getLength();
+    for (uint t=0; t<size; t++)
+    {
+      Attribute *attr = mAttributeVector.at(t);
+      if ((mCaseSensitive  &&  attr->mName == name) || (!mCaseSensitive  &&  strcasecmp(attr->mName.c_str(),name) == 0))
+        values.push_back(attr->mValue);
+    }
+    return values.size();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+Attribute* AttributeList::getAttributeByIndex(unsigned int index) const
 {
   try
   {
     if (index < getLength())
     {
-      Attribute *attr = attributeVector.at(index);
+      Attribute *attr = mAttributeVector.at(index);
       return attr;
     }
 
@@ -214,13 +317,13 @@ Attribute* AttributeList::getAttributeByIndex(unsigned int index)
 
 
 
-const char* AttributeList::getAttributeNameByIndex(unsigned int index)
+const char* AttributeList::getAttributeNameByIndex(unsigned int index) const
 {
   try
   {
     if (index < getLength())
     {
-      Attribute *attr = attributeVector.at(index);
+      Attribute *attr = mAttributeVector.at(index);
       return attr->mName.c_str();
     }
 
@@ -236,15 +339,15 @@ const char* AttributeList::getAttributeNameByIndex(unsigned int index)
 
 
 
-const char* AttributeList::getAttributeValue(const char *name)
+const char* AttributeList::getAttributeValue(const char *name) const
 {
   try
   {
     uint size = getLength();
     for (uint t=0; t<size; t++)
     {
-      Attribute *attr = attributeVector.at(t);
-      if (attr->mName == name)
+      Attribute *attr = mAttributeVector.at(t);
+      if ((mCaseSensitive  &&  attr->mName == name) || (!mCaseSensitive  &&  strcasecmp(attr->mName.c_str(),name) == 0))
         return attr->mValue.c_str();
     }
     return nullptr;
@@ -259,13 +362,13 @@ const char* AttributeList::getAttributeValue(const char *name)
 
 
 
-const char* AttributeList::getAttributeValueByIndex(unsigned int index)
+const char* AttributeList::getAttributeValueByIndex(unsigned int index) const
 {
   try
   {
     if (index < getLength())
     {
-      Attribute *attr = attributeVector.at(index);
+      Attribute *attr = mAttributeVector.at(index);
       return attr->mValue.c_str();
     }
 
@@ -281,7 +384,7 @@ const char* AttributeList::getAttributeValueByIndex(unsigned int index)
 
 
 
-void AttributeList::print(std::ostream& stream,uint level,uint optionFlags)
+void AttributeList::print(std::ostream& stream,uint level,uint optionFlags) const
 {
   try
   {
@@ -289,7 +392,7 @@ void AttributeList::print(std::ostream& stream,uint level,uint optionFlags)
     stream << space(level) << "AttributeList\n";
     for (uint t=0; t<size; t++)
     {
-      Attribute *attr = attributeVector.at(t);
+      Attribute *attr = mAttributeVector.at(t);
       stream << space(level) << "- " << attr->mName << " = " << attr->mValue << "\n";
     }
   }

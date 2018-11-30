@@ -20,6 +20,7 @@ class FmiParameterId_newbase
     T::ParamId      mFmiParameterId;
     T::ParamId      mNewbaseParameterId;
     std::string     mConversionFunction;
+    std::string     mReverseConversionFunction;
 };
 
 

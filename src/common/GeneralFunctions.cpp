@@ -1393,6 +1393,108 @@ void splitString(std::string str, char separator, std::vector<float> &partList)
   }
 }
 
+void splitString(const char *str, char separator, std::set<float> &partList)
+{
+  try
+  {
+    char buf[10000];
+    uint c = 0;
+    char *p = const_cast<char *>(str);
+
+    bool ind = false;
+    while (*p != '\0' && *p != '\n' && c < 10000)
+    {
+      if (*p == '"') ind = !ind;
+
+      if (*p == separator && !ind)
+      {
+        buf[c] = '\0';
+        partList.insert(toDouble(buf));
+        c = 0;
+      }
+      else
+      {
+        buf[c] = *p;
+        c++;
+      }
+      p++;
+    }
+    if (c > 0)
+    {
+      buf[c] = '\0';
+      partList.insert(toDouble(buf));
+    }
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+void splitString(std::string str, char separator, std::set<float> &partList)
+{
+  try
+  {
+    splitString(str.c_str(), separator, partList);
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+void splitString(const char *str, char separator, std::set<double> &partList)
+{
+  try
+  {
+    char buf[10000];
+    uint c = 0;
+    char *p = const_cast<char *>(str);
+
+    bool ind = false;
+    while (*p != '\0' && *p != '\n' && c < 10000)
+    {
+      if (*p == '"') ind = !ind;
+
+      if (*p == separator && !ind)
+      {
+        buf[c] = '\0';
+        partList.insert(toDouble(buf));
+        c = 0;
+      }
+      else
+      {
+        buf[c] = *p;
+        c++;
+      }
+      p++;
+    }
+    if (c > 0)
+    {
+      buf[c] = '\0';
+      partList.insert(toDouble(buf));
+    }
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+void splitString(std::string str, char separator, std::set<double> &partList)
+{
+  try
+  {
+    splitString(str.c_str(), separator, partList);
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
 std::string getAbsoluteFilePath(std::string filename)
 {
   try
@@ -1524,5 +1626,193 @@ void getFileList(const char *dirName,
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
+
+
+
+int timePeriodToSeconds(const char *timePeriod)
+{
+  try
+  {
+    char tmp[100];
+    strcpy(tmp,timePeriod);
+    char *p = strcasestr(tmp,"s");
+    if (p != nullptr)
+    {
+      *p = '\0';
+      return atoi(tmp);
+    }
+    else
+    {
+      char *p = strcasestr(tmp,"m");
+      if (p != nullptr)
+      {
+        *p = '\0';
+        return (atoi(tmp) * 60);
+      }
+      else
+      {
+        char *p = strcasestr(tmp,"h");
+        if (p != nullptr)
+        {
+          *p = '\0';
+          return (atoi(tmp) * 3600);
+        }
+        else
+        {
+          char *p = strcasestr(tmp,"d");
+          if (p != nullptr)
+          {
+            *p = '\0';
+            return (atoi(tmp) * 3600*24);
+          }
+          else
+          {
+            return (atoi(tmp) * 60);
+          }
+        }
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+std::string toString(std::list<std::string>& parts,char separator)
+{
+  try
+  {
+    std::ostringstream output;
+    for (auto s = parts.begin(); s != parts.end(); ++s)
+    {
+      if (s != parts.begin())
+        output << separator;
+
+      output << *s;
+    }
+    return output.str();
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+std::string toString(std::set<int>& parts,char separator)
+{
+  try
+  {
+    std::ostringstream output;
+    for (auto s = parts.begin(); s != parts.end(); ++s)
+    {
+      if (s != parts.begin())
+        output << separator;
+
+      output << *s;
+    }
+    return output.str();
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+std::string toString(std::set<float>& parts,char separator)
+{
+  try
+  {
+    std::ostringstream output;
+    for (auto s = parts.begin(); s != parts.end(); ++s)
+    {
+      if (s != parts.begin())
+        output << separator;
+
+      output << *s;
+    }
+    return output.str();
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+std::string toString(T::AreaCoordinates& coordinates,char separator1,char separator2)
+{
+  try
+  {
+    std::ostringstream output;
+    for (auto s = coordinates.begin(); s != coordinates.end(); ++s)
+    {
+      if (s != coordinates.begin())
+        output << separator2;
+
+      for (auto a = s->begin(); a != s->end(); ++a)
+      {
+        if (a != s->begin())
+          output << separator1;
+
+        output << a->x() << separator1 << a->y();
+      }
+    }
+    return output.str();
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+void parseCoordinates(std::string coordinateStr,char separator1,char separator2,T::AreaCoordinates& coordinates)
+{
+  try
+  {
+    std::vector<std::string> partList;
+
+    splitString(coordinateStr,separator2,partList);
+    for (auto it = partList.begin(); it != partList.end(); ++it)
+    {
+      T::Coordinate_vec coordinateList;
+
+      std::vector<double> cList;
+      splitString(*it,separator1,cList);
+      size_t sz = cList.size();
+      if ((sz % 2) == 0)
+      {
+        for (size_t t=0; t<sz; t=t+2)
+          coordinateList.push_back(T::Coordinate(cList[t],cList[t+1]));
+      }
+      coordinates.push_back(coordinateList);
+    }
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
 
 }  // Namespace SmartMet

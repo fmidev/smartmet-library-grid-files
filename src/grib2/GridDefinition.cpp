@@ -205,14 +205,24 @@ bool GridDefinition::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& top
     double lon[4] = {0};
 
     if (getGridLatLonCoordinatesByGridPoint(0,0,lat[0],lon[0]) &&
-        getGridLatLonCoordinatesByGridPoint(d.nx(),0,lat[1],lon[1]) &&
-        getGridLatLonCoordinatesByGridPoint(0,d.ny(),lat[2],lon[2]) &&
-        getGridLatLonCoordinatesByGridPoint(d.nx(),d.ny(),lat[3],lon[3]))
+        getGridLatLonCoordinatesByGridPoint(d.nx()-1,0,lat[1],lon[1]) &&
+        getGridLatLonCoordinatesByGridPoint(0,d.ny()-1,lat[2],lon[2]) &&
+        getGridLatLonCoordinatesByGridPoint(d.nx()-1,d.ny()-1,lat[3],lon[3]))
     {
-      topLeft.set(lon[0],lat[0]);
-      topRight.set(lon[1],lat[1]);
-      bottomLeft.set(lon[2],lat[2]);
-      bottomRight.set(lon[3],lat[3]);
+      if (lat[0] > lat[2])
+      {
+        topLeft.set(lon[0],lat[0]);
+        topRight.set(lon[1],lat[1]);
+        bottomLeft.set(lon[2],lat[2]);
+        bottomRight.set(lon[3],lat[3]);
+      }
+      else
+      {
+        bottomLeft.set(lon[0],lat[0]);
+        bottomRight.set(lon[1],lat[1]);
+        topLeft.set(lon[2],lat[2]);
+        topRight.set(lon[3],lat[3]);
+      }
       return true;
     }
     return false;

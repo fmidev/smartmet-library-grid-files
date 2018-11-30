@@ -31,6 +31,7 @@ FmiParameterId_grib::FmiParameterId_grib(const FmiParameterId_grib& parameter)
     mFmiParameterId = parameter.mFmiParameterId;
     mGribParameterId = parameter.mGribParameterId;
     mConversionFunction = parameter.mConversionFunction;
+    mReverseConversionFunction = parameter.mReverseConversionFunction;
   }
   catch (...)
   {
@@ -63,9 +64,10 @@ void FmiParameterId_grib::print(std::ostream& stream,uint level,uint optionFlags
   try
   {
     stream << space(level) << "FmiParameterId_grib\n";
-    stream << space(level) << "- mFmiParameterId      = " << mFmiParameterId << "\n";
-    stream << space(level) << "- mGribParameterId  = " << mGribParameterId << "\n";
-    stream << space(level) << "- mConversionFunction  = " << mConversionFunction << "\n";
+    stream << space(level) << "- mFmiParameterId             = " << mFmiParameterId << "\n";
+    stream << space(level) << "- mGribParameterId            = " << mGribParameterId << "\n";
+    stream << space(level) << "- mConversionFunction         = " << mConversionFunction << "\n";
+    stream << space(level) << "- mReverseConversionFunction  = " << mReverseConversionFunction << "\n";
   }
   catch (...)
   {

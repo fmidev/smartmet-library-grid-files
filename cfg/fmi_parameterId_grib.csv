@@ -4,6 +4,7 @@
 # 1) FmiParameterId
 # 2) GribParameterId
 # 3) ConversionFunction
+# 4) ReverseConversionFunction
 #
 
 # Minimum temperature at 2m since previous post-processing

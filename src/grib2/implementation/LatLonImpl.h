@@ -35,6 +35,18 @@ class LatLonImpl : public LatLon
     void              initSpatialReference();
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
     void              read(MemoryReader& memoryReader);
+
+  private:
+
+    void              init() const;
+
+    mutable uint      mNi;
+    mutable uint      mNj;
+    mutable double    mDx;
+    mutable double    mDy;
+    mutable double    mStartX;
+    mutable double    mStartY;
+    mutable bool      mInitialized;
 };
 
 

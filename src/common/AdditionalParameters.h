@@ -29,7 +29,7 @@ class AdditionalParameters
 
     virtual     ~AdditionalParameters();
 
-    bool        isAdditionalParameter(const char *parameterName);
+    static bool isAdditionalParameter(const char *parameterName);
 
     bool        getParameterValueByLocation(
                     std::string parameterName,

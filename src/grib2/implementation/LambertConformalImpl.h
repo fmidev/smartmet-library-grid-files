@@ -38,6 +38,15 @@ class LambertConformalImpl : public LambertConformal
     mutable OGRCoordinateTransformation*  mCt_latlon2lambert;
     mutable OGRCoordinateTransformation*  mCt_lambert2latlon;
 
+  private:
+
+    void              init() const;
+
+    mutable double    mDxx;
+    mutable double    mDyy;
+    mutable double    mStartX;
+    mutable double    mStartY;
+    mutable bool      mInitialized;
 };
 
 

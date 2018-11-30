@@ -9,6 +9,14 @@ namespace SmartMet
 
 DataWriter::DataWriter()
 {
+  try
+  {
+    littleEndian = false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -26,6 +34,22 @@ DataWriter::~DataWriter()
 ulonglong DataWriter::getWritePosition()
 {
   throw SmartMet::Spine::Exception(BCP,"Not implemented!",nullptr);
+}
+
+
+
+
+
+void DataWriter::setLittleEndian(bool _littleEndian)
+{
+  try
+  {
+    littleEndian = _littleEndian;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -88,8 +112,16 @@ void DataWriter::write_uint16(std::uint16_t _value)
   try
   {
     uchar v[2];
-    v[0] = C_UCHAR((_value & 0xFF00) >> 8);
-    v[1] = C_UCHAR((_value & 0xFF));
+    if (littleEndian)
+    {
+      v[1] = C_UCHAR((_value & 0xFF00) >> 8);
+      v[0] = C_UCHAR((_value & 0xFF));
+    }
+    else
+    {
+      v[0] = C_UCHAR((_value & 0xFF00) >> 8);
+      v[1] = C_UCHAR((_value & 0xFF));
+    }
 
     write_data(v,2);
   }
@@ -108,9 +140,18 @@ void DataWriter::write_uint24(std::uint32_t _value)
   try
   {
     uchar v[3];
-    v[0] = C_UCHAR((_value & 0xFF0000) >> 16);
-    v[1] = C_UCHAR((_value & 0xFF00) >> 8);
-    v[2] = C_UCHAR((_value & 0xFF));
+    if (littleEndian)
+    {
+      v[2] = C_UCHAR((_value & 0xFF0000) >> 16);
+      v[1] = C_UCHAR((_value & 0xFF00) >> 8);
+      v[0] = C_UCHAR((_value & 0xFF));
+    }
+    else
+    {
+      v[0] = C_UCHAR((_value & 0xFF0000) >> 16);
+      v[1] = C_UCHAR((_value & 0xFF00) >> 8);
+      v[2] = C_UCHAR((_value & 0xFF));
+    }
 
     write_data(v,3);
   }
@@ -129,10 +170,20 @@ void DataWriter::write_uint32(std::uint32_t _value)
   try
   {
     uchar v[4];
-    v[0] = C_UCHAR((_value & 0xFF000000) >> 24);
-    v[1] = C_UCHAR((_value & 0xFF0000) >> 16);
-    v[2] = C_UCHAR((_value & 0xFF00) >> 8);
-    v[3] = C_UCHAR((_value & 0xFF));
+    if (littleEndian)
+    {
+      v[3] = C_UCHAR((_value & 0xFF000000) >> 24);
+      v[2] = C_UCHAR((_value & 0xFF0000) >> 16);
+      v[1] = C_UCHAR((_value & 0xFF00) >> 8);
+      v[0] = C_UCHAR((_value & 0xFF));
+    }
+    else
+    {
+      v[0] = C_UCHAR((_value & 0xFF000000) >> 24);
+      v[1] = C_UCHAR((_value & 0xFF0000) >> 16);
+      v[2] = C_UCHAR((_value & 0xFF00) >> 8);
+      v[3] = C_UCHAR((_value & 0xFF));
+    }
 
     write_data(v,4);
   }
@@ -151,14 +202,28 @@ void DataWriter::write_uint64(std::uint64_t _value)
   try
   {
     uchar v[8];
-    v[0] = C_UCHAR((_value & 0xFF000000) >> 56);
-    v[1] = C_UCHAR((_value & 0xFF000000) >> 48);
-    v[2] = C_UCHAR((_value & 0xFF000000) >> 40);
-    v[3] = C_UCHAR((_value & 0xFF000000) >> 32);
-    v[4] = C_UCHAR((_value & 0xFF000000) >> 24);
-    v[5] = C_UCHAR((_value & 0xFF0000) >> 16);
-    v[6] = C_UCHAR((_value & 0xFF00) >> 8);
-    v[7] = C_UCHAR((_value & 0xFF));
+    if (littleEndian)
+    {
+      v[7] = C_UCHAR((_value & 0xFF000000) >> 56);
+      v[6] = C_UCHAR((_value & 0xFF000000) >> 48);
+      v[5] = C_UCHAR((_value & 0xFF000000) >> 40);
+      v[4] = C_UCHAR((_value & 0xFF000000) >> 32);
+      v[3] = C_UCHAR((_value & 0xFF000000) >> 24);
+      v[2] = C_UCHAR((_value & 0xFF0000) >> 16);
+      v[1] = C_UCHAR((_value & 0xFF00) >> 8);
+      v[0] = C_UCHAR((_value & 0xFF));
+    }
+    else
+    {
+      v[0] = C_UCHAR((_value & 0xFF000000) >> 56);
+      v[1] = C_UCHAR((_value & 0xFF000000) >> 48);
+      v[2] = C_UCHAR((_value & 0xFF000000) >> 40);
+      v[3] = C_UCHAR((_value & 0xFF000000) >> 32);
+      v[4] = C_UCHAR((_value & 0xFF000000) >> 24);
+      v[5] = C_UCHAR((_value & 0xFF0000) >> 16);
+      v[6] = C_UCHAR((_value & 0xFF00) >> 8);
+      v[7] = C_UCHAR((_value & 0xFF));
+    }
 
     write_data(v,8);
   }
@@ -204,11 +269,22 @@ void DataWriter::write_int16(std::int16_t _value)
       val = -val;
 
     uchar v[2];
-    v[0] = C_UCHAR((val & 0xFF00) >> 8);
-    v[1] = C_UCHAR((val & 0xFF));
+    if (littleEndian)
+    {
+      v[1] = C_UCHAR((val & 0xFF00) >> 8);
+      v[0] = C_UCHAR((val & 0xFF));
 
-    if (_value < 0)
-      v[0] = v[0] | 0x80;
+      if (_value < 0)
+        v[1] = v[1] | 0x80;
+    }
+    else
+    {
+      v[0] = C_UCHAR((val & 0xFF00) >> 8);
+      v[1] = C_UCHAR((val & 0xFF));
+
+      if (_value < 0)
+        v[0] = v[0] | 0x80;
+    }
 
     write_data(v,2);
   }
@@ -231,12 +307,24 @@ void DataWriter::write_int24(std::int32_t _value)
       val = -val;
 
     uchar v[3];
-    v[0] = C_UCHAR((val & 0xFF0000) >> 16);
-    v[1] = C_UCHAR((val & 0xFF00) >> 8);
-    v[2] = C_UCHAR((val & 0xFF));
+    if (littleEndian)
+    {
+      v[2] = C_UCHAR((val & 0xFF0000) >> 16);
+      v[1] = C_UCHAR((val & 0xFF00) >> 8);
+      v[0] = C_UCHAR((val & 0xFF));
 
-    if (_value < 0)
-      v[0] = v[0] | 0x80;
+      if (_value < 0)
+        v[2] = v[2] | 0x80;
+    }
+    else
+    {
+      v[0] = C_UCHAR((val & 0xFF0000) >> 16);
+      v[1] = C_UCHAR((val & 0xFF00) >> 8);
+      v[2] = C_UCHAR((val & 0xFF));
+
+      if (_value < 0)
+        v[0] = v[0] | 0x80;
+    }
 
     write_data(v,3);
   }
@@ -259,13 +347,26 @@ void DataWriter::write_int32(std::int32_t _value)
       val = -val;
 
     uchar v[4];
-    v[0] = C_UCHAR((val & 0xFF000000) >> 24);
-    v[1] = C_UCHAR((val & 0xFF0000) >> 16);
-    v[2] = C_UCHAR((val & 0xFF00) >> 8);
-    v[3] = C_UCHAR((val & 0xFF));
+    if (littleEndian)
+    {
+      v[3] = C_UCHAR((val & 0xFF000000) >> 24);
+      v[2] = C_UCHAR((val & 0xFF0000) >> 16);
+      v[1] = C_UCHAR((val & 0xFF00) >> 8);
+      v[0] = C_UCHAR((val & 0xFF));
 
-    if (_value < 0)
-      v[0] = v[0] | 0x80;
+      if (_value < 0)
+        v[3] = v[3] | 0x80;
+    }
+    else
+    {
+      v[0] = C_UCHAR((val & 0xFF000000) >> 24);
+      v[1] = C_UCHAR((val & 0xFF0000) >> 16);
+      v[2] = C_UCHAR((val & 0xFF00) >> 8);
+      v[3] = C_UCHAR((val & 0xFF));
+
+      if (_value < 0)
+        v[0] = v[0] | 0x80;
+    }
 
     write_data(v,4);
   }
@@ -285,10 +386,58 @@ void DataWriter::write_float(std::float_t _value)
   {
     unsigned char* f = reinterpret_cast<unsigned char*>(&_value);
 
-    write_data(&f[3],1);
-    write_data(&f[2],1);
-    write_data(&f[1],1);
-    write_data(&f[0],1);
+    if (littleEndian)
+    {
+      write_data(&f[0],1);
+      write_data(&f[1],1);
+      write_data(&f[2],1);
+      write_data(&f[3],1);
+    }
+    else
+    {
+      write_data(&f[3],1);
+      write_data(&f[2],1);
+      write_data(&f[1],1);
+      write_data(&f[0],1);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+void DataWriter::write_double(std::double_t _value)
+{
+  try
+  {
+    unsigned char* f = reinterpret_cast<unsigned char*>(&_value);
+
+    if (littleEndian)
+    {
+      write_data(&f[0],1);
+      write_data(&f[1],1);
+      write_data(&f[2],1);
+      write_data(&f[3],1);
+      write_data(&f[4],1);
+      write_data(&f[5],1);
+      write_data(&f[6],1);
+      write_data(&f[7],1);
+    }
+    else
+    {
+      write_data(&f[7],1);
+      write_data(&f[6],1);
+      write_data(&f[5],1);
+      write_data(&f[4],1);
+      write_data(&f[3],1);
+      write_data(&f[2],1);
+      write_data(&f[1],1);
+      write_data(&f[0],1);
+    }
   }
   catch (...)
   {
@@ -661,6 +810,23 @@ DataWriter& DataWriter::operator<<(std::float_t _value)
   try
   {
     write_float(_value);
+    return (*this);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+DataWriter& DataWriter::operator<<(std::double_t _value)
+{
+  try
+  {
+    write_double(_value);
     return (*this);
   }
   catch (...)

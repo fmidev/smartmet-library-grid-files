@@ -135,6 +135,7 @@ bool AdditionalParameters::getParameterValueByLocation(
   FUNCTION_TRACE
   try
   {
+    int def_coordinatePrecision = 6;
     std::string param = toLowerString(parameterName);
 
     if (param == "place")
@@ -185,25 +186,37 @@ bool AdditionalParameters::getParameterValueByLocation(
 
     if (param == "latitude" || param == "lat")
     {
-      value = mValueFormatter.format(loc->latitude, precision);
+      if (precision >= 0)
+        value = mValueFormatter.format(loc->latitude, precision);
+      else
+        value = mValueFormatter.format(loc->latitude, def_coordinatePrecision);
       return true;
     }
 
     if (param == "longitude" || param == "lon")
     {
-      value = mValueFormatter.format(loc->longitude, precision);
+      if (precision >= 0)
+        value = mValueFormatter.format(loc->longitude, precision);
+      else
+        value = mValueFormatter.format(loc->longitude, def_coordinatePrecision);
       return true;
     }
 
     if (param == "latlon")
     {
-      value = mValueFormatter.format(loc->latitude, precision) + ", " + mValueFormatter.format(loc->longitude, precision);
+      if (precision >= 0)
+        value = mValueFormatter.format(loc->latitude, precision) + ", " + mValueFormatter.format(loc->longitude, precision);
+      else
+        value = mValueFormatter.format(loc->latitude, precision) + ", " + mValueFormatter.format(loc->longitude, def_coordinatePrecision);
       return true;
     }
 
     if (param == "lonlat")
     {
-      value = mValueFormatter.format(loc->longitude, precision) + ", " + mValueFormatter.format(loc->latitude, precision);
+      if (precision >= 0)
+        value = mValueFormatter.format(loc->longitude, precision) + ", " + mValueFormatter.format(loc->latitude, precision);
+      else
+        value = mValueFormatter.format(loc->longitude, precision) + ", " + mValueFormatter.format(loc->latitude, def_coordinatePrecision);
       return true;
     }
 

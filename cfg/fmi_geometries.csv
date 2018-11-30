@@ -148,7 +148,7 @@
 9;507;NPOHJO2000;275;290;18.55;64.04;2;2;+x+y;0;60.0;Nordrad Pohjo2 290x275;
 9;508;NNORDEN4000;374;431;9;52.4;4;4;+x+y;0;60.0;Nordrad Finorden 431x374;
 #9;610;NEMO609719;609;719;-85.9766;41.1385;12.5;12.5;+x+y;-45;60.0;Polar stereographic area;
-9;901;OSI_NO_AHL;1260;900;-40.173;37.345;5000;5000;+x+y;0;60.0;OSI North Atlantic from met.no;
+9;901;OSI_NO_AHL;1260;900;-40.173;37.345;5000;5000;-x+y;0;60.0;OSI North Atlantic from met.no;
 9;1043;MOSLAPS;980;840;354.093;30.3273;5000;5000;+x+y;20;60.0;MOS ECMWF LAPS gridded dataset;
 9;1057;ERASCAND;28;31;6;51.3;76000;76000;+x+y;20;60.0;ERA Interim area for Smartmet Scandinavia editor;
 9;1058;MEPS10000;212;235;6;51.3;10000;10000;+x+y;20;60.0;MEPS area in 10km resolution for Smartmet Scandinavia editor;

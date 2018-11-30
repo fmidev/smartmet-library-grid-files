@@ -1,5 +1,6 @@
 #include "StretchedRotatedLatLonImpl.h"
 #include "../../common/Exception.h"
+#include "../../common/CoordinateConversions.h"
 
 namespace SmartMet
 {
@@ -122,12 +123,12 @@ T::Coordinate_vec StretchedRotatedLatLonImpl::getGridCoordinates() const
     for (uint j=0; j < nj; j++)
     {
       double x = longitudeOfFirstGridPoint;
-      if (longitudeOfFirstGridPoint >= 180000000)
-        x = longitudeOfFirstGridPoint - 360000000;
+      //if (longitudeOfFirstGridPoint >= 180000000)
+      //  x = longitudeOfFirstGridPoint - 360000000;
 
       for (uint i=0; i < ni; i++)
       {
-        double cx = x/1000000;
+        double cx = getLongitude(x/1000000);
         double cy = y/1000000;
         T::Coordinate coord(cx,cy);
         coordinateList.push_back(coord);

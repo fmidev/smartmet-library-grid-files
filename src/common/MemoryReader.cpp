@@ -22,6 +22,37 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size)
     startPtr = _startPtr;
     endPtr = _startPtr + _size;
     readPtr = _startPtr;
+    dataRelease = false;
+    littleEndian = false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The constructor of the class. */
+
+MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size,bool _dataRelease)
+{
+  try
+  {
+    if (_startPtr == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The '_startPtr' parameter points to nullptr!");
+
+    if (_size == 0)
+      throw SmartMet::Spine::Exception(BCP,"The value of the '_size' parameter is 0!");
+
+    parentPtr = _startPtr;
+    startPtr = _startPtr;
+    endPtr = _startPtr + _size;
+    readPtr = _startPtr;
+    dataRelease = _dataRelease;
+    littleEndian = false;
   }
   catch (...)
   {
@@ -52,6 +83,8 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr)
     startPtr = _startPtr;
     endPtr = _endPtr;
     readPtr = _startPtr;
+    dataRelease = false;
+    littleEndian = false;
   }
   catch (...)
   {
@@ -69,6 +102,8 @@ MemoryReader::~MemoryReader()
 {
   try
   {
+    if (dataRelease  &&  startPtr != NULL)
+      delete [] startPtr;
   }
   catch (...)
   {
@@ -248,6 +283,22 @@ void MemoryReader::setReadPosition(ulonglong _pos)
 
 
 
+void MemoryReader::setLittleEndian(bool _littleEndian)
+{
+  try
+  {
+    littleEndian = _littleEndian;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 unsigned char MemoryReader::getByte(ulonglong _pos)
 {
   try
@@ -350,6 +401,8 @@ std::uint16_t MemoryReader::read_uint16()
     unsigned short a = readPtr[0];
     unsigned short b = readPtr[1];
     unsigned short val = static_cast<unsigned short>((a << 8 | b));
+    if (littleEndian)
+      val = static_cast<unsigned short>((b << 8 | a));
 
     readPtr += 2;
 
@@ -376,6 +429,8 @@ std::uint32_t MemoryReader::read_uint24()
     uint b = readPtr[1];
     uint c = readPtr[2];
     uint val =  static_cast<unsigned int>((a << 16 | b << 8 | c));
+    if (littleEndian)
+      val =  static_cast<unsigned int>((c << 16 | b << 8 | a));
 
     readPtr += 3;
 
@@ -403,6 +458,8 @@ std::uint32_t MemoryReader::read_uint32()
     uint c = readPtr[2];
     uint d = readPtr[3];
     uint val =  static_cast<unsigned int>((a << 24 | b << 16 | c << 8 | d));
+    if (littleEndian)
+      val =  static_cast<unsigned int>((d << 24 | c << 16 | b << 8 | a));
 
     readPtr += 4;
 
@@ -434,6 +491,8 @@ std::uint64_t MemoryReader::read_uint64()
     ulonglong g = readPtr[6];
     ulonglong h = readPtr[7];
     ulonglong val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
+    if (littleEndian)
+      val =  (h << 56 | g << 48 | f << 40 | e << 32 | d << 24 | c << 16 | b << 8 | a);
 
     readPtr += 8;
 
@@ -483,6 +542,8 @@ std::int16_t MemoryReader::read_int16()
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
     short val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
+    if (littleEndian)
+      val = static_cast<short>((1 - ((b & 128) >> 6)) * ((b & 127) << 8 | a));
 
     readPtr += 2;
 
@@ -509,6 +570,9 @@ std::int32_t MemoryReader::read_int24()
     unsigned char b = readPtr[1];
     unsigned char c = readPtr[2];
     int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
+    if (littleEndian)
+      val =  static_cast<int>((1 - ((c & 128) >> 6)) * ((c & 127) << 24 | b << 16 | a << 8));
+
     val = val / 256;
 
 
@@ -538,6 +602,8 @@ std::int32_t MemoryReader::read_int32()
     unsigned char c = readPtr[2];
     unsigned char d = readPtr[3];
     int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
+    if (littleEndian)
+      val =  static_cast<int>((1 - ((d & 128) >> 6)) * ((d & 127) << 24 | c << 16 | b << 8 | a));
 
     readPtr += 4;
 
@@ -569,6 +635,14 @@ std::float_t MemoryReader::read_float()
     f[2] = readPtr[1];
     f[3] = readPtr[0];
 
+    if (littleEndian)
+    {
+      f[0] = readPtr[0];
+      f[1] = readPtr[1];
+      f[2] = readPtr[2];
+      f[3] = readPtr[3];
+    }
+
     readPtr += 4;
 
     return val;
@@ -579,6 +653,51 @@ std::float_t MemoryReader::read_float()
   }
 }
 
+
+
+
+
+std::double_t MemoryReader::read_double()
+{
+  try
+  {
+    if ((readPtr + 8) > endPtr)
+      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+
+    double val = 0.0;
+
+    unsigned char* f = reinterpret_cast<unsigned char*>(&val);
+
+    f[0] = readPtr[7];
+    f[1] = readPtr[6];
+    f[2] = readPtr[5];
+    f[3] = readPtr[4];
+    f[4] = readPtr[3];
+    f[5] = readPtr[2];
+    f[6] = readPtr[1];
+    f[7] = readPtr[0];
+
+    if (littleEndian)
+    {
+      f[0] = readPtr[0];
+      f[1] = readPtr[1];
+      f[2] = readPtr[2];
+      f[3] = readPtr[3];
+      f[4] = readPtr[4];
+      f[5] = readPtr[5];
+      f[6] = readPtr[6];
+      f[7] = readPtr[7];
+    }
+
+    readPtr += 8;
+
+    return val;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 
@@ -674,13 +793,9 @@ T::UInt16_opt MemoryReader::read_UInt16_opt()
     if ((readPtr + 2) > endPtr)
       throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
 
-    unsigned short a = readPtr[0];
-    unsigned short b = readPtr[1];
-    unsigned short val = static_cast<unsigned short>((a << 8 | b));
+    unsigned short val = read_uint16();
 
-    readPtr += 2;
-
-    if (!(a == 0xFF  &&  b == 0xFF))
+    if (val != 0xFFFF)
       return val;
 
     return {};
@@ -702,14 +817,8 @@ T::UInt32_opt MemoryReader::read_UInt24_opt()
     if ((readPtr + 3) > endPtr)
       throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
 
-    uint a = readPtr[0];
-    uint b = readPtr[1];
-    uint c = readPtr[2];
-    uint val =  static_cast<unsigned int>((a << 16 | b << 8 | c));
-
-    readPtr += 3;
-
-    if (!(a == 0xFF  &&  b == 0xFF  &&  c == 0xFF))
+    uint val =  read_uint24();
+    if (val != 0xFFFFFF)
       return val;
 
     return {};
@@ -731,15 +840,8 @@ T::UInt32_opt MemoryReader::read_UInt32_opt()
     if ((readPtr + 4) > endPtr)
       throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
 
-    uint a = readPtr[0];
-    uint b = readPtr[1];
-    uint c = readPtr[2];
-    uint d = readPtr[3];
-    uint val =  static_cast<unsigned int>((a << 24 | b << 16 | c << 8 | d));
-
-    readPtr += 4;
-
-    if (!(a == 0xFF  &&  b == 0xFF  &&  c == 0xFF  &&  d == 0xFF))
+    uint val =  read_uint32();
+    if (val != 0xFFFFFFFF)
       return val;
 
     return {};
@@ -761,19 +863,8 @@ T::UInt64_opt MemoryReader::read_UInt64_opt()
     if ((readPtr + 8) > endPtr)
       throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
 
-    ulonglong a = readPtr[0];
-    ulonglong b = readPtr[1];
-    ulonglong c = readPtr[2];
-    ulonglong d = readPtr[3];
-    ulonglong e = readPtr[4];
-    ulonglong f = readPtr[5];
-    ulonglong g = readPtr[6];
-    ulonglong h = readPtr[7];
-    ulonglong val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
-
-    readPtr += 8;
-
-    if (!(a == 0xFF  &&  b == 0xFF  &&  c == 0xFF  &&  d == 0xFF  &&  e == 0xFF  &&  f == 0xFF  &&  g == 0xFF  &&  h == 0xFF))
+    ulonglong val = read_uint64();
+    if (val != 0xFFFFFFFFFFFFFFFF)
       return val;
 
     return {};
@@ -796,9 +887,7 @@ T::Int8_opt MemoryReader::read_Int8_opt()
       throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char a = readPtr[0];
-    unsigned char val = static_cast<char>((1 - ((a & 128) >> 6)) * (a & 127));
-
-    readPtr++;
+    char val = read_int8();
 
     if (!(a == 0xFF))
       return val;
@@ -825,6 +914,8 @@ T::Int16_opt MemoryReader::read_Int16_opt()
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
     short val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
+    if (littleEndian)
+      val = static_cast<short>((1 - ((b & 128) >> 6)) * ((b & 127) << 8 | a));
 
     readPtr += 2;
 
@@ -854,10 +945,12 @@ T::Int32_opt MemoryReader::read_Int24_opt()
     unsigned char b = readPtr[1];
     unsigned char c = readPtr[2];
     int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
+    if (littleEndian)
+      val =  static_cast<int>((1 - ((c & 128) >> 6)) * ((c & 127) << 24 | b << 16 | a << 8));
+
     val = val / 256;
 
     readPtr += 3;
-
 
     if (!(a == 0xFF  &&  b == 0xFF  &&  c == 0xFF))
       return val;
@@ -886,6 +979,8 @@ T::Int32_opt MemoryReader::read_Int32_opt()
     unsigned char c = readPtr[2];
     unsigned char d = readPtr[3];
     int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
+    if (littleEndian)
+      val =  static_cast<int>((1 - ((d & 128) >> 6)) * ((d & 127) << 24 | c << 16 | b << 8 | a));
 
     readPtr += 4;
 
@@ -919,6 +1014,14 @@ T::Float_opt MemoryReader::read_Float_opt()
     f[1] = readPtr[2];
     f[2] = readPtr[1];
     f[3] = readPtr[0];
+
+    if (littleEndian)
+    {
+      f[0] = readPtr[0];
+      f[1] = readPtr[1];
+      f[2] = readPtr[2];
+      f[3] = readPtr[3];
+    }
 
     readPtr += 4;
 

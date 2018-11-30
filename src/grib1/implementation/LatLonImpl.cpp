@@ -2,6 +2,7 @@
 #include "../../common/Exception.h"
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
+#include "../../common/CoordinateConversions.h"
 #include "../../grid/PrintOptions.h"
 
 namespace SmartMet
@@ -15,6 +16,11 @@ namespace GRIB1
 LatLonImpl::LatLonImpl()
 {
   mGridProjection = T::GridProjectionValue::LatLon;
+  mDx = 0;
+  mDy = 0;
+  mStartX = 0;
+  mStartY = 0;
+  mInitialized = false;
 }
 
 
@@ -26,6 +32,18 @@ LatLonImpl::LatLonImpl()
 LatLonImpl::LatLonImpl(const LatLonImpl& other)
 :LatLon(other)
 {
+  try
+  {
+    mDx = other.mDx;
+    mDy = other.mDy;
+    mStartX = other.mStartX;
+    mStartY = other.mStartY;
+    mInitialized = other.mInitialized;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -98,6 +116,35 @@ void LatLonImpl::read(MemoryReader& memoryReader)
 
 
 
+void LatLonImpl::init() const
+{
+  try
+  {
+    mStartY = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
+    mStartX = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000);
+
+    mDx = C_DOUBLE(mIDirectionIncrement) / 1000;
+    mDy = C_DOUBLE(mJDirectionIncrement) / 1000;
+
+    unsigned char scanMode = mScanningMode.getScanningMode();
+
+    if ((scanMode & 0x80) != 0)
+      mDx = -mDx;
+
+    if ((scanMode & 0x40) == 0)
+      mDy = -mDy;
+
+    mInitialized = true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 /*! \brief The method returns all grid coordinates as a coordinate vector.
     Notice that if the grid layout is "irregular" (i.e. its row lengths vary) then
     grid width is the same as the length of the longest grid row. I.e. the coordinates
@@ -112,53 +159,24 @@ T::Coordinate_vec LatLonImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
-    uint ni = mNi;
-    uint nj = mNj;
+    if (!mInitialized)
+      init();
 
-    if (ni == 0)
-      ni = getGridOriginalColumnCount();
+    if (mNi == 0 ||  mNj == 0)
+      return coordinateList;
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
-    double latitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint());
-    double longitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint());
+    coordinateList.reserve(mNi*mNj);
 
-    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
-    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
-
-    unsigned char scanMode = mScanningMode.getScanningMode();
-
-    if ((scanMode & 0x80) != 0)
-      iDirectionIncrement = -iDirectionIncrement;
-
-    if ((scanMode & 0x40) == 0)
-      jDirectionIncrement = -jDirectionIncrement;
-
-
-    if (iDirectionIncrement == 0  &&  (longitudeOfLastGridPoint-longitudeOfFirstGridPoint) != 0  && ni > 0)
-      iDirectionIncrement = (longitudeOfLastGridPoint-longitudeOfFirstGridPoint)/ni;
-
-    if (jDirectionIncrement == 0  &&  (latitudeOfLastGridPoint-latitudeOfFirstGridPoint) != 0  && ni > 0)
-      jDirectionIncrement = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/nj;
-
-    coordinateList.reserve(ni*nj);
-
-    double y = latitudeOfFirstGridPoint;
-    for (uint j=0; j < nj; j++)
+    double y = mStartY;
+    for (uint j=0; j < mNj; j++)
     {
-      double x = longitudeOfFirstGridPoint;
-      if (longitudeOfFirstGridPoint >= 180000)
-        x = longitudeOfFirstGridPoint - 360000;
-
-      for (uint i=0; i < ni; i++)
+      double x = mStartX;
+      for (uint i=0; i < mNi; i++)
       {
-        double cx = x/1000;
-        double cy = y/1000;
-        T::Coordinate coord(cx,cy);
-        coordinateList.push_back(coord);
-        x += iDirectionIncrement;
+        coordinateList.push_back(T::Coordinate(getLongitude(x),y));
+        x += mDx;
       }
-      y += jDirectionIncrement;
+      y += mDy;
     }
 
     return coordinateList;
@@ -334,48 +352,17 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,dou
 {
   try
   {
-    uint ni = mNi;
-    uint nj = mNj;
+    if (!mInitialized)
+      init();
 
-    if (ni == 0)
-      ni = getGridOriginalColumnCount();
-
-    if (grid_i > ni)
+    if (grid_i > mNi)
       return false;
 
-    if (grid_j > nj)
+    if (grid_j > mNj)
       return false;
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
-    double latitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint());
-    double longitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint());
-
-    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
-    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
-
-    unsigned char scanMode = mScanningMode.getScanningMode();
-
-    if ((scanMode & 0x80) != 0)
-      iDirectionIncrement = -iDirectionIncrement;
-
-    if ((scanMode & 0x40) == 0)
-      jDirectionIncrement = -jDirectionIncrement;
-
-    if (iDirectionIncrement == 0  &&  (longitudeOfLastGridPoint-longitudeOfFirstGridPoint) != 0  && ni > 0)
-      iDirectionIncrement = (longitudeOfLastGridPoint-longitudeOfFirstGridPoint)/ni;
-
-    if (jDirectionIncrement == 0  &&  (latitudeOfLastGridPoint-latitudeOfFirstGridPoint) != 0  && ni > 0)
-      jDirectionIncrement = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/nj;
-
-    double y = latitudeOfFirstGridPoint + grid_j * jDirectionIncrement;
-    double x = longitudeOfFirstGridPoint + grid_i * iDirectionIncrement;
-
-    if (longitudeOfFirstGridPoint >= 180000)
-      x = longitudeOfFirstGridPoint - 360000 + grid_i * iDirectionIncrement;
-
-    lon = x/1000;
-    lat = y/1000;
+    lat = mStartY + grid_j * mDy;
+    lon = getLongitude(mStartX + grid_i * mDx);
 
     return true;
   }
@@ -402,48 +389,17 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double gri
 {
   try
   {
-    uint ni = mNi;
-    uint nj = mNj;
+    if (!mInitialized)
+      init();
 
-    if (ni == 0)
-      ni = getGridOriginalColumnCount();
-
-    if (grid_i > C_DOUBLE(ni))
+    if (grid_i > C_DOUBLE(mNi))
       return false;
 
-    if (grid_j > C_DOUBLE(nj))
+    if (grid_j > C_DOUBLE(mNj))
       return false;
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
-    double latitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint());
-    double longitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint());
-
-    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
-    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
-
-    unsigned char scanMode = mScanningMode.getScanningMode();
-
-    if ((scanMode & 0x80) != 0)
-      iDirectionIncrement = -iDirectionIncrement;
-
-    if ((scanMode & 0x40) == 0)
-      jDirectionIncrement = -jDirectionIncrement;
-
-    if (iDirectionIncrement == 0  &&  (longitudeOfLastGridPoint-longitudeOfFirstGridPoint) != 0  && ni > 0)
-      iDirectionIncrement = (longitudeOfLastGridPoint-longitudeOfFirstGridPoint)/ni;
-
-    if (jDirectionIncrement == 0  &&  (latitudeOfLastGridPoint-latitudeOfFirstGridPoint) != 0  && ni > 0)
-      jDirectionIncrement = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/nj;
-
-    double y = latitudeOfFirstGridPoint + grid_j * jDirectionIncrement;
-    double x = longitudeOfFirstGridPoint + grid_i * iDirectionIncrement;
-
-    if (longitudeOfFirstGridPoint >= 180000)
-      x = longitudeOfFirstGridPoint - 360000 + grid_i * iDirectionIncrement;
-
-    lon = x/1000;
-    lat = y/1000;
+    lat = mStartY + grid_j * mDy;
+    lon = getLongitude(mStartX + grid_i * mDx);
 
     return true;
   }
@@ -530,50 +486,22 @@ bool LatLonImpl::getGridPointByOriginalCoordinates(double x,double y,double& gri
 {
   try
   {
-    uint ni = mNi;
-    uint nj = mNj;
-
-    if (ni == 0)
-      ni = getGridOriginalColumnCount();
-
-    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
-    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
-    double latitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint()) / 1000;
-    double longitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint()) / 1000;
-    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement) / 1000;
-    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement) / 1000;
-
-    unsigned char scanMode = mScanningMode.getScanningMode();
-
-    if ((scanMode & 0x80) != 0)
-      iDirectionIncrement = -iDirectionIncrement;
-
-    if ((scanMode & 0x40) == 0)
-      jDirectionIncrement = -jDirectionIncrement;
-
-    if (longitudeOfFirstGridPoint >= 180)
-      longitudeOfFirstGridPoint -= 360;
-
-
-    if (iDirectionIncrement == 0  &&  (longitudeOfLastGridPoint-longitudeOfFirstGridPoint) != 0  && ni > 0)
-      iDirectionIncrement = (longitudeOfLastGridPoint-longitudeOfFirstGridPoint)/ni;
-
-    if (jDirectionIncrement == 0  &&  (latitudeOfLastGridPoint-latitudeOfFirstGridPoint) != 0  && ni > 0)
-      jDirectionIncrement = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/nj;
+    if (!mInitialized)
+      init();
 
     double aLat = y;
     double aLon = x;
 
-    if (aLon < longitudeOfFirstGridPoint)
+    if (aLon < mStartX)
       aLon += 360;
 
-    double latDiff = aLat - latitudeOfFirstGridPoint;
-    double lonDiff = aLon - longitudeOfFirstGridPoint;
+    double latDiff = aLat - mStartY;
+    double lonDiff = aLon - mStartX;
 
-    double i = lonDiff / iDirectionIncrement;
-    double j = latDiff / jDirectionIncrement;
+    double i = lonDiff / mDx;
+    double j = latDiff / mDy;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j >= C_DOUBLE(nj))
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(mNi) ||  j >= C_DOUBLE(mNj))
       return false;
 
     grid_i = i;

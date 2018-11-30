@@ -16,6 +16,15 @@ namespace GRIB1
 RotatedLatLonImpl::RotatedLatLonImpl()
 {
   mGridProjection = T::GridProjectionValue::RotatedLatLon;
+  mNi = 0;
+  mNj = 0;
+  mStartY = 0;
+  mStartX = 0;
+  mDx = 0;
+  mDy = 0;
+  mSouthPoleLat = 0;
+  mSouthPoleLon = 0;
+  mInitialized = false;
 }
 
 
@@ -37,6 +46,40 @@ RotatedLatLonImpl::RotatedLatLonImpl(const RotatedLatLonImpl& other)
 
 RotatedLatLonImpl::~RotatedLatLonImpl()
 {
+}
+
+
+
+
+
+void RotatedLatLonImpl::init() const
+{
+  try
+  {
+    if (mInitialized)
+      return;
+
+    mSouthPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    mSouthPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    mStartY = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
+    mStartX = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
+    mDx = C_DOUBLE(mIDirectionIncrement) / 1000;
+    mDy = C_DOUBLE(mJDirectionIncrement) / 1000;
+
+    unsigned char scanMode = mScanningMode.getScanningMode();
+
+    if ((scanMode & 0x80) != 0)
+      mDx = -mDx;
+
+    if ((scanMode & 0x40) == 0)
+      mDy = -mDy;
+
+    mInitialized = true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -621,6 +664,7 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
 {
   try
   {
+#if 0
     uint ni = mNi;
     uint nj = mNj;
 
@@ -659,6 +703,25 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
 
     grid_i = i;
     grid_j = j;
+
+    return true;
+#endif
+
+    if (!mInitialized)
+      init();
+
+    double aLon = getLongitude(x);
+    if (aLon < mStartX)
+      aLon += 360;
+
+    double latDiff = (round(y*100) - round(mStartY*100)) / 100;
+    double lonDiff = (round(aLon*100) - round(mStartX*100)) / 100;
+
+    grid_i = lonDiff / mDx;
+    grid_j = latDiff / mDy;
+
+    if (grid_i < 0 ||  grid_j < 0  ||  grid_i >= C_DOUBLE(mNi) ||  grid_j >= C_DOUBLE(mNj))
+      return false;
 
     return true;
   }

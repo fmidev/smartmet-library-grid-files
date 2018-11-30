@@ -17,6 +17,12 @@ LambertConformalImpl::LambertConformalImpl()
     mSr_lambertConformal = nullptr;
     mCt_latlon2lambert = nullptr;
     mCt_lambert2latlon = nullptr;
+
+    mDx = 0;
+    mDy = 0;
+    mStartX = 0;
+    mStartY = 0;
+    mInitialized = false;
   }
   catch (...)
   {
@@ -37,6 +43,11 @@ LambertConformalImpl::LambertConformalImpl(const LambertConformalImpl& other):La
     mSr_lambertConformal = nullptr;
     mCt_latlon2lambert = nullptr;
     mCt_lambert2latlon = nullptr;
+    mDx = other.mDx;
+    mDy = other.mDy;
+    mStartX = other.mStartX;
+    mStartY = other.mStartY;
+    mInitialized = other.mInitialized;
   }
   catch (...)
   {
@@ -70,6 +81,45 @@ LambertConformalImpl::~LambertConformalImpl()
   }
 }
 
+
+
+
+
+void LambertConformalImpl::init() const
+{
+  try
+  {
+    if (mInitialized)
+      return;
+
+    if (mCt_latlon2lambert == nullptr)
+      return;
+
+    double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
+    double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
+
+    mDx = C_DOUBLE(mDxInMetres);
+    mDy = C_DOUBLE(mDyInMetres);
+
+    unsigned char scanningMode = mScanningMode.getScanningMode();
+    if ((scanningMode & 0x80) != 0)
+      mDx = -mDx;
+
+    if ((scanningMode & 0x40) == 0)
+      mDy = -mDy;
+
+    mStartX = longitudeOfFirstGridPoint;
+    mStartY = latitudeOfFirstGridPoint;
+
+    mCt_latlon2lambert->Transform(1,&mStartX,&mStartY);
+
+    mInitialized = true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 
@@ -135,38 +185,23 @@ T::Coordinate_vec LambertConformalImpl::getGridCoordinates() const
     if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return coordinateList;
 
-    uint nx = mNx;
-    uint ny = mNy;
+    if (!mInitialized)
+      init();
 
-    coordinateList.reserve(nx*ny);
+    coordinateList.reserve(mNx*mNy);
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
-    double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
-
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
-
-    unsigned char scanningMode = mScanningMode.getScanningMode();
-    if ((scanningMode & 0x80) != 0)
-      dx = -dx;
-
-    if ((scanningMode & 0x40) == 0)
-      dy = -dy;
-
-    mCt_latlon2lambert->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
-
-    double y = latitudeOfFirstGridPoint;
-    for (uint j=0; j < ny; j++)
+    double y = mStartY;
+    for (uint j=0; j < mNy; j++)
     {
-      double x = longitudeOfFirstGridPoint;
+      double x = mStartX;
 
-      for (uint i=0; i < nx; i++)
+      for (uint i=0; i < mNx; i++)
       {
         T::Coordinate coord(x,y);
         coordinateList.push_back(coord);
-        x += dx;
+        x += mDx;
       }
-      y += dy;
+      y += mDy;
     }
 
     return coordinateList;
@@ -268,29 +303,14 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
     if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return false;
 
-    uint nx = mNx;
-    uint ny = mNy;
-
-    if (grid_i < 0  ||  grid_j < 0  ||  grid_i >= nx  ||  grid_j >= ny)
+    if (grid_i < 0  ||  grid_j < 0  ||  grid_i >= mNx  ||  grid_j >= mNy)
       return false;
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
-    double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
+    if (!mInitialized)
+      init();
 
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
-
-    unsigned char scanningMode = mScanningMode.getScanningMode();
-    if ((scanningMode & 0x80) != 0)
-      dx = -dx;
-
-    if ((scanningMode & 0x40) == 0)
-      dy = -dy;
-
-    mCt_latlon2lambert->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
-
-    y = latitudeOfFirstGridPoint + grid_j * dy;
-    x = longitudeOfFirstGridPoint + grid_i * dx;
+    y = mStartY + grid_j * mDy;
+    x = mStartX + grid_i * mDx;
 
     return true;
   }
@@ -299,6 +319,7 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
 
 
 
@@ -318,39 +339,22 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
 {
   try
   {
-    T::Coordinate_vec coordinateList;
-
     if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return false;
 
-    uint nx = mNx;
-    uint ny = mNy;
+    if (!mNx || !mNy)
+      return false;
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
-    double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
+    if (!mInitialized)
+      init();
 
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
+    double xDiff = (round(x*100) - round(mStartX*100)) / 100;
+    double yDiff = (round(y*100) - round(mStartY*100)) / 100;
 
-    unsigned char scanningMode = mScanningMode.getScanningMode();
-    if ((scanningMode & 0x80) != 0)
-      dx = -dx;
+    double i = xDiff / mDx;
+    double j = yDiff / mDy;
 
-    if ((scanningMode & 0x40) == 0)
-      dy = -dy;
-
-    double fX = longitudeOfFirstGridPoint;
-    double fY = latitudeOfFirstGridPoint;
-
-    mCt_latlon2lambert->Transform(1,&fX,&fY);
-
-    double xDiff = x - fX;
-    double yDiff = y - fY;
-
-    double i = xDiff / dx;
-    double j = yDiff / dy;
-
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(nx) ||  j > C_DOUBLE(ny))
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(mNx) ||  j > C_DOUBLE(mNy))
       return false;
 
     grid_i = i;
@@ -363,6 +367,7 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
 
 
 

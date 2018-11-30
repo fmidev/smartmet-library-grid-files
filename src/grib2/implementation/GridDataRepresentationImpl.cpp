@@ -2,7 +2,6 @@
 #include "../../common/Exception.h"
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
-#include "../../common/BitArrayReader.h"
 #include "../../common/BitArrayWriter.h"
 #include "../Message.h"
 
@@ -19,6 +18,25 @@ namespace GRIB2
 
 GridDataRepresentationImpl::GridDataRepresentationImpl()
 {
+  try
+  {
+    mData = nullptr;
+    mDataSize = 0;
+    mBinaryScaleFactor = 0;
+    mDecimalScaleFactor = 0;
+    mReferenceValue = 0;
+    mBitsPerValue = 0;
+    mEfac = 0;
+    mDfac = 0;
+    mRDfac = 0;
+    mEDfac = 0;
+    mBitArrayReader = nullptr;
+    mInitialized = false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -40,6 +58,15 @@ GridDataRepresentationImpl::GridDataRepresentationImpl(const GridDataRepresentat
 
 GridDataRepresentationImpl::~GridDataRepresentationImpl()
 {
+  try
+  {
+    if (mBitArrayReader != nullptr)
+      delete mBitArrayReader;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -90,44 +117,55 @@ void GridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 
 
+void GridDataRepresentationImpl::init(Message *message) const
+{
+  try
+  {
+    mData = message->getDataPtr();
+    mDataSize = message->getDataSize();
+    mBinaryScaleFactor = *(mPacking.getBinaryScaleFactor());
+    mDecimalScaleFactor = *(mPacking.getDecimalScaleFactor());
+    mReferenceValue = mPacking.getReferenceValue();
+    mBitsPerValue = *(mPacking.getBitsPerValue());
+    mBitArrayReader = new BitArrayReader(mData,mDataSize*8);
+
+    mEfac = std::pow(2.0, mBinaryScaleFactor);
+    mDfac = std::pow(10, -mDecimalScaleFactor);
+    mRDfac = mReferenceValue * mDfac;
+    mEDfac = mEfac * mDfac;
+
+    mInitialized = true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::ParamValue& value) const
 {
   try
   {
-    T::Data_ptr data = message->getDataPtr();
-    std::size_t dataSize = message->getDataSize();
-    std::int16_t binaryScaleFactor = *(mPacking.getBinaryScaleFactor());
-    std::uint16_t decimalScaleFactor = *(mPacking.getDecimalScaleFactor());
-    std::float_t referenceValue = mPacking.getReferenceValue();
-    std::uint8_t bitsPerValue = *(mPacking.getBitsPerValue());
+    if (!mInitialized)
+      init(message);
 
     // If 'bitsPerValue' is zero then all values are same as the reference value
 
-    if (!bitsPerValue)
+    if (!mBitsPerValue)
     {
-      value = referenceValue;
+      value = mReferenceValue;
       return true;
     }
 
-    double R = referenceValue;
-    std::int16_t E = binaryScaleFactor;
-    std::int16_t D = decimalScaleFactor;
-
-    // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
-
-    const double Efac = std::pow(2.0, E);
-    const double Dfac = std::pow(10, -D);
-
-    const double RDfac = R * Dfac;
-    const double EDfac = Efac * Dfac;
     uint X = 0;
+    mBitArrayReader->setReadPosition(index*mBitsPerValue);
+    mBitArrayReader->readBits(mBitsPerValue,X);
 
-
-    BitArrayReader bitArrayReader(data,dataSize*8);
-    bitArrayReader.setReadPosition(index*bitsPerValue);
-    bitArrayReader.readBits(bitsPerValue,X);
-
-    value = (RDfac + X * EDfac);
+    value = (mRDfac + X * mEDfac);
     // printf("VAL %f\n",value);
     return true;
   }
@@ -221,94 +259,6 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
       }
     }
 
-#if 0
-    // Note: It would be nice to just read a full 64-bit value and shift it all at once.
-    // However, the data section is only guaranteed to be followed by the 4 bytes of an
-    // End section. If we are extremely unlucky, the minimum one byte required by the
-    // packed value plus the 4 bytes of the End section are very close to a memory block
-    // mapped to the program, and reading the 3 extra bytes could in theory cause a
-    // segmentation fault. If not, we'd get a bus error. However, assuming that the have
-    // validated the message, we know there should be at least 8+32 = 40 bits left in
-    // the memory mapped file.
-    // For now we'll settle for the safe option of reading one byte at a time.
-    // TODO: Optimize for speed.
-
-    unsigned int bitsleft = 0;  // How many bits in register
-    unsigned int bits = 0;      // The actual bits in register
-    std::uint64_t bytepos = 0;  // Byte position
-
-    for (std::uint32_t i = 0; i < numOfValues; i++)
-    {
-      if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
-      {
-        decodedValues.push_back(ParamValueMissing);
-      }
-      else
-      {
-        // Read bits still missing from completing the request
-        while (bitsleft < nbits)
-        {
-          if (bytepos >= dataSize)
-          {
-            SmartMet::Spine::Exception exception(BCP,"Trying to access data outside of the memory area!");
-            exception.addParameter("Data size",std::to_string(dataSize));
-            exception.addParameter("Requested position",std::to_string(bytepos));
-            throw exception;
-          }
-
-          bits = (bits << 8) | data[bytepos++];
-          bitsleft += 8;
-        }
-
-        // Calculate the value, keeping only the highest nbits
-        unsigned int X = (bits >> (bitsleft - nbits));  //  & ((1 << nbits) - 1);
-
-        // We used nbits many bits
-        bitsleft -= nbits;
-        bits = bits & ((1 << bitsleft) - 1);
-
-        // Output the caclulated value
-        double Y = RDfac + X * EDfac;
-
-        decodedValues.push_back(Y);
-      }
-    }
-#endif
-/*
-    uint valueCount = 0;
-    uint missingCount = 0;
-    T::ParamValue minValue = ParamValueMissing;
-    T::ParamValue maxValue = ParamValueMissing;
-
-    for (auto it = decodedValues.begin(); it != decodedValues.end(); ++it)
-    {
-      if ((*it) != ParamValueMissing)
-      {
-        if (minValue == ParamValueMissing || ((*it) < minValue))
-        {
-          minValue = *it;
-        }
-
-        if (maxValue == ParamValueMissing || ((*it) > maxValue))
-        {
-          maxValue = *it;
-        }
-        valueCount++;
-      }
-      else
-      {
-        missingCount++;
-      }
-    }
-
-
-    printf("*** MIN %f  MAX %f\n",minValue,maxValue);
-    if (missingCount > 0)
-    {
-      // Bitmap required
-    }
-
-*/
   }
   catch (...)
   {

@@ -14,6 +14,7 @@ class DataWriter
     virtual           ~DataWriter();
 
     virtual ulonglong getWritePosition();
+    virtual void      setLittleEndian(bool _littleEndian);
     virtual void      setWritePosition(ulonglong _pos);
 
     virtual void      write_data(void *_data,ulonglong _size);
@@ -29,6 +30,7 @@ class DataWriter
     virtual void      write_int24(std::int32_t _value);
     virtual void      write_int32(std::int32_t _value);
     virtual void      write_float(std::float_t _value);
+    virtual void      write_double(std::double_t _value);
     virtual void      write_ibmFloat(std::float_t _value);
 
     virtual void      write_uuid(std::array<char,16> _value);
@@ -52,6 +54,7 @@ class DataWriter
     DataWriter&       operator<<(std::int16_t _value);
     DataWriter&       operator<<(std::int32_t _value);
     DataWriter&       operator<<(std::float_t _value);
+    DataWriter&       operator<<(std::double_t _value);
 
     DataWriter&       operator<<(T::UInt8_opt _value);
     DataWriter&       operator<<(T::UInt16_opt _value);
@@ -63,6 +66,10 @@ class DataWriter
     DataWriter&       operator<<(T::Float_opt _value);
 
     DataWriter&       operator<<(std::array<char, 16> _value);
+
+  protected:
+
+    bool              littleEndian;
 };
 
 

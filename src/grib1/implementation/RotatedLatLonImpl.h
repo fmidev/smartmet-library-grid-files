@@ -34,6 +34,18 @@ class RotatedLatLonImpl : public RotatedLatLon
     void              initSpatialReference();
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
     void              read(MemoryReader& memoryReader);
+
+  private:
+
+    void              init() const;
+
+    mutable double    mDx;
+    mutable double    mDy;
+    mutable double    mStartX;
+    mutable double    mStartY;
+    mutable double    mSouthPoleLat;
+    mutable double    mSouthPoleLon;
+    mutable bool      mInitialized;
 };
 
 }  // namespace GRIB1

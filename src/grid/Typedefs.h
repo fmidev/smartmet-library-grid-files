@@ -74,7 +74,6 @@ typedef short ForecastType;
 typedef short ForecastNumber;
 typedef int   GeometryId;
 
-
 typedef uchar ParamKeyType;
 
 class ParamKeyTypeValue

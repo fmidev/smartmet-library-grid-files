@@ -4,7 +4,6 @@
 #include "../common/Exception.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
-#include "../common/BitArrayReader.h"
 
 
 namespace SmartMet
@@ -17,6 +16,22 @@ namespace GRIB1
 
 SimplePacking::SimplePacking()
 {
+  try
+  {
+    mNumOfValues = 0;
+    mData = nullptr;
+    mDataSize = 0;
+    mBinaryScaleFactor = 0;
+    mDecimalScaleFactor = 0;
+    mReferenceValue = 0;
+    mBitsPerValue = 0;
+    mBitArrayReader = nullptr;
+    mInitialized = false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -28,6 +43,22 @@ SimplePacking::SimplePacking()
 SimplePacking::SimplePacking(const SimplePacking& other)
 :DataDefinition(other)
 {
+  try
+  {
+    mNumOfValues = 0;
+    mData = nullptr;
+    mDataSize = 0;
+    mBinaryScaleFactor = 0;
+    mDecimalScaleFactor = 0;
+    mReferenceValue = 0;
+    mBitsPerValue = 0;
+    mBitArrayReader = nullptr;
+    mInitialized = false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -38,6 +69,19 @@ SimplePacking::SimplePacking(const SimplePacking& other)
 
 SimplePacking::~SimplePacking()
 {
+  try
+  {
+    if (mBitArrayReader != nullptr)
+    {
+      delete mBitArrayReader;
+      mBitArrayReader = nullptr;
+    }
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
+  }
 }
 
 
@@ -76,58 +120,72 @@ DataDefinition* SimplePacking::createDataDefinition() const
 
 
 
+void SimplePacking::init(Message *message) const
+{
+  try
+  {
+    if (mInitialized)
+      return;
+
+    mNumOfValues = message->getGridOriginalValueCount();
+    mData = message->getDataPtr();
+    mDataSize = message->getDataSize();
+    mBinaryScaleFactor = message->getBinaryScaleFactor();
+    mDecimalScaleFactor = message->getDecimalScaleFactor();
+    mReferenceValue = message->getReferenceValue();
+    mBitsPerValue = message->getBitsPerValue();
+
+    mEfac = std::pow(2.0, mBinaryScaleFactor);
+    mDfac = std::pow(10, -mDecimalScaleFactor);
+    mRDfac = mReferenceValue * mDfac;
+    mEDfac = mEfac * mDfac;
+
+    std::size_t ss = ((mNumOfValues * mBitsPerValue) / 8) + 1;
+    if (mDataSize < ss)
+      mDataSize = message->getDataSizeMax();
+
+    mBitArrayReader = new BitArrayReader(mData,mDataSize*8);
+
+    mInitialized = true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& value) const
 {
   try
   {
-    std::size_t numOfValues = message->getGridOriginalValueCount();
-    T::Data_ptr data = message->getDataPtr();
-    std::size_t dataSize = message->getDataSize();
-    std::int16_t binaryScaleFactor = message->getBinaryScaleFactor();
-    std::uint16_t decimalScaleFactor = message->getDecimalScaleFactor();
-    std::float_t referenceValue = message->getReferenceValue();
-    std::uint8_t bitsPerValue = message->getBitsPerValue();
+    if (!mInitialized)
+      init(message);
 
-    if (data == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
+    if (index >= mNumOfValues)
+      return false;
 
-    // If 'bitsPerValue' is zero then all values are same as the reference value
-
-    if (!bitsPerValue)
+    if (!mBitsPerValue)
     {
-      value = referenceValue;
+      // If 'bitsPerValue' is zero then all values are same as the reference value
+      value = mReferenceValue;
       return true;
     }
 
-    double R = referenceValue;
-    std::int16_t E = binaryScaleFactor;
-    std::int16_t D = decimalScaleFactor;
-
-    // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
-
-    const double Efac = std::pow(2.0, E);
-    const double Dfac = std::pow(10, -D);
-
-    const double RDfac = R * Dfac;
-    const double EDfac = Efac * Dfac;
     uint X = 0;
+    mBitArrayReader->setReadPosition(index*mBitsPerValue);
+    mBitArrayReader->readBits(mBitsPerValue,X);
 
-    std::size_t ss = ((numOfValues * bitsPerValue) / 8) + 1;
-    if (dataSize < ss)
-      dataSize = message->getDataSizeMax();
-
-    BitArrayReader bitArrayReader(data,dataSize*8);
-    bitArrayReader.setReadPosition(index*bitsPerValue);
-    bitArrayReader.readBits(bitsPerValue,X);
-
-    double Y = RDfac + X * EDfac;
+    double Y = mRDfac + X * mEDfac;
 
     if (round(Y) == 9999)
       value = ParamValueMissing;
     else
       value = Y;
 
-    // value = (RDfac + X * EDfac);
     return true;
   }
   catch (...)
@@ -135,6 +193,7 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
 
 
 

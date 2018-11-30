@@ -11,6 +11,7 @@ class MemoryReader
 {
   public:
                         MemoryReader(unsigned char *_startPtr,ulonglong _size);
+                        MemoryReader(unsigned char *_startPtr,ulonglong _size,bool _dataRelease);
                         MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr);
     virtual             ~MemoryReader();
 
@@ -24,6 +25,7 @@ class MemoryReader
     void                setReadPosition(ulonglong _pos);
     void                setParentPtr(unsigned char *_parentPtr);
     unsigned char*      getParentPtr();
+    void                setLittleEndian(bool _littleEndian);
 
     unsigned char       getByte(ulonglong _pos);
     unsigned char       getByte(unsigned char *_posPtr);
@@ -61,6 +63,7 @@ class MemoryReader
     std::int32_t        read_int24();
     std::int32_t        read_int32();
     std::float_t        read_float();
+    std::double_t       read_double();
     std::float_t        read_ibmFloat();
 
     std::array<char,16> read_uuid();
@@ -82,6 +85,8 @@ class MemoryReader
     unsigned char*      endPtr;
     unsigned char*      readPtr;
     unsigned char*      parentPtr;
+    bool                dataRelease;
+    bool                littleEndian;
 };
 
 

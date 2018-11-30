@@ -1,21 +1,32 @@
 #include "GraphFunctions.h"
 #include "Exception.h"
-#include "Typedefs.h"
+#include "ImageFunctions.h"
+#include "MemoryReader.h"
+#include "MemoryWriter.h"
+#include "GeneralFunctions.h"
+#include "AutoThreadLock.h"
+#include "ShowFunction.h"
+#include "SimpleDataMatrixAdapter.h"
+
 #include <math.h>
 #include <sstream>
+#include <stack>
+
+#include <geos/io/WKBWriter.h>
+#include <tron/FmiBuilder.h>
+#include <tron/Tron.h>
+#include <tron/SavitzkyGolay2D.h>
+
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
+
 
 
 namespace SmartMet
 {
 
-
-#ifndef MIN
-  #define MIN(a,b) (((a)<(b))?(a):(b))
-#endif
-
-#ifndef MAX
-  #define MAX(a,b) (((a)>(b))?(a):(b))
-#endif
+extern void convertWkbCoordinates(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation);
 
 
 
@@ -133,7 +144,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
 
 
 
-void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordinate>& polygonPoints,std::vector<T::Point>& gridPoints)
+void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& polygonPoints,std::vector<T::Point>& gridPoints)
 {
   try
   {
@@ -263,7 +274,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordina
 
 
 
-void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::vector<T::Coordinate>>& polygonPath,std::vector<T::Point>& gridPoints)
+void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& polygonPath,std::vector<T::Point>& gridPoints)
 {
   try
   {
@@ -478,11 +489,11 @@ void getPointsInsideCircle(int gridWidth,int gridHeight,double origoX,double ori
 
 
 
-void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,std::vector<std::vector<T::Coordinate>>& polygonPath)
+void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,T::Polygon_vec& polygonPath)
 {
   try
   {
-    std::vector<T::Coordinate> polygonPoints;
+    T::Coordinate_vec polygonPoints;
 
     for (auto it=svgPath.begin(); it!=svgPath.end(); ++it)
     {
@@ -577,7 +588,7 @@ void convertWktMultipolygonToSvgPath(const std::string& wktString,NFmiSvgPath& s
 
 
 
-void convertWktMultipolygonToPolygonPath(const std::string& wktString,std::vector<std::vector<T::Coordinate>>& polygonPath)
+void convertWktMultipolygonToPolygonPath(const std::string& wktString,T::Polygon_vec& polygonPath)
 {
   try
   {
@@ -850,11 +861,11 @@ void getPointMovementRev(double x1,double y1,double x2,double y2,double areaExte
 
 
 
-std::vector<T::Coordinate> getEnlargedPolygon(std::vector<T::Coordinate>& oldCoordinates,double areaExtensionX,double areaExtensionY,bool rev)
+T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec& oldCoordinates,double areaExtensionX,double areaExtensionY,bool rev)
 {
   try
   {
-    std::vector<T::Coordinate> newCoordinates;
+    T::Coordinate_vec newCoordinates;
 
     std::vector<std::pair<T::Coordinate,T::Coordinate>> tmpLines;
     int points = C_INT(oldCoordinates.size());
@@ -912,7 +923,7 @@ std::vector<T::Coordinate> getEnlargedPolygon(std::vector<T::Coordinate>& oldCoo
 
 
 
-double getPolygonLen(std::vector<T::Coordinate>& coordinates)
+double getPolygonLen(T::Coordinate_vec& coordinates)
 {
   try
   {
@@ -939,7 +950,7 @@ double getPolygonLen(std::vector<T::Coordinate>& coordinates)
 
 
 
-std::vector<T::Coordinate> getEnlargedPolygon(std::vector<T::Coordinate>& oldCoordinates,double areaExtensionX,double areaExtensionY)
+T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec& oldCoordinates,double areaExtensionX,double areaExtensionY)
 {
   try
   {
@@ -977,15 +988,15 @@ std::vector<T::Coordinate> getEnlargedPolygon(std::vector<T::Coordinate>& oldCoo
 
 
 
-std::vector<std::vector<T::Coordinate>> getEnlargedPolygonPath(std::vector<std::vector<T::Coordinate>>& oldPath,double areaExtensionX,double areaExtensionY)
+T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec& oldPath,double areaExtensionX,double areaExtensionY)
 {
   try
   {
-    std::vector<std::vector<T::Coordinate>> newPath;
+    T::Polygon_vec newPath;
 
     for (auto coordinates = oldPath.begin(); coordinates != oldPath.end(); ++coordinates)
     {
-      std::vector<T::Coordinate> newCoordinates = getEnlargedPolygon(*coordinates,areaExtensionX,areaExtensionY);
+      T::Coordinate_vec newCoordinates = getEnlargedPolygon(*coordinates,areaExtensionX,areaExtensionY);
       newPath.push_back(newCoordinates);
     }
     return newPath;
@@ -997,361 +1008,226 @@ std::vector<std::vector<T::Coordinate>> getEnlargedPolygonPath(std::vector<std::
 }
 
 
+#if 0
 
 
-
-uint getIsolines(std::vector<float>& d,int width,int height,int ilb,int iub,int jlb,int jub,std::vector<float>& z,T::ContourLine *line,uint maxLines)
+class DataMatrixAdapter
 {
-#define xsect(p1,p2) (h[p2]*xh[p1]-h[p1]*xh[p2])/(h[p2]-h[p1])
-#define ysect(p1,p2) (h[p2]*yh[p1]-h[p1]*yh[p2])/(h[p2]-h[p1])
-#define pos(xx,yy) ((yy)*width+(xx))
+  public:
+    typedef float value_type;
+    typedef double coord_type;
+    typedef NFmiDataMatrix<float>::size_type size_type;
 
-  try
-  {
-    uint lineCount = 0;
-    int nc = (int)z.size();
-    double x1=0,x2=0,y1=0,y2=0;
-    int m1 = 0;
-    int m2 = 0;
-    int m3 = 0;
-    int case_value = 0;
 
-    double h[5];
-    int sh[5];
-    double xh[5],yh[5];
-    int im[4] = {0,1,1,0},jm[4]={0,0,1,1};
-    int castab[3][3][3] = {
-      { {0,0,8},{0,2,5},{7,6,9} },
-      { {0,3,4},{1,3,1},{4,3,0} },
-      { {9,6,7},{5,2,0},{8,0,0} }
-    };
-
-    for (int j=(jub-1);j>=jlb;j--)
+    DataMatrixAdapter(std::vector<float>& values,std::vector<T::Coordinate> *coordinates,uint width,uint height)
     {
-      for (int i=ilb;i<=iub-1;i++)
+      mValues = &values;
+      mCoordinates = coordinates;
+      mWidth = width;
+      mHeight = height;
+      mReleaseData = false;
+      mMissingValue = NAN;
+    }
+
+    DataMatrixAdapter(const DataMatrixAdapter& other)
+    {
+      mValues = nullptr;
+      mCoordinates = nullptr;
+      mWidth = other.mWidth;
+      mHeight = other.mHeight;
+      mMissingValue = NAN;
+      mReleaseData = true;
+
+      if (other.mValues != nullptr)
       {
-        double temp1 = MIN(d[pos(i,j)],d[pos(i,j+1)]);
-        double temp2 = MIN(d[pos(i+1,j)],d[pos(i+1,j+1)]);
-        double dmin  = MIN(temp1,temp2);
-        temp1 = MAX(d[pos(i,j)],d[pos(i,j+1)]);
-        temp2 = MAX(d[pos(i+1,j)],d[pos(i+1,j+1)]);
-        double  dmax  = MAX(temp1,temp2);
-        if (dmax < z[0] || dmin > z[nc-1])
-          continue;
+        mValues = new std::vector<float>();
+        *mValues = *other.mValues;
+      }
 
-        for (int k=0; k<nc; k++)
-        {
-          if (z[k] < dmin || z[k] > dmax)
-            continue;
-
-          for (int m=4; m>=0; m--)
-          {
-            if (m > 0)
-            {
-              h[m]  = d[pos(i+im[m-1],j+jm[m-1])]-z[k];
-              xh[m] = i+im[m-1];
-              yh[m] = j+jm[m-1];
-            }
-            else
-            {
-              h[0]  = 0.25 * (h[1]+h[2]+h[3]+h[4]);
-              xh[0] = 0.50 * (i+i+1);
-              yh[0] = 0.50 * (j+j+1);
-            }
-
-            if (h[m] > 0.0)
-              sh[m] = 1;
-            else
-            if (h[m] < 0.0)
-              sh[m] = -1;
-            else
-              sh[m] = 0;
-          }
-
-          for (int m=1; m<=4; m++)
-          {
-            m1 = m;
-            m2 = 0;
-
-            if (m != 4)
-              m3 = m + 1;
-            else
-              m3 = 1;
-
-            if ((case_value = castab[sh[m1]+1][sh[m2]+1][sh[m3]+1]) == 0)
-              continue;
-
-            switch (case_value)
-            {
-              case 1:
-                x1 = xh[m1];
-                y1 = yh[m1];
-                x2 = xh[m2];
-                y2 = yh[m2];
-                break;
-
-              case 2:
-                x1 = xh[m2];
-                y1 = yh[m2];
-                x2 = xh[m3];
-                y2 = yh[m3];
-                break;
-
-              case 3:
-                x1 = xh[m3];
-                y1 = yh[m3];
-                x2 = xh[m1];
-                y2 = yh[m1];
-                break;
-
-              case 4:
-                x1 = xh[m1];
-                y1 = yh[m1];
-                x2 = xsect(m2,m3);
-                y2 = ysect(m2,m3);
-                break;
-
-              case 5:
-                x1 = xh[m2];
-                y1 = yh[m2];
-                x2 = xsect(m3,m1);
-                y2 = ysect(m3,m1);
-                break;
-
-              case 6:
-                x1 = xh[m3];
-                y1 = yh[m3];
-                x2 = xsect(m1,m2);
-                y2 = ysect(m1,m2);
-                break;
-
-              case 7:
-                x1 = xsect(m1,m2);
-                y1 = ysect(m1,m2);
-                x2 = xsect(m2,m3);
-                y2 = ysect(m2,m3);
-                break;
-
-              case 8:
-                x1 = xsect(m2,m3);
-                y1 = ysect(m2,m3);
-                x2 = xsect(m3,m1);
-                y2 = ysect(m3,m1);
-                break;
-
-              case 9:
-                x1 = xsect(m3,m1);
-                y1 = ysect(m3,m1);
-                x2 = xsect(m1,m2);
-                y2 = ysect(m1,m2);
-                break;
-
-              default:
-                break;
-            }
-
-            /* Finally draw the line */
-
-            line[lineCount].mX1 = x1;
-            line[lineCount].mY1 = y1;
-            line[lineCount].mX2 = x2;
-            line[lineCount].mY2 = y2;
-
-            //line[lineCount].mLevel = k;
-            //line[lineCount].mValue = z[k];
-            lineCount++;
-
-            if (lineCount == maxLines)
-              return lineCount;
-
-            //lineVectorVector[k].push_back(T::Line(x1,y1,x2,y2));
-            //drawLine(x1,y1,x2,y2,z[k]);
-          }
-        }
+      if (other.mCoordinates != nullptr)
+      {
+        mCoordinates = new std::vector<T::Coordinate>();
+        *mCoordinates = *other.mCoordinates;
       }
     }
-    return lineCount;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
 
-
-
-
-
-uint getIsolines(std::vector<double>& d,int width,int height,int ilb,int iub,int jlb,int jub,std::vector<double>& z,T::ContourLine *line,uint maxLines)
-{
-#define xsect(p1,p2) (h[p2]*xh[p1]-h[p1]*xh[p2])/(h[p2]-h[p1])
-#define ysect(p1,p2) (h[p2]*yh[p1]-h[p1]*yh[p2])/(h[p2]-h[p1])
-#define pos(xx,yy) ((yy)*width+(xx))
-
-  try
-  {
-    uint lineCount = 0;
-    int nc = (int)z.size();
-    double x1=0,x2=0,y1=0,y2=0;
-    int m1 = 0;
-    int m2 = 0;
-    int m3 = 0;
-    int case_value = 0;
-    double h[5];
-    int sh[5];
-    double xh[5],yh[5];
-
-    int im[4] = {0,1,1,0},jm[4]={0,0,1,1};
-    int castab[3][3][3] = {
-      { {0,0,8},{0,2,5},{7,6,9} },
-      { {0,3,4},{1,3,1},{4,3,0} },
-      { {9,6,7},{5,2,0},{8,0,0} }
-    };
-
-    for (int j=(jub-1);j>=jlb;j--)
+    virtual ~DataMatrixAdapter()
     {
-      for (int i=ilb;i<=iub-1;i++)
+      if (mReleaseData)
       {
-        double temp1 = MIN(d[pos(i,j)],d[pos(i,j+1)]);
-        double temp2 = MIN(d[pos(i+1,j)],d[pos(i+1,j+1)]);
-        double dmin  = MIN(temp1,temp2);
-        temp1 = MAX(d[pos(i,j)],d[pos(i,j+1)]);
-        temp2 = MAX(d[pos(i+1,j)],d[pos(i+1,j+1)]);
-        double  dmax  = MAX(temp1,temp2);
-        if (dmax < z[0] || dmin > z[nc-1])
-          continue;
+        if (mValues != nullptr)
+          delete mValues;
 
-        for (int k=0; k<nc; k++)
-        {
-          if (z[k] < dmin || z[k] > dmax)
-            continue;
-
-          for (int m=4; m>=0; m--)
-          {
-            if (m > 0)
-            {
-              h[m]  = d[pos(i+im[m-1],j+jm[m-1])]-z[k];
-              xh[m] = i+im[m-1];
-              yh[m] = j+jm[m-1];
-            }
-            else
-            {
-              h[0]  = 0.25 * (h[1]+h[2]+h[3]+h[4]);
-              xh[0] = 0.50 * (i+i+1);
-              yh[0] = 0.50 * (j+j+1);
-            }
-
-            if (h[m] > 0.0)
-              sh[m] = 1;
-            else
-            if (h[m] < 0.0)
-              sh[m] = -1;
-            else
-              sh[m] = 0;
-          }
-
-          for (int m=1; m<=4; m++)
-          {
-            m1 = m;
-            m2 = 0;
-
-            if (m != 4)
-              m3 = m + 1;
-            else
-              m3 = 1;
-
-            if ((case_value = castab[sh[m1]+1][sh[m2]+1][sh[m3]+1]) == 0)
-              continue;
-
-            switch (case_value)
-            {
-              case 1:
-                x1 = xh[m1];
-                y1 = yh[m1];
-                x2 = xh[m2];
-                y2 = yh[m2];
-                break;
-
-              case 2:
-                x1 = xh[m2];
-                y1 = yh[m2];
-                x2 = xh[m3];
-                y2 = yh[m3];
-                break;
-
-              case 3:
-                x1 = xh[m3];
-                y1 = yh[m3];
-                x2 = xh[m1];
-                y2 = yh[m1];
-                break;
-
-              case 4:
-                x1 = xh[m1];
-                y1 = yh[m1];
-                x2 = xsect(m2,m3);
-                y2 = ysect(m2,m3);
-                break;
-
-              case 5:
-                x1 = xh[m2];
-                y1 = yh[m2];
-                x2 = xsect(m3,m1);
-                y2 = ysect(m3,m1);
-                break;
-
-              case 6:
-                x1 = xh[m3];
-                y1 = yh[m3];
-                x2 = xsect(m1,m2);
-                y2 = ysect(m1,m2);
-                break;
-
-              case 7:
-                x1 = xsect(m1,m2);
-                y1 = ysect(m1,m2);
-                x2 = xsect(m2,m3);
-                y2 = ysect(m2,m3);
-                break;
-
-              case 8:
-                x1 = xsect(m2,m3);
-                y1 = ysect(m2,m3);
-                x2 = xsect(m3,m1);
-                y2 = ysect(m3,m1);
-                break;
-
-              case 9:
-                x1 = xsect(m3,m1);
-                y1 = ysect(m3,m1);
-                x2 = xsect(m1,m2);
-                y2 = ysect(m1,m2);
-                break;
-
-              default:
-                break;
-            }
-
-            /* Finally draw the line */
-
-            line[lineCount].mX1 = x1;
-            line[lineCount].mY1 = y1;
-            line[lineCount].mX2 = x2;
-            line[lineCount].mY2 = y2;
-            //line[lineCount].mLevel = k;
-            //line[lineCount].mValue = z[k];
-            lineCount++;
-
-            if (lineCount == maxLines)
-              return lineCount;
-
-            //lineVectorVector[k].push_back(T::Line(x1,y1,x2,y2));
-            //drawLine(x1,y1,x2,y2,z[k]);
-          }
-        }
+        if (mCoordinates != nullptr)
+          delete mCoordinates;
       }
     }
-    return lineCount;
+
+    const float& operator()(uint i, uint j) const
+    {
+      uint pos = (j % mHeight)*mWidth + (i % mWidth);
+      if (mCoordinates != nullptr  &&  (*mCoordinates)[pos].x() == ParamValueMissing)
+        return mMissingValue;
+
+      if ((*mValues)[pos] == ParamValueMissing)
+        return mMissingValue;
+
+      return (*mValues)[pos];
+    }
+
+    float& operator()(uint i, uint j)
+    {
+      uint pos = (j % mHeight)*mWidth + (i % mWidth);
+      if (mCoordinates != nullptr  &&  (*mCoordinates)[pos].x() == ParamValueMissing)
+        return mMissingValue;
+
+      if ((*mValues)[pos] == ParamValueMissing)
+        return mMissingValue;
+
+      return (*mValues)[pos];
+    }
+
+    double x(uint i, uint j) const
+    {
+      if (mCoordinates == nullptr)
+        return i;
+
+      if (i < mWidth  &&  j < mHeight)
+        return (*mCoordinates)[(j % mHeight)*mWidth + i].x();
+
+      return 360;
+    }
+
+    double y(uint i, uint j) const
+    {
+      if (mCoordinates == nullptr)
+        return j;
+
+      if (i < mWidth  &&  j < mHeight)
+        return (*mCoordinates)[(j % mHeight)*mWidth + i].y();
+
+      return 90;
+    }
+
+    uint width() const
+    {
+      return mWidth;
+    }
+
+    uint height() const
+    {
+      return mHeight;
+    }
+
+    void swap(DataMatrixAdapter& other)
+    {
+      mWidth = other.mWidth;
+      mHeight = other.mHeight;
+
+      if (other.mValues != nullptr  &&  mValues != nullptr)
+      {
+        *mValues = *other.mValues;
+      }
+
+      if (other.mCoordinates != nullptr  &&  mCoordinates != nullptr)
+      {
+        mCoordinates = new std::vector<T::Coordinate>();
+      }
+    }
+
+
+  private:
+    std::vector<float>          *mValues;
+    std::vector<T::Coordinate>  *mCoordinates;
+    uint                        mWidth;
+    uint                        mHeight;
+    bool                        mReleaseData;
+    float                       mMissingValue;
+};
+
+#endif
+
+
+
+typedef boost::shared_ptr<geos::geom::Geometry> GeometryPtr;
+
+typedef Tron::Traits<double, double, Tron::InfMissing> MyTraits;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LinearInterpolation>  MyLinearContourer;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LogLinearInterpolation> MyLogLinearContourer;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::NearestNeighbourInterpolation>  MyNearestContourer;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::DiscreteInterpolation> MyDiscreteContourer;
+typedef Tron::Hints<SimpleDataMatrixAdapter, MyTraits> MyHints;
+
+
+
+
+void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int width,int height,std::vector<float>& contourValues,short interpolationMethod,size_t smooth_size,size_t smooth_degree,T::WkbData_vec& contours)
+{
+  try
+  {
+    if (gridData.size() == 0)
+      return;
+
+    std::vector<float> *gridDataPtr = &gridData;
+    std::vector<float> tmpGridData;
+    if (smooth_size > 0 || smooth_degree > 0)
+    {
+      tmpGridData = gridData;
+      SimpleDataMatrixAdapter tmpData(tmpGridData,nullptr,width,height);
+      Tron::SavitzkyGolay2D::smooth(tmpData, smooth_size, smooth_degree);
+      gridDataPtr = &tmpGridData;
+    }
+    SimpleDataMatrixAdapter data(*gridDataPtr,coordinates,width,height);
+
+    std::unique_ptr<MyHints> hints;
+
+    hints.reset(new MyHints(data));
+
+    bool worldwrap = false;
+
+    auto len = contourValues.size();
+    for (size_t c = 0; c<len; c++)
+    {
+      double isovalue = contourValues[c];
+
+      boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
+      Tron::FmiBuilder builder(itsGeomFactory);
+
+      switch (interpolationMethod)
+      {
+        case T::AreaInterpolationMethod::Linear:
+          MyLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
+          break;
+
+//        case T::AreaInterpolationMethod::Nearest:
+//          MyNearestContourer::line(builder, data, isovalue, worldwrap, *hints);
+//          break;
+
+        default:
+          MyLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
+          break;
+      }
+
+      auto geom = builder.result();
+
+      std::ostringstream out;
+      geos::io::WKBWriter writer;
+
+      writer.write(*geom, out);
+
+
+      const auto &wkb = out.str();
+      unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+      size_t size = wkb.length();
+
+      T::WkbData wkbData;
+      wkbData.reserve(size);
+
+      for (size_t t=0; t<size; t++)
+        wkbData.push_back(data[t]);
+
+      contours.push_back(wkbData);
+    }
   }
   catch (...)
   {
@@ -1364,187 +1240,387 @@ uint getIsolines(std::vector<double>& d,int width,int height,int ilb,int iub,int
 
 
 
-uint getIsolines(std::vector<float>& d,int width,int height,int ilb,int iub,int jlb,int jub,std::vector<float>& z,std::vector<T::ContourLine_vec>& lineVecVec)
+void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordinates,int width,int height,std::vector<float>& contourLowValues,std::vector<float>& contourHighValues,short interpolationMethod,size_t smooth_size,size_t smooth_degree,T::WkbData_vec& contours)
 {
-#define xsect(p1,p2) (h[p2]*xh[p1]-h[p1]*xh[p2])/(h[p2]-h[p1])
-#define ysect(p1,p2) (h[p2]*yh[p1]-h[p1]*yh[p2])/(h[p2]-h[p1])
-#define pos(xx,yy) ((yy)*width+(xx))
-
   try
   {
-    uint lineCount = 0;
-    int nc = (int)z.size();
-    for (int t=0; t<nc; t++)
+    if (gridData.size() == 0)
+      return;
+
+    std::vector<float> *gridDataPtr = &gridData;
+    std::vector<float> tmpGridData;
+
+    if (smooth_size > 0 || smooth_degree > 0)
     {
-      T::ContourLine_vec vec;
-      lineVecVec.push_back(vec);
+      tmpGridData = gridData;
+      SimpleDataMatrixAdapter tmpData(tmpGridData,nullptr,width,height);
+      Tron::SavitzkyGolay2D::smooth(tmpData, smooth_size, smooth_degree);
+      gridDataPtr = &tmpGridData;
     }
 
-    double x1=0,x2=0,y1=0,y2=0;
-    int m1 = 0;
-    int m2 = 0;
-    int m3 = 0;
-    int case_value = 0;
+    SimpleDataMatrixAdapter data(*gridDataPtr,coordinates,width,height);
 
-    double h[5];
-    int sh[5];
-    double xh[5],yh[5];
-    int im[4] = {0,1,1,0},jm[4]={0,0,1,1};
-    int castab[3][3][3] = {
-      { {0,0,8},{0,2,5},{7,6,9} },
-      { {0,3,4},{1,3,1},{4,3,0} },
-      { {9,6,7},{5,2,0},{8,0,0} }
-    };
+    std::unique_ptr<MyHints> hints;
+    hints.reset(new MyHints(data));
 
-    for (int j=(jub-1);j>=jlb;j--)
+
+    bool worldwrap = false;
+
+    auto len = contourLowValues.size();
+    if (contourHighValues.size() != len)
     {
-      for (int i=ilb;i<=iub-1;i++)
+      throw SmartMet::Spine::Exception(BCP,"There should be the same number of contour high and low values!");
+    }
+
+    for (size_t c = 0; c<len; c++)
+    {
+      double low = contourLowValues[c];
+      double high = contourHighValues[c];
+
+      boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
+      Tron::FmiBuilder builder(itsGeomFactory);
+
+      switch (interpolationMethod)
       {
-        double temp1 = MIN(d[pos(i,j)],d[pos(i,j+1)]);
-        double temp2 = MIN(d[pos(i+1,j)],d[pos(i+1,j+1)]);
-        double dmin  = MIN(temp1,temp2);
-        temp1 = MAX(d[pos(i,j)],d[pos(i,j+1)]);
-        temp2 = MAX(d[pos(i+1,j)],d[pos(i+1,j+1)]);
-        double  dmax  = MAX(temp1,temp2);
-        if (dmax < z[0] || dmin > z[nc-1])
-          continue;
-
-        for (int k=0; k<nc; k++)
-        {
-          if (z[k] < dmin || z[k] > dmax)
-            continue;
-
-          for (int m=4; m>=0; m--)
-          {
-            if (m > 0)
-            {
-              h[m]  = d[pos(i+im[m-1],j+jm[m-1])]-z[k];
-              xh[m] = i+im[m-1];
-              yh[m] = j+jm[m-1];
-            }
-            else
-            {
-              h[0]  = 0.25 * (h[1]+h[2]+h[3]+h[4]);
-              xh[0] = 0.50 * (i+i+1);
-              yh[0] = 0.50 * (j+j+1);
-            }
-
-            if (h[m] > 0.0)
-              sh[m] = 1;
-            else
-            if (h[m] < 0.0)
-              sh[m] = -1;
-            else
-              sh[m] = 0;
-          }
-
-          for (int m=1; m<=4; m++)
-          {
-            m1 = m;
-            m2 = 0;
-
-            if (m != 4)
-              m3 = m + 1;
-            else
-              m3 = 1;
-
-            if ((case_value = castab[sh[m1]+1][sh[m2]+1][sh[m3]+1]) == 0)
-              continue;
-
-            switch (case_value)
-            {
-              case 1:
-                x1 = xh[m1];
-                y1 = yh[m1];
-                x2 = xh[m2];
-                y2 = yh[m2];
-                break;
-
-              case 2:
-                x1 = xh[m2];
-                y1 = yh[m2];
-                x2 = xh[m3];
-                y2 = yh[m3];
-                break;
-
-              case 3:
-                x1 = xh[m3];
-                y1 = yh[m3];
-                x2 = xh[m1];
-                y2 = yh[m1];
-                break;
-
-              case 4:
-                x1 = xh[m1];
-                y1 = yh[m1];
-                x2 = xsect(m2,m3);
-                y2 = ysect(m2,m3);
-                break;
-
-              case 5:
-                x1 = xh[m2];
-                y1 = yh[m2];
-                x2 = xsect(m3,m1);
-                y2 = ysect(m3,m1);
-                break;
-
-              case 6:
-                x1 = xh[m3];
-                y1 = yh[m3];
-                x2 = xsect(m1,m2);
-                y2 = ysect(m1,m2);
-                break;
-
-              case 7:
-                x1 = xsect(m1,m2);
-                y1 = ysect(m1,m2);
-                x2 = xsect(m2,m3);
-                y2 = ysect(m2,m3);
-                break;
-
-              case 8:
-                x1 = xsect(m2,m3);
-                y1 = ysect(m2,m3);
-                x2 = xsect(m3,m1);
-                y2 = ysect(m3,m1);
-                break;
-
-              case 9:
-                x1 = xsect(m3,m1);
-                y1 = ysect(m3,m1);
-                x2 = xsect(m1,m2);
-                y2 = ysect(m1,m2);
-                break;
-
-              default:
-                break;
-            }
-
-            /* Finally draw the line */
-
-            T::ContourLine line;
-            line.mX1 = x1;
-            line.mY1 = y1;
-            line.mX2 = x2;
-            line.mY2 = y2;
-            //line.mLevel = k;
-            //line.mValue = z[k];
-            lineVecVec[k].push_back(line);
-            lineCount++;
-
-            //lineVectorVector[k].push_back(T::Line(x1,y1,x2,y2));
-            //drawLine(x1,y1,x2,y2,z[k]);
-          }
-        }
+        case T::AreaInterpolationMethod::Linear:
+          MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
+          break;
+/*
+        case T::AreaInterpolationMethod::Nearest:
+          MyNearestContourer::fill(builder, data, low,high, worldwrap, *hints);
+          break;
+*/
+        default:
+          MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
+          break;
       }
+
+
+      auto geom = builder.result();
+
+      std::ostringstream out;
+      geos::io::WKBWriter writer;
+
+      writer.write(*geom, out);
+
+
+      const auto &wkb = out.str();
+      unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+      size_t size = wkb.length();
+
+      T::WkbData wkbData;
+      wkbData.reserve(size);
+
+      for (size_t t=0; t<size; t++)
+        wkbData.push_back(data[t]);
+
+      contours.push_back(wkbData);
     }
-    return lineCount;
   }
   catch (...)
   {
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
+
+
+
+#if 0
+void convertWkbPoint(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void convertWkbLine(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::uint32_t pointCount = _memoryReader.read_uint32();
+    _memoryWriter.write_uint32(pointCount);
+
+    for (std::uint32_t t=0; t<pointCount; t++)
+    {
+      double x = _memoryReader.read_double();
+      double y = _memoryReader.read_double();
+
+      _transformation.Transform(1,&x,&y);
+
+      _memoryWriter.write_double(x);
+      _memoryWriter.write_double(y);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void convertWkbRing(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::uint32_t pointCount = _memoryReader.read_uint32();
+    _memoryWriter.write_uint32(pointCount);
+
+    for (std::uint32_t t=0; t<pointCount; t++)
+    {
+      double x = _memoryReader.read_double();
+      double y = _memoryReader.read_double();
+
+      _transformation.Transform(1,&x,&y);
+
+      _memoryWriter.write_double(x);
+      _memoryWriter.write_double(y);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void convertWkbPolygon(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::uint32_t ringCount = _memoryReader.read_uint32();
+    _memoryWriter.write_uint32(ringCount);
+
+    for (std::uint32_t t=0; t<ringCount; t++)
+    {
+      convertWkbRing(_memoryReader,_memoryWriter,_transformation);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void convertWkbMultiPoint(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void convertWkbMultiLineString(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::uint32_t stringCount = _memoryReader.read_uint32();
+    _memoryWriter.write_uint32(stringCount);
+
+    for (std::uint32_t t=0; t<stringCount; t++)
+    {
+      std::uint8_t byteOrder = _memoryReader.read_uint8();
+      _memoryWriter.write_uint8(byteOrder);
+
+      _memoryReader.setLittleEndian((bool)byteOrder);
+      _memoryWriter.setLittleEndian((bool)byteOrder);
+
+      std::uint32_t wkbType = _memoryReader.read_uint32();
+      _memoryWriter.write_uint32(wkbType);
+
+      convertWkbLine(_memoryReader,_memoryWriter,_transformation);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void convertWkbMultiPolygon(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void convertWkbGeometryCollection(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::uint32_t geometryCount = _memoryReader.read_uint32();
+    for (std::uint32_t t=0; t<geometryCount; t++)
+    {
+      convertWkbCoordinates(_memoryReader,_memoryWriter,_transformation);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void convertWkbCoordinates(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+    while (_memoryReader.getReadPosition() < _memoryReader.getDataSize())
+    {
+      std::uint8_t byteOrder = _memoryReader.read_uint8();
+      _memoryWriter.write_uint8(byteOrder);
+
+      _memoryReader.setLittleEndian((bool)byteOrder);
+      _memoryWriter.setLittleEndian((bool)byteOrder);
+
+      std::uint32_t wkbType = _memoryReader.read_uint32();
+      _memoryWriter.write_uint32(wkbType);
+
+      switch (wkbType)
+      {
+        case 1:
+          convertWkbPoint(_memoryReader,_memoryWriter,_transformation);
+          break;
+
+        case 2:
+          convertWkbLine(_memoryReader,_memoryWriter,_transformation);
+          break;
+
+        case 3:
+          convertWkbPolygon(_memoryReader,_memoryWriter,_transformation);
+          break;
+
+        case 4:
+          convertWkbMultiPoint(_memoryReader,_memoryWriter,_transformation);
+          break;
+
+        case 5:
+          convertWkbMultiLineString(_memoryReader,_memoryWriter,_transformation);
+          break;
+
+        case 6:
+          convertWkbMultiPolygon(_memoryReader,_memoryWriter,_transformation);
+          break;
+
+        case 7:
+          convertWkbGeometryCollection(_memoryReader,_memoryWriter,_transformation);
+          break;
+      }
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void convertWkbCoordinates(T::WkbData& _wkb,T::WkbData& _newWkb,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+    size_t sz = _wkb.size();
+    if (sz == 0)
+      return;
+
+    uchar *buf = new uchar[sz];
+    MemoryReader memoryReader(buf,sz,true);
+
+    uchar *bufnew = new uchar[sz];
+    MemoryWriter memoryWriter(buf,sz,true);
+
+    for (size_t t=0; t<sz; t++)
+      buf[t] = _wkb[t];
+
+    convertWkbCoordinates(memoryReader,memoryWriter,_transformation);
+
+    ulonglong nsize = memoryWriter.getWritePosition();
+
+    for (ulonglong t=0; t<nsize; t++)
+      _newWkb.push_back(bufnew[t]);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void convertWkbCoordinates(T::WkbData_vec& _wkbVec,T::WkbData_vec& _newWkbVec,OGRCoordinateTransformation& _transformation)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = _wkbVec.begin(); it != _wkbVec.end(); ++ it)
+    {
+      T::WkbData newWkb;
+      convertWkbCoordinates(*it,newWkb,_transformation);
+      _newWkbVec.push_back(newWkb);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+#endif
+
 
 }
 

@@ -79,6 +79,7 @@ LIBS = -L$(libdir) \
 	-lsmartmet-newbase \
 	-lsmartmet-spine \
 	-lsmartmet-macgyver \
+	-lsmartmet-tron \
 	-lboost_date_time \
 	-lboost_filesystem \
 	-lboost_iostreams \

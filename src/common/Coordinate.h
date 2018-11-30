@@ -28,6 +28,9 @@ class Coordinate
 };
 
 typedef std::vector<T::Coordinate> Coordinate_vec;
+typedef std::vector<Coordinate_vec> AreaCoordinates;
+typedef std::vector<std::vector<T::Coordinate>> Polygon_vec;
+
 
 }
 }  // namespace SmartMet

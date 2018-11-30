@@ -28,8 +28,15 @@ bool missing(const A& obj)
   return !obj;
 }
 
+namespace T
+{
+  typedef std::vector<uchar> WkbData;
+  typedef std::vector<WkbData> WkbData_vec;
+}
 
 }
+
+
 
 
 namespace std
@@ -37,6 +44,8 @@ namespace std
   typedef int32_t int24_t;
   typedef uint32_t uint24_t;
 };
+
+
 
 
 #define C_CHAR(x) static_cast<char>(x)

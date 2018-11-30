@@ -3,52 +3,97 @@
 #include "Exception.h"
 #include "Point.h"
 #include "Coordinate.h"
+#include "Typedefs.h"
 
 #include <newbase/NFmiSvgPath.h>
 #include <set>
+#include <gdal/ogr_spatialref.h>
 
 
 namespace SmartMet
 {
 
 
-namespace T
-{
+void getPointsInsideCircle(
+    int gridWidth,
+    int gridHeight,
+    double origoX,
+    double origoY,
+    double radius,
+    std::vector<T::Point>& gridPoints);
 
+void getPointsInsidePolygon(
+    int gridWidth,
+    int gridHeight,
+    T::Coordinate_vec& polygonPoints,
+    std::vector<T::Point>& gridPoints);
 
-struct ContourLine
-{
-  double mX1;
-  double mY1;
-  double mX2;
-  double mY2;
-  //double mValue;
-  //uint mLevel;
-};
+void getPointsInsidePolygonPath(
+    int gridWidth,
+    int gridHeight,
+    T::Polygon_vec&
+    polygonPath,
+    std::vector<T::Point>& gridPoints);
 
-typedef std::vector<ContourLine> ContourLine_vec;
-}
+void convertSvgPathToPolygonPath(
+    NFmiSvgPath& svgPath,
+    T::Polygon_vec& polygonPath);
 
+std::string convertWktMultiPolygonToSvgString(
+    const std::string& wktString);
 
+void convertWktMultipolygonToSvgPath(
+    const std::string& wktString,
+    NFmiSvgPath& svgPath);
 
-void getPointsInsideCircle(int gridWidth,int gridHeight,double origoX,double origoY,double radius,std::vector<T::Point>& gridPoints);
-void getPointsInsidePolygon(int gridWidth,int gridHeight,std::vector<T::Coordinate>& polygonPoints,std::vector<T::Point>& gridPoints);
-void getPointsInsidePolygonPath(int gridWidth,int gridHeight,std::vector<std::vector<T::Coordinate>>& polygonPath,std::vector<T::Point>& gridPoints);
+void convertWktMultipolygonToPolygonPath(
+    const std::string& wktString,
+    T::Polygon_vec& polygonPath);
 
-void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,std::vector<std::vector<T::Coordinate>>& polygonPath);
+T::Coordinate_vec getEnlargedPolygon(
+    T::Coordinate_vec& oldCoordinates,
+    double areaExtensionX,
+    double areaExtensionY);
 
-std::string convertWktMultiPolygonToSvgString(const std::string& wktString);
-void convertWktMultipolygonToSvgPath(const std::string& wktString,NFmiSvgPath& svgPath);
+T::Polygon_vec getEnlargedPolygonPath(
+    T::Polygon_vec& oldPath,
+    double areaExtensionX,
+    double areaExtensionY);
 
-void convertWktMultipolygonToPolygonPath(const std::string& wktString,std::vector<std::vector<T::Coordinate>>& polygonPath);
+void getIsolines(
+    std::vector<float>& gridData,
+    std::vector<T::Coordinate> *coordinates,
+    int width,
+    int height,
+    std::vector<float>& contourValues,
+    short interpolationMethod,
+    size_t smooth_size,
+    size_t smooth_degree,
+    T::WkbData_vec& contours);
 
-std::vector<T::Coordinate> getEnlargedPolygon(std::vector<T::Coordinate>& oldCoordinates,double areaExtensionX,double areaExtensionY);
-std::vector<std::vector<T::Coordinate>> getEnlargedPolygonPath(std::vector<std::vector<T::Coordinate>>& oldPath,double areaExtensionX,double areaExtensionY);
+void getIsobands(
+    std::vector<float>& gridData,
+    std::vector<T::Coordinate> *coordinates,
+    int width,
+    int height,
+    std::vector<float>& contourLowValues,
+    std::vector<float>& contourHighValues,
+    short interpolationMethod,
+    size_t smooth_size,
+    size_t smooth_degree,
+    T::WkbData_vec& contours);
 
+/*
+void convertWkbCoordinates(
+    T::WkbData& _wkb,
+    T::WkbData& _newWkb,
+    OGRCoordinateTransformation& _transformation);
 
-uint getIsolines(std::vector<float>& d,int width,int height,int ilb,int iub,int jlb,int jub,std::vector<float>& z,T::ContourLine *line,uint maxLines);
-uint getIsolines(std::vector<double>& d,int width,int height,int ilb,int iub,int jlb,int jub,std::vector<double>& z,T::ContourLine *line,uint maxLines);
-uint getIsolines(std::vector<float>& d,int width,int height,int ilb,int iub,int jlb,int jub,std::vector<float>& z,std::vector<T::ContourLine_vec>& lineVecVec);
+void convertWkbCoordinates(
+    T::WkbData_vec& _wkbVec,
+    T::WkbData_vec& _newWkbVec,
+    OGRCoordinateTransformation& _transformation);
+*/
 
 }
 
