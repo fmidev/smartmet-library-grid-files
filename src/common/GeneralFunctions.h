@@ -96,6 +96,11 @@ int compressData(void *_data,uint _dataSize,void *_compressedData,uint& _compres
 int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompressedData,uint& _decompressedDataSize);
 
 void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordinate>& coordinates);
+
+void splitString(const char *str,char separator,std::vector<uint>& partList);
+void splitString(std::string str,char separator,std::vector<uint>& partList);
+void splitString(const char *str,char separator,std::vector<int>& partList);
+void splitString(std::string str,char separator,std::vector<int>& partList);
 void splitString(const char *str,char separator,std::vector<float>& partList);
 void splitString(std::string str,char separator,std::vector<float>& partList);
 void splitString(const char *str,char separator,std::vector<double>& partList);
@@ -119,5 +124,6 @@ void parseCoordinates(std::string coordinateStr,char separator1,char separator2,
 
 bool patternMatch(const char *str,std::vector<std::string>& patterns);
 void getFileList(const char *dirName,std::vector<std::string>& filePatterns,bool includeSubDirs,std::set<std::string>& dirList,std::vector<std::pair<std::string,std::string>>& fileList);
+void tuneLevels(int& level1,int& level2,int newLevel);
 
 }

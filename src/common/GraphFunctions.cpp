@@ -1165,8 +1165,22 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
 {
   try
   {
-    if (gridData.size() == 0)
+    size_t sz = gridData.size();
+    if (sz == 0)
       return;
+
+    double minValue = gridData[0];
+    double maxValue = gridData[0];
+
+    for (size_t t=0; t<sz; t++)
+    {
+      if (gridData[t] < minValue)
+        minValue = gridData[t];
+
+      if (gridData[t] > maxValue)
+        maxValue = gridData[t];
+    }
+
 
     std::vector<float> *gridDataPtr = &gridData;
     std::vector<float> tmpGridData;
@@ -1189,43 +1203,48 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
     for (size_t c = 0; c<len; c++)
     {
       double isovalue = contourValues[c];
-
-      boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
-      Tron::FmiBuilder builder(itsGeomFactory);
-
-      switch (interpolationMethod)
-      {
-        case T::AreaInterpolationMethod::Linear:
-          MyLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
-          break;
-
-//        case T::AreaInterpolationMethod::Nearest:
-//          MyNearestContourer::line(builder, data, isovalue, worldwrap, *hints);
-//          break;
-
-        default:
-          MyLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
-          break;
-      }
-
-      auto geom = builder.result();
-
-      std::ostringstream out;
-      geos::io::WKBWriter writer;
-
-      writer.write(*geom, out);
-
-
-      const auto &wkb = out.str();
-      unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
-      size_t size = wkb.length();
-
       T::WkbData wkbData;
-      wkbData.reserve(size);
 
-      for (size_t t=0; t<size; t++)
-        wkbData.push_back(data[t]);
+      if (isovalue >= minValue  &&  isovalue <= maxValue)
+      {
+        boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
+        Tron::FmiBuilder builder(itsGeomFactory);
 
+        switch (interpolationMethod)
+        {
+          case T::AreaInterpolationMethod::Linear:
+            MyLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
+            break;
+
+  //        case T::AreaInterpolationMethod::Nearest:
+  //          MyNearestContourer::line(builder, data, isovalue, worldwrap, *hints);
+  //          break;
+
+          default:
+            MyLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
+            break;
+        }
+
+        auto geom = builder.result();
+
+        std::ostringstream out;
+        geos::io::WKBWriter writer;
+
+        writer.write(*geom, out);
+
+
+        const auto &wkb = out.str();
+        unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+        size_t size = wkb.length();
+
+        if (size > 0)
+        {
+          wkbData.reserve(size);
+
+          for (size_t t=0; t<size; t++)
+            wkbData.push_back(data[t]);
+        }
+      }
       contours.push_back(wkbData);
     }
   }
@@ -1244,8 +1263,21 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
 {
   try
   {
-    if (gridData.size() == 0)
+    size_t sz = gridData.size();
+    if (sz == 0)
       return;
+
+    double minValue = gridData[0];
+    double maxValue = gridData[0];
+
+    for (size_t t=0; t<sz; t++)
+    {
+      if (gridData[t] < minValue)
+        minValue = gridData[t];
+
+      if (gridData[t] > maxValue)
+        maxValue = gridData[t];
+    }
 
     std::vector<float> *gridDataPtr = &gridData;
     std::vector<float> tmpGridData;
@@ -1277,43 +1309,48 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
       double low = contourLowValues[c];
       double high = contourHighValues[c];
 
-      boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
-      Tron::FmiBuilder builder(itsGeomFactory);
-
-      switch (interpolationMethod)
-      {
-        case T::AreaInterpolationMethod::Linear:
-          MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
-          break;
-/*
-        case T::AreaInterpolationMethod::Nearest:
-          MyNearestContourer::fill(builder, data, low,high, worldwrap, *hints);
-          break;
-*/
-        default:
-          MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
-          break;
-      }
-
-
-      auto geom = builder.result();
-
-      std::ostringstream out;
-      geos::io::WKBWriter writer;
-
-      writer.write(*geom, out);
-
-
-      const auto &wkb = out.str();
-      unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
-      size_t size = wkb.length();
-
       T::WkbData wkbData;
-      wkbData.reserve(size);
 
-      for (size_t t=0; t<size; t++)
-        wkbData.push_back(data[t]);
+      if (high >= minValue && low <= maxValue)
+      {
+        boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
+        Tron::FmiBuilder builder(itsGeomFactory);
 
+        switch (interpolationMethod)
+        {
+          case T::AreaInterpolationMethod::Linear:
+            MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
+            break;
+  /*
+          case T::AreaInterpolationMethod::Nearest:
+            MyNearestContourer::fill(builder, data, low,high, worldwrap, *hints);
+            break;
+  */
+          default:
+            MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
+            break;
+        }
+
+        auto geom = builder.result();
+
+        std::ostringstream out;
+        geos::io::WKBWriter writer;
+
+        writer.write(*geom, out);
+
+
+        const auto &wkb = out.str();
+        unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+        size_t size = wkb.length();
+
+        if (size > 0)
+        {
+          wkbData.reserve(size);
+
+          for (size_t t=0; t<size; t++)
+            wkbData.push_back(data[t]);
+        }
+      }
       contours.push_back(wkbData);
     }
   }

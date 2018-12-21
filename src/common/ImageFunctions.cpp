@@ -26,11 +26,11 @@ typedef unsigned char uchar;
 
 
 
-extern void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color);
+extern void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color);
 
 
 
-static int compare_coordinates(const void *p1, const void *p2)
+int compare_coordinates(const void *p1, const void *p2)
 {
   const double *v1 = (const double*)p1;
   const double *v2 = (const double*)p2;
@@ -152,7 +152,7 @@ uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value
 // ********************************************* JPEG *********************************************************
 
 
-void jpeg_save(const char *filename, unsigned long *image, int image_height,int image_width, int quality)
+void jpeg_save(const char *filename, uint *image, int image_height,int image_width, int quality)
 {
   try
   {
@@ -165,7 +165,7 @@ void jpeg_save(const char *filename, unsigned long *image, int image_height,int 
     {
       for (int x=0; x<image_width; x++)
       {
-        unsigned long col = image[c];
+        uint col = image[c];
         image_buffer[p++] = C_UCHAR((col & 0xFF0000) >> 16);
         image_buffer[p++] = C_UCHAR((col & 0x00FF00) >> 8);
         image_buffer[p++] = C_UCHAR(col & 0xFF);
@@ -738,8 +738,153 @@ int png_load(const char *_filename,CImage& _image)
 
 
 
+struct CImageHandle_png
+{
+  png_structp   png_ptr;
+  png_infop     info_ptr;
+  FILE          *file;
+};
 
-void paintPixel(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,int _x,int _y,uint _color)
+
+
+/* local prototype */
+
+static void writepng_error_handler(png_structp png_ptr, png_const_charp msg);
+
+
+
+void writepng_version_info(void)
+{
+}
+
+
+
+void* png_writeOpen(const char *_filename,int image_width,int image_height)
+{
+  CImageHandle_png *handle = new CImageHandle_png;
+
+  handle->file = fopen(_filename,"wb");
+  if (handle->file == nullptr)
+  {
+    delete handle;
+    return nullptr;
+  }
+
+  handle->png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr,writepng_error_handler, nullptr);
+  if (!handle->png_ptr)
+    return nullptr;   // out of memory
+
+  handle->info_ptr = png_create_info_struct(handle->png_ptr);
+  if (!handle->info_ptr)
+  {
+    png_destroy_write_struct(&handle->png_ptr, nullptr);
+    return nullptr;   // out of memory
+  }
+
+  png_init_io(handle->png_ptr,handle->file);
+  png_set_compression_level(handle->png_ptr, 9 /*Z_BEST_COMPRESSION*/);
+  png_set_IHDR(handle->png_ptr,handle->info_ptr,image_width,image_height,8,PNG_COLOR_TYPE_RGBA,PNG_INTERLACE_NONE,PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+  png_write_info(handle->png_ptr, handle->info_ptr);
+  png_set_packing(handle->png_ptr);
+
+  return handle;
+}
+
+
+
+
+
+int png_writeImageRow(void *_handle,uchar *_row)
+{
+  CImageHandle_png *handle = (CImageHandle_png*)_handle;
+  png_write_row(handle->png_ptr,_row);
+  return 0;
+}
+
+
+
+
+
+int png_writeClose(void *_handle)
+{
+  CImageHandle_png *handle = (CImageHandle_png*)_handle;
+  png_write_end(handle->png_ptr, nullptr);
+
+  fclose(handle->file);
+  delete handle;
+
+  return 0;
+}
+
+
+
+
+
+static void writepng_error_handler(png_structp png_ptr, png_const_charp msg)
+{
+  exit(-1);
+}
+
+
+
+
+
+int png_save(const char *filename,uint *image,int image_width,int image_height)
+{
+  void *handle = png_writeOpen(filename,image_width,image_height);
+  if (handle == nullptr)
+  {
+    return -1;
+  }
+
+  int psize = sizeof(uint);
+
+  int len = image_width * psize;
+
+  uchar *pixel = new uchar[len];
+
+  uchar *ptr = (uchar*)image;
+
+  for (int y=0; y<image_height; y++)
+  {
+    int p1 = 0;
+    int p2 = 0;
+
+    for (int x=0; x<image_width; x++)
+    {
+      if (ptr[p2+3] != 0)
+        pixel[p1+3] = 0;
+      else
+        pixel[p1+3] = 0xFF;
+
+      pixel[p1+2] = ptr[p2+0];
+      pixel[p1+1] = ptr[p2+1];
+      pixel[p1+0] = ptr[p2+2];
+
+      p1 = p1 + 4;
+      p2 = p2 + psize;
+    }
+    png_writeImageRow(handle,pixel);
+
+    ptr = (uchar*)image + y * image_width * psize;
+  }
+
+  delete pixel;
+
+  png_writeClose(handle);
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+#if 0
+void paintPixel(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,int _x,int _y,uint _color)
 {
   try
   {
@@ -764,7 +909,7 @@ void paintPixel(unsigned long *_image,int _width,int _height,bool _rotatedX,bool
 
 
 
-void paintLine(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,int _x1,int _y1,int _x2,int _y2,uint _color)
+void paintLine(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,int _x1,int _y1,int _x2,int _y2,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -843,7 +988,7 @@ void paintLine(unsigned long *_image,int _width,int _height,bool _rotatedX,bool 
 
 
 
-void paintSvgPath(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,NFmiSvgPath& _svgPath,uint _color)
+void paintSvgPath(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,NFmiSvgPath& _svgPath,uint _color)
 {
   try
   {
@@ -894,11 +1039,11 @@ void paintSvgPath(unsigned long *_image,int _width,int _height,bool _rotatedX,bo
 
 
 
-void paintPolygon(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,std::vector<T::Coordinate>& polygonPoints,uint _color)
+void paintPolygon(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,std::vector<T::Coordinate>& polygonPoints,uint _color)
 {
   try
   {
-    std::set<unsigned long long> cList;
+    std::set<uint long> cList;
     uint numOfPoints = polygonPoints.size();
     if (numOfPoints == 0)
       return;
@@ -1012,14 +1157,14 @@ void paintPolygon(unsigned long *_image,int _width,int _height,bool _rotatedX,bo
 
 
 
-void paintPolygonPath(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,std::vector<std::vector<T::Coordinate>>& polygonPath,uint _color)
+void paintPolygonPath(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,std::vector<std::vector<T::Coordinate>>& polygonPath,uint _color)
 {
   try
   {
     if (polygonPath.size() == 0)
       return;
 
-    std::set<unsigned long long> cList;
+    std::set<uint long> cList;
 
     int minY = _height-1;
     int maxY = 0;
@@ -1160,7 +1305,7 @@ void paintPolygonPath(unsigned long *_image,int _width,int _height,bool _rotated
 
 
 
-void paintWkbPoint(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void paintWkbPoint(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1187,7 +1332,7 @@ void paintWkbPoint(unsigned long *_image,int _width,int _height,bool _rotatedX,b
 
 
 
-void paintWkbLine(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void paintWkbLine(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1223,7 +1368,7 @@ void paintWkbLine(unsigned long *_image,int _width,int _height,bool _rotatedX,bo
 
 
 
-void paintWkbRing(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void paintWkbRing(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1254,7 +1399,7 @@ void paintWkbRing(unsigned long *_image,int _width,int _height,bool _rotatedX,bo
 
 
 
-void paintWkbPolygon(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void paintWkbPolygon(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1276,7 +1421,7 @@ void paintWkbPolygon(unsigned long *_image,int _width,int _height,bool _rotatedX
 
 
 
-void paintWkbMultiPoint(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void paintWkbMultiPoint(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1298,7 +1443,7 @@ void paintWkbMultiPoint(unsigned long *_image,int _width,int _height,bool _rotat
 
 
 
-void paintWkbMultiLineString(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void paintWkbMultiLineString(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1322,7 +1467,7 @@ void paintWkbMultiLineString(unsigned long *_image,int _width,int _height,bool _
 
 
 
-void paintWkbMultiPolygon(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void paintWkbMultiPolygon(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1370,7 +1515,7 @@ void paintWkbMultiPolygon(unsigned long *_image,int _width,int _height,bool _rot
 
 
 
-void paintWkbGeometryCollection(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void paintWkbGeometryCollection(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1392,7 +1537,7 @@ void paintWkbGeometryCollection(unsigned long *_image,int _width,int _height,boo
 
 
 
-void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1448,7 +1593,7 @@ void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _
 
 
 
-void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,uchar *_wkb,uint _size,uint _color)
+void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,uchar *_wkb,uint _size,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1469,7 +1614,7 @@ void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _
 
 
 
-void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::WkbData& _wkb,uint _color)
+void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::WkbData& _wkb,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1497,7 +1642,7 @@ void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _
 
 
 
-void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::WkbData_vec& _wkbVec,uint _color)
+void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::WkbData_vec& _wkbVec,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1513,7 +1658,7 @@ void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _
   }
 }
 
-
+#endif
 
 
 

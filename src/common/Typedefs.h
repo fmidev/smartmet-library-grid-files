@@ -21,6 +21,7 @@ typedef std::float_t ibmfloat;
 typedef std::set<std::string> string_set;
 typedef std::vector<std::string> string_vec;
 typedef std::vector<double> double_vec;
+typedef std::vector<uchar> uchar_vec;
 
 template <typename A>
 bool missing(const A& obj)

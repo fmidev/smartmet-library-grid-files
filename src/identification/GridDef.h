@@ -164,6 +164,9 @@ class GridDef
     bool              getGribDefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib& def);
     bool              getGrib2DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib2& def);
 
+    GRIB1::GridDefinition*  createGrib1GridDefinition(const char *str);
+    GRIB2::GridDefinition*  createGrib2GridDefinition(const char *str);
+
     GRIB1::GridDef_ptr      getGrib1DefinitionByGeometryId(int geometryId);
     GRIB2::GridDef_ptr      getGrib2DefinitionByGeometryId(int geometryId);
 

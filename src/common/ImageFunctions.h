@@ -10,6 +10,8 @@
 namespace SmartMet
 {
 
+extern int compare_coordinates(const void *p1, const void *p2);
+
 
 class CImage
 {
@@ -72,11 +74,16 @@ int jpg_load(const char *_filename,CImage& _image);
 
 // The function writes an image data to the JPEG file.
 
-void jpeg_save(const char *filename,unsigned long *image,int image_height,int image_width,int quality);
+void jpeg_save(const char *filename,uint *image,int image_height,int image_width,int quality);
 
 // The function reads a PNG image into the memory.
 
 int png_load(const char *_filename,CImage& _image);
+
+// The function writes an image data to the PNG file.
+
+int png_save(const char *filename,uint *image,int image_width,int image_height);
+
 
 // The function converts RGB color component (Red,Green,Blue) to a single RGB value.
 // An individual color should have a value that is the range 0..255.
@@ -89,12 +96,14 @@ uint rgb(uint red, uint green, uint blue);
 
 uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value);
 
-void paintPixel(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,int _x,int _y,uint _color);
-void paintLine(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,int _x1,int _y1,int _x2,int _y2,uint _color);
-void paintSvgPath(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,NFmiSvgPath& _svgPath,uint _color);
-void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,uchar *_wkb,uint _size,uint _color);
-void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::WkbData& _wkb,uint _color);
-void paintWkb(unsigned long *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::WkbData_vec& _wkbVec,uint _color);
+/*
+void paintPixel(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,int _x,int _y,uint _color);
+void paintLine(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,int _x1,int _y1,int _x2,int _y2,uint _color);
+void paintSvgPath(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,NFmiSvgPath& _svgPath,uint _color);
+void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,uchar *_wkb,uint _size,uint _color);
+void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::WkbData& _wkb,uint _color);
+void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::WkbData_vec& _wkbVec,uint _color);
+*/
 
 }
 

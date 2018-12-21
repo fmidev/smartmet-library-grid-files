@@ -322,6 +322,8 @@ double linearInterpolation2(double x,double y,double x1,double y1,double x2,doub
 
 
 
+
+
 double logarithmicInterpolation(double wantedPosition, double position1, double position2, double value1, double value2)
 {
   try
@@ -351,6 +353,307 @@ double logarithmicInterpolation(double wantedPosition, double position1, double 
 
 
 
+T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,int level1,int level2,int newLevel,short levelInterpolationMethod)
+{
+  try
+  {
+    if (level1 == newLevel)
+      return value1;
+
+    if (level2 == newLevel)
+      return value2;
+
+    int diff1 = newLevel - level1;
+    int diff2 = level2 - newLevel;
+    double levelDiff = C_DOUBLE(level2 - level1);
+
+    switch (levelInterpolationMethod)
+    {
+      case T::LevelInterpolationMethod::None:
+        return value1;
+
+      case T::LevelInterpolationMethod::Nearest:
+        if (diff1 < diff2)
+          return value1;
+        else
+          return value2;
+        break;
+
+      case T::LevelInterpolationMethod::Min:
+        if (value1 < value2)
+          return value1;
+        else
+          return value2;
+        break;
+
+        case T::LevelInterpolationMethod::Max:
+          if (value1 > value2)
+            return value1;
+          else
+            return value2;
+          break;
+
+      case T::LevelInterpolationMethod::Logarithmic:
+        return logarithmicInterpolation(newLevel, level1, level2, value1, value2);
+
+      default:
+      case T::LevelInterpolationMethod::Linear:
+        if (value1 != ParamValueMissing && value2 != ParamValueMissing)
+        {
+          T::ParamValue valueDiff = value2 - value1;
+          T::ParamValue valueStep = valueDiff / levelDiff;
+          return (value1 + (diff1 * valueStep));
+        }
+        else
+        {
+          return ParamValueMissing;
+        }
+        break;
+    }
+    return ParamValueMissing;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int level1,int level2,int newLevel,short levelInterpolationMethod,T::GridValueList& valueList)
+{
+  try
+  {
+    if (level1 == newLevel)
+    {
+      valueList = values1;
+      return;
+    }
+
+    if (level2 == newLevel)
+    {
+      valueList = values2;
+      return;
+    }
+
+    int diff1 = newLevel - level1;
+    int diff2 = level2 - newLevel;
+    double levelDiff = C_DOUBLE(level2 - level1);
+
+    uint len1 = values1.getLength();
+    uint len2 = values2.getLength();
+
+    if (len1 == len2)
+    {
+      switch (levelInterpolationMethod)
+      {
+        case T::LevelInterpolationMethod::None:
+          for (uint t = 0; t < len1; t++)
+          {
+            T::GridValue* val1 = values1.getGridValueByIndex(t);
+            T::GridValue* rec = new T::GridValue();
+            rec->mX = val1->mX;
+            rec->mY = val1->mY;
+            rec->mValue = val1->mValue;
+
+            valueList.addGridValue(rec);
+          }
+          break;
+
+        case T::LevelInterpolationMethod::Nearest:
+          for (uint t = 0; t < len1; t++)
+          {
+            T::GridValue* val1 = values1.getGridValueByIndex(t);
+            T::GridValue* val2 = values2.getGridValueByIndex(t);
+
+            T::GridValue* rec = new T::GridValue();
+            rec->mX = val1->mX;
+            rec->mY = val1->mY;
+
+            if (diff1 < diff2)
+              rec->mValue = val1->mValue;
+            else
+              rec->mValue = val2->mValue;
+
+            valueList.addGridValue(rec);
+          }
+          break;
+
+        case T::LevelInterpolationMethod::Min:
+          for (uint t = 0; t < len1; t++)
+          {
+            T::GridValue* val1 = values1.getGridValueByIndex(t);
+            T::GridValue* val2 = values2.getGridValueByIndex(t);
+
+            T::GridValue* rec = new T::GridValue();
+            rec->mX = val1->mX;
+            rec->mY = val1->mY;
+
+            if (val1->mValue < val2->mValue)
+              rec->mValue = val1->mValue;
+            else
+              rec->mValue = val2->mValue;
+
+            valueList.addGridValue(rec);
+          }
+          break;
+
+        case T::LevelInterpolationMethod::Max:
+          for (uint t = 0; t < len1; t++)
+          {
+            T::GridValue* val1 = values1.getGridValueByIndex(t);
+            T::GridValue* val2 = values2.getGridValueByIndex(t);
+
+            T::GridValue* rec = new T::GridValue();
+            rec->mX = val1->mX;
+            rec->mY = val1->mY;
+
+            if (val1->mValue > val2->mValue)
+              rec->mValue = val1->mValue;
+            else
+              rec->mValue = val2->mValue;
+
+            valueList.addGridValue(rec);
+          }
+          break;
+
+        case T::LevelInterpolationMethod::Logarithmic:
+          for (uint t = 0; t < len1; t++)
+          {
+            T::GridValue* val1 = values1.getGridValueByIndex(t);
+            T::GridValue* val2 = values2.getGridValueByIndex(t);
+
+            T::GridValue* rec = new T::GridValue();
+            rec->mX = val1->mX;
+            rec->mY = val1->mY;
+            rec->mValue = logarithmicInterpolation(newLevel, level1, level2, val1->mValue, val2->mValue);
+
+            valueList.addGridValue(rec);
+          }
+          break;
+
+        default:
+        case T::LevelInterpolationMethod::Linear:
+          for (uint t = 0; t < len1; t++)
+          {
+            T::GridValue* val1 = values1.getGridValueByIndex(t);
+            T::GridValue* val2 = values2.getGridValueByIndex(t);
+
+            T::GridValue* rec = new T::GridValue();
+            rec->mX = val1->mX;
+            rec->mY = val1->mY;
+
+            if (val1->mValue != ParamValueMissing && val2->mValue != ParamValueMissing)
+            {
+              T::ParamValue valueDiff = val2->mValue - val1->mValue;
+              T::ParamValue valueStep = valueDiff / levelDiff;
+              rec->mValue = val1->mValue + (diff1 * valueStep);
+            }
+            else
+            {
+              rec->mValue = ParamValueMissing;
+            }
+            valueList.addGridValue(rec);
+          }
+          break;
+      }
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod)
+{
+  try
+  {
+    time_t tt = utcTimeToTimeT(newTime);
+    time_t t1 = utcTimeToTimeT(time1);
+    time_t t2 = utcTimeToTimeT(time2);
+
+    if (t1 == tt)
+      return value1;
+
+    if (t2 == tt)
+      return value2;
+
+    double timeDiff = C_DOUBLE(t2 - t1);
+    double diff1 = C_DOUBLE(tt - t1);
+    double diff2 = C_DOUBLE(t2 - tt);
+
+    switch (timeInterpolationMethod)
+    {
+      case T::TimeInterpolationMethod::Undefined:
+      case T::TimeInterpolationMethod::None:
+        return value1;
+
+      case T::TimeInterpolationMethod::Linear:
+        if (value1 != ParamValueMissing  &&  value2 != ParamValueMissing)
+        {
+          T::ParamValue vd = (value2 - value1)/timeDiff;
+          return (value1 + diff1 * vd);
+        }
+        else
+        {
+          return ParamValueMissing;
+        }
+
+      case T::TimeInterpolationMethod::Nearest:
+        if (diff1 <= diff2)
+          return value1;
+        else
+          return value2;
+
+      case T::TimeInterpolationMethod::Min:
+        if (value1 != ParamValueMissing  &&  value2 != ParamValueMissing)
+        {
+          if (value1 <= value2)
+            return value1;
+          else
+            return value2;
+        }
+        else
+        {
+          return ParamValueMissing;
+        }
+
+      case T::TimeInterpolationMethod::Max:
+        if (value1 != ParamValueMissing  &&  value2 != ParamValueMissing)
+        {
+          if (value1 >= value2)
+            return value1;
+          else
+            return value2;
+        }
+        else
+        {
+          return ParamValueMissing;
+        }
+
+      default:
+        throw SmartMet::Spine::Exception(BCP,"Unsupported or unknown intepolation method!");
+    }
+
+    return ParamValueMissing;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues)
 {
   try
@@ -362,8 +665,22 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
     time_t t1 = utcTimeToTimeT(time1);
     time_t t2 = utcTimeToTimeT(time2);
 
+    if (t1 == tt)
+    {
+      newValues = values1;
+      return;
+    }
+
+    if (t2 == tt)
+    {
+      newValues = values2;
+      return;
+    }
+
+
     double timeDiff = C_DOUBLE(t2 - t1);
-    double steps = C_DOUBLE(tt - t1);
+    double diff1 = C_DOUBLE(tt - t1);
+    double diff2 = C_DOUBLE(t2 - tt);
 
     uint sz = values1.size();
     newValues.reserve(sz);
@@ -385,7 +702,7 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
           if (v1 != ParamValueMissing  &&  v2 != ParamValueMissing)
           {
             T::ParamValue vd = (v2 - v1)/timeDiff;
-            T::ParamValue newValue = v1 + steps * vd;
+            T::ParamValue newValue = v1 + diff1 * vd;
             newValues.push_back(newValue);
           }
           else
@@ -397,7 +714,7 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
 
 
       case T::TimeInterpolationMethod::Nearest:
-        if ((tt-t1) <= (t2-t1))
+        if (diff1 <= diff2)
           newValues = values1;
         else
           newValues = values2;
@@ -458,16 +775,32 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
 
 
 
+
 void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::string timeStr1,std::string timeStr2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList)
 {
   try
   {
+    if (values1.getLength() != values2.getLength())
+      throw SmartMet::Spine::Exception(BCP,"Value lists are not the same size!");
+
     boost::posix_time::ptime ftime = toTimeStamp(newTime);
     boost::posix_time::ptime ftime1 = toTimeStamp(timeStr1);
     boost::posix_time::ptime ftime2 = toTimeStamp(timeStr2);
 
-    time_t diff = toTimeT(ftime) - toTimeT(ftime1);
-    time_t ttDiff = toTimeT(ftime2) - toTimeT(ftime1);
+    if (ftime1 == ftime)
+    {
+      valueList = values1;
+      return;
+    }
+
+    if (ftime2 == ftime)
+    {
+      valueList = values2;
+      return;
+    }
+
+    time_t diff1 = toTimeT(ftime) - toTimeT(ftime1);
+    time_t diff2 = toTimeT(ftime2) - toTimeT(ftime1);
 
     uint len1 = values1.getLength();
     uint len2 = values2.getLength();
@@ -486,7 +819,7 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::
             rec->mX = val1->mX;
             rec->mY = val1->mY;
 
-            if (diff < ttDiff)
+            if (diff1 < diff2)
               rec->mValue = val1->mValue;
             else
               rec->mValue = val2->mValue;
@@ -547,8 +880,8 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::
             if (val1->mValue != ParamValueMissing && val2->mValue != ParamValueMissing)
             {
               T::ParamValue valueDiff = val2->mValue - val1->mValue;
-              T::ParamValue valueStep = valueDiff / ttDiff;
-              rec->mValue = val1->mValue + (diff * valueStep);
+              T::ParamValue valueStep = valueDiff / diff2;
+              rec->mValue = val1->mValue + (diff1 * valueStep);
             }
             else
             {

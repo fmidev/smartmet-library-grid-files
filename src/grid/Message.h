@@ -71,15 +71,15 @@ class Message
 
     virtual T::Coordinate_vec getGridCoordinates() const;
     virtual void              getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::WkbData_vec& contours);
-    virtual void              getGridIsobandsByBox(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,std::string urn,double x1,double y1,double x2,double y2,T::AttributeList& attributeList,T::WkbData_vec& contours);
-    virtual void              getGridIsobandsByGeometryId(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::GeometryId geometryId,T::AttributeList& attributeList,T::WkbData_vec& contours);
+    virtual void              getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::WkbData_vec& contours);
     virtual void              getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::WkbData_vec& contours);
     virtual void              getGridIsobandsByTime(const GRID::Message& message,std::string newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::WkbData_vec& contours);
+    virtual void              getGridIsobandsByTimeAndGeometry(const GRID::Message& message,std::string newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::WkbData_vec& contours);
     virtual void              getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::WkbData_vec& contours);
-    virtual void              getGridIsolinesByBox(T::ParamValue_vec& contourValues,std::string urn,double x1,double y1,double x2,double y2,T::AttributeList& attributeList,T::WkbData_vec& contours);
-    virtual void              getGridIsolinesByGeometryId(T::ParamValue_vec& contourValues,T::GeometryId geometryId,T::AttributeList& attributeList,T::WkbData_vec& contours);
+    virtual void              getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::WkbData_vec& contours);
     virtual void              getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::WkbData_vec& contours);
     virtual void              getGridIsolinesByTime(const GRID::Message& message,std::string newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::WkbData_vec& contours);
+    virtual void              getGridIsolinesByTimeAndGeometry(const GRID::Message& message,std::string newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::WkbData_vec& contours);
     virtual T::Coordinate_vec getGridLatLonCoordinates() const;
     virtual T::Dimensions     getGridDimensions() const;
     virtual T::GeometryId     getGridGeometryId() const;
@@ -106,19 +106,32 @@ class Message
     virtual void              getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;
     virtual std::string       getGridProjectionString() const;
 
-    virtual void              getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short interpolationMethod,T::ParamValue& value) const;
+    virtual void              getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,T::ParamValue& value) const;
+    virtual void              getGridValueByLevelAndPoint(const GRID::Message& message,int newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short levelInterpolationMethod,T::ParamValue& value) const;
+    virtual void              getGridValueByTimeAndPoint(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,T::ParamValue& value) const;
+
     virtual void              getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList) const;
-    virtual void              getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short interpolationMethod,T::GridValueList& valueList) const;
-    virtual void              getGridValueListByTimeAndPointList(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,T::GridValueList& valueList);
+    virtual void              getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,T::GridValueList& valueList) const;
     virtual void              getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList) const;
     virtual void              getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,T::GridValueList& valueList) const;
     virtual void              getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,bool gridRectangle,T::GridValueList& valueList) const;
+    virtual void              getGridValueListByLevelAndPointList(const GRID::Message& message,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList);
+    virtual void              getGridValueListByTimeAndCircle(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,T::GridValueList& valueList) const;
+    virtual void              getGridValueListByTimeAndPointList(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,T::GridValueList& valueList);
+    virtual void              getGridValueListByTimeAndPolygon(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,T::GridValueList& valueList) const;
+    virtual void              getGridValueListByTimeAndPolygonPath(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,T::GridValueList& valueList) const;
+    virtual void              getGridValueListByTimeLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,std::string newTime,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList);
+
     virtual void              getGridValueVector(T::ParamValue_vec& values) const;
     virtual void              getGridValueVectorWithCaching(T::ParamValue_vec& values) const;
     virtual void              getGridValueVectorByTime(const GRID::Message& message,std::string newTime,short timeInterpolationMethod,T::ParamValue_vec& values);
-    virtual void              getGridValueVectorByCoordinateList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,short interpolationMethod,T::ParamValue_vec& values) const;
-    virtual void              getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate>& coordinates,short interpolationMethod,T::ParamValue_vec& values) const;
-    virtual void              getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coordinates,short interpolationMethod,T::ParamValue_vec& values) const;
+    virtual void              getGridValueVectorByTimeAndCoordinateList(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values);
+    virtual void              getGridValueVectorByTimeAndGeometry(const GRID::Message& message,std::string newTime,T::AttributeList& attributeList,T::ParamValue_vec& values);
+    virtual void              getGridValueVectorByGeometry(T::AttributeList& attributeList,T::ParamValue_vec& values) const;
+    virtual void              getGridValueVectorByCoordinateList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const;
+    virtual void              getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const;
+    virtual void              getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const;
+
     virtual void              getGridOriginalValueVector(T::ParamValue_vec& values) const;
     virtual T::ParamLevel     getGridParameterLevel() const;
     virtual T::ParamLevelId   getGridParameterLevelId() const;
@@ -130,13 +143,13 @@ class Message
     virtual void              getGridValueVectorByLatLonCoordinate(double lat,double lon,uint vectorType,double_vec& valueVector) const;
 
     virtual T::ParamValue     getGridValueByGridPoint(uint grid_i,uint grid_j) const;
-    virtual T::ParamValue     getGridValueByGridPoint(double grid_i,double grid_j,short interpolationMethod) const;
+    virtual T::ParamValue     getGridValueByGridPoint(double grid_i,double grid_j,short areaInterpolationMethod) const;
     virtual T::ParamValue     getGridValueByGridPoint_noInterpolation(double grid_i,double grid_j) const;
     virtual T::ParamValue     getGridValueByGridPoint_nearest(double grid_i,double grid_j) const;
     virtual T::ParamValue     getGridValueByGridPoint_min(double grid_i,double grid_j) const;
     virtual T::ParamValue     getGridValueByGridPoint_max(double grid_i,double grid_j) const;
     virtual T::ParamValue     getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j) const;
-    virtual T::ParamValue     getGridValueByLatLonCoordinate(double lat,double lon,short interpolationMethod) const;
+    virtual T::ParamValue     getGridValueByLatLonCoordinate(double lat,double lon,short areaInterpolationMethod) const;
     virtual T::ParamValue     getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
     virtual void              getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValue_vec& gridPointValues) const;
     virtual void              getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValueList& gridPointValues) const;
