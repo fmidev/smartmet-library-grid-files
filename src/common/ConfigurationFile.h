@@ -41,6 +41,7 @@ class ConfigurationFile
     bool          getAttributeValue(const char *attributeName,std::vector<std::string>& attributeValueVec);
 
     bool          getAttributeFields(const char *attributeName,std::set<std::string>& attributeFields);
+    std::string   getFilename();
 
     void          setAttributeValue(const char *attributeName,std::string& attributeValue);
 

@@ -25,6 +25,7 @@ class FmiParameterDef
     short         mAreaInterpolationMethod;
     short         mTimeInterpolationMethod;
     short         mLevelInterpolationMethod;
+    short         mDefaultPrecision;
 };
 
 typedef std::vector<FmiParameterDef> FmiParamDef_vec;

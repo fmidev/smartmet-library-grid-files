@@ -1601,7 +1601,7 @@ void GridDef::loadGribUnitDefinitions(const char *filename)
           UnitDefinition rec;
           rec.mOriginalUnits = field[0];
           rec.mPreferredUnits = field[1];
-          rec.mPreferredAreaInterpolationMethod = C_SHORT(toInt64(field[2]));
+          rec.mPreferredAreaInterpolationMethod = toInt16(field[2]);
 
           mGrib_unitDef_records.push_back(rec);
         }
@@ -2597,13 +2597,16 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
             rec.mParameterDescription = field[4];
 
           if (field[5][0] != '\0')
-            rec.mAreaInterpolationMethod = C_SHORT(toInt64(field[5]));
+            rec.mAreaInterpolationMethod = toInt16(field[5]);
 
           if (field[6][0] != '\0')
-            rec.mTimeInterpolationMethod = C_SHORT(toInt64(field[6]));
+            rec.mTimeInterpolationMethod = toInt16(field[6]);
 
           if (field[7][0] != '\0')
-            rec.mLevelInterpolationMethod = C_SHORT(toInt64(field[7]));
+            rec.mLevelInterpolationMethod = toInt16(field[7]);
+
+          if (c > 8 &&  field[8][0] != '\0')
+            rec.mDefaultPrecision = toInt16(field[8]);
 
           mFmi_parameterDef_records.push_back(rec);
         }

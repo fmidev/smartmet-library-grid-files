@@ -781,6 +781,22 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
 
 
 
+std::string ConfigurationFile::getFilename()
+{
+  try
+  {
+    return mFilename;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Configuration file",mFilename);
+    throw exception;
+  }
+}
+
+
+
 bool ConfigurationFile::findAttribute(const char *attributeName)
 {
   FUNCTION_TRACE

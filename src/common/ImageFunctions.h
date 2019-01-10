@@ -84,6 +84,8 @@ int png_load(const char *_filename,CImage& _image);
 
 int png_save(const char *filename,uint *image,int image_width,int image_height);
 
+void mergePngFiles(const char *newFile,std::vector<std::string>& fileList);
+
 
 // The function converts RGB color component (Red,Green,Blue) to a single RGB value.
 // An individual color should have a value that is the range 0..255.

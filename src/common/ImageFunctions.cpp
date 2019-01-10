@@ -1,3 +1,4 @@
+#include "GeneralFunctions.h"
 #include "ImageFunctions.h"
 #include "Exception.h"
 #include "MemoryReader.h"
@@ -264,199 +265,212 @@ METHODDEF(void) my_error_exit (j_common_ptr cinfo)
 
 int jpg_load(const char *_filename,CImage& _image)
 {
-  // ### This struct contains the JPEG decompression parameters and pointers to
-  // ### working space (which is allocated as needed by the JPEG library).
-
-  struct jpeg_decompress_struct cinfo;
-
-  // ### We use our private extension JPEG error handler.
-  // ### Note that this struct must live as long as the main JPEG parameter
-  // ### struct, to avoid dangling-pointer problems.
-
-  struct my_error_mgr jerr;
-
-  JSAMPARRAY buffer;  // ### Output row buffer
-  int row_stride;     // ###  physical row width in output buffer
-
-  FILE *infile = fopen(_filename, "rbe");
-  if (infile == nullptr)
+  try
   {
-//    fprintf(moutput, "ERROR; Cannot open file (%s)!\n", _filename);
-    return - 1;
-  }
+    if (getFileSize(_filename) <= 0)
+    {
+      SmartMet::Spine::Exception exception(BCP,"File is empty or missing!");
+      exception.addParameter("Filename",_filename);
+      throw exception;
+    }
+    // ### This struct contains the JPEG decompression parameters and pointers to
+    // ### working space (which is allocated as needed by the JPEG library).
+
+    struct jpeg_decompress_struct cinfo;
+
+    // ### We use our private extension JPEG error handler.
+    // ### Note that this struct must live as long as the main JPEG parameter
+    // ### struct, to avoid dangling-pointer problems.
+
+    struct my_error_mgr jerr;
+
+    JSAMPARRAY buffer;  // ### Output row buffer
+    int row_stride;     // ###  physical row width in output buffer
+
+    FILE *infile = fopen(_filename, "rbe");
+    if (infile == nullptr)
+    {
+  //    fprintf(moutput, "ERROR; Cannot open file (%s)!\n", _filename);
+      return - 1;
+    }
 
 
-  // ### Step 1: allocate and initialize JPEG decompression object
+    // ### Step 1: allocate and initialize JPEG decompression object
 
-  // ### We set up the normal JPEG error routines, then override error_exit.
+    // ### We set up the normal JPEG error routines, then override error_exit.
 
-  cinfo.err = jpeg_std_error(&jerr.pub);
-  jerr.pub.error_exit = my_error_exit;
+    cinfo.err = jpeg_std_error(&jerr.pub);
+    jerr.pub.error_exit = my_error_exit;
 
-  // ### Establish the setjmp return context for my_error_exit to use.
+    // ### Establish the setjmp return context for my_error_exit to use.
 
-  if (setjmp(jerr.setjmp_buffer))
-  {
-    // ### If we get here, the JPEG code has signaled an error.
-    // ### We need to clean up the JPEG object, close the input file, and return.
+    if (setjmp(jerr.setjmp_buffer))
+    {
+      // ### If we get here, the JPEG code has signaled an error.
+      // ### We need to clean up the JPEG object, close the input file, and return.
+
+      jpeg_destroy_decompress(&cinfo);
+      fclose(infile);
+      return - 2;
+    }
+
+    // ### Now we can initialize the JPEG decompression object.
+
+    jpeg_create_decompress(&cinfo);
+
+
+    // ### Step 2: specify data source (eg, a file)
+
+    jpeg_stdio_src(&cinfo, infile);
+
+
+    // ### Step 3: read file parameters with jpeg_read_header()
+
+    jpeg_read_header(&cinfo, TRUE);
+
+    //printf("DataPrecision %d\n",cinfo.data_precision);
+    //printf("ColorComponents %d\n",cinfo.num_components);
+    //printf("ColorSpace %d\n",cinfo.jpeg_color_space);
+
+
+    // ### Step 4: set parameters for decompression
+
+    // ### We don't need to change any of the defaults set by jpeg_read_header(), so we do nothing here.
+
+
+    // ### Step 5: Start decompressor
+
+    jpeg_start_decompress(&cinfo);
+
+
+    // ### We may need to do some setup of our own at this point before reading
+    // ### the data.  After jpeg_start_decompress() we have the correct scaled
+    // ### output image dimensions available, as well as the output colormap
+    // ### if we asked for color quantization.
+    // ### In this example, we need to make an output work buffer of the right size.
+
+    // ### JSAMPLEs per row in output buffer:
+
+    row_stride = cinfo.output_width * cinfo.output_components;
+
+    // ### Make a one-row-high sample array that will go away when done with image:
+
+    buffer = (*cinfo.mem->alloc_sarray) ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
+
+
+    // ### Step 6: while (scan lines remain to be read) jpeg_read_scanlines(...);
+
+    // ###  Here we use the library's state variable cinfo.output_scanline as the
+    // ### loop counter, so that we don't have to keep track ourselves.
+
+  //  setSize(cinfo.output_width,cinfo.output_height);
+
+    _image.width = cinfo.output_width;
+    _image.height = cinfo.output_height;
+    _image.pixel = new uint[_image.width * _image.height];
+
+    int y = 0;
+
+    //printf("MCOLORSPACE : %d\n",cinfo.jpeg_color_space);
+
+    while (cinfo.output_scanline < cinfo.output_height)
+    {
+      // ### jpeg_read_scanlines expects an array of pointers to scanlines.
+      // ### Here the array is only one element long, but you could ask for
+      // ### more than one scanline at a time if that's more convenient.
+
+      jpeg_read_scanlines(&cinfo, buffer, 1);
+
+      // ### Assume put_scanline_someplace wants a pointer and sample count.
+
+      int p = 0;
+      uchar *data = (uchar*)buffer[0];
+      for (uint x=0; x<cinfo.output_width; x++)
+      {
+        uchar cc[10] = {0};
+        uint color = 0;
+        for (int a=0; a < cinfo.output_components; a++)
+        {
+          cc[a] = data[p];
+          //color = color << 8;
+          //color = color + data[p];
+          p++;
+        }
+
+        //if (cinfo.jpeg_color_space == JCS_RGB /* &&  cinfo.num_components == 3*/)
+        {
+          color = rgb(cc[0],cc[1],cc[2]);
+        }
+
+        if (cinfo.jpeg_color_space == JCS_GRAYSCALE  &&  cinfo.num_components == 1)
+        {
+          /*
+          double h = 0.0, s = 0.0, v = 0.0;
+          color_rgb2hsv(color,h,s,v);
+          */
+          color = rgb(cc[0],cc[0],cc[0]);
+        }
+
+        if (cinfo.jpeg_color_space == JCS_CMYK  &&  cinfo.num_components == 4)
+        {
+          color = cmyk2rgb(C_DOUBLE(cc[0])/255,C_DOUBLE(cc[1])/255,C_DOUBLE(cc[2])/255,C_DOUBLE(cc[3])/255);
+        }
+
+        if (cinfo.jpeg_color_space == JCS_YCCK  &&  cinfo.num_components == 4)
+        {
+
+          uchar r = 255 - int_min(255, cc[0] + cc[3]);
+          uchar g = 255 - int_min(255, cc[1] + cc[3]);
+          uchar b = 255 - int_min(255, cc[2] + cc[3]);
+
+  /*
+          double R = (double)cc[0] + 1.402*(double)cc[2] - 179.456;
+          double G = (double)cc[0] - 0.34414*(double)cc[1] - 0.71414*(double)cc[2] + 135.45984;
+          double B = (double)cc[0] + 1.772*(double)cc[1] - 226.816;
+
+          double C = 255 - (int)R;
+          double M = 255 - (int)G;
+          double Y = 255 - (int)B;
+
+          color = color_cmyk2rgb(C/255,M/255,Y/255,(double)cc[3]/255);
+          printf("CMYK %f %f % %f %f => %06x\n",C/255,M/255,Y/255,cc[3]/255,color);
+
+          //color = color_rgb((uchar)(255-cc[0]),(uchar)(255-cc[1]),(uchar)(255-cc[2]));
+           */
+
+          color = rgb(r,g,b);
+        }
+
+        _image.pixel[y*_image.width + x] = color;
+      }
+      y++;
+    }
+
+    // ### Step 7: Finish decompression */
+
+    (void) jpeg_finish_decompress(&cinfo);
+
+
+    // ### Step 8: Release JPEG decompression object
+
+    // ### This is an important step since it will release a good deal of memory.
 
     jpeg_destroy_decompress(&cinfo);
+
+    // ### After finish_decompress, we can close the input file.
+
+
     fclose(infile);
-    return - 2;
+
+    // ### At this point you may want to check to see whether any corrupt-data
+    // ### warnings occurred (test whether jerr.pub.num_warnings is nonzero).
+
+    return 0;
   }
-
-  // ### Now we can initialize the JPEG decompression object.
-
-  jpeg_create_decompress(&cinfo);
-
-
-  // ### Step 2: specify data source (eg, a file)
-
-  jpeg_stdio_src(&cinfo, infile);
-
-
-  // ### Step 3: read file parameters with jpeg_read_header()
-
-  jpeg_read_header(&cinfo, TRUE);
-
-  //printf("DataPrecision %d\n",cinfo.data_precision);
-  //printf("ColorComponents %d\n",cinfo.num_components);
-  //printf("ColorSpace %d\n",cinfo.jpeg_color_space);
-
-
-  // ### Step 4: set parameters for decompression
-
-  // ### We don't need to change any of the defaults set by jpeg_read_header(), so we do nothing here.
-
-
-  // ### Step 5: Start decompressor
-
-  jpeg_start_decompress(&cinfo);
-
-
-  // ### We may need to do some setup of our own at this point before reading
-  // ### the data.  After jpeg_start_decompress() we have the correct scaled
-  // ### output image dimensions available, as well as the output colormap
-  // ### if we asked for color quantization.
-  // ### In this example, we need to make an output work buffer of the right size.
-
-  // ### JSAMPLEs per row in output buffer:
-
-  row_stride = cinfo.output_width * cinfo.output_components;
-
-  // ### Make a one-row-high sample array that will go away when done with image:
-
-  buffer = (*cinfo.mem->alloc_sarray) ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
-
-
-  // ### Step 6: while (scan lines remain to be read) jpeg_read_scanlines(...);
-
-  // ###  Here we use the library's state variable cinfo.output_scanline as the
-  // ### loop counter, so that we don't have to keep track ourselves.
-
-//  setSize(cinfo.output_width,cinfo.output_height);
-
-  _image.width = cinfo.output_width;
-  _image.height = cinfo.output_height;
-  _image.pixel = new uint[_image.width * _image.height];
-
-  int y = 0;
-
-  //printf("MCOLORSPACE : %d\n",cinfo.jpeg_color_space);
-
-  while (cinfo.output_scanline < cinfo.output_height)
+  catch (...)
   {
-    // ### jpeg_read_scanlines expects an array of pointers to scanlines.
-    // ### Here the array is only one element long, but you could ask for
-    // ### more than one scanline at a time if that's more convenient.
-
-    jpeg_read_scanlines(&cinfo, buffer, 1);
-
-    // ### Assume put_scanline_someplace wants a pointer and sample count.
-
-    int p = 0;
-    uchar *data = (uchar*)buffer[0];
-    for (uint x=0; x<cinfo.output_width; x++)
-    {
-      uchar cc[10] = {0};
-      uint color = 0;
-      for (int a=0; a < cinfo.output_components; a++)
-      {
-        cc[a] = data[p];
-        //color = color << 8;
-        //color = color + data[p];
-        p++;
-      }
-
-      //if (cinfo.jpeg_color_space == JCS_RGB /* &&  cinfo.num_components == 3*/)
-      {
-        color = rgb(cc[0],cc[1],cc[2]);
-      }
-
-      if (cinfo.jpeg_color_space == JCS_GRAYSCALE  &&  cinfo.num_components == 1)
-      {
-        /*
-        double h = 0.0, s = 0.0, v = 0.0;
-        color_rgb2hsv(color,h,s,v);
-        */
-        color = rgb(cc[0],cc[0],cc[0]);
-      }
-
-      if (cinfo.jpeg_color_space == JCS_CMYK  &&  cinfo.num_components == 4)
-      {
-        color = cmyk2rgb(C_DOUBLE(cc[0])/255,C_DOUBLE(cc[1])/255,C_DOUBLE(cc[2])/255,C_DOUBLE(cc[3])/255);
-      }
-
-      if (cinfo.jpeg_color_space == JCS_YCCK  &&  cinfo.num_components == 4)
-      {
-
-        uchar r = 255 - int_min(255, cc[0] + cc[3]);
-        uchar g = 255 - int_min(255, cc[1] + cc[3]);
-        uchar b = 255 - int_min(255, cc[2] + cc[3]);
-
-/*
-        double R = (double)cc[0] + 1.402*(double)cc[2] - 179.456;
-        double G = (double)cc[0] - 0.34414*(double)cc[1] - 0.71414*(double)cc[2] + 135.45984;
-        double B = (double)cc[0] + 1.772*(double)cc[1] - 226.816;
-
-        double C = 255 - (int)R;
-        double M = 255 - (int)G;
-        double Y = 255 - (int)B;
-
-        color = color_cmyk2rgb(C/255,M/255,Y/255,(double)cc[3]/255);
-        printf("CMYK %f %f % %f %f => %06x\n",C/255,M/255,Y/255,cc[3]/255,color);
-
-        //color = color_rgb((uchar)(255-cc[0]),(uchar)(255-cc[1]),(uchar)(255-cc[2]));
-         */
-
-        color = rgb(r,g,b);
-      }
-
-      _image.pixel[y*_image.width + x] = color;
-    }
-    y++;
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
-
-  // ### Step 7: Finish decompression */
-
-  (void) jpeg_finish_decompress(&cinfo);
-
-
-  // ### Step 8: Release JPEG decompression object
-
-  // ### This is an important step since it will release a good deal of memory.
-
-  jpeg_destroy_decompress(&cinfo);
-
-  // ### After finish_decompress, we can close the input file.
-
-
-  fclose(infile);
-
-  // ### At this point you may want to check to see whether any corrupt-data
-  // ### warnings occurred (test whether jerr.pub.num_warnings is nonzero).
-
-  return 0;
 }
 
 
@@ -670,69 +684,83 @@ void readpng_cleanup(int free_image_data)
 
 int png_load(const char *_filename,CImage& _image)
 {
-  double LUT_exponent = 1.0;
-  double CRT_exponent = 2.2;
-  double display_exponent = LUT_exponent * CRT_exponent;
-  int image_channels = 0;
-  uint image_rowbytes = 0;
-
-  uint width = 0;
-  uint height = 0;
-
-
-  FILE *infile = fopen(_filename, "rbe");
-  if (infile == nullptr)
-    return -1;
-
-  if (readpng_init(infile, &width, &height) != 0)
-    return -2;
-
-  _image.width = width;
-  _image.height = height;
-
-  uchar *pixel = readpng_get_image(display_exponent, &image_channels,&image_rowbytes);
-  if (pixel == nullptr)
-    return -3;
-
-  int size = width * height;
-  _image.pixel = (uint*)pixel;
-
-  _image.pixel = new uint[size];
-
-  int p1 = 0;
-  int p2 = 0;
-
-  uchar *ptr = (uchar*)_image.pixel;
-
-  for (int t=0; t<size; t++)
+  try
   {
-    ptr[p2+0] = pixel[p1+2];
-    ptr[p2+1] = pixel[p1+1];
-    ptr[p2+2] = pixel[p1+0];
-
-    if (image_channels == 4)
+    if (getFileSize(_filename) <= 0)
     {
-      if (pixel[p1+3] == 0)
-      {
-        ptr[p2+3] = 0x01;
-      }
-      else
-        ptr[p2+3] = 0;
+      SmartMet::Spine::Exception exception(BCP,"File is empty or missing!");
+      exception.addParameter("Filename",_filename);
+      throw exception;
     }
 
-    p1 = p1 + image_channels;
-    p2 = p2 + 4;
+    double LUT_exponent = 1.0;
+    double CRT_exponent = 2.2;
+    double display_exponent = LUT_exponent * CRT_exponent;
+    int image_channels = 0;
+    uint image_rowbytes = 0;
+
+    uint width = 0;
+    uint height = 0;
+
+
+    FILE *infile = fopen(_filename, "rbe");
+    if (infile == nullptr)
+      return -1;
+
+    if (readpng_init(infile, &width, &height) != 0)
+      return -2;
+
+    _image.width = width;
+    _image.height = height;
+
+    uchar *pixel = readpng_get_image(display_exponent, &image_channels,&image_rowbytes);
+    if (pixel == nullptr)
+      return -3;
+
+    int size = width * height;
+    _image.pixel = (uint*)pixel;
+
+    _image.pixel = new uint[size];
+
+    int p1 = 0;
+    int p2 = 0;
+
+    uchar *ptr = (uchar*)_image.pixel;
+
+    for (int t=0; t<size; t++)
+    {
+      ptr[p2+0] = pixel[p1+2];
+      ptr[p2+1] = pixel[p1+1];
+      ptr[p2+2] = pixel[p1+0];
+
+      if (image_channels == 4)
+      {
+        if (pixel[p1+3] == 0)
+        {
+          ptr[p2+3] = 0x01;
+        }
+        else
+          ptr[p2+3] = 0;
+      }
+
+      p1 = p1 + image_channels;
+      p2 = p2 + 4;
+    }
+
+    free(pixel);
+
+    readpng_cleanup(0);
+    fclose(infile);
+
+    if (!_image.pixel)
+      return -4;
+
+    return 0;
   }
-
-  free(pixel);
-
-  readpng_cleanup(0);
-  fclose(infile);
-
-  if (!_image.pixel)
-    return -4;
-
-  return 0;
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -1665,9 +1693,62 @@ void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,
 
 
 
+void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
+{
+  try
+  {
+    uint size = fileList.size();
 
+    if (size == 0)
+    {
+      SmartMet::Spine::Exception exception(BCP,"No files defined!");
+      throw exception;
+    }
 
+    CImage image;
+    if (png_load(fileList[0].c_str(),image) != 0)
+    {
+      SmartMet::Spine::Exception exception(BCP,"PNG load failed!");
+      exception.addParameter("Filename",fileList[0]);
+      throw exception;
+    }
 
+    int sz = image.width * image.height;
+
+    for (uint t = 1; t < size; t++)
+    {
+      CImage img;
+      if (png_load(fileList[t].c_str(),img) != 0  ||  img.width != image.width ||  img.height != image.height)
+      {
+        SmartMet::Spine::Exception exception(BCP,"PNG load failed!");
+        exception.addParameter("Filename",fileList[t]);
+        throw exception;
+      }
+
+      if (img.width != image.width ||  img.height != image.height)
+      {
+        SmartMet::Spine::Exception exception(BCP,"Image sizes are not equal!");
+        exception.addParameter("Filename",fileList[t]);
+        throw exception;
+      }
+
+      for (int a=0; a<sz; a++)
+      {
+        unsigned long col = img.pixel[a];
+        if ((col & 0xFF000000) == 0)
+          image.pixel[a] = col;
+      }
+    }
+
+    // The function writes an image data to the PNG file.
+
+    png_save(newFile,image.pixel,image.width,image.height);
+  }
+  catch (SmartMet::Spine::Exception& e)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 

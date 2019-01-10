@@ -102,7 +102,7 @@ MemoryReader::~MemoryReader()
 {
   try
   {
-    if (dataRelease  &&  startPtr != NULL)
+    if (dataRelease  &&  startPtr != nullptr)
       delete [] startPtr;
   }
   catch (...)

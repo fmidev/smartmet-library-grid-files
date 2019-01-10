@@ -46,6 +46,9 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
 std::string localTimeToUtc(std::string localTime,boost::local_time::time_zone_ptr tz);
 
 
+std::string addSeconds(std::string timeStr,int seconds);
+
+
 time_t toTimeT(boost::posix_time::ptime tim);
 time_t getFileModificationTime(const char *filename);
 long long getFileSize(const char *filename);
@@ -65,6 +68,8 @@ uint        toUInt32(const char *str);
 ulonglong   toUInt64(const char *str);
 
 double      toDouble(const char *str);
+
+size_t      toSize_t(const char *str);
 
 std::string toString(std::int8_t value);
 std::string toString(std::int16_t value);
@@ -125,5 +130,8 @@ void parseCoordinates(std::string coordinateStr,char separator1,char separator2,
 bool patternMatch(const char *str,std::vector<std::string>& patterns);
 void getFileList(const char *dirName,std::vector<std::string>& filePatterns,bool includeSubDirs,std::set<std::string>& dirList,std::vector<std::pair<std::string,std::string>>& fileList);
 void tuneLevels(int& level1,int& level2,int newLevel);
+
+std::string fileToBase64(const char *filename);
+std::string base64_encode(unsigned char *data,size_t dataSize);
 
 }

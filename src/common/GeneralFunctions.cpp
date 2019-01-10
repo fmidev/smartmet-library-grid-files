@@ -15,6 +15,10 @@
 #include <zlib.h>
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/archive/iterators/binary_from_base64.hpp>
+#include <boost/archive/iterators/base64_from_binary.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
+#include <boost/algorithm/string.hpp>
 #include <set>
 #include <sstream>
 #include <string>
@@ -607,8 +611,6 @@ time_t utcTimeToTimeT(std::string utcTime)
 
 
 
-
-
 std::string localTimeFromTimeT(time_t t, const char *tzone)
 {
   try
@@ -737,6 +739,24 @@ time_t toTimeT(boost::posix_time::ptime tim)
 
 
 
+std::string addSeconds(std::string timeStr,int seconds)
+{
+  try
+  {
+    time_t t = utcTimeToTimeT(timeStr);
+    t = t+seconds;
+    return utcTimeFromTimeT(t);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
 char toInt8(const char *str)
 {
   try
@@ -798,6 +818,24 @@ long long toInt64(const char *str)
     if (str == nullptr) return 0;
 
     return atoll(str);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
+size_t toSize_t(const char *str)
+{
+  try
+  {
+    if (str == nullptr) return 0;
+
+    return static_cast<size_t>(atoll(str));
   }
   catch (...)
   {
@@ -2223,6 +2261,83 @@ void tuneLevels(int& level1,int& level2,int newLevel)
   }
 }
 
+
+
+
+
+
+std::string base64_encode(unsigned char *data,size_t dataSize)
+{
+  try
+  {
+    namespace bai = boost::archive::iterators;
+
+    const std::string base64_padding[] = {"", "==","="};
+    std::stringstream os;
+
+    // convert binary values to base64 characters
+    typedef bai::base64_from_binary
+    // retrieve 6 bit integers from a sequence of 8 bit bytes
+    <bai::transform_width<const char *, 6, 8> > base64_enc;
+
+    std::copy(base64_enc(data), base64_enc(data + dataSize), std::ostream_iterator<char>(os));
+
+    os << base64_padding[dataSize % 3];
+    return os.str();
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+std::string fileToBase64(const char *filename)
+{
+  try
+  {
+    long long size = getFileSize(filename);
+    if (size <= 0)
+    {
+      Spine::Exception exception(BCP, "Invalid file size!");
+      exception.addParameter("Filename",filename);
+      exception.addParameter("Size",std::to_string(size));
+      throw exception;
+    }
+
+    FILE *file = fopen(filename,"r");
+    if (file == NULL)
+    {
+      Spine::Exception exception(BCP, "Cannot open the file!");
+      exception.addParameter("Filename",filename);
+      throw exception;
+    }
+
+    unsigned char *data = new unsigned char[size+1];
+    size_t n = fread(data,1,size,file);
+    if (n <= 0)
+    {
+      fclose(file);
+      delete[] data;
+      Spine::Exception exception(BCP, "File read failed!");
+      exception.addParameter("Filename",filename);
+      throw exception;
+    }
+
+    fclose(file);
+
+    std::string st = base64_encode(data,size);
+    delete[] data;
+
+    return st;
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
 
 
 

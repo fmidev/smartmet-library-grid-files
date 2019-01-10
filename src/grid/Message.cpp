@@ -316,22 +316,22 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
-      coordinateType = static_cast<T::CoordinateType>(atoi(coordinateTypeStr));
+      coordinateType = toUInt8(coordinateTypeStr);
 
     size_t smoothSize = 0;
     const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
     if (smoothSizeStr != nullptr)
-      smoothSize = static_cast<size_t>(atoi(smoothSizeStr));
+      smoothSize = static_cast<size_t>(toInt32(smoothSizeStr));
 
     size_t smoothDegree = 0;
     const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
     if (smoothDegreeStr != nullptr)
-      smoothDegree = static_cast<size_t>(atoi(smoothDegreeStr));
+      smoothDegree = static_cast<size_t>(toInt32(smoothDegreeStr));
 
     T::ParamValue_vec gridValues;
     getGridValueVectorWithCaching(gridValues);
@@ -376,262 +376,12 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
 
 
 
-void Message::getGridIsobandsByTime(const GRID::Message& message,std::string newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::WkbData_vec& contours)
-{
-  try
-  {
-    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
-    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
-    if (timeInterpolationMethodStr != nullptr)
-      timeInterpolationMethod = atoi(timeInterpolationMethodStr);
-
-    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
-    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
-    if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
-
-    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
-    const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
-    if (coordinateTypeStr != nullptr)
-      coordinateType = static_cast<T::CoordinateType>(atoi(coordinateTypeStr));
-
-    size_t smoothSize = 0;
-    const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
-    if (smoothSizeStr != nullptr)
-      smoothSize = static_cast<size_t>(atoi(smoothSizeStr));
-
-    size_t smoothDegree = 0;
-    const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
-    if (smoothDegreeStr != nullptr)
-      smoothDegree = static_cast<size_t>(atoi(smoothDegreeStr));
-
-    T::ParamValue_vec gridValues;
-    getGridValueVectorByTime(message,newTime,timeInterpolationMethod,gridValues);
-
-    T::Dimensions d = this->getGridDimensions();
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec *coordinatePtr = nullptr;
-
-    switch (coordinateType)
-    {
-      case T::CoordinateTypeValue::UNKNOWN:
-      case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinates = this->getGridLatLonCoordinates();
-        coordinatePtr = &coordinates;
-        break;
-
-      case T::CoordinateTypeValue::GRID_COORDINATES:
-        break;
-
-      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = this->getGridCoordinates();
-        coordinatePtr = &coordinates;
-        break;
-    }
-
-    getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
-
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-    attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-void Message::getGridValueVectorByTimeAndCoordinateList(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values)
-{
-  try
-  {
-    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
-    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
-    if (timeInterpolationMethodStr != nullptr)
-      timeInterpolationMethod = atoi(timeInterpolationMethodStr);
-
-    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
-    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
-    if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
-
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("grid.coordinateType",std::to_string(coordinateType));
-
-    if (coordinates.size() == 0)
-      return;
-
-    T::ParamValue_vec gridValues1;
-    getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,gridValues1);
-
-    T::ParamValue_vec gridValues2;
-    message.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,gridValues2);
-
-    timeInterpolation(gridValues1,gridValues2,this->getForecastTime(),message.getForecastTime(),newTime,timeInterpolationMethod,values);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-void Message::getGridValueVectorByTimeAndGeometry(const GRID::Message& message,std::string newTime,T::AttributeList& attributeList,T::ParamValue_vec& values)
-{
-  try
-  {
-    const char *urnStr = attributeList.getAttributeValue("grid.urn");
-    const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
-    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
-    const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
-    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-
-    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
-    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
-    if (timeInterpolationMethodStr != nullptr)
-      timeInterpolationMethod = atoi(timeInterpolationMethodStr);
-
-    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
-    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
-    if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
-
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-
-    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == atoi(geometryIdStr)))
-    {
-      T::Dimensions d = getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-      attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
-      attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
-
-      getGridValueVectorByTime(message,newTime,timeInterpolationMethod,values);
-      return;
-    }
-
-    T::Coordinate_vec latLonCoordinates;
-
-    GRIB2::GridDef_ptr def = nullptr;
-    if (geometryIdStr != nullptr)
-    {
-      def = Identification::gridDef.getGrib2DefinitionByGeometryId(atoi(geometryIdStr));
-      if (!def)
-        return;
-
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-    std::shared_ptr<GRIB2::GridDefinition> defPtr;
-    if (geometryStringStr != nullptr)
-    {
-      def =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!def)
-        return;
-
-      defPtr.reset(def);
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-    if (def != nullptr)
-    {
-      T::Dimensions d = def->getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-      attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)def->reverseXDirection()));
-    }
-
-    if (urnStr != nullptr  &&  bboxStr != nullptr  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
-    {
-      std::vector<double> cc;
-      splitString(bboxStr,',',cc);
-
-      if (cc.size() == 4)
-      {
-        OGRSpatialReference sr_latlon;
-        sr_latlon.importFromEPSG(4326);
-
-        OGRSpatialReference sr;
-        if (sr.importFromURN(urnStr) != OGRERR_NONE)
-          throw SmartMet::Spine::Exception(BCP, "Invalid crs!" + std::string(urnStr) + "'!");
-
-        OGRCoordinateTransformation *tranformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
-        if (tranformation == nullptr)
-          throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
-
-        uint width = atoi(gridWidthStr);
-        uint height = atoi(gridHeightStr);
-
-        double diffx = cc[2] - cc[0];
-        double diffy = cc[3] - cc[1];
-
-        double dx = diffx / C_DOUBLE(width);
-        double dy = diffy / C_DOUBLE(height);
-
-        uint sz = width*height;
-
-        latLonCoordinates.reserve(sz);
-
-        double yy = cc[1];
-        for (uint y=0; y<height; y++)
-        {
-          double xx = cc[0];
-          for (uint x=0; x<width; x++)
-          {
-            double lon = xx;
-            double lat = yy;
-
-            tranformation->Transform(1,&lon,&lat);
-            latLonCoordinates.push_back(T::Coordinate(lon,lat));
-
-            xx = xx + dx;
-          }
-          yy = yy + dy;
-        }
-      }
-    }
-
-    if (latLonCoordinates.size() == 0)
-      return;
-
-    T::ParamValue_vec gridValues1;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,gridValues1);
-
-    T::ParamValue_vec gridValues2;
-    message.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,gridValues2);
-
-    timeInterpolation(gridValues1,gridValues2,this->getForecastTime(),message.getForecastTime(),newTime,timeInterpolationMethod,values);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
 void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::WkbData_vec& contours)
 {
   FUNCTION_TRACE
   try
   {
+    //attributeList.print(std::cout,0,0);
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
@@ -642,24 +392,24 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
-      coordinateType = static_cast<T::CoordinateType>(atoi(coordinateTypeStr));
+      coordinateType = toUInt8(coordinateTypeStr);
 
     size_t smoothSize = 0;
     const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
     if (smoothSizeStr != nullptr)
-      smoothSize = static_cast<size_t>(atoi(smoothSizeStr));
+      smoothSize = toSize_t(smoothSizeStr);
 
     size_t smoothDegree = 0;
     const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
     if (smoothDegreeStr != nullptr)
-      smoothDegree = static_cast<size_t>(atoi(smoothDegreeStr));
+      smoothDegree = toSize_t(smoothDegreeStr);
 
-    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == atoi(geometryIdStr)))
+    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == toInt32(geometryIdStr)))
     {
       getGridIsobands(contourLowValues,contourHighValues,attributeList,contours);
       return;
@@ -671,7 +421,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     GRIB2::GridDef_ptr def = nullptr;
     if (geometryIdStr != nullptr)
     {
-      def = Identification::gridDef.getGrib2DefinitionByGeometryId(atoi(geometryIdStr));
+      def = Identification::gridDef.getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
       if (!def)
         return;
 
@@ -712,15 +462,20 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
         sr_latlon.importFromEPSG(4326);
 
         OGRSpatialReference sr;
-        if (sr.importFromURN(urnStr) != OGRERR_NONE)
+
+        std::string urn = urnStr;
+        if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
+          urn = std::string("urn:ogc:def:crs:") + urnStr;
+
+        if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
           throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(urnStr) + "'!");
 
         OGRCoordinateTransformation *tranformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
         if (tranformation == nullptr)
           throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
 
-        width = atoi(gridWidthStr);
-        height = atoi(gridHeightStr);
+        width = toUInt32(gridWidthStr);
+        height = toUInt32(gridHeightStr);
 
         double diffx = cc[2] - cc[0];
         double diffy = cc[3] - cc[1];
@@ -745,6 +500,8 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
             tranformation->Transform(1,&lon,&lat);
             latLonCoordinates.push_back(T::Coordinate(lon,lat));
             coordinates.push_back(T::Coordinate(xx,yy));
+
+            //printf("%f,%f => %f,%f\n",xx,yy,lon,lat);
 
             xx = xx + dx;
           }
@@ -796,184 +553,6 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
 
 
-void Message::getGridIsobandsByTimeAndGeometry(const GRID::Message& message,std::string newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::WkbData_vec& contours)
-{
-  try
-  {
-    const char *urnStr = attributeList.getAttributeValue("grid.urn");
-    const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
-    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
-    const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
-    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-
-    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
-    const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
-    if (coordinateTypeStr != nullptr)
-      coordinateType = static_cast<T::CoordinateType>(atoi(coordinateTypeStr));
-
-    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
-    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
-    if (timeInterpolationMethodStr != nullptr)
-      timeInterpolationMethod = atoi(timeInterpolationMethodStr);
-
-    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
-    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
-    if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
-
-    size_t smoothSize = 0;
-    const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
-    if (smoothSizeStr != nullptr)
-      smoothSize = static_cast<size_t>(atoi(smoothSizeStr));
-
-    size_t smoothDegree = 0;
-    const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
-    if (smoothDegreeStr != nullptr)
-      smoothDegree = static_cast<size_t>(atoi(smoothDegreeStr));
-
-    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == atoi(geometryIdStr)))
-    {
-      T::Dimensions d = getGridDimensions();
-      getGridIsobandsByTime(message,newTime,contourLowValues,contourHighValues,attributeList,contours);
-      return;
-    }
-
-    T::Coordinate_vec latLonCoordinates;
-    T::Coordinate_vec coordinates;
-
-    GRIB2::GridDef_ptr def = nullptr;
-    if (geometryIdStr != nullptr)
-    {
-      def = Identification::gridDef.getGrib2DefinitionByGeometryId(atoi(geometryIdStr));
-      if (!def)
-        return;
-
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-    std::shared_ptr<GRIB2::GridDefinition> defPtr;
-    if (geometryStringStr != nullptr)
-    {
-      def =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!def)
-        return;
-
-      defPtr.reset(def);
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-    uint width = 0;
-    uint height = 0;
-
-    if (def != nullptr)
-    {
-      T::Dimensions d = def->getGridDimensions();
-      width = d.nx();
-      height = d.ny();
-      attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)def->reverseXDirection()));
-    }
-
-    if (urnStr != nullptr  &&  bboxStr != nullptr  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
-    {
-      std::vector<double> cc;
-      splitString(bboxStr,',',cc);
-
-      if (cc.size() == 4)
-      {
-        OGRSpatialReference sr_latlon;
-        sr_latlon.importFromEPSG(4326);
-
-        OGRSpatialReference sr;
-        if (sr.importFromURN(urnStr) != OGRERR_NONE)
-          throw SmartMet::Spine::Exception(BCP, "Invalid crs!" + std::string(urnStr) + "'!");
-
-        OGRCoordinateTransformation *tranformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
-        if (tranformation == nullptr)
-          throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
-
-        width = atoi(gridWidthStr);
-        height = atoi(gridHeightStr);
-
-        double diffx = cc[2] - cc[0];
-        double diffy = cc[3] - cc[1];
-
-        double dx = diffx / C_DOUBLE(width);
-        double dy = diffy / C_DOUBLE(height);
-
-        uint sz = width*height;
-
-        coordinates.reserve(sz);
-        latLonCoordinates.reserve(sz);
-
-        double yy = cc[1];
-        for (uint y=0; y<height; y++)
-        {
-          double xx = cc[0];
-          for (uint x=0; x<width; x++)
-          {
-            double lon = xx;
-            double lat = yy;
-
-            tranformation->Transform(1,&lon,&lat);
-            latLonCoordinates.push_back(T::Coordinate(lon,lat));
-            coordinates.push_back(T::Coordinate(xx,yy));
-
-            xx = xx + dx;
-          }
-          yy = yy + dy;
-        }
-      }
-    }
-
-    if (latLonCoordinates.size() == 0)
-      return;
-
-    T::ParamValue_vec gridValues1;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,gridValues1);
-
-    T::ParamValue_vec gridValues2;
-    message.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,gridValues2);
-
-    T::ParamValue_vec gridValues;
-    timeInterpolation(gridValues1,gridValues2,this->getForecastTime(),message.getForecastTime(),newTime,timeInterpolationMethod,gridValues);
-
-    T::Coordinate_vec *coordinatePtr = nullptr;
-
-    switch (coordinateType)
-    {
-      case T::CoordinateTypeValue::UNKNOWN:
-      case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinatePtr = &latLonCoordinates;
-        break;
-
-      case T::CoordinateTypeValue::GRID_COORDINATES:
-        break;
-
-      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = def->getGridCoordinates();
-        coordinatePtr = &coordinates;
-        break;
-    }
-
-    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
-
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
 void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::WkbData_vec& contours)
 {
   FUNCTION_TRACE
@@ -985,22 +564,22 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
     T::CoordinateType coordinateType = T::CoordinateTypeValue::GRID_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
-      coordinateType = static_cast<T::CoordinateType>(atoi(coordinateTypeStr));
+      coordinateType = toUInt8(coordinateTypeStr);
 
     size_t smoothSize = 0;
     const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
     if (smoothSizeStr != nullptr)
-      smoothSize = static_cast<size_t>(atoi(smoothSizeStr));
+      smoothSize = toSize_t(smoothSizeStr);
 
     size_t smoothDegree = 0;
     const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
     if (smoothDegreeStr != nullptr)
-      smoothDegree = static_cast<size_t>(atoi(smoothDegreeStr));
+      smoothDegree = toSize_t(smoothDegreeStr);
 
     T::ParamValue_vec gridValues;
     getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,gridValues);
@@ -1028,7 +607,6 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
     attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-
   }
   catch (...)
   {
@@ -1048,22 +626,22 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
-      coordinateType = static_cast<T::CoordinateType>(atoi(coordinateTypeStr));
+      coordinateType = toUInt8(coordinateTypeStr);
 
     size_t smoothSize = 0;
     const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
     if (smoothSizeStr != nullptr)
-      smoothSize = static_cast<size_t>(atoi(smoothSizeStr));
+      smoothSize = toSize_t(smoothSizeStr);
 
     size_t smoothDegree = 0;
     const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
     if (smoothDegreeStr != nullptr)
-      smoothDegree = static_cast<size_t>(atoi(smoothDegreeStr));
+      smoothDegree = toSize_t(smoothDegreeStr);
 
     T::ParamValue_vec gridValues;
     getGridValueVector(gridValues);
@@ -1109,84 +687,12 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
 
 
 
-void Message::getGridIsolinesByTime(const GRID::Message& message,std::string newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::WkbData_vec& contours)
-{
-  try
-  {
-    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
-    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
-    if (timeInterpolationMethodStr != nullptr)
-      timeInterpolationMethod = atoi(timeInterpolationMethodStr);
-
-    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
-    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
-    if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
-
-    T::ParamValue_vec gridValues;
-    getGridValueVectorByTime(message,newTime,timeInterpolationMethod,gridValues);
-
-    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
-    const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
-    if (coordinateTypeStr != nullptr)
-      coordinateType = static_cast<T::CoordinateType>(atoi(coordinateTypeStr));
-
-    size_t smoothSize = 0;
-    const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
-    if (smoothSizeStr != nullptr)
-      smoothSize = static_cast<size_t>(atoi(smoothSizeStr));
-
-    size_t smoothDegree = 0;
-    const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
-    if (smoothDegreeStr != nullptr)
-      smoothDegree = static_cast<size_t>(atoi(smoothDegreeStr));
-
-    T::Dimensions d = this->getGridDimensions();
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec *coordinatePtr = nullptr;
-
-    switch (coordinateType)
-    {
-      case T::CoordinateTypeValue::UNKNOWN:
-      case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinates = this->getGridLatLonCoordinates();
-        coordinatePtr = &coordinates;
-        break;
-
-      case T::CoordinateTypeValue::GRID_COORDINATES:
-        break;
-
-      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = this->getGridCoordinates();
-        coordinatePtr = &coordinates;
-        break;
-    }
-
-    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
-
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-    attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
 void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::WkbData_vec& contours)
 {
   FUNCTION_TRACE
   try
   {
+    //attributeList.print(std::cout,0,0);
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
@@ -1197,24 +703,24 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
-      coordinateType = static_cast<T::CoordinateType>(atoi(coordinateTypeStr));
+      coordinateType = toUInt8(coordinateTypeStr);
 
     size_t smoothSize = 0;
     const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
     if (smoothSizeStr != nullptr)
-      smoothSize = static_cast<size_t>(atoi(smoothSizeStr));
+      smoothSize = toSize_t(smoothSizeStr);
 
     size_t smoothDegree = 0;
     const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
     if (smoothDegreeStr != nullptr)
-      smoothDegree = static_cast<size_t>(atoi(smoothDegreeStr));
+      smoothDegree = toSize_t(smoothDegreeStr);
 
-    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == atoi(geometryIdStr)))
+    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == toInt32(geometryIdStr)))
     {
       getGridIsolines(contourValues,attributeList,contours);
       return;
@@ -1226,7 +732,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     GRIB2::GridDef_ptr def = nullptr;
     if (geometryIdStr != nullptr)
     {
-      def = Identification::gridDef.getGrib2DefinitionByGeometryId(atoi(geometryIdStr));
+      def = Identification::gridDef.getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
       if (!def)
         return;
 
@@ -1267,15 +773,19 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
         sr_latlon.importFromEPSG(4326);
 
         OGRSpatialReference sr;
-        if (sr.importFromURN(urnStr) != OGRERR_NONE)
+        std::string urn = urnStr;
+        if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
+          urn = std::string("urn:ogc:def:crs:") + urnStr;
+
+        if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
           throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(urnStr) + "'!");
 
         OGRCoordinateTransformation *tranformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
         if (tranformation == nullptr)
           throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
 
-        width = atoi(gridWidthStr);
-        height = atoi(gridHeightStr);
+        width = toUInt32(gridWidthStr);
+        height = toUInt32(gridHeightStr);
 
         double diffx = cc[2] - cc[0];
         double diffy = cc[3] - cc[1];
@@ -1351,185 +861,6 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
 
 
-void Message::getGridIsolinesByTimeAndGeometry(const GRID::Message& message,std::string newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::WkbData_vec& contours)
-{
-  try
-  {
-    const char *urnStr = attributeList.getAttributeValue("grid.urn");
-    const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
-    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
-    const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
-    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-
-    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
-    const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
-    if (coordinateTypeStr != nullptr)
-      coordinateType = static_cast<T::CoordinateType>(atoi(coordinateTypeStr));
-
-    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
-    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
-    if (timeInterpolationMethodStr != nullptr)
-      timeInterpolationMethod = atoi(timeInterpolationMethodStr);
-
-    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
-    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
-    if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
-
-    size_t smoothSize = 0;
-    const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
-    if (smoothSizeStr != nullptr)
-      smoothSize = static_cast<size_t>(atoi(smoothSizeStr));
-
-    size_t smoothDegree = 0;
-    const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
-    if (smoothDegreeStr != nullptr)
-      smoothDegree = static_cast<size_t>(atoi(smoothDegreeStr));
-
-    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == atoi(geometryIdStr)))
-    {
-      T::Dimensions d = getGridDimensions();
-      getGridIsolinesByTime(message,newTime,contourValues,attributeList,contours);
-      return;
-    }
-
-    T::Coordinate_vec latLonCoordinates;
-    T::Coordinate_vec coordinates;
-
-    GRIB2::GridDef_ptr def = nullptr;
-    if (geometryIdStr != nullptr)
-    {
-      def = Identification::gridDef.getGrib2DefinitionByGeometryId(atoi(geometryIdStr));
-      if (!def)
-        return;
-
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-    std::shared_ptr<GRIB2::GridDefinition> defPtr;
-    if (geometryStringStr != nullptr)
-    {
-      def =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!def)
-        return;
-
-      defPtr.reset(def);
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-    uint width = 0;
-    uint height = 0;
-
-    if (def != nullptr)
-    {
-      T::Dimensions d = def->getGridDimensions();
-      width = d.nx();
-      height = d.ny();
-      attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)def->reverseXDirection()));
-    }
-
-    if (urnStr != nullptr  &&  bboxStr != nullptr  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
-    {
-      std::vector<double> cc;
-      splitString(bboxStr,',',cc);
-
-      if (cc.size() == 4)
-      {
-        OGRSpatialReference sr_latlon;
-        sr_latlon.importFromEPSG(4326);
-
-        OGRSpatialReference sr;
-        if (sr.importFromURN(urnStr) != OGRERR_NONE)
-          throw SmartMet::Spine::Exception(BCP, "Invalid crs!" + std::string(urnStr) + "'!");
-
-        OGRCoordinateTransformation *tranformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
-        if (tranformation == nullptr)
-          throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
-
-        width = atoi(gridWidthStr);
-        height = atoi(gridHeightStr);
-
-        double diffx = cc[2] - cc[0];
-        double diffy = cc[3] - cc[1];
-
-        double dx = diffx / C_DOUBLE(width);
-        double dy = diffy / C_DOUBLE(height);
-
-        uint sz = width*height;
-
-        coordinates.reserve(sz);
-        latLonCoordinates.reserve(sz);
-
-        double yy = cc[1];
-        for (uint y=0; y<height; y++)
-        {
-          double xx = cc[0];
-          for (uint x=0; x<width; x++)
-          {
-            double lon = xx;
-            double lat = yy;
-
-            tranformation->Transform(1,&lon,&lat);
-            latLonCoordinates.push_back(T::Coordinate(lon,lat));
-            coordinates.push_back(T::Coordinate(xx,yy));
-
-            xx = xx + dx;
-          }
-          yy = yy + dy;
-        }
-      }
-    }
-
-    if (latLonCoordinates.size() == 0)
-      return;
-
-    T::ParamValue_vec gridValues1;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,gridValues1);
-
-    T::ParamValue_vec gridValues2;
-    message.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,gridValues2);
-
-    T::ParamValue_vec gridValues;
-    timeInterpolation(gridValues1,gridValues2,this->getForecastTime(),message.getForecastTime(),newTime,timeInterpolationMethod,gridValues);
-
-    T::Coordinate_vec *coordinatePtr = nullptr;
-
-    switch (coordinateType)
-    {
-      case T::CoordinateTypeValue::UNKNOWN:
-      case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinatePtr = &latLonCoordinates;
-        break;
-
-      case T::CoordinateTypeValue::GRID_COORDINATES:
-        break;
-
-      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = def->getGridCoordinates();
-        coordinatePtr = &coordinates;
-        break;
-    }
-
-    getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
-
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
 void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::WkbData_vec& contours)
 {
   FUNCTION_TRACE
@@ -1541,22 +872,22 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = atoi(areaInterpolationMethodStr);
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
-      coordinateType = static_cast<T::CoordinateType>(atoi(coordinateTypeStr));
+      coordinateType = toUInt8(coordinateTypeStr);
 
     size_t smoothSize = 0;
     const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
     if (smoothSizeStr != nullptr)
-      smoothSize = static_cast<size_t>(atoi(smoothSizeStr));
+      smoothSize = toSize_t(smoothSizeStr);
 
     size_t smoothDegree = 0;
     const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
     if (smoothDegreeStr != nullptr)
-      smoothDegree = static_cast<size_t>(atoi(smoothDegreeStr));
+      smoothDegree = toSize_t(smoothDegreeStr);
 
     T::ParamValue_vec gridValues;
     getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,gridValues);
@@ -2489,7 +1820,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
 
-    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == atoi(geometryIdStr)))
+    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == toInt32(geometryIdStr)))
     {
       getGridValueVector(values);
       return;
@@ -2499,7 +1830,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
     if (geometryIdStr != nullptr)
     {
-      def = Identification::gridDef.getGrib2DefinitionByGeometryId(atoi(geometryIdStr));
+      def = Identification::gridDef.getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
       if (!def)
         return;
     }
@@ -2523,7 +1854,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *s = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (s != nullptr)
-      areaInterpolationMethod = atoi(s);
+      areaInterpolationMethod = toInt16(s);
 
     T::ParamValue_vec gridValues;
     getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,values);
@@ -2535,46 +1866,6 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     attributeList.setAttribute("grid.height",std::to_string(d.ny()));
     attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-void Message::getGridValueVectorByTime(const GRID::Message& message,std::string newTime,short timeInterpolationMethod,T::ParamValue_vec& values)
-{
-  try
-  {
-    time_t tt = utcTimeToTimeT(newTime);
-    time_t t1 = utcTimeToTimeT(this->getForecastTime());
-    time_t t2 = utcTimeToTimeT(message.getForecastTime());
-
-    if (timeInterpolationMethod == T::TimeInterpolationMethod::Undefined  || timeInterpolationMethod == T::TimeInterpolationMethod::None ||
-        (timeInterpolationMethod == T::TimeInterpolationMethod::Nearest  &&  (tt-t1) <= (t2-tt)) ||
-        (timeInterpolationMethod == T::TimeInterpolationMethod::Linear  &&  tt == t1))
-    {
-      this->getGridValueVectorWithCaching(values);
-      return;
-    }
-
-    if ((timeInterpolationMethod == T::TimeInterpolationMethod::Nearest  &&  (tt-t1) > (t2-tt)) ||
-        (timeInterpolationMethod == T::TimeInterpolationMethod::Linear  &&  tt == t2))
-    {
-      message.getGridValueVectorWithCaching(values);
-      return;
-    }
-
-    T::ParamValue_vec values1;
-    T::ParamValue_vec values2;
-    this->getGridValueVectorWithCaching(values1);
-    message.getGridValueVectorWithCaching(values2);
-
-    timeInterpolation(values1,values2,this->getForecastTime(),message.getForecastTime(),newTime,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -3036,59 +2327,6 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
 
 
 
-void Message::getGridValueByLevelAndPoint(const GRID::Message& message,int newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short levelInterpolationMethod,T::ParamValue& value) const
-{
-  //FUNCTION_TRACE
-  try
-  {
-    T::ParamValue value1 = ParamValueMissing;
-    T::ParamValue value2 = ParamValueMissing;
-
-    getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,value1);
-    message.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,value2);
-
-    int level1 = getGridParameterLevel();
-    int level2 = message.getGridParameterLevel();
-
-    // If the levels are using different units (for example hPa and Pa), then we
-    // try to tune levels so that : level1 < newLevel < level2
-
-    tuneLevels(level1,level2,newLevel);
-
-    value = levelInterpolation(value1,value2,level1,level2,newLevel,levelInterpolationMethod);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-void Message::getGridValueByTimeAndPoint(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,T::ParamValue& value) const
-{
-  //FUNCTION_TRACE
-  try
-  {
-    T::ParamValue value1 = ParamValueMissing;
-    T::ParamValue value2 = ParamValueMissing;
-
-    getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,value1);
-    message.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,value2);
-
-    value = timeInterpolation(value1,value2,getForecastTime(),message.getForecastTime(),newTime,timeInterpolationMethod);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
 
 void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double x,double y,uint vectorType,double_vec& valueVector) const
 {
@@ -3392,29 +2630,6 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
 
 
-void Message::getGridValueListByTimeAndCircle(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,T::GridValueList& valueList) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    T::GridValueList values1;
-    T::GridValueList values2;
-
-    this->getGridValueListByCircle(coordinateType,origoX,origoY,radius,values1);
-    message.getGridValueListByCircle(coordinateType,origoX,origoY,radius,values2);
-
-    timeInterpolation(values1,values2,this->getForecastTime(),message.getForecastTime(),newTime,timeInterpolationMethod,valueList);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
 void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -3435,111 +2650,6 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
   }
 }
 
-
-
-
-
-void Message::getGridValueListByLevelAndPointList(const GRID::Message& message,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList)
-{
-  FUNCTION_TRACE
-  try
-  {
-    T::GridValueList values1;
-    T::GridValueList values2;
-
-    this->getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,values1);
-    message.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,values2);
-
-    int level1 = getGridParameterLevel();
-    int level2 = message.getGridParameterLevel();
-
-    // If the levels are using different units (for example hPa and Pa), then we
-    // try to tune levels so that : level1 < newLevel < level2
-
-    tuneLevels(level1,level2,newLevel);
-
-    levelInterpolation(values1,values2,level1,level2,newLevel,levelInterpolationMethod,valueList);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-void Message::getGridValueListByTimeAndPointList(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,T::GridValueList& valueList)
-{
-  FUNCTION_TRACE
-  try
-  {
-    T::GridValueList values1;
-    T::GridValueList values2;
-
-    this->getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,values1);
-    message.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,values2);
-
-    timeInterpolation(values1,values2,this->getForecastTime(),message.getForecastTime(),newTime,timeInterpolationMethod,valueList);
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-void Message::getGridValueListByTimeLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,std::string newTime,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList)
-{
-  FUNCTION_TRACE
-  try
-  {
-    int prevTimeLevel1 = getGridParameterLevel();
-    int prevTimeLevel2 = message1.getGridParameterLevel();
-
-    int nextTimeLevel1 = message2.getGridParameterLevel();
-    int nextTimeLevel2 = message3.getGridParameterLevel();
-
-    T::GridValueList prevTimePrevLevel;
-    T::GridValueList prevTimeNextLevel;
-    T::GridValueList prevValues;
-
-    T::GridValueList nextTimePrevLevel;
-    T::GridValueList nextTimeNextLevel;
-    T::GridValueList nextValues;
-
-    this->getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,prevTimePrevLevel);
-    message1.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,prevTimeNextLevel);
-    message2.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,nextTimePrevLevel);
-    message3.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,nextTimeNextLevel);
-
-    //prevTimePrevLevel.print(std::cout,0,0);
-    //prevTimeNextLevel.print(std::cout,0,0);
-    //nextTimePrevLevel.print(std::cout,0,0);
-    //nextTimeNextLevel.print(std::cout,0,0);
-
-    if (prevTimeLevel1 == nextTimeLevel1  &&  prevTimeLevel2 == nextTimeLevel2)
-    {
-      timeInterpolation(prevTimePrevLevel,nextTimePrevLevel,this->getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod,prevValues);
-      timeInterpolation(prevTimeNextLevel,nextTimeNextLevel,message1.getForecastTime(),message3.getForecastTime(),newTime,timeInterpolationMethod,nextValues);
-
-      tuneLevels(prevTimeLevel1,prevTimeLevel2,newLevel);
-
-      //prevValues.print(std::cout,0,0);
-      //nextValues.print(std::cout,0,0);
-      levelInterpolation(prevValues,nextValues,prevTimeLevel1,prevTimeLevel2,newLevel,levelInterpolationMethod,valueList);
-      //valueList.print(std::cout,0,0);
-    }
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
 
 
 
@@ -3648,29 +2758,6 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
       }
       return;
     }
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-void Message::getGridValueListByTimeAndPolygon(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,T::GridValueList& valueList) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    T::GridValueList values1;
-    T::GridValueList values2;
-
-    this->getGridValueListByPolygon(coordinateType,polygonPoints,values1);
-    message.getGridValueListByPolygon(coordinateType,polygonPoints,values2);
-
-    timeInterpolation(values1,values2,this->getForecastTime(),message.getForecastTime(),newTime,timeInterpolationMethod,valueList);
   }
   catch (...)
   {
@@ -3793,30 +2880,6 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
       }
       return;
     }
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-
-void Message::getGridValueListByTimeAndPolygonPath(const GRID::Message& message,std::string newTime,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,T::GridValueList& valueList) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    T::GridValueList values1;
-    T::GridValueList values2;
-
-    this->getGridValueListByPolygonPath(coordinateType,polygonPath,values1);
-    message.getGridValueListByPolygonPath(coordinateType,polygonPath,values2);
-
-    timeInterpolation(values1,values2,this->getForecastTime(),message.getForecastTime(),newTime,timeInterpolationMethod,valueList);
   }
   catch (...)
   {
@@ -4131,8 +3194,6 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
         break;
         // throw SmartMet::Spine::Exception(BCP,"Unknown 'areaInterpolationMethod' parameter value!");
     }
-
-
   }
   catch (...)
   {

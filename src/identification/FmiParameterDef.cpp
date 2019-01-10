@@ -18,6 +18,7 @@ FmiParameterDef::FmiParameterDef()
     mAreaInterpolationMethod = T::AreaInterpolationMethod::Undefined;
     mTimeInterpolationMethod = T::TimeInterpolationMethod::Undefined;
     mLevelInterpolationMethod = T::LevelInterpolationMethod::Undefined;
+    mDefaultPrecision = -1;
   }
   catch (...)
   {
@@ -41,6 +42,7 @@ FmiParameterDef::FmiParameterDef(const FmiParameterDef& parameterDef)
     mAreaInterpolationMethod = parameterDef.mAreaInterpolationMethod;
     mTimeInterpolationMethod = parameterDef.mTimeInterpolationMethod;
     mLevelInterpolationMethod = parameterDef.mLevelInterpolationMethod;
+    mDefaultPrecision = parameterDef.mDefaultPrecision;
   }
   catch (...)
   {
@@ -81,6 +83,7 @@ void FmiParameterDef::print(std::ostream& stream,uint level,uint optionFlags) co
     stream << space(level) << "- mAreaInterpolationMethod  = " << mAreaInterpolationMethod << "\n";
     stream << space(level) << "- mTimeInterpolationMethod  = " << mTimeInterpolationMethod << "\n";
     stream << space(level) << "- mLevelInterpolationMethod = " << mLevelInterpolationMethod << "\n";
+    stream << space(level) << "- mDefaultPrecision         = " << mDefaultPrecision << "\n";
   }
   catch (...)
   {

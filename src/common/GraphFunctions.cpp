@@ -26,8 +26,13 @@
 namespace SmartMet
 {
 
-extern void convertWkbCoordinates(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation);
 
+std::vector<std::pair<long long,T::WkbData>> wkbCache;
+ThreadLock wkbCacheThreadLock;
+
+
+
+extern void convertWkbCoordinates(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation);
 
 
 
@@ -1264,8 +1269,10 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
   try
   {
     size_t sz = gridData.size();
-    if (sz == 0)
+    if (sz == 0 ||  (coordinates != nullptr  &&  sz != coordinates->size()))
       return;
+
+    long long hash = 0;
 
     double minValue = gridData[0];
     double maxValue = gridData[0];
@@ -1277,7 +1284,19 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
 
       if (gridData[t] > maxValue)
         maxValue = gridData[t];
+
+      hash += C_INT64(gridData[t]*1000000);
+      if (coordinates != nullptr)
+      {
+        hash += C_INT64((*coordinates)[t].x()*1000000);
+        hash += C_INT64((*coordinates)[t].y()*1000000);
+      }
     }
+
+    hash += smooth_size;
+    hash += smooth_degree;
+
+
 
     std::vector<float> *gridDataPtr = &gridData;
     std::vector<float> tmpGridData;
@@ -1309,49 +1328,77 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
       double low = contourLowValues[c];
       double high = contourHighValues[c];
 
-      T::WkbData wkbData;
+      long long hh = hash + low*1000000 + high*1000000 + interpolationMethod;
+      bool found = false;
 
-      if (high >= minValue && low <= maxValue)
       {
-        boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
-        Tron::FmiBuilder builder(itsGeomFactory);
+        AutoThreadLock lock(&wkbCacheThreadLock);
+        if (wkbCache.size() >= 5000)
+          wkbCache.erase(wkbCache.begin(), wkbCache.begin() + 1000);
 
-        switch (interpolationMethod)
+        for (auto it = wkbCache.rbegin(); it != wkbCache.rend()  &&  !found; ++it)
         {
-          case T::AreaInterpolationMethod::Linear:
-            MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
-            break;
-  /*
-          case T::AreaInterpolationMethod::Nearest:
-            MyNearestContourer::fill(builder, data, low,high, worldwrap, *hints);
-            break;
-  */
-          default:
-            MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
-            break;
-        }
-
-        auto geom = builder.result();
-
-        std::ostringstream out;
-        geos::io::WKBWriter writer;
-
-        writer.write(*geom, out);
-
-
-        const auto &wkb = out.str();
-        unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
-        size_t size = wkb.length();
-
-        if (size > 0)
-        {
-          wkbData.reserve(size);
-
-          for (size_t t=0; t<size; t++)
-            wkbData.push_back(data[t]);
+          if (it->first == hh)
+          {
+            contours.push_back(it->second);
+            found = true;
+          }
         }
       }
-      contours.push_back(wkbData);
+
+      if (!found)
+      {
+        T::WkbData wkbData;
+
+
+        if (high >= minValue && low <= maxValue)
+        {
+          boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
+          Tron::FmiBuilder builder(itsGeomFactory);
+
+          switch (interpolationMethod)
+          {
+            case T::AreaInterpolationMethod::Linear:
+              MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
+              break;
+    /*
+            case T::AreaInterpolationMethod::Nearest:
+              MyNearestContourer::fill(builder, data, low,high, worldwrap, *hints);
+              break;
+    */
+            default:
+              MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
+              break;
+          }
+
+          auto geom = builder.result();
+
+          std::ostringstream out;
+          geos::io::WKBWriter writer;
+
+          writer.write(*geom, out);
+
+
+          const auto &wkb = out.str();
+          unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+          size_t size = wkb.length();
+
+          if (size > 0)
+          {
+            wkbData.reserve(size);
+
+            for (size_t t=0; t<size; t++)
+              wkbData.push_back(data[t]);
+          }
+        }
+        contours.push_back(wkbData);
+
+        AutoThreadLock lock(&wkbCacheThreadLock);
+        if (wkbCache.size() >= 5000)
+          wkbCache.erase(wkbCache.begin(), wkbCache.begin() + 1000);
+
+        wkbCache.push_back(std::pair<long long,T::WkbData>(hh,wkbData));
+      }
     }
   }
   catch (...)
