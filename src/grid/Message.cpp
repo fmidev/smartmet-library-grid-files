@@ -2303,7 +2303,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
-        value = getGridValueByGridPoint(x,y,areaInterpolationMethod);
+        value = getGridValueByGridPoint_byInterpolation(x,y,areaInterpolationMethod);
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
@@ -3292,7 +3292,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
         \param areaInterpolationMethod    The interpolation method.
 */
 
-T::ParamValue Message::getGridValueByGridPoint(double grid_i,double grid_j,short areaInterpolationMethod) const
+T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,double grid_j,short areaInterpolationMethod) const
 {
   //FUNCTION_TRACE
   try
@@ -3357,7 +3357,7 @@ T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,shor
     double grid_j = 0;
     if (getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
     {
-      return getGridValueByGridPoint(grid_i,grid_j,areaInterpolationMethod);
+      return getGridValueByGridPoint_byInterpolation(grid_i,grid_j,areaInterpolationMethod);
     }
 
     return ParamValueMissing;

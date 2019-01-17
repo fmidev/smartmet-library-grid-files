@@ -127,7 +127,7 @@ class Message
     virtual void              getGridValueVectorByLatLonCoordinate(double lat,double lon,uint vectorType,double_vec& valueVector) const;
 
     virtual T::ParamValue     getGridValueByGridPoint(uint grid_i,uint grid_j) const;
-    virtual T::ParamValue     getGridValueByGridPoint(double grid_i,double grid_j,short areaInterpolationMethod) const;
+    virtual T::ParamValue     getGridValueByGridPoint_byInterpolation(double grid_i,double grid_j,short areaInterpolationMethod) const;
     virtual T::ParamValue     getGridValueByGridPoint_noInterpolation(double grid_i,double grid_j) const;
     virtual T::ParamValue     getGridValueByGridPoint_nearest(double grid_i,double grid_j) const;
     virtual T::ParamValue     getGridValueByGridPoint_min(double grid_i,double grid_j) const;
