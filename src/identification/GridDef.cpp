@@ -3048,6 +3048,258 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  g
 
 
 
+void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_vec& coordinates,uint& width,uint& height)
+{
+  FUNCTION_TRACE
+  try
+  {
+    //attributeList.print(std::cout,0,0);
+    const char *urnStr = attributeList.getAttributeValue("grid.urn");
+    const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
+    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
+    const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
+    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+
+    if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)
+      return;
+
+
+    // Checking if the geometry is defined by the geometryId
+
+    GRIB2::GridDef_ptr def = nullptr;
+    if (geometryIdStr != nullptr)
+    {
+      def = getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
+      if (!def)
+        return;
+
+      latLonCoordinates = def->getGridLatLonCoordinates();
+    }
+
+
+    // Checking if the geometry is defigned by the geometry string
+
+    std::shared_ptr<GRIB2::GridDefinition> defPtr;
+    if (geometryStringStr != nullptr)
+    {
+      def =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
+      if (!def)
+        return;
+
+      defPtr.reset(def);
+      latLonCoordinates = def->getGridLatLonCoordinates();
+    }
+
+
+    if (def != nullptr)
+    {
+      // If we have valid geometry definition then we know the grid width and the height.
+
+      T::Dimensions d = def->getGridDimensions();
+      width = d.nx();
+      height = d.ny();
+      attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)def->reverseYDirection()));
+      attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)def->reverseXDirection()));
+    }
+
+
+    if (urnStr != nullptr  &&  bboxStr != nullptr  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
+    {
+      // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
+
+      std::vector<double> cc;
+      splitString(bboxStr,',',cc);
+
+      if (cc.size() == 4)
+      {
+        OGRSpatialReference sr_latlon;
+        sr_latlon.importFromEPSG(4326);
+
+        OGRSpatialReference sr;
+
+        std::string urn = urnStr;
+        if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
+          urn = std::string("urn:ogc:def:crs:") + urnStr;
+
+        if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
+          throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(urnStr) + "'!");
+
+        OGRCoordinateTransformation *tranformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
+        if (tranformation == nullptr)
+          throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+
+        width = toUInt32(gridWidthStr);
+        height = toUInt32(gridHeightStr);
+
+        double diffx = cc[2] - cc[0];
+        double diffy = cc[3] - cc[1];
+
+        double dx = diffx / C_DOUBLE(width);
+        double dy = diffy / C_DOUBLE(height);
+
+        uint sz = width*height;
+
+        coordinates.reserve(sz);
+        latLonCoordinates.reserve(sz);
+
+        double yy = cc[1];
+        for (uint y=0; y<height; y++)
+        {
+          double xx = cc[0];
+          for (uint x=0; x<width; x++)
+          {
+            double lon = xx;
+            double lat = yy;
+
+            tranformation->Transform(1,&lon,&lat);
+            latLonCoordinates.push_back(T::Coordinate(lon,lat));
+            coordinates.push_back(T::Coordinate(xx,yy));
+
+            //printf("%f,%f => %f,%f\n",xx,yy,lon,lat);
+
+            xx = xx + dx;
+          }
+          yy = yy + dy;
+        }
+      }
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,uint& width,uint& height)
+{
+  FUNCTION_TRACE
+  try
+  {
+    //attributeList.print(std::cout,0,0);
+    const char *urnStr = attributeList.getAttributeValue("grid.urn");
+    const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
+    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
+    const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
+    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+
+    if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)
+      return;
+
+
+    // Checking if the geometry is defined by the geometryId
+
+    GRIB2::GridDef_ptr def = nullptr;
+    if (geometryIdStr != nullptr)
+    {
+      def = getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
+      if (!def)
+        return;
+
+      latLonCoordinates = def->getGridLatLonCoordinates();
+    }
+
+
+    // Checking if the geometry is defigned by the geometry string
+
+    std::shared_ptr<GRIB2::GridDefinition> defPtr;
+    if (geometryStringStr != nullptr)
+    {
+      def =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
+      if (!def)
+        return;
+
+      defPtr.reset(def);
+      latLonCoordinates = def->getGridLatLonCoordinates();
+    }
+
+
+    if (def != nullptr)
+    {
+      // If we have valid geometry definition then we know the grid width and the height.
+
+      T::Dimensions d = def->getGridDimensions();
+      width = d.nx();
+      height = d.ny();
+      attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)def->reverseYDirection()));
+      attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)def->reverseXDirection()));
+    }
+
+
+    if (urnStr != nullptr  &&  bboxStr != nullptr  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
+    {
+      // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
+
+      std::vector<double> cc;
+      splitString(bboxStr,',',cc);
+
+      if (cc.size() == 4)
+      {
+        OGRSpatialReference sr_latlon;
+        sr_latlon.importFromEPSG(4326);
+
+        OGRSpatialReference sr;
+
+        std::string urn = urnStr;
+        if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
+          urn = std::string("urn:ogc:def:crs:") + urnStr;
+
+        if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
+          throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(urnStr) + "'!");
+
+        OGRCoordinateTransformation *tranformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
+        if (tranformation == nullptr)
+          throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+
+        width = toUInt32(gridWidthStr);
+        height = toUInt32(gridHeightStr);
+
+        double diffx = cc[2] - cc[0];
+        double diffy = cc[3] - cc[1];
+
+        double dx = diffx / C_DOUBLE(width);
+        double dy = diffy / C_DOUBLE(height);
+
+        uint sz = width*height;
+
+        latLonCoordinates.reserve(sz);
+
+        double yy = cc[1];
+        for (uint y=0; y<height; y++)
+        {
+          double xx = cc[0];
+          for (uint x=0; x<width; x++)
+          {
+            double lon = xx;
+            double lat = yy;
+
+            tranformation->Transform(1,&lon,&lat);
+            latLonCoordinates.push_back(T::Coordinate(lon,lat));
+
+            //printf("%f,%f => %f,%f\n",xx,yy,lon,lat);
+
+            xx = xx + dx;
+          }
+          yy = yy + dy;
+        }
+      }
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
 {
   FUNCTION_TRACE

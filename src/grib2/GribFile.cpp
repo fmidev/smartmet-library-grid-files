@@ -77,6 +77,9 @@ GribFile::~GribFile()
        \param filename  The grib filename with a possible directory path.
 */
 
+uint mapCnt2 = 0;
+
+
 void GribFile::read(std::string filename)
 {
   try
@@ -99,6 +102,13 @@ void GribFile::read(std::string filename)
 
     auto startAddr = const_cast<char*>(mMappedFile->const_data());
     auto endAddr = startAddr + fsize;
+
+    // Making sure that the file is read into the memory.
+
+    for (long t= 0; t<fsize; t = t + 16)
+    {
+      mapCnt2 += startAddr[t];
+    }
 
     MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
     read(memoryReader);

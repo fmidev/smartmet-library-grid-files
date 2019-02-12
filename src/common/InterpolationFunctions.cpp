@@ -422,6 +422,114 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,int l
 
 
 
+void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int level1,int level2,int newLevel,short levelInterpolationMethod,T::ParamValue_vec& values)
+{
+  try
+  {
+    if (level1 == newLevel)
+    {
+      values = values1;
+      return;
+    }
+
+    if (level2 == newLevel)
+    {
+      values = values2;
+      return;
+    }
+
+    int diff1 = newLevel - level1;
+    int diff2 = level2 - newLevel;
+    double levelDiff = C_DOUBLE(level2 - level1);
+
+    uint len1 = values1.size();
+    uint len2 = values2.size();
+
+    if (len1 == len2)
+    {
+      switch (levelInterpolationMethod)
+      {
+        case T::LevelInterpolationMethod::None:
+          values = values1;
+          break;
+
+        case T::LevelInterpolationMethod::Nearest:
+          if (diff1 < diff2)
+            values = values1;
+          else
+            values = values2;
+          break;
+
+        case T::LevelInterpolationMethod::Min:
+          values.reserve(len1);
+          for (uint t = 0; t < len1; t++)
+          {
+            T::ParamValue val1 = values1[t];
+            T::ParamValue val2 = values2[t];
+
+            if (val1 < val2)
+              values.push_back(val1);
+            else
+              values.push_back(val2);
+          }
+          break;
+
+        case T::LevelInterpolationMethod::Max:
+          values.reserve(len1);
+          for (uint t = 0; t < len1; t++)
+          {
+            T::ParamValue val1 = values1[t];
+            T::ParamValue val2 = values2[t];
+
+            if (val1 > val2)
+              values.push_back(val1);
+            else
+              values.push_back(val2);
+          }
+          break;
+
+        case T::LevelInterpolationMethod::Logarithmic:
+          values.reserve(len1);
+          for (uint t = 0; t < len1; t++)
+          {
+            T::ParamValue val1 = values1[t];
+            T::ParamValue val2 = values2[t];
+
+            T::ParamValue val = logarithmicInterpolation(newLevel, level1, level2, val1, val2);
+            values.push_back(val);
+          }
+          break;
+
+        default:
+        case T::LevelInterpolationMethod::Linear:
+          values.reserve(len1);
+          for (uint t = 0; t < len1; t++)
+          {
+            T::ParamValue val1 = values1[t];
+            T::ParamValue val2 = values2[t];
+             T::ParamValue val = ParamValueMissing;
+            if (val1 != ParamValueMissing && val2 != ParamValueMissing)
+            {
+              T::ParamValue valueDiff = val2 - val1;
+              T::ParamValue valueStep = valueDiff / levelDiff;
+              val = val1 + (diff1 * valueStep);
+            }
+            values.push_back(val);
+          }
+          break;
+      }
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
 void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int level1,int level2,int newLevel,short levelInterpolationMethod,T::GridValueList& valueList)
 {
   try
