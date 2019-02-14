@@ -37,6 +37,7 @@ namespace SmartMet
 namespace Identification
 {
 
+
 /*! The GridDef class is used for accessing different kind of definitions relating
     to the GRIB1/GRIB2 files.
 
@@ -61,6 +62,7 @@ namespace Identification
     be initialized in the main program. After that all GRIB definition related information can
     be fetched from this instance.
 */
+
 
 class GridDef
 {
@@ -107,7 +109,10 @@ class GridDef
     bool              getGridDirectionsByGeometryId(T::GeometryId geometryId,bool& reverseXDirection,bool& reverseYDirection);
 
     T::Coordinate_vec getGridCoordinatesByGeometryId(T::GeometryId  geometryId);
+    void              getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_vec& coordinates,uint& width,uint& height);
+
     T::Coordinate_vec getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId);
+    void              getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,uint& width,uint& height);
     T::Coordinate_vec getGridLatLonCoordinateLinePointsByGeometryId(T::GeometryId  geometryId);
     bool              getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geometryId,double lat,double lon,double& grid_i,double& grid_j);
 
@@ -325,8 +330,8 @@ class GridDef
 
     string_vec              mFmi_geometryDef_files;
     time_t                  mFmi_geometryDef_modificationTime;
-    GRIB1::GridDef_pvec     mGridDefinitions1;
-    GRIB2::GridDef_pvec     mGridDefinitions2;
+    GRIB1::GridDef_map      mGridDefinitions1;
+    GRIB2::GridDef_map      mGridDefinitions2;
 
     string_vec              mNewbase_parameterDef_files;
     time_t                  mNewbase_parameterDef_modificationTime;

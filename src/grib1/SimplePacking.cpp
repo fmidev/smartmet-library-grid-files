@@ -165,6 +165,9 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
     if (!mInitialized)
       init(message);
 
+    if (mData == nullptr || mDataSize == 0)
+      return false;
+
     if (index >= mNumOfValues)
       return false;
 

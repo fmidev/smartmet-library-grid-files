@@ -366,8 +366,8 @@ std::string LambertConformalImpl::getGridGeometryString() const
     }
 
 
-    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s,%f;%f;%f;%f;%f;60.0;description",
-      T::GridProjectionValue::LambertConformal,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy);
+    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s,%f;%f;%f;%f;%f;%f;description",
+      T::GridProjectionValue::LambertConformal,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy,60.0);
 
     return std::string(buf);
   }

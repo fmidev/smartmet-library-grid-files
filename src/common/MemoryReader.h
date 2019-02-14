@@ -31,6 +31,7 @@ class MemoryReader
     unsigned char       getByte(unsigned char *_posPtr);
 
     bool                peek_string(const char *_str);
+    int                 search_string(const char *_str);
 
     void                read_data(unsigned char *_data,ulonglong _size);
     void                read_null(ulonglong _size);

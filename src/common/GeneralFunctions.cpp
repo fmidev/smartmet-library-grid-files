@@ -934,6 +934,164 @@ double toDouble(const char *str)
 
 
 
+char toInt8(const std::string& str)
+{
+  try
+  {
+    return toInt8(str.c_str());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+short toInt16(const std::string& str)
+{
+  try
+  {
+    return toInt16(str.c_str());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+int toInt32(const std::string& str)
+{
+  try
+  {
+    return toInt32(str.c_str());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
+long long toInt64(const std::string& str)
+{
+  try
+  {
+    return toInt64(str.c_str());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
+uchar toUInt8(const std::string& str)
+{
+  try
+  {
+    return toUInt8(str.c_str());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
+ushort toUInt16(const std::string& str)
+{
+  try
+  {
+    return toUInt16(str.c_str());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
+uint toUInt32(const std::string& str)
+{
+  try
+  {
+    return toUInt32(str.c_str());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
+ulonglong toUInt64(const std::string& str)
+{
+  try
+  {
+    return toUInt64(str.c_str());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
+double toDouble(const std::string& str)
+{
+  try
+  {
+    return toDouble(str.c_str());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
+size_t toSize_t(const std::string& str)
+{
+  try
+  {
+    return toSize_t(str.c_str());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
 std::string toString(std::array<char, 16> value)
 {
   try
@@ -1820,6 +1978,64 @@ void splitString(const char *str, char separator, std::set<float> &partList)
 
 
 void splitString(std::string str, char separator, std::set<float> &partList)
+{
+  try
+  {
+    splitString(str.c_str(), separator, partList);
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+void splitString(const char *str, char separator, std::set<int> &partList)
+{
+  try
+  {
+    char buf[10000];
+    uint c = 0;
+    char *p = const_cast<char *>(str);
+
+    bool ind = false;
+    while (*p != '\0' && *p != '\n' && c < 10000)
+    {
+      if (*p == '"') ind = !ind;
+
+      if (*p == separator && !ind)
+      {
+        buf[c] = '\0';
+        partList.insert(toInt32(buf));
+        c = 0;
+      }
+      else
+      {
+        buf[c] = *p;
+        c++;
+      }
+      p++;
+    }
+    if (c > 0)
+    {
+      buf[c] = '\0';
+      partList.insert(toInt32(buf));
+    }
+  }
+  catch (...)
+  {
+    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+void splitString(std::string str, char separator, std::set<int> &partList)
 {
   try
   {

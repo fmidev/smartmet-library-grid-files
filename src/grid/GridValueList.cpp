@@ -27,13 +27,7 @@ GridValueList::GridValueList(const GridValueList& gridValueList)
 {
   try
   {
-    uint sz = gridValueList.getLength();
-    for (uint t=0; t<sz; t++)
-    {
-      GridValue *rec = gridValueList.getGridValueByIndex(t);
-      if (rec != nullptr)
-        mList.push_back(new GridValue(*rec));
-    }
+    mList = gridValueList.mList;
   }
   catch (...)
   {
@@ -49,7 +43,6 @@ GridValueList::~GridValueList()
 {
   try
   {
-    clear();
   }
   catch (...)
   {
@@ -69,14 +62,7 @@ GridValueList& GridValueList::operator=(const GridValueList& gridValueList)
     if (&gridValueList == this)
       return *this;
 
-    clear();
-    uint sz = gridValueList.getLength();
-    for (uint t=0; t<sz; t++)
-    {
-      GridValue *rec = gridValueList.getGridValueByIndex(t);
-      if (rec != nullptr)
-        mList.push_back(new GridValue(*rec));
-    }
+    mList = gridValueList.mList;
     return *this;
   }
   catch (...)
@@ -89,7 +75,7 @@ GridValueList& GridValueList::operator=(const GridValueList& gridValueList)
 
 
 
-void GridValueList::addGridValue(GridValue *gridValue)
+void GridValueList::addGridValue(GridValue& gridValue)
 {
   try
   {
@@ -109,13 +95,6 @@ void GridValueList::clear()
 {
   try
   {
-    uint sz = mList.size();
-    for (uint t=0; t<sz; t++)
-    {
-      GridValue *rec = mList[t];
-      if (rec != nullptr)
-        delete rec;
-    }
     mList.clear();
   }
   catch (...)
@@ -128,14 +107,14 @@ void GridValueList::clear()
 
 
 
-GridValue* GridValueList::getGridValueByIndex(uint index) const
+GridValue* GridValueList::getGridValuePtrByIndex(uint index) const
 {
   try
   {
     if (index >= mList.size())
       return nullptr;
 
-    return mList[index];
+    return (GridValue*)&mList[index];
   }
   catch (...)
   {
@@ -147,16 +126,40 @@ GridValue* GridValueList::getGridValueByIndex(uint index) const
 
 
 
-GridValue* GridValueList::getGridValueByCoordinates(double x,double y) const
+bool GridValueList::getGridValueByIndex(uint index,GridValue& gridValue) const
+{
+  try
+  {
+    if (index >= mList.size())
+      return false;
+
+
+    gridValue = mList[index];
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridValueList::getGridValueByCoordinates(double x,double y,GridValue& gridValue) const
 {
   try
   {
     for (auto it=mList.begin(); it != mList.end(); ++it)
     {
-      if ((*it)->mX == x  &&  (*it)->mY == y)
-        return (*it);
+      if (it->mX == x  &&  it->mY == y)
+      {
+        gridValue = *it;
+        return true;
+      }
     }
-    return nullptr;
+    return false;
   }
   catch (...)
   {
@@ -192,8 +195,8 @@ T::ParamValue GridValueList::getMaxValue() const
 
     for (auto it=mList.begin(); it != mList.end(); ++it)
     {
-      if ((*it)->mValue != ParamValueMissing  &&  (max == ParamValueMissing || (*it)->mValue > max))
-        max = (*it)->mValue;
+      if (it->mValue != ParamValueMissing  &&  (max == ParamValueMissing || it->mValue > max))
+        max = it->mValue;
     }
     return max;
   }
@@ -215,8 +218,8 @@ T::ParamValue GridValueList::getMinValue() const
 
     for (auto it=mList.begin(); it != mList.end(); ++it)
     {
-      if ((*it)->mValue != ParamValueMissing  &&  (min == ParamValueMissing || (*it)->mValue < min))
-        min = (*it)->mValue;
+      if (it->mValue != ParamValueMissing  &&  (min == ParamValueMissing || it->mValue < min))
+        min = it->mValue;
     }
     return min;
   }
@@ -239,9 +242,9 @@ T::ParamValue GridValueList::getAverageValue() const
 
     for (auto it=mList.begin(); it != mList.end(); ++it)
     {
-      if ((*it)->mValue != ParamValueMissing)
+      if (it->mValue != ParamValueMissing)
       {
-        total = total + (*it)->mValue;
+        total = total + it->mValue;
         cnt++;
       }
     }
@@ -268,7 +271,7 @@ uint GridValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamVa
     uint cnt = 0;
     for (auto it=mList.begin(); it != mList.end(); ++it)
     {
-      if ((*it)->mValue >= minValue  &&  (*it)->mValue <= maxValue)
+      if (it->mValue >= minValue  &&  it->mValue <= maxValue)
         cnt++;
     }
     return cnt;
@@ -293,9 +296,8 @@ void GridValueList::print(std::ostream& stream,uint level,uint optionFlags) cons
     uint sz = mList.size();
     for (uint t=0; t<sz; t++)
     {
-      GridValue *rec = mList[t];
-      if (rec != nullptr)
-        rec->print(stream,level+2,optionFlags);
+      auto it = mList[t];
+      it.print(stream,level+2,optionFlags);
     }
   }
   catch (...)
@@ -303,6 +305,8 @@ void GridValueList::print(std::ostream& stream,uint level,uint optionFlags) cons
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
+
 
 
 }

@@ -35,11 +35,11 @@ int timePeriodToSeconds(const char *timePeriod);
 
 time_t localTimeToTimeT(std::string localTime,const char *tzone);
 /*
-std::string utcTimeFromTimeT(time_t t);
 std::string localTimeToUtcTime(std::string localTime,const char *tzone);
 std::string utcTimeToLocalTime(std::string utcTime,const char *tzone);
 */
 
+std::string utcTimeFromTimeT(time_t t);
 time_t      utcTimeToTimeT(std::string utcTime);
 std::string localTimeFromTimeT(time_t t,const char *tzone);
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
@@ -61,15 +61,24 @@ char        toInt8(const char *str);
 short       toInt16(const char *str);
 int         toInt32(const char *str);
 long long   toInt64(const char *str);
-
 uchar       toUInt8(const char *str);
 ushort      toUInt16(const char *str);
 uint        toUInt32(const char *str);
 ulonglong   toUInt64(const char *str);
-
 double      toDouble(const char *str);
-
 size_t      toSize_t(const char *str);
+
+char        toInt8(const std::string& str);
+short       toInt16(const std::string& str);
+int         toInt32(const std::string& str);
+long long   toInt64(const std::string& str);
+uchar       toUInt8(const std::string& str);
+ushort      toUInt16(const std::string& str);
+uint        toUInt32(const std::string& str);
+ulonglong   toUInt64(const std::string& str);
+double      toDouble(const std::string& str);
+size_t      toSize_t(const std::string& str);
+
 
 std::string toString(std::int8_t value);
 std::string toString(std::int16_t value);
@@ -118,6 +127,8 @@ void splitString(const char *str,char separator,std::set<float>& partList);
 void splitString(std::string str,char separator,std::set<float>& partList);
 void splitString(const char *str,char separator,std::set<double>& partList);
 void splitString(std::string str,char separator,std::set<double>& partList);
+void splitString(const char *str,char separator,std::set<int>& partList);
+void splitString(std::string str,char separator,std::set<int>& partList);
 
 std::string toString(std::list<std::string>& parts,char separator);
 std::string toString(std::set<int>& parts,char separator);

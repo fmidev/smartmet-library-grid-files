@@ -368,6 +368,40 @@ bool MemoryReader::peek_string(const char *_str)
 
 
 
+int MemoryReader::search_string(const char *_str)
+{
+  try
+  {
+    if (_str == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The '_str' parameter points to nullptr!");
+
+    uchar *p = (uchar*)_str;
+    uchar *r = readPtr;
+    while (*p != '\0' && r < endPtr)
+    {
+      if (*p == *r)
+        p++;
+      else
+        p = (uchar*)_str;
+
+      r++;
+    }
+
+    if (*p != '\0')
+      return -1;
+
+    return C_INT(r - readPtr) - strlen(_str);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 std::uint8_t MemoryReader::read_uint8()
 {
   try

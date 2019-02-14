@@ -73,6 +73,8 @@ typedef unsigned long long SessionId;
 typedef short ForecastType;
 typedef short ForecastNumber;
 typedef int   GeometryId;
+typedef std::set<T::GeometryId> GeometryId_set;
+
 
 typedef uchar ParamKeyType;
 

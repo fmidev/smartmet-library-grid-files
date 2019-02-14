@@ -171,9 +171,6 @@ void PhysicalGridFile::read(std::string filename)
     mIsMemoryMapped = true;
     mFileModificationTime = getFileModificationTime(mFileName.c_str());
 
-    //mMapping.reset(new bi::file_mapping(path.c_str(), bi::read_only));
-    // mRegion.reset(new bi::mapped_region(*mMapping, bi::read_only, 0, fsize));
-
     auto startAddr = const_cast<char*>(mMappedFile->const_data());
     auto endAddr = startAddr + fsize;
 

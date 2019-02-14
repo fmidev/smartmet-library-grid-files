@@ -424,7 +424,7 @@ void Message::read(MemoryReader& memoryReader)
       }
       else
       {
-        std::cout << "\n** Geometry not configured : " << mGribFile->getFileName() << "\n";
+        std::cout << "\n** GRIB1 Geometry not configured : " << mGribFile->getFileName() << "\n";
         std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
         std::cout << getGridGeometryString() << "\n\n";
       }

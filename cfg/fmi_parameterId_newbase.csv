@@ -526,9 +526,6 @@
 137;284;;;
 # Specific Humidity in kg/kg
 # Q-KGKG => SpecificHumidity
-138;12;;;
-# Specific Humidity in kg/kg
-# Q-KGKG => SpecificHumidity
 138;12;MUL{$,1000.000000};DIV{$,1000.000000};
 # Specific Humidity in kg/kg
 # Q-KGKG => NEWBASE-PARAMETER[4788]
@@ -559,9 +556,6 @@
 # Soil Moisture Content in Kg per square meter
 # SM-KGM2 => SoilMoistureContent
 147;286;;;
-# Ice Cover, 1=ice, 0=no ice
-# IC-0TO1 => IceConcentration
-148;384;;;
 # Ice Cover, 1=ice, 0=no ice
 # IC-0TO1 => IceCover
 148;532;;;
@@ -671,9 +665,6 @@
 180;0;;;
 
 # Rain over the last 6 hours in mm
-# RR-6-MM => SigWaveLength
-181;179;;;
-# Rain over the last 6 hours in mm
 # RR-6-MM => Precipitation6h
 181;355;;;
 # Rain over the last 12 hours in mm
@@ -697,9 +688,6 @@
 # Convective precipitation in kg/m2
 # RRC-KGM2 => PrecipitationConv
 186;48;MUL{$,1000.000000};DIV{$,1000.000000};
-# Total Cloud Cover in %
-# N-PRCNT => TotalCloudCover
-187;79;;;
 # Total Cloud Cover in %
 # N-PRCNT => TotalCloudCover
 187;79;MUL{$,100.000000};DIV{$,100.000000};
@@ -752,9 +740,6 @@
 # Large Scale Precipitation rate in kg m-2
 # RRRL-KGM2 => PrecipitationRateLarge
 200;200;;;
-# Convective Precipitation rate in kg m-2
-# RRRC-KGM2 => NEWBASE-PARAMETER[72]
-201;72;;;
 # Convective Precipitation rate in kg m-2
 # RRRC-KGM2 => PrecipitationRateConv
 201;201;;;
@@ -811,12 +796,6 @@
 # Maximum Temperature in Kelvins
 # TMIN-K => MinimumTemperature2m
 215;361;SUM{$,-273.15};SUM{$,273.15};
-# Ground Temperature in Kelvins
-# TG-K => WaterEquivalentOfSnow
-216;266;SUM{$,-273.15};SUM{$,273.15};
-# Ground Temperature in Kelvins
-# TG-K => GroundTemperature
-216;288;SUM{$,-273.15};SUM{$,273.15};
 # Ground Temperature in Kelvins
 # TG-K => GroundTemperature
 216;288;SUM{$,-273.15};SUM{$,273.15};
@@ -1357,16 +1336,9 @@
 # Total hail precipitation in kg/m2
 # RRH-KGM2 => UNKNOWN
 321;0;;;
-
 # Precipitation form, duplicate parameter for HIMAN purposes
-# PRECFORM2-N => PrecipitationForm
-322;57;;;
-# Precipitation form, duplicate parameter for HIMAN purposes
-# PRECFORM2-N => PrecipitationForm3
-322;1206;;;
-# Precipitation form, duplicate parameter for HIMAN purposes
-# PRECFORM2-N => atmosphere_eastward_stress_due_to_gravity_wave_drag
-322;10058;;;
+# PRECFORM2-N => PrecipitationForm2
+322;1205;;;
 # Instant snowfall rate in mm/s or mm/h
 # SNRI-KGM2 => LargeScaleSnow
 323;279;;;
@@ -1687,10 +1659,8 @@
 411;417;;;
 # Pressure in hPa
 # P-HPA => Pressure
-412;1;MUL{$,0.010000};DIV{$,0.010000};
-# Pressure in hPa
-# P-HPA => Pressure
 412;1;;;
+# Pressure in hPa
 # Dew Point Temperature at 2m in Celsius
 # TD2M-C => UNKNOWN
 414;0;;;
@@ -2538,8 +2508,8 @@
 633;0;;;
 
 # Hourly maximum wind gust
-# HFFG-MS => UNKNOWN
-634;0;;;
+# HFFG-MS => HourlyMaximumGust
+634;467;;;
 
 # Hourly mean wind direction
 # HDD-D => UNKNOWN
@@ -2615,7 +2585,7 @@
 653;301;;;
 # Cloud water
 # CLDWAT-KGKG => CloudWater
-654;276;;;
+654;276;MUL{$,1000};DIV{$,1000};;
 # Mixed layer height in m
 # MIXHGT-M => MixedLayerDepth
 655;180;;;
@@ -2705,48 +2675,27 @@
 # Probability of big positive temperature anomaly (+8 K) in EPS
 # ANOM+8-T-K => ProbabilityOfTempLimit4
 680;564;;;
+
 # Probability of reaching some precipitation threshold value
 # PROB-RR-1 => ProbabilityOfPrecLimit1
 681;571;MUL{$,100.000000};DIV{$,100.000000};
-# Probability of reaching some precipitation threshold value
-# PROB-RR-1 => ProbabilityOfPr6Limit1
-681;1061;;;
-# Probability of reaching some precipitation threshold value
-# PROB-RR-1 => ProbabilityOfPr6Limit1
-681;1061;MUL{$,100.000000};DIV{$,100.000000};
+
 # Probability of reaching some precipitation threshold value
 # PROB-RR-2 => ProbabilityOfPrecLimit2
 682;572;MUL{$,100.000000};DIV{$,100.000000};
-# Probability of reaching some precipitation threshold value
-# PROB-RR-2 => ProbabilityOfPr6Limit2
-682;1062;;;
-# Probability of reaching some precipitation threshold value
-# PROB-RR-2 => ProbabilityOfPr6Limit2
-682;1062;MUL{$,100.000000};DIV{$,100.000000};
+
 # Probability of reaching some precipitation threshold value
 # PROB-RR-3 => ProbabilityOfPrecLimit3
 683;573;MUL{$,100.000000};DIV{$,100.000000};
-# Probability of reaching some precipitation threshold value
-# PROB-RR-3 => ProbabilityOfPr6Limit3
-683;1063;;;
-# Probability of reaching some precipitation threshold value
-# PROB-RR-3 => ProbabilityOfPr6Limit3
-683;1063;MUL{$,100.000000};DIV{$,100.000000};
-# Probability of reaching some precipitation threshold value
-# PROB-RR-4 => ProbabilityOfPrecLimit4
-684;574;;;
+
 # Probability of reaching some precipitation threshold value
 # PROB-RR-4 => ProbabilityOfPrecLimit4
 684;574;MUL{$,100.000000};DIV{$,100.000000};
-# Probability of reaching some precipitation threshold value
-# PROB-RR-4 => ProbabilityOfPr6Limit4
-684;1064;;;
-# Probability of reaching some precipitation threshold value
-# PROB-RR-4 => ProbabilityOfPr6Limit4
-684;1064;MUL{$,100.000000};DIV{$,100.000000};
+
 # Probability of reaching wind speed of 10 m/s in EPS
 # PROB-W-1 => ProbabilityOfWindLimit1
 685;581;;;
+
 # Probability of reaching wind speed of 10 m/s in EPS
 # PROB-W-1 => ProbabilityOfWindLimit1
 685;581;MUL{$,100.000000};DIV{$,100.000000};
@@ -2787,8 +2736,8 @@
 # PRI-KGM2 => PrecipitationInstantTotal
 695;1208;;;
 # Precipitation form, triplicate parameter for HIMAN purposes
-# PRECFORM3-N => PrecipitationForm2
-696;1205;;;
+# PRECFORM3-N => PrecipitationForm3
+696;1206;;;
 # Eastward surface stress due to turbulent processes, accumulated
 # EWSS-NM2S => UNKNOWN
 697;0;;;

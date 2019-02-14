@@ -679,8 +679,10 @@ void Message::read(MemoryReader& memoryReader)
         break;
       }
 
-      if (memoryReader.peek_string("GRIB"))
+      int spos = memoryReader.search_string("GRIB");
+      if (spos >= 0)
       {
+        memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
         IndicatorSection *section = new IndicatorSection();
         section->setMessagePtr(this);
         mIndicatorSection.reset(section);
@@ -1037,7 +1039,7 @@ void Message::initParameterInfo()
       }
       else
       {
-        std::cout << "\n** Geometry not configured : " << mGribFile->getFileName() << "\n";
+        std::cout << "\n** GRIB2 Geometry not configured : " << mGribFile->getFileName() << "\n";
         std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
         std::cout << getGridGeometryString() << "\n\n";
           //SmartMet::Spine::Exception exception(BCP,"Geometry not found");
