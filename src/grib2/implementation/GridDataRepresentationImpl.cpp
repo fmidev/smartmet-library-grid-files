@@ -153,6 +153,9 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
     if (!mInitialized)
       init(message);
 
+    if (mData == nullptr || mDataSize == 0)
+      return false;
+
     // If 'bitsPerValue' is zero then all values are same as the reference value
 
     if (!mBitsPerValue)

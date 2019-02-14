@@ -558,51 +558,33 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int 
       switch (levelInterpolationMethod)
       {
         case T::LevelInterpolationMethod::None:
-          for (uint t = 0; t < len1; t++)
-          {
-            T::GridValue* val1 = values1.getGridValueByIndex(t);
-            T::GridValue* rec = new T::GridValue();
-            rec->mX = val1->mX;
-            rec->mY = val1->mY;
-            rec->mValue = val1->mValue;
-
-            valueList.addGridValue(rec);
-          }
+          valueList = values1;
           break;
 
         case T::LevelInterpolationMethod::Nearest:
-          for (uint t = 0; t < len1; t++)
-          {
-            T::GridValue* val1 = values1.getGridValueByIndex(t);
-            T::GridValue* val2 = values2.getGridValueByIndex(t);
-
-            T::GridValue* rec = new T::GridValue();
-            rec->mX = val1->mX;
-            rec->mY = val1->mY;
-
-            if (diff1 < diff2)
-              rec->mValue = val1->mValue;
-            else
-              rec->mValue = val2->mValue;
-
-            valueList.addGridValue(rec);
-          }
+          if (diff1 < diff2)
+            valueList = values1;
+          else
+            valueList = values2;
           break;
 
         case T::LevelInterpolationMethod::Min:
           for (uint t = 0; t < len1; t++)
           {
-            T::GridValue* val1 = values1.getGridValueByIndex(t);
-            T::GridValue* val2 = values2.getGridValueByIndex(t);
+            T::GridValue val1;
+            T::GridValue val2;
+            T::GridValue rec;
 
-            T::GridValue* rec = new T::GridValue();
-            rec->mX = val1->mX;
-            rec->mY = val1->mY;
+            values1.getGridValueByIndex(t,val1);
+            values2.getGridValueByIndex(t,val2);
 
-            if (val1->mValue < val2->mValue)
-              rec->mValue = val1->mValue;
+            rec.mX = val1.mX;
+            rec.mY = val1.mY;
+
+            if (val1.mValue < val2.mValue)
+              rec.mValue = val1.mValue;
             else
-              rec->mValue = val2->mValue;
+              rec.mValue = val2.mValue;
 
             valueList.addGridValue(rec);
           }
@@ -611,17 +593,20 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int 
         case T::LevelInterpolationMethod::Max:
           for (uint t = 0; t < len1; t++)
           {
-            T::GridValue* val1 = values1.getGridValueByIndex(t);
-            T::GridValue* val2 = values2.getGridValueByIndex(t);
+            T::GridValue val1;
+            T::GridValue val2;
+            T::GridValue rec;
 
-            T::GridValue* rec = new T::GridValue();
-            rec->mX = val1->mX;
-            rec->mY = val1->mY;
+            values1.getGridValueByIndex(t,val1);
+            values2.getGridValueByIndex(t,val2);
 
-            if (val1->mValue > val2->mValue)
-              rec->mValue = val1->mValue;
+            rec.mX = val1.mX;
+            rec.mY = val1.mY;
+
+            if (val1.mValue > val2.mValue)
+              rec.mValue = val1.mValue;
             else
-              rec->mValue = val2->mValue;
+              rec.mValue = val2.mValue;
 
             valueList.addGridValue(rec);
           }
@@ -630,13 +615,16 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int 
         case T::LevelInterpolationMethod::Logarithmic:
           for (uint t = 0; t < len1; t++)
           {
-            T::GridValue* val1 = values1.getGridValueByIndex(t);
-            T::GridValue* val2 = values2.getGridValueByIndex(t);
+            T::GridValue val1;
+            T::GridValue val2;
+            T::GridValue rec;
 
-            T::GridValue* rec = new T::GridValue();
-            rec->mX = val1->mX;
-            rec->mY = val1->mY;
-            rec->mValue = logarithmicInterpolation(newLevel, level1, level2, val1->mValue, val2->mValue);
+            values1.getGridValueByIndex(t,val1);
+            values2.getGridValueByIndex(t,val2);
+
+            rec.mX = val1.mX;
+            rec.mY = val1.mY;
+            rec.mValue = logarithmicInterpolation(newLevel, level1, level2, val1.mValue, val2.mValue);
 
             valueList.addGridValue(rec);
           }
@@ -646,22 +634,25 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int 
         case T::LevelInterpolationMethod::Linear:
           for (uint t = 0; t < len1; t++)
           {
-            T::GridValue* val1 = values1.getGridValueByIndex(t);
-            T::GridValue* val2 = values2.getGridValueByIndex(t);
+            T::GridValue val1;
+            T::GridValue val2;
+            T::GridValue rec;
 
-            T::GridValue* rec = new T::GridValue();
-            rec->mX = val1->mX;
-            rec->mY = val1->mY;
+            values1.getGridValueByIndex(t,val1);
+            values2.getGridValueByIndex(t,val2);
 
-            if (val1->mValue != ParamValueMissing && val2->mValue != ParamValueMissing)
+            rec.mX = val1.mX;
+            rec.mY = val1.mY;
+
+            if (val1.mValue != ParamValueMissing && val2.mValue != ParamValueMissing)
             {
-              T::ParamValue valueDiff = val2->mValue - val1->mValue;
+              T::ParamValue valueDiff = val2.mValue - val1.mValue;
               T::ParamValue valueStep = valueDiff / levelDiff;
-              rec->mValue = val1->mValue + (diff1 * valueStep);
+              rec.mValue = val1.mValue + (diff1 * valueStep);
             }
             else
             {
-              rec->mValue = ParamValueMissing;
+              rec.mValue = ParamValueMissing;
             }
             valueList.addGridValue(rec);
           }
@@ -917,39 +908,34 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::
     {
       switch (timeInterpolationMethod)
       {
+        case T::TimeInterpolationMethod::None:
+          valueList = values1;
+          break;
+
         case T::TimeInterpolationMethod::Nearest:
-          for (uint t = 0; t < len1; t++)
-          {
-            T::GridValue* val1 = values1.getGridValueByIndex(t);
-            T::GridValue* val2 = values2.getGridValueByIndex(t);
-
-            T::GridValue* rec = new T::GridValue();
-            rec->mX = val1->mX;
-            rec->mY = val1->mY;
-
-            if (diff1 < diff2)
-              rec->mValue = val1->mValue;
-            else
-              rec->mValue = val2->mValue;
-
-            valueList.addGridValue(rec);
-          }
+          if (diff1 < diff2)
+            valueList = values1;
+          else
+            valueList = values2;
           break;
 
         case T::TimeInterpolationMethod::Min:
           for (uint t = 0; t < len1; t++)
           {
-            T::GridValue* val1 = values1.getGridValueByIndex(t);
-            T::GridValue* val2 = values2.getGridValueByIndex(t);
+            T::GridValue val1;
+            T::GridValue val2;
+            T::GridValue rec;
 
-            T::GridValue* rec = new T::GridValue();
-            rec->mX = val1->mX;
-            rec->mY = val1->mY;
+            values1.getGridValueByIndex(t,val1);
+            values2.getGridValueByIndex(t,val2);
 
-            if (val1->mValue < val2->mValue)
-              rec->mValue = val1->mValue;
+            rec.mX = val1.mX;
+            rec.mY = val1.mY;
+
+            if (val1.mValue < val2.mValue)
+              rec.mValue = val1.mValue;
             else
-              rec->mValue = val2->mValue;
+              rec.mValue = val2.mValue;
 
             valueList.addGridValue(rec);
           }
@@ -958,17 +944,20 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::
         case T::TimeInterpolationMethod::Max:
           for (uint t = 0; t < len1; t++)
           {
-            T::GridValue* val1 = values1.getGridValueByIndex(t);
-            T::GridValue* val2 = values2.getGridValueByIndex(t);
+            T::GridValue val1;
+            T::GridValue val2;
+            T::GridValue rec;
 
-            T::GridValue* rec = new T::GridValue();
-            rec->mX = val1->mX;
-            rec->mY = val1->mY;
+            values1.getGridValueByIndex(t,val1);
+            values2.getGridValueByIndex(t,val2);
 
-            if (val1->mValue > val2->mValue)
-              rec->mValue = val1->mValue;
+            rec.mX = val1.mX;
+            rec.mY = val1.mY;
+
+            if (val1.mValue > val2.mValue)
+              rec.mValue = val1.mValue;
             else
-              rec->mValue = val2->mValue;
+              rec.mValue = val2.mValue;
 
             valueList.addGridValue(rec);
           }
@@ -978,22 +967,25 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::
         case T::TimeInterpolationMethod::Linear:
           for (uint t = 0; t < len1; t++)
           {
-            T::GridValue* val1 = values1.getGridValueByIndex(t);
-            T::GridValue* val2 = values2.getGridValueByIndex(t);
+            T::GridValue val1;
+            T::GridValue val2;
+            T::GridValue rec;
 
-            T::GridValue* rec = new T::GridValue();
-            rec->mX = val1->mX;
-            rec->mY = val1->mY;
+            values1.getGridValueByIndex(t,val1);
+            values2.getGridValueByIndex(t,val2);
 
-            if (val1->mValue != ParamValueMissing && val2->mValue != ParamValueMissing)
+            rec.mX = val1.mX;
+            rec.mY = val1.mY;
+
+            if (val1.mValue != ParamValueMissing && val2.mValue != ParamValueMissing)
             {
-              T::ParamValue valueDiff = val2->mValue - val1->mValue;
+              T::ParamValue valueDiff = val2.mValue - val1.mValue;
               T::ParamValue valueStep = valueDiff / diff2;
-              rec->mValue = val1->mValue + (diff1 * valueStep);
+              rec.mValue = val1.mValue + (diff1 * valueStep);
             }
             else
             {
-              rec->mValue = ParamValueMissing;
+              rec.mValue = ParamValueMissing;
             }
             valueList.addGridValue(rec);
           }

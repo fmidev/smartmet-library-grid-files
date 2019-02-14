@@ -37,6 +37,7 @@ namespace SmartMet
 namespace Identification
 {
 
+
 /*! The GridDef class is used for accessing different kind of definitions relating
     to the GRIB1/GRIB2 files.
 
@@ -61,6 +62,7 @@ namespace Identification
     be initialized in the main program. After that all GRIB definition related information can
     be fetched from this instance.
 */
+
 
 class GridDef
 {
@@ -328,8 +330,8 @@ class GridDef
 
     string_vec              mFmi_geometryDef_files;
     time_t                  mFmi_geometryDef_modificationTime;
-    GRIB1::GridDef_pvec     mGridDefinitions1;
-    GRIB2::GridDef_pvec     mGridDefinitions2;
+    GRIB1::GridDef_map      mGridDefinitions1;
+    GRIB2::GridDef_map      mGridDefinitions2;
 
     string_vec              mNewbase_parameterDef_files;
     time_t                  mNewbase_parameterDef_modificationTime;

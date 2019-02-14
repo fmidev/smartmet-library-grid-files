@@ -19,10 +19,11 @@ class GridValueList
 
      GridValueList&   operator=(const GridValueList& gridValueList);
 
-     void             addGridValue(GridValue *gridValue);
+     void             addGridValue(GridValue& gridValue);
      void             clear();
-     GridValue*       getGridValueByIndex(uint index) const;
-     GridValue*       getGridValueByCoordinates(double x,double y) const;
+     GridValue*       getGridValuePtrByIndex(uint index) const;
+     bool             getGridValueByIndex(uint index,GridValue& gridValue) const;
+     bool             getGridValueByCoordinates(double x,double y,GridValue& gridValue) const;
      uint             getLength() const;
      T::ParamValue    getMaxValue() const;
      T::ParamValue    getMinValue() const;
@@ -32,9 +33,8 @@ class GridValueList
 
   protected:
 
-     std::vector<GridValue*>  mList;
+     std::vector<GridValue>  mList;
 };
-
 
 }
 }

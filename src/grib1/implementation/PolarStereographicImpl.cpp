@@ -221,8 +221,8 @@ std::string PolarStereographicImpl::getGridGeometryString() const
       p += sprintf(p,"+y");
     }
 
-    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;60.0;description",
-        T::GridProjectionValue::PolarStereographic,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,orientation);
+    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;%f;description",
+        T::GridProjectionValue::PolarStereographic,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,orientation,60.0);
 
     return std::string(buf);
   }

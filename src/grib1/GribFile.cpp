@@ -113,9 +113,6 @@ void GribFile::read(std::string filename)
     mMappedFile.reset(new MappedFile(params));
     mIsMemoryMapped = true;
 
-    //mMapping.reset(new bi::file_mapping(path.c_str(), bi::read_only));
-    //mRegion.reset(new bi::mapped_region(*mMapping, bi::read_only, 0, fsize));
-
     auto startAddr = const_cast<char*>(mMappedFile->const_data());
     auto endAddr = startAddr + fsize;
 
@@ -428,69 +425,57 @@ T::Data_ptr_vec GribFile::searchMessageLocations(MemoryReader& memoryReader)
       // seem to have it. Most likely it's not worth optimizing this search, we'll just skip one byte
       // at a time.
 
-      if (!memoryReader.peek_string("GRIB"))
+
+      int spos = memoryReader.search_string("GRIB");
+      if (spos < 0)
+        return gribs;
+
+      memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
+
+      bool valid = true;
+
+      // Skip identifier, reserved and discipline and then read the edition number
+
+      auto startPtr = memoryReader.getReadPtr();
+      memoryReader.read_null(4);
+
+      std::uint8_t s[3];
+      memoryReader >> s[0];
+      memoryReader >> s[1];
+      memoryReader >> s[2];
+
+      std::uint8_t edition = 0;
+      memoryReader >> edition;
+
+      // TODO: Keeping this genering for now
+      if (missing(edition))
       {
-        memoryReader.read_null(1);
+        valid = false;
+      }
+
+      if (edition != 1)
+      {
+        valid = false;
+      }
+
+      std::uint64_t totalLength = 0;
+      totalLength = (s[0] << 16) + (s[1] << 8) + s[2];
+
+      // The value of the total length contains also 16 bytes in the beginning of the section 0.
+      if ((memoryReader.getReadPosition() + totalLength-16) > memoryReader.getDataSize())
+      {
+        valid = false;
+      }
+
+      if (valid)
+      {
+        memoryReader.read_null(totalLength-16);
+        gribs.push_back(startPtr);
       }
       else
       {
-        // Found message.
-        bool valid = true;
-
-        // Skip identifier, reserved and discipline and then read the edition number
-
-        auto startPtr = memoryReader.getReadPtr();
-        memoryReader.read_null(4);
-
-        std::uint8_t s[3];
-        memoryReader >> s[0];
-        memoryReader >> s[1];
-        memoryReader >> s[2];
-
-        std::uint8_t edition = 0;
-        memoryReader >> edition;
-
-        // TODO: Keeping this genering for now
-        if (missing(edition))
-        {
-          valid = false;
-          //SmartMet::Spine::Exception exception(BCP,"GRIB edition number missing (255)!");
-          //exception.addParameter("Read position",uint64_toHex(memoryReader.getReadPosition()-1));
-          //throw exception;
-        }
-
-        if (edition != 1)
-        {
-          valid = false;
-          //SmartMet::Spine::Exception exception(BCP,"Wrong GRIB edition number '" +
-          //                         std::to_string(static_cast<int>(edition)) + "'!");
-          //exception.addParameter("Read position",uint64_toHex(memoryReader.getReadPosition()-1));
-          //throw exception;
-        }
-
-        std::uint64_t totalLength = 0;
-        totalLength = (s[0] << 16) + (s[1] << 8) + s[2];
-
-        // The value of the total length contains also 16 bytes in the beginning of the section 0.
-        if ((memoryReader.getReadPosition() + totalLength-16) > memoryReader.getDataSize())
-        {
-          valid = false;
-          //SmartMet::Spine::Exception exception(BCP,"The GRIB size ('totalLength') is out of the limits!");
-          //exception.addParameter("Read position",uint64_toHex(memoryReader.getReadPosition()));
-          //exception.addParameter("totalLength",std::to_string(totalLength));
-          //throw exception;
-        }
-
-        if (valid)
-        {
-          memoryReader.read_null(totalLength-16);
-          gribs.push_back(startPtr);
-        }
-        else
-        {
-          memoryReader.setReadPtr(startPtr);
-          memoryReader.read_null(1);
-        }
+        memoryReader.setReadPtr(startPtr);
+        memoryReader.read_null(1);
       }
     }
 

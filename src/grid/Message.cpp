@@ -2477,9 +2477,12 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         uint len = tmpValueList.getLength();
         for (uint t=0; t<len; t++)
         {
-          T::GridValue *rec = tmpValueList.getGridValueByIndex(t);
-          if (latlon_distance(origoY,origoX,rec->mY,rec->mX) <= radius)
-            valueList.addGridValue(new T::GridValue(*rec));
+          T::GridValue rec;
+          if (tmpValueList.getGridValueByIndex(t,rec))
+          {
+            if (latlon_distance(origoY,origoX,rec.mY,rec.mX) <= radius)
+              valueList.addGridValue(rec);
+          }
         }
       }
       return;
@@ -2492,11 +2495,11 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         getPointsInsideCircle(cols,rows,origoX,origoY,radius,gridPoints);
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
-          T::GridValue *rec = new T::GridValue();
+          T::GridValue rec;
 
-          rec->mX = it->x();
-          rec->mY = it->y();
-          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mX = it->x();
+          rec.mY = it->y();
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
           valueList.addGridValue(rec);
         }
       }
@@ -2563,14 +2566,15 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         uint len = tmpValueList.getLength();
         for (uint t=0; t<len; t++)
         {
-          T::GridValue *rec = tmpValueList.getGridValueByIndex(t);
+          T::GridValue rec;
+          tmpValueList.getGridValueByIndex(t,rec);
 
           double lat = 0;
           double lon = 0;
-          getGridLatLonCoordinatesByOriginalCoordinates(rec->mY,rec->mX,lat,lon);
+          getGridLatLonCoordinatesByOriginalCoordinates(rec.mY,rec.mX,lat,lon);
 
           if (latlon_distance(origoY,origoX,lat,lon) <= radius)
-            valueList.addGridValue(new T::GridValue(*rec));
+            valueList.addGridValue(rec);
         }
       }
       return;
@@ -2593,10 +2597,10 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
   {
     for (auto it = pointList.begin(); it != pointList.end(); ++it)
     {
-      T::GridValue *rec = new T::GridValue();
-      rec->mX = it->x();
-      rec->mY = it->y();
-      getGridValueByPoint(coordinateType,it->x(),it->y(),areaInterpolationMethod,rec->mValue);
+      T::GridValue rec;
+      rec.mX = it->x();
+      rec.mY = it->y();
+      getGridValueByPoint(coordinateType,it->x(),it->y(),areaInterpolationMethod,rec.mValue);
       valueList.addGridValue(rec);
     }
   }
@@ -2639,18 +2643,18 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
-          T::GridValue *rec = new T::GridValue();
+          T::GridValue rec;
 
           double lat = 0;
           double lon = 0;
           if (getGridLatLonCoordinatesByGridPoint(it->x(),it->y(),lat,lon))
           {
-            rec->mX = lon;
-            rec->mY = lat;
+            rec.mX = lon;
+            rec.mY = lat;
               //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
           }
 
-          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
           valueList.addGridValue(rec);
         }
       }
@@ -2664,11 +2668,11 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
-          T::GridValue *rec = new T::GridValue();
+          T::GridValue rec;
 
-          rec->mX = it->x();
-          rec->mY = it->y();
-          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mX = it->x();
+          rec.mY = it->y();
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
           valueList.addGridValue(rec);
 
           double lat = 0,lon = 0;
@@ -2697,18 +2701,18 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
-          T::GridValue *rec = new T::GridValue();
+          T::GridValue rec;
 
           double x = 0;
           double y = 0;
           if (getGridOriginalCoordinatesByGridPoint(it->x(),it->y(),x,y))
           {
-            rec->mX = x;
-            rec->mY = y;
+            rec.mX = x;
+            rec.mY = y;
               //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
           }
 
-          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
           valueList.addGridValue(rec);
         }
       }
@@ -2760,18 +2764,18 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
-          T::GridValue *rec = new T::GridValue();
+          T::GridValue rec;
 
           double lat = 0;
           double lon = 0;
           if (getGridLatLonCoordinatesByGridPoint(it->x(),it->y(),lat,lon))
           {
-            rec->mX = lon;
-            rec->mY = lat;
+            rec.mX = lon;
+            rec.mY = lat;
             //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
           }
 
-          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
           valueList.addGridValue(rec);
         }
       }
@@ -2785,11 +2789,11 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
-          T::GridValue *rec = new T::GridValue();
+          T::GridValue rec;
 
-          rec->mX = it->x();
-          rec->mY = it->y();
-          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mX = it->x();
+          rec.mY = it->y();
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
           valueList.addGridValue(rec);
         }
       }
@@ -2819,18 +2823,18 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
         for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
         {
-          T::GridValue *rec = new T::GridValue();
+          T::GridValue rec;
 
           double x = 0;
           double y = 0;
           if (getGridOriginalCoordinatesByGridPoint(it->x(),it->y(),x,y))
           {
-            rec->mX = x;
-            rec->mY = y;
+            rec.mX = x;
+            rec.mY = y;
               //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
           }
 
-          rec->mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
           valueList.addGridValue(rec);
         }
       }
