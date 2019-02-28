@@ -3363,6 +3363,14 @@ GRIB2::GridDef_ptr GridDef::getGrib2Definition(GRIB2::Message& message)
   try
   {
     std::string geometryStr = message.getGridGeometryString();
+    /*
+    std::cout << "FIND [" << geometryStr << "]\n";
+    for (auto it = mGridDefinitions2.begin(); it != mGridDefinitions2.end(); ++it)
+    {
+      std::cout << it->first << "\n";
+    }
+    */
+
     auto it = mGridDefinitions2.find(geometryStr);
     if (it != mGridDefinitions2.end())
       return it->second;
@@ -4548,8 +4556,11 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           int latin2 = C_INT(round(toDouble(field[12])*1000000));
           int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000000));
           int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000000));
+          int laD = 60000000;
+          if (c >= 15)
+            laD = C_INT(round(toDouble(field[15])*1000000));
 
-          GRIB2::LambertConformalImpl *def2 = new GRIB2::LambertConformalImpl();
+            GRIB2::LambertConformalImpl *def2 = new GRIB2::LambertConformalImpl();
           GRIB2::ScanningModeSettings scanningMode2;
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
@@ -4571,7 +4582,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
           def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
 
-          def2->setLaD(latin1);
+          def2->setLaD(laD);
           def2->setLoV(orientation);
           def2->setDx(T::UInt32_opt(iInc*1000));
           def2->setDy(T::UInt32_opt(jInc*1000));

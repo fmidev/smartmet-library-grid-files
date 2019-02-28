@@ -1551,8 +1551,11 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     T::ParamValue value = 0;
     if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
     {
-      if (mDataSection->getValueByIndex(idx,value))
-        return value;
+      if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
+      {
+        if (mDataSection->getValueByIndex(idx,value))
+          return value;
+      }
     }
     else
     {
@@ -1604,21 +1607,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     {
       if (mPointCacheCoordinate[t] == C_UINT(idx))
         return mPointCacheValue[t];
-    }
-
-
-    if (mCacheKey > 0)
-    {
-      // Trying to get a compressed cache value.
-
-      if (GRID::valueCache.getCompressedCacheValue(mCacheKey,idx,value))
-      {
-        mPointCacheCoordinate[mPointCachePosition % POINT_CACHE_SIZE] = idx;
-        mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = value;
-        mPointCachePosition++;
-
-        return value;
-      }
     }
 
 
@@ -1730,6 +1718,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     {
       mDataSection->decodeValues(values);
 
+      //printf("FILE (1) %u\n",getFileId());
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
@@ -1760,6 +1749,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
         }
         values = valVector;
 
+        //  printf("FILE (2) %u\n",getFileId());
         if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
           mCacheKey = GRID::valueCache.addValues(values);
       }
@@ -1826,6 +1816,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     try
     {
       mDataSection->decodeValues(values);
+      //printf("FILE (3) %u\n",getFileId());
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
@@ -1862,6 +1853,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
             valVector.push_back(val);
           }
         }
+        //printf("FILE (4) %u\n",getFileId());
         if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
           mCacheKey = GRID::valueCache.addValues(valVector);
       }

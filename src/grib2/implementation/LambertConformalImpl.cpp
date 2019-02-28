@@ -336,6 +336,7 @@ std::string LambertConformalImpl::getGridGeometryString() const
     double dx = C_DOUBLE(*mDx) / 1000;
     double dy = C_DOUBLE(*mDy) / 1000;
     double loV = C_DOUBLE(*mLoV) / 1000000;
+    double laD = C_DOUBLE(*mLaD) / 1000000;
     double latin1 = C_DOUBLE(*mLatin1) / 1000000;
     double latin2 = C_DOUBLE(*mLatin2) / 1000000;
     double sx = C_DOUBLE(*mLongitudeOfSouthernPole) / 1000000;
@@ -366,8 +367,8 @@ std::string LambertConformalImpl::getGridGeometryString() const
     }
 
 
-    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s,%f;%f;%f;%f;%f;%f;description",
-      T::GridProjectionValue::LambertConformal,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy,60.0);
+    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;%f;%f;%f;%f;%f;description",
+      T::GridProjectionValue::LambertConformal,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy,laD);
 
     return std::string(buf);
   }

@@ -36,6 +36,20 @@ class CImage
       }
     }
 
+    CImage(int _width,int _height)
+    {
+      width = _width;
+      height = _height;
+      pixel = nullptr;
+      if (width != 0  &&  height != 0)
+      {
+        int sz = width*height;
+        pixel = new uint[sz];
+        for (int t=0; t<sz; t++)
+          pixel[t] = 0xFFFFFFFF;
+      }
+    }
+
     virtual ~CImage()
     {
       if (pixel != nullptr)

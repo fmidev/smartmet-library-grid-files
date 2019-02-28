@@ -26,8 +26,8 @@ ValueCache::ValueCache()
     mValueList = nullptr;
     mKeyList = nullptr;
     mAccessCounterList = nullptr;
-    mMaxUncompressedSize = 1000;
-    init(1000,1000,1000);
+    mMaxSize = 1000;
+    init(1000,1000);
   }
   catch (...)
   {
@@ -62,66 +62,26 @@ ValueCache::~ValueCache()
     for the data removal.
 */
 
-void ValueCache::init(uint len,std::size_t maxUncompressedSize,std::size_t maxCompressedSize)
+void ValueCache::init(uint maxLen,UInt64 maxSize)
 {
   try
   {
     clear();
     mKeyCounter = 0;
-    mLength = len;
-    mMaxUncompressedSize = maxUncompressedSize;
-    mMaxCompressedSize = maxCompressedSize;
+    mMaxLength = maxLen;
+    mMaxSize = maxSize;
 
-    AutoThreadLock lock(&mThreadLock);
-    mValueList = new T::ParamValue_vec_ptr[mLength];
-    mKeyList = new uint[mLength];
-    mAccessCounterList = new UInt64[mLength];
+    AutoWriteLock lock(&mModificationLock);
+    mValueList = new T::ParamValue_vec_ptr[mMaxLength];
+    mKeyList = new uint[mMaxLength];
+    mAccessCounterList = new UInt64[mMaxLength];
 
-    mCompressedData = new puchar[mLength];
-    mCompressedDataSize = new uint[mLength];
-
-
-    for (uint t=0; t<mLength; t++)
+    for (uint t=0; t<mMaxLength; t++)
     {
       mKeyList[t] = 0;
       mValueList[t] = nullptr;
       mAccessCounterList[t] = 0;
-      mCompressedData[t] = nullptr;
-      mCompressedDataSize[t] = 0;
     }
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-bool ValueCache::compressOldestUncompressed()
-{
-  try
-  {
-    //AutoThreadLock lock(&mThreadLock);
-    UInt64 ac = mAccessCounter;
-    uint idx = 0xFFFFFFFF;
-
-    for (uint t=0; t<mLength; t++)
-    {
-      if (mValueList[t] != nullptr  &&  mCompressedData[t] == nullptr  &&  mAccessCounterList[t] < ac)
-      {
-        ac = mAccessCounterList[t];
-        idx = t;
-      }
-    }
-
-    if (idx != 0xFFFFFFFF)
-    {
-      return compressCachedValues(idx);
-    }
-    return false;
   }
   catch (...)
   {
@@ -143,12 +103,12 @@ uint ValueCache::getEmpty()
     uint key = mKeyCounter;
     uint k = 0;
 
-    for (uint t=0; t<mLength; t++)
+    for (uint t=0; t<mMaxLength; t++)
     {
       key++;
-      uint i = key % mLength;
+      uint i = key % mMaxLength;
 
-      if (mValueList[i] == nullptr  &&  mCompressedData[i] == nullptr)
+      if (mValueList[i] == nullptr)
         return key;
 
       if (mAccessCounterList[i] < ac)
@@ -165,12 +125,6 @@ uint ValueCache::getEmpty()
       mValueList[idx] = nullptr;
     }
 
-    if (mCompressedData[idx] != nullptr)
-    {
-      delete mCompressedData[idx];
-      mCompressedData[idx] = nullptr;
-    }
-
     return k;
   }
   catch (...)
@@ -183,17 +137,16 @@ uint ValueCache::getEmpty()
 
 
 
-bool ValueCache::compressOldestCompressed()
+void ValueCache::deleteOldest()
 {
   try
   {
-    //AutoThreadLock lock(&mThreadLock);
     UInt64 ac = mAccessCounter;
     uint idx = 0xFFFFFFFF;
 
-    for (uint t=0; t<mLength; t++)
+    for (uint t=0; t<mMaxLength; t++)
     {
-      if (mCompressedData[t] != nullptr  &&  mValueList[t] != nullptr)
+      if (mValueList[t] != nullptr)
       {
         if (mAccessCounterList[t] < ac)
         {
@@ -203,13 +156,11 @@ bool ValueCache::compressOldestCompressed()
       }
     }
 
-    if (idx != 0xFFFFFFFF)
+    if (mValueList[idx] != nullptr)
     {
       delete mValueList[idx];
       mValueList[idx] = nullptr;
-      return true;
     }
-    return false;
   }
   catch (...)
   {
@@ -220,17 +171,17 @@ bool ValueCache::compressOldestCompressed()
 
 
 
-
 /*! \brief The method clears all memory structures used by the cache. */
 
 void ValueCache::clear()
 {
   try
   {
-    AutoThreadLock lock(&mThreadLock);
+    AutoWriteLock lock(&mModificationLock);
+
     if (mValueList != nullptr)
     {
-      for (uint t=0; t<mLength; t++)
+      for (uint t=0; t<mMaxLength; t++)
       {
         if (mValueList[t] != nullptr)
         {
@@ -253,23 +204,6 @@ void ValueCache::clear()
       delete[] mAccessCounterList;
       mAccessCounterList = nullptr;
     }
-
-    if (mCompressedDataSize != nullptr)
-    {
-      delete[] mCompressedDataSize;
-      mCompressedDataSize = nullptr;
-    }
-
-    if (mCompressedData != nullptr)
-    {
-      for (uint t=0; t<mLength; t++)
-      {
-        if (mCompressedData[t] != nullptr)
-          delete mCompressedData[t];
-      }
-      delete[] mCompressedData;
-      mCompressedData = nullptr;
-    }
   }
   catch (...)
   {
@@ -280,37 +214,24 @@ void ValueCache::clear()
 
 
 
-void ValueCache::getSizeInBytes(std::size_t& memorySize,std::size_t& compressedSize)
+UInt64 ValueCache::getSizeInBytes()
 {
   try
   {
-    uint compCount = 0;
-    uint ncompCount = 0;
-
-    memorySize = 0;
-    compressedSize = 0;
+    UInt64 memorySize = 0;
 
     if (mValueList != nullptr)
     {
-      for (uint t=0; t<mLength; t++)
+      for (uint t=0; t<mMaxLength; t++)
       {
         if (mValueList[t] != nullptr)
         {
-          std::size_t s = mValueList[t]->size() * sizeof(T::ParamValue) ;
+          UInt64 s = mValueList[t]->size() * sizeof(T::ParamValue);
           memorySize += s;
-
-          if (mCompressedData[t] != nullptr)
-            ncompCount++;
-        }
-
-        if (mCompressedData[t] != nullptr)
-        {
-          compressedSize += mCompressedDataSize[t];
-          compCount++;
         }
       }
     }
-    //printf("Compressed=%u Uncompressed=%u\n",compCount,ncompCount);
+    return memorySize;
   }
   catch (...)
   {
@@ -326,19 +247,16 @@ void ValueCache::checkLimits()
 {
   try
   {
-    AutoThreadLock lock(&mThreadLock);
+    AutoWriteLock lock(&mModificationLock);
 
-    std::size_t memorySize = 0;
-    std::size_t compressedSize = 0;
-    getSizeInBytes(memorySize,compressedSize);
+    UInt64 memorySize = getSizeInBytes();
 
-    while (memorySize > (mMaxUncompressedSize*1000000))
+    printf("*** SIZE %llu\n",memorySize);
+
+    while (memorySize > (mMaxSize*1000000))
     {
-      if (!compressOldestUncompressed())
-      {
-        compressOldestCompressed();
-      }
-      getSizeInBytes(memorySize,compressedSize);
+      deleteOldest();
+      memorySize = getSizeInBytes();
     }
   }
   catch (...)
@@ -361,12 +279,15 @@ uint ValueCache::addValues(T::ParamValue_vec& values)
 {
   try
   {
+    if (values.size() == 0)
+      return 0;
+
     checkLimits();
 
-    AutoThreadLock lock(&mThreadLock);
+    AutoWriteLock lock(&mModificationLock);
 
     mKeyCounter = getEmpty();
-    uint idx = mKeyCounter % mLength;
+    uint idx = mKeyCounter % mMaxLength;
 
     if (mValueList[idx] == nullptr)
       mValueList[idx] = new T::ParamValue_vec();
@@ -375,7 +296,7 @@ uint ValueCache::addValues(T::ParamValue_vec& values)
     mKeyList[idx] = mKeyCounter;
     mAccessCounterList[idx] = mAccessCounter++;
 
-    //printf("ACCESS KEY %u (%u)\n",mKeyCounter,mKeyCounter % mLength);
+    printf("ADD VALUES %u (%u)\n",mKeyCounter,mKeyCounter % mMaxLength);
     return mKeyCounter;
   }
   catch (...)
@@ -400,16 +321,11 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
 {
   try
   {
-    uint idx = key % mLength;
+    uint idx = key % mMaxLength;
 
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
     if (mKeyList[idx] != key)
       return false;
-
-    if (mValueList[idx] == nullptr  &&  mCompressedData[idx] != nullptr)
-    {
-      decompressCachedValues(idx);
-    }
 
     if (mValueList[idx] == nullptr)
       return false;
@@ -417,104 +333,6 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
     values = *mValueList[idx];
     mAccessCounterList[idx] = mAccessCounter++;
     return true;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-bool ValueCache::compressCachedValues(uint index)
-{
-  try
-  {
-    if (index >= mLength)
-      return false;
-
-    if (mCompressedData[index] != nullptr  ||  mValueList[index] == nullptr)
-      return false;
-
-    uint len = mValueList[index]->size();
-    uint size = (len*sizeof(T::ParamValue));
-
-    T::ParamValue data[len];
-    uchar compressedData[size];
-
-    for (uint t=0; t<len; t++)
-      data[t] = mValueList[index]->at(t);
-
-    uint compressedDataSize = size;
-
-    int res = compressData(data,size,compressedData,compressedDataSize);
-    if (res == 0)
-    {
-      if (compressedDataSize > 0)
-      {
-        mCompressedDataSize[index] = compressedDataSize;
-        mCompressedData[index] = new uchar[compressedDataSize];
-        memcpy(mCompressedData[index],compressedData,compressedDataSize);
-        delete mValueList[index];
-        mValueList[index] = nullptr;
-        return true;
-      }
-    }
-
-    return false;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-bool ValueCache::decompressCachedValues(uint index)
-{
-  try
-  {
-    if (index >= mLength)
-      return false;
-
-    if (mCompressedData[index] == nullptr)
-      return false;
-
-    if (mValueList[index] != nullptr)
-      return false;
-
-
-    T::ParamValue *data = new T::ParamValue[10000000];
-    uint decompressedDataSize = 10000000*sizeof(T::ParamValue);
-
-    int res = decompressData(mCompressedData[index],mCompressedDataSize[index],data,decompressedDataSize);
-    if (res == 0)
-    {
-      if (mValueList[index] == nullptr)
-        mValueList[index] = new T::ParamValue_vec();
-
-      uint len = decompressedDataSize / sizeof(T::ParamValue);
-      for (uint t=0; t<len; t++)
-      {
-        mValueList[index]->push_back(data[t]);
-      }
-      delete[] data;
-
-      //delete mCompressedData[index];
-      //mCompressedData[index] = nullptr;
-      //mCompressedDataSize[index] = 0;
-      mAccessCounterList[index] = mAccessCounter++;
-      compressOldestUncompressed();
-
-      return true;
-    }
-
-    delete[] data;
-    return false;
   }
   catch (...)
   {
@@ -542,9 +360,9 @@ bool ValueCache::getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamVal
     minValue = 1000000000;
     maxValue = -1000000000;
 
-    uint idx = key % mLength;
+    uint idx = key % mMaxLength;
 
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
     if (mValueList[idx] == nullptr  ||  mKeyList[idx] != key)
     {
       return false;

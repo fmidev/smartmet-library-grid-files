@@ -668,6 +668,7 @@ void Message::read(MemoryReader& memoryReader)
 
     // Index of the section processed last (=none)
     std::uint8_t last_idx = 0u;
+    bool begin = false;
 
     //std::uint8_t tablesVersion = 0;
 
@@ -679,14 +680,18 @@ void Message::read(MemoryReader& memoryReader)
         break;
       }
 
-      int spos = memoryReader.search_string("GRIB");
-      if (spos >= 0)
+      if (!begin)
       {
-        memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
-        IndicatorSection *section = new IndicatorSection();
-        section->setMessagePtr(this);
-        mIndicatorSection.reset(section);
-        section->read(memoryReader);
+        int spos = memoryReader.search_string("GRIB");
+        if (spos >= 0)
+        {
+          memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
+          IndicatorSection *section = new IndicatorSection();
+          section->setMessagePtr(this);
+          mIndicatorSection.reset(section);
+          section->read(memoryReader);
+          begin = true;
+        }
       }
       else
       if (memoryReader.peek_string("7777"))
@@ -2003,7 +2008,10 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     try
     {
       mRepresentationSection->decodeValues(values);
-      mCacheKey = GRID::valueCache.addValues(values);
+      //printf("FILE (5) %u\n",getFileId());
+
+      if (mRepresentationSection->getDataRepresentationTemplateNumber() != RepresentationSection::Template::GridDataRepresentation)
+        mCacheKey = GRID::valueCache.addValues(values);
     }
     catch (...)
     {
@@ -2065,6 +2073,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     try
     {
       mRepresentationSection->decodeValues(values);
+      //printf("FILE (6) %u\n",getFileId());
       mCacheKey = GRID::valueCache.addValues(values);
       mOrigCacheKey = mCacheKey;
     }
@@ -2334,10 +2343,13 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     T::ParamValue value = 0;
     if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
     {
-      if (mRepresentationSection->getValueByIndex(idx,value))
+      if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
       {
-        // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
-        return value;
+        if (mRepresentationSection->getValueByIndex(idx,value))
+        {
+          // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
+          return value;
+        }
       }
     }
     else
@@ -2400,22 +2412,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     {
       if (mPointCacheCoordinate[t] == i)
         return mPointCacheValue[t];
-    }
-
-
-    if (mCacheKey > 0)
-    {
-      // Trying to get a compressed cache value.
-
-      if (GRID::valueCache.getCompressedCacheValue(mCacheKey,idx,value))
-      {
-        mPointCacheCoordinate[mPointCachePosition % POINT_CACHE_SIZE] = idx;
-        mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = value;
-        mPointCachePosition++;
-
-        // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
-        return value;
-      }
     }
 
 

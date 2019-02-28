@@ -379,7 +379,7 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
 
     if (param == "moonphase")
     {
-      value = value = mValueFormatter.format(Fmi::Astronomy::moonphase(queryTime.utc_time()),precision);
+      value = mValueFormatter.format(Fmi::Astronomy::moonphase(queryTime.utc_time()),precision);
       return true;
     }
 
