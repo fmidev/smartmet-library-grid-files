@@ -83,6 +83,9 @@ class GridFile
     virtual Message*            newMessage();
     virtual void                addMessage(Message *message);
 
+    virtual bool                getPointCacheEnabled();
+    virtual void                setPointCacheEnabled(bool enabled);
+
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
     virtual void                read(std::string filename);
     virtual void                write(std::string filename);
@@ -100,6 +103,8 @@ class GridFile
     uint                        mSourceId;
     time_t                      mCheckTime;
     std::set<uint>              mUserList;
+    bool                        mRequestCounterEnabled;
+    bool                        mPointCacheEnabled;
 };
 
 

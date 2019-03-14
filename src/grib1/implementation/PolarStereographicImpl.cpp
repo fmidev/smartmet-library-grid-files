@@ -377,8 +377,11 @@ void PolarStereographicImpl::initSpatialReference()
     const char *pszGeogName = "UNKNOWN";
     const char *pszDatumName = "UNKNOWN";
     const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor = 6371229.0;
+    double dfSemiMajor =  6367470;
     double dfInvFlattening = 0.0;
+
+    dfSemiMajor = getMajorAxis(mResolutionFlags.getResolutionAndComponentFlags());
+    dfInvFlattening = getFlattening(mResolutionFlags.getResolutionAndComponentFlags());
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 

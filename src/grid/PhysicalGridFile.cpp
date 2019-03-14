@@ -185,6 +185,7 @@ void PhysicalGridFile::read(std::string filename)
         auto file = new GRIB1::GribFile();
         file->setFileName(filename);
         file->setFileId(mFileId);
+        file->setPointCacheEnabled(mPointCacheEnabled);
         file->setGroupFlags(mGroupFlags);
         file->setProducerId(mProducerId);
         file->setGenerationId(mGenerationId);
@@ -199,6 +200,7 @@ void PhysicalGridFile::read(std::string filename)
         auto file = new GRIB2::GribFile();
         file->setFileName(filename);
         file->setFileId(mFileId);
+        file->setPointCacheEnabled(mPointCacheEnabled);
         file->setGroupFlags(mGroupFlags);
         file->setProducerId(mProducerId);
         file->setGenerationId(mGenerationId);

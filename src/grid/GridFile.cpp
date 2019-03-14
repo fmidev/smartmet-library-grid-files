@@ -859,6 +859,44 @@ std::string GridFile::getFileTypeString() const
 
 
 
+bool GridFile::getPointCacheEnabled()
+{
+  try
+  {
+    if (mGridFile)
+      return mGridFile->getPointCacheEnabled();
+
+    return mPointCacheEnabled;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridFile::setPointCacheEnabled(bool enabled)
+{
+  try
+  {
+    if (mGridFile)
+      mGridFile->setPointCacheEnabled(enabled);
+
+    mPointCacheEnabled = enabled;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method prints the content of the current object into the given stream.
 
         \param ostream      The output stream.

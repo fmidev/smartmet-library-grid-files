@@ -73,6 +73,10 @@ class GridDefinition
 
    protected:
 
+    virtual double              getMajorAxis(uchar resolutionAndComponentFlags);
+    virtual double              getMinorAxis(uchar resolutionAndComponentFlags);
+    virtual double              getFlattening(uchar resolutionAndComponentFlags);
+
     /*! \brief The spatial reference. */
      T::SpatialRef              mSpatialReference;
 

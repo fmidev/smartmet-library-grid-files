@@ -16,6 +16,7 @@ GribFile::GribFile()
 {
   try
   {
+    mPointCacheEnabled = false;
   }
   catch (...)
   {
@@ -32,6 +33,7 @@ GribFile::GribFile(const GribFile& other)
 {
   try
   {
+    mPointCacheEnabled = false;
     for (auto msg = other.mMessages.begin(); msg != other.mMessages.end(); ++msg)
     {
       Message *message = new Message(*(*msg));
@@ -93,7 +95,7 @@ GRID::GridFile* GribFile::createGridFile()
        \param filename  The grib filename with a possible directory path.
 */
 
-uint mapCnt1 = 0;
+//uint mapCnt1 = 0;
 
 void GribFile::read(std::string filename)
 {
@@ -116,10 +118,12 @@ void GribFile::read(std::string filename)
     auto startAddr = const_cast<char*>(mMappedFile->const_data());
     auto endAddr = startAddr + fsize;
 
+    /*
     for (long t= 0; t<fsize; t = t + 16)
     {
       mapCnt1 += startAddr[t];
     }
+    */
 
     MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr) );
     read(memoryReader);
@@ -506,6 +510,7 @@ void GribFile::readMessage(MemoryReader& memoryReader, uint messageIndex)
     Message *message = new Message();
     message->setGribFilePtr(this);
     message->setMessageIndex(messageIndex);
+    message->setPointCacheEnabled(mPointCacheEnabled);
     mMessages.push_back(message);
     message->read(memoryReader);
   }

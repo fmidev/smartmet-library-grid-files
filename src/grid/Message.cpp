@@ -53,6 +53,10 @@ Message::Message()
     mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
     mDefaultInterpolationMethod = T::AreaInterpolationMethod::Nearest;
+    mRequestCounterEnabled = false;
+    mLastCacheAccess = time(0);
+    mCacheHitCounter = 0;
+    mPointCacheEnabled = false;
   }
   catch (...)
   {
@@ -90,6 +94,10 @@ Message::Message(const Message& message)
     mNewbaseParameterName = message.mNewbaseParameterName;
     mVirtualFileId = message.mVirtualFileId;
     mDefaultInterpolationMethod = message.mDefaultInterpolationMethod;
+    mRequestCounterEnabled = false;
+    mLastCacheAccess = time(0);
+    mCacheHitCounter = 0;
+    mPointCacheEnabled = message.mPointCacheEnabled;
   }
   catch (...)
   {
@@ -130,6 +138,24 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 */
 
 uint Message::getFileId() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+uint Message::getProducerId() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+uint Message::getGenerationId() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2247,9 +2273,11 @@ void Message::setNewbaseParameterName(std::string newbaseParameterName)
 
 void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,T::ParamValue& value) const
 {
-  //FUNCTION_TRACE
+  FUNCTION_TRACE
   try
   {
+    mRequestCounterEnabled = true;
+
     value = ParamValueMissing;
     switch (coordinateType)
     {
@@ -2273,9 +2301,12 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
         throw exception;
       }
     }
+    mRequestCounterEnabled = false;
+
   }
   catch (...)
   {
+    mRequestCounterEnabled = false;
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
@@ -2289,6 +2320,8 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
   FUNCTION_TRACE
   try
   {
+    mRequestCounterEnabled = true;
+
     switch (coordinateType)
     {
       case T::CoordinateTypeValue::UNKNOWN:
@@ -2311,9 +2344,11 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
         throw exception;
       }
     }
+    mRequestCounterEnabled = false;
   }
   catch (...)
   {
+    mRequestCounterEnabled = false;
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
@@ -2423,6 +2458,8 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
   FUNCTION_TRACE
   try
   {
+    mRequestCounterEnabled = true;
+
     T::Dimensions d = getGridDimensions();
     uint cols = d.nx();
     uint rows = d.ny();
@@ -2485,7 +2522,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
           }
         }
       }
-      return;
+      break;
 
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -2503,7 +2540,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
           valueList.addGridValue(rec);
         }
       }
-      return;
+      break;
 
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
@@ -2577,11 +2614,13 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
             valueList.addGridValue(rec);
         }
       }
-      return;
+      break;
     }
+    mRequestCounterEnabled = false;
   }
   catch (...)
   {
+    mRequestCounterEnabled = false;
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
@@ -2619,6 +2658,8 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
   FUNCTION_TRACE
   try
   {
+    mRequestCounterEnabled = true;
+
     T::Dimensions d = getGridDimensions();
     uint cols = d.nx();
     uint rows = d.ny();
@@ -2658,7 +2699,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
           valueList.addGridValue(rec);
         }
       }
-      return;
+      break;
 
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -2681,7 +2722,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
         }
       }
-      return;
+      break;
 
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
@@ -2716,11 +2757,13 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
           valueList.addGridValue(rec);
         }
       }
-      return;
+      break;
     }
+    mRequestCounterEnabled = false;
   }
   catch (...)
   {
+    mRequestCounterEnabled = false;
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
@@ -2734,6 +2777,8 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
   FUNCTION_TRACE
   try
   {
+    mRequestCounterEnabled = true;
+
     T::Dimensions d = getGridDimensions();
     uint cols = d.nx();
     uint rows = d.ny();
@@ -2779,7 +2824,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
           valueList.addGridValue(rec);
         }
       }
-      return;
+      break;
 
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -2797,7 +2842,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
           valueList.addGridValue(rec);
         }
       }
-      return;
+      break;
 
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
@@ -2838,11 +2883,13 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
           valueList.addGridValue(rec);
         }
       }
-      return;
+      break;
     }
+    mRequestCounterEnabled = false;
   }
   catch (...)
   {
+    mRequestCounterEnabled = false;
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
@@ -3254,7 +3301,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
 
 T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,double grid_j,short areaInterpolationMethod) const
 {
-  //FUNCTION_TRACE
+  FUNCTION_TRACE
   try
   {
     short ipm = areaInterpolationMethod;
@@ -3309,7 +3356,7 @@ T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,dou
 
 T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,short areaInterpolationMethod) const
 {
-  //FUNCTION_TRACE
+  FUNCTION_TRACE
   try
   {
     //areaInterpolationMethod = T::AreaInterpolationMethod::Nearest;
@@ -3411,7 +3458,7 @@ void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,
 
 T::ParamValue Message::getGridValueByGridPoint_noInterpolation(double grid_i,double grid_j) const
 {
-  //FUNCTION_TRACE
+  FUNCTION_TRACE
   try
   {
     return getGridValueByGridPoint(floor(grid_i),floor(grid_j));
@@ -3435,7 +3482,7 @@ T::ParamValue Message::getGridValueByGridPoint_noInterpolation(double grid_i,dou
 
 T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid_j) const
 {
-  //FUNCTION_TRACE
+  FUNCTION_TRACE
   try
   {
     double x = grid_i;
@@ -3482,7 +3529,7 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
 
 T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) const
 {
-  //FUNCTION_TRACE
+  FUNCTION_TRACE
   try
   {
     double x = grid_i;
@@ -3514,7 +3561,7 @@ T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) 
 
 T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) const
 {
-  //FUNCTION_TRACE
+  FUNCTION_TRACE
   try
   {
     double x = grid_i;
@@ -3553,7 +3600,7 @@ T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) 
 
 T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j) const
 {
-  //FUNCTION_TRACE
+  FUNCTION_TRACE
   try
   {
     // https://en.wikipedia.org/wiki/Bilinear_interpolation
@@ -3574,6 +3621,185 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
     auto val_q22 = getGridValueByGridPoint(x2,y2);
 
     return linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void Message::setPointCacheEnabled(bool enabled)
+{
+  //FUNCTION_TRACE
+  try
+  {
+    mPointCacheEnabled = enabled;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+void Message::addCachedValue(uint index,T::ParamValue value) const
+{
+  //FUNCTION_TRACE
+  try
+  {
+    if (!mPointCacheEnabled)
+      return;
+
+    AutoThreadLock lock(&mThreadLock);
+    mLastCacheAccess = time(0);
+    auto it = mPointCache.find(index);
+    if (it == mPointCache.end())
+    {
+      mPointCache.insert(std::pair<uint,T::ParamValue>(index,value));
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool Message::getCachedValue(uint index,T::ParamValue& value) const
+{
+  //FUNCTION_TRACE
+  try
+  {
+    if (!mPointCacheEnabled)
+      return false;
+
+    AutoThreadLock lock(&mThreadLock);
+    mLastCacheAccess = time(0);
+    auto it = mPointCache.find(index);
+    if (it != mPointCache.end())
+    {
+      mCacheHitCounter++;
+      value = it->second;
+      return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void Message::clearCachedValues(uint hitsRequired,uint timePeriod) const
+{
+  //FUNCTION_TRACE
+  try
+  {
+    if (!mPointCacheEnabled)
+      return;
+
+    AutoThreadLock lock(&mThreadLock);
+
+    if ((mLastCacheAccess + timePeriod) < time(0))
+    {
+      if (mCacheHitCounter < hitsRequired)
+      {
+        mPointCache.clear();
+      }
+
+      mLastCacheAccess = time(0);
+      mCacheHitCounter = 0;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void Message::incRequestCounter(uint index) const
+{
+  //FUNCTION_TRACE
+  try
+  {
+    if (mRequestCounterEnabled)
+    {
+      ulonglong key = getRequestCounterKey();
+      requestCounter.incCounter(key,index);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+ulonglong Message::getRequestCounterKey() const
+{
+  //FUNCTION_TRACE
+  try
+  {
+    ulonglong geometryId = C_UINT64(getGridGeometryId());
+    ulonglong level = C_UINT64(getGridParameterLevel());
+    ulonglong levelId = C_UINT64(getFmiParameterLevelId());
+    ulonglong paramId = toUInt64(mFmiParameterId);
+    ulonglong key = (geometryId << 48) + (levelId << 40) + (level << 20) + paramId;
+
+    ulonglong producerId = C_UINT64(getProducerId());
+    if (producerId > 0)
+      key = key * producerId;
+
+    return key;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void Message::refreshIndexes(std::vector<uint>& indexes)
+{
+  //FUNCTION_TRACE
+  try
+  {
+    bool oldState = mRequestCounterEnabled;
+    mRequestCounterEnabled = false;
+    auto d = getGridDimensions();
+
+    for (auto it = indexes.rbegin(); it != indexes.rend(); ++it)
+    {
+      uint i = (*it) % d.nx();
+      uint j = (*it) / d.ny();
+
+      getGridValueByGridPoint(i,j);
+    }
+
+    mRequestCounterEnabled = oldState;
   }
   catch (...)
   {

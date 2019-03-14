@@ -981,6 +981,66 @@ bool GridDefinition::getGridPointByOriginalCoordinates(double x,double y,double&
 
 
 
+double GridDefinition::getMajorAxis(uchar resolutionAndComponentFlags)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if ((resolutionAndComponentFlags & 0x40) == 0)
+      return  6367470;
+
+    return 6378160;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+double GridDefinition::getMinorAxis(uchar resolutionAndComponentFlags)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if ((resolutionAndComponentFlags & 0x40) == 0)
+      return  6367470;
+
+    return 6356775;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
+double GridDefinition::getFlattening(uchar resolutionAndComponentFlags)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if ((resolutionAndComponentFlags & 0x40) == 0)
+      return  0;
+
+    return 1/297.0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 uint GridDefinition::getTemplateNumber() const
 {
   FUNCTION_TRACE

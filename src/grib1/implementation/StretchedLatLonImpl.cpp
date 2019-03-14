@@ -256,8 +256,15 @@ void StretchedLatLonImpl::initSpatialReference()
     const char *pszGeogName = "UNKNOWN";
     const char *pszDatumName = "UNKNOWN";
     const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor = 6371229;
+    double dfSemiMajor =  6367470;
     double dfInvFlattening = 0.0;
+
+    ResolutionFlagsSettings *rflags = mGridArea.getResolutionFlags();
+    if (rflags != nullptr)
+    {
+      dfSemiMajor = getMajorAxis(rflags->getResolutionAndComponentFlags());
+      dfInvFlattening = getFlattening(rflags->getResolutionAndComponentFlags());
+    }
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 

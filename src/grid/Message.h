@@ -10,16 +10,21 @@
 #include "../common/Dimensions.h"
 #include "../common/GraphFunctions.h"
 #include "../common/ThreadLock.h"
+#include "../common/RequestCounter.h"
 
 #include <vector>
 #include <string>
 #include <memory>
 
 
+
 namespace SmartMet
 {
 namespace GRID
 {
+
+
+typedef std::map<uint,T::ParamValue> PointCache;
 
 
 // ====================================================================================
@@ -43,6 +48,8 @@ class Message
 
     virtual void              getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     virtual uint              getFileId() const;
+    virtual uint              getProducerId() const;
+    virtual uint              getGenerationId() const;
     virtual uint              getMessageIndex() const;
     virtual T::FilePosition   getFilePosition() const;
     virtual T::TimeString     getForecastTime() const;
@@ -142,6 +149,7 @@ class Message
     virtual T::SpatialRef*    getSpatialReference() const;
     virtual std::string       getWKT() const;
     virtual bool              isGridGlobal() const;
+    virtual void              refreshIndexes(std::vector<uint>& indexes);
     virtual bool              reverseXDirection() const;
     virtual bool              reverseYDirection() const;
 
@@ -178,9 +186,20 @@ class Message
 
     virtual bool              setProperty(uint propertyId,long long value);
 
+    virtual ulonglong         getRequestCounterKey() const;
+    virtual void              setPointCacheEnabled(bool enabled);
+
+    virtual void              addCachedValue(uint index,T::ParamValue value) const;
+    virtual bool              getCachedValue(uint index,T::ParamValue& value) const;
+    virtual void              clearCachedValues(uint hitsRequired,uint timePeriod) const;
+
     virtual void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
+
 protected:
+
+    void                      incRequestCounter(uint index) const;
+
 
     /*! \brief  The index of the message in the file. */
     uint                      mMessageIndex;
@@ -242,7 +261,14 @@ protected:
 
     mutable ThreadLock        mThreadLock;
 
+    mutable bool              mRequestCounterEnabled;
+    bool                      mPointCacheEnabled;
+    mutable PointCache        mPointCache;
+    mutable uint              mCacheHitCounter;
+    mutable time_t            mLastCacheAccess;
+
 };
+
 
 
 typedef Message* MessagePtr;

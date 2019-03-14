@@ -162,14 +162,14 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
 {
   try
   {
+    if (message->getDataPtr() == nullptr || message->getDataSize() == 0)
+      return false;
+
+    if (index >= message->getGridOriginalValueCount())
+      return false;
+
     if (!mInitialized)
       init(message);
-
-    if (mData == nullptr || mDataSize == 0)
-      return false;
-
-    if (index >= mNumOfValues)
-      return false;
 
     if (!mBitsPerValue)
     {

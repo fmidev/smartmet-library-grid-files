@@ -29,8 +29,6 @@ namespace SmartMet
 namespace GRIB2
 {
 
-#define POINT_CACHE_SIZE 400
-
 
 /*! \brief The constructor of the class. */
 
@@ -45,15 +43,7 @@ Message::Message()
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
-    mPointCachePosition = 0;
-    mPointCacheCoordinate = new uint[POINT_CACHE_SIZE];
-    mPointCacheValue = new T::ParamValue[POINT_CACHE_SIZE];
-
-    for (uint t=0; t<POINT_CACHE_SIZE; t++)
-    {
-      mPointCacheCoordinate[t] = 0xFFFFFFFF;
-      mPointCacheValue[t] = 0;
-    }
+    mPointCacheEnabled = false;
   }
   catch (...)
   {
@@ -132,23 +122,8 @@ Message::Message(const Message& other)
 
     mCacheKey = 0;
     mOrigCacheKey = 0;
+    mPointCacheEnabled = false;
     mValueDecodingFailed = other.mValueDecodingFailed;
-    mPointCacheCoordinate = nullptr;
-    mPointCacheValue = nullptr;
-
-    if (other.mPointCacheCoordinate != nullptr &&  other.mPointCacheValue != nullptr)
-    {
-      mPointCacheCoordinate = new uint[POINT_CACHE_SIZE];
-      mPointCacheValue = new T::ParamValue[POINT_CACHE_SIZE];
-
-      for (uint t=0; t<POINT_CACHE_SIZE; t++)
-      {
-        mPointCacheCoordinate[t] = other.mPointCacheCoordinate[t];
-        mPointCacheValue[t] = other.mPointCacheValue[t];
-      }
-
-      mPointCachePosition = other.mPointCachePosition;
-    }
   }
   catch (...)
   {
@@ -167,8 +142,6 @@ Message::~Message()
   FUNCTION_TRACE
   try
   {
-    delete[] mPointCacheCoordinate;
-    delete[] mPointCacheValue;
   }
   catch (...)
   {
@@ -1746,6 +1719,47 @@ uint Message::getFileId() const
 
 
 
+uint Message::getProducerId() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGribFile != nullptr)
+      return mGribFile->getProducerId();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+uint Message::getGenerationId() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGribFile != nullptr)
+      return mGribFile->getGenerationId();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
 /*! \brief The method can be used in order to find out the message's start
     position in the grib file.
 
@@ -2339,15 +2353,23 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
     uint idx = grid_j * d.nx() + (grid_i % d.nx());
 
+    incRequestCounter(idx);
+
+    // Trying to find the value from the point cache.
 
     T::ParamValue value = 0;
+
+    if (getCachedValue(idx,value))
+      return value;
+
     if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
     {
       if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
       {
         if (mRepresentationSection->getValueByIndex(idx,value))
         {
-          // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
+          addCachedValue(idx,value);
+          //printf("--- getValueByIndex %u,%u %u : %f\n",grid_i,grid_j,idx,value);
           return value;
         }
       }
@@ -2365,7 +2387,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         if (mRepresentationSection->getValueByIndex(index,value))
         {
-          // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
+          addCachedValue(idx,value);
+          //printf("Value %u,%u : %f\n",grid_i,grid_j,value);
           return value;
         }
       }
@@ -2379,7 +2402,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         if (mRepresentationSection->getValueByIndex(indexVector[idx],value))
         {
-          // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
+          addCachedValue(idx,value);
+          //printf("Value %u,%u : %f\n",grid_i,grid_j,value);
           return value;
         }
       }
@@ -2391,27 +2415,10 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
       if (GRID::valueCache.getValue(mCacheKey,idx,value))
       {
-        mPointCacheCoordinate[mPointCachePosition % POINT_CACHE_SIZE] = idx;
-        mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = value;
-        mPointCachePosition++;
-
-        // printf("Value %u,%u : %f\n",grid_i,grid_j,value);
+        addCachedValue(idx,value);
+        //printf("--- ValueFromCahe %u,%u : %f\n",grid_i,grid_j,value);
         return value;
       }
-    }
-
-
-    // Trying to find the value from the point cache.
-
-    uint endp = mPointCachePosition;
-    if (endp >= POINT_CACHE_SIZE)
-      endp = POINT_CACHE_SIZE;
-
-    uint i = C_UINT(idx);
-    for (uint t=0; t<endp; t++)
-    {
-      if (mPointCacheCoordinate[t] == i)
-        return mPointCacheValue[t];
     }
 
 
@@ -2420,11 +2427,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     if (idx >= values.size())
       return ParamValueMissing;
 
-    mPointCacheCoordinate[mPointCachePosition % POINT_CACHE_SIZE] = idx;
-    mPointCacheValue[mPointCachePosition % POINT_CACHE_SIZE] = values[idx];
-    mPointCachePosition++;
-
-    // printf("Value %u,%u : %f\n",grid_i,grid_j,values[idx]);
+    addCachedValue(idx,value);
+    //printf("--- ValueFromVector %u,%u : %f\n",grid_i,grid_j,values[idx]);
     return values[idx];
   }
   catch (...)

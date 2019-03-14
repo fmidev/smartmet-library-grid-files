@@ -1070,8 +1070,8 @@ double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
     switch (*shape)
     {
       case 0: // Earth assumed spherical with radius = 6,367,470.0 m
-        return 6371220;
-        //return 6367470;
+        return 6367470;
+        //return 6371220;
 
       case 1: // Earth assumed spherical with radius specified by data producer
         return (*earthSettings.getScaledValueOfEarthMajorAxis());

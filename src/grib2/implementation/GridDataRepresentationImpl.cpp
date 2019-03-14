@@ -150,11 +150,14 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
 {
   try
   {
+    if (message->getDataPtr() == nullptr || message->getDataSize() == 0)
+    {
+      //printf("-- no data\n");
+      return false;
+    }
+
     if (!mInitialized)
       init(message);
-
-    if (mData == nullptr || mDataSize == 0)
-      return false;
 
     // If 'bitsPerValue' is zero then all values are same as the reference value
 
@@ -169,7 +172,7 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
     mBitArrayReader->readBits(mBitsPerValue,X);
 
     value = (mRDfac + X * mEDfac);
-    // printf("VAL %f\n",value);
+    //printf("-- VAL %f\n",value);
     return true;
   }
   catch (...)
@@ -192,17 +195,19 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
-    if (data == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
+
+    if (numOfValues == 0)
+      return;
+
+    if (data == nullptr)
+      return;
+      //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     // Vector to return
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
-
-    if (numOfValues == 0)
-      return;
 
     // Reference value R, IEEE 32-bit floating point value
     double R = mPacking.getReferenceValue();

@@ -26,6 +26,7 @@ namespace GRIB1
 
 class GribFile;
 
+
 /*
   --------------------------------------------------------------------------------------
   GRIB 1 Message
@@ -52,6 +53,8 @@ class Message : public GRID::Message
 
     void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
     uint                getFileId() const;
+    uint                getProducerId() const;
+    uint                getGenerationId() const;
     T::FilePosition     getFilePosition() const;
     T::TimeString       getForecastTime() const;
     short               getForecastType() const;
@@ -167,12 +170,6 @@ class Message : public GRID::Message
 
     /*! \brief  A flag that indicates that the data decoding is impossible. */
     mutable bool        mValueDecodingFailed;
-
-    // Cache for last requested grid points
-
-    mutable uint*          mPointCacheCoordinate;
-    mutable T::ParamValue* mPointCacheValue;
-    mutable uint           mPointCachePosition;
 
   public:
 
