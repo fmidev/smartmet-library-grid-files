@@ -3656,7 +3656,7 @@ void Message::addCachedValue(uint index,T::ParamValue value) const
     if (!mPointCacheEnabled)
       return;
 
-    AutoThreadLock lock(&mThreadLock);
+    AutoThreadLock lock(&mCacheLock);
     mLastCacheAccess = time(0);
     auto it = mPointCache.find(index);
     if (it == mPointCache.end())
@@ -3682,7 +3682,7 @@ bool Message::getCachedValue(uint index,T::ParamValue& value) const
     if (!mPointCacheEnabled)
       return false;
 
-    AutoThreadLock lock(&mThreadLock);
+    AutoThreadLock lock(&mCacheLock);
     mLastCacheAccess = time(0);
     auto it = mPointCache.find(index);
     if (it != mPointCache.end())
@@ -3711,7 +3711,7 @@ void Message::clearCachedValues(uint hitsRequired,uint timePeriod) const
     if (!mPointCacheEnabled)
       return;
 
-    AutoThreadLock lock(&mThreadLock);
+    AutoThreadLock lock(&mCacheLock);
 
     if ((mLastCacheAccess + timePeriod) < time(0))
     {

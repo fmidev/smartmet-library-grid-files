@@ -260,6 +260,7 @@ protected:
     short                     mDefaultInterpolationMethod;
 
     mutable ThreadLock        mThreadLock;
+    mutable ThreadLock        mCacheLock;
 
     mutable bool              mRequestCounterEnabled;
     bool                      mPointCacheEnabled;
