@@ -3648,6 +3648,7 @@ void Message::setPointCacheEnabled(bool enabled)
 
 
 
+
 void Message::addCachedValue(uint index,T::ParamValue value) const
 {
   //FUNCTION_TRACE
@@ -3657,7 +3658,6 @@ void Message::addCachedValue(uint index,T::ParamValue value) const
       return;
 
     AutoThreadLock lock(&mCacheLock);
-    mLastCacheAccess = time(0);
     auto it = mPointCache.find(index);
     if (it == mPointCache.end())
     {
@@ -3683,7 +3683,6 @@ bool Message::getCachedValue(uint index,T::ParamValue& value) const
       return false;
 
     AutoThreadLock lock(&mCacheLock);
-    mLastCacheAccess = time(0);
     auto it = mPointCache.find(index);
     if (it != mPointCache.end())
     {
