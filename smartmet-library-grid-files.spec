@@ -14,6 +14,7 @@ BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 19.3.14
 BuildRequires: smartmet-library-spine-devel >= 19.3.14
 BuildRequires: smartmet-library-macgyver >= 18.11.24
+BuildRequires: smartmet-library-tron >= 17.9.20
 BuildRequires: boost-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal-devel
