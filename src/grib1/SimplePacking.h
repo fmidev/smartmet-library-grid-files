@@ -40,7 +40,6 @@ class SimplePacking : public DataDefinition
     mutable double          mDfac;
     mutable double          mRDfac;
     mutable double          mEDfac;
-    mutable BitArrayReader* mBitArrayReader;
     mutable bool            mInitialized;
 
 

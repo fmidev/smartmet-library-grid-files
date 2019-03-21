@@ -30,7 +30,6 @@ GridDataRepresentationImpl::GridDataRepresentationImpl()
     mDfac = 0;
     mRDfac = 0;
     mEDfac = 0;
-    mBitArrayReader = nullptr;
     mInitialized = false;
   }
   catch (...)
@@ -60,8 +59,6 @@ GridDataRepresentationImpl::~GridDataRepresentationImpl()
 {
   try
   {
-    if (mBitArrayReader != nullptr)
-      delete mBitArrayReader;
   }
   catch (...)
   {
@@ -127,7 +124,6 @@ void GridDataRepresentationImpl::init(Message *message) const
     mDecimalScaleFactor = *(mPacking.getDecimalScaleFactor());
     mReferenceValue = mPacking.getReferenceValue();
     mBitsPerValue = *(mPacking.getBitsPerValue());
-    mBitArrayReader = new BitArrayReader(mData,mDataSize*8);
 
     mEfac = std::pow(2.0, mBinaryScaleFactor);
     mDfac = std::pow(10, -mDecimalScaleFactor);
@@ -168,8 +164,9 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
     }
 
     uint X = 0;
-    mBitArrayReader->setReadPosition(index*mBitsPerValue);
-    mBitArrayReader->readBits(mBitsPerValue,X);
+    BitArrayReader bitArrayReader(mData,mDataSize*8);
+    bitArrayReader.setReadPosition(index*mBitsPerValue);
+    bitArrayReader.readBits(mBitsPerValue,X);
 
     value = (mRDfac + X * mEDfac);
     //printf("-- VAL %f\n",value);
