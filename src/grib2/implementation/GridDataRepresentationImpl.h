@@ -39,7 +39,6 @@ class GridDataRepresentationImpl : public GridDataRepresentation
     mutable double          mRDfac;
     mutable double          mEDfac;
     mutable bool            mInitialized;
-    mutable BitArrayReader* mBitArrayReader;
 
 };
 

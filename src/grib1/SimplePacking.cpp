@@ -25,7 +25,6 @@ SimplePacking::SimplePacking()
     mDecimalScaleFactor = 0;
     mReferenceValue = 0;
     mBitsPerValue = 0;
-    mBitArrayReader = nullptr;
     mInitialized = false;
   }
   catch (...)
@@ -52,7 +51,6 @@ SimplePacking::SimplePacking(const SimplePacking& other)
     mDecimalScaleFactor = 0;
     mReferenceValue = 0;
     mBitsPerValue = 0;
-    mBitArrayReader = nullptr;
     mInitialized = false;
   }
   catch (...)
@@ -71,11 +69,6 @@ SimplePacking::~SimplePacking()
 {
   try
   {
-    if (mBitArrayReader != nullptr)
-    {
-      delete mBitArrayReader;
-      mBitArrayReader = nullptr;
-    }
   }
   catch (...)
   {
@@ -144,8 +137,6 @@ void SimplePacking::init(Message *message) const
     if (mDataSize < ss)
       mDataSize = message->getDataSizeMax();
 
-    mBitArrayReader = new BitArrayReader(mData,mDataSize*8);
-
     mInitialized = true;
   }
   catch (...)
@@ -179,8 +170,10 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
     }
 
     uint X = 0;
-    mBitArrayReader->setReadPosition(index*mBitsPerValue);
-    mBitArrayReader->readBits(mBitsPerValue,X);
+
+    BitArrayReader bitArrayReader(mData,mDataSize*8);
+    bitArrayReader.setReadPosition(index*mBitsPerValue);
+    bitArrayReader.readBits(mBitsPerValue,X);
 
     double Y = mRDfac + X * mEDfac;
 
