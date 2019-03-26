@@ -251,7 +251,7 @@ void ValueCache::checkLimits()
 
     UInt64 memorySize = getSizeInBytes();
 
-    printf("*** SIZE %llu\n",memorySize);
+    //printf("*** SIZE %llu\n",memorySize);
 
     while (memorySize > (mMaxSize*1000000))
     {
@@ -296,7 +296,7 @@ uint ValueCache::addValues(T::ParamValue_vec& values)
     mKeyList[idx] = mKeyCounter;
     mAccessCounterList[idx] = mAccessCounter++;
 
-    printf("ADD VALUES %u (%u)\n",mKeyCounter,mKeyCounter % mMaxLength);
+    //printf("ADD VALUES %u (%u)\n",mKeyCounter,mKeyCounter % mMaxLength);
     return mKeyCounter;
   }
   catch (...)
