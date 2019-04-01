@@ -123,6 +123,56 @@ void MercatorImpl::read(MemoryReader& memoryReader)
 
 
 
+std::string MercatorImpl::getGridGeometryString() const
+{
+  try
+  {
+    char buf[1000];
+
+    double x = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
+    double y = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
+
+    double dx = C_DOUBLE(*mDi) / 1000;
+    double dy = C_DOUBLE(*mDj) / 1000;
+    double latin = C_DOUBLE(*mLaD) / 1000000;
+
+    unsigned char scanningMode = mScanningMode.getScanningMode();
+
+    char sm[100];
+    char *p = sm;
+    if ((scanningMode & 0x80) != 0)
+    {
+      dx = -dx;
+      p += sprintf(p,"-x");
+    }
+    else
+    {
+      p += sprintf(p,"+x");
+    }
+
+    if ((scanningMode & 0x40) == 0)
+    {
+      dy = -dy;
+      p += sprintf(p,"-y");
+    }
+    else
+    {
+      p += sprintf(p,"+y");
+    }
+
+    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;description",
+        T::GridProjectionValue::Mercator,*mNi,*mNj,x,y,fabs(dx),fabs(dy),sm,latin);
+
+    return std::string(buf);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
 
 /*! \brief The method returns all grid coordinates as a coordinate vector.
     Notice that if the grid layout is "irregular" (i.e. its row lengths vary) then
@@ -293,7 +343,6 @@ void MercatorImpl::initSpatialReference()
     if (!dfCenterLong)
       throw SmartMet::Spine::Exception(BCP,"The 'longitudeOfFirstGridPoint' value is missing!");
 
-
     // ### Set geographic coordinate system.
 
     const char *pszGeogName = "UNKNOWN";
@@ -339,10 +388,12 @@ void MercatorImpl::initSpatialReference()
 
     double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
     double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
+    double latin = C_DOUBLE(*mLaD) / 1000000;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
 
-    mSpatialReference.SetMercator(centerLat,centerLon,1.0,dfFalseEasting,dfFalseNorthing);
+    //mSpatialReference.SetMercator(centerLat,centerLon,1.0,dfFalseEasting,dfFalseNorthing);
+    mSpatialReference.SetMercator2SP(latin,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
     mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
 
 

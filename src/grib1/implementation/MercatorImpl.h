@@ -19,11 +19,13 @@ class MercatorImpl : public Mercator
 
     T::Coordinate_vec getGridCoordinates() const;
     T::Dimensions     getGridDimensions() const;
+    std::string       getGridGeometryString() const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     bool              reverseXDirection() const;
     bool              reverseYDirection() const;
 
     void              initSpatialReference();
+    void              print(std::ostream& stream,uint level,uint optionFlags) const;
     void              read(MemoryReader& memoryReader);
 
   protected:

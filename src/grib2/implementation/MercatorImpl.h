@@ -19,6 +19,7 @@ class MercatorImpl : public Mercator
 
     T::Coordinate_vec getGridCoordinates() const;
     T::Dimensions     getGridDimensions() const;
+    std::string       getGridGeometryString() const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
 
     void              initSpatialReference();

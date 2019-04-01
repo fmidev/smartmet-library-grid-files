@@ -3535,7 +3535,6 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
     AutoThreadLock lock(&mThreadLock);
 
     T::Coordinate_vec coordinates;
-
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
     {
@@ -4048,7 +4047,64 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::Mercator:
-          break;
+        {
+          if (c < 12)
+            return nullptr;
+
+          uint geometryId = toInt64(field[1]);
+          char *geometryName = field[2];
+          int ni = toInt64(field[3]);
+          int nj = toInt64(field[4]);
+          int longitude = C_INT(round(toDouble(field[5])*1000));
+          int latitude = C_INT(round(toDouble(field[6])*1000));
+          int iInc = C_INT(round(toDouble(field[7]) * 1000));
+          int jInc = C_INT(round(toDouble(field[8]) * 1000));
+          char *scanningMode = field[9];
+          int latin = C_INT(round(toDouble(field[10])*1000));
+
+          int lastLongitude = longitude + ni*iInc - iInc;
+          int lastLatitude = latitude + nj*jInc - jInc;
+
+          GRIB1::MercatorImpl *def1 = new GRIB1::MercatorImpl();
+          GRIB1::ScanningModeSettings scanningMode1;
+
+          if (strcasecmp(scanningMode,"+x+y") == 0)
+            scanningMode1.setScanningMode(0x40);
+          else
+          if (strcasecmp(scanningMode,"-x+y") == 0)
+            scanningMode1.setScanningMode(0x80+0x40);
+          else
+          if (strcasecmp(scanningMode,"+x-y") == 0)
+            scanningMode1.setScanningMode(0);
+          else
+          if (strcasecmp(scanningMode,"-x-y") == 0)
+            scanningMode1.setScanningMode(0x80);
+
+          def1->setScanningMode(scanningMode1);
+
+          def1->setNi(std::uint16_t(ni));
+          def1->setNj(std::uint16_t(nj));
+
+          GRIB1::GridAreaSettings gridArea;
+          gridArea.setLatitudeOfFirstGridPoint(latitude);
+          gridArea.setLongitudeOfFirstGridPoint(longitude);
+          gridArea.setLatitudeOfLastGridPoint(lastLatitude);
+          gridArea.setLongitudeOfLastGridPoint(lastLongitude);
+          def1->setGridArea(gridArea);
+          def1->setDiInMetres(iInc);
+          def1->setDjInMetres(jInc);
+          def1->setLatin((std::int24_t)latin);
+
+          def1->setGridGeometryId(geometryId);
+          def1->setGridGeometryName(geometryName);
+          def1->initSpatialReference();
+
+          //def1->print(std::cout,0,0);
+          //std::string ss = def1->getGridGeometryString();
+          //std::cout << ss << "\n";
+          return def1;
+        }
+        break;
 
         case T::GridProjectionValue::TransverseMercator:
           break;

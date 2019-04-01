@@ -1,5 +1,8 @@
 #include "MercatorImpl.h"
 #include "../../common/Exception.h"
+#include "../../common/GeneralFunctions.h"
+#include "../../grid/PrintOptions.h"
+#include "../../grid/Typedefs.h"
 
 namespace SmartMet
 {
@@ -108,6 +111,57 @@ void MercatorImpl::read(MemoryReader& memoryReader)
   try
   {
     Mercator::read(memoryReader);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+std::string MercatorImpl::getGridGeometryString() const
+{
+  try
+  {
+    char buf[1000];
+
+    double x = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
+    double y = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
+    double dx = C_DOUBLE(mDiInMetres)/1000;
+    double dy = C_DOUBLE(mDjInMetres)/1000;
+    double latin = C_DOUBLE(mLatin)/1000;
+
+    unsigned char scanningMode = mScanningMode.getScanningMode();
+
+    char sm[100];
+    char *p = sm;
+    if ((scanningMode & 0x80) != 0)
+    {
+      dx = -dx;
+      p += sprintf(p,"-x");
+    }
+    else
+    {
+      p += sprintf(p,"+x");
+    }
+
+    if ((scanningMode & 0x40) == 0)
+    {
+      dy = -dy;
+      p += sprintf(p,"-y");
+    }
+    else
+    {
+      p += sprintf(p,"+y");
+    }
+
+    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;description",
+        T::GridProjectionValue::Mercator,mNi,mNj,x,y,fabs(dx),fabs(dy),sm,latin);
+
+    return std::string(buf);
   }
   catch (...)
   {
@@ -336,12 +390,14 @@ void MercatorImpl::initSpatialReference()
 
     // ### Set the projection and the linear units for the projection.
 
-    dfCenterLat /= 1000;
-    dfCenterLong /= 1000;
+    double centerLat = C_DOUBLE(dfCenterLat) / 1000;
+    double centerLon = C_DOUBLE(dfCenterLong) / 1000;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
+    double latin = C_DOUBLE(mLatin)/1000;
 
-    mSpatialReference.SetMercator(dfCenterLat,dfCenterLong,1.0,dfFalseEasting,dfFalseNorthing);
+    //mSpatialReference.SetMercator(centerLat,centerLon,1.0,dfFalseEasting,dfFalseNorthing);
+    mSpatialReference.SetMercator2SP(latin,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
     mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
 
 
@@ -369,6 +425,56 @@ void MercatorImpl::initSpatialReference()
     mCt_mercator2latlon = OGRCreateCoordinateTransformation(mSr_mercator,&sr_latlon);
     if (mCt_mercator2latlon == nullptr)
       throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+void MercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
+{
+  try
+  {
+    Mercator::print(stream,level,optionFlags);
+    stream << space(level+1) << "MercatorImpl\n";
+
+    if (optionFlags & GRID::PrintFlag::coordinates)
+    {
+      stream << space(level+1) << "- Coordinates (of the grid corners):\n";
+      T::Coordinate_vec coordinateList = getGridCoordinates();
+
+      int nx = C_INT(mNi);
+      int ny = C_INT(mNj);
+
+      char str[200];
+      uint c = 0;
+      for (int y=0; y < ny; y++)
+      {
+        for (int x=0; x < nx; x++)
+        {
+          if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
+          {
+            T::Coordinate coord = coordinateList.at(c);
+
+            if (mCt_mercator2latlon)
+            {
+              double lon = coord.x();
+              double lat = coord.y();
+              if (mCt_mercator2latlon->Transform(1,&lon,&lat))
+              {
+                sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
+                stream << space(level+2) << str << "\n";
+              }
+            }
+          }
+          c++;
+        }
+      }
+    }
   }
   catch (...)
   {
