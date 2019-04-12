@@ -66,8 +66,8 @@ void RotationSettings::read(MemoryReader &memoryReader) {
 
 void RotationSettings::write(DataWriter &dataWriter) {
   try {
-    dataWriter << mLatitudeOfSouthernPole;
-    dataWriter << mLongitudeOfSouthernPole;
+    dataWriter.write_int24(mLatitudeOfSouthernPole);
+    dataWriter.write_int24(mLongitudeOfSouthernPole);
     dataWriter << mGeography_angleOfRotationInDegrees;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);

@@ -62,6 +62,7 @@ typedef boost::optional<std::int32_t> Int32_opt;
 typedef boost::optional<std::int64_t> Int64_opt;
 typedef boost::optional<std::uint8_t> UInt8_opt;
 typedef boost::optional<std::uint16_t> UInt16_opt;
+typedef boost::optional<std::uint24_t> UInt24_opt;
 typedef boost::optional<std::uint32_t> UInt32_opt;
 typedef boost::optional<std::uint64_t> UInt64_opt;
 typedef boost::optional<std::float_t> Float_opt;

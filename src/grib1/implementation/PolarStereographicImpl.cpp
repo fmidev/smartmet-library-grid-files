@@ -1,4 +1,5 @@
 #include "PolarStereographicImpl.h"
+#include "../Properties.h"
 #include "../../common/Exception.h"
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
@@ -357,6 +358,65 @@ bool PolarStereographicImpl::reverseYDirection() const
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
+
+
+
+
+bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::PolarStereographic::Nx:
+        setNx(value);
+        return true;
+
+      case Property::GridSection::PolarStereographic::Ny:
+        setNy(value);
+        return true;
+
+      case Property::GridSection::PolarStereographic::LatitudeOfFirstGridPoint:
+        setLatitudeOfFirstGridPoint(value);
+        return true;
+
+      case Property::GridSection::PolarStereographic::LongitudeOfFirstGridPoint:
+        setLongitudeOfFirstGridPoint(value);
+        return true;
+
+      case Property::GridSection::PolarStereographic::OrientationOfTheGrid:
+        setOrientationOfTheGrid(value);
+        return true;
+
+      case Property::GridSection::PolarStereographic::DxInMetres:
+        setDxInMetres(value);
+        return true;
+
+      case Property::GridSection::PolarStereographic::DyInMetres:
+        setDyInMetres(value);
+        return true;
+
+      case Property::GridSection::PolarStereographic::ProjectionCentreFlag:
+        setProjectionCentreFlag(value);
+        return true;
+    }
+
+    if (setProperty_resolutionFlags(mResolutionFlags,propertyId,value))
+      return true;
+
+    if (setProperty_scanningMode(mScanningMode,propertyId,value))
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
 
 
 

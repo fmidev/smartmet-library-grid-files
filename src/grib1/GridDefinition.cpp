@@ -1,4 +1,5 @@
 #include "GridDefinition.h"
+#include "Properties.h"
 #include "../common/Exception.h"
 #include "../common/CoordinateConversions.h"
 #include "../common/GeneralFunctions.h"
@@ -579,6 +580,125 @@ bool GridDefinition::isGridGlobal() const
 }
 
 
+
+
+
+bool GridDefinition::setProperty(uint propertyId,long long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::setProperty(uint propertyId,double value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::setProperty_gridArea(GridAreaSettings& gridArea,uint propertyId,long long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::GridArea::LatitudeOfFirstGridPoint:
+        gridArea.setLatitudeOfFirstGridPoint(value);
+        return true;
+
+      case Property::GridSection::GridArea::LongitudeOfFirstGridPoint:
+        gridArea.setLongitudeOfFirstGridPoint(value);
+        return true;
+
+      case Property::GridSection::GridArea::LatitudeOfLastGridPoint:
+        gridArea.setLatitudeOfLastGridPoint(value);
+        return true;
+
+      case Property::GridSection::GridArea::LongitudeOfLastGridPoint:
+        gridArea.setLongitudeOfLastGridPoint(value);
+        return true;
+    }
+
+    if (setProperty_resolutionFlags(*gridArea.getResolutionFlags(),propertyId,value))
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::setProperty_scanningMode(ScanningModeSettings& scanningMode,uint propertyId,long long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::ScanningMode::ScanMode:
+        scanningMode.setScanningMode(value);
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::setProperty_resolutionFlags(ResolutionFlagsSettings& resolutionFlags,uint propertyId,long long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
+        resolutionFlags.setResolutionAndComponentFlags(value);
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 

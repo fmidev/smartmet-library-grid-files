@@ -467,21 +467,23 @@ void Message::write(DataWriter& dataWriter)
 
 
 
-void Message::initGridSection()
+void Message::initIndicatorSection()
 {
   FUNCTION_TRACE
   try
   {
-    if (mGridSection == nullptr)
+    if (mIndicatorSection == nullptr)
     {
-      GridSection *section = new GridSection();
+      IndicatorSection *section = new IndicatorSection();
       section->setMessagePtr(this);
-      mGridSection.reset(section);
+      mIndicatorSection.reset(section);
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
   }
 }
 
@@ -537,11 +539,41 @@ void Message::initDataSection()
 
 
 
+void Message::initGridSection()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+    {
+      GridSection *section = new GridSection();
+      section->setMessagePtr(this);
+      mGridSection.reset(section);
+    }
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 bool Message::setProperty(uint propertyId,long long value)
 {
   FUNCTION_TRACE
   try
   {
+    if (propertyId >= Property::IndicatorSection::FirstProperty  &&  propertyId <= Property::IndicatorSection::LastProperty)
+    {
+      initIndicatorSection();
+      return mIndicatorSection->setProperty(propertyId,value);
+    }
+
     if (propertyId >= Property::ProductSection::FirstProperty  &&  propertyId <= Property::ProductSection::LastProperty)
     {
       initProductSection();
@@ -554,6 +586,12 @@ bool Message::setProperty(uint propertyId,long long value)
       return mDataSection->setProperty(propertyId,value);
     }
 
+    if (propertyId >= Property::GridSection::FirstProperty  &&  propertyId <= Property::GridSection::LastProperty)
+    {
+      initGridSection();
+      return mGridSection->setProperty(propertyId,value);
+    }
+
     return false;
   }
   catch (...)
@@ -562,6 +600,66 @@ bool Message::setProperty(uint propertyId,long long value)
   }
 }
 
+
+
+
+
+bool Message::setProperty(uint propertyId,double value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (propertyId >= Property::IndicatorSection::FirstProperty  &&  propertyId <= Property::IndicatorSection::LastProperty)
+    {
+      initIndicatorSection();
+      return mIndicatorSection->setProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::ProductSection::FirstProperty  &&  propertyId <= Property::ProductSection::LastProperty)
+    {
+      initProductSection();
+      return mProductSection->setProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::DataSection::FirstProperty  &&  propertyId <= Property::DataSection::LastProperty)
+    {
+      initDataSection();
+      return mDataSection->setProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::GridSection::FirstProperty  &&  propertyId <= Property::GridSection::LastProperty)
+    {
+      initGridSection();
+      return mGridSection->setProperty(propertyId,value);
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+void Message::setGridValues(T::ParamValue_vec& values)
+{
+  FUNCTION_TRACE
+  try
+  {
+    initDataSection();
+    mDataSection->encodeValues(values);
+    //mDataSection->setNumberOfValues(values.size());
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
 
 
 
@@ -1501,14 +1599,25 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
   FUNCTION_TRACE
   try
   {
-    T::ParamValue_vec values;
-    if (mCacheKey == 0)
-      getGridValueVector(values);
+    if (mCacheKey != 0  &&  GRID::valueCache.getMinAndMaxValues(mCacheKey,minValue,maxValue))
+      return;
 
-    if (!GRID::valueCache.getMinAndMaxValues(mCacheKey,minValue,maxValue))
+    T::ParamValue_vec values;
+    getGridValueVector(values);
+
+    minValue = 1000000000;
+    maxValue = -1000000000;
+
+    for (auto it = values.begin(); it != values.end(); ++it)
     {
-      getGridValueVector(values);
-      GRID::valueCache.getMinAndMaxValues(mCacheKey,minValue,maxValue);
+      if (*it != ParamValueMissing)
+      {
+        if (*it < minValue)
+          minValue = *it;
+
+        if (*it > maxValue)
+          maxValue = *it;
+      }
     }
   }
   catch (...)

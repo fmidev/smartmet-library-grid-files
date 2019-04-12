@@ -675,6 +675,7 @@ void Message::read(MemoryReader& memoryReader)
       else
       {
         std::uint8_t idx = memoryReader.getByte(memoryReader.getReadPosition() + 4);
+        //printf("-- index %llu  %u\n",memoryReader.getReadPosition(), idx);
 
 
         // A message ends if an earlier section is encountered
@@ -700,7 +701,13 @@ void Message::read(MemoryReader& memoryReader)
               IdentificationSection *section = new IdentificationSection();
               section->setMessagePtr(this);
               mIdentificationSection.reset(section);
+              auto p1 = memoryReader.getReadPosition();
               section->read(memoryReader);
+              auto p2 = memoryReader.getReadPosition();
+              auto len = section->getSectionLength();
+
+              if (len > 0  &&  (p1+len) != p2)
+                memoryReader.setReadPosition(p1+len);
             }
             break;
 
@@ -709,7 +716,13 @@ void Message::read(MemoryReader& memoryReader)
               LocalSection *section = new LocalSection();
               section->setMessagePtr(this);
               mLocalSection.reset(section);
+              auto p1 = memoryReader.getReadPosition();
               section->read(memoryReader);
+              auto p2 = memoryReader.getReadPosition();
+              auto len = section->getSectionLength();
+
+              if (len > 0  &&  (p1+len) != p2)
+                memoryReader.setReadPosition(p1+len);
             }
             break;
 
@@ -718,7 +731,13 @@ void Message::read(MemoryReader& memoryReader)
               GridSection *section = new GridSection();
               section->setMessagePtr(this);
               mGridSection.reset(section);
+              auto p1 = memoryReader.getReadPosition();
               section->read(memoryReader);
+              auto p2 = memoryReader.getReadPosition();
+              auto len = section->getSectionLength();
+
+              if (len > 0  &&  (p1+len) != p2)
+                memoryReader.setReadPosition(p1+len);
             }
             break;
 
@@ -727,7 +746,13 @@ void Message::read(MemoryReader& memoryReader)
               ProductSection *section = new ProductSection();
               section->setMessagePtr(this);
               mProductSection.reset(section);
+              auto p1 = memoryReader.getReadPosition();
               section->read(memoryReader);
+              auto p2 = memoryReader.getReadPosition();
+              auto len = section->getSectionLength();
+
+              if (len > 0  &&  (p1+len) != p2)
+                memoryReader.setReadPosition(p1+len);
             }
             break;
 
@@ -736,7 +761,13 @@ void Message::read(MemoryReader& memoryReader)
               RepresentationSection *section = new RepresentationSection();
               section->setMessagePtr(this);
               mRepresentationSection.reset(section);
+              auto p1 = memoryReader.getReadPosition();
               section->read(memoryReader);
+              auto p2 = memoryReader.getReadPosition();
+              auto len = section->getSectionLength();
+
+              if (len > 0  &&  (p1+len) != p2)
+                memoryReader.setReadPosition(p1+len);
             }
             break;
 
@@ -745,7 +776,13 @@ void Message::read(MemoryReader& memoryReader)
               BitmapSection *section = new BitmapSection();
               section->setMessagePtr(this);
               mBitmapSection.reset(section);
+              auto p1 = memoryReader.getReadPosition();
               section->read(memoryReader);
+              auto p2 = memoryReader.getReadPosition();
+              auto len = section->getSectionLength();
+
+              if (len > 0  &&  (p1+len) != p2)
+                memoryReader.setReadPosition(p1+len);
             }
             break;
 
@@ -754,7 +791,13 @@ void Message::read(MemoryReader& memoryReader)
               DataSection *section = new DataSection();
               section->setMessagePtr(this);
               mDataSection.reset(section);
+              auto p1 = memoryReader.getReadPosition();
               section->read(memoryReader);
+              auto p2 = memoryReader.getReadPosition();
+              auto len = section->getSectionLength();
+
+              if (len > 0  &&  (p1+len) != p2)
+                memoryReader.setReadPosition(p1+len);
             }
             break;
 
@@ -1965,14 +2008,25 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
   FUNCTION_TRACE
   try
   {
-    T::ParamValue_vec values;
-    if (mCacheKey == 0)
-      getGridValueVector(values);
+    if (mCacheKey != 0  &&  GRID::valueCache.getMinAndMaxValues(mCacheKey,minValue,maxValue))
+      return;
 
-    if (!GRID::valueCache.getMinAndMaxValues(mCacheKey,minValue,maxValue))
+    T::ParamValue_vec values;
+    getGridValueVector(values);
+
+    minValue = 1000000000;
+    maxValue = -1000000000;
+
+    for (auto it = values.begin(); it != values.end(); ++it)
     {
-      getGridValueVector(values);
-      GRID::valueCache.getMinAndMaxValues(mCacheKey,minValue,maxValue);
+      if (*it != ParamValueMissing)
+      {
+        if (*it < minValue)
+          minValue = *it;
+
+        if (*it > maxValue)
+          maxValue = *it;
+      }
     }
   }
   catch (...)

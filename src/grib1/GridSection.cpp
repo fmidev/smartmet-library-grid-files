@@ -67,6 +67,7 @@ GridSection::GridSection(const GridSection& other)
     mPvlLocation = other.mPvlLocation;
     mDataRepresentationType = other.mDataRepresentationType;
     mNumberOfPoints = other.mNumberOfPoints;
+    mVerticalCoordinates = other.mVerticalCoordinates;
 
     if (other.mGridDefinition)
     {
@@ -133,6 +134,112 @@ void GridSection::getAttributeList(std::string prefix,T::AttributeList& attribut
 
 
 
+bool GridSection::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->setProperty(propertyId,value);
+
+    switch (propertyId)
+    {
+      case Property::GridSection::NumberOfVerticalCoordinateValues:
+        setNumberOfVerticalCoordinateValues(value);
+        return true;
+
+      case Property::GridSection::PvlLocation:
+        setPvlLocation(value);
+        return true;
+
+      case Property::GridSection::DataRepresentationType:
+        setDataRepresentationType(value);
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridSection::setProperty(uint propertyId,double value)
+{
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->setProperty(propertyId,value);
+
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::setNumberOfVerticalCoordinateValues(long long value)
+{
+  try
+  {
+    mNumberOfVerticalCoordinateValues = static_cast<std::uint8_t>(value);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::setPvlLocation(long long value)
+{
+  try
+  {
+    mPvlLocation = static_cast<std::uint8_t>(value);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::setDataRepresentationType(long long value)
+{
+  try
+  {
+    if (!mGridDefinition)
+    {
+      mDataRepresentationType = static_cast<std::uint8_t>(value);
+      auto gridDefinition = createGridDefinition(mDataRepresentationType);
+      mGridDefinition.reset(gridDefinition);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void GridSection::setMessagePtr(Message *message)
 {
   try
@@ -171,7 +278,17 @@ void GridSection::read(MemoryReader& memoryReader)
     mGridDefinition.reset(gridDefinition);
     gridDefinition->read(memoryReader);
 
-    memoryReader.setReadPosition(rPos + mSectionLength);
+    if (mNumberOfVerticalCoordinateValues > 0)
+    {
+      memoryReader.setReadPosition(rPos + mPvlLocation - 1);
+
+      for (uint t=0; t<mNumberOfVerticalCoordinateValues; t++)
+      {
+        std::uint32_t v = 0;
+        memoryReader >> v;
+        mVerticalCoordinates.push_back(v);
+      }
+    }
 
     if (mNumberOfVerticalCoordinateValues == 0  &&  mPvlLocation != 255)
     {
@@ -192,9 +309,9 @@ void GridSection::read(MemoryReader& memoryReader)
         mNumberOfPoints += len;
         rowPositions.push_back(mNumberOfPoints);
       }
-
-      mGridDefinition->initRowPositions(rowPositions);
     }
+
+    memoryReader.setReadPosition(rPos + mSectionLength);
 
     try
     {
@@ -238,6 +355,14 @@ void GridSection::write(DataWriter& dataWriter)
     dataWriter << mDataRepresentationType;
 
     mGridDefinition->write(dataWriter);
+
+    if (mNumberOfVerticalCoordinateValues == mVerticalCoordinates.size())
+    {
+      for (uint t=0; t<mNumberOfVerticalCoordinateValues; t++)
+      {
+        dataWriter << mVerticalCoordinates[t];
+      }
+    }
 
     // Updata the section length
 

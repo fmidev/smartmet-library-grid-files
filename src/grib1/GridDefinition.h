@@ -6,6 +6,9 @@
 #include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
 #include "../common/AttributeList.h"
+#include "definition/GridAreaSettings.h"
+#include "definition/ScanningModeSettings.h"
+#include "definition/ResolutionFlagsSettings.h"
 
 #include <gdal/ogr_spatialref.h>
 #include <map>
@@ -64,6 +67,9 @@ class GridDefinition
     virtual void                setGridGeometryId(T::GeometryId geometryId);
     virtual void                setGridGeometryName(std::string geometryName);
 
+    virtual bool                setProperty(uint propertyId,long long value);
+    virtual bool                setProperty(uint propertyId,double value);
+
     T::SpatialRef*              getSpatialReference();
     bool                        isGridGlobal() const;
 
@@ -76,6 +82,10 @@ class GridDefinition
     virtual double              getMajorAxis(uchar resolutionAndComponentFlags);
     virtual double              getMinorAxis(uchar resolutionAndComponentFlags);
     virtual double              getFlattening(uchar resolutionAndComponentFlags);
+
+    virtual bool                setProperty_gridArea(GridAreaSettings& gridArea,uint propertyId,long long value);
+    virtual bool                setProperty_scanningMode(ScanningModeSettings& scanningMode,uint propertyId,long long value);
+    virtual bool                setProperty_resolutionFlags(ResolutionFlagsSettings& resolutionFlags,uint propertyId,long long value);
 
     /*! \brief The spatial reference. */
      T::SpatialRef              mSpatialReference;

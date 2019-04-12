@@ -61,6 +61,9 @@ class IndicatorSection : public GRID::MessageSection
     void            setMessagePtr(Message *message);
     void            setTotalLength(std::uint32_t length);
 
+    bool            setProperty(uint propertyId,long long value);
+    bool            setProperty(uint propertyId,double value);
+
     void            read(MemoryReader& memoryReader);
     void            write(DataWriter& dataWriter);
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

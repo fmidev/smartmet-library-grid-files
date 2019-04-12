@@ -36,6 +36,7 @@ class DataDefinition
     virtual PackingMethod   getPackingMethod() const;
     virtual bool            getValueByIndex(Message *message,uint index,T::ParamValue& value) const;
     virtual void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
+    virtual void            encodeValues(Message *message,T::ParamValue_vec& values);
 
     virtual void            read(MemoryReader& memoryReader);
     virtual void            write(DataWriter& dataWriter);

@@ -362,6 +362,22 @@ bool ProductSection::setProperty(uint propertyId,long long value)
 
 
 
+bool ProductSection::setProperty(uint propertyId,double value)
+{
+  try
+  {
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current section object.
 
         \param memoryReader  This object controls the access to the memory mapped file.

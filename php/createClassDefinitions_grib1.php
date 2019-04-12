@@ -536,6 +536,7 @@ function process_template($file, $name, $class, $outdir)
   foreach ( $members as $Var => $type )
   {
     $var = lcfirst ( $Var );
+    $cpptype = $cpptypes [$Var];
 
     if ($type == "class")
       $cpp .= "m$Var.write(dataWriter);\n";
@@ -544,7 +545,7 @@ function process_template($file, $name, $class, $outdir)
     else if ($cpptype == "std::uint24_t")
       $cpp .= "dataWriter.write_uint24(m$Var);\n";
     else
-      $cpp .= "dataWriter << m$Var;";
+      $cpp .= "dataWriter << m$Var;\n";
   }
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}}\n\n";
 

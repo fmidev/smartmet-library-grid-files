@@ -103,8 +103,10 @@ class Message : public GRID::Message
     bool                reverseYDirection() const;
 
     bool                setProperty(uint propertyId,long long value);
+    bool                setProperty(uint propertyId,double value);
 
     void                setGridGeometryId(T::GeometryId geometryId);
+    void                setGridValues(T::ParamValue_vec& values);
     void                setGridValueCompressionMethod(ushort compressionMethod);
 
     void                setGribFilePtr(GribFile *gribFile);
@@ -131,6 +133,7 @@ class Message : public GRID::Message
     std::size_t         getDataSize() const;
     std::size_t         getDataSizeMax() const;
 
+    void                initIndicatorSection();
     void                initDataSection();
     void                initGridSection();
     void                initProductSection();

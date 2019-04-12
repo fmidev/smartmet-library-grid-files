@@ -184,7 +184,16 @@ class Message
     virtual void              setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId);
 
 
+    virtual bool              setProperty(uint propertyId,char value);
+    virtual bool              setProperty(uint propertyId,short value);
+    virtual bool              setProperty(uint propertyId,int value);
+    virtual bool              setProperty(uint propertyId,long value);
+    virtual bool              setProperty(uint propertyId,unsigned char value);
+    virtual bool              setProperty(uint propertyId,unsigned short value);
+    virtual bool              setProperty(uint propertyId,unsigned int value);
+    virtual bool              setProperty(uint propertyId,unsigned long value);
     virtual bool              setProperty(uint propertyId,long long value);
+    virtual bool              setProperty(uint propertyId,double value);
 
     virtual ulonglong         getRequestCounterKey() const;
     virtual void              setPointCacheEnabled(bool enabled);

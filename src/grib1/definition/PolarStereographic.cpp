@@ -88,12 +88,12 @@ void PolarStereographic::write(DataWriter &dataWriter) {
   try {
     dataWriter << mNx;
     dataWriter << mNy;
-    dataWriter << mLatitudeOfFirstGridPoint;
-    dataWriter << mLongitudeOfFirstGridPoint;
+    dataWriter.write_int24(mLatitudeOfFirstGridPoint);
+    dataWriter.write_int24(mLongitudeOfFirstGridPoint);
     mResolutionFlags.write(dataWriter);
-    dataWriter << mOrientationOfTheGrid;
-    dataWriter << mDxInMetres;
-    dataWriter << mDyInMetres;
+    dataWriter.write_int24(mOrientationOfTheGrid);
+    dataWriter.write_uint24(mDxInMetres);
+    dataWriter.write_uint24(mDyInMetres);
     dataWriter << mProjectionCentreFlag;
     mScanningMode.write(dataWriter);
   } catch (...) {

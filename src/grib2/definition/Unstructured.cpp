@@ -31,6 +31,7 @@ Unstructured::Unstructured() {
 Unstructured::Unstructured(const Unstructured &other) : GridDefinition(other) {
   try {
     mShapeOfTheEarth = other.mShapeOfTheEarth;
+    mNumberOfGridUsed = other.mNumberOfGridUsed;
     mNumberOfGridInReference = other.mNumberOfGridInReference;
     mUuidOfHGrid = other.mUuidOfHGrid;
   } catch (...) {
@@ -51,6 +52,7 @@ Unstructured::~Unstructured() {
 void Unstructured::read(MemoryReader &memoryReader) {
   try {
     mShapeOfTheEarth = memoryReader.read_UInt8_opt();
+    mNumberOfGridUsed = memoryReader.read_UInt24_opt();
     mNumberOfGridInReference = memoryReader.read_UInt8_opt();
     mUuidOfHGrid = memoryReader.read_uuid();
   } catch (...) {
@@ -66,6 +68,7 @@ void Unstructured::read(MemoryReader &memoryReader) {
 void Unstructured::write(DataWriter &dataWriter) {
   try {
     dataWriter << mShapeOfTheEarth;
+    dataWriter << mNumberOfGridUsed;
     dataWriter << mNumberOfGridInReference;
     dataWriter << mUuidOfHGrid;
   } catch (...) {
@@ -84,6 +87,8 @@ void Unstructured::getAttributeList(std::string prefix, T::AttributeList &attrib
     char name[300];
     sprintf(name, "%sUnstructured.ShapeOfTheEarth", prefix.c_str());
     attributeList.addAttribute(name, toString(mShapeOfTheEarth));
+    sprintf(name, "%sUnstructured.NumberOfGridUsed", prefix.c_str());
+    attributeList.addAttribute(name, toString(mNumberOfGridUsed));
     sprintf(name, "%sUnstructured.NumberOfGridInReference", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfGridInReference));
     sprintf(name, "%sUnstructured.UuidOfHGrid", prefix.c_str());
@@ -104,6 +109,7 @@ void Unstructured::print(std::ostream &stream, uint level, uint optionFlags) con
   try {
     stream << space(level) << "Unstructured\n";
     stream << space(level) << "- ShapeOfTheEarth = " << toString(mShapeOfTheEarth) << "\n";
+    stream << space(level) << "- NumberOfGridUsed = " << toString(mNumberOfGridUsed) << "\n";
     stream << space(level) << "- NumberOfGridInReference = " << toString(mNumberOfGridInReference) << "\n";
     stream << space(level) << "- UuidOfHGrid = " << toString(mUuidOfHGrid) << "\n";
   } catch (...) {
@@ -118,6 +124,8 @@ T::Hash Unstructured::countHash() {
     std::size_t seed = 0;
     if (mShapeOfTheEarth)
       boost::hash_combine(seed, *mShapeOfTheEarth);
+    if (mNumberOfGridUsed)
+      boost::hash_combine(seed, *mNumberOfGridUsed);
     if (mNumberOfGridInReference)
       boost::hash_combine(seed, *mNumberOfGridInReference);
     boost::hash_combine(seed, mUuidOfHGrid);
@@ -151,6 +159,16 @@ const T::UInt8_opt &Unstructured::getShapeOfTheEarth() const {
   }
 }
 
+/*! \brief The method returns the value of the {@link mNumberOfGridUsed} attribute. */
+
+const T::UInt24_opt &Unstructured::getNumberOfGridUsed() const {
+  try {
+    return mNumberOfGridUsed;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
 /*! \brief The method returns the value of the {@link mNumberOfGridInReference} attribute. */
 
 const T::UInt8_opt &Unstructured::getNumberOfGridInReference() const {
@@ -174,6 +192,14 @@ const std::array<char, 16> &Unstructured::getUuidOfHGrid() const {
 void Unstructured::setShapeOfTheEarth(T::UInt8_opt shapeOfTheEarth) {
   try {
     mShapeOfTheEarth = shapeOfTheEarth;
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+void Unstructured::setNumberOfGridUsed(T::UInt24_opt numberOfGridUsed) {
+  try {
+    mNumberOfGridUsed = numberOfGridUsed;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

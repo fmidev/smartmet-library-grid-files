@@ -34,6 +34,8 @@ public:
 
   const T::UInt8_opt &getShapeOfTheEarth() const;
   void setShapeOfTheEarth(T::UInt8_opt shapeOfTheEarth);
+  const T::UInt24_opt &getNumberOfGridUsed() const;
+  void setNumberOfGridUsed(T::UInt24_opt numberOfGridUsed);
   const T::UInt8_opt &getNumberOfGridInReference() const;
   void setNumberOfGridInReference(T::UInt8_opt numberOfGridInReference);
   const std::array<char, 16> &getUuidOfHGrid() const;
@@ -57,6 +59,9 @@ protected:
 
   //
   // unsigned[3] numberOfGridUsed : dump;
+
+  T::UInt24_opt mNumberOfGridUsed;
+
   //
   // unsigned[1] numberOfGridInReference : dump;
 

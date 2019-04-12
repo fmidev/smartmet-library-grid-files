@@ -100,16 +100,16 @@ void SpaceView::write(DataWriter &dataWriter) {
   try {
     dataWriter << mNx;
     dataWriter << mNy;
-    dataWriter << mLatitudeOfSubSatellitePoint;
-    dataWriter << mLongitudeOfSubSatellitePoint;
+    dataWriter.write_int24(mLatitudeOfSubSatellitePoint);
+    dataWriter.write_int24(mLongitudeOfSubSatellitePoint);
     mResolutionFlags.write(dataWriter);
-    dataWriter << mDx;
-    dataWriter << mDy;
+    dataWriter.write_uint24(mDx);
+    dataWriter.write_uint24(mDy);
     dataWriter << mXpInGridLengths;
     dataWriter << mYpInGridLengths;
     mScanningMode.write(dataWriter);
-    dataWriter << mOrientationOfTheGrid;
-    dataWriter << mNrInRadiusOfEarth;
+    dataWriter.write_uint24(mOrientationOfTheGrid);
+    dataWriter.write_uint24(mNrInRadiusOfEarth);
     dataWriter << mXo;
     dataWriter << mYo;
   } catch (...) {

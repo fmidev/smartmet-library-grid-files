@@ -2007,7 +2007,152 @@ short Message::getForecastNumber() const
 
 
 
+bool Message::setProperty(uint propertyId,char value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool Message::setProperty(uint propertyId,short value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool Message::setProperty(uint propertyId,int value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool Message::setProperty(uint propertyId,long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool Message::setProperty(uint propertyId,unsigned char value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool Message::setProperty(uint propertyId,unsigned short value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool Message::setProperty(uint propertyId,unsigned int value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool Message::setProperty(uint propertyId,unsigned long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool Message::setProperty(uint propertyId,long long value)
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+bool Message::setProperty(uint propertyId,double value)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }

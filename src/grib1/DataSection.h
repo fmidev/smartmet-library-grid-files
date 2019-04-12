@@ -65,6 +65,7 @@ class DataSection : public GRID::MessageSection
     // ### Section specific methods
 
     void              decodeValues(T::ParamValue_vec& decodedValues) const;
+    void              encodeValues(T::ParamValue_vec& values);
     std::uint8_t      getFlags() const;
     std::int16_t      getBinaryScaleFactor() const;
     std::float_t      getReferenceValue() const;
@@ -85,6 +86,7 @@ class DataSection : public GRID::MessageSection
     void              setMessagePtr(Message *message);
 
     bool              setProperty(uint propertyId,long long value);
+    bool              setProperty(uint propertyId,double value);
 
     void              read(MemoryReader& memoryReader);
     void              write(DataWriter& dataWriter);

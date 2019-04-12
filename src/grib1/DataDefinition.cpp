@@ -118,6 +118,15 @@ void DataDefinition::decodeValues(Message *message,T::ParamValue_vec& decodedVal
 
 
 
+void DataDefinition::encodeValues(Message *message,T::ParamValue_vec& values)
+{
+  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+}
+
+
+
+
+
 /*! \brief The method prints the content of the current object into the given stream.
 
         \param ostream      The output stream.

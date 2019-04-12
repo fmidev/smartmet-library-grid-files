@@ -98,15 +98,15 @@ void LambertConformal::read(MemoryReader &memoryReader) {
 
 void LambertConformal::write(DataWriter &dataWriter) {
   try {
-    dataWriter.write_int24(mNx);
-    dataWriter.write_int24(mNy);
+    dataWriter << mNx;
+    dataWriter << mNy;
     dataWriter.write_int24(mLatitudeOfFirstGridPoint);
     dataWriter.write_int24(mLongitudeOfFirstGridPoint);
     mResolutionFlags.write(dataWriter);
     dataWriter.write_int24(mLoV);
-    dataWriter.write_int24(mDxInMetres);
-    dataWriter.write_int24(mDyInMetres);
-    dataWriter.write_int24(mProjectionCentreFlag);
+    dataWriter.write_uint24(mDxInMetres);
+    dataWriter.write_uint24(mDyInMetres);
+    dataWriter << mProjectionCentreFlag;
     mScanningMode.write(dataWriter);
     dataWriter.write_int24(mLatin1);
     dataWriter.write_int24(mLatin2);

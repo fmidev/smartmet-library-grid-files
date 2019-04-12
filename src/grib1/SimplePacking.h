@@ -20,6 +20,7 @@ class SimplePacking : public DataDefinition
 
     DataDefinition* createDataDefinition() const;
     void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
+    void            encodeValues(Message *message,T::ParamValue_vec& encodeValues);
     PackingMethod   getPackingMethod() const;
     bool            getValueByIndex(Message *message,uint index,T::ParamValue& value) const;
 

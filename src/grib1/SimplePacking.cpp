@@ -4,6 +4,7 @@
 #include "../common/Exception.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
+#include "../common/BitArrayWriter.h"
 
 
 namespace SmartMet
@@ -322,6 +323,148 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
           decodedValues.push_back(Y);
       }
     }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
+{
+  try
+  {
+    std::int16_t binaryScaleFactor = message->getBinaryScaleFactor();
+    std::uint16_t decimalScaleFactor = message->getDecimalScaleFactor();
+    std::float_t referenceValue = message->getReferenceValue();
+    std::uint8_t bitsPerValue = message->getBitsPerValue();
+
+    uint valueCount = 0;
+    uint missingCount = 0;
+    T::ParamValue minValue = ParamValueMissing;
+    T::ParamValue maxValue = ParamValueMissing;
+
+    for (auto it = values.begin(); it != values.end(); ++it)
+    {
+      if ((*it) != ParamValueMissing)
+      {
+        if (minValue == ParamValueMissing || ((*it) < minValue))
+        {
+          minValue = *it;
+        }
+
+        if (maxValue == ParamValueMissing || ((*it) > maxValue))
+        {
+          maxValue = *it;
+        }
+        valueCount++;
+      }
+      else
+      {
+        missingCount++;
+      }
+    }
+
+    std::int16_t E = binaryScaleFactor;
+    std::int16_t D = decimalScaleFactor;
+
+    referenceValue = minValue;
+    double R = referenceValue;
+
+
+    uint bits = 0;
+
+    if (!bitsPerValue)
+    {
+      T::ParamValue diff = maxValue - minValue;
+      ulonglong valuesInRange = diff / std::pow(2.0, E);
+
+      while (C_UINT64(1 << bits) < valuesInRange)
+        (bits)++;
+    }
+    else
+    {
+      bits = bitsPerValue;
+    }
+
+
+    if (missingCount > 0)
+    {
+      // Bitmap required
+    }
+
+
+
+    //printf("R = %f  E = %d  D = %d  Bits = %u\n",R,E,D,bits);
+
+    // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
+
+    const double Efac = std::pow(2.0, E);
+    const double Dfac = std::pow(10, -D);
+
+    const double RDfac = R * Dfac;
+    const double EDfac = Efac * Dfac;
+
+    uint totalBits = (valueCount * bits);
+
+    uint dataSize = totalBits / 8;
+    //if ((totalBits % 8) != 0)
+      dataSize++;
+
+    uchar *data = new uchar[dataSize];
+    memset(data,0,dataSize);
+    BitArrayWriter bitArrayWriter(data,totalBits);
+
+    for (auto it = values.begin(); it != values.end(); ++it)
+    {
+      if ((*it) != ParamValueMissing)
+      {
+        double Y = *it;
+        double X = (Y - RDfac) / EDfac;
+
+        ulonglong v = C_UINT64(round(X));
+        bitArrayWriter.writeBits(bits,v);
+      }
+    }
+
+    DataSect_sptr dataSection = message->getDataSection();
+
+    if (dataSection)
+      dataSection->setData(data,dataSize);
+    /*
+    if (!dataSection)
+    {
+      DataSection *section = new DataSection();
+      section->setMessagePtr(message);
+      section->setData(data,dataSize);
+      message->setDataSection(section);
+    }
+    else
+    {
+      dataSection->setData(data,dataSize);
+    }
+    */
+
+/*
+    mPacking.setReferenceValue(R);
+    mPacking.setBinaryScaleFactor(E);
+    mPacking.setDecimalScaleFactor(D);
+    mPacking.setBitsPerValue(bits);
+*/
+/*
+    uint idx = message->getMessageIndex();
+
+    char filename[100];
+    sprintf(filename,"/tmp/data_%04d.dat",idx);
+    FILE *file = fopen(filename,"we");
+    fwrite(data,dataSize,1,file);
+    fclose(file);
+    delete data;
+*/
   }
   catch (...)
   {

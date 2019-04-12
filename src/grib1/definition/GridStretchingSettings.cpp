@@ -66,8 +66,8 @@ void GridStretchingSettings::read(MemoryReader &memoryReader) {
 
 void GridStretchingSettings::write(DataWriter &dataWriter) {
   try {
-    dataWriter << mLatitudeOfStretchingPole;
-    dataWriter << mLongitudeOfStretchingPole;
+    dataWriter.write_int24(mLatitudeOfStretchingPole);
+    dataWriter.write_int24(mLongitudeOfStretchingPole);
     dataWriter << mStretchingFactor;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);

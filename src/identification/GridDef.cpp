@@ -3062,6 +3062,7 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
     //attributeList.print(std::cout,0,0);
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
+    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
@@ -3110,15 +3111,24 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
     }
 
 
-    if (urnStr != nullptr  &&  bboxStr != nullptr  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
+    if (urnStr != nullptr  &&  (bboxStr != nullptr || llboxStr != nullptr)  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
     {
       // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
 
-      std::vector<double> cc;
-      splitString(bboxStr,',',cc);
+      std::vector<double> aa;
 
-      if (cc.size() == 4)
+      if (bboxStr != nullptr)
+        splitString(bboxStr,',',aa);
+      else
+      if (llboxStr != nullptr)
       {
+        splitString(llboxStr,',',aa);
+      }
+
+      if (aa.size() == 4)
+      {
+        std::vector<double> cc;
+
         OGRSpatialReference sr_latlon;
         sr_latlon.importFromEPSG(4326);
 
@@ -3131,9 +3141,40 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
         if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
           throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(urnStr) + "'!");
 
-        OGRCoordinateTransformation *tranformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
-        if (tranformation == nullptr)
+        OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
+        if (transformation == nullptr)
           throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+
+        OGRCoordinateTransformation *reverseTransformation = nullptr;
+
+        if (bboxStr != nullptr)
+          cc = aa;
+        else
+        if (llboxStr != nullptr)
+        {
+          reverseTransformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr);
+          if (reverseTransformation == nullptr)
+          {
+            if (transformation != nullptr)
+             OCTDestroyCoordinateTransformation(transformation);
+
+            throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+          }
+
+          double lon1 = aa[0];
+          double lat1 = aa[1];
+          double lon2 = aa[2];
+          double lat2 = aa[3];
+
+          reverseTransformation->Transform(1,&lon1,&lat1);
+          reverseTransformation->Transform(1,&lon2,&lat2);
+
+          cc.push_back(lon1);
+          cc.push_back(lat1);
+          cc.push_back(lon2);
+          cc.push_back(lat2);
+        }
+
 
         width = toUInt32(gridWidthStr);
         height = toUInt32(gridHeightStr);
@@ -3158,7 +3199,7 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
             double lon = xx;
             double lat = yy;
 
-            tranformation->Transform(1,&lon,&lat);
+            transformation->Transform(1,&lon,&lat);
             latLonCoordinates.push_back(T::Coordinate(lon,lat));
             coordinates.push_back(T::Coordinate(xx,yy));
 
@@ -3168,6 +3209,11 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
           }
           yy = yy + dy;
         }
+        if (transformation != nullptr)
+          OCTDestroyCoordinateTransformation(transformation);
+
+        if (reverseTransformation != nullptr)
+          OCTDestroyCoordinateTransformation(reverseTransformation);
       }
     }
   }
@@ -3189,6 +3235,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     //attributeList.print(std::cout,0,0);
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
+    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
@@ -3241,11 +3288,20 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     {
       // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
 
-      std::vector<double> cc;
-      splitString(bboxStr,',',cc);
+      std::vector<double> aa;
 
-      if (cc.size() == 4)
+      if (bboxStr != nullptr)
+        splitString(bboxStr,',',aa);
+      else
+      if (llboxStr != nullptr)
       {
+        splitString(llboxStr,',',aa);
+      }
+
+      if (aa.size() == 4)
+      {
+        std::vector<double> cc;
+
         OGRSpatialReference sr_latlon;
         sr_latlon.importFromEPSG(4326);
 
@@ -3258,9 +3314,39 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
           throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(urnStr) + "'!");
 
-        OGRCoordinateTransformation *tranformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
-        if (tranformation == nullptr)
+        OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
+        if (transformation == nullptr)
           throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+
+        OGRCoordinateTransformation *reverseTransformation = nullptr;
+
+        if (bboxStr != nullptr)
+          cc = aa;
+        else
+        if (llboxStr != nullptr)
+        {
+          reverseTransformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr);
+          if (reverseTransformation == nullptr)
+          {
+            if (transformation != nullptr)
+             OCTDestroyCoordinateTransformation(transformation);
+
+            throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+          }
+
+          double lon1 = aa[0];
+          double lat1 = aa[1];
+          double lon2 = aa[2];
+          double lat2 = aa[3];
+
+          reverseTransformation->Transform(1,&lon1,&lat1);
+          reverseTransformation->Transform(1,&lon2,&lat2);
+
+          cc.push_back(lon1);
+          cc.push_back(lat1);
+          cc.push_back(lon2);
+          cc.push_back(lat2);
+        }
 
         width = toUInt32(gridWidthStr);
         height = toUInt32(gridHeightStr);
@@ -3284,7 +3370,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             double lon = xx;
             double lat = yy;
 
-            tranformation->Transform(1,&lon,&lat);
+            transformation->Transform(1,&lon,&lat);
             latLonCoordinates.push_back(T::Coordinate(lon,lat));
 
             //printf("%f,%f => %f,%f\n",xx,yy,lon,lat);
@@ -3293,6 +3379,12 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           }
           yy = yy + dy;
         }
+
+        if (transformation != nullptr)
+          OCTDestroyCoordinateTransformation(transformation);
+
+        if (reverseTransformation != nullptr)
+          OCTDestroyCoordinateTransformation(reverseTransformation);
       }
     }
   }

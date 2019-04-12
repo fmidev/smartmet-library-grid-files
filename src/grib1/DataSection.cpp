@@ -160,6 +160,43 @@ bool DataSection::setProperty(uint propertyId,long long value)
 
 
 
+
+bool DataSection::setProperty(uint propertyId,double value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::DataSection::Flags:
+        setFlags(C_INT(value));
+        return true;
+
+      case Property::DataSection::BinaryScaleFactor:
+        setBinaryScaleFactor(C_INT(value));
+        return true;
+
+      case Property::DataSection::ReferenceValue:
+        setReferenceValue(C_FLOAT(value));
+        return true;
+
+      case Property::DataSection::BitsPerValue:
+        setBitsPerValue(C_INT(value));
+        return true;
+
+      case Property::DataSection::PackingMethod:
+        //setPackingMethod(value);
+        return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
 /*! \brief The method can be used for collecting all attributeList details related
     to the current section.
 */
@@ -661,11 +698,58 @@ void DataSection::decodeValues(T::ParamValue_vec& decodedValues) const
 
 
 
+void DataSection::encodeValues(T::ParamValue_vec& values)
+{
+  try
+  {
+    if (mDataDefinition)
+      mDataDefinition->encodeValues(mMessage,values);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void DataSection::setFlags(std::uint8_t flags)
 {
   try
   {
+    if (mDataDefinition)
+      return;
+
     mFlags = flags;
+
+    if ((mFlags & SphercicalHarmonicCoefficients) == 0)
+    {
+      if ((mFlags & ComplexPacking) == 0)
+      {
+        auto dataDefinition = new SimplePacking();
+        mDataDefinition.reset(dataDefinition);
+      }
+      else
+      {
+        auto dataDefinition = new SecondOrderPacking();
+        mDataDefinition.reset(dataDefinition);
+      }
+    }
+    else
+    {
+      if ((mFlags & ComplexPacking) == 0)
+      {
+        auto dataDefinition = new SphericalHarmonicsSimplePacking();
+        mDataDefinition.reset(dataDefinition);
+      }
+      else
+      {
+        auto dataDefinition = new SphericalHarmonicsComplexPacking();
+        mDataDefinition.reset(dataDefinition);
+      }
+    }
   }
   catch (...)
   {

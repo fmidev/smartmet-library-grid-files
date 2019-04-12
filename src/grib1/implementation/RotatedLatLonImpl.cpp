@@ -845,7 +845,7 @@ void RotatedLatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) 
   {
     RotatedLatLon::print(stream,level,optionFlags);
 
-    stream << space(level+1) << "LatLonImpl\n";
+    stream << space(level+1) << "RotatedLatLonImpl\n";
 
     if (optionFlags & GRID::PrintFlag::coordinates)
     {

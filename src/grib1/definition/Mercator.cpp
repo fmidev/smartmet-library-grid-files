@@ -62,7 +62,6 @@ void Mercator::read(MemoryReader &memoryReader) {
     mNj = memoryReader.read_int16();
     mGridArea.read(memoryReader);
     mLatin = memoryReader.read_int24();
-    memoryReader.read_uint8();  // *** This field was not automatically generated
     mScanningMode.read(memoryReader);
     mDiInMetres = memoryReader.read_int24();
     mDjInMetres = memoryReader.read_int24();
@@ -78,11 +77,10 @@ void Mercator::read(MemoryReader &memoryReader) {
 
 void Mercator::write(DataWriter &dataWriter) {
   try {
-    dataWriter.write_int24(mNi);
-    dataWriter.write_int24(mNj);
+    dataWriter << mNi;
+    dataWriter << mNj;
     mGridArea.write(dataWriter);
     dataWriter.write_int24(mLatin);
-    dataWriter.write_uint8(0);       // *** This field was not automatically generated
     mScanningMode.write(dataWriter);
     dataWriter.write_int24(mDiInMetres);
     dataWriter.write_int24(mDjInMetres);

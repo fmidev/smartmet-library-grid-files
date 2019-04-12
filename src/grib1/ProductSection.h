@@ -138,6 +138,7 @@ class ProductSection : public GRID::MessageSection
     void              setMessagePtr(Message *message);
 
     bool              setProperty(uint propertyId,long long value);
+    bool              setProperty(uint propertyId,double value);
 
     void              read(MemoryReader& memoryReader);
     void              write(DataWriter& dataWriter);

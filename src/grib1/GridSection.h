@@ -103,6 +103,13 @@ class GridSection : public GRID::MessageSection
     void                  setGridGeometryId(T::GeometryId geometryId);
     void                  setMessagePtr(Message *message);
 
+    bool                  setProperty(uint propertyId,long long value);
+    bool                  setProperty(uint propertyId,double value);
+
+    void                  setNumberOfVerticalCoordinateValues(long long value);
+    void                  setPvlLocation(long long value);
+    void                  setDataRepresentationType(long long value);
+
     void                  read(MemoryReader& memoryReader);
     void                  write(DataWriter& dataWriter);
     void                  print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -134,6 +141,8 @@ class GridSection : public GRID::MessageSection
 
     /*! \brief The number of the grid point (calculated when the grid is irregular). */
     std::uint32_t         mNumberOfPoints;
+
+    std::vector<std::uint32_t>  mVerticalCoordinates;
 };
 
 

@@ -188,7 +188,7 @@ $nohash = array (
  * - flags [1]
  * - ieeefloat
  * - include
- * - unsigned[1], unsigned[2], unsigned[4]
+ * - unsigned[1], unsigned[2], unsigned[3], unsigned[4]
  * - signed[1], signed[2], signed[4]
  */
 
@@ -238,6 +238,7 @@ function process_template($file, $name, $class, $outdir)
       'ieeefloat' => 'float',
       'unsigned\s*\[1\]' => 'T::UInt8_opt',
       'unsigned\s*\[2\]' => 'T::UInt16_opt',
+      'unsigned\s*\[3\]' => 'T::UInt24_opt',
       'unsigned\s*\[4\]' => 'T::UInt32_opt',
       'signed\s*\[1\]' => 'T::Int8_opt',
       'signed\s*\[2\]' => 'T::Int16_opt',
@@ -251,6 +252,7 @@ function process_template($file, $name, $class, $outdir)
       'std::uint16_t' => 'std::uint16_t',
       'T::UInt8_opt' => 'const T::UInt8_opt &',
       'T::UInt16_opt' => 'const T::UInt16_opt &',
+      'T::UInt24_opt' => 'const T::UInt24_opt &',
       'T::UInt32_opt' => 'const T::UInt32_opt &',
       'T::Int8_opt' => 'const T::Int8_opt &',
       'T::Int16_opt' => 'const T::Int16_opt &',

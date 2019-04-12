@@ -552,7 +552,11 @@ time_t localTimeToTimeT(std::string localTime, const char *tzone)
   try
   {
     if (localTime.length() != 15)
-      throw SmartMet::Spine::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+    {
+      SmartMet::Spine::Exception exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+      exception.addParameter("timestamp",localTime);
+      throw exception;
+    }
 
     const char *str = localTime.c_str();
 

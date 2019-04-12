@@ -1,4 +1,5 @@
 #include "LatLonImpl.h"
+#include "../Properties.h"
 #include "../../common/Exception.h"
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
@@ -547,6 +548,47 @@ bool LatLonImpl::reverseYDirection() const
     unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x40) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool LatLonImpl::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::LatLon::Ni:
+        setNi(value);
+        return true;
+
+      case Property::GridSection::LatLon::Nj:
+        setNj(value);
+        return true;
+
+      case Property::GridSection::LatLon::IDirectionIncrement:
+        setIDirectionIncrement(value);
+        return true;
+
+      case Property::GridSection::LatLon::JDirectionIncrement:
+        setJDirectionIncrement(value);
+        return true;
+    }
+
+    if (setProperty_gridArea(mGridArea,propertyId,value))
+      return true;
+
+    if (setProperty_scanningMode(mScanningMode,propertyId,value))
       return true;
 
     return false;
