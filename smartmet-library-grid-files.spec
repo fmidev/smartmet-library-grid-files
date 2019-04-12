@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 19.3.20
+Version: 19.4.2
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,7 +11,7 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 19.3.14
+BuildRequires: smartmet-library-newbase-devel >= 19.3.21
 BuildRequires: smartmet-library-spine-devel >= 19.3.14
 BuildRequires: smartmet-library-macgyver >= 18.11.24
 BuildRequires: smartmet-library-tron >= 17.9.20
@@ -36,7 +36,7 @@ Requires: gdal
 Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 19.3.14
+Requires: smartmet-library-newbase >= 19.3.21
 Requires: smartmet-library-macgyver >= 18.11.24
 Requires: smartmet-library-spine >= 19.3.14
 
@@ -77,6 +77,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Apr  2 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.4.2-1.fmi
+- Fix to Mercator projection
+- Fix to a thread safety problem
 * Wed Mar 20 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.3.20-1.fmi
 - Fixed memory leak
 * Tue Mar 19 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.3.19-1.fmi
