@@ -65,18 +65,24 @@ class GridDefinition
     virtual void                setGridGeometryId(T::GeometryId geometryId);
     virtual void                setGridGeometryName(std::string geometryName);
 
-
+    virtual bool                getProperty(uint propertyId,long long& value);
     virtual bool                setProperty(uint propertyId,long long value);
-    virtual bool                setProperty_EarthShape(uint propertyId,long long value);
-    virtual bool                setProperty_Grid(uint propertyId,long long value);
-    virtual bool                setProperty_Rotation(uint propertyId,long long value);
-    virtual bool                setProperty_LatLon(uint propertyId,long long value);
 
     virtual void                read(MemoryReader& memoryReader);
     virtual void                write(DataWriter& dataWriter);
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
 
   protected:
+
+    virtual bool                getProperty_EarthShape(uint propertyId,long long& value);
+    virtual bool                getProperty_Grid(uint propertyId,long long& value);
+    virtual bool                getProperty_Rotation(uint propertyId,long long& value);
+    virtual bool                getProperty_LatLon(uint propertyId,long long& value);
+
+    virtual bool                setProperty_EarthShape(uint propertyId,long long value);
+    virtual bool                setProperty_Grid(uint propertyId,long long value);
+    virtual bool                setProperty_Rotation(uint propertyId,long long value);
+    virtual bool                setProperty_LatLon(uint propertyId,long long value);
 
     virtual double              getMajorAxis(EarthShapeSettings& earthSettings);
     virtual double              getMinorAxis(EarthShapeSettings& earthSettings);

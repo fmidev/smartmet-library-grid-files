@@ -89,8 +89,31 @@ void RotatedLatLonImpl::init() const
     mNj = (*mLatLon.getGrid()->getNj());
     mStartY = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
     mStartX = getLongitude(C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000);
+
+    double mEndY = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfLastGridPoint()) / 1000000;
+    double mEndX = getLongitude(C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfLastGridPoint()) / 1000000);
+
     mDx = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
     mDy = C_DOUBLE(*mLatLon.getJDirectionIncrement()) / 1000000;
+
+    ResolutionSettings *rs = mLatLon.getGrid()->getResolution();
+    if (rs != nullptr)
+    {
+      std::uint8_t flags = rs->getResolutionAndComponentFlags();
+      if ((flags & 0x20) == 0)
+      {
+        // i direction increment not given
+        mDx = (mEndX-mStartX)/mNi;
+      }
+
+      if ((flags & 0x10) == 0)
+      {
+        // j direction increment not given
+        mDy = (mEndY-mStartY)/mNj;
+      }
+    }
+
+
     mSouthPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
     mSouthPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000;
 

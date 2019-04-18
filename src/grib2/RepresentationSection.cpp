@@ -139,6 +139,32 @@ void RepresentationSection::setMessagePtr(Message *message)
 
 
 
+bool RepresentationSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::RepresentationSection::RepresentationTemplateNumber:
+        value = *mDataRepresentationTemplateNumber;
+        return true;
+    }
+
+    if (mRepresentationDefinition)
+      return mRepresentationDefinition->getProperty(propertyId,value);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool RepresentationSection::setProperty(uint propertyId,long long value)
 {
   try
@@ -224,7 +250,7 @@ void RepresentationSection::write(DataWriter& dataWriter)
   try
   {
     if (!mRepresentationDefinition)
-      throw SmartMet::Spine::Exception(BCP,"Missing represntation definition");
+      throw SmartMet::Spine::Exception(BCP,"Missing representation definition");
 
     if (missing(mNumberOfValues))
       throw SmartMet::Spine::Exception(BCP,"Number of values in section cannot be missing");

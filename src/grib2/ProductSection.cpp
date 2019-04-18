@@ -160,6 +160,36 @@ void ProductSection::setMessagePtr(Message *message)
 
 
 
+bool ProductSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::ProductSection::ProductDefinitionTemplateNumber:
+        value = *mProductDefinitionTemplateNumber;
+        return true;
+
+      case Property::ProductSection::NV:
+        value = *mNV;
+        return true;
+    }
+
+    if (mProductDefinition)
+      return mProductDefinition->getProperty(propertyId,value);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool ProductSection::setProperty(uint propertyId,long long value)
 {
   try

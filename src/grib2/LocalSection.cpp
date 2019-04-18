@@ -149,15 +149,26 @@ void LocalSection::setData(T::Data_ptr data,std::size_t size)
 
 
 
+bool LocalSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool LocalSection::setProperty(uint propertyId,long long value)
 {
   try
   {
-    /*
-    switch (propertyId)
-    {
-    }
-    */
     return false;
   }
   catch (...)

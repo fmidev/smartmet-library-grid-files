@@ -9,6 +9,7 @@
 #include "definition/GridAreaSettings.h"
 #include "definition/ScanningModeSettings.h"
 #include "definition/ResolutionFlagsSettings.h"
+#include "definition/RotationSettings.h"
 
 #include <gdal/ogr_spatialref.h>
 #include <map>
@@ -67,6 +68,9 @@ class GridDefinition
     virtual void                setGridGeometryId(T::GeometryId geometryId);
     virtual void                setGridGeometryName(std::string geometryName);
 
+    virtual bool                getProperty(uint propertyId,long long& value);
+    virtual bool                getProperty(uint propertyId,double& value);
+
     virtual bool                setProperty(uint propertyId,long long value);
     virtual bool                setProperty(uint propertyId,double value);
 
@@ -77,15 +81,28 @@ class GridDefinition
     virtual void                write(DataWriter& dataWriter);
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
 
+    virtual GridAreaSettings*        getGridArea() const;
+    virtual ScanningModeSettings*    getScanningMode() const;
+    virtual ResolutionFlagsSettings* getResolutionFlags() const;
+    virtual RotationSettings*        getRotation() const;
+
    protected:
 
     virtual double              getMajorAxis(uchar resolutionAndComponentFlags);
     virtual double              getMinorAxis(uchar resolutionAndComponentFlags);
     virtual double              getFlattening(uchar resolutionAndComponentFlags);
 
-    virtual bool                setProperty_gridArea(GridAreaSettings& gridArea,uint propertyId,long long value);
-    virtual bool                setProperty_scanningMode(ScanningModeSettings& scanningMode,uint propertyId,long long value);
-    virtual bool                setProperty_resolutionFlags(ResolutionFlagsSettings& resolutionFlags,uint propertyId,long long value);
+    virtual bool                getProperty_gridArea(uint propertyId,long long& value);
+    virtual bool                getProperty_scanningMode(uint propertyId,long long& value);
+    virtual bool                getProperty_resolutionFlags(uint propertyId,long long& value);
+    virtual bool                getProperty_rotation(uint propertyId,long long& value);
+    virtual bool                getProperty_rotation(uint propertyId,double& value);
+
+    virtual bool                setProperty_gridArea(uint propertyId,long long value);
+    virtual bool                setProperty_scanningMode(uint propertyId,long long value);
+    virtual bool                setProperty_resolutionFlags(uint propertyId,long long value);
+    virtual bool                setProperty_rotation(uint propertyId,long long value);
+    virtual bool                setProperty_rotation(uint propertyId,double value);
 
     /*! \brief The spatial reference. */
      T::SpatialRef              mSpatialReference;

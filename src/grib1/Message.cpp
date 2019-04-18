@@ -563,6 +563,77 @@ void Message::initGridSection()
 
 
 
+bool Message::getProperty(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (propertyId >= Property::IndicatorSection::FirstProperty  &&  propertyId <= Property::IndicatorSection::LastProperty)
+    {
+      if (mIndicatorSection)
+        return mIndicatorSection->getProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::ProductSection::FirstProperty  &&  propertyId <= Property::ProductSection::LastProperty)
+    {
+      if (mProductSection)
+        return mProductSection->getProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::DataSection::FirstProperty  &&  propertyId <= Property::DataSection::LastProperty)
+    {
+      if (mDataSection)
+        return mDataSection->getProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::GridSection::FirstProperty  &&  propertyId <= Property::GridSection::LastProperty)
+    {
+      if (mGridSection)
+        return mGridSection->getProperty(propertyId,value);
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyId",std::to_string(propertyId));
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::getProperty(const char *propertyName,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint id = gribProperty.getPropertyId(propertyName);
+    if (id == 0)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Unknow property name!");
+      exception.addParameter("propertyName",propertyName);
+    }
+
+    return getProperty(id,value);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyName",propertyName);
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
+  }
+}
+
+
+
+
+
 bool Message::setProperty(uint propertyId,long long value)
 {
   FUNCTION_TRACE
@@ -596,7 +667,10 @@ bool Message::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyId",std::to_string(propertyId));
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
   }
 }
 
@@ -637,9 +711,69 @@ bool Message::setProperty(uint propertyId,double value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyId",std::to_string(propertyId));
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
   }
 }
+
+
+
+
+
+
+
+bool Message::setProperty(const char *propertyName,long long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint id = gribProperty.getPropertyId(propertyName);
+    if (id == 0)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Unknow property name!");
+      exception.addParameter("propertyName",propertyName);
+    }
+
+    return setProperty(id,value);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyName",propertyName);
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::setProperty(const char *propertyName,double value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint id = gribProperty.getPropertyId(propertyName);
+    if (id == 0)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Unknow property name!");
+      exception.addParameter("propertyName",propertyName);
+    }
+
+    return setProperty(id,value);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyName",propertyName);
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
+  }
+}
+
 
 
 
@@ -650,7 +784,8 @@ void Message::setGridValues(T::ParamValue_vec& values)
   try
   {
     initDataSection();
-    mDataSection->encodeValues(values);
+    if (mDataSection)
+      mDataSection->encodeValues(values);
     //mDataSection->setNumberOfValues(values.size());
   }
   catch (...)
@@ -692,7 +827,10 @@ T::TimeString Message::getReferenceTime() const
   FUNCTION_TRACE
   try
   {
-    return mProductSection->getReferenceTime();
+    if (mProductSection)
+      return mProductSection->getReferenceTime();
+
+    return "";
   }
   catch (...)
   {
@@ -717,13 +855,33 @@ T::TimeString Message::getForecastTime() const
   FUNCTION_TRACE
   try
   {
-    return mProductSection->getForecastTime();
+    if (mProductSection)
+      return mProductSection->getForecastTime();
+
+    return "";
   }
   catch (...)
   {
     SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
     exception.addParameter("Message index",std::to_string(mMessageIndex));
     throw exception;
+  }
+}
+
+
+
+
+
+uint Message::getGribVersion() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return 1;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
 
@@ -767,6 +925,44 @@ uint Message::getGribSubCentre() const
   }
 }
 
+
+
+
+
+uint Message::getGribGeneratingProcessIdentifier() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mProductSection)
+      return mProductSection->getGeneratingProcessIdentifier();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+uint Message::getGribTableVersion() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mProductSection)
+      return mProductSection->getTableVersion();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 
@@ -866,7 +1062,8 @@ void Message::setGridValueCompressionMethod(ushort compressionMethod)
   try
   {
     initDataSection();
-    mDataSection->setDataDefinition(compressionMethod);
+    if (mDataSection)
+      mDataSection->setDataDefinition(compressionMethod);
   }
   catch (...)
   {
@@ -1821,6 +2018,9 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     if (mDataSection == nullptr)
       throw SmartMet::Spine::Exception(BCP,"The 'mDataSection' attribute points to nullptr!");
 
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
     values.clear();
     if (mValueDecodingFailed)
     {
@@ -2018,7 +2218,10 @@ T::ParamLevel Message::getGridParameterLevel() const
   FUNCTION_TRACE
   try
   {
-    return static_cast<T::ParamLevel>(mProductSection->getLevel());
+    if (mProductSection != nullptr)
+      return static_cast<T::ParamLevel>(mProductSection->getLevel());
+
+    return 0;
   }
   catch (...)
   {
@@ -2042,7 +2245,10 @@ T::ParamLevelId Message::getGridParameterLevelId() const
   FUNCTION_TRACE
   try
   {
-    return mProductSection->getIndicatorOfTypeOfLevel();
+    if (mProductSection != nullptr)
+      return mProductSection->getIndicatorOfTypeOfLevel();
+
+    return 0;
   }
   catch (...)
   {
@@ -2067,6 +2273,26 @@ std::string Message::getGridParameterLevelIdString() const
   try
   {
     return Identification::gridDef.getGribTableValue(1,0,"3",getGridParameterLevelId());
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+void Message::initSpatialReference()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection != nullptr)
+      mGridSection->initSpatialReference();
   }
   catch (...)
   {

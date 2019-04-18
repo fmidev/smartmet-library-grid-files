@@ -46,19 +46,106 @@ RepresentationDefinition* RepresentationDefinition::createRepresentationDefiniti
 
 
 
+bool RepresentationDefinition::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    if (getProperty_Packing(propertyId,value))
+      return true;
+
+    if (getProperty_OriginalValues(propertyId,value))
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool RepresentationDefinition::getProperty_Packing(uint propertyId,long long& value)
+{
+  try
+  {
+    PackingSettings *packing = getPacking();
+    if (packing == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::RepresentationSection::Packing::ReferenceValue:
+      {
+        value = packing->getReferenceValue();
+        return true;
+      }
+      break;
+
+      case Property::RepresentationSection::Packing::BinaryScaleFactor:
+        value = *packing->getBinaryScaleFactor();
+        return true;
+
+      case Property::RepresentationSection::Packing::DecimalScaleFactor:
+        value = *packing->getDecimalScaleFactor();
+        return true;
+
+      case Property::RepresentationSection::Packing::BitsPerValue:
+        value = *packing->getBitsPerValue();
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool RepresentationDefinition::getProperty_OriginalValues(uint propertyId,long long& value)
+{
+  try
+  {
+    OriginalValuesSettings *originalValues = getOriginalValues();
+    if (originalValues == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::RepresentationSection::OriginalValues::TypeOfOriginalFieldValues:
+        value = *originalValues->getTypeOfOriginalFieldValues();
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool RepresentationDefinition::setProperty(uint propertyId,long long value)
 {
   try
   {
-    if (propertyId >= Property::RepresentationSection::Packing::FirstProperty  &&  propertyId <= Property::RepresentationSection::Packing::LastProperty)
-    {
-      return setProperty_Packing(propertyId,value);
-    }
+    if (setProperty_Packing(propertyId,value))
+      return true;
 
-    if (propertyId >= Property::RepresentationSection::OriginalValues::FirstProperty  &&  propertyId <= Property::RepresentationSection::OriginalValues::LastProperty)
-    {
-      return setProperty_OriginalValues(propertyId,value);
-    }
+    if (setProperty_OriginalValues(propertyId,value))
+      return true;
 
     return false;
   }

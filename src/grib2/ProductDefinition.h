@@ -39,6 +39,7 @@ class ProductDefinition
     virtual T::UInt8_opt                getGeneratingProcessIdentifier() const;
     virtual uint                        getTemplateNumber() const;
 
+    virtual bool                        getProperty(uint propertyId,long long& value);
     virtual bool                        setProperty(uint propertyId,long long value);
     virtual void                        read(MemoryReader& memoryReader) {}
     virtual void                        write(DataWriter& dataWriter) {}
@@ -61,6 +62,16 @@ class ProductDefinition
 
     T::TimeString                       countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const;
     T::TimeString                       countForecastEndTime(const StatisticalSettings& stat) const;
+
+    virtual bool                        getProperty_ParameterSettings(uint propertyId,long long& value);
+    virtual bool                        getProperty_HorizontalSettings(uint propertyId,long long& value);
+    virtual bool                        getProperty_StatisticalSettings(uint propertyId,long long& value);
+    virtual bool                        getProperty_EpsSettings(uint propertyId,long long& value);
+    virtual bool                        getProperty_DerivedSettings(uint propertyId,long long& value);
+    virtual bool                        getProperty_RectangularClusterSettings(uint propertyId,long long& value);
+    virtual bool                        getProperty_ProbabilitySettings(uint propertyId,long long& value);
+    virtual bool                        getProperty_PercentileSettings(uint propertyId,long long& value);
+    virtual bool                        getProperty_CategoricalSettings(uint propertyId,long long& value);
 
     virtual bool                        setProperty_ParameterSettings(uint propertyId,long long value);
     virtual bool                        setProperty_HorizontalSettings(uint propertyId,long long value);

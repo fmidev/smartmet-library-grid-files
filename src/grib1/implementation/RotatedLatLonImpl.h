@@ -31,6 +31,11 @@ class RotatedLatLonImpl : public RotatedLatLon
     bool              reverseXDirection() const;
     bool              reverseYDirection() const;
 
+    bool              getProperty(uint propertyId,long long& value);
+
+    bool              setProperty(uint propertyId,long long value);
+    bool              setProperty(uint propertyId,double value);
+
     void              initSpatialReference();
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
     void              read(MemoryReader& memoryReader);

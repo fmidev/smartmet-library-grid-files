@@ -211,7 +211,179 @@ bool Message::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyId",std::to_string(propertyId));
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::setProperty(uint propertyId,double value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    return setProperty(propertyId,C_INT64(value));
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyId",std::to_string(propertyId));
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::setProperty(const char *propertyName,long long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint id = gribProperty.getPropertyId(propertyName);
+    if (id == 0)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Unknow property name!");
+      exception.addParameter("propertyName",propertyName);
+    }
+
+    return setProperty(id,value);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyName",propertyName);
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::setProperty(const char *propertyName,double value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint id = gribProperty.getPropertyId(propertyName);
+    if (id == 0)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Unknow property name!");
+      exception.addParameter("propertyName",propertyName);
+    }
+
+    return setProperty(id,value);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyName",propertyName);
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::getProperty(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (propertyId >= Property::IndicatorSection::FirstProperty  &&  propertyId <= Property::IndicatorSection::LastProperty)
+    {
+      if (mIndicatorSection)
+        return mIndicatorSection->getProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::IdentificationSection::FirstProperty  &&  propertyId <= Property::IdentificationSection::LastProperty)
+    {
+      if (mIdentificationSection)
+        return mIdentificationSection->getProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::LocalSection::FirstProperty  &&  propertyId <= Property::LocalSection::LastProperty)
+    {
+      if (mLocalSection)
+        return mLocalSection->getProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::GridSection::FirstProperty  &&  propertyId <= Property::GridSection::LastProperty)
+    {
+      if (mGridSection)
+        return mGridSection->getProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::ProductSection::FirstProperty  &&  propertyId <= Property::ProductSection::LastProperty)
+    {
+      if (mProductSection)
+        return mProductSection->getProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::RepresentationSection::FirstProperty  &&  propertyId <= Property::RepresentationSection::LastProperty)
+    {
+      if (mRepresentationSection)
+        return mRepresentationSection->getProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::BitmapSection::FirstProperty  &&  propertyId <= Property::BitmapSection::LastProperty)
+    {
+      if (mBitmapSection)
+        return mBitmapSection->getProperty(propertyId,value);
+    }
+
+    if (propertyId >= Property::DataSection::FirstProperty  &&  propertyId <= Property::DataSection::LastProperty)
+    {
+      if (mDataSection)
+        return mDataSection->getProperty(propertyId,value);
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyId",std::to_string(propertyId));
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::getProperty(const char *propertyName,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint id = gribProperty.getPropertyId(propertyName);
+    if (id == 0)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Unknow property name!");
+      exception.addParameter("propertyName",propertyName);
+    }
+
+    return getProperty(id,value);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("propertyName",propertyName);
+    exception.addParameter("value",std::to_string(value));
+    throw exception;
   }
 }
 
@@ -940,6 +1112,23 @@ uint Message::getGribCentre() const
 
 
 
+uint Message::getGribVersion() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return 2;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 uint Message::getGribSubCentre() const
 {
   FUNCTION_TRACE
@@ -951,6 +1140,46 @@ uint Message::getGribSubCentre() const
       if (centre)
         return *centre;
     }
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+uint Message::getGribGeneratingProcessIdentifier() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mProductSection)
+      return *mProductSection->getGeneratingProcessIdentifier();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+uint Message::getGribTableVersion() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mIdentificationSection)
+      return *mIdentificationSection->getTablesVersion();
 
     return 0;
   }
@@ -2765,6 +2994,26 @@ int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
       throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridOriginalValueIndex(grid_i,grid_j);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+void Message::initSpatialReference()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection != nullptr)
+      mGridSection->initSpatialReference();
   }
   catch (...)
   {

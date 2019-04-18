@@ -137,6 +137,8 @@ class ProductSection : public GRID::MessageSection
     void              setForecastNumber(short forecastNuber);
     void              setMessagePtr(Message *message);
 
+    bool              getProperty(uint propertyId,long long& value);
+
     bool              setProperty(uint propertyId,long long value);
     bool              setProperty(uint propertyId,double value);
 

@@ -2,6 +2,7 @@
 #include "../../common/Exception.h"
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
+#include "../../common/CoordinateConversions.h"
 #include "../../grid/PrintOptions.h"
 #include "../Properties.h"
 
@@ -105,10 +106,30 @@ void LambertConformalImpl::init() const
       return;
 
     double latitudeOfFirstGridPoint = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
-    double longitudeOfFirstGridPoint = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
+    double longitudeOfFirstGridPoint = getLongitude(C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000);
+
+    double latitudeOfLastGridPoint = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
+    double longitudeOfLastGridPoint = getLongitude(C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000);
 
     mDxx = C_DOUBLE(*mDx) / 1000;
     mDyy = C_DOUBLE(*mDy) / 1000;
+
+    ResolutionSettings *rs = getResolution();
+    if (rs != nullptr)
+    {
+      std::uint8_t flags = rs->getResolutionAndComponentFlags();
+      if ((flags & 0x20) == 0)
+      {
+        // i direction increment not given
+        mDxx = (longitudeOfLastGridPoint-longitudeOfFirstGridPoint)/(*mNx);
+      }
+
+      if ((flags & 0x10) == 0)
+      {
+        // j direction increment not given
+        mDxx = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/(*mNy);
+      }
+    }
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
@@ -674,6 +695,9 @@ void LambertConformalImpl::print(std::ostream& stream,uint level,uint optionFlag
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
       T::Coordinate_vec coordinateList = getGridCoordinates();
+
+      if (mCt_lambert2latlon == nullptr)
+        return;
 
       // ### Printing coordinates close to the grid corners.
 

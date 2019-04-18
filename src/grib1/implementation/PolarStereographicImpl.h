@@ -24,6 +24,7 @@ class PolarStereographicImpl : public PolarStereographic
     bool              reverseXDirection() const;
     bool              reverseYDirection() const;
 
+    bool              getProperty(uint propertyId,long long& value);
     bool              setProperty(uint propertyId,long long value);
 
     void              initSpatialReference();

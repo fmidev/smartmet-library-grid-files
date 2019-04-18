@@ -28,6 +28,9 @@ class RepresentationDefinition
     virtual uint  getTemplateNumber() const;
     virtual bool  getValueByIndex(Message *message,uint index,T::ParamValue& value) const;
 
+    virtual bool  getProperty(uint propertyId,long long& value);
+    virtual bool  getProperty_Packing(uint propertyId,long long& value);
+    virtual bool  getProperty_OriginalValues(uint propertyId,long long& value);
 
     virtual bool  setProperty(uint propertyId,long long value);
     virtual bool  setProperty_Packing(uint propertyId,long long value);

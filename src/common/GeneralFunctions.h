@@ -44,7 +44,7 @@ time_t      utcTimeToTimeT(std::string utcTime);
 std::string localTimeFromTimeT(time_t t,const char *tzone);
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
 std::string localTimeToUtc(std::string localTime,boost::local_time::time_zone_ptr tz);
-
+void splitTimeString(std::string timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second);
 
 std::string addSeconds(std::string timeStr,int seconds);
 

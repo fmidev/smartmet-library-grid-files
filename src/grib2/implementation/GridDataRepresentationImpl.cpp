@@ -198,7 +198,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     if (numOfValues == 0)
       return;
 
-    if (data == nullptr)
+    if (data == nullptr || dataSize == 0)
       return;
       //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
@@ -341,39 +341,10 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     }
 
 
-
-/*
-    if (!binaryScaleFactor)
-    {
-      ulonglong steps = (1 << bits);
-      double stepSize = diff / steps;
-
-      if (stepSize > 1)
-      {
-
-      }
-      else
-      {
-        while (std::pow(2.0, E) > stepSize)
-          E--;
-      }
-    }
-    else
-    {
-      E = *binaryScaleFactor;
-    }
-*/
-
-
-    //printf("*** MIN %f  MAX %f\n",minValue,maxValue);
     if (missingCount > 0)
     {
       // Bitmap required
     }
-
-
-
-
 
     //printf("R = %f  E = %d  D = %d  Bits = %u\n",R,E,D,bits);
 
@@ -386,6 +357,8 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     const double EDfac = Efac * Dfac;
 
     uint totalBits = (valueCount * bits);
+
+    //printf("--- totalBits = %u  %u  %u  %u\n",totalBits,valueCount,bits,missingCount);
 
     uint dataSize = totalBits / 8;
     if ((totalBits % 8) != 0)
@@ -418,25 +391,19 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     }
     else
     {
+      //printf("**** Create DataSection %u\n",dataSize);
       dataSection->setData(data,dataSize);
     }
+
+    RepresentSect_sptr repSect = message->getRepresentationSection();
+    if (repSect)
+      repSect->setNumberOfValues(values.size());
 
 
     mPacking.setReferenceValue(R);
     mPacking.setBinaryScaleFactor(E);
     mPacking.setDecimalScaleFactor(D);
     mPacking.setBitsPerValue(bits);
-
-/*
-    uint idx = message->getMessageIndex();
-
-    char filename[100];
-    sprintf(filename,"/tmp/data_%04d.dat",idx);
-    FILE *file = fopen(filename,"we");
-    fwrite(data,dataSize,1,file);
-    fclose(file);
-    delete data;
-*/
   }
   catch (...)
   {

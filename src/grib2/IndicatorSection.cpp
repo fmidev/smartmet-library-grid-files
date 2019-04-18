@@ -123,6 +123,22 @@ void IndicatorSection::setMessagePtr(Message *message)
 
 
 
+bool IndicatorSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool IndicatorSection::setProperty(uint propertyId,long long value)
 {
   try

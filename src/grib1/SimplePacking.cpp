@@ -391,12 +391,10 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
       bits = bitsPerValue;
     }
 
-
     if (missingCount > 0)
     {
       // Bitmap required
     }
-
 
 
     //printf("R = %f  E = %d  D = %d  Bits = %u\n",R,E,D,bits);
@@ -434,37 +432,10 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
     DataSect_sptr dataSection = message->getDataSection();
 
     if (dataSection)
-      dataSection->setData(data,dataSize);
-    /*
-    if (!dataSection)
-    {
-      DataSection *section = new DataSection();
-      section->setMessagePtr(message);
-      section->setData(data,dataSize);
-      message->setDataSection(section);
-    }
-    else
     {
       dataSection->setData(data,dataSize);
+      dataSection->setReferenceValue(R);
     }
-    */
-
-/*
-    mPacking.setReferenceValue(R);
-    mPacking.setBinaryScaleFactor(E);
-    mPacking.setDecimalScaleFactor(D);
-    mPacking.setBitsPerValue(bits);
-*/
-/*
-    uint idx = message->getMessageIndex();
-
-    char filename[100];
-    sprintf(filename,"/tmp/data_%04d.dat",idx);
-    FILE *file = fopen(filename,"we");
-    fwrite(data,dataSize,1,file);
-    fclose(file);
-    delete data;
-*/
   }
   catch (...)
   {

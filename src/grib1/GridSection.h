@@ -96,12 +96,15 @@ class GridSection : public GRID::MessageSection
     T::GridProjection     getGridProjection() const;
     std::string           getGridProjectionString() const;
     T::SpatialRef*        getSpatialReference() const;
+    void                  initSpatialReference();
     bool                  isGridGlobal() const;
     bool                  reverseXDirection() const;
     bool                  reverseYDirection() const;
 
     void                  setGridGeometryId(T::GeometryId geometryId);
     void                  setMessagePtr(Message *message);
+
+    bool                  getProperty(uint propertyId,long long& value);
 
     bool                  setProperty(uint propertyId,long long value);
     bool                  setProperty(uint propertyId,double value);

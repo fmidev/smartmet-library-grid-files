@@ -95,6 +95,28 @@ void IndicatorSection::getAttributeList(std::string prefix,T::AttributeList& att
 
 
 
+bool IndicatorSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::IndicatorSection::EditionNumber:
+        value = mEditionNumber;
+        return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool IndicatorSection::setProperty(uint propertyId,long long value)
 {
   try

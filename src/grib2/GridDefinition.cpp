@@ -271,30 +271,254 @@ void GridDefinition::setGridGeometryId(T::GeometryId geometryId)
 
 
 
+bool GridDefinition::getProperty(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (getProperty_EarthShape(propertyId,value))
+      return true;
+
+    if (getProperty_Grid(propertyId,value))
+      return true;
+
+    if (getProperty_Rotation(propertyId,value))
+      return true;
+
+    if (getProperty_LatLon(propertyId,value))
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty_EarthShape(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    EarthShapeSettings *earthShape = getEarthShape();
+    if (earthShape == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::EarthShape::ShapeOfTheEarth:
+        value = *earthShape->getShapeOfTheEarth();
+        return true;
+
+      case Property::GridSection::EarthShape::ScaleFactorOfRadiusOfSphericalEarth:
+        value = *earthShape->getScaleFactorOfRadiusOfSphericalEarth();
+        return true;
+
+      case Property::GridSection::EarthShape::ScaledValueOfRadiusOfSphericalEarth:
+        value = *earthShape->getScaledValueOfRadiusOfSphericalEarth();
+        return true;
+
+      case Property::GridSection::EarthShape::ScaleFactorOfEarthMajorAxis:
+        value = *earthShape->getScaleFactorOfEarthMajorAxis();
+        return true;
+
+      case Property::GridSection::EarthShape::ScaledValueOfEarthMajorAxis:
+        value = *earthShape->getScaledValueOfEarthMajorAxis();
+        return true;
+
+      case Property::GridSection::EarthShape::ScaleFactorOfEarthMinorAxis:
+        value = *earthShape->getScaleFactorOfEarthMinorAxis();
+        return true;
+
+      case Property::GridSection::EarthShape::ScaledValueOfEarthMinorAxis:
+        value = *earthShape->getScaledValueOfEarthMinorAxis();
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty_Grid(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    LatLonSettings *latlon = getLatLon();
+    if (latlon == nullptr)
+      return false;
+
+    GridSettings *grid = latlon->getGrid();
+    if (grid == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::Grid::Ni:
+        value = *grid->getNi();
+        return true;
+
+      case Property::GridSection::Grid::Nj:
+        value = *grid->getNj();
+        return true;
+
+      case Property::GridSection::Grid::BasicAngleOfTheInitialProductionDomain:
+        value = *grid->getBasicAngleOfTheInitialProductionDomain();
+        return true;
+
+      case Property::GridSection::Grid::SubdivisionsOfBasicAngle:
+        value = *grid->getSubdivisionsOfBasicAngle();
+        return true;
+
+      case Property::GridSection::Grid::LatitudeOfFirstGridPoint:
+        value = *grid->getLatitudeOfFirstGridPoint();
+        return true;
+
+      case Property::GridSection::Grid::LongitudeOfFirstGridPoint:
+        value = *grid->getLongitudeOfFirstGridPoint();
+        return true;
+
+      case Property::GridSection::Grid::LatitudeOfLastGridPoint:
+        value = *grid->getLatitudeOfLastGridPoint();
+        return true;
+
+      case Property::GridSection::Grid::LongitudeOfLastGridPoint:
+        value = *grid->getLongitudeOfLastGridPoint();
+        return true;
+
+      case Property::GridSection::Grid::ResolutionAndComponentFlags:
+      {
+        ResolutionSettings *resolution = grid->getResolution();
+        if (resolution != nullptr)
+        {
+          value = resolution->getResolutionAndComponentFlags();
+          return true;
+        }
+        return false;
+      }
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty_Rotation(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    RotationSettings *rotation = getRotation();
+    if (rotation == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::Rotation::LatitudeOfSouthernPole:
+        value = *rotation->getLatitudeOfSouthernPole();
+        return true;
+
+      case Property::GridSection::Rotation::LongitudeOfSouthernPole:
+        value = *rotation->getLongitudeOfSouthernPole();
+        return true;
+
+      case Property::GridSection::Rotation::AngleOfRotation:
+        value = rotation->getAngleOfRotation();
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty_LatLon(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    LatLonSettings *latlon = getLatLon();
+    if (latlon == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::LatLon::IDirectionIncrement:
+        value = *latlon->getIDirectionIncrement();
+        return true;
+
+      case Property::GridSection::LatLon::JDirectionIncrement:
+        value = *latlon->getJDirectionIncrement();
+        return true;
+
+      case Property::GridSection::LatLon::ScanningMode:
+      {
+        ScanningModeSettings *scanningMode = latlon->getScanningMode();
+        if (scanningMode != nullptr)
+        {
+          value = scanningMode->getScanningMode();
+          return true;
+        }
+        return false;
+      }
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
 bool GridDefinition::setProperty(uint propertyId,long long value)
 {
   FUNCTION_TRACE
   try
   {
-    if (propertyId >= Property::GridSection::EarthShape::FirstProperty  &&  propertyId <= Property::GridSection::EarthShape::LastProperty)
-    {
-      return setProperty_EarthShape(propertyId,value);
-    }
+    if (setProperty_EarthShape(propertyId,value))
+      return true;
 
-    if (propertyId >= Property::GridSection::Grid::FirstProperty  &&  propertyId <= Property::GridSection::Grid::LastProperty)
-    {
-      return setProperty_Grid(propertyId,value);
-    }
+    if (setProperty_Grid(propertyId,value))
+      return true;
 
-    if (propertyId >= Property::GridSection::Rotation::FirstProperty  &&  propertyId <= Property::GridSection::Rotation::LastProperty)
-    {
-      return setProperty_Rotation(propertyId,value);
-    }
+    if (setProperty_Rotation(propertyId,value))
+      return true;
 
-    if (propertyId >= Property::GridSection::LatLon::FirstProperty  &&  propertyId <= Property::GridSection::LatLon::LastProperty)
-    {
-      return setProperty_LatLon(propertyId,value);
-    }
+    if (setProperty_LatLon(propertyId,value))
+      return true;
 
     return false;
   }

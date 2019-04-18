@@ -134,6 +134,40 @@ void GridSection::getAttributeList(std::string prefix,T::AttributeList& attribut
 
 
 
+bool GridSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->getProperty(propertyId,value);
+
+    switch (propertyId)
+    {
+      case Property::GridSection::NumberOfVerticalCoordinateValues:
+        value = mNumberOfVerticalCoordinateValues;
+        return true;
+
+      case Property::GridSection::PvlLocation:
+        value = mPvlLocation;
+        return true;
+
+      case Property::GridSection::DataRepresentationType:
+        value = mDataRepresentationType;
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool GridSection::setProperty(uint propertyId,long long value)
 {
   try
@@ -995,6 +1029,23 @@ T::GridLayout GridSection::getGridLayout() const
       throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLayout();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::initSpatialReference()
+{
+  try
+  {
+    if (mGridDefinition != nullptr)
+      mGridDefinition->initSpatialReference();
   }
   catch (...)
   {

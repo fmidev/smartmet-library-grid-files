@@ -3,6 +3,7 @@
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../grid/PrintOptions.h"
+#include "../Properties.h"
 
 #include <iostream>
 
@@ -191,6 +192,9 @@ T::Coordinate_vec MercatorImpl::getGridCoordinates() const
     if (!mNi || !mNj)
       return coordinateList;
 
+    if (mCt_latlon2mercator == nullptr)
+      return coordinateList;
+
     uint ni = (*mNi);
     uint nj = (*mNj);
 
@@ -281,6 +285,9 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     if (!mNi || !mNj)
       return false;
 
+    if (mCt_latlon2mercator == nullptr)
+      return false;
+
     uint ni = (*mNi);
     uint nj = (*mNj);
 
@@ -315,6 +322,73 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     grid_j = j;
 
     return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool MercatorImpl::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::Mercator::Ni:
+        setNi(value);
+        return true;
+
+      case Property::GridSection::Mercator::Nj:
+        setNj(value);
+        return true;
+
+      case Property::GridSection::Mercator::LatitudeOfFirstGridPoint:
+        setLatitudeOfFirstGridPoint(value);
+        return true;
+
+      case Property::GridSection::Mercator::LongitudeOfFirstGridPoint:
+        setLongitudeOfFirstGridPoint(value);
+        return true;
+
+      case Property::GridSection::Mercator::LaD:
+        setLaD(value);
+        return true;
+
+      case Property::GridSection::Mercator::LatitudeOfLastGridPoint:
+        setLatitudeOfLastGridPoint(value);
+        return true;
+
+      case Property::GridSection::Mercator::LongitudeOfLastGridPoint:
+        setLongitudeOfLastGridPoint(value);
+        return true;
+
+      case Property::GridSection::Mercator::OrientationOfTheGrid:
+        setOrientationOfTheGrid(value);
+        return true;
+
+      case Property::GridSection::Mercator::Di:
+        setDi(value);
+        return true;
+
+      case Property::GridSection::Mercator::Dj:
+        setDj(value);
+        return true;
+
+      case Property::GridSection::Mercator::ResolutionAndComponentFlags:
+        mResolution.setResolutionAndComponentFlags(value);
+        return true;
+
+      case Property::GridSection::Mercator::ScanningMode:
+        mScanningMode.setScanningMode(value);
+        return true;
+    }
+
+    return GridDefinition::setProperty(propertyId,value);
   }
   catch (...)
   {
@@ -457,6 +531,9 @@ void MercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
       // ### Printing coordinates close to the grid corners.
 
       if (!mNi || !mNj)
+        return;
+
+      if (mCt_latlon2mercator == nullptr)
         return;
 
       int nx = C_INT(*mNi);

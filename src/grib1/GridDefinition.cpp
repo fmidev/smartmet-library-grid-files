@@ -583,11 +583,338 @@ bool GridDefinition::isGridGlobal() const
 
 
 
+GridAreaSettings* GridDefinition::getGridArea() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+ScanningModeSettings* GridDefinition::getScanningMode() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+ResolutionFlagsSettings* GridDefinition::getResolutionFlags() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+RotationSettings* GridDefinition::getRotation() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (getProperty_gridArea(propertyId,value))
+      return true;
+
+    if (getProperty_scanningMode(propertyId,value))
+      return true;
+
+    if (getProperty_resolutionFlags(propertyId,value))
+      return true;
+
+    if (getProperty_rotation(propertyId,value))
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty(uint propertyId,double& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (getProperty_rotation(propertyId,value))
+      return true;
+
+    long long val = 0;
+    if (getProperty_gridArea(propertyId,val))
+    {
+      value = val;
+      return true;
+    }
+
+    if (getProperty_scanningMode(propertyId,val))
+    {
+      value = val;
+      return true;
+    }
+
+    if (getProperty_resolutionFlags(propertyId,val))
+    {
+      value = val;
+      return true;
+    }
+
+    if (getProperty_rotation(propertyId,val))
+    {
+      value = val;
+      return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty_gridArea(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    GridAreaSettings *gridArea = getGridArea();
+    if (gridArea == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::GridArea::LatitudeOfFirstGridPoint:
+        value = gridArea->getLatitudeOfFirstGridPoint();
+        return true;
+
+      case Property::GridSection::GridArea::LongitudeOfFirstGridPoint:
+        value = gridArea->getLongitudeOfFirstGridPoint();
+        return true;
+
+      case Property::GridSection::GridArea::LatitudeOfLastGridPoint:
+        value = gridArea->getLatitudeOfLastGridPoint();
+        return true;
+
+      case Property::GridSection::GridArea::LongitudeOfLastGridPoint:
+        value = gridArea->getLongitudeOfLastGridPoint();
+        return true;
+
+      case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
+      {
+        auto resolutionFlags = gridArea->getResolutionFlags();
+        if (resolutionFlags)
+          value = resolutionFlags->getResolutionAndComponentFlags();
+        return true;
+      }
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty_scanningMode(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    ScanningModeSettings* scanningMode = getScanningMode();
+    if (scanningMode == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::ScanningMode::ScanMode:
+        value = scanningMode->getScanningMode();
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty_resolutionFlags(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    ResolutionFlagsSettings *resolutionFlags = getResolutionFlags();
+    if (resolutionFlags == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
+        value = resolutionFlags->getResolutionAndComponentFlags();
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty_rotation(uint propertyId,long long& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    RotationSettings *rotation = getRotation();
+    if (rotation == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::Rotation::LatitudeOfSouthernPole:
+        value = rotation->getLatitudeOfSouthernPole();
+        return true;
+
+      case Property::GridSection::Rotation::LongitudeOfSouthernPole:
+        value = rotation->getLongitudeOfSouthernPole();
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getProperty_rotation(uint propertyId,double& value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    RotationSettings *rotation = getRotation();
+    if (rotation == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::Rotation::LatitudeOfSouthernPole:
+        value = rotation->getLatitudeOfSouthernPole();
+        return true;
+
+      case Property::GridSection::Rotation::LongitudeOfSouthernPole:
+        value = rotation->getLongitudeOfSouthernPole();
+        return true;
+
+      case Property::GridSection::Rotation::AngleOfRotationInDegrees:
+        value = rotation->getGeography_angleOfRotationInDegrees();
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
 bool GridDefinition::setProperty(uint propertyId,long long value)
 {
   FUNCTION_TRACE
   try
   {
+    if (setProperty_gridArea(propertyId,value))
+      return true;
+
+    if (setProperty_scanningMode(propertyId,value))
+      return true;
+
+    if (setProperty_resolutionFlags(propertyId,value))
+      return true;
+
+    if (setProperty_rotation(propertyId,value))
+      return true;
+
     return false;
   }
   catch (...)
@@ -605,43 +932,16 @@ bool GridDefinition::setProperty(uint propertyId,double value)
   FUNCTION_TRACE
   try
   {
-    return false;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
+    if (setProperty_gridArea(propertyId,value))
+      return true;
 
+    if (setProperty_scanningMode(propertyId,value))
+      return true;
 
+    if (setProperty_resolutionFlags(propertyId,value))
+      return true;
 
-
-
-bool GridDefinition::setProperty_gridArea(GridAreaSettings& gridArea,uint propertyId,long long value)
-{
-  FUNCTION_TRACE
-  try
-  {
-    switch (propertyId)
-    {
-      case Property::GridSection::GridArea::LatitudeOfFirstGridPoint:
-        gridArea.setLatitudeOfFirstGridPoint(value);
-        return true;
-
-      case Property::GridSection::GridArea::LongitudeOfFirstGridPoint:
-        gridArea.setLongitudeOfFirstGridPoint(value);
-        return true;
-
-      case Property::GridSection::GridArea::LatitudeOfLastGridPoint:
-        gridArea.setLatitudeOfLastGridPoint(value);
-        return true;
-
-      case Property::GridSection::GridArea::LongitudeOfLastGridPoint:
-        gridArea.setLongitudeOfLastGridPoint(value);
-        return true;
-    }
-
-    if (setProperty_resolutionFlags(*gridArea.getResolutionFlags(),propertyId,value))
+    if (setProperty_rotation(propertyId,value))
       return true;
 
     return false;
@@ -656,15 +956,67 @@ bool GridDefinition::setProperty_gridArea(GridAreaSettings& gridArea,uint proper
 
 
 
-bool GridDefinition::setProperty_scanningMode(ScanningModeSettings& scanningMode,uint propertyId,long long value)
+bool GridDefinition::setProperty_gridArea(uint propertyId,long long value)
 {
   FUNCTION_TRACE
   try
   {
+    GridAreaSettings *gridArea = getGridArea();
+    if (gridArea == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::GridArea::LatitudeOfFirstGridPoint:
+        gridArea->setLatitudeOfFirstGridPoint(value);
+        return true;
+
+      case Property::GridSection::GridArea::LongitudeOfFirstGridPoint:
+        gridArea->setLongitudeOfFirstGridPoint(value);
+        return true;
+
+      case Property::GridSection::GridArea::LatitudeOfLastGridPoint:
+        gridArea->setLatitudeOfLastGridPoint(value);
+        return true;
+
+      case Property::GridSection::GridArea::LongitudeOfLastGridPoint:
+        gridArea->setLongitudeOfLastGridPoint(value);
+        return true;
+
+      case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
+      {
+        auto resolutionFlags = gridArea->getResolutionFlags();
+        if (resolutionFlags)
+          resolutionFlags->setResolutionAndComponentFlags(value);
+        return true;
+      }
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::setProperty_scanningMode(uint propertyId,long long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    ScanningModeSettings* scanningMode = getScanningMode();
+    if (scanningMode == nullptr)
+      return false;
+
     switch (propertyId)
     {
       case Property::GridSection::ScanningMode::ScanMode:
-        scanningMode.setScanningMode(value);
+        scanningMode->setScanningMode(value);
         return true;
     }
 
@@ -680,15 +1032,19 @@ bool GridDefinition::setProperty_scanningMode(ScanningModeSettings& scanningMode
 
 
 
-bool GridDefinition::setProperty_resolutionFlags(ResolutionFlagsSettings& resolutionFlags,uint propertyId,long long value)
+bool GridDefinition::setProperty_resolutionFlags(uint propertyId,long long value)
 {
   FUNCTION_TRACE
   try
   {
+    ResolutionFlagsSettings *resolutionFlags = getResolutionFlags();
+    if (resolutionFlags == nullptr)
+      return false;
+
     switch (propertyId)
     {
       case Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags:
-        resolutionFlags.setResolutionAndComponentFlags(value);
+        resolutionFlags->setResolutionAndComponentFlags(value);
         return true;
     }
 
@@ -699,6 +1055,76 @@ bool GridDefinition::setProperty_resolutionFlags(ResolutionFlagsSettings& resolu
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
+
+
+
+
+bool GridDefinition::setProperty_rotation(uint propertyId,long long value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    RotationSettings *rotation = getRotation();
+    if (rotation == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::Rotation::LatitudeOfSouthernPole:
+        rotation->setLatitudeOfSouthernPole(value);
+        return true;
+
+      case Property::GridSection::Rotation::LongitudeOfSouthernPole:
+        rotation->setLongitudeOfSouthernPole(value);
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::setProperty_rotation(uint propertyId,double value)
+{
+  FUNCTION_TRACE
+  try
+  {
+    RotationSettings *rotation = getRotation();
+    if (rotation == nullptr)
+      return false;
+
+    switch (propertyId)
+    {
+      case Property::GridSection::Rotation::LatitudeOfSouthernPole:
+        rotation->setLatitudeOfSouthernPole(C_INT64(value));
+        return true;
+
+      case Property::GridSection::Rotation::LongitudeOfSouthernPole:
+        rotation->setLongitudeOfSouthernPole(C_INT64(value));
+        return true;
+
+      case Property::GridSection::Rotation::AngleOfRotationInDegrees:
+        rotation->setGeography_angleOfRotationInDegrees(value);
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
 
 
 

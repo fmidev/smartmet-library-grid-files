@@ -61,6 +61,7 @@ class LocalSection : public GRID::MessageSection
     void            setMessagePtr(Message *message);
     void            setData(T::Data_ptr data,std::size_t size);
 
+    bool              getProperty(uint propertyId,long long& value);
     bool            setProperty(uint propertyId,long long value);
 
     void            read(MemoryReader& memoryReader);

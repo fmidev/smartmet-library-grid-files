@@ -167,6 +167,7 @@ class GridDef
     short             getFmiParameterInterpolationMethod(GRIB2::Message& message);
 
     bool              getGribDefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib& def);
+    bool              getGrib1DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib2& def);
     bool              getGrib2DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib2& def);
 
     GRIB1::GridDefinition*  createGrib1GridDefinition(const char *str);

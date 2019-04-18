@@ -1,4 +1,5 @@
 #include "MercatorImpl.h"
+#include "../Properties.h"
 #include "../../common/Exception.h"
 #include "../../common/GeneralFunctions.h"
 #include "../../grid/PrintOptions.h"
@@ -187,6 +188,9 @@ T::Coordinate_vec MercatorImpl::getGridCoordinates() const
   {
     T::Coordinate_vec coordinateList;
 
+    if (mCt_latlon2mercator == nullptr)
+      return coordinateList;
+
     uint ni = mNi;
     uint nj = mNj;
 
@@ -271,6 +275,9 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
 {
   try
   {
+    if (mCt_latlon2mercator == nullptr)
+      return false;
+
     uint ni = mNi;
     uint nj = mNj;
 
@@ -356,6 +363,83 @@ bool MercatorImpl::reverseYDirection() const
   }
 }
 
+
+
+
+
+bool MercatorImpl::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::Mercator::Ni:
+        value = getNi();
+        return true;
+
+      case Property::GridSection::Mercator::Nj:
+        value = getNj();
+        return true;
+
+      case Property::GridSection::Mercator::Latin:
+        value = getLatin();
+        return true;
+
+      case Property::GridSection::Mercator::DiInMetres:
+        value = getDiInMetres();
+        return true;
+
+      case Property::GridSection::Mercator::DjInMetres:
+        value = getDjInMetres();
+        return true;
+    }
+
+    return GridDefinition::getProperty(propertyId,value);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool MercatorImpl::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::Mercator::Ni:
+        setNi(value);
+        return true;
+
+      case Property::GridSection::Mercator::Nj:
+        setNj(value);
+        return true;
+
+      case Property::GridSection::Mercator::Latin:
+        setLatin(value);
+        return true;
+
+      case Property::GridSection::Mercator::DiInMetres:
+        setDiInMetres(value);
+        return true;
+
+      case Property::GridSection::Mercator::DjInMetres:
+        setDjInMetres(value);
+        return true;
+    }
+
+    return GridDefinition::setProperty(propertyId,value);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 

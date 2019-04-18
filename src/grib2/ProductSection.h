@@ -83,6 +83,7 @@ class ProductSection : public GRID::MessageSection
     void                  setProductDefinition(std::uint16_t productTemplateId);
     void                  setMessagePtr(Message *message);
 
+    bool                  getProperty(uint propertyId,long long& value);
     bool                  setProperty(uint propertyId,long long value);
 
     void                  read(MemoryReader& memoryReader);

@@ -48,8 +48,11 @@ class Message : public GRID::Message
     short               getForecastNumber() const;
 
     GribFile*           getGribFile() const;
+    uint                getGribVersion() const;
     uint                getGribCentre() const;
     uint                getGribSubCentre() const;
+    uint                getGribGeneratingProcessIdentifier() const;
+    uint                getGribTableVersion() const;
 
     T::Coordinate_vec   getGridCoordinates() const;
     T::Dimensions       getGridDimensions() const;
@@ -84,11 +87,18 @@ class Message : public GRID::Message
     T::TimeString       getReferenceTime() const;
     T::SpatialRef*      getSpatialReference() const;
     std::string         getWKT() const;
+    void                initSpatialReference();
     bool                isGridGlobal() const;
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
 
+    bool                getProperty(uint propertyId,long long& value);
+    bool                getProperty(const char *propertyName,long long& value);
+
     bool                setProperty(uint propertyId,long long value);
+    bool                setProperty(uint propertyId,double value);
+    bool                setProperty(const char *propertyName,long long value);
+    bool                setProperty(const char *propertyName,double value);
 
     void                setGribFilePtr(GribFile *gribFile);
 

@@ -61,8 +61,11 @@ class Message : public GRID::Message
     short               getForecastNumber() const;
 
     GribFile*           getGribFile() const;
+    uint                getGribVersion() const;
     uint                getGribCentre() const;
     uint                getGribSubCentre() const;
+    uint                getGribGeneratingProcessIdentifier() const;
+    uint                getGribTableVersion() const;
 
     T::Coordinate_vec   getGridCoordinates() const;
     T::GeometryId       getGridGeometryId() const;
@@ -99,11 +102,17 @@ class Message : public GRID::Message
     T::SpatialRef*      getSpatialReference() const;
     std::string         getWKT() const;
     bool                isGridGlobal() const;
+    void                initSpatialReference();
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
 
+    bool                getProperty(uint propertyId,long long& value);
+    bool                getProperty(const char *propertyName,long long& value);
+
     bool                setProperty(uint propertyId,long long value);
     bool                setProperty(uint propertyId,double value);
+    bool                setProperty(const char *propertyName,long long value);
+    bool                setProperty(const char *propertyName,double value);
 
     void                setGridGeometryId(T::GeometryId geometryId);
     void                setGridValues(T::ParamValue_vec& values);

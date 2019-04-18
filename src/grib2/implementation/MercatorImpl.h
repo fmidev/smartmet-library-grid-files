@@ -22,6 +22,8 @@ class MercatorImpl : public Mercator
     std::string       getGridGeometryString() const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
 
+    bool              setProperty(uint propertyId,long long value);
+
     void              initSpatialReference();
     void              print(std::ostream& stream,uint level,uint optionFlags) const;
     void              read(MemoryReader& memoryReader);

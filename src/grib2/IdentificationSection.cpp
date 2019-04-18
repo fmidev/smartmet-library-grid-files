@@ -192,6 +192,76 @@ void IdentificationSection::setMessagePtr(Message *message)
 
 
 
+bool IdentificationSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::IdentificationSection::Centre:
+        value = *mCentre;
+        return true;
+
+      case Property::IdentificationSection::SubCentre:
+        value = *mSubCentre;
+        return true;
+
+      case Property::IdentificationSection::TablesVersion:
+        value = *mTablesVersion;
+        return true;
+
+      case Property::IdentificationSection::LocalTablesVersion:
+        value = *mLocalTablesVersion;
+        return true;
+
+      case Property::IdentificationSection::SignificanceOfReferenceTime:
+        value = *mSignificanceOfReferenceTime;
+        return true;
+
+      case Property::IdentificationSection::Year:
+        value = *mYear;
+        return true;
+
+      case Property::IdentificationSection::Month:
+        value = *mMonth;
+        return true;
+
+      case Property::IdentificationSection::Day:
+        value = *mDay;
+        return true;
+
+      case Property::IdentificationSection::Hour:
+        value = *mHour;
+        return true;
+
+      case Property::IdentificationSection::Minute:
+        value = *mMinute;
+        return true;
+
+      case Property::IdentificationSection::Second:
+        value = *mSecond;
+        return true;
+
+      case Property::IdentificationSection::ProductionStatusOfProcessedData:
+        value = *mProductionStatusOfProcessedData;
+        return true;
+
+      case Property::IdentificationSection::TypeOfProcessedData:
+        value = *mTypeOfProcessedData;
+        return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool IdentificationSection::setProperty(uint propertyId,long long value)
 {
   try

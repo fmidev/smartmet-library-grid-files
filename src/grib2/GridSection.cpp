@@ -181,6 +181,48 @@ void GridSection::setMessagePtr(Message *message)
 
 
 
+bool GridSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::SourceOfGridDefinition:
+        value = *mSourceOfGridDefinition;
+        return true;
+
+      case Property::GridSection::NumberOfGridPoints:
+        value = *mNumberOfGridPoints;
+        return true;
+
+      case Property::GridSection::NumberOfOctetsForNumberOfPoints:
+        value = *mNumberOfOctetsForNumberOfPoints;
+        return true;
+
+      case Property::GridSection::InterpretationOfNumberOfPoints:
+        value = *mInterpretationOfNumberOfPoints;
+        return true;
+
+      case Property::GridSection::GridDefinitionTemplateNumber:
+        value = *mGridDefinitionTemplateNumber;
+        return true;
+    }
+
+    if (mGridDefinition)
+      return mGridDefinition->getProperty(propertyId,value);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool GridSection::setProperty(uint propertyId,long long value)
 {
   FUNCTION_TRACE
@@ -1152,6 +1194,23 @@ int GridSection::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
       return (grid_j * d.nx() + (grid_i % d.nx()));
     }
     return -1;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::initSpatialReference()
+{
+  try
+  {
+    if (mGridDefinition != nullptr)
+      mGridDefinition->initSpatialReference();
   }
   catch (...)
   {

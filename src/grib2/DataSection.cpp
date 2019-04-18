@@ -152,15 +152,26 @@ void DataSection::setMessagePtr(Message *message)
 
 
 
+bool DataSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool DataSection::setProperty(uint propertyId,long long value)
 {
   try
   {
-    /*
-    switch (propertyId)
-    {
-    }
-    */
     return false;
   }
   catch (...)

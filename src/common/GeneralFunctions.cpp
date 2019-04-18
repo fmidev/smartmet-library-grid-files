@@ -615,6 +615,33 @@ time_t utcTimeToTimeT(std::string utcTime)
 
 
 
+
+
+void splitTimeString(std::string timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second)
+{
+  try
+  {
+    if (timeStr.length() != 15)
+      throw SmartMet::Spine::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+
+    const char *str = timeStr.c_str();
+
+    year = getInt(str, 0, 4);
+    month = getInt(str, 4, 2);
+    day = getInt(str, 6, 2);
+    hour = getInt(str, 9, 2);
+    minute = getInt(str, 11, 2);
+    second = getInt(str, 13, 2);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
 std::string localTimeFromTimeT(time_t t, const char *tzone)
 {
   try

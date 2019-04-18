@@ -1,5 +1,6 @@
 #include "LambertConformalImpl.h"
 #include "../../common/Exception.h"
+#include "../Properties.h"
 
 namespace SmartMet
 {
@@ -409,6 +410,143 @@ bool LambertConformalImpl::reverseYDirection() const
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
+
+
+
+
+bool LambertConformalImpl::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::LambertConformal::Nx:
+        value = getNx();
+        return true;
+
+      case Property::GridSection::LambertConformal::Ny:
+        value = getNy();
+        return true;
+
+      case Property::GridSection::LambertConformal::LatitudeOfFirstGridPoint:
+        value = getLatitudeOfFirstGridPoint();
+        return true;
+
+      case Property::GridSection::LambertConformal::LongitudeOfFirstGridPoint:
+        value = getLongitudeOfFirstGridPoint();
+        return true;
+
+      case Property::GridSection::LambertConformal::LoV:
+        value = getLoV();
+        return true;
+
+      case Property::GridSection::LambertConformal::DxInMetres:
+        value = getDxInMetres();
+        return true;
+
+      case Property::GridSection::LambertConformal::DyInMetres:
+        value = getDyInMetres();
+        return true;
+
+      case Property::GridSection::LambertConformal::ProjectionCentreFlag:
+        value = getProjectionCentreFlag();
+        return true;
+
+      case Property::GridSection::LambertConformal::Latin1:
+        value = getLatin1();
+        return true;
+
+      case Property::GridSection::LambertConformal::Latin2:
+        value = getLatin2();
+        return true;
+
+      case Property::GridSection::LambertConformal::LatitudeOfSouthernPole:
+        value = getLatitudeOfSouthernPole();
+        return true;
+
+      case Property::GridSection::LambertConformal::LongitudeOfSouthernPole:
+        value = getLongitudeOfSouthernPole();
+        return true;
+
+    }
+
+    return GridDefinition::getProperty(propertyId,value);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool LambertConformalImpl::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::LambertConformal::Nx:
+        setNx(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::Ny:
+        setNy(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::LatitudeOfFirstGridPoint:
+        setLatitudeOfFirstGridPoint(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::LongitudeOfFirstGridPoint:
+        setLongitudeOfFirstGridPoint(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::LoV:
+        setLoV(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::DxInMetres:
+        setDxInMetres(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::DyInMetres:
+        setDyInMetres(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::ProjectionCentreFlag:
+        setProjectionCentreFlag(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::Latin1:
+        setLatin1(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::Latin2:
+        setLatin2(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::LatitudeOfSouthernPole:
+        setLatitudeOfSouthernPole(value);
+        return true;
+
+      case Property::GridSection::LambertConformal::LongitudeOfSouthernPole:
+        setLongitudeOfSouthernPole(value);
+        return true;
+
+    }
+
+    return GridDefinition::setProperty(propertyId,value);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
 
 
 

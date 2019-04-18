@@ -124,8 +124,23 @@ void LatLonImpl::init() const
     mStartY = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
     mStartX = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000);
 
+    double mEndY = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint()) / 1000;
+    double mEndX = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint()) / 1000);
+
     mDx = C_DOUBLE(mIDirectionIncrement) / 1000;
     mDy = C_DOUBLE(mJDirectionIncrement) / 1000;
+
+    auto rs = mGridArea.getResolutionFlags();
+    if (rs != nullptr)
+    {
+      std::uint8_t flags = rs->getResolutionAndComponentFlags();
+      if ((flags & 0x80) == 0)
+      {
+        // direction increments not given
+        mDx = (mEndX-mStartX)/mNi;
+        mDy = (mEndY-mStartY)/mNj;
+      }
+    }
 
     unsigned char scanMode = mScanningMode.getScanningMode();
 
@@ -562,6 +577,41 @@ bool LatLonImpl::reverseYDirection() const
 
 
 
+bool LatLonImpl::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::LatLon::Ni:
+        value = getNi();
+        return true;
+
+      case Property::GridSection::LatLon::Nj:
+        value = getNj();
+        return true;
+
+      case Property::GridSection::LatLon::IDirectionIncrement:
+        value = getIDirectionIncrement();
+        return true;
+
+      case Property::GridSection::LatLon::JDirectionIncrement:
+        value = getJDirectionIncrement();
+        return true;
+    }
+
+    return GridDefinition::setProperty(propertyId,value);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool LatLonImpl::setProperty(uint propertyId,long long value)
 {
   try
@@ -585,13 +635,7 @@ bool LatLonImpl::setProperty(uint propertyId,long long value)
         return true;
     }
 
-    if (setProperty_gridArea(mGridArea,propertyId,value))
-      return true;
-
-    if (setProperty_scanningMode(mScanningMode,propertyId,value))
-      return true;
-
-    return false;
+    return GridDefinition::setProperty(propertyId,value);
   }
   catch (...)
   {

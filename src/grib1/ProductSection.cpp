@@ -248,6 +248,120 @@ void ProductSection::setMessagePtr(Message *message)
 
 
 
+bool ProductSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::ProductSection::TableVersion:
+        value = mTableVersion;
+        return true;
+
+      case Property::ProductSection::Centre:
+        value = mCentre;
+        return true;
+
+      case Property::ProductSection::GeneratingProcessIdentifier:
+        value = mGeneratingProcessIdentifier;
+        return true;
+
+      case Property::ProductSection::GridDefinitionNumber:
+        value = mGridDefinitionNumber;
+        return true;
+
+      case Property::ProductSection::SectionFlags:
+        value = mSectionFlags;
+        return true;
+
+      case Property::ProductSection::IndicatorOfParameter:
+        value = mIndicatorOfParameter;
+        return true;
+
+      case Property::ProductSection::IndicatorOfTypeOfLevel:
+        value = mIndicatorOfTypeOfLevel;
+        return true;
+
+      case Property::ProductSection::Level:
+        value = mLevel;
+        return true;
+
+      case Property::ProductSection::YearOfCentury:
+        value = mYearOfCentury;
+        return true;
+
+      case Property::ProductSection::Month:
+        value = mMonth;
+        return true;
+
+      case Property::ProductSection::Day:
+        value = mDay;
+        return true;
+
+      case Property::ProductSection::Hour:
+        value = mHour;
+        return true;
+
+      case Property::ProductSection::Minute:
+        value = mMinute;
+        return true;
+
+      case Property::ProductSection::UnitOfTimeRange:
+        value = mUnitOfTimeRange;
+        return true;
+
+      case Property::ProductSection::P1:
+        value = mP1;
+        return true;
+
+      case Property::ProductSection::P2:
+        value = mP2;
+        return true;
+
+      case Property::ProductSection::TimeRangeIndicator:
+        value = mTimeRangeIndicator;
+        return true;
+
+      case Property::ProductSection::NumberIncludedInAverage:
+        value = mNumberIncludedInAverage;
+        return true;
+
+      case Property::ProductSection::NumberMissingFromAveragesOrAccumulations:
+        value = mNumberMissingFromAveragesOrAccumulations;
+        return true;
+
+      case Property::ProductSection::CenturyOfReferenceTimeOfData:
+        value = mCenturyOfReferenceTimeOfData;
+        return true;
+
+      case Property::ProductSection::SubCentre:
+        value = mSubCentre;
+        return true;
+
+      case Property::ProductSection::DecimalScaleFactor:
+        value = mDecimalScaleFactor;
+        return true;
+
+      case Property::ProductSection::ForecastType:
+        value = mForecastType;
+        return true;
+
+      case Property::ProductSection::ForecastNumber:
+        value = mForecastNumber;
+        return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool ProductSection::setProperty(uint propertyId,long long value)
 {
   try

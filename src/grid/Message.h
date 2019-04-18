@@ -67,8 +67,12 @@ class Message
     virtual std::string       getNewbaseParameterId() const;
     virtual std::string       getNewbaseParameterName() const;
 
+    virtual uint              getGribVersion() const;
     virtual uint              getGribCentre() const;
     virtual uint              getGribSubCentre() const;
+    virtual uint              getGribGeneratingProcessIdentifier() const;
+    virtual uint              getGribTableVersion() const;
+
     virtual T::ParamId        getGribParameterId() const;
     virtual std::string       getGribParameterName() const;
     virtual std::string       getGribParameterDescription() const;
@@ -148,6 +152,7 @@ class Message
     virtual T::TimeString     getReferenceTime() const;
     virtual T::SpatialRef*    getSpatialReference() const;
     virtual std::string       getWKT() const;
+    virtual void              initSpatialReference();
     virtual bool              isGridGlobal() const;
     virtual void              refreshIndexes(std::vector<uint>& indexes);
     virtual bool              reverseXDirection() const;
@@ -183,6 +188,8 @@ class Message
 
     virtual void              setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId);
 
+    virtual bool              getProperty(uint propertyId,long long& value);
+    virtual bool              getProperty(const char *propertyName,long long& value);
 
     virtual bool              setProperty(uint propertyId,char value);
     virtual bool              setProperty(uint propertyId,short value);
@@ -194,6 +201,17 @@ class Message
     virtual bool              setProperty(uint propertyId,unsigned long value);
     virtual bool              setProperty(uint propertyId,long long value);
     virtual bool              setProperty(uint propertyId,double value);
+
+    virtual bool              setProperty(const char *propertyName,char value);
+    virtual bool              setProperty(const char *propertyName,short value);
+    virtual bool              setProperty(const char *propertyName,int value);
+    virtual bool              setProperty(const char *propertyName,long value);
+    virtual bool              setProperty(const char *propertyName,unsigned char value);
+    virtual bool              setProperty(const char *propertyName,unsigned short value);
+    virtual bool              setProperty(const char *propertyName,unsigned int value);
+    virtual bool              setProperty(const char *propertyName,unsigned long value);
+    virtual bool              setProperty(const char *propertyName,long long value);
+    virtual bool              setProperty(const char *propertyName,double value);
 
     virtual ulonglong         getRequestCounterKey() const;
     virtual void              setPointCacheEnabled(bool enabled);

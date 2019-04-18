@@ -122,6 +122,44 @@ void DataSection::setMessagePtr(Message *message)
 
 
 
+bool DataSection::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::DataSection::Flags:
+        value = mFlags;
+        return true;
+
+      case Property::DataSection::BinaryScaleFactor:
+        value = mBinaryScaleFactor;
+        return true;
+
+      case Property::DataSection::ReferenceValue:
+        value = mReferenceValue;
+        return true;
+
+      case Property::DataSection::BitsPerValue:
+        value = mBitsPerValue;
+        return true;
+
+      case Property::DataSection::PackingMethod:
+        //value = mPackingMethod;
+        return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool DataSection::setProperty(uint propertyId,long long value)
 {
   try

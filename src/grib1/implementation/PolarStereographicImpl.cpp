@@ -363,6 +363,58 @@ bool PolarStereographicImpl::reverseYDirection() const
 
 
 
+bool PolarStereographicImpl::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::PolarStereographic::Nx:
+        value = getNx();
+        return true;
+
+      case Property::GridSection::PolarStereographic::Ny:
+        value = getNy();
+        return true;
+
+      case Property::GridSection::PolarStereographic::LatitudeOfFirstGridPoint:
+        value = getLatitudeOfFirstGridPoint();
+        return true;
+
+      case Property::GridSection::PolarStereographic::LongitudeOfFirstGridPoint:
+        value = getLongitudeOfFirstGridPoint();
+        return true;
+
+      case Property::GridSection::PolarStereographic::OrientationOfTheGrid:
+        value = getOrientationOfTheGrid();
+        return true;
+
+      case Property::GridSection::PolarStereographic::DxInMetres:
+        value = getDxInMetres();
+        return true;
+
+      case Property::GridSection::PolarStereographic::DyInMetres:
+        value = getDyInMetres();
+        return true;
+
+      case Property::GridSection::PolarStereographic::ProjectionCentreFlag:
+        value = getProjectionCentreFlag();
+        return true;
+    }
+
+    return GridDefinition::getProperty(propertyId,value);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
 bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
 {
   try
@@ -402,13 +454,7 @@ bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
         return true;
     }
 
-    if (setProperty_resolutionFlags(mResolutionFlags,propertyId,value))
-      return true;
-
-    if (setProperty_scanningMode(mScanningMode,propertyId,value))
-      return true;
-
-    return false;
+    return GridDefinition::setProperty(propertyId,value);
   }
   catch (...)
   {

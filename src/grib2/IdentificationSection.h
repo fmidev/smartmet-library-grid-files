@@ -105,6 +105,7 @@ class IdentificationSection : public GRID::MessageSection
     void            setTypeOfProcessedData(T::UInt8_opt typeOfProcessedData);
     void            setMessagePtr(Message *message);
 
+    bool            getProperty(uint propertyId,long long& value);
     bool            setProperty(uint propertyId,long long value);
 
     void            read(MemoryReader& memoryReader);

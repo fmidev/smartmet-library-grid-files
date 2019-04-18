@@ -214,6 +214,9 @@ T::Coordinate_vec PolarStereographicImpl::getGridCoordinates() const
     if (!mNx || !mNy)
       return coordinateList;
 
+    if (mCt_latlon2pst == nullptr)
+      return coordinateList;
+
     uint nx = (*mNx);
     uint ny = (*mNy);
 
@@ -362,6 +365,9 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
     if (!mNx || !mNy)
       return false;
 
+    if (mCt_latlon2pst == nullptr)
+      return false;
+
     uint nx = (*mNx);
     uint ny = (*mNy);
 
@@ -413,6 +419,9 @@ bool PolarStereographicImpl::getGridOriginalCoordinatesByGridPosition(double gri
   try
   {
     if (!mNx || !mNy)
+      return false;
+
+    if (mCt_latlon2pst == nullptr)
       return false;
 
     uint nx = (*mNx);
@@ -627,6 +636,9 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
       T::Coordinate_vec coordinateList = getGridCoordinates();
 
       if (!mNx || !mNy)
+        return;
+
+      if (mCt_pst2latlon == nullptr)
         return;
 
       int nx = C_INT(*mNx);

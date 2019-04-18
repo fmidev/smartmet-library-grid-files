@@ -1,4 +1,5 @@
 #include "RotatedLatLonImpl.h"
+#include "../Properties.h"
 #include "../../common/Exception.h"
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
@@ -61,10 +62,27 @@ void RotatedLatLonImpl::init() const
 
     mSouthPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
     mSouthPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+
     mStartY = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
     mStartX = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
+
+    double mEndY = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint()) / 1000000;
+    double mEndX = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint()) / 1000000);
+
     mDx = C_DOUBLE(mIDirectionIncrement) / 1000;
     mDy = C_DOUBLE(mJDirectionIncrement) / 1000;
+
+    auto rs = mGridArea.getResolutionFlags();
+    if (rs != nullptr)
+    {
+      std::uint8_t flags = rs->getResolutionAndComponentFlags();
+      if ((flags & 0x80) == 0)
+      {
+        // direction increments not given
+        mDx = (mEndX-mStartX)/mNi;
+        mDy = (mEndY-mStartY)/mNj;
+      }
+    }
 
     unsigned char scanMode = mScanningMode.getScanningMode();
 
@@ -766,6 +784,94 @@ bool RotatedLatLonImpl::reverseYDirection() const
       return true;
 
     return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+bool RotatedLatLonImpl::getProperty(uint propertyId,long long& value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::RotatedLatLon::Ni:
+        value = getNi();
+        return true;
+
+      case Property::GridSection::RotatedLatLon::Nj:
+        value = getNj();
+        return true;
+
+      case Property::GridSection::RotatedLatLon::IDirectionIncrement:
+        value = getIDirectionIncrement();
+        return true;
+
+      case Property::GridSection::RotatedLatLon::JDirectionIncrement:
+        value = getJDirectionIncrement();
+        return true;
+    }
+
+    return GridDefinition::getProperty(propertyId,value);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool RotatedLatLonImpl::setProperty(uint propertyId,long long value)
+{
+  try
+  {
+    switch (propertyId)
+    {
+      case Property::GridSection::RotatedLatLon::Ni:
+        setNi(value);
+        return true;
+
+      case Property::GridSection::RotatedLatLon::Nj:
+        setNj(value);
+        return true;
+
+      case Property::GridSection::RotatedLatLon::IDirectionIncrement:
+        setIDirectionIncrement(value);
+        return true;
+
+      case Property::GridSection::RotatedLatLon::JDirectionIncrement:
+        setJDirectionIncrement(value);
+        return true;
+    }
+
+    return GridDefinition::setProperty(propertyId,value);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool RotatedLatLonImpl::setProperty(uint propertyId,double value)
+{
+  try
+  {
+    if (setProperty(propertyId,C_INT64(value)))
+      return true;
+
+    return GridDefinition::setProperty(propertyId,value);
   }
   catch (...)
   {
