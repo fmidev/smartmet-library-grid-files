@@ -361,7 +361,7 @@ T::Coordinate_vec Message::getGridCoordinates() const
 
 
 
-void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::WkbData_vec& contours)
+void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
   try
@@ -430,7 +430,7 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
 
 
 
-void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::WkbData_vec& contours)
+void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
   try
@@ -517,7 +517,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
 
 
-void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::WkbData_vec& contours)
+void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
   try
@@ -582,7 +582,7 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
 
 
 
-void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::WkbData_vec& contours)
+void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
   try
@@ -651,7 +651,7 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
 
 
 
-void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::WkbData_vec& contours)
+void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
   try
@@ -854,7 +854,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
 
 
-void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::WkbData_vec& contours)
+void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
   try

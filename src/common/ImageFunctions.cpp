@@ -1642,7 +1642,7 @@ void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,
 
 
 
-void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::WkbData& _wkb,uint _color)
+void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::ByteData& _wkb,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -1670,7 +1670,7 @@ void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,
 
 
 
-void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::WkbData_vec& _wkbVec,uint _color)
+void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::ByteData_vec& _wkbVec,uint _color)
 {
   FUNCTION_TRACE
   try

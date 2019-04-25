@@ -24,8 +24,8 @@ class ImagePaint
 
     void    paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader,uint _color);
     void    paintWkb(double _mpx,double _mpy,double _dx,double _dy,uchar *_wkb,uint _size,uint _color);
-    void    paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::WkbData& _wkb,uint _color);
-    void    paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::WkbData_vec& _wkbVec,uint _color);
+    void    paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteData& _wkb,uint _color);
+    void    paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteData_vec& _wkbVec,uint _color);
 
     void    saveJpgImage(const char *_filename);
     void    savePngImage(const char *_filename);

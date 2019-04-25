@@ -754,7 +754,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,uchar *_
 
 
 
-void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::WkbData& _wkb,uint _color)
+void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteData& _wkb,uint _color)
 {
   FUNCTION_TRACE
   try
@@ -782,7 +782,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::WkbDa
 
 
 
-void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::WkbData_vec& _wkbVec,uint _color)
+void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteData_vec& _wkbVec,uint _color)
 {
   FUNCTION_TRACE
   try

@@ -69,7 +69,7 @@ void getIsolines(
     short interpolationMethod,
     size_t smooth_size,
     size_t smooth_degree,
-    T::WkbData_vec& contours);
+    T::ByteData_vec& contours);
 
 void getIsobands(
     std::vector<float>& gridData,
@@ -81,17 +81,17 @@ void getIsobands(
     short interpolationMethod,
     size_t smooth_size,
     size_t smooth_degree,
-    T::WkbData_vec& contours);
+    T::ByteData_vec& contours);
 
 /*
 void convertWkbCoordinates(
-    T::WkbData& _wkb,
-    T::WkbData& _newWkb,
+    T::ByteData& _wkb,
+    T::ByteData& _newWkb,
     OGRCoordinateTransformation& _transformation);
 
 void convertWkbCoordinates(
-    T::WkbData_vec& _wkbVec,
-    T::WkbData_vec& _newWkbVec,
+    T::ByteData_vec& _wkbVec,
+    T::ByteData_vec& _newWkbVec,
     OGRCoordinateTransformation& _transformation);
 */
 

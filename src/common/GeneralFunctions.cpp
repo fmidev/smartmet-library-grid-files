@@ -2236,11 +2236,11 @@ void getFileList(const char *dirName,
       return;
     }
 
-    struct dirent entry;
-    struct dirent *ep = nullptr;
+    bool ind = true;
 
-    while (readdir_r(dp, &entry, &ep) == 0 && ep != nullptr)
+    while (ind)
     {
+      struct dirent *ep = readdir(dp);
       if (ep != nullptr)
       {
         char fullName[2000];
@@ -2273,6 +2273,10 @@ void getFileList(const char *dirName,
             }
           }
         }
+      }
+      else
+      {
+        ind = false;
       }
     }
     closedir(dp);

@@ -4708,7 +4708,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           if (c >= 15)
             laD = C_INT(round(toDouble(field[15])*1000000));
 
-            GRIB2::LambertConformalImpl *def2 = new GRIB2::LambertConformalImpl();
+          GRIB2::LambertConformalImpl *def2 = new GRIB2::LambertConformalImpl();
           GRIB2::ScanningModeSettings scanningMode2;
 
           if (strcasecmp(scanningMode,"+x+y") == 0)

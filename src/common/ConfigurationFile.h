@@ -41,6 +41,7 @@ class ConfigurationFile
     bool          getAttributeValue(const char *attributeName,std::vector<std::string>& attributeValueVec);
 
     bool          getAttributeFields(const char *attributeName,std::set<std::string>& attributeFields);
+    bool          getSubAttributes(const char *attributeName,std::vector<std::string>& attributeNames);
     std::string   getFilename();
 
     void          setAttributeValue(const char *attributeName,std::string& attributeValue);
@@ -60,7 +61,7 @@ class ConfigurationFile
     void          setPositions(char *st,unsigned long long *positions,int len);
     void          getWords(char *st,unsigned long long *positions,std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions);
     int           readValue(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path);
-    int           readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path);
+    int           readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path,int index);
 
   public:
 

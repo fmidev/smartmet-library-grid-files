@@ -27,7 +27,7 @@ namespace SmartMet
 {
 
 
-std::vector<std::pair<long long,T::WkbData>> wkbCache;
+std::vector<std::pair<long long,T::ByteData>> wkbCache;
 ThreadLock wkbCacheThreadLock;
 
 
@@ -1166,7 +1166,7 @@ typedef Tron::Hints<SimpleDataMatrixAdapter, MyTraits> MyHints;
 
 
 
-void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int width,int height,std::vector<float>& contourValues,short interpolationMethod,size_t smooth_size,size_t smooth_degree,T::WkbData_vec& contours)
+void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int width,int height,std::vector<float>& contourValues,short interpolationMethod,size_t smooth_size,size_t smooth_degree,T::ByteData_vec& contours)
 {
   try
   {
@@ -1208,7 +1208,7 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
     for (size_t c = 0; c<len; c++)
     {
       double isovalue = contourValues[c];
-      T::WkbData wkbData;
+      T::ByteData wkbData;
 
       if (isovalue >= minValue  &&  isovalue <= maxValue)
       {
@@ -1264,7 +1264,7 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
 
 
 
-void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordinates,int width,int height,std::vector<float>& contourLowValues,std::vector<float>& contourHighValues,short interpolationMethod,size_t smooth_size,size_t smooth_degree,T::WkbData_vec& contours)
+void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordinates,int width,int height,std::vector<float>& contourLowValues,std::vector<float>& contourHighValues,short interpolationMethod,size_t smooth_size,size_t smooth_degree,T::ByteData_vec& contours)
 {
   try
   {
@@ -1348,7 +1348,7 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
 
       if (!found)
       {
-        T::WkbData wkbData;
+        T::ByteData wkbData;
 
 
         if (high >= minValue && low <= maxValue)
@@ -1397,7 +1397,7 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
         if (wkbCache.size() >= 5000)
           wkbCache.erase(wkbCache.begin(), wkbCache.begin() + 1000);
 
-        wkbCache.push_back(std::pair<long long,T::WkbData>(hh,wkbData));
+        wkbCache.push_back(std::pair<long long,T::ByteData>(hh,wkbData));
       }
     }
   }
@@ -1651,7 +1651,7 @@ void convertWkbCoordinates(MemoryReader& _memoryReader,MemoryWriter& _memoryWrit
 
 
 
-void convertWkbCoordinates(T::WkbData& _wkb,T::WkbData& _newWkb,OGRCoordinateTransformation& _transformation)
+void convertWkbCoordinates(T::ByteData& _wkb,T::ByteData& _newWkb,OGRCoordinateTransformation& _transformation)
 {
   FUNCTION_TRACE
   try
@@ -1686,14 +1686,14 @@ void convertWkbCoordinates(T::WkbData& _wkb,T::WkbData& _newWkb,OGRCoordinateTra
 
 
 
-void convertWkbCoordinates(T::WkbData_vec& _wkbVec,T::WkbData_vec& _newWkbVec,OGRCoordinateTransformation& _transformation)
+void convertWkbCoordinates(T::ByteData_vec& _wkbVec,T::ByteData_vec& _newWkbVec,OGRCoordinateTransformation& _transformation)
 {
   FUNCTION_TRACE
   try
   {
     for (auto it = _wkbVec.begin(); it != _wkbVec.end(); ++ it)
     {
-      T::WkbData newWkb;
+      T::ByteData newWkb;
       convertWkbCoordinates(*it,newWkb,_transformation);
       _newWkbVec.push_back(newWkb);
     }

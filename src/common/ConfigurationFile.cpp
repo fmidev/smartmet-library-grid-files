@@ -194,7 +194,7 @@ void ConfigurationFile::readFile(std::string filename)
       int pos = 0;
       while (pos < len)
       {
-        pos = readAttribute(wordList,wordPositions,len,pos,path);
+        pos = readAttribute(wordList,wordPositions,len,pos,path,-1);
       }
     }
 
@@ -781,6 +781,48 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
 
 
 
+bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<std::string>& attributeNames)
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint len = strlen(attributeName);
+    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    {
+      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      {
+        if (attr->mName.length() == len)
+        {
+          // Attribute exists, but it does not have sub-attributes
+          return true;
+        }
+
+        if (attr->mName[len] == '.')
+        {
+          std::string itm = attr->mName.substr(len+1);
+
+          attributeNames.push_back(itm);
+        }
+      }
+    }
+
+    if (attributeNames.size() > 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Configuration file",mFilename);
+    throw exception;
+  }
+}
+
+
+
+
+
 std::string ConfigurationFile::getFilename()
 {
   try
@@ -1227,7 +1269,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
       pos++;
       while (pos < len  &&  words[pos] != "}")
       {
-        pos = readAttribute(words,wordPositions,len,pos,path);
+        pos = readAttribute(words,wordPositions,len,pos,path,-1);
       }
 
       if (pos == len)
@@ -1244,19 +1286,16 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
     if (words[pos] == "(")
     {
       T::Attribute attr;
-      attr.mName = path + "[]";
+      attr.mName = path + "()";
       attr.mValue = "";
       mAttributeList.push_back(attr);
 
       int startPos = pos;
       pos++;
-      uint index = 0;
-      char tmp[1000];
+      int index = 0;
       while (pos < len  &&  words[pos] != ")")
       {
-        sprintf(tmp,"%s.%u",path.c_str(),index);
-        std::string newPath = tmp;
-        pos = readValue(words,wordPositions,len,pos,newPath);
+        pos = readAttribute(words,wordPositions,len,pos,path,index);
         index++;
 
         if (words[pos] != ","  &&  words[pos] != ")")
@@ -1266,7 +1305,6 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
           exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
           throw exception;
         }
-
         while (pos < len  &&  words[pos] == ",")
           pos++;
       }
@@ -1389,7 +1427,7 @@ void ConfigurationFile::removeAttributes(const char *pattern)
 
 
 
-int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path)
+int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path,int index)
 {
   FUNCTION_TRACE
   try
@@ -1597,10 +1635,13 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
     if ((pos+1) < len  &&  (words[pos+1] == ":" || words[pos+1] == "="))
     {
       std::string attributeName = words[pos];
-      //std::cout << "*** ATTRIBUTE " << attributeName << "\n";
       std::string newPath = attributeName;
       if (path > " ")
         newPath = path + "." + attributeName;
+
+      if (index >= 0)
+        newPath = newPath + "." + std::to_string(index);
+
       pos = readValue(words,wordPositions,len,pos+2,newPath);
       return pos;
     }

@@ -31,8 +31,8 @@ bool missing(const A& obj)
 
 namespace T
 {
-  typedef std::vector<uchar> WkbData;
-  typedef std::vector<WkbData> WkbData_vec;
+  typedef std::vector<uchar> ByteData;
+  typedef std::vector<ByteData> ByteData_vec;
 }
 
 }
