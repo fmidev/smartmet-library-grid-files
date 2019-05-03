@@ -4162,6 +4162,22 @@ void Message::refreshIndexes(std::vector<uint>& indexes)
 
 
 
+void Message::read(MemoryReader& memoryReader)
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+void Message::write(DataWriter& dataWriter)
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
 
 /*! \brief The method prints the content of the current object into the given stream.
 

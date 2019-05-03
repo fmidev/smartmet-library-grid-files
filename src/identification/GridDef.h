@@ -167,8 +167,13 @@ class GridDef
     short             getFmiParameterInterpolationMethod(GRIB2::Message& message);
 
     bool              getGribDefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib& def);
-    bool              getGrib1DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib2& def);
+    bool              getGrib1DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib1& def);
     bool              getGrib2DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib2& def);
+
+    bool              getGrib1LevelDef(uint fmiLevelId,uint generatingProcessId,uint centre,FmiLevelId_grib& def);
+    bool              getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def);
+    bool              getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def);
+
 
     GRIB1::GridDefinition*  createGrib1GridDefinition(const char *str);
     GRIB2::GridDefinition*  createGrib2GridDefinition(const char *str);
@@ -202,6 +207,7 @@ class GridDef
     Grib2ParamDef_cptr      getGrib2ParameterDefByName(std::string gribParamName);
     TimeRangeDef_cptr       getGrib2TimeRangeDef(uint timeRangeId);
     FmiParameterId_grib*    getGribDefByFmiId(T::ParamId fmiParamId);
+    FmiParameterId_grib1*   getGrib1DefByFmiId(T::ParamId fmiParamId);
     FmiParameterId_grib2*   getGrib2DefByFmiId(T::ParamId fmiParamId);
 
     void                    loadGeometryDefinitions(const char *filename);

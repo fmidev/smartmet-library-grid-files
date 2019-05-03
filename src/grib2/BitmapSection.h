@@ -63,6 +63,7 @@ class BitmapSection : public GRID::MessageSection
     long long       getHash();
     void            getIndexVector(uint numOfValues,T::IndexVector& indexVector);
 
+    void            setBitMapIndicator(uchar ind);
     void            setBitmapData(T::Data_ptr data,std::size_t size);
     void            setMessagePtr(Message *message);
 

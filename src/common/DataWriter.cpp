@@ -40,6 +40,15 @@ ulonglong DataWriter::getWritePosition()
 
 
 
+ulonglong DataWriter::getMaxWritePosition()
+{
+  throw SmartMet::Spine::Exception(BCP,"Not implemented!",nullptr);
+}
+
+
+
+
+
 void DataWriter::setLittleEndian(bool _littleEndian)
 {
   try

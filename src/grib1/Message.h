@@ -142,6 +142,7 @@ class Message : public GRID::Message
     std::size_t         getDataSize() const;
     std::size_t         getDataSizeMax() const;
 
+    void                initBitmapSection();
     void                initIndicatorSection();
     void                initDataSection();
     void                initGridSection();

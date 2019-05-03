@@ -20,3 +20,13 @@
 9;5005;name;685;765;5.940857;51.057868;3000.000000;3000.000000;+x+y;20.000000;60.000000;description
 9;5006;name;171;191;5.985607;51.104713;12017.543000;12015.707000;+x+y;20.000000;60.000000;description
 9;5007;name;171;191;5.986000;51.105000;12017.000000;12015.000000;+x+y;20.000000;60.0;description
+
+
+#Mercator
+#projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,latin,description
+7;6000;Mercator1;1044;864;95.372000;3.949000;3.000000;3.000000;+x+y;15.850000;Mercator1
+
+# LAMBERT CONFORMAL : projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,orientation,latin1,latin2,south_pole.x,south_pole.y,LaD,description
+10;7000;KOSKELAM1;349;277;214.500000;1.000000;32463.000000;32463.000000;+x+y;253.000000;50.000000;50.000000;0.000000;0.000000;50.000000;description
+10;7002;KOSKELAM2;1749;1385;214.500000;1.000000;6492.6000000;6492.6000000;+x+y;253.000000;50.000000;50.000000;0.000000;0.000000;50.000000;description
+

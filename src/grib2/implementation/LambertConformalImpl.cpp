@@ -118,15 +118,15 @@ void LambertConformalImpl::init() const
     if (rs != nullptr)
     {
       std::uint8_t flags = rs->getResolutionAndComponentFlags();
-      if ((flags & 0x20) == 0)
+      if ((flags & 0x20) == 0  &&  mLongitudeOfFirstGridPoint)
       {
-        // i direction increment not given
+        //std::cout << "i direction increment not given\n";
         mDxx = (longitudeOfLastGridPoint-longitudeOfFirstGridPoint)/(*mNx);
       }
 
-      if ((flags & 0x10) == 0)
+      if ((flags & 0x10) == 0  &&  latitudeOfLastGridPoint)
       {
-        // j direction increment not given
+        //std::cout << "j direction increment not given\n";
         mDxx = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/(*mNy);
       }
     }

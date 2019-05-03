@@ -100,13 +100,13 @@ void RotatedLatLonImpl::init() const
     if (rs != nullptr)
     {
       std::uint8_t flags = rs->getResolutionAndComponentFlags();
-      if ((flags & 0x20) == 0)
+      if ((flags & 0x20) == 0  &&  mLatLon.getGrid()->getLongitudeOfLastGridPoint())
       {
         // i direction increment not given
         mDx = (mEndX-mStartX)/mNi;
       }
 
-      if ((flags & 0x10) == 0)
+      if ((flags & 0x10) == 0  &&  mLatLon.getGrid()->getLatitudeOfLastGridPoint())
       {
         // j direction increment not given
         mDy = (mEndY-mStartY)/mNj;

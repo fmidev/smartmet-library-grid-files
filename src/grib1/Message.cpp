@@ -11,6 +11,7 @@
 #include "../common/AutoThreadLock.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
+#include "../common/BitArrayWriter.h"
 #include "../identification/GridDef.h"
 #include "../grid/ValueCache.h"
 #include "../grid/IndexCache.h"
@@ -539,6 +540,30 @@ void Message::initDataSection()
 
 
 
+void Message::initBitmapSection()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mBitmapSection == nullptr)
+    {
+      BitmapSection *section = new BitmapSection();
+      section->setMessagePtr(this);
+      mBitmapSection.reset(section);
+    }
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 void Message::initGridSection()
 {
   FUNCTION_TRACE
@@ -783,6 +808,34 @@ void Message::setGridValues(T::ParamValue_vec& values)
   FUNCTION_TRACE
   try
   {
+    uint size = values.size();
+
+    for (uint t=0; t<size; t++)
+    {
+      if (values[t] == ParamValueMissing)
+      {
+        initBitmapSection();
+
+        uint bmSize = size /  8 + 1;
+        uchar *bm = new uchar[bmSize];
+
+        BitArrayWriter bmWriter(bm,size);
+        for (uint a=0; a<size; a++)
+        {
+          if (values[a] == ParamValueMissing)
+            bmWriter.writeBit(false);
+          else
+            bmWriter.writeBit(true);
+        }
+
+        mBitmapSection->setBitmapData(bm,bmSize);
+        mProductSection->setSectionFlags(mProductSection->getSectionFlags() | 0x40);
+
+        t = size;
+      }
+    }
+
+
     initDataSection();
     if (mDataSection)
       mDataSection->encodeValues(values);

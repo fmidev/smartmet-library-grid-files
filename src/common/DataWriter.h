@@ -14,6 +14,8 @@ class DataWriter
     virtual           ~DataWriter();
 
     virtual ulonglong getWritePosition();
+    virtual ulonglong getMaxWritePosition();
+
     virtual void      setLittleEndian(bool _littleEndian);
     virtual void      setWritePosition(ulonglong _pos);
 

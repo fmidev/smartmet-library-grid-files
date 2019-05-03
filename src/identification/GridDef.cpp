@@ -772,6 +772,31 @@ bool GridDef::getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfPara
 
 
 
+bool GridDef::getGrib1DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib1& def)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto pdef =  getGrib1DefByFmiId(fmiParamId);
+    if (pdef == nullptr)
+      return false;
+
+    def = *pdef;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 Grib1ParamDef_cptr GridDef::getGrib1ParameterDefById(T::ParamId gribParamId)
 {
   FUNCTION_TRACE
@@ -4550,8 +4575,6 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           if (lastLatitude > 90000000)
             lastLatitude = 180000000 - lastLatitude;
 
-          // ******* GRIB 2 ********
-
           GRIB2::RotatedLatLonImpl *def2 = new GRIB2::RotatedLatLonImpl();
           GRIB2::LatLonSettings latLon;
           GRIB2::ScanningModeSettings scanningMode2;
@@ -4675,6 +4698,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           ////def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
           //def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
 
+          def2->setResolutionAndComponentFlag(0x30);
+
           def2->setGridGeometryId(geometryId);
           def2->setGridGeometryName(geometryName);
           def2->initSpatialReference();
@@ -4739,6 +4764,10 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setLatin2(T::Int32_opt(latin2));
           def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
           def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
+
+          GRIB2::ResolutionSettings resolution;
+          resolution.setResolutionAndComponentFlags(0x30);
+          def2->setResolution(resolution);
 
           def2->setGridGeometryId(geometryId);
           def2->setGridGeometryName(geometryName);
@@ -4928,6 +4957,27 @@ FmiParameterId_grib* GridDef::getGribDefByFmiId(T::ParamId fmiParamId)
 
 
 
+FmiParameterId_grib1* GridDef::getGrib1DefByFmiId(T::ParamId fmiParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_parametersFromGrib1_records.begin(); it != mFmi_parametersFromGrib1_records.end(); ++it)
+    {
+      if (strcasecmp(it->mFmiParameterId.c_str(),fmiParamId.c_str()) == 0)
+        return &(*it);
+    }
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 FmiParameterId_grib2* GridDef::getGrib2DefByFmiId(T::ParamId fmiParamId)
 {
   FUNCTION_TRACE
@@ -5050,6 +5100,84 @@ T::ParamId GridDef::getGribParameterId(GRIB2::Message& message)
     }
 
     return paramId;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDef::getGrib1LevelDef(uint fmiLevelId,uint generatingProcessId,uint centre,FmiLevelId_grib& def)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_levelsFromGrib1_records.begin(); it != mFmi_levelsFromGrib1_records.end(); ++it)
+    {
+      if (it->mFmiLevelId == fmiLevelId  &&  it->mGeneratingProcessIdentifier == generatingProcessId  &&  it->mCentre == centre)
+      {
+        def = *it;
+        return true;
+      }
+    }
+    return false;
+
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDef::getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_levelsFromGrib1_records.begin(); it != mFmi_levelsFromGrib1_records.end(); ++it)
+    {
+      if (it->mFmiLevelId == fmiLevelId)
+      {
+        def = *it;
+        return true;
+      }
+    }
+    return false;
+
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDef::getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_levelsFromGrib2_records.begin(); it != mFmi_levelsFromGrib2_records.end(); ++it)
+    {
+      if (it->mFmiLevelId == fmiLevelId)
+      {
+        def = *it;
+        return true;
+      }
+    }
+    return false;
+
   }
   catch (...)
   {

@@ -172,6 +172,22 @@ bool BitmapSection::setProperty(uint propertyId,long long value)
 
 
 
+void BitmapSection::setBitMapIndicator(uchar ind)
+{
+  try
+  {
+    mBitmapIndicator = ind;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current section object.
 
         \param memoryReader  This object controls the access to the memory mapped file.

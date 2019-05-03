@@ -89,6 +89,7 @@ class GridFile
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
     virtual void                read(std::string filename);
     virtual void                write(std::string filename);
+    virtual void                write(DataWriter& dataWriter);
 
   protected:
 

@@ -235,8 +235,26 @@ void PhysicalGridFile::write(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Read failed!",nullptr);
+    SmartMet::Spine::Exception exception(BCP,"Write failed!",nullptr);
     exception.addParameter("File name ",filename);
+    throw exception;
+  }
+}
+
+
+
+
+
+void PhysicalGridFile::write(DataWriter& dataWriter)
+{
+  try
+  {
+    if (mGridFile)
+      mGridFile->write(dataWriter);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Write failed!",nullptr);
     throw exception;
   }
 }

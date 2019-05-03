@@ -15,10 +15,11 @@ MemoryWriter::MemoryWriter(uchar *_data,ulonglong _dataSize,bool _dataRelease)
     if (_dataSize == 0)
       throw SmartMet::Spine::Exception(BCP,"The value of the '_dataSize' parameter is 0!");
 
-    data = _data;
-    dataSize = _dataSize;
-    dataRelease = _dataRelease;
-    writePosition = 0;
+    mData = _data;
+    mDataSize = _dataSize;
+    mDataRelease = _dataRelease;
+    mWritePosition = 0;
+    mMaxWritePosition = 0;
   }
   catch (...)
   {
@@ -33,10 +34,10 @@ MemoryWriter::~MemoryWriter()
 {
   try
   {
-    if (dataRelease  &&  data != nullptr)
-      delete [] data;
+    if (mDataRelease  &&  mData != nullptr)
+      delete [] mData;
 
-    data = nullptr;
+    mData = nullptr;
   }
   catch (...)
   {
@@ -53,7 +54,22 @@ ulonglong MemoryWriter::getWritePosition()
 {
   try
   {
-    return writePosition;
+    return mWritePosition;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+ulonglong MemoryWriter::getMaxWritePosition()
+{
+  try
+  {
+    return mMaxWritePosition;
   }
   catch (...)
   {
@@ -68,10 +84,10 @@ void MemoryWriter::setWritePosition(ulonglong _pos)
 {
   try
   {
-    if (_pos >= dataSize)
+    if (_pos >= mDataSize)
       throw SmartMet::Spine::Exception(BCP,"The '_pos' parameter point to out of the data area!");
 
-    writePosition = _pos;
+    mWritePosition = _pos;
   }
   catch (...)
   {
@@ -87,7 +103,7 @@ uchar* MemoryWriter::getDataPtr()
 {
   try
   {
-    return data;
+    return mData;
   }
   catch (...)
   {
@@ -104,13 +120,16 @@ void MemoryWriter::write_data(void *_data,ulonglong _size)
   try
   {
     uchar *d = (uchar*)_data;
-    if ((writePosition + _size) >= dataSize)
+    if ((mWritePosition + _size) >= mDataSize)
       throw SmartMet::Spine::Exception(BCP,"Trying to write data to outsize of the buffer!");
 
     for (ulonglong t=0; t< _size; t++)
-      data[writePosition + t] = d[t];
+      mData[mWritePosition + t] = d[t];
 
-    writePosition += _size;
+    mWritePosition += _size;
+
+    if (mWritePosition > mMaxWritePosition)
+      mMaxWritePosition = mWritePosition;
   }
   catch (...)
   {

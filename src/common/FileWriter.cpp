@@ -10,6 +10,7 @@ FileWriter::FileWriter()
   try
   {
     mFileHandle = nullptr;
+    mMaxFilePosition = 0;
   }
   catch (...)
   {
@@ -101,6 +102,25 @@ ulonglong FileWriter::getWritePosition()
 
 
 
+ulonglong FileWriter::getMaxWritePosition()
+{
+  try
+  {
+    if (mFileHandle == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"No file defined!");
+
+    return mMaxFilePosition;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void FileWriter::setWritePosition(ulonglong _pos)
 {
   try
@@ -109,7 +129,6 @@ void FileWriter::setWritePosition(ulonglong _pos)
       throw SmartMet::Spine::Exception(BCP,"No file defined!");
 
     fseek(mFileHandle,_pos,SEEK_SET);
-
   }
   catch (...)
   {
@@ -129,6 +148,10 @@ void FileWriter::write_data(void *_data,ulonglong _size)
       throw SmartMet::Spine::Exception(BCP,"No file defined!");
 
     fwrite(_data,_size,1,mFileHandle);
+
+    ulonglong fp = ftell(mFileHandle);
+    if (fp > mMaxFilePosition)
+      mMaxFilePosition = fp;
   }
   catch (...)
   {

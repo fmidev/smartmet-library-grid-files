@@ -299,6 +299,8 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
           if (bytepos >= dataSize)
           {
             SmartMet::Spine::Exception exception(BCP,"Trying to access data outside of the memory area!");
+            exception.addParameter("Value index",std::to_string(i));
+            exception.addParameter("Num of values",std::to_string(numOfValues));
             exception.addParameter("Data size",std::to_string(dataSize));
             exception.addParameter("Requested position",std::to_string(bytepos));
             throw exception;
@@ -368,6 +370,7 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
         missingCount++;
       }
     }
+
 
     std::int16_t E = binaryScaleFactor;
     std::int16_t D = decimalScaleFactor;

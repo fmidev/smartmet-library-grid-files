@@ -12,6 +12,7 @@
 #include "../grid/ValueCache.h"
 #include "../grid/IndexCache.h"
 #include "../grid/Typedefs.h"
+#include "../common/BitArrayWriter.h"
 #include "../common/Dimensions.h"
 #include "../common/Exception.h"
 #include "../common/GeneralFunctions.h"
@@ -784,6 +785,37 @@ void Message::setGridValues(T::ParamValue_vec& values)
   try
   {
     initRepresentationSection();
+
+    uint size = values.size();
+
+    for (uint t=0; t<size; t++)
+    {
+      if (values[t] == ParamValueMissing)
+      {
+        initBitmapSection();
+
+        uint bmSize = size /  8 + 1;
+        uchar *bm = new uchar[bmSize];
+
+        BitArrayWriter bmWriter(bm,size);
+        for (uint a=0; a<size; a++)
+        {
+          if (values[a] == ParamValueMissing)
+            bmWriter.writeBit(false);
+          else
+            bmWriter.writeBit(true);
+        }
+
+        mBitmapSection->setBitmapData(bm,bmSize);
+        mBitmapSection->setBitMapIndicator(0);
+        //mProductSection->setSectionFlags(mProductSection->getSectionFlags() | 0x40);
+
+        t = size;
+      }
+    }
+
+    initDataSection();
+
     mRepresentationSection->encodeValues(this,values);
     mRepresentationSection->setNumberOfValues(values.size());
   }

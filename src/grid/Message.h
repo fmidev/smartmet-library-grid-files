@@ -11,6 +11,8 @@
 #include "../common/GraphFunctions.h"
 #include "../common/ThreadLock.h"
 #include "../common/RequestCounter.h"
+#include "../common/DataWriter.h"
+#include "../common/MemoryReader.h"
 
 #include <vector>
 #include <string>
@@ -221,6 +223,8 @@ class Message
     virtual void              clearCachedValues(uint hitsRequired,uint timePeriod) const;
 
     virtual void              print(std::ostream& stream,uint level,uint optionFlags) const;
+    virtual void              read(MemoryReader& memoryReader);
+    virtual void              write(DataWriter& dataWriter);
 
 
 protected:

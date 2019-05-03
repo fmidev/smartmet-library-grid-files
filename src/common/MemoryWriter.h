@@ -15,15 +15,17 @@ class MemoryWriter : public DataWriter
 
     uchar*      getDataPtr();
     ulonglong   getWritePosition();
+    ulonglong   getMaxWritePosition();
     void        setWritePosition(ulonglong _pos);
     void        write_data(void *_data,ulonglong _size);
 
   protected:
 
-    uchar       *data;
-    ulonglong   dataSize;
-    bool        dataRelease;
-    ulonglong   writePosition;
+    uchar       *mData;
+    ulonglong   mDataSize;
+    bool        mDataRelease;
+    ulonglong   mWritePosition;
+    ulonglong   mMaxWritePosition;
 };
 
 

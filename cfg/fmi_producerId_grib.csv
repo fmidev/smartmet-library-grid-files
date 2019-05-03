@@ -16,7 +16,7 @@
 4;3;251;40;MEPS;MEPS ensemble from Metcoop;
 5;3;88;2;GLAMEPS;GLAMEPS;
 6;3;88;4;GLAMEPSCAL;GLAMEPS calibrated fields;
-7;1;251;41;MNWC;MEPS Nowcasting;
+7;1;233;40;MNWC;MEPS Nowcasting;
 10;3;233;40;MEPS_PREOP;MEPS preop experiment;
 34;1;34;201;JRA55;JMA JRA-55 reanalysis;
 47;1;54;47;GEM;GEM GDPS global forecast from Canada;
@@ -68,7 +68,7 @@
 210;1;86;210;AROMTA;Arome postprocessed fields;
 230;1;86;230;HL2MTA;Hirlam RCR-malli, lasketut kentät;
 240;1;86;240;ECGMTA;ECMWF-malli, lasketut kentät;
-241;1;86;241;ERAMTA;Postprocessed fields for ECMWF ERA-Interim;
+241;1;86;241;ERA5MTA;Postprocessed fields for ECMWF ERA5;
 242;1;86;242;ECM_PROB;Probabilities from ECMWF EPS;
 243;3;86;243;ECGEPSMTA;ECMWF Ensemble Forecast System post processed fields;
 250;1;86;250;GFSMTA;Postprocessed fields for GFS;

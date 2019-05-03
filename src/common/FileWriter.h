@@ -16,6 +16,7 @@ class FileWriter : public DataWriter
     void        createFile(const char *_filename);
     void        closeFile();
     ulonglong   getWritePosition();
+    ulonglong   getMaxWritePosition();
     void        setWritePosition(ulonglong _pos);
     void        write_data(void *_data,ulonglong _size);
 
@@ -23,6 +24,7 @@ class FileWriter : public DataWriter
 
     std::string mFilename;
     FILE*       mFileHandle;
+    ulonglong   mMaxFilePosition;
 };
 
 
