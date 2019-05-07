@@ -26,6 +26,7 @@ class AttributeList
     void            clear();
     unsigned int    getLength() const;
     Attribute*      getAttribute(const char *name) const;
+    Attribute*      getAttributeByNameEnd(const char *nameEnd) const;
     Attribute*      getAttributeByIndex(unsigned int index) const;
     const char*     getAttributeNameByIndex(unsigned int index) const;
     const char*     getAttributeValue(const char *name) const;

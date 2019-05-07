@@ -273,6 +273,40 @@ Attribute* AttributeList::getAttribute(const char *name) const
 
 
 
+Attribute* AttributeList::getAttributeByNameEnd(const char *nameEnd) const
+{
+  try
+  {
+    uint alen = strlen(nameEnd);
+    uint size = getLength();
+    for (uint t=0; t<size; t++)
+    {
+      Attribute *attr = mAttributeVector.at(t);
+      if (mCaseSensitive)
+      {
+        const char *p = strstr(attr->mName.c_str(),nameEnd);
+        if (p != nullptr  &&  p[alen] == '\0')
+          return attr;
+      }
+      else
+      {
+        const char *p = strcasestr(attr->mName.c_str(),nameEnd);
+        if (p != nullptr  &&  p[alen] == '\0')
+          return attr;
+      }
+    }
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 size_t AttributeList::getAttributeValues(const char *name,std::vector<std::string>& values) const
 {
   try
