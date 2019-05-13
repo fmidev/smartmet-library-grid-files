@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 19.5.6
+Version: 19.5.10
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -12,7 +12,7 @@ Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 19.5.6
-BuildRequires: smartmet-library-spine-devel >= 19.4.29
+BuildRequires: smartmet-library-spine-devel >= 19.5.8
 BuildRequires: smartmet-library-macgyver >= 19.4.23
 BuildRequires: smartmet-library-tron >= 17.9.20
 BuildRequires: boost-devel
@@ -38,7 +38,7 @@ Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 19.5.6
 Requires: smartmet-library-macgyver >= 19.4.23
-Requires: smartmet-library-spine >= 19.4.29
+Requires: smartmet-library-spine >= 19.5.8
 
 %description
 FMI Grid File handling library
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri May 10 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.5.10-1.fmi
+- New attribute search methods
 * Mon May  6 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.5.6-1.fmi
 - Added possibility to download GRIB1/GRIB2 files
 * Tue Apr  2 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.4.2-1.fmi
