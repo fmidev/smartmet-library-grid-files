@@ -824,9 +824,6 @@
 # TMIN-K => MinimumTemperature2m
 215;361;SUM{$,-273.15};SUM{$,273.15};
 # Ground Temperature in Kelvins
-# TG-K => WaterEquivalentOfSnow
-216;266;SUM{$,-273.15};SUM{$,273.15};
-# Ground Temperature in Kelvins
 # TG-K => GroundTemperature
 216;288;SUM{$,-273.15};SUM{$,273.15};
 # Ground Temperature in Kelvins
