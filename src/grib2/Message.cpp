@@ -2675,7 +2675,10 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     T::ParamValue value = 0;
 
     if (getCachedValue(idx,value))
+    {
+      //printf("Cached %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
       return value;
+    }
 
     if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
     {
@@ -2718,7 +2721,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         if (mRepresentationSection->getValueByIndex(indexVector[idx],value))
         {
           addCachedValue(idx,value);
-          //printf("Value %u,%u : %f\n",grid_i,grid_j,value);
+          //printf("Value %u,%u (%u): %f\n",grid_i,grid_j,idx,value);
           return value;
         }
       }
@@ -2731,7 +2734,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       if (GRID::valueCache.getValue(mCacheKey,idx,value))
       {
         addCachedValue(idx,value);
-        //printf("--- ValueFromCahe %u,%u : %f\n",grid_i,grid_j,value);
+        //printf("--- ValueFromCahe %u,%u (%u) : %f\n",grid_i,grid_j,idx,value);
         return value;
       }
     }
@@ -2742,7 +2745,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     if (idx >= values.size())
       return ParamValueMissing;
 
-    addCachedValue(idx,value);
+    addCachedValue(idx,values[idx]);
     //printf("--- ValueFromVector %u,%u : %f\n",grid_i,grid_j,values[idx]);
     return values[idx];
   }

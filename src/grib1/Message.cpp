@@ -1992,7 +1992,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     if ((std::size_t)idx >= values.size())
       return ParamValueMissing;
 
-    addCachedValue(idx,value);
+    addCachedValue(idx,values[idx]);
     // printf("--- getValueFromVector %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
     return values[idx];
   }
