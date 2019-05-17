@@ -185,6 +185,11 @@ void GribFile::write(std::string filename)
 
 
 
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
+
 void GribFile::write(DataWriter& dataWriter)
 {
   try

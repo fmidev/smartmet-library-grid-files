@@ -186,6 +186,15 @@ T::Coordinate_vec PolarStereographicImpl::getGridCoordinates() const
 
 
 
+
+/*! \brief The method returns the grid geometry string. This string can be used for comparing
+    geometries in different grid files. For example, is is possible that a GRIB 1 message has
+    the same geometry string as a GRIB 2 message, which means that they have same geometries.
+    This comparison is more reliable than the hash comparison.
+
+        \return   The grid geometry string.
+*/
+
 std::string PolarStereographicImpl::getGridGeometryString() const
 {
   try
@@ -321,6 +330,13 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
 
 
 
+
+/*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
+
+        \return   The method returns 'true' if the grid horizontal values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool PolarStereographicImpl::reverseXDirection() const
 {
   try
@@ -342,6 +358,12 @@ bool PolarStereographicImpl::reverseXDirection() const
 
 
 
+/*! \brief The method returns 'true' if the grid vertical values are in the reverse order.
+
+        \return   The method returns 'true' if the grid vertical values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool PolarStereographicImpl::reverseYDirection() const
 {
   try
@@ -362,6 +384,13 @@ bool PolarStereographicImpl::reverseYDirection() const
 
 
 
+
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
 
 bool PolarStereographicImpl::getProperty(uint propertyId,long long& value)
 {
@@ -414,6 +443,13 @@ bool PolarStereographicImpl::getProperty(uint propertyId,long long& value)
 
 
 
+
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
 {

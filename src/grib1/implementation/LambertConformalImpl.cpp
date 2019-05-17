@@ -217,6 +217,14 @@ T::Coordinate_vec LambertConformalImpl::getGridCoordinates() const
 
 
 
+/*! \brief The method returns the grid geometry string. This string can be used for comparing
+    geometries in different grid files. For example, is is possible that a GRIB 1 message has
+    the same geometry string as a GRIB 2 message, which means that they have same geometries.
+    This comparison is more reliable than the hash comparison.
+
+        \return   The grid geometry string.
+*/
+
 std::string LambertConformalImpl::getGridGeometryString() const
 {
   try
@@ -297,6 +305,15 @@ T::Dimensions LambertConformalImpl::getGridDimensions() const
 
 
 
+/*! \brief The method returns the grid original (projection) coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
+
 bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
   try
@@ -373,6 +390,13 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
 
 
 
+
+/*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
+
+        \return   The method returns 'true' if the grid horizontal values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool LambertConformalImpl::reverseXDirection() const
 {
   try
@@ -394,6 +418,12 @@ bool LambertConformalImpl::reverseXDirection() const
 
 
 
+/*! \brief The method returns 'true' if the grid vertical values are in the reverse order.
+
+        \return   The method returns 'true' if the grid vertical values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool LambertConformalImpl::reverseYDirection() const
 {
   try
@@ -414,6 +444,13 @@ bool LambertConformalImpl::reverseYDirection() const
 
 
 
+
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
 
 bool LambertConformalImpl::getProperty(uint propertyId,long long& value)
 {
@@ -482,6 +519,13 @@ bool LambertConformalImpl::getProperty(uint propertyId,long long& value)
 
 
 
+
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool LambertConformalImpl::setProperty(uint propertyId,long long value)
 {

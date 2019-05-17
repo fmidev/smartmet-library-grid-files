@@ -132,9 +132,10 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 
 
 
-/*! \brief The method can be used in order to find the file id of the current file.
+/*! \brief The method returns the file identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
 
-        \return  The file id of  the grib file.
+      \return  The grid file identifier.
 */
 
 uint Message::getFileId() const
@@ -146,6 +147,12 @@ uint Message::getFileId() const
 
 
 
+/*! \brief The method returns the producer identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \return  The grid producer identifier.
+*/
+
 uint Message::getProducerId() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -154,6 +161,12 @@ uint Message::getProducerId() const
 
 
 
+
+/*! \brief The method returns the generation identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \return  The grid generation identifier.
+*/
 
 uint Message::getGenerationId() const
 {
@@ -213,10 +226,10 @@ void Message::setMessageIndex(uint index)
 
 
 
-/*! \brief The method returns the reference time of the current message. The forecast
+/*! \brief The method returns the reference time of the current grid. The forecast
     times are calculated from this.
 
-        \return   The reference time of the current message.
+        \return   The reference time of the current grid.
 */
 
 T::TimeString Message::getReferenceTime() const
@@ -302,9 +315,9 @@ T::Hash Message::getGridHash() const
 
 
 
-/*! \brief The method returns the type of the grid.
+/*! \brief This method can be used for finding out the grid projection type (Mercator, LatLon, PolarStereographic, etc.).
 
-        \return   The type of the grid (expressed as an enum value).
+        \return   The type of the grid projection (expressed as an enum value).
 */
 
 T::GridProjection Message::getGridProjection() const
@@ -683,15 +696,6 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
       return;
     }
 
-/*
-    const char *urnStr = attributeList.getAttributeValue("grid.urn");
-    const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
-    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
-    const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
-    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
-    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
-
-*/
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (areaInterpolationMethodStr != nullptr)
@@ -708,113 +712,6 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
       smoothDegree = toSize_t(smoothDegreeStr);
 
 
-/*
-    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
-    const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
-    if (coordinateTypeStr != nullptr)
-      coordinateType = toUInt8(coordinateTypeStr);
-
-    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == toInt32(geometryIdStr)))
-    {
-      getGridIsolines(contourValues,attributeList,contours);
-      return;
-    }
-
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec latLonCoordinates;
-
-    GRIB2::GridDef_ptr def = nullptr;
-    if (geometryIdStr != nullptr)
-    {
-      def = Identification::gridDef.getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
-      if (!def)
-        return;
-
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-    std::shared_ptr<GRIB2::GridDefinition> defPtr;
-    if (geometryStringStr != nullptr)
-    {
-      def =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!def)
-        return;
-
-      defPtr.reset(def);
-      latLonCoordinates = def->getGridLatLonCoordinates();
-    }
-
-    uint width = 0;
-    uint height = 0;
-
-    if (def != nullptr)
-    {
-      T::Dimensions d = def->getGridDimensions();
-      width = d.nx();
-      height = d.ny();
-      attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)def->reverseXDirection()));
-    }
-
-    if (urnStr != nullptr  &&  bboxStr != nullptr  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
-    {
-      std::vector<double> cc;
-      splitString(bboxStr,',',cc);
-
-      if (cc.size() == 4)
-      {
-        OGRSpatialReference sr_latlon;
-        sr_latlon.importFromEPSG(4326);
-
-        OGRSpatialReference sr;
-        std::string urn = urnStr;
-        if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
-          urn = std::string("urn:ogc:def:crs:") + urnStr;
-
-        if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
-          throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(urnStr) + "'!");
-
-        OGRCoordinateTransformation *tranformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
-        if (tranformation == nullptr)
-          throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
-
-        width = toUInt32(gridWidthStr);
-        height = toUInt32(gridHeightStr);
-
-        double diffx = cc[2] - cc[0];
-        double diffy = cc[3] - cc[1];
-
-        double dx = diffx / C_DOUBLE(width);
-        double dy = diffy / C_DOUBLE(height);
-
-        uint sz = width*height;
-
-        coordinates.reserve(sz);
-        latLonCoordinates.reserve(sz);
-
-        double yy = cc[1];
-        for (uint y=0; y<height; y++)
-        {
-          double xx = cc[0];
-          for (uint x=0; x<width; x++)
-          {
-            double lon = xx;
-            double lat = yy;
-
-            tranformation->Transform(1,&lon,&lat);
-            latLonCoordinates.push_back(T::Coordinate(lon,lat));
-            coordinates.push_back(T::Coordinate(xx,yy));
-
-            xx = xx + dx;
-          }
-          yy = yy + dy;
-        }
-      }
-    }
-
-    if (latLonCoordinates.size() == 0)
-      return;
-*/
     T::ParamValue_vec gridValues;
     getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,gridValues);
 
@@ -919,6 +816,13 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
 
 
 
+
+/*! \brief The method returns all grid coordinates as a latlon coordinate vector. If the grid
+    original coordiantes were not latlon coordinates then the original coordinates are converted
+    to the latlon coordinates.
+
+        \return   The grid latlon coordinates.
+*/
 
 T::Coordinate_vec Message::getGridLatLonCoordinates() const
 {
@@ -1043,6 +947,11 @@ bool Message::isGridGlobal() const
 
 
 
+/*! \brief The method returns the grid geometry identifer.
+
+        \return   The grid geometry identifier.
+*/
+
 T::GeometryId Message::getGridGeometryId() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -1051,6 +960,14 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
+
+/*! \brief The method returns the grid geometry string. This string can be used for comparing
+    geometries in different grid files. For example, is is possible that a GRIB 1 message has
+    the same geometry string as a GRIB 2 message, which means that they have same geometries.
+    This comparison is more reliable than the hash comparison.
+
+        \return   The grid geometry string.
+*/
 
 std::string Message::getGridGeometryString() const
 {
@@ -1061,6 +978,17 @@ std::string Message::getGridGeometryString() const
 
 
 
+/*! \brief The method set the grid geometry identifer.
+
+   This identifier can be used for identifying different geometries. Usually geometry identifiers are defined
+   in a configuration file and when a grid file read the geometry is automatically identified. However, there might
+   be cases that the geometry cannot be automatically identified (because it is not defined in the configuration file).
+   It is also possible that we might want to use our own geometry identifiers and this method allows us to set it
+   in place.
+
+        \param   The grid geometry identifier.
+*/
+
 void Message::setGridGeometryId(T::GeometryId geometryId)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -1069,6 +997,13 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
 
 
 
+
+/*! \brief The method is used for setting grid values. The basic assumption is that
+    all necessary attributes/parameters (like dimensions, packing method, etc)
+    are already initialized before calling this function.
+
+        \param values  The vector of grid values.
+*/
 
 void Message::setGridValues(T::ParamValue_vec& values)
 {
@@ -1079,6 +1014,15 @@ void Message::setGridValues(T::ParamValue_vec& values)
 
 
 
+/*! \brief The method returns the grid latlon coordinates in the given grid point (= integer coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return   The method return true if the latlon values were succesfully returned.
+*/
+
 bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -1087,6 +1031,15 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
 
 
 
+
+/*! \brief The method returns the grid latlon coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return        The method return true if the latlon values were succesfully returned.
+*/
 
 bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
 {
@@ -1097,6 +1050,15 @@ bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j
 
 
 
+/*! \brief The method returns the grid latlon coordinates according the grid original (projection) coordinates.
+
+        \param x       The x-coordinate in the original projection.
+        \param y       The y-coordinate in the original projection.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return        The method return true if the latlon values were succesfully returned.
+*/
+
 bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -1105,6 +1067,15 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,do
 
 
 
+
+/*! \brief The method returns the grid original (projection) coordinates in the given grid point (= integer coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
 
 bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
@@ -1115,6 +1086,15 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,doub
 
 
 
+/*! \brief The method returns the grid original (projection) coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
+
 bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -1123,6 +1103,15 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
 
 
 
+
+/*! \brief The method returns the grid original (projection) coordinates by the given latlon position.
+
+        \param lat  The latitude value.
+        \param lon  The longitude value.
+        \param x    The x-coordinate in the original projection is returned in this parameter.
+        \param y    The y-coordinate in the original projection is returned in this parameter.
+        \return     The method return true if the original coordinates were succesfully returned.
+*/
 
 bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
@@ -1364,6 +1353,12 @@ bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i
 
 
 
+/*! \brief The method returns a list of grid projection attributes.
+
+        \param prefix         The prefix that is added in the front of each attribute name.
+        \param attributeList  The projection attributes are returned in this parameter.
+*/
+
 void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -1428,6 +1423,11 @@ T::ParamId Message::getGribParameterId() const
 
 
 
+/*! \brief The method returns the grib parameter name.
+
+         \return   The grip parameter name.
+*/
+
 std::string Message::getGribParameterName() const
 {
   FUNCTION_TRACE
@@ -1444,6 +1444,11 @@ std::string Message::getGribParameterName() const
 
 
 
+
+/*! \brief The method returns the grib parameter description.
+
+         \return   The grip parameter description.
+*/
 
 std::string Message::getGribParameterDescription() const
 {
@@ -1462,6 +1467,11 @@ std::string Message::getGribParameterDescription() const
 
 
 
+/*! \brief The method returns the grib parameter units.
+
+         \return   The grib parameter units.
+*/
+
 std::string Message::getGribParameterUnits() const
 {
   FUNCTION_TRACE
@@ -1474,6 +1484,7 @@ std::string Message::getGribParameterUnits() const
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
 
 
 
@@ -1524,6 +1535,11 @@ T::ParamLevelId Message::getGrib2ParameterLevelId() const
 
 
 
+/*! \brief The method returns the FMI producer name.
+
+         \return   The FMI producer name.
+*/
+
 std::string Message::getFmiProducerName() const
 {
   FUNCTION_TRACE
@@ -1540,6 +1556,11 @@ std::string Message::getFmiProducerName() const
 
 
 
+
+/*! \brief The method returns the FMI parameter id.
+
+         \return   The FMI parameter id.
+*/
 
 T::ParamId Message::getFmiParameterId() const
 {
@@ -1558,6 +1579,11 @@ T::ParamId Message::getFmiParameterId() const
 
 
 
+/*! \brief The method returns the FMI parameter level id.
+
+         \return   The FMI parameter level id.
+*/
+
 T::ParamLevelId Message::getFmiParameterLevelId() const
 {
   FUNCTION_TRACE
@@ -1574,6 +1600,11 @@ T::ParamLevelId Message::getFmiParameterLevelId() const
 
 
 
+
+/*! \brief The method returns the FMI parameter name.
+
+         \return   The FMI parameter name.
+*/
 
 std::string Message::getFmiParameterName() const
 {
@@ -1592,6 +1623,11 @@ std::string Message::getFmiParameterName() const
 
 
 
+/*! \brief The method returns the FMI parameter description.
+
+         \return   The FMI parameter description.
+*/
+
 std::string Message::getFmiParameterDescription() const
 {
   FUNCTION_TRACE
@@ -1608,6 +1644,11 @@ std::string Message::getFmiParameterDescription() const
 
 
 
+
+/*! \brief The method returns the FMI parameter units.
+
+         \return   The FMI parameter units.
+*/
 
 std::string Message::getFmiParameterUnits() const
 {
@@ -1626,6 +1667,11 @@ std::string Message::getFmiParameterUnits() const
 
 
 
+/*! \brief The method returns the CDM parameter id.
+
+         \return   The CDM parameter id.
+*/
+
 std::string Message::getCdmParameterId() const
 {
   FUNCTION_TRACE
@@ -1642,6 +1688,11 @@ std::string Message::getCdmParameterId() const
 
 
 
+
+/*! \brief The method returns the CDM parameter name.
+
+         \return   The CDM parameter name.
+*/
 
 std::string Message::getCdmParameterName() const
 {
@@ -1660,6 +1711,11 @@ std::string Message::getCdmParameterName() const
 
 
 
+/*! \brief The method returns the newbase parameter id.
+
+         \return   The newbase parameter id.
+*/
+
 std::string Message::getNewbaseParameterId() const
 {
   FUNCTION_TRACE
@@ -1676,6 +1732,11 @@ std::string Message::getNewbaseParameterId() const
 
 
 
+
+/*! \brief The method returns the newbase parameter name.
+
+         \return   The newbase parameter name.
+*/
 
 std::string Message::getNewbaseParameterName() const
 {
@@ -1745,7 +1806,6 @@ std::string Message::getGridParameterLevelIdString() const
 
         \param grid_i   The grid i-position.
         \param grid_j   The grid j-position.
-
         \return         The parameter value of the given grid point.
 */
 
@@ -1762,7 +1822,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         \param grid_i   The grid i-position.
         \param grid_j   The grid j-position.
-
         \return         The parameter value of the given grid point.
 */
 
@@ -1789,6 +1848,8 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
 
 
 
+
+
 /*! \brief The method returns all grid data values (also missing values) as the grid
     would be regular. In the case of an irregular grid, the grid rows are filled so that
     the grid looks like a regular grid.
@@ -1804,6 +1865,12 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
 
 
+
+/*! \brief The method returns grid values according to the geometry defined by attributes.
+
+        \param attributeList   The list of attributes that should contain geometry definitions.
+        \param values          The returned grid values.
+*/
 
 void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
@@ -1886,6 +1953,11 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
 
 
+/*! \brief The method returns all grid data values so that these values are cached.
+
+        \param values   The returned grid values.
+*/
+
 void Message::getGridValueVectorWithCaching(T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -1936,7 +2008,6 @@ void Message::getGridValueVectorWithCaching(T::ParamValue_vec& values) const
 
 
 
-
 /*! \brief The method returns the original grid data values.
     If the grid is regular then the 'getGridValueVector()' method returns the same
     result as this method. However, if the grid is irregular then the grid rows
@@ -1958,6 +2029,8 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
 
 
+/*! \brief The method initializes the spatial reference (mSpatialReference) of the grid. */
+
 void Message::initSpatialReference()
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -1966,6 +2039,11 @@ void Message::initSpatialReference()
 
 
 
+
+/*! \brief The method returns the pointer to the spatial reference of the current grid.
+
+        \return   The pointer to the spatial reference.
+*/
 
 T::SpatialRef* Message::getSpatialReference() const
 {
@@ -1990,6 +2068,11 @@ std::string Message::getWKT() const
 
 
 
+/*! \brief The method returns the default area interpolation method
+
+        \return   The default area interpolation method.
+*/
+
 short Message::getDefaultInterpolationMethod() const
 {
   FUNCTION_TRACE
@@ -2007,6 +2090,13 @@ short Message::getDefaultInterpolationMethod() const
 
 
 
+
+/*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
+
+        \return   The method returns 'true' if the grid horizontal values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool Message::reverseXDirection() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -2015,6 +2105,12 @@ bool Message::reverseXDirection() const
 
 
 
+
+/*! \brief The method returns 'true' if the grid vertical values are in the reverse order.
+
+        \return   The method returns 'true' if the grid vertical values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
 
 bool Message::reverseYDirection() const
 {
@@ -2025,6 +2121,11 @@ bool Message::reverseYDirection() const
 
 
 
+/*! \brief The method returns the forecast type of the current grid.
+
+        \return   The forecast type.
+*/
+
 short Message::getForecastType() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -2034,6 +2135,11 @@ short Message::getForecastType() const
 
 
 
+/*! \brief The method returns the forecast number of the current grid.
+
+        \return   The forecast number.
+*/
+
 short Message::getForecastNumber() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -2042,6 +2148,13 @@ short Message::getForecastNumber() const
 
 
 
+
+/*! \brief The method is used for setting a value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(uint propertyId,char value)
 {
@@ -2060,6 +2173,13 @@ bool Message::setProperty(uint propertyId,char value)
 
 
 
+/*! \brief The method is used for setting a value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(uint propertyId,short value)
 {
   FUNCTION_TRACE
@@ -2076,6 +2196,13 @@ bool Message::setProperty(uint propertyId,short value)
 
 
 
+
+/*! \brief The method is used for setting a value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(uint propertyId,int value)
 {
@@ -2094,6 +2221,13 @@ bool Message::setProperty(uint propertyId,int value)
 
 
 
+/*! \brief The method is used for setting a value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(uint propertyId,long value)
 {
   FUNCTION_TRACE
@@ -2110,6 +2244,13 @@ bool Message::setProperty(uint propertyId,long value)
 
 
 
+
+/*! \brief The method is used for setting a value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(uint propertyId,unsigned char value)
 {
@@ -2128,6 +2269,13 @@ bool Message::setProperty(uint propertyId,unsigned char value)
 
 
 
+/*! \brief The method is used for setting a value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(uint propertyId,unsigned short value)
 {
   FUNCTION_TRACE
@@ -2144,6 +2292,13 @@ bool Message::setProperty(uint propertyId,unsigned short value)
 
 
 
+
+/*! \brief The method is used for setting a value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(uint propertyId,unsigned int value)
 {
@@ -2162,6 +2317,13 @@ bool Message::setProperty(uint propertyId,unsigned int value)
 
 
 
+/*! \brief The method is used for setting a value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(uint propertyId,unsigned long value)
 {
   FUNCTION_TRACE
@@ -2179,6 +2341,13 @@ bool Message::setProperty(uint propertyId,unsigned long value)
 
 
 
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(uint propertyId,long long value)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -2187,6 +2356,13 @@ bool Message::setProperty(uint propertyId,long long value)
 
 
 
+
+/*! \brief The method is used for setting a (double) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(uint propertyId,double value)
 {
@@ -2197,6 +2373,13 @@ bool Message::setProperty(uint propertyId,double value)
 
 
 
+/*! \brief The method is used for fetching a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
+
 bool Message::getProperty(uint propertyId,long long& value)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -2206,6 +2389,13 @@ bool Message::getProperty(uint propertyId,long long& value)
 
 
 
+/*! \brief The method is used for fetching a (long long) value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the requested property is returned in this parameter.
+        \return              The method returns true if the value of the requested property was found.
+*/
+
 bool Message::getProperty(const char *propertyName,long long& value)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -2214,6 +2404,13 @@ bool Message::getProperty(const char *propertyName,long long& value)
 
 
 
+
+/*! \brief The method is used for setting a value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(const char *propertyName,char value)
 {
@@ -2232,6 +2429,13 @@ bool Message::setProperty(const char *propertyName,char value)
 
 
 
+/*! \brief The method is used for setting a value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(const char *propertyName,short value)
 {
   FUNCTION_TRACE
@@ -2248,6 +2452,13 @@ bool Message::setProperty(const char *propertyName,short value)
 
 
 
+
+/*! \brief The method is used for setting a value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(const char *propertyName,int value)
 {
@@ -2266,6 +2477,13 @@ bool Message::setProperty(const char *propertyName,int value)
 
 
 
+/*! \brief The method is used for setting a value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(const char *propertyName,long value)
 {
   FUNCTION_TRACE
@@ -2282,6 +2500,13 @@ bool Message::setProperty(const char *propertyName,long value)
 
 
 
+
+/*! \brief The method is used for setting a value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(const char *propertyName,unsigned char value)
 {
@@ -2300,6 +2525,13 @@ bool Message::setProperty(const char *propertyName,unsigned char value)
 
 
 
+/*! \brief The method is used for setting a value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(const char *propertyName,unsigned short value)
 {
   FUNCTION_TRACE
@@ -2316,6 +2548,13 @@ bool Message::setProperty(const char *propertyName,unsigned short value)
 
 
 
+
+/*! \brief The method is used for setting a value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(const char *propertyName,unsigned int value)
 {
@@ -2334,6 +2573,13 @@ bool Message::setProperty(const char *propertyName,unsigned int value)
 
 
 
+/*! \brief The method is used for setting a value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(const char *propertyName,unsigned long value)
 {
   FUNCTION_TRACE
@@ -2351,6 +2597,13 @@ bool Message::setProperty(const char *propertyName,unsigned long value)
 
 
 
+/*! \brief The method is used for setting a (long long) value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(const char *propertyName,long long value)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -2360,6 +2613,13 @@ bool Message::setProperty(const char *propertyName,long long value)
 
 
 
+/*! \brief The method is used for setting a (double) value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(const char *propertyName,double value)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -2368,6 +2628,11 @@ bool Message::setProperty(const char *propertyName,double value)
 
 
 
+
+/*! \brief The method sets the value of the 'mFmiParameterId' member attribute.
+
+        \param fmiParameterId   The new value for the member attribute.
+*/
 
 void Message::setFmiParameterId(T::ParamId fmiParameterId)
 {
@@ -2386,6 +2651,11 @@ void Message::setFmiParameterId(T::ParamId fmiParameterId)
 
 
 
+/*! \brief The method sets the value of the 'mFmiParameterLevelId' member attribute.
+
+        \param fmiParameterLevelId   The new value for the member attribute.
+*/
+
 void Message::setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId)
 {
   FUNCTION_TRACE
@@ -2402,6 +2672,11 @@ void Message::setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId)
 
 
 
+
+/*! \brief The method sets the value of the 'mFmiParameterName' member attribute.
+
+        \param fmiParameterName   The new value for the member attribute.
+*/
 
 void Message::setFmiParameterName(std::string fmiParameterName)
 {
@@ -2420,6 +2695,11 @@ void Message::setFmiParameterName(std::string fmiParameterName)
 
 
 
+/*! \brief The method sets the value of the 'mFmiParameterDescription' member attribute.
+
+        \param fmiParameterDescr   The new value for the member attribute.
+*/
+
 void Message::setFmiParameterDescription(std::string fmiParameterDescr)
 {
   FUNCTION_TRACE
@@ -2436,6 +2716,11 @@ void Message::setFmiParameterDescription(std::string fmiParameterDescr)
 
 
 
+
+/*! \brief The method sets the value of the 'mFmiParameterUnits' member attribute.
+
+        \param fmiParameterUnits   The new value for the member attribute.
+*/
 
 void Message::setFmiParameterUnits(std::string fmiParameterUnits)
 {
@@ -2454,6 +2739,11 @@ void Message::setFmiParameterUnits(std::string fmiParameterUnits)
 
 
 
+/*! \brief The method sets the value of the 'mGribParameterId' member attribute.
+
+        \param gribParameterId   The new value for the member attribute.
+*/
+
 void Message::setGribParameterId(T::ParamId gribParameterId)
 {
   FUNCTION_TRACE
@@ -2470,6 +2760,11 @@ void Message::setGribParameterId(T::ParamId gribParameterId)
 
 
 
+
+/*! \brief The method sets the value of the 'mGribParameterName' member attribute.
+
+        \param gribParameterName   The new value for the member attribute.
+*/
 
 void Message::setGribParameterName(std::string gribParameterName)
 {
@@ -2488,6 +2783,11 @@ void Message::setGribParameterName(std::string gribParameterName)
 
 
 
+/*! \brief The method sets the value of the 'mGribParameterDescription' member attribute.
+
+        \param gribParameterDescr   The new value for the member attribute.
+*/
+
 void Message::setGribParameterDescription(std::string gribParameterDescr)
 {
   FUNCTION_TRACE
@@ -2504,6 +2804,11 @@ void Message::setGribParameterDescription(std::string gribParameterDescr)
 
 
 
+
+/*! \brief The method sets the value of the 'mGribParameterUnits' member attribute.
+
+        \param gribParameterUnits   The new value for the member attribute.
+*/
 
 void Message::setGribParameterUnits(std::string gribParameterUnits)
 {
@@ -2522,6 +2827,11 @@ void Message::setGribParameterUnits(std::string gribParameterUnits)
 
 
 
+/*! \brief The method sets the value of the 'mGrib1ParameterLevelId' member attribute.
+
+        \param grib1ParameterLevelId   The new value for the member attribute.
+*/
+
 void Message::setGrib1ParameterLevelId(T::ParamLevelId grib1ParameterLevelId)
 {
   FUNCTION_TRACE
@@ -2538,6 +2848,11 @@ void Message::setGrib1ParameterLevelId(T::ParamLevelId grib1ParameterLevelId)
 
 
 
+
+/*! \brief The method sets the value of the 'mGrib2ParameterLevelId' member attribute.
+
+        \param grib2ParameterLevelId   The new value for the member attribute.
+*/
 
 void Message::setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId)
 {
@@ -2556,6 +2871,11 @@ void Message::setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId)
 
 
 
+/*! \brief The method sets the value of the 'mCdmParameterId' member attribute.
+
+        \param cdmParameterId   The new value for the member attribute.
+*/
+
 void Message::setCdmParameterId(std::string cdmParameterId)
 {
   FUNCTION_TRACE
@@ -2572,6 +2892,11 @@ void Message::setCdmParameterId(std::string cdmParameterId)
 
 
 
+
+/*! \brief The method sets the value of the 'mCdmParameterName' member attribute.
+
+        \param cdmParameterName   The new value for the member attribute.
+*/
 
 void Message::setCdmParameterName(std::string cdmParameterName)
 {
@@ -2590,6 +2915,11 @@ void Message::setCdmParameterName(std::string cdmParameterName)
 
 
 
+/*! \brief The method sets the value of the 'mNewbaseParameterId' member attribute.
+
+        \param newbaseParameterId   The new value for the member attribute.
+*/
+
 void Message::setNewbaseParameterId(std::string newbaseParameterId)
 {
   FUNCTION_TRACE
@@ -2607,6 +2937,11 @@ void Message::setNewbaseParameterId(std::string newbaseParameterId)
 
 
 
+/*! \brief The method sets the value of the 'mNewbaseParameterName' member attribute.
+
+        \param newbaseParameterName   The new value for the member attribute.
+*/
+
 void Message::setNewbaseParameterName(std::string newbaseParameterName)
 {
   FUNCTION_TRACE
@@ -2623,6 +2958,15 @@ void Message::setNewbaseParameterName(std::string newbaseParameterName)
 
 
 
+
+/*! \brief The method returns the value of the given grid coordinates.
+
+        \param coordinateType            The type of the used coordinates.
+        \param x                         The x-coordinate (longitude when using latlon)
+        \param y                         The y-coordinate (latitude when using latlon)
+        \param areaInterpolationMethod   The area interpolation method.
+        \param value                     The value of the grid point is returned in this parameter.
+*/
 
 void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,T::ParamValue& value) const
 {
@@ -2655,7 +2999,6 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
       }
     }
     mRequestCounterEnabled = false;
-
   }
   catch (...)
   {
@@ -2667,6 +3010,15 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
 
 
 
+
+/*! \brief The method returns the value vector related to the given grid coordinates (for example grid corner values).
+
+        \param coordinateType  The type of the used coordinates.
+        \param x               The x-coordinate (longitude when using latlon)
+        \param y               The y-coordinate (latitude when using latlon)
+        \param vectorType      The type of the requested value vector.
+        \param value           The value vector is returned in this parameter.
+*/
 
 void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double x,double y,uint vectorType,double_vec& valueVector) const
 {
@@ -2708,6 +3060,15 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
 
 
 
+
+
+/*! \brief The method returns the value vector related to the given grid position (for example grid corner values).
+
+        \param x               The x-coordinate (longitude when using latlon)
+        \param y               The y-coordinate (latitude when using latlon)
+        \param vectorType      The type of the requested value vector.
+        \param value           The value vector is returned in this parameter.
+*/
 
 void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vectorType,double_vec& valueVector) const
 {
@@ -2780,6 +3141,14 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
 
 
 
+/*! \brief The method returns the value vector related to the given grid latlon coordinates.
+
+        \param lat             The latitude of the coordinates
+        \param lon             The longitude of the coordinates
+        \param vectorType      The type of the requested value vector.
+        \param value           The value vector is returned in this parameter.
+*/
+
 void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint vectorType,double_vec& valueVector) const
 {
   FUNCTION_TRACE
@@ -2805,6 +3174,15 @@ void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint ve
 
 
 
+
+/*! \brief The method returns a list of grid point values that are inside the given circle.
+
+        \param coordinateType    The type of the used coordinates.
+        \param origoX            The x-coordinate (longitude when using latlon) of the origo
+        \param origoY            The y-coordinate (latitude when using latlon) of the origo
+        \param radius            The radius of the circle.
+        \param valueList         The list of grid point values are returned in this parameter.
+*/
 
 void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList) const
 {
@@ -2982,6 +3360,14 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
 
 
+/*! \brief The method returns the list of grid point values according to the given list of coordinates.
+
+        \param coordinateType            The type of the used coordinates.
+        \param pointList                 The list of coordinates
+        \param areaInterpolationMethod   The area interpolation method.
+        \param valueList                 The list of grid point values is returned in this parameter.
+*/
+
 void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -3005,6 +3391,13 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
 
 
 
+
+/*! \brief The method returns a list of grid point values that are inside the given polygon.
+
+        \param coordinateType    The type of the used coordinates.
+        \param polygonPoints     The polygon point coordinates
+        \param valueList         The list of grid point values are returned in this parameter.
+*/
 
 void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList) const
 {
@@ -3124,6 +3517,15 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
 
 
+
+/*! \brief The method returns a list of grid point values that are inside the given polygon area. The polygon area
+    can consists of multiple polygons. If a polygon is inside of another polygon then it is seen as a "hole" in
+    the current area.
+
+        \param coordinateType    The type of the used coordinates.
+        \param polygonPath       The list of polygons (i.e. vectors of polygon points)
+        \param valueList         The list of grid point values are returned in this parameter.
+*/
 
 void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,T::GridValueList& valueList) const
 {
@@ -3251,6 +3653,17 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
 
 
+/*! \brief The method returns a list of grid point values that are inside the given rectangle.
+
+        \param coordinateType    The type of the used coordinates.
+        \param x1                The x-parameter of the rectangles top-left corner.
+        \param y1                The y-parameter of the rectangles top-left corner.
+        \param x2                The x-parameter of the rectangles bottom-right corner.
+        \param x2                The x-parameter of the rectangles bottom-right corner.
+        \gridRectangle           The parameter defines if the given area is rectangular in the grid (or in the coordinate space).
+        \param valueList         The list of grid point values are returned in this parameter.
+*/
+
 void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,bool gridRectangle,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
@@ -3357,6 +3770,14 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
 
 
 
+/*! \brief The method returns a vector of grid point values according the given coordinate vector.
+
+        \param coordinateType            The type of the used coordinates.
+        \param coordinates               The vector of coordinates.
+        \param areaInterpolationMethod   The area interpolation method.
+        \param values                    The vector of grid point values are returned in this parameter.
+*/
+
 void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -3433,6 +3854,13 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
 
 
 
+
+/*! \brief The method returns a vector of grid point values according the given latlon coordinate vector.
+
+        \param coordinates               The vector of latlon coordinates.
+        \param areaInterpolationMethod   The area interpolation method.
+        \param values                    The vector of grid point values are returned in this parameter.
+*/
 
 void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const
 {
@@ -3566,6 +3994,13 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
 
 
 
+/*! \brief The method returns a vector of grid point values according the given grid position coordinate vector.
+
+        \param coordinates               The vector of grid position coordinates.
+        \param areaInterpolationMethod   The area interpolation method.
+        \param values                    The vector of grid point values are returned in this parameter.
+*/
+
 void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
@@ -3638,6 +4073,9 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
+
+
 
 
 
@@ -3880,6 +4318,13 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
 
 
 
+/*! \brief The method returns the min value of the closest (four) grid points.
+
+        \param grid_i   The grid i-position.
+        \param grid_j   The grid j-position.
+        \return         The min value of the closest grid points.
+*/
+
 T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) const
 {
   FUNCTION_TRACE
@@ -3900,7 +4345,6 @@ T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) 
     values.insert(getGridValueByGridPoint(x2,y2));
 
     return *values.begin();
-
   }
   catch (...)
   {
@@ -3911,6 +4355,13 @@ T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) 
 
 
 
+
+/*! \brief The method returns the max value of the closest (four) grid points.
+
+        \param grid_i   The grid i-position.
+        \param grid_j   The grid j-position.
+        \return         The max value of the closest grid points.
+*/
 
 T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) const
 {
@@ -3985,6 +4436,11 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
 
 
 
+/*! \brief The method enabled or disables the point cache in the current message object.
+
+        \param enabled   The 'true' value enables the point cache and the 'false' value disables it.
+*/
+
 void Message::setPointCacheEnabled(bool enabled)
 {
   //FUNCTION_TRACE
@@ -4001,6 +4457,12 @@ void Message::setPointCacheEnabled(bool enabled)
 
 
 
+
+/*! \brief The method add a value into the point cache if the cache is enabled.
+
+        \param index   The index of the value (in the grid value vector).
+        \param value   The value that is added into the cache.
+*/
 
 void Message::addCachedValue(uint index,T::ParamValue value) const
 {
@@ -4026,6 +4488,13 @@ void Message::addCachedValue(uint index,T::ParamValue value) const
 
 
 
+
+/*! \brief The method returns the cached value.
+
+        \param index   The index of the value (in the grid value vector).
+        \param value   The cached value is returned in this parameter.
+        \return        The method returns 'true' if the cached value is found.
+*/
 
 bool Message::getCachedValue(uint index,T::ParamValue& value) const
 {
@@ -4054,6 +4523,12 @@ bool Message::getCachedValue(uint index,T::ParamValue& value) const
 
 
 
+
+/*! \brief The method clears all cached values if there are not enough read hits in the given time period.
+
+        \param hitsRequired   The number of read hits required.
+        \param timePeriod     The time period.
+*/
 
 void Message::clearCachedValues(uint hitsRequired,uint timePeriod) const
 {
@@ -4086,6 +4561,13 @@ void Message::clearCachedValues(uint hitsRequired,uint timePeriod) const
 
 
 
+/*! \brief The method increases the request counter of the given index. The idea is to
+    find out which parameters, geometries and levels are requested most often. This information
+    can be used for pre-caching data. So far, this is only experimental.
+
+        \param index      The index of the grid location.
+*/
+
 void Message::incRequestCounter(uint index) const
 {
   //FUNCTION_TRACE
@@ -4106,6 +4588,13 @@ void Message::incRequestCounter(uint index) const
 
 
 
+
+/*! \brief The method returns a key/hash that is used for grouping similar information together
+    for counting purposes. The idea is to find out which parameters, geometries and levels are requested
+    most often. This information can be used for pre-caching data. So far, this is only experimental.
+
+        \return    The key that is used for grouping similar requests.
+*/
 
 ulonglong Message::getRequestCounterKey() const
 {
@@ -4162,6 +4651,12 @@ void Message::refreshIndexes(std::vector<uint>& indexes)
 
 
 
+
+/*! \brief The method reads and initializes all data related to the current object.
+
+        \param memoryReader  This object controls the access to the memory mapped file.
+*/
+
 void Message::read(MemoryReader& memoryReader)
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
@@ -4169,6 +4664,12 @@ void Message::read(MemoryReader& memoryReader)
 
 
 
+
+
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
 
 void Message::write(DataWriter& dataWriter)
 {

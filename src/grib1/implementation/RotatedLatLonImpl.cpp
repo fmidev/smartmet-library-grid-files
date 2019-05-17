@@ -210,6 +210,14 @@ T::Coordinate_vec RotatedLatLonImpl::getGridCoordinates() const
 
 
 
+
+/*! \brief The method returns all grid coordinates as a latlon coordinate vector. If the grid
+    original coordiantes were not latlon coordinates then the original coordinates are converted
+    to the latlon coordinates.
+
+        \return   The grid latlon coordinates.
+*/
+
 T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
 {
   try
@@ -271,12 +279,13 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
 
 
 
-/*! \brief This method return the latlon coordinates of the give grid point.
+/*! \brief The method returns the grid latlon coordinates in the given grid point (= integer coordinates).
 
-        \param grid_i  The grid i-position.
-        \param grid_j  The grid j-position.
-        \param lat     The returned latitude value.
-        \param lon     The returned longitude value.
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return   The method return true if the latlon values were succesfully returned.
 */
 
 bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
@@ -343,12 +352,13 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
 
 
 
-/*! \brief This method return the latlon coordinates of the give grid point.
+/*! \brief The method returns the grid latlon coordinates in the given grid position (= double coordinates).
 
-        \param grid_i  The grid i-position.
-        \param grid_j  The grid j-position.
-        \param lat     The returned latitude value.
-        \param lon     The returned longitude value.
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return        The method return true if the latlon values were succesfully returned.
 */
 
 bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
@@ -415,6 +425,15 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
 
 
 
+/*! \brief The method returns the grid original (projection) coordinates in the given grid point (= integer coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
+
 bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
   try
@@ -473,6 +492,16 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
 
 
 
+
+/*! \brief The method returns the grid original (projection) coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
+
 bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
   try
@@ -530,6 +559,15 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,d
 
 
 
+
+
+/*! \brief The method returns the grid geometry string. This string can be used for comparing
+    geometries in different grid files. For example, is is possible that a GRIB 1 message has
+    the same geometry string as a GRIB 2 message, which means that they have same geometries.
+    This comparison is more reliable than the hash comparison.
+
+        \return   The grid geometry string.
+*/
 
 std::string RotatedLatLonImpl::getGridGeometryString() const
 {
@@ -608,14 +646,13 @@ T::Dimensions RotatedLatLonImpl::getGridDimensions() const
 
 
 
-/*! \brief This method converts the latlon coordinates to the original coordinates.
+/*! \brief The method returns the grid original (projection) coordinates by the given latlon position.
 
-    The original coordinates are returned in the 'x' and 'y' parameters.
-
-        \param lat     The latitude.
-        \param lon     The longitude.
-        \param x       The x-coordinate of the original coordinates.
-        \param y       The y-coordinate of the original coordinates.
+        \param lat  The latitude value.
+        \param lon  The longitude value.
+        \param x    The x-coordinate in the original projection is returned in this parameter.
+        \param y    The y-coordinate in the original projection is returned in this parameter.
+        \return     The method return true if the original coordinates were succesfully returned.
 */
 
 bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
@@ -638,13 +675,13 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
 
 
 
-/*! \brief This method converts the original coordinates to the latlon coordinates.
-    The latlon coordinates are returned in the 'lat' and 'lon' parameters.
+/*! \brief The method returns the grid latlon coordinates according the grid original (projection) coordinates.
 
-        \param x       The original x-coordinate.
-        \param y       The original y-coordinate.
-        \param lat     The returned latitude value.
-        \param lon     The returned longitude value.
+        \param x       The x-coordinate in the original projection.
+        \param y       The y-coordinate in the original projection.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return        The method return true if the latlon values were succesfully returned.
 */
 
 bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
@@ -753,6 +790,13 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
 
 
 
+
+/*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
+
+        \return   The method returns 'true' if the grid horizontal values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool RotatedLatLonImpl::reverseXDirection() const
 {
   try
@@ -774,6 +818,12 @@ bool RotatedLatLonImpl::reverseXDirection() const
 
 
 
+/*! \brief The method returns 'true' if the grid vertical values are in the reverse order.
+
+        \return   The method returns 'true' if the grid vertical values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool RotatedLatLonImpl::reverseYDirection() const
 {
   try
@@ -793,6 +843,13 @@ bool RotatedLatLonImpl::reverseYDirection() const
 
 
 
+
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
 
 bool RotatedLatLonImpl::getProperty(uint propertyId,long long& value)
 {
@@ -829,6 +886,13 @@ bool RotatedLatLonImpl::getProperty(uint propertyId,long long& value)
 
 
 
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
+
 bool RotatedLatLonImpl::setProperty(uint propertyId,long long value)
 {
   try
@@ -863,6 +927,13 @@ bool RotatedLatLonImpl::setProperty(uint propertyId,long long value)
 
 
 
+
+/*! \brief The method is used for setting a (double) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool RotatedLatLonImpl::setProperty(uint propertyId,double value)
 {

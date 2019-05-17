@@ -232,6 +232,12 @@ void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attri
 
 
 
+/*! \brief The method sets the pointer to the Message -object in which the current section
+    object belongs to. This helps the object to reference information in other sections.
+
+        \param message    The Message -object pointer.
+*/
+
 void ProductSection::setMessagePtr(Message *message)
 {
   try
@@ -247,6 +253,13 @@ void ProductSection::setMessagePtr(Message *message)
 
 
 
+
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
 
 bool ProductSection::getProperty(uint propertyId,long long& value)
 {
@@ -362,6 +375,13 @@ bool ProductSection::getProperty(uint propertyId,long long& value)
 
 
 
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
+
 bool ProductSection::setProperty(uint propertyId,long long value)
 {
   try
@@ -476,6 +496,13 @@ bool ProductSection::setProperty(uint propertyId,long long value)
 
 
 
+/*! \brief The method is used for setting a (double) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
+
 bool ProductSection::setProperty(uint propertyId,double value)
 {
   try
@@ -555,6 +582,11 @@ void ProductSection::read(MemoryReader& memoryReader)
 
 
 
+
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
 
 void ProductSection::write(DataWriter& dataWriter)
 {
@@ -1083,7 +1115,11 @@ std::uint16_t ProductSection::getDecimalScaleFactor() const
 
 
 
-/*! \brief The method returns the reference time. */
+/*! \brief The method returns the reference time of the current grid. The forecast
+    times are calculated from this.
+
+        \return   The reference time of the current grid.
+*/
 
 T::TimeString ProductSection::getReferenceTime() const
 {
@@ -1107,6 +1143,11 @@ T::TimeString ProductSection::getReferenceTime() const
 
 
 
+/*! \brief The method returns the forecast type of the current grid.
+
+        \return   The forecast type.
+*/
+
 short ProductSection::getForecastType() const
 {
   try
@@ -1122,6 +1163,11 @@ short ProductSection::getForecastType() const
 
 
 
+
+/*! \brief The method returns the forecast number of the current grid.
+
+        \return   The forecast number.
+*/
 
 short ProductSection::getForecastNumber() const
 {
@@ -1139,7 +1185,10 @@ short ProductSection::getForecastNumber() const
 
 
 
-/*! \brief The method returns the forecast start time. */
+/*! \brief The method returns the forecast time of the current grid.
+
+        \return   The forecast time.
+*/
 
 T::TimeString ProductSection::getForecastTime() const
 {

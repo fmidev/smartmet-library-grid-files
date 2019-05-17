@@ -144,6 +144,12 @@ void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attri
 
 
 
+/*! \brief The method sets the pointer to the Message -object in which the current section
+    object belongs to. This helps the object to reference information in other sections.
+
+        \param message    The Message -object pointer.
+*/
+
 void ProductSection::setMessagePtr(Message *message)
 {
   try
@@ -159,6 +165,13 @@ void ProductSection::setMessagePtr(Message *message)
 
 
 
+
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
 
 bool ProductSection::getProperty(uint propertyId,long long& value)
 {
@@ -189,6 +202,13 @@ bool ProductSection::getProperty(uint propertyId,long long& value)
 
 
 
+
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool ProductSection::setProperty(uint propertyId,long long value)
 {
@@ -283,6 +303,11 @@ void ProductSection::read(MemoryReader& memoryReader)
 
 
 
+
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
 
 void ProductSection::write(DataWriter& dataWriter)
 {
@@ -616,6 +641,11 @@ T::ParamLevel ProductSection::getGribParameterLevel() const
 
 
 
+/*! \brief The method returns the forecast type of the current grid.
+
+        \return   The forecast type.
+*/
+
 short ProductSection::getForecastType() const
 {
   try
@@ -644,6 +674,11 @@ short ProductSection::getForecastType() const
 
 
 
+
+/*! \brief The method returns the forecast number of the current grid.
+
+        \return   The forecast number.
+*/
 
 short ProductSection::getForecastNumber() const
 {

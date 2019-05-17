@@ -125,6 +125,12 @@ void BitmapSection::getAttributeList(std::string prefix,T::AttributeList& attrib
 
 
 
+/*! \brief The method sets the pointer to the Message -object in which the current section
+    object belongs to. This helps the object to reference information in other sections.
+
+        \param message    The Message -object pointer.
+*/
+
 void BitmapSection::setMessagePtr(Message *message)
 {
   try
@@ -172,6 +178,11 @@ void BitmapSection::read(MemoryReader& memoryReader)
 
 
 
+
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
 
 void BitmapSection::write(DataWriter& dataWriter)
 {

@@ -92,6 +92,11 @@ void DataDefinition::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
+
 void DataDefinition::write(DataWriter& dataWriter)
 {
 }

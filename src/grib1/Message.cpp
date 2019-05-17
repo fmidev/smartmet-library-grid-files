@@ -55,6 +55,8 @@ Message::Message()
 
 
 
+/*! \brief The copy-constructor of the class. */
+
 Message::Message(const Message& other)
 :GRID::Message(other)
 {
@@ -255,6 +257,12 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 
 
 
+/*! \brief The method sets the GribFile pointer for the current message object. This allows
+     the message object to access information in the current grib file.
+
+        \param gribFile  The pointer to the GribFile object.
+*/
+
 void Message::setGribFilePtr(GribFile *gribFile)
 {
   FUNCTION_TRACE
@@ -417,6 +425,11 @@ void Message::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
+
 void Message::write(DataWriter& dataWriter)
 {
   FUNCTION_TRACE
@@ -468,6 +481,8 @@ void Message::write(DataWriter& dataWriter)
 
 
 
+/*! \brief The method creates the IndicatorSection object if it does not exist. */
+
 void Message::initIndicatorSection()
 {
   FUNCTION_TRACE
@@ -491,6 +506,8 @@ void Message::initIndicatorSection()
 
 
 
+
+/*! \brief The method creates the ProductSection object if it does not exist. */
 
 void Message::initProductSection()
 {
@@ -516,6 +533,8 @@ void Message::initProductSection()
 
 
 
+/*! \brief The method creates the DataSection object if it does not exist. */
+
 void Message::initDataSection()
 {
   FUNCTION_TRACE
@@ -539,6 +558,8 @@ void Message::initDataSection()
 
 
 
+
+/*! \brief The method creates the BitmapSection object if it does not exist. */
 
 void Message::initBitmapSection()
 {
@@ -564,6 +585,8 @@ void Message::initBitmapSection()
 
 
 
+/*! \brief The method creates the GridSection object if it does not exist. */
+
 void Message::initGridSection()
 {
   FUNCTION_TRACE
@@ -587,6 +610,13 @@ void Message::initGridSection()
 
 
 
+
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
 
 bool Message::getProperty(uint propertyId,long long& value)
 {
@@ -632,6 +662,13 @@ bool Message::getProperty(uint propertyId,long long& value)
 
 
 
+/*! \brief The method is used for fetching a (long long) value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the requested property is returned in this parameter.
+        \return              The method returns true if the value of the requested property was found.
+*/
+
 bool Message::getProperty(const char *propertyName,long long& value)
 {
   FUNCTION_TRACE
@@ -658,6 +695,13 @@ bool Message::getProperty(const char *propertyName,long long& value)
 
 
 
+
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(uint propertyId,long long value)
 {
@@ -703,6 +747,13 @@ bool Message::setProperty(uint propertyId,long long value)
 
 
 
+/*! \brief The method is used for setting a (double) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(uint propertyId,double value)
 {
   FUNCTION_TRACE
@@ -747,7 +798,12 @@ bool Message::setProperty(uint propertyId,double value)
 
 
 
+/*! \brief The method is used for setting a (long long) value for the property according to the property name.
 
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
 
 bool Message::setProperty(const char *propertyName,long long value)
 {
@@ -776,6 +832,13 @@ bool Message::setProperty(const char *propertyName,long long value)
 
 
 
+/*! \brief The method is used for setting a (double) value for the property according to the property name.
+
+        \param propertyName  The unique name of the requested property.
+        \param value         The value of the property to be set.
+        \return              The method returns true if the value of the requested property was set.
+*/
+
 bool Message::setProperty(const char *propertyName,double value)
 {
   FUNCTION_TRACE
@@ -803,18 +866,32 @@ bool Message::setProperty(const char *propertyName,double value)
 
 
 
+/*! \brief The method is used for setting grid values. The basic assumption is that
+    all necessary attributes/parameters (like dimensions, packing method, etc)
+    are already initialized before calling this function.
+
+        \param values  The vector of grid values.
+*/
+
 void Message::setGridValues(T::ParamValue_vec& values)
 {
   FUNCTION_TRACE
   try
   {
+    // If the grid values contains "ParamValueMissing" values then we should use bitmap
+    // in ordert to indicate which values are in place.
+
     uint size = values.size();
 
     for (uint t=0; t<size; t++)
     {
       if (values[t] == ParamValueMissing)
       {
+        // We found a missing value. Let's create a bitmap.
+
         initBitmapSection();
+
+        // Defining the bitmap for the current values.
 
         uint bmSize = size /  8 + 1;
         uchar *bm = new uchar[bmSize];
@@ -828,18 +905,29 @@ void Message::setGridValues(T::ParamValue_vec& values)
             bmWriter.writeBit(true);
         }
 
+        // Setting the bitmap data into the BitmapSection. Notice that the this object will release
+        // the data that we just allocated.
+
         mBitmapSection->setBitmapData(bm,bmSize);
+
+        // We should set a flag that indicates that the bitmap is in use.
+
         mProductSection->setSectionFlags(mProductSection->getSectionFlags() | 0x40);
+
+        // Ending the for -loop
 
         t = size;
       }
     }
 
+    // Creating the DataSection object if it does not exists.
 
     initDataSection();
+
+    // Setting the values for the DataSection object.
+
     if (mDataSection)
       mDataSection->encodeValues(values);
-    //mDataSection->setNumberOfValues(values.size());
   }
   catch (...)
   {
@@ -851,6 +939,12 @@ void Message::setGridValues(T::ParamValue_vec& values)
 
 
 
+
+
+/*! \brief The method returns the pointer to the GribFile object.
+
+        \return   The pointer of the GribFile object.
+*/
 
 GribFile* Message::getGribFile() const
 {
@@ -869,10 +963,10 @@ GribFile* Message::getGribFile() const
 
 
 
-/*! \brief The method returns the reference time of the current message. The forecast
+/*! \brief The method returns the reference time of the current grid. The forecast
     times are calculated from this.
 
-        \return   The reference time of the current message.
+        \return   The reference time of the current grid.
 */
 
 T::TimeString Message::getReferenceTime() const
@@ -925,6 +1019,12 @@ T::TimeString Message::getForecastTime() const
 
 
 
+/*! \brief The method returns the GRIB version number of the current message.
+
+        \return   The GRIB version number.
+*/
+
+
 uint Message::getGribVersion() const
 {
   FUNCTION_TRACE
@@ -941,6 +1041,11 @@ uint Message::getGribVersion() const
 
 
 
+
+/*! \brief The method returns the GRIB 1 centre identifer.
+
+        \return   The GRIB 1 centre identifier.
+*/
 
 uint Message::getGribCentre() const
 {
@@ -962,6 +1067,11 @@ uint Message::getGribCentre() const
 
 
 
+/*! \brief The method returns the GRIB 1 sub-centre identifer.
+
+        \return   The GRIB 1 sub-centre identifier.
+*/
+
 uint Message::getGribSubCentre() const
 {
   FUNCTION_TRACE
@@ -982,6 +1092,11 @@ uint Message::getGribSubCentre() const
 
 
 
+/*! \brief The method returns the GRIB 1 processing identifer.
+
+        \return   The GRIB 1 processing identifier.
+*/
+
 uint Message::getGribGeneratingProcessIdentifier() const
 {
   FUNCTION_TRACE
@@ -1001,6 +1116,12 @@ uint Message::getGribGeneratingProcessIdentifier() const
 
 
 
+
+/*! \brief The method returns the GRIB 1 table version.
+
+        \return   The GRIB 1 table version.
+*/
+
 uint Message::getGribTableVersion() const
 {
   FUNCTION_TRACE
@@ -1019,6 +1140,12 @@ uint Message::getGribTableVersion() const
 
 
 
+
+
+/*! \brief The method returns the grid hash value.
+
+        \return   The grid hash value.
+*/
 
 T::Hash Message::getGridHash() const
 {
@@ -1041,6 +1168,11 @@ T::Hash Message::getGridHash() const
 
 
 
+
+/*! \brief The method returns the grid geometry identifer.
+
+        \return   The grid geometry identifier.
+*/
 
 T::GeometryId Message::getGridGeometryId() const
 {
@@ -1065,6 +1197,14 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
+/*! \brief The method returns the grid geometry string. This string can be used for comparing
+    geometries in different grid files. For example, is is possible that a GRIB 1 message has
+    the same geometry string as a GRIB 2 message, which means that they have same geometries.
+    This comparison is more reliable than the hash comparison.
+
+        \return   The grid geometry string.
+*/
+
 std::string Message::getGridGeometryString() const
 {
   FUNCTION_TRACE
@@ -1088,6 +1228,16 @@ std::string Message::getGridGeometryString() const
 
 
 
+/*! \brief The method set the grid geometry identifer.
+
+   This identifier can be used for identifying different geometries. Usually geometry identifiers are defined
+   in a configuration file and when a grid file read the geometry is automatically identified. However, there might
+   be cases that the geometry cannot be automatically identified (because it is not defined in the configuration file).
+   It is also possible that we might want to use our own geometry identifiers and this method allows us to set it
+   in place.
+
+        \param   The grid geometry identifier.
+*/
 
 void Message::setGridGeometryId(T::GeometryId geometryId)
 {
@@ -1108,6 +1258,12 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
 
 
 
+
+/*! \brief The method set the data compression method that is used when new grid values are set into
+    the place. In other words, the method does not change the compression method of the existing grid values.
+
+        \param   The grid value compression method.
+*/
 
 void Message::setGridValueCompressionMethod(ushort compressionMethod)
 {
@@ -1130,9 +1286,9 @@ void Message::setGridValueCompressionMethod(ushort compressionMethod)
 
 
 
-/*! \brief The method returns the type of the grid.
+/*! \brief This method can be used for finding out the grid projection type (Mercator, LatLon, PolarStereographic, etc.).
 
-        \return   The type of the grid (expressed as an enum value).
+        \return   The type of the grid projection (expressed as an enum value).
 */
 
 T::GridProjection Message::getGridProjection() const
@@ -1216,6 +1372,15 @@ T::Dimensions Message::getGridDimensions() const
 
 
 
+/*! \brief The method returns the grid latlon coordinates in the given grid point (= integer coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return        The method return true if the latlon values were succesfully returned.
+*/
+
 bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
   FUNCTION_TRACE
@@ -1237,6 +1402,15 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
 
 
 
+
+/*! \brief The method returns the grid latlon coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return        The method return true if the latlon values were succesfully returned.
+*/
 
 bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
 {
@@ -1260,6 +1434,15 @@ bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j
 
 
 
+/*! \brief The method returns the grid latlon coordinates according the grid original (projection) coordinates.
+
+        \param x       The x-coordinate in the original projection.
+        \param y       The y-coordinate in the original projection.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return        The method return true if the latlon values were succesfully returned.
+*/
+
 bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
   FUNCTION_TRACE
@@ -1281,6 +1464,15 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,do
 
 
 
+
+/*! \brief The method returns the grid original (projection) coordinates in the given grid point (= integer coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
 
 bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
@@ -1304,6 +1496,15 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,doub
 
 
 
+/*! \brief The method returns the grid original (projection) coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
+
 bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
   FUNCTION_TRACE
@@ -1326,7 +1527,7 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
 
 
 
-/*! \brief The method returns all grid coordinates as a coordinate vector.
+/*! \brief The method returns all grid coordinates as a coordinate vector (in original projection).
     Notice that if the grid layout is "irregular" (i.e. its row lengths vary) then
     grid width is the same as the length of the longest grid row. I.e. the coordinates
     are returned as the grid would be a regular grid.
@@ -1356,6 +1557,13 @@ T::Coordinate_vec Message::getGridCoordinates() const
 
 
 
+/*! \brief The method returns all grid coordinates as a latlon coordinate vector. If the grid
+    original coordiantes were not latlon coordinates then the original coordinates are converted
+    to the latlon coordinates.
+
+        \return   The grid latlon coordinates.
+*/
+
 T::Coordinate_vec Message::getGridLatLonCoordinates() const
 {
   FUNCTION_TRACE
@@ -1377,6 +1585,47 @@ T::Coordinate_vec Message::getGridLatLonCoordinates() const
 
 
 
+
+/*! \brief The method returns the grid original (projection) coordinates by the given grid position.
+
+        \param grid_i  The grid i-position.
+        \param grid_j  The grid j-position.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
+/*
+
+bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+    return mGridSection->getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+*/
+
+
+
+
+/*! \brief The method returns the grid original (projection) coordinates by the given latlon position.
+
+        \param lat  The latitude value.
+        \param lon  The longitude value.
+        \param x    The x-coordinate in the original projection is returned in this parameter.
+        \param y    The y-coordinate in the original projection is returned in this parameter.
+        \return     The method return true if the original coordinates were succesfully returned.
+*/
 
 bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
@@ -1400,6 +1649,12 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 
 
 
+/*! \brief The method returns a list of grid projection attributes.
+
+        \param prefix         The prefix that is added in the front of each attribute name.
+        \param attributeList  The projection attributes are returned in this parameter.
+*/
+
 void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
@@ -1422,6 +1677,12 @@ void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& a
 
 
 
+/*! \brief The method returns the file identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \return  The grid file identifier.
+*/
+
 uint Message::getFileId() const
 {
   {
@@ -1443,6 +1704,13 @@ uint Message::getFileId() const
 
 
 
+
+/*! \brief The method returns the producer identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \return  The grid producer identifier.
+*/
+
 uint Message::getProducerId() const
 {
   FUNCTION_TRACE
@@ -1462,6 +1730,12 @@ uint Message::getProducerId() const
 
 
 
+
+/*! \brief The method returns the generation identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \return  The grid generation identifier.
+*/
 
 uint Message::getGenerationId() const
 {
@@ -2339,6 +2613,8 @@ std::string Message::getGridParameterLevelIdString() const
 
 
 
+/*! \brief The method intializes the grid's spatial reference that is used for coordinate conversions. */
+
 void Message::initSpatialReference()
 {
   FUNCTION_TRACE
@@ -2358,6 +2634,11 @@ void Message::initSpatialReference()
 
 
 
+
+/*! \brief The method returns the pointer to the spatial reference of the current grid.
+
+        \return   The pointer to the spatial reference.
+*/
 
 T::SpatialRef* Message::getSpatialReference() const
 {
@@ -2414,6 +2695,11 @@ std::string Message::getWKT() const
 
 
 
+/*! \brief The method returns the forecast type of the current grid.
+
+        \return   The forecast type.
+*/
+
 short Message::getForecastType() const
 {
   FUNCTION_TRACE
@@ -2435,6 +2721,11 @@ short Message::getForecastType() const
 
 
 
+
+/*! \brief The method returns the forecast number of the current grid.
+
+        \return   The forecast number.
+*/
 
 short Message::getForecastNumber() const
 {
@@ -2486,6 +2777,13 @@ bool Message::isGridGlobal() const
 
 
 
+
+/*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
+
+        \return   The method returns 'true' if the grid horizontal values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool Message::reverseXDirection() const
 {
   FUNCTION_TRACE
@@ -2507,6 +2805,12 @@ bool Message::reverseXDirection() const
 
 
 
+
+/*! \brief The method returns 'true' if the grid vertical values are in the reverse order.
+
+        \return   The method returns 'true' if the grid vertical values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
 
 bool Message::reverseYDirection() const
 {

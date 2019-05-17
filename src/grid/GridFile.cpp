@@ -120,6 +120,12 @@ GridFile* GridFile::createGridFile()
 
 
 
+/*! \brief The method returns the file identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \return  The grid file identifier.
+*/
+
 uint GridFile::getFileId() const
 {
   try
@@ -138,6 +144,12 @@ uint GridFile::getFileId() const
 
 
 
+
+/*! \brief The method returns the group flags of the current grid file. Usully these flags are set
+    when the grid file is registered for example into the Content Server.
+
+      \return  The grid file group flags.
+*/
 
 uint GridFile::getGroupFlags() const
 {
@@ -158,6 +170,12 @@ uint GridFile::getGroupFlags() const
 
 
 
+/*! \brief The method returns the producer identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \return  The grid producer identifier.
+*/
+
 uint GridFile::getProducerId() const
 {
   try
@@ -176,6 +194,12 @@ uint GridFile::getProducerId() const
 
 
 
+
+/*! \brief The method returns the generation identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \return  The grid generation identifier.
+*/
 
 uint GridFile::getGenerationId() const
 {
@@ -196,6 +220,11 @@ uint GridFile::getGenerationId() const
 
 
 
+/*! \brief The method returns the shared pointer to the actual grid file.
+
+      \return  The shared pointer of the grid file.
+*/
+
 std::shared_ptr<GridFile> GridFile::getGridFile()
 {
   try
@@ -211,6 +240,11 @@ std::shared_ptr<GridFile> GridFile::getGridFile()
 
 
 
+
+/*! \brief The method returns the time when the grid file was last time checked.
+
+      \return    The last check time of the current grid file.
+*/
 
 time_t GridFile::getCheckTime() const
 {
@@ -231,6 +265,11 @@ time_t GridFile::getCheckTime() const
 
 
 
+/*! \brief The method returns the modification time of the grid file.
+
+      \return  The modification time of the grid file.
+*/
+
 time_t GridFile::getModificationTime() const
 {
   try
@@ -250,6 +289,11 @@ time_t GridFile::getModificationTime() const
 
 
 
+/*! \brief The method returns the expected deletion time of the grid file.
+
+      \return  The expected deletion time of the grid file.
+*/
+
 std::string GridFile::getDeletionTime() const
 {
   try
@@ -268,6 +312,12 @@ std::string GridFile::getDeletionTime() const
 
 
 
+
+/*! \brief The method returns the source identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \return  The grid source identifier.
+*/
 
 uint GridFile::getSourceId() const
 {
@@ -391,6 +441,8 @@ void GridFile::getUsers(std::set<uint>& userList)
 
 
 
+/*! \brief The method returns 'true' if the current grid file is memory mapped. */
+
 bool GridFile::isMemoryMapped() const
 {
   try
@@ -410,6 +462,8 @@ bool GridFile::isMemoryMapped() const
 
 
 
+/*! \brief The method maps the current grid file into the memory.  */
+
 void GridFile::mapToMemory()
 {
   try
@@ -426,6 +480,8 @@ void GridFile::mapToMemory()
 
 
 
+
+/*! \brief The method returns 'true' if the current grid file is physical (not virtual). */
 
 bool GridFile::isPhysical() const
 {
@@ -446,6 +502,8 @@ bool GridFile::isPhysical() const
 
 
 
+/*! \brief The method returns 'true' if the current grid file is virtual. */
+
 bool GridFile::isVirtual() const
 {
   try
@@ -465,6 +523,11 @@ bool GridFile::isVirtual() const
 
 
 
+/*! \brief The method sets pointer to the actual grid file.
+
+      \param gridFile   The pointer to the actual grid file.
+*/
+
 void GridFile::setGridFile(GridFile *gridFile)
 {
   try
@@ -480,6 +543,11 @@ void GridFile::setGridFile(GridFile *gridFile)
 
 
 
+
+/*! \brief The method sets time when the current grid file was last checked.
+
+      \param checkTime   The last check time.
+*/
 
 void GridFile::setCheckTime(time_t checkTime)
 {
@@ -499,6 +567,12 @@ void GridFile::setCheckTime(time_t checkTime)
 
 
 
+/*! \brief The method sets the file identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \param fileId  The grid file identifier.
+*/
+
 void GridFile::setFileId(uint fileId)
 {
   try
@@ -516,6 +590,11 @@ void GridFile::setFileId(uint fileId)
 
 
 
+
+/*! \brief The method sets time the expected deletion time of the current grid file.
+
+      \param deletionTime   The deletion time of the grid file.
+*/
 
 void GridFile::setDeletionTime(std::string deletionTime)
 {
@@ -535,6 +614,12 @@ void GridFile::setDeletionTime(std::string deletionTime)
 
 
 
+/*! \brief The method sets the group flags of the current grid file. Usully these flags are set
+    when the grid file is registered for example into the Content Server.
+
+      \param groupFlags  The grid file group flags.
+*/
+
 void GridFile::setGroupFlags(uint groupFlags)
 {
   try
@@ -552,6 +637,12 @@ void GridFile::setGroupFlags(uint groupFlags)
 
 
 
+
+/*! \brief The method sets the producer identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \param producerID  The grid producer identifier.
+*/
 
 void GridFile::setProducerId(uint producerId)
 {
@@ -572,6 +663,12 @@ void GridFile::setProducerId(uint producerId)
 
 
 
+/*! \brief The method sets the generation identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \param generationId  The grid generation identifier.
+*/
+
 void GridFile::setGenerationId(uint generationId)
 {
   try
@@ -589,6 +686,12 @@ void GridFile::setGenerationId(uint generationId)
 
 
 
+
+/*! \brief The method sets the file name of the current grid file. Usully this name is set
+    when the grid file is registered for example into the Content Server.
+
+      \param fileName  The grid file name.
+*/
 
 void GridFile::setFileName(std::string fileName)
 {
@@ -608,6 +711,12 @@ void GridFile::setFileName(std::string fileName)
 
 
 
+
+/*! \brief The method sets the source identifier of the current grid file. Usully this identifier is set
+    when the grid file is registered for example into the Content Server.
+
+      \param sourceId  The grid source identifier.
+*/
 
 void GridFile::setSourceId(uint sourceId)
 {
@@ -733,6 +842,11 @@ void GridFile::write(std::string filename)
 
 
 
+
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
 
 void GridFile::write(DataWriter& dataWriter)
 {

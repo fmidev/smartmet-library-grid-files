@@ -155,6 +155,11 @@ RotationSettings* GridDefinition::getRotation() const
 
 
 
+/*! \brief The method returns the grid geometry identifer.
+
+        \return   The grid geometry identifier.
+*/
+
 T::GeometryId GridDefinition::getGridGeometryId() const
 {
   FUNCTION_TRACE
@@ -172,6 +177,14 @@ T::GeometryId GridDefinition::getGridGeometryId() const
 
 
 
+
+/*! \brief The method returns the grid geometry string. This string can be used for comparing
+    geometries in different grid files. For example, is is possible that a GRIB 1 message has
+    the same geometry string as a GRIB 2 message, which means that they have same geometries.
+    This comparison is more reliable than the hash comparison.
+
+        \return   The grid geometry string.
+*/
 
 std::string GridDefinition::getGridGeometryString() const
 {
@@ -237,6 +250,11 @@ bool GridDefinition::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& top
 
 
 
+/*! \brief This method can be used for finding out the grid projection type (Mercator, LatLon, PolarStereographic, etc.).
+
+        \return   The type of the grid projection (expressed as an enum value).
+*/
+
 T::GridProjection GridDefinition::getGridProjection()
 {
   FUNCTION_TRACE
@@ -254,6 +272,17 @@ T::GridProjection GridDefinition::getGridProjection()
 
 
 
+/*! \brief The method set the grid geometry identifer.
+
+   This identifier can be used for identifying different geometries. Usually geometry identifiers are defined
+   in a configuration file and when a grid file read the geometry is automatically identified. However, there might
+   be cases that the geometry cannot be automatically identified (because it is not defined in the configuration file).
+   It is also possible that we might want to use our own geometry identifiers and this method allows us to set it
+   in place.
+
+        \param   The grid geometry identifier.
+*/
+
 void GridDefinition::setGridGeometryId(T::GeometryId geometryId)
 {
   FUNCTION_TRACE
@@ -270,6 +299,13 @@ void GridDefinition::setGridGeometryId(T::GeometryId geometryId)
 
 
 
+
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
 
 bool GridDefinition::getProperty(uint propertyId,long long& value)
 {
@@ -502,6 +538,13 @@ bool GridDefinition::getProperty_LatLon(uint propertyId,long long& value)
 
 
 
+
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool GridDefinition::setProperty(uint propertyId,long long value)
 {
@@ -798,6 +841,14 @@ uint GridDefinition::getTemplateNumber() const
 
 
 
+
+/*! \brief The method returns all grid coordinates as a latlon coordinate vector. If the grid
+    original coordiantes were not latlon coordinates then the original coordinates are converted
+    to the latlon coordinates.
+
+        \return   The grid latlon coordinates.
+*/
+
 T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 {
   FUNCTION_TRACE
@@ -861,6 +912,15 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 
 
 
+/*! \brief The method returns the grid original (projection) coordinates in the given grid point (= integer coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
+
 bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
   FUNCTION_TRACE
@@ -890,6 +950,15 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
 
 
 
+/*! \brief The method returns the grid original (projection) coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
+
 bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
   FUNCTION_TRACE
@@ -899,6 +968,15 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,doub
 
 
 
+
+/*! \brief The method returns the grid latlon coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return        The method return true if the latlon values were succesfully returned.
+*/
 
 bool GridDefinition::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
 {
@@ -957,6 +1035,12 @@ void GridDefinition::initSpatialReference()
 
 
 
+/*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
+
+        \return   The method returns 'true' if the grid horizontal values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool GridDefinition::reverseXDirection() const
 {
   FUNCTION_TRACE
@@ -966,6 +1050,12 @@ bool GridDefinition::reverseXDirection() const
 
 
 
+
+/*! \brief The method returns 'true' if the grid vertical values are in the reverse order.
+
+        \return   The method returns 'true' if the grid vertical values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
 
 bool GridDefinition::reverseYDirection() const
 {
@@ -1033,6 +1123,15 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
 
 
 
+/*! \brief The method returns the grid latlon coordinates in the given grid point (= integer coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return   The method return true if the latlon values were succesfully returned.
+*/
+
 bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
   FUNCTION_TRACE
@@ -1083,15 +1182,13 @@ bool GridDefinition::getGridPointByOriginalCoordinates(double x,double y,double&
 
 
 
-/*! \brief This method converts the latlon coordinates to the original coordinates.
-    The original coordinates are returned in the 'x' and 'y' parameters.
-    This method could be overridden in the child classes in order to make
-    the implementation faster.
+/*! \brief The method returns the grid original (projection) coordinates by the given latlon position.
 
-        \param lat     The latitude.
-        \param lon     The longitude.
-        \param x       The x-coordinate of the original coordinates.
-        \param y       The y-coordinate of the original coordinates.
+        \param lat  The latitude value.
+        \param lon  The longitude value.
+        \param x    The x-coordinate in the original projection is returned in this parameter.
+        \param y    The y-coordinate in the original projection is returned in this parameter.
+        \return     The method return true if the original coordinates were succesfully returned.
 */
 
 bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
@@ -1177,6 +1274,11 @@ bool GridDefinition::getGridLatLonCoordinatesByOriginalCoordinates(double x,doub
 
 
 
+/*! \brief The method returns the pointer to the spatial reference of the current grid.
+
+        \return   The pointer to the spatial reference.
+*/
+
 T::SpatialRef* GridDefinition::getSpatialReference()
 {
   FUNCTION_TRACE
@@ -1215,6 +1317,11 @@ T::GridLayout GridDefinition::getGridLayout()
 
 
 
+
+/*! \brief The method returns the grid hash value.
+
+        \return   The grid hash value.
+*/
 
 T::Hash GridDefinition::getGridHash()
 {
@@ -1428,6 +1535,11 @@ double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
 
 
 
+/*! \brief The method reads and initializes all data related to the current object.
+
+        \param memoryReader  This object controls the access to the memory mapped file.
+*/
+
 void GridDefinition::read(MemoryReader& memoryReader)
 {
   FUNCTION_TRACE
@@ -1437,6 +1549,11 @@ void GridDefinition::read(MemoryReader& memoryReader)
 
 
 
+
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
 
 void GridDefinition::write(DataWriter& dataWriter)
 {

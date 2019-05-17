@@ -46,6 +46,13 @@ RepresentationDefinition* RepresentationDefinition::createRepresentationDefiniti
 
 
 
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
+
 bool RepresentationDefinition::getProperty(uint propertyId,long long& value)
 {
   try
@@ -136,6 +143,13 @@ bool RepresentationDefinition::getProperty_OriginalValues(uint propertyId,long l
 
 
 
+
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool RepresentationDefinition::setProperty(uint propertyId,long long value)
 {
@@ -295,6 +309,11 @@ void RepresentationDefinition::encodeValues(Message *message,T::ParamValue_vec& 
 
 
 
+/*! \brief The method reads and initializes all data related to the current object.
+
+        \param memoryReader  This object controls the access to the memory mapped file.
+*/
+
 void RepresentationDefinition::read(MemoryReader& memoryReader)
 {
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
@@ -303,6 +322,11 @@ void RepresentationDefinition::read(MemoryReader& memoryReader)
 
 
 
+
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
 
 void RepresentationDefinition::write(DataWriter& dataWriter)
 {

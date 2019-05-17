@@ -123,6 +123,14 @@ void MercatorImpl::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief The method returns the grid geometry string. This string can be used for comparing
+    geometries in different grid files. For example, is is possible that a GRIB 1 message has
+    the same geometry string as a GRIB 2 message, which means that they have same geometries.
+    This comparison is more reliable than the hash comparison.
+
+        \return   The grid geometry string.
+*/
+
 std::string MercatorImpl::getGridGeometryString() const
 {
   try
@@ -325,6 +333,13 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
 
 
 
+
+/*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
+
+        \return   The method returns 'true' if the grid horizontal values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool MercatorImpl::reverseXDirection() const
 {
   try
@@ -346,6 +361,12 @@ bool MercatorImpl::reverseXDirection() const
 
 
 
+/*! \brief The method returns 'true' if the grid vertical values are in the reverse order.
+
+        \return   The method returns 'true' if the grid vertical values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool MercatorImpl::reverseYDirection() const
 {
   try
@@ -366,6 +387,13 @@ bool MercatorImpl::reverseYDirection() const
 
 
 
+
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
 
 bool MercatorImpl::getProperty(uint propertyId,long long& value)
 {
@@ -405,6 +433,13 @@ bool MercatorImpl::getProperty(uint propertyId,long long& value)
 
 
 
+
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool MercatorImpl::setProperty(uint propertyId,long long value)
 {

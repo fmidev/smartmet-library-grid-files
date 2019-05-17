@@ -225,6 +225,14 @@ T::Coordinate_vec LatLonImpl::getGridCoordinates() const
 
 
 
+
+/*! \brief The method returns all grid coordinates as a latlon coordinate vector. If the grid
+    original coordiantes were not latlon coordinates then the original coordinates are converted
+    to the latlon coordinates.
+
+        \return   The grid latlon coordinates.
+*/
+
 T::Coordinate_vec LatLonImpl::getGridLatLonCoordinates() const
 {
   try
@@ -240,6 +248,14 @@ T::Coordinate_vec LatLonImpl::getGridLatLonCoordinates() const
 
 
 
+
+/*! \brief The method returns the grid geometry string. This string can be used for comparing
+    geometries in different grid files. For example, is is possible that a GRIB 1 message has
+    the same geometry string as a GRIB 2 message, which means that they have same geometries.
+    This comparison is more reliable than the hash comparison.
+
+        \return   The grid geometry string.
+*/
 
 std::string LatLonImpl::getGridGeometryString() const
 {
@@ -324,15 +340,13 @@ T::Dimensions LatLonImpl::getGridDimensions() const
 
 
 
-/*! \brief This method converts the latlon coordinates to the original coordinates.
+/*! \brief The method returns the grid original (projection) coordinates by the given latlon position.
 
-    The original coordinates are returned in the 'x' and 'y' parameters. In this
-    case the latlon coordinates are the same as the original coordinates.
-
-        \param lat     The latitude.
-        \param lon     The longitude.
-        \param x       The x-coordinate of the original coordinates.
-        \param y       The y-coordinate of the original coordinates.
+        \param lat  The latitude value.
+        \param lon  The longitude value.
+        \param x    The x-coordinate in the original projection is returned in this parameter.
+        \param y    The y-coordinate in the original projection is returned in this parameter.
+        \return     The method return true if the original coordinates were succesfully returned.
 */
 
 bool LatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
@@ -354,14 +368,13 @@ bool LatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double
 
 
 
-/*! \brief This method converts the original coordinates to the latlon coordinates.
-    The latlon coordinates are returned in the 'lat' and 'lon' parameters. In this
-    case the original coordinates are the same as the latlon coordinates.
+/*! \brief The method returns the grid latlon coordinates according the grid original (projection) coordinates.
 
-        \param x       The original x-coordinate.
-        \param y       The original y-coordinate.
-        \param lat     The returned latitude value.
-        \param lon     The returned longitude value.
+        \param x       The x-coordinate in the original projection.
+        \param y       The y-coordinate in the original projection.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return        The method return true if the latlon values were succesfully returned.
 */
 
 bool LatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
@@ -425,6 +438,15 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,dou
 
 
 
+/*! \brief The method returns the grid latlon coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param lat     The latitude value is returned in this parameter.
+        \param lon     The longitude value is returned in this parameter.
+        \return        The method return true if the latlon values were succesfully returned.
+*/
+
 bool LatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
 {
   try
@@ -456,6 +478,15 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double gri
 
 
 
+/*! \brief The method returns the grid original (projection) coordinates in the given grid point (= integer coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
+
 bool LatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
   try
@@ -471,6 +502,15 @@ bool LatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,d
 
 
 
+
+/*! \brief The method returns the grid original (projection) coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
 
 bool LatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
@@ -563,6 +603,13 @@ bool LatLonImpl::getGridPointByOriginalCoordinates(double x,double y,double& gri
 
 
 
+
+/*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
+
+        \return   The method returns 'true' if the grid horizontal values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
 bool LatLonImpl::reverseXDirection() const
 {
   try
@@ -583,6 +630,12 @@ bool LatLonImpl::reverseXDirection() const
 
 
 
+
+/*! \brief The method returns 'true' if the grid vertical values are in the reverse order.
+
+        \return   The method returns 'true' if the grid vertical values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
 
 bool LatLonImpl::reverseYDirection() const
 {

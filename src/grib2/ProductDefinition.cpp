@@ -48,6 +48,13 @@ ProductDefinition* ProductDefinition::createProductDefinition() const
 
 
 
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
+
 bool ProductDefinition::getProperty(uint propertyId,long long& value)
 {
   try
@@ -549,6 +556,13 @@ bool ProductDefinition::getProperty_CategoricalSettings(uint propertyId,long lon
 
 
 
+
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool ProductDefinition::setProperty(uint propertyId,long long value)
 {

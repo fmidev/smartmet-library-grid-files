@@ -176,6 +176,12 @@ void IdentificationSection::getAttributeList(std::string prefix,T::AttributeList
 
 
 
+/*! \brief The method sets the pointer to the Message -object in which the current section
+    object belongs to. This helps the object to reference information in other sections.
+
+        \param message    The Message -object pointer.
+*/
+
 void IdentificationSection::setMessagePtr(Message *message)
 {
   try
@@ -191,6 +197,13 @@ void IdentificationSection::setMessagePtr(Message *message)
 
 
 
+
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
 
 bool IdentificationSection::getProperty(uint propertyId,long long& value)
 {
@@ -261,6 +274,13 @@ bool IdentificationSection::getProperty(uint propertyId,long long& value)
 
 
 
+
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool IdentificationSection::setProperty(uint propertyId,long long value)
 {
@@ -442,6 +462,11 @@ void IdentificationSection::read(MemoryReader& memoryReader)
 
 
 
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
+
 void IdentificationSection::write(DataWriter& dataWriter)
 {
   try
@@ -601,6 +626,12 @@ T::UInt8_opt IdentificationSection::getNumberOfSection() const
 
 
 
+
+/*! \brief The method returns the reference time of the current grid. The forecast
+    times are calculated from this.
+
+        \return   The reference time of the current grid.
+*/
 
 T::TimeString IdentificationSection::getReferenceTime() const
 {

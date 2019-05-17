@@ -123,6 +123,12 @@ void RepresentationSection::getAttributeList(std::string prefix,T::AttributeList
 
 
 
+/*! \brief The method sets the pointer to the Message -object in which the current section
+    object belongs to. This helps the object to reference information in other sections.
+
+        \param message    The Message -object pointer.
+*/
+
 void RepresentationSection::setMessagePtr(Message *message)
 {
   try
@@ -138,6 +144,13 @@ void RepresentationSection::setMessagePtr(Message *message)
 
 
 
+
+/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the requested property is returned in this parameter.
+        \return            The method returns true if the value of the requested property was found.
+*/
 
 bool RepresentationSection::getProperty(uint propertyId,long long& value)
 {
@@ -164,6 +177,13 @@ bool RepresentationSection::getProperty(uint propertyId,long long& value)
 
 
 
+
+/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+
+        \param propertyId  The (numeric) identifier of the requested property.
+        \param value       The value of the property to be set.
+        \return            The method returns true if the value of the requested property was set.
+*/
 
 bool RepresentationSection::setProperty(uint propertyId,long long value)
 {
@@ -244,6 +264,11 @@ void RepresentationSection::read(MemoryReader& memoryReader)
 
 
 
+
+/*! \brief The method writes all data related to the current object into the data stream.
+
+        \param dataWriter  The data stream object.
+*/
 
 void RepresentationSection::write(DataWriter& dataWriter)
 {
