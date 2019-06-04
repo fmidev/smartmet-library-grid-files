@@ -455,6 +455,10 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
     {
       getGridIsobands(contourLowValues,contourHighValues,attributeList,contours);
+
+      T::Dimensions  d = getGridDimensions();
+      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
       return;
     }
 
@@ -675,6 +679,9 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
     {
       getGridIsolines(contourValues,attributeList,contours);
+      T::Dimensions  d = getGridDimensions();
+      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
       return;
     }
 
@@ -1882,6 +1889,9 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
     {
       getGridValueVector(values);
+      T::Dimensions  d = getGridDimensions();
+      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
       return;
     }
 

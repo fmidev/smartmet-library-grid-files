@@ -178,6 +178,9 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
       getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,contours);
+      T::Dimensions  d = message1.getGridDimensions();
+      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
       return;
     }
 
@@ -403,6 +406,9 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
       getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,contours);
+      T::Dimensions  d = message1.getGridDimensions();
+      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
       return;
     }
 
@@ -563,6 +569,9 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
       getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,contours);
+      T::Dimensions  d = message1.getGridDimensions();
+      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
       return;
     }
 
@@ -761,6 +770,9 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
       getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,contours);
+      T::Dimensions  d = message1.getGridDimensions();
+      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
       return;
     }
 
@@ -995,6 +1007,9 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
       getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,contours);
+      T::Dimensions  d = message1.getGridDimensions();
+      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
       return;
     }
 
@@ -1082,6 +1097,9 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
       getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,contours);
+      T::Dimensions  d = message1.getGridDimensions();
+      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
       return;
     }
 

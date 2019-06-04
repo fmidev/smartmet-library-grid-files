@@ -120,6 +120,7 @@
 2;1068;ECEUR0200G2;331;289;334;22.6;0.2;0.2;+x-y;0;-30;0;ECMWF Europe, rotated 0.2 degrees, GRIB2 version;
 2;1090;ECEDIT100;201;221;-10;13;0.1;0.1;+x-y;20;-30;0;EC editing area in 0.1 deg;
 2;1091;ECEDIT100G2;201;221;350;13;0.1;0.1;+x-y;0;-30;0;EC editing area in 0.1 deg GRIB 2;
+2;1098;GLAMEPSG2;870;660;307.6;-11.5;0.075;0.075;+x+y;30;-46;0;GLAMEPS 870 x 660 0.075 deg GRIB2;
 
 # LAMBERT CONFORMAL : projection,id,name,ni,nj,first_point.x,first_point.y,di,dj,scanning_mode,orientation,latin1,latin2,south_pole.x,south_pole.y,LaD,description
 10;1050;MEPSNOFMI2500;739;949;1.639;52.041;2500;2500;+x+y;15;63;63;0;0;60.0;MEPS Scandinavia area without FMI extension;
@@ -160,4 +161,4 @@
 9;1079;IASI_L2;171;191;5.985607;51.104713;12017.543;12015.707;+x+y;20.0;60.0;IASI L2 satellite area over Europe;
 9;1080;KALMANSCAN3000;685;765;5.941;51.058;3000;3000;+x+y;20.0;60.0;Kalman filtered data with LAPS gridding over Scandinavia;
 9;1086;BLENDSCAN3000;685;765;5.94086;51.0579;3000;3000;+x+y;20.0;60.0;Blend Scandinavia from extended LAPS;
-9;1096;SMARTMETSMALL7500;255;280;5.44402;52.6459;7364.73;7437.52;+x+y;20.0;60.0;SmartMet Scandinavian area 7500km resolution, covering MEPS domain;
+9;1096;SMARTMETSMALL7500;255;280;5.4211;52.6997;7361.039;7414.492;+x+y;20.0;60.0;SmartMet Scandinavian area 7500km resolution, covering MEPS domain;
