@@ -160,6 +160,9 @@ T::Coordinate_vec RotatedLatLonImpl::getGridCoordinates() const
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     T::Coordinate_vec coordinateList;
 
     uint ni = mNi;
@@ -222,6 +225,9 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     T::Coordinate_vec coordinateList;
 
     uint ni = mNi;
@@ -292,6 +298,9 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     uint ni = mNi;
     uint nj = mNj;
 
@@ -365,6 +374,9 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     uint ni = mNi;
     uint nj = mNj;
 
@@ -438,6 +450,9 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     uint ni = mNi;
     uint nj = mNj;
 
@@ -506,6 +521,9 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,d
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     uint ni = mNi;
     uint nj = mNj;
 
@@ -573,6 +591,9 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     char buf[1000];
 
     double x = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
@@ -659,6 +680,9 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
     double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
 
@@ -688,6 +712,9 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
     double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
 
@@ -959,6 +986,9 @@ void RotatedLatLonImpl::initSpatialReference()
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     // ### Set geographic coordinate system.
 
     const char *pszGeogName = "UNKNOWN";
@@ -976,11 +1006,19 @@ void RotatedLatLonImpl::initSpatialReference()
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 
-    //mSpatialReference.SetProjParm("latitude_of_origin",(double)(rotation().latitudeOfSouthernPole()/1000));
-    //mSpatialReference.SetProjParm("central_meridian",(double)(rotation().longitudeOfSouthernPole()/1000));
+    double npole_lat = -mSouthPoleLat;
+    double npole_lon = mSouthPoleLon;
+
+    char proj[200];
+    sprintf(proj,"+to_meter=.0174532925199433 +proj=ob_tran +o_proj=eqc +o_lon_p=%f +o_lat_p=%f +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+        npole_lon,npole_lat,dfSemiMajor);
+
+    OGRErr err = mSpatialReference.SetFromUserInput(proj);
+    if (err != OGRERR_NONE)
+      throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(proj) + "'!");
 
     // ### Validate the spatial reference.
-
+/*
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
@@ -988,7 +1026,7 @@ void RotatedLatLonImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
-
+*/
 
     // ### Test if the grid is global
 

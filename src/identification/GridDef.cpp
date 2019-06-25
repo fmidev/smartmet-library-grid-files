@@ -2,6 +2,7 @@
 #include "../common/Exception.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
+#include "../common/CoordinateConversions.h"
 
 #include "../grib1/implementation/LatLonImpl.h"
 #include "../grib1/implementation/MercatorImpl.h"
@@ -3085,6 +3086,7 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
   try
   {
     //attributeList.print(std::cout,0,0);
+    const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
@@ -3093,7 +3095,7 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
     const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
 
-    if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)
+    if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
 
 
@@ -3136,9 +3138,9 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
     }
 
 
-    if (urnStr != nullptr  &&  (bboxStr != nullptr || llboxStr != nullptr)  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
+    if ((urnStr != nullptr  || crsStr != nullptr)  &&  (bboxStr != nullptr || llboxStr != nullptr)  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
     {
-      // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
+      // If the geometry id defined by the URN / CRS then we need to the bounding box coordinates and preferred grid width and height.
 
       std::vector<double> aa;
 
@@ -3159,12 +3161,31 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
 
         OGRSpatialReference sr;
 
-        std::string urn = urnStr;
-        if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
-          urn = std::string("urn:ogc:def:crs:") + urnStr;
+        if (urnStr != nullptr)
+        {
+          std::string urn = urnStr;
+          if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
+            urn = std::string("urn:ogc:def:crs:") + urnStr;
 
-        if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
-          throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(urnStr) + "'!");
+          if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
+            throw SmartMet::Spine::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
+        }
+        else
+        if (crsStr != nullptr)
+        {
+          char* s = (char*)crsStr;
+          if (strncasecmp(s,"PROJCS",6) == 0)
+          {
+            if (sr.importFromWkt(&s) != OGRERR_NONE)
+              throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
+          }
+          else
+          {
+            OGRErr err = sr.SetFromUserInput(crsStr);
+            if (err != OGRERR_NONE)
+              throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
+          }
+        }
 
         OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
         if (transformation == nullptr)
@@ -3200,7 +3221,6 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
           cc.push_back(lat2);
         }
 
-
         width = toUInt32(gridWidthStr);
         height = toUInt32(gridHeightStr);
 
@@ -3210,6 +3230,7 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
         double dx = diffx / C_DOUBLE(width);
         double dy = diffy / C_DOUBLE(height);
 
+//        printf("DIFF %f %f  %f %f  %d,%d   %f,%f,%f,%f\n",diffx,diffy,dx,dy,width,height,cc[0],cc[1],cc[2],cc[3]);
         uint sz = width*height;
 
         coordinates.reserve(sz);
@@ -3224,11 +3245,13 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
             double lon = xx;
             double lat = yy;
 
+            //rotatedLatlon_to_latlon(yy,xx,60.0,20.0,lat,lon);
+
             transformation->Transform(1,&lon,&lat);
             latLonCoordinates.push_back(T::Coordinate(lon,lat));
             coordinates.push_back(T::Coordinate(xx,yy));
 
-            //printf("%f,%f => %f,%f\n",xx,yy,lon,lat);
+            //if (x < 10  &&  y < 10) printf("%u,%u : %f,%f => %f,%f\n",x,y,xx,yy,lon,lat);
 
             xx = xx + dx;
           }
@@ -3258,6 +3281,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
   try
   {
     //attributeList.print(std::cout,0,0);
+    const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
@@ -3266,7 +3290,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
     const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
 
-    if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr)
+    if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
 
 
@@ -3309,7 +3333,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     }
 
 
-    if (urnStr != nullptr  &&  bboxStr != nullptr  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
+    if ((urnStr != nullptr || crsStr != nullptr)  &&  (bboxStr != nullptr ||  llboxStr != nullptr)  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
     {
       // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
 
@@ -3332,12 +3356,22 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
         OGRSpatialReference sr;
 
-        std::string urn = urnStr;
-        if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
-          urn = std::string("urn:ogc:def:crs:") + urnStr;
+        if (urnStr != nullptr)
+        {
+          std::string urn = urnStr;
+          if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
+            urn = std::string("urn:ogc:def:crs:") + urnStr;
 
-        if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
-          throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(urnStr) + "'!");
+          if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
+            throw SmartMet::Spine::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
+        }
+        else
+        if (crsStr != nullptr)
+        {
+          char* s = (char*)crsStr;
+          if (sr.importFromWkt(&s) != OGRERR_NONE)
+            throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
+        }
 
         OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
         if (transformation == nullptr)

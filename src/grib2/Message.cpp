@@ -3680,7 +3680,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
       if ((optionFlags &  GRID::PrintFlag::data) != 0  &&  mGridSection)
       {
         auto d = mGridSection->getGridDimensions();
-        d.print(std::cout,0,0);
+        d.print(stream,0,0);
         if (d.getDimensions() == 2)
         {
           T::ParamValue_vec values;
