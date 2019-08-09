@@ -1961,6 +1961,39 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
   FUNCTION_TRACE
   try
   {
+    const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
+    {
+      attributeList.setAttribute("grid.crs",getWKT());
+      T::Dimensions  d = getGridDimensions();
+
+      double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+      uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+
+      if (reverseYDirection())
+        px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+
+      char tmp[100];
+      if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+      {
+        if (x2 < x1  &&  x2 < 0)
+          x2 += 360;
+
+        sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+        attributeList.setAttribute("grid.llbox",tmp);
+        //attributeList.setAttribute("grid.bbox",tmp);
+      }
+
+      if (getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
+      {
+        sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+        if (getGridProjection() > 2)
+          attributeList.setAttribute("grid.bbox",tmp);
+      }
+
+      attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
+    }
+
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
 
     if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
