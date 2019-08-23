@@ -1204,6 +1204,11 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
 
     bool worldwrap = false;
 
+    boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
+    itsGeomFactory.reset(new geos::geom::GeometryFactory());
+    Tron::FmiBuilder builder(itsGeomFactory);
+
+
     auto len = contourValues.size();
     for (size_t c = 0; c<len; c++)
     {
@@ -1212,9 +1217,6 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
 
       if (isovalue >= minValue  &&  isovalue <= maxValue)
       {
-        boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
-        Tron::FmiBuilder builder(itsGeomFactory);
-
         switch (interpolationMethod)
         {
           case T::AreaInterpolationMethod::Linear:
@@ -1323,6 +1325,11 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
       throw SmartMet::Spine::Exception(BCP,"There should be the same number of contour high and low values!");
     }
 
+    boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
+    itsGeomFactory.reset(new geos::geom::GeometryFactory());
+    Tron::FmiBuilder builder(itsGeomFactory);
+
+
     for (size_t c = 0; c<len; c++)
     {
       double low = contourLowValues[c];
@@ -1353,9 +1360,6 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
 
         if (high >= minValue && low <= maxValue)
         {
-          boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
-          Tron::FmiBuilder builder(itsGeomFactory);
-
           switch (interpolationMethod)
           {
             case T::AreaInterpolationMethod::Linear:

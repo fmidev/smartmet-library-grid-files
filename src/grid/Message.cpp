@@ -550,6 +550,9 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
+    attributeList.setAttribute("grid.original.crs",getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
@@ -812,6 +815,9 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
+    attributeList.setAttribute("grid.original.crs",getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
@@ -929,6 +935,42 @@ T::Coordinate_vec Message::getGridLatLonCoordinates() const
 T::Dimensions Message::getGridDimensions() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+uint Message::getGridWidth() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    T::Dimensions d = getGridDimensions();
+    return d.nx();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+uint Message::getGridHeight() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    T::Dimensions d = getGridDimensions();
+    return d.ny();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -2062,6 +2104,9 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     T::ParamValue_vec gridValues;
     getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,values);
 
+    attributeList.setAttribute("grid.original.crs",getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(width));
     attributeList.setAttribute("grid.height",std::to_string(height));

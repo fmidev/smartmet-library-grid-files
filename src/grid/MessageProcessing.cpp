@@ -79,6 +79,9 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
 
     getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
+    attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.levelInterpolationMethod",std::to_string(levelInterpolationMethod));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(d.nx()));
@@ -273,6 +276,9 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
+    attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
@@ -534,6 +540,9 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
+    attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
@@ -731,6 +740,9 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
+    attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
@@ -970,6 +982,9 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
+    attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
@@ -1240,6 +1255,9 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
+    attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
@@ -1363,6 +1381,9 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
+    attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));

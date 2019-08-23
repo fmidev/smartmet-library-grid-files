@@ -114,6 +114,8 @@ class Message
     virtual T::GridProjection getGridProjection() const;
     virtual void              getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;
     virtual std::string       getGridProjectionString() const;
+    virtual uint              getGridWidth() const;
+    virtual uint              getGridHeight() const;
 
     virtual void              getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,T::ParamValue& value) const;
     virtual void              getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList) const;
