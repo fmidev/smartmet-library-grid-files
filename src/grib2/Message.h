@@ -89,6 +89,7 @@ class Message : public GRID::Message
     std::string         getWKT() const;
     void                initSpatialReference();
     bool                isGridGlobal() const;
+    bool                isRelativeUV() const;
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
 

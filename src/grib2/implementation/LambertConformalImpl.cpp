@@ -127,7 +127,7 @@ void LambertConformalImpl::init() const
       if ((flags & 0x10) == 0  &&  latitudeOfLastGridPoint)
       {
         //std::cout << "j direction increment not given\n";
-        mDxx = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/(*mNy);
+        mDyy = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/(*mNy);
       }
     }
 

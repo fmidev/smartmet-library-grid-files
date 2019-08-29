@@ -158,6 +158,7 @@ class Message
     virtual std::string       getWKT() const;
     virtual void              initSpatialReference();
     virtual bool              isGridGlobal() const;
+    virtual bool              isRelativeUV() const;
     virtual void              refreshIndexes(std::vector<uint>& indexes);
     virtual bool              reverseXDirection() const;
     virtual bool              reverseYDirection() const;

@@ -98,6 +98,7 @@ class GridSection : public GRID::MessageSection
     T::SpatialRef*        getSpatialReference() const;
     void                  initSpatialReference();
     bool                  isGridGlobal() const;
+    bool                  isRelativeUV() const;
     bool                  reverseXDirection() const;
     bool                  reverseYDirection() const;
 

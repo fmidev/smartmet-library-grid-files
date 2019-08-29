@@ -3,6 +3,14 @@
 #include "GeneralDefinitions.h"
 #include "Exception.h"
 
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/math/constants/constants.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/make_shared.hpp>
+#include <gdal/ogr_geometry.h>
+#include <gdal/ogr_spatialref.h>
+
 
 
 
@@ -136,3 +144,218 @@ double latlon_distance(double lat1, double lon1, double lat2, double lon2)
 
 
 
+
+
+
+
+void getBoundingBox(
+    boost::optional<std::string> crs,
+    boost::optional<std::string> bboxcrs,
+    boost::optional<int> xsize,
+    boost::optional<int> ysize,
+    boost::optional<double> x1,
+    boost::optional<double> y1,
+    boost::optional<double> x2,
+    boost::optional<double> y2,
+    boost::optional<double> cx,
+    boost::optional<double> cy,
+    boost::optional<double> resolution,
+    bool latlon_center,
+    double& xx1,
+    double& yy1,
+    double& yy2,
+    double& xx2)
+{
+  try
+  {
+    boost::shared_ptr<OGRSpatialReference> ogr_crs;
+
+    if (!crs)
+      throw SmartMet::Spine::Exception(BCP, "CRS not set, unable to create projection");
+
+    if (!xsize && !ysize)
+      throw SmartMet::Spine::Exception(BCP, "CRS xsize and ysize are both missing");
+
+    // Are subdefinitions complete?
+    bool full_rect_bbox = (x1 && y1 && x2 && y2);
+    bool full_center_bbox = (cx && cy && resolution);
+
+    // Are they partial?
+    bool partial_rect_bbox = !full_rect_bbox && (x1 || y1 || x2 || y2);
+    bool partial_center_bbox = !full_center_bbox && (cx || cy || resolution);
+
+    // Disallow partial definitions
+    if (partial_rect_bbox)
+      throw SmartMet::Spine::Exception(BCP, "Partial CRS bounding box given: x1,y1,x2,y2 are needed");
+
+    if (partial_center_bbox)
+      throw SmartMet::Spine::Exception(BCP, "Partial CRS bounding box given: cx,cy,resolution are needed");
+
+    // bbox definition missing completely?
+    if (!full_rect_bbox && !full_center_bbox)
+      throw SmartMet::Spine::Exception(BCP, "CRS bounding box missing: x1,y2,x2,y2 or cx,cy,resolution are needed");
+
+    // must give both width and height if centered bbox is given
+    if (!full_rect_bbox && full_center_bbox && (!xsize || !ysize))
+      throw SmartMet::Spine::Exception(BCP, "CRS xsize and ysize are required when a centered bounding box is used");
+
+    // Create the CRS
+    ogr_crs = boost::make_shared<OGRSpatialReference>();
+    OGRErr err = ogr_crs->SetFromUserInput(crs->c_str());
+
+    if (err != OGRERR_NONE)
+      throw SmartMet::Spine::Exception(BCP, "Unknown CRS: '" + *crs + "'");
+
+    if (xsize && *xsize <= 0)
+      throw SmartMet::Spine::Exception(BCP, "Projection xsize must be positive");
+
+    if (ysize && *ysize <= 0)
+      throw SmartMet::Spine::Exception(BCP, "Projection ysize must be positive");
+
+    // World XY bounding box will be calculated during the process
+
+    double XMIN, YMIN, XMAX, YMAX;
+
+    // Create the Contour::Area object
+
+    if (full_rect_bbox)
+    {
+      // rect bounding box
+
+      XMIN = *x1;
+      YMIN = *y1;
+      XMAX = *x2;
+      YMAX = *y2;
+
+      if (bboxcrs)
+      {
+        // Reproject corners coordinates from bboxcrs to crs
+        OGRSpatialReference ogr_crs2;
+        err = ogr_crs2.SetFromUserInput(bboxcrs->c_str());
+        if (err != OGRERR_NONE)
+          throw SmartMet::Spine::Exception(BCP, "Unknown CRS: '" + *bboxcrs + "'");
+
+        boost::shared_ptr<OGRCoordinateTransformation> transformation(OGRCreateCoordinateTransformation(&ogr_crs2, ogr_crs.get()));
+        transformation->Transform(1, &XMIN, &YMIN);
+        transformation->Transform(1, &XMAX, &YMAX);
+      }
+
+      if (XMIN == XMAX || YMIN == YMAX)
+        throw SmartMet::Spine::Exception(BCP, "Bounding box size is zero!");
+
+      if (!xsize)
+      {
+        // Preserve aspect by calculating xsize
+        int w = boost::numeric_cast<int>((*ysize) * (XMAX - XMIN) / (YMAX - YMIN));
+        xx1 = XMIN; yy1 = YMIN; xx2 = XMAX; yy2 = YMAX;
+        //box = Fmi::Box(XMIN, YMIN, XMAX, YMAX, w, *ysize);
+      }
+      else if (!ysize)
+      {
+        // Preserve aspect by calculating ysize
+        int h = boost::numeric_cast<int>((*xsize) * (YMAX - YMIN) / (XMAX - XMIN));
+        xx1 = XMIN; yy1 = YMIN; xx2 = XMAX; yy2 = YMAX;
+        //box = Fmi::Box(XMIN, YMIN, XMAX, YMAX, *xsize, h);
+      }
+      else
+      {
+        xx1 = XMIN; yy1 = YMIN; xx2 = XMAX; yy2 = YMAX;
+        // box = Fmi::Box(XMIN, YMIN, XMAX, YMAX, *xsize, *ysize);
+      }
+
+      if (ogr_crs->IsGeographic() != 0)
+      {
+        // Substract equations 5 and 4, subsititute equation 3 and solve resolution
+        double pi = boost::math::constants::pi<double>();
+        double circumference = 2 * pi * 6371.220;
+        resolution = (YMAX - YMIN) * circumference / (360 * (*ysize));
+        ;
+      }
+      else
+      {
+        // Substract equations 1 and 2 to eliminate and solve resolution
+        resolution = (XMAX - XMIN) / ((*xsize) * 1000);
+      }
+    }
+
+    else
+    {
+      // centered bounding box
+      if (!xsize || !ysize)
+        throw SmartMet::Spine::Exception(BCP, "xsize and ysize are required when a centered bounding box is used");
+
+      double CX = *cx, CY = *cy;
+
+      if (latlon_center || (bboxcrs && *crs != *bboxcrs))
+      {
+        // Reproject center coordinates from latlon/bboxcrs to crs
+        OGRSpatialReference ogr_crs2;
+        if (latlon_center)
+          err = ogr_crs2.SetFromUserInput("WGS84");
+        else
+          err = ogr_crs2.SetFromUserInput(bboxcrs->c_str());
+
+        if (err != OGRERR_NONE)
+          throw SmartMet::Spine::Exception(BCP, "Unknown CRS: '" + *bboxcrs + "'");
+
+        boost::shared_ptr<OGRCoordinateTransformation> transformation(OGRCreateCoordinateTransformation(&ogr_crs2, ogr_crs.get()));
+        transformation->Transform(1, &CX, &CY);
+      }
+
+      if (ogr_crs->IsGeographic() != 0)
+      {
+        double pi = boost::math::constants::pi<double>();
+        double circumference = 2 * pi * 6371.220;
+
+        // This will work well, since we move along an isocircle
+        double dy = 360 * (*ysize) / 2.0 * (*resolution) / circumference;  // Equation 3.
+        YMIN = CY - dy;                                                    // Equation 4.
+        YMAX = CY + dy;                                                    // Equation 5
+
+        // Distances will become distorted the further away we are from the equator
+        double dx = 360 * (*xsize) / 2.0 * (*resolution) / circumference / cos(CX * pi / 180.0);
+        XMIN = CX - dx;
+        XMAX = CX + dx;
+
+        xx1 = XMIN; yy1 = YMIN; xx2 = XMAX; yy2 = YMAX;
+      }
+      else
+      {
+        XMIN = CX - (*xsize) / 2.0 * (*resolution) * 1000;  // Equation 1.
+        XMAX = CX + (*xsize) / 2.0 * (*resolution) * 1000;  // Equation 2.
+        YMIN = CY - (*ysize) / 2.0 * (*resolution) * 1000;
+        YMAX = CY + (*ysize) / 2.0 * (*resolution) * 1000;
+
+        xx1 = XMIN; yy1 = YMIN; xx2 = XMAX; yy2 = YMAX;
+      }
+    }
+
+    // newbase corners calculated from world xy coordinates
+
+    const char* fmiwkt = R"xxx(GEOGCS["FMI_Sphere",DATUM["FMI_2007",SPHEROID["FMI_Sphere",)xxx"
+                         R"xxx(6371220,0]],PRIMEM["Greenwich",0],UNIT["Degree",0.)xxx"
+                         R"xxx(0174532925199433]])xxx";
+    OGRSpatialReference fmi;
+    err = fmi.SetFromUserInput(fmiwkt);
+
+    if (err != OGRERR_NONE)
+      throw SmartMet::Spine::Exception(BCP, "Unable to parse FMI WKT");
+
+    boost::shared_ptr<OGRCoordinateTransformation> transformation(OGRCreateCoordinateTransformation(ogr_crs.get(), &fmi));
+
+    // Calculate bottom left and top right coordinates
+
+    printf("*** BOX %f,%f,%f,%f\n",XMIN,YMIN,XMAX,YMAX);
+
+    transformation->Transform(1, &XMIN, &YMIN);
+    transformation->Transform(1, &XMAX, &YMAX);
+
+    xx1 = XMIN; yy1 = YMIN; xx2 = XMAX; yy2 = YMAX;
+
+    printf("BOX %f,%f,%f,%f\n",XMIN,YMIN,XMAX,YMAX);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}

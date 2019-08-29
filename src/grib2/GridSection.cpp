@@ -1429,6 +1429,24 @@ bool GridSection::isGridGlobal() const
 
 
 
+bool GridSection::isRelativeUV() const
+{
+  try
+  {
+    if (!mGridDefinition)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+
+    return mGridDefinition->isRelativeUV();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 void GridSection::setNumberOfSection(std::uint8_t section)
 {
   FUNCTION_TRACE

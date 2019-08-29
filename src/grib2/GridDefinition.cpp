@@ -135,6 +135,16 @@ EarthShapeSettings* GridDefinition::getEarthShape() const
 
 
 
+ResolutionSettings* GridDefinition::getResolution() const
+{
+  FUNCTION_TRACE
+  return nullptr;
+}
+
+
+
+
+
 LatLonSettings* GridDefinition::getLatLon() const
 {
   FUNCTION_TRACE
@@ -1080,6 +1090,30 @@ bool GridDefinition::isGridGlobal() const
   try
   {
     return mGlobal;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::isRelativeUV() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    ResolutionSettings *resolution = getResolution();
+    if (resolution)
+    {
+      if (resolution->getResolutionAndComponentFlags() & 0x08)
+        return true;
+    }
+
+    return false;
   }
   catch (...)
   {

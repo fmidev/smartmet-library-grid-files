@@ -662,6 +662,29 @@ bool GridDefinition::isGridGlobal() const
 
 
 
+bool GridDefinition::isRelativeUV() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    ResolutionFlagsSettings *resolutionFlags = getResolutionFlags();
+    if (resolutionFlags)
+    {
+      if (resolutionFlags->getResolutionAndComponentFlags() &  0x08)
+        return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 GridAreaSettings* GridDefinition::getGridArea() const
 {
   FUNCTION_TRACE
@@ -701,6 +724,10 @@ ResolutionFlagsSettings* GridDefinition::getResolutionFlags() const
   FUNCTION_TRACE
   try
   {
+    GridAreaSettings *area = getGridArea();
+    if (area)
+      return area->getResolutionFlags();
+
     return nullptr;
   }
   catch (...)

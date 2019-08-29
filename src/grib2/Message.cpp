@@ -3419,6 +3419,27 @@ bool Message::isGridGlobal() const
 
 
 
+bool Message::isRelativeUV() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+    return mGridSection->isRelativeUV();
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
 
 /*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
 

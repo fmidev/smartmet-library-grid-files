@@ -1,5 +1,8 @@
 #pragma once
 
+#include <boost/optional.hpp>
+#include <gdal/ogr_spatialref.h>
+
 
 /*! \brief  The function converts latlon coordinates to rotated latlon coordinates. */
 
@@ -26,6 +29,24 @@ void rotatedLatlon_to_latlon(
 
 
 double latlon_distance(double lat1, double lon1, double lat2, double lon2);
+
+void getBoundingBox(
+    boost::optional<std::string> crs,
+    boost::optional<std::string> bboxcrs,
+    boost::optional<int> xsize,
+    boost::optional<int> ysize,
+    boost::optional<double> x1,
+    boost::optional<double> y1,
+    boost::optional<double> x2,
+    boost::optional<double> y2,
+    boost::optional<double> cx,
+    boost::optional<double> cy,
+    boost::optional<double> resolution,
+    bool latlon_center,
+    double& xx1,
+    double& yy1,
+    double& yy2,
+    double& xx2);
 
 
 inline double getLongitude(double lon)

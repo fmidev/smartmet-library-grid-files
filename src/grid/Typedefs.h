@@ -144,6 +144,7 @@ class AreaInterpolationMethod
     static const short Nearest        = 2;
     static const short Min            = 3;
     static const short Max            = 4;
+    static const short Forbidden      = 10;    // Requested point needs to match a grid point (or to be very close to it)
     static const short List           = 500;   // Returns grid corner values
     static const short ListWithAngles = 501;   // Returns grid corner values and angles
     static const short External       = 1000;  // Numbers 1000 - 65535 reserved for external interpolation types
@@ -159,6 +160,7 @@ class TimeInterpolationMethod
     static const short Nearest      = 2;
     static const short Min          = 3;
     static const short Max          = 4;
+    static const short Forbidden    = 10;      // Requested time needs to match the grid time (or to be very close to it)
     static const short External     = 1000;    // Numbers 1000 - 65535 reserved for external interpolation types
 };
 
@@ -173,6 +175,7 @@ class LevelInterpolationMethod
     static const short Min          = 3;
     static const short Max          = 4;
     static const short Logarithmic  = 5;
+    static const short Forbidden    = 10;      // Requested level needs to match the grid level (or to be very close to it)
     static const short External     = 1000;    // Numbers 1000 - 65535 reserved for external interpolation types
 };
 

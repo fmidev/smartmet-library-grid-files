@@ -3098,7 +3098,75 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
 
+#if 0
+    if (llboxStr == nullptr  &&  bboxStr == nullptr)
+    {
+      const char *crsStr = attributeList.getAttributeValue("grid.crs");
+      const char *bboxcrsStr = attributeList.getAttributeValue("grid.bboxcrs");
+      const char *cxStr = attributeList.getAttributeValue("grid.cx");
+      const char *cyStr = attributeList.getAttributeValue("grid.cy");
+      const char *resolutionStr = attributeList.getAttributeValue("grid.resolution");
 
+      boost::shared_ptr<OGRSpatialReference> ogr_crs;
+      boost::optional<std::string> crs;
+      boost::optional<std::string> bboxcrs;
+      boost::optional<int> xsize;
+      boost::optional<int> ysize;
+      boost::optional<double> x1;
+      boost::optional<double> y1;
+      boost::optional<double> x2;
+      boost::optional<double> y2;
+      boost::optional<double> cx;
+      boost::optional<double> cy;
+      boost::optional<double> resolution;
+      bool latlon_center = false;
+      double xx1 = 0.0;
+      double yy1 = 0.0;
+      double yy2 = 0.0;
+      double xx2 = 0.0;
+
+      if (crsStr != nullptr)
+        crs = crsStr;
+
+      if (bboxcrsStr != nullptr)
+        bboxcrs = bboxcrsStr;
+
+      if (gridWidthStr != nullptr)
+        xsize = atoi(gridWidthStr);
+
+      if (gridHeightStr != nullptr)
+        ysize = atoi(gridHeightStr);
+
+      if (cxStr != nullptr)
+        cx = atoi(cxStr);
+
+      if (cyStr != nullptr)
+        cy = atoi(cyStr);
+
+      if (resolutionStr != nullptr)
+        resolution = atoi(resolutionStr);
+
+      getBoundingBox(
+        crs,
+        bboxcrs,
+        xsize,
+        ysize,
+        x1,
+        y1,
+        x2,
+        y2,
+        cx,
+        cy,
+        resolution,
+        latlon_center,
+        xx1,
+        yy1,
+        yy2,
+        xx2);
+
+      printf("NEW BOX %f,%f,%f,%f\n",xx1,yy1,xx2,yy2);
+    }
+#endif
     // Checking if the geometry is defined by the geometryId
 
     GRIB2::GridDef_ptr def = nullptr;

@@ -55,12 +55,14 @@ class GridDefinition
     T::SpatialRef*              getSpatialReference();
     virtual void                initSpatialReference();
     bool                        isGridGlobal() const;
+    bool                        isRelativeUV() const;
     virtual bool                reverseXDirection() const;
     virtual bool                reverseYDirection() const;
 
     virtual EarthShapeSettings* getEarthShape() const;
     virtual LatLonSettings *    getLatLon() const;
     virtual RotationSettings*   getRotation() const;
+    virtual ResolutionSettings* getResolution() const;
 
     virtual void                setGridGeometryId(T::GeometryId geometryId);
     virtual void                setGridGeometryName(std::string geometryName);

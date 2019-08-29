@@ -76,6 +76,7 @@ class GridDefinition
 
     T::SpatialRef*              getSpatialReference();
     bool                        isGridGlobal() const;
+    bool                        isRelativeUV() const;
 
     virtual void                read(MemoryReader& memoryReader);
     virtual void                write(DataWriter& dataWriter);

@@ -428,6 +428,8 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(d.nx()));
     attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+    attributeList.setAttribute("grid.relativeUV",std::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.global",std::to_string((int)isGridGlobal()));
     attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
@@ -451,38 +453,41 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     //attributeList.print(std::cout,0,0);
 
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",getWKT());
       T::Dimensions  d = getGridDimensions();
 
-      double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-      uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-      if (reverseYDirection())
-        px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-      char tmp[100];
-      if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+      if (llboxStr == nullptr)
       {
-        if (x2 < x1  &&  x2 < 0)
-          x2 += 360;
+        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
 
-        sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
-        attributeList.setAttribute("grid.llbox",tmp);
-        //attributeList.setAttribute("grid.bbox",tmp);
-      }
+        if (reverseYDirection())
+          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-      if (getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-      {
-        sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
-        if (getGridProjection() > 2)
-          attributeList.setAttribute("grid.bbox",tmp);
+        char tmp[100];
+        if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+        {
+          if (x2 < x1  &&  x2 < 0)
+            x2 += 360;
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          attributeList.setAttribute("grid.llbox",tmp);
+          //attributeList.setAttribute("grid.bbox",tmp);
+        }
+
+        if (getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
+        {
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          if (getGridProjection() > 2)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
       }
 
       attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
     }
-
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
 
     if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
@@ -553,6 +558,8 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     attributeList.setAttribute("grid.original.crs",getWKT());
     attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
     attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
@@ -626,6 +633,8 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(gridWidth));
     attributeList.setAttribute("grid.height",std::to_string(gridHeight));
+    attributeList.setAttribute("grid.relativeUV",std::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.global",std::to_string((int)isGridGlobal()));
     attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
@@ -694,6 +703,8 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(d.nx()));
     attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+    attributeList.setAttribute("grid.relativeUV",std::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.global",std::to_string((int)isGridGlobal()));
     attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
@@ -818,6 +829,8 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     attributeList.setAttribute("grid.original.crs",getWKT());
     attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
     attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
@@ -893,6 +906,8 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(gridWidth));
     attributeList.setAttribute("grid.height",std::to_string(gridHeight));
+    attributeList.setAttribute("grid.relativeUV",std::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.global",std::to_string((int)isGridGlobal()));
     attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
@@ -1065,6 +1080,15 @@ int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 */
 
 bool Message::isGridGlobal() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+bool Message::isRelativeUV() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2107,6 +2131,8 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     attributeList.setAttribute("grid.original.crs",getWKT());
     attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
     attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(width));
     attributeList.setAttribute("grid.height",std::to_string(height));
