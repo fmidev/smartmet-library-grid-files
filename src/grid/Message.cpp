@@ -454,6 +454,18 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
+
+    if (gridSizeStr != nullptr)
+    {
+      double m = atof(gridSizeStr);
+      if (m > 0)
+      {
+        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(getGridHeight())*m)));
+      }
+    }
+
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",getWKT());
@@ -473,21 +485,42 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
           if (x2 < x1  &&  x2 < 0)
             x2 += 360;
 
+          if (x2 < x1  && x1 >= 180)
+            x1 -= 360;
+
           sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
-          //attributeList.setAttribute("grid.bbox",tmp);
+          if (getGridProjection() == T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
         }
 
         if (getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
         {
+          if (getGridProjection() == T::GridProjectionValue::LatLon)
+          {
+            if (x2 < x1  &&  x2 < 0)
+              x2 += 360;
+
+            if (x2 < x1  && x1 >= 180)
+              x1 -= 360;
+          }
+
+          if (reverseYDirection())
+          {
+            double tmp = y1;
+            y1 = y2;
+            y2 = tmp;
+          }
+
           sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
-          if (getGridProjection() > 2)
+          if (getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
       }
 
       attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
     }
+
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
 
     if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
@@ -726,35 +759,70 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
+
+    if (gridSizeStr != nullptr)
+    {
+      double m = atof(gridSizeStr);
+      if (m > 0)
+      {
+        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(getGridHeight())*m)));
+      }
+    }
+
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",getWKT());
       T::Dimensions  d = getGridDimensions();
 
-      double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-      uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-      if (reverseYDirection())
-        px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-      char tmp[100];
-      if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+      if (llboxStr == nullptr)
       {
-        if (x2 < x1  &&  x2 < 0)
-          x2 += 360;
+        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
 
-        sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
-        attributeList.setAttribute("grid.llbox",tmp);
-        //attributeList.setAttribute("grid.bbox",tmp);
+        if (reverseYDirection())
+          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+
+        char tmp[100];
+        if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+        {
+          if (x2 < x1  &&  x2 < 0)
+            x2 += 360;
+
+          if (x2 < x1  && x1 >= 180)
+            x1 -= 360;
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          attributeList.setAttribute("grid.llbox",tmp);
+          if (getGridProjection() == T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
+
+        if (getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
+        {
+          if (getGridProjection() == T::GridProjectionValue::LatLon)
+          {
+            if (x2 < x1  &&  x2 < 0)
+              x2 += 360;
+
+            if (x2 < x1  && x1 >= 180)
+              x1 -= 360;
+          }
+
+          if (reverseYDirection())
+          {
+            double tmp = y1;
+            y1 = y2;
+            y2 = tmp;
+          }
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          if (getGridProjection() != T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
       }
-
-      if (getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-      {
-        sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
-        if (getGridProjection() > 2)
-          attributeList.setAttribute("grid.bbox",tmp);
-      }
-
       attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
     }
 
@@ -2028,37 +2096,74 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
+
+    if (gridSizeStr != nullptr)
+    {
+      double m = atof(gridSizeStr);
+      if (m > 0)
+      {
+        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(getGridHeight())*m)));
+      }
+    }
+
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",getWKT());
       T::Dimensions  d = getGridDimensions();
 
-      double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-      uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
-
-      if (reverseYDirection())
-        px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
-
-      char tmp[100];
-      if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+      if (llboxStr == nullptr)
       {
-        if (x2 < x1  &&  x2 < 0)
-          x2 += 360;
+        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
 
-        sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
-        attributeList.setAttribute("grid.llbox",tmp);
-        //attributeList.setAttribute("grid.bbox",tmp);
-      }
+        if (reverseYDirection())
+          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
 
-      if (getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
-      {
-        sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
-        if (getGridProjection() > 2)
-          attributeList.setAttribute("grid.bbox",tmp);
+        char tmp[100];
+        if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+        {
+          if (x2 < x1  &&  x2 < 0)
+            x2 += 360;
+
+          if (x2 < x1  && x1 >= 180)
+            x1 -= 360;
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          attributeList.setAttribute("grid.llbox",tmp);
+          if (getGridProjection() == T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
+
+        if (getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
+        {
+          if (getGridProjection() == T::GridProjectionValue::LatLon)
+          {
+            if (x2 < x1  &&  x2 < 0)
+              x2 += 360;
+
+            if (x2 < x1  && x1 >= 180)
+              x1 -= 360;
+          }
+
+          if (reverseYDirection())
+          {
+            double tmp = y1;
+            y1 = y2;
+            y2 = tmp;
+          }
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          if (getGridProjection() != T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
       }
 
       attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
     }
+
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
 

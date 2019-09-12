@@ -279,8 +279,8 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
     uint ni = mNi;
     uint nj = mNj;
 
-    double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
     double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
     double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
     double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
@@ -392,8 +392,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     double rotated_lon = x/1000;
     double rotated_lat = y/1000;
 
-    double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
 
     lat = rotated_lat;
     lon = rotated_lon;
@@ -472,11 +472,12 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     double rotated_lon = x/1000;
     double rotated_lat = y/1000;
 
-    double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
 
     lat = rotated_lat;
     lon = rotated_lon;
+
     mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
 //    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
@@ -739,8 +740,8 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
     if (!mInitialized)
       init();
 
-    double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
 
     y = lat;
     x = lon;
@@ -775,8 +776,8 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
     if (!mInitialized)
       init();
 
-    double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
 
     lat = y;
     lon = x;

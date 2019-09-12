@@ -50,7 +50,9 @@ class RotatedLatLonImpl : public RotatedLatLon
     mutable double    mSouthPoleLat;
     mutable double    mSouthPoleLon;
     mutable bool      mInitialized;
-
+    mutable OGRSpatialReference*          mSr_rotatedLatlon;
+    mutable OGRCoordinateTransformation*  mCt_latlon2rotatedLatlon;
+    mutable OGRCoordinateTransformation*  mCt_rotatedLatlon2latlon;
 };
 
 }

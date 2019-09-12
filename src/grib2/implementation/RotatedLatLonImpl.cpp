@@ -29,6 +29,9 @@ RotatedLatLonImpl::RotatedLatLonImpl()
     mSouthPoleLat = 0;
     mSouthPoleLon = 0;
     mInitialized = false;
+    mSr_rotatedLatlon = nullptr;
+    mCt_latlon2rotatedLatlon = nullptr;
+    mCt_rotatedLatlon2latlon = nullptr;
   }
   catch (...)
   {
@@ -57,6 +60,9 @@ RotatedLatLonImpl::RotatedLatLonImpl(const RotatedLatLonImpl& other)
     mSouthPoleLat = other.mSouthPoleLat;
     mSouthPoleLon = other.mSouthPoleLon;
     mInitialized = other.mInitialized;
+    mSr_rotatedLatlon = nullptr;
+    mCt_latlon2rotatedLatlon = nullptr;
+    mCt_rotatedLatlon2latlon = nullptr;
   }
   catch (...)
   {
@@ -72,6 +78,22 @@ RotatedLatLonImpl::RotatedLatLonImpl(const RotatedLatLonImpl& other)
 
 RotatedLatLonImpl::~RotatedLatLonImpl()
 {
+  try
+  {
+    if (mSr_rotatedLatlon != nullptr)
+      mSpatialReference.DestroySpatialReference(mSr_rotatedLatlon);
+
+    if (mCt_latlon2rotatedLatlon != nullptr)
+      OCTDestroyCoordinateTransformation(mCt_latlon2rotatedLatlon);
+
+    if (mCt_rotatedLatlon2latlon != nullptr)
+      OCTDestroyCoordinateTransformation(mCt_rotatedLatlon2latlon);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    exception.printError();
+  }
 }
 
 
@@ -262,10 +284,12 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
 
       for (uint i=0; i < mNi; i++)
       {
-        double lat = 0;
-        double lon = 0;
+        double lat = y;
+        double lon = x;
 
-        rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
+        mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+
+        //rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
         coordinateList.push_back(T::Coordinate(lon,lat));
         x += mDx;
@@ -312,7 +336,12 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     double rotated_lat = mStartY + grid_j * mDy;
     double rotated_lon = mStartX + grid_i * mDx;
 
-    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
+    double lat = rotated_lat;
+    double lon = rotated_lon;
+
+    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+
+    //rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
     return true;
   }
@@ -354,7 +383,12 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     double rotated_lat = mStartY + grid_j * mDy;
     double rotated_lon = mStartX + grid_i * mDx;
 
-    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
+    double lat = rotated_lat;
+    double lon = rotated_lon;
+
+    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+
+    //rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
     return true;
   }
@@ -559,7 +593,12 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
     if (!mInitialized)
       init();
 
-    latlon_to_rotatedLatlon(lat,lon,mSouthPoleLat,mSouthPoleLon,y,x);
+    double y = lat;
+    double x = lon;
+
+    mCt_latlon2rotatedLatlon->Transform(1,&x,&y);
+
+    //latlon_to_rotatedLatlon(lat,lon,mSouthPoleLat,mSouthPoleLon,y,x);
     return true;
   }
   catch (...)
@@ -588,7 +627,12 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
     if (!mInitialized)
       init();
 
-    rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
+    double lat = y;
+    double lon = x;
+
+    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+
+    //rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
     return true;
   }
@@ -738,11 +782,13 @@ void RotatedLatLonImpl::initSpatialReference()
 
     // ### Set geographic coordinate system.
 
+    /*
     const char *pszGeogName = "UNKNOWN";
     const char *pszDatumName = "UNKNOWN";
     const char *pszSpheroidName = "UNKNOWN";
+    */
     double dfSemiMajor = 0.0;
-    double dfInvFlattening = 0.0;
+    //double dfInvFlattening = 0.0;
 
     auto radius = mEarthShape.getScaledValueOfRadiusOfSphericalEarth();
 
@@ -758,30 +804,33 @@ void RotatedLatLonImpl::initSpatialReference()
       {
         // dfSemiMajor = 6371229;
         dfSemiMajor = getMajorAxis(mEarthShape);
-        dfInvFlattening = 0.0;
+        //dfInvFlattening = 0.0;
       }
       else
       {
         if (majorAxis)
           dfSemiMajor = *majorAxis;
 
-        if (minorAxis)
-          dfInvFlattening = 1.0 / (1.0 - (*minorAxis / dfSemiMajor));
+        //if (minorAxis)
+        //  dfInvFlattening = 1.0 / (1.0 - (*minorAxis / dfSemiMajor));
       }
     }
     else
     {
       dfSemiMajor = *radius;
-      dfInvFlattening = 0.0;
+      //dfInvFlattening = 0.0;
     }
 
-    mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+    //mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 
     double npole_lat = -mSouthPoleLat;
     double npole_lon = mSouthPoleLon;
 
     char proj[200];
-    sprintf(proj,"+to_meter=.0174532925199433 +proj=ob_tran +o_proj=eqc +o_lon_p=%f +o_lat_p=%f +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+    //sprintf(proj,"+to_meter=.0174532925199433 +proj=ob_tran +o_proj=eqc +o_lon_p=%f +o_lat_p=%f +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+    //    npole_lon,npole_lat,dfSemiMajor);
+
+    sprintf(proj,"+proj=ob_tran +o_proj=lonlat +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
         npole_lon,npole_lat,dfSemiMajor);
 
     OGRErr err = mSpatialReference.SetFromUserInput(proj);
@@ -807,6 +856,21 @@ void RotatedLatLonImpl::initSpatialReference()
 
     if (len >= 360)
       mGlobal = true;
+
+    // ### Coordinate converters
+
+    OGRSpatialReference sr_latlon;
+    sr_latlon.importFromEPSG(4326);
+
+    mSr_rotatedLatlon = mSpatialReference.Clone();
+
+    mCt_latlon2rotatedLatlon = OGRCreateCoordinateTransformation(&sr_latlon,mSr_rotatedLatlon);
+    if (mCt_latlon2rotatedLatlon == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+
+    mCt_rotatedLatlon2latlon = OGRCreateCoordinateTransformation(mSr_rotatedLatlon,&sr_latlon);
+    if (mCt_rotatedLatlon2latlon == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {

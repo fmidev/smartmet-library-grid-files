@@ -3316,7 +3316,7 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
             //rotatedLatlon_to_latlon(yy,xx,60.0,20.0,lat,lon);
 
             transformation->Transform(1,&lon,&lat);
-            latLonCoordinates.push_back(T::Coordinate(lon,lat));
+            latLonCoordinates.push_back(T::Coordinate(getLongitude(lon),lat));
             coordinates.push_back(T::Coordinate(xx,yy));
 
             //if (x < 10  &&  y < 10) printf("%u,%u : %f,%f => %f,%f\n",x,y,xx,yy,lon,lat);
@@ -3498,7 +3498,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             double lat = yy;
 
             transformation->Transform(1,&lon,&lat);
-            latLonCoordinates.push_back(T::Coordinate(lon,lat));
+            latLonCoordinates.push_back(T::Coordinate(getLongitude(lon),lat));
 
             //printf("%f,%f => %f,%f\n",xx,yy,lon,lat);
 

@@ -302,7 +302,7 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
     uint c = grid_j*d.nx() + grid_i;
     if (c < coordinates.size())
     {
-      lon = coordinates[c].x();
+      lon = getLongitude(coordinates[c].x());
       lat = coordinates[c].y();
       return true;
     }
