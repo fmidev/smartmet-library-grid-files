@@ -54,6 +54,10 @@ inline double getLongitude(double lon)
   if (lon >= -180  &&  lon <= 180)
     return lon;
 
+  // The longitude value is out the acceptable range.
+  if (lon < -1000  ||  lon > 1000)
+    return lon;
+
   lon = lon + 180;
   while (lon > 360)
     lon = lon-360;
