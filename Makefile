@@ -31,7 +31,7 @@ DEFINES = -DUNIX -D_REENTRANT
 ifeq ($(CXX), clang++)
 
  FLAGS = \
-	-std=c++11 -fPIC -MD \
+	-std=c++11 -fPIC -MD -fno-omit-frame-pointer \
 	-Weverything \
 	-Wno-c++98-compat \
 	-Wno-float-equal \
@@ -44,7 +44,7 @@ ifeq ($(CXX), clang++)
 
 else
 
- FLAGS = -std=c++11 -fPIC -MD -Wall -W -Wno-unused-parameter
+ FLAGS = -std=c++11 -fPIC -MD -Wall -W -Wno-unused-parameter -fno-omit-frame-pointer
 
  FLAGS_DEBUG = \
 	-Wcast-align \
