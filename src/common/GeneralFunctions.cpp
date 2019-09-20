@@ -13,12 +13,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <zlib.h>
+#include <boost/algorithm/string.hpp>
+#include <boost/archive/iterators/base64_from_binary.hpp>
+#include <boost/archive/iterators/binary_from_base64.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/archive/iterators/binary_from_base64.hpp>
-#include <boost/archive/iterators/base64_from_binary.hpp>
-#include <boost/archive/iterators/transform_width.hpp>
-#include <boost/algorithm/string.hpp>
 #include <set>
 #include <sstream>
 #include <string>
@@ -33,7 +33,6 @@ namespace SmartMet
 {
 ThreadLock timeThreadLock;
 
-
 std::string uint64_toHex(unsigned long long value)
 {
   try
@@ -47,10 +46,6 @@ std::string uint64_toHex(unsigned long long value)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 int uint_compare(uint v1, uint v2)
 {
@@ -68,10 +63,6 @@ int uint_compare(uint v1, uint v2)
   }
 }
 
-
-
-
-
 int int_compare(int v1, int v2)
 {
   try
@@ -87,9 +78,6 @@ int int_compare(int v1, int v2)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
 
 int uint64_compare(unsigned long long v1, unsigned long long v2)
 {
@@ -107,10 +95,6 @@ int uint64_compare(unsigned long long v1, unsigned long long v2)
   }
 }
 
-
-
-
-
 int int64_compare(long long v1, long long v2)
 {
   try
@@ -126,9 +110,6 @@ int int64_compare(long long v1, long long v2)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
 
 int double_compare(double v1, double v2)
 {
@@ -146,10 +127,6 @@ int double_compare(double v1, double v2)
   }
 }
 
-
-
-
-
 int time_compare(time_t v1, time_t v2)
 {
   try
@@ -166,10 +143,6 @@ int time_compare(time_t v1, time_t v2)
   }
 }
 
-
-
-
-
 void time_usleep(int _sec, int _usec)
 {
   timespec r1, r2;
@@ -177,10 +150,6 @@ void time_usleep(int _sec, int _usec)
   r1.tv_nsec = _usec;  // * 1000;
   nanosleep(&r1, &r2);
 }
-
-
-
-
 
 double int_power(double x, int y)
 {
@@ -210,10 +179,6 @@ double int_power(double x, int y)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 void ieee2ibm(void *to, void *from, int len)
 {
@@ -261,10 +226,6 @@ void ieee2ibm(void *to, void *from, int len)
   }
 }
 
-
-
-
-
 float ieee2ibm(float value)
 {
   try
@@ -278,10 +239,6 @@ float ieee2ibm(float value)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 float ibm2ieee(float ibmFloat)
 {
@@ -307,10 +264,6 @@ float ibm2ieee(float ibmFloat)
   }
 }
 
-
-
-
-
 double grib_power(long s, long n)
 {
   try
@@ -334,10 +287,6 @@ double grib_power(long s, long n)
   }
 }
 
-
-
-
-
 std::string space(uint size)
 {
   try
@@ -354,10 +303,6 @@ std::string space(uint size)
   }
 }
 
-
-
-
-
 unsigned long long getTime()
 {
   try
@@ -371,10 +316,6 @@ unsigned long long getTime()
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 time_t getFileModificationTime(const char *filename)
 {
@@ -391,10 +332,6 @@ time_t getFileModificationTime(const char *filename)
   }
 }
 
-
-
-
-
 long long getFileSize(const char *filename)
 {
   try
@@ -409,10 +346,6 @@ long long getFileSize(const char *filename)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 uint stringToId(const char *str, uint len)
 {
@@ -437,10 +370,6 @@ uint stringToId(const char *str, uint len)
   }
 }
 
-
-
-
-
 uint stringToId(const char *str)
 {
   try
@@ -456,10 +385,6 @@ uint stringToId(const char *str)
   }
 }
 
-
-
-
-
 int getInt(const char *str, uint startIdx, uint len)
 {
   try
@@ -474,10 +399,6 @@ int getInt(const char *str, uint startIdx, uint len)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 time_t mktime_tz(struct tm *tm, const char *tzone)
 {
@@ -507,10 +428,6 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
 {
@@ -543,18 +460,15 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
   }
 }
 
-
-
-
-
 time_t localTimeToTimeT(std::string localTime, const char *tzone)
 {
   try
   {
     if (localTime.length() != 15)
     {
-      SmartMet::Spine::Exception exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
-      exception.addParameter("timestamp",localTime);
+      SmartMet::Spine::Exception exception(BCP,
+                                           "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+      exception.addParameter("timestamp", localTime);
       throw exception;
     }
 
@@ -579,10 +493,6 @@ time_t localTimeToTimeT(std::string localTime, const char *tzone)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 time_t utcTimeToTimeT(std::string utcTime)
 {
@@ -613,11 +523,8 @@ time_t utcTimeToTimeT(std::string utcTime)
   }
 }
 
-
-
-
-
-void splitTimeString(std::string timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second)
+void splitTimeString(
+    std::string timeStr, int &year, int &month, int &day, int &hour, int &minute, int &second)
 {
   try
   {
@@ -638,9 +545,6 @@ void splitTimeString(std::string timeStr,int& year,int& month,int& day,int& hour
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
 
 std::string localTimeFromTimeT(time_t t, const char *tzone)
 {
@@ -667,10 +571,6 @@ std::string localTimeFromTimeT(time_t t, const char *tzone)
   }
 }
 
-
-
-
-
 std::string utcTimeFromTimeT(time_t t)
 {
   try
@@ -696,10 +596,6 @@ std::string utcTimeFromTimeT(time_t t)
   }
 }
 
-
-
-
-
 std::string localTimeToUtcTime(std::string localTime, const char *tzone)
 {
   try
@@ -712,10 +608,6 @@ std::string localTimeToUtcTime(std::string localTime, const char *tzone)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 std::string localTimeToUtc(std::string localTime, boost::local_time::time_zone_ptr tz)
 {
@@ -732,10 +624,6 @@ std::string localTimeToUtc(std::string localTime, boost::local_time::time_zone_p
   }
 }
 
-
-
-
-
 std::string utcTimeToLocalTime(std::string utcTime, const char *tzone)
 {
   try
@@ -749,16 +637,11 @@ std::string utcTimeToLocalTime(std::string utcTime, const char *tzone)
   }
 }
 
-
-
-
-
 time_t toTimeT(boost::posix_time::ptime tim)
 {
   try
   {
-    struct tm tt = boost::posix_time::to_tm(tim);
-    return mktime(&tt);
+    return boost::posix_time::to_time_t(tim);
   }
   catch (...)
   {
@@ -766,16 +649,12 @@ time_t toTimeT(boost::posix_time::ptime tim)
   }
 }
 
-
-
-
-
-std::string addSeconds(std::string timeStr,int seconds)
+std::string addSeconds(std::string timeStr, int seconds)
 {
   try
   {
     time_t t = utcTimeToTimeT(timeStr);
-    t = t+seconds;
+    t = t + seconds;
     return utcTimeFromTimeT(t);
   }
   catch (...)
@@ -783,10 +662,6 @@ std::string addSeconds(std::string timeStr,int seconds)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 char toInt8(const char *str)
 {
@@ -802,10 +677,6 @@ char toInt8(const char *str)
   }
 }
 
-
-
-
-
 short toInt16(const char *str)
 {
   try
@@ -819,10 +690,6 @@ short toInt16(const char *str)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 int toInt32(const char *str)
 {
@@ -838,10 +705,6 @@ int toInt32(const char *str)
   }
 }
 
-
-
-
-
 long long toInt64(const char *str)
 {
   try
@@ -855,10 +718,6 @@ long long toInt64(const char *str)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 size_t toSize_t(const char *str)
 {
@@ -874,10 +733,6 @@ size_t toSize_t(const char *str)
   }
 }
 
-
-
-
-
 uchar toUInt8(const char *str)
 {
   try
@@ -891,10 +746,6 @@ uchar toUInt8(const char *str)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 ushort toUInt16(const char *str)
 {
@@ -910,9 +761,6 @@ ushort toUInt16(const char *str)
   }
 }
 
-
-
-
 uint toUInt32(const char *str)
 {
   try
@@ -926,9 +774,6 @@ uint toUInt32(const char *str)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
 
 ulonglong toUInt64(const char *str)
 {
@@ -944,9 +789,6 @@ ulonglong toUInt64(const char *str)
   }
 }
 
-
-
-
 double toDouble(const char *str)
 {
   try
@@ -961,11 +803,7 @@ double toDouble(const char *str)
   }
 }
 
-
-
-
-
-char toInt8(const std::string& str)
+char toInt8(const std::string &str)
 {
   try
   {
@@ -977,10 +815,7 @@ char toInt8(const std::string& str)
   }
 }
 
-
-
-
-short toInt16(const std::string& str)
+short toInt16(const std::string &str)
 {
   try
   {
@@ -992,10 +827,7 @@ short toInt16(const std::string& str)
   }
 }
 
-
-
-
-int toInt32(const std::string& str)
+int toInt32(const std::string &str)
 {
   try
   {
@@ -1007,11 +839,7 @@ int toInt32(const std::string& str)
   }
 }
 
-
-
-
-
-long long toInt64(const std::string& str)
+long long toInt64(const std::string &str)
 {
   try
   {
@@ -1023,11 +851,7 @@ long long toInt64(const std::string& str)
   }
 }
 
-
-
-
-
-uchar toUInt8(const std::string& str)
+uchar toUInt8(const std::string &str)
 {
   try
   {
@@ -1039,11 +863,7 @@ uchar toUInt8(const std::string& str)
   }
 }
 
-
-
-
-
-ushort toUInt16(const std::string& str)
+ushort toUInt16(const std::string &str)
 {
   try
   {
@@ -1055,11 +875,7 @@ ushort toUInt16(const std::string& str)
   }
 }
 
-
-
-
-
-uint toUInt32(const std::string& str)
+uint toUInt32(const std::string &str)
 {
   try
   {
@@ -1071,11 +887,7 @@ uint toUInt32(const std::string& str)
   }
 }
 
-
-
-
-
-ulonglong toUInt64(const std::string& str)
+ulonglong toUInt64(const std::string &str)
 {
   try
   {
@@ -1087,11 +899,7 @@ ulonglong toUInt64(const std::string& str)
   }
 }
 
-
-
-
-
-double toDouble(const std::string& str)
+double toDouble(const std::string &str)
 {
   try
   {
@@ -1103,11 +911,7 @@ double toDouble(const std::string& str)
   }
 }
 
-
-
-
-
-size_t toSize_t(const std::string& str)
+size_t toSize_t(const std::string &str)
 {
   try
   {
@@ -1118,10 +922,6 @@ size_t toSize_t(const std::string& str)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 std::string toString(std::array<char, 16> value)
 {
@@ -1136,9 +936,6 @@ std::string toString(std::array<char, 16> value)
   }
 }
 
-
-
-
 std::string toString(std::int8_t value)
 {
   try
@@ -1150,9 +947,6 @@ std::string toString(std::int8_t value)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
 
 std::string toString(std::int16_t value)
 {
@@ -1166,10 +960,6 @@ std::string toString(std::int16_t value)
   }
 }
 
-
-
-
-
 std::string toString(std::int32_t value)
 {
   try
@@ -1181,10 +971,6 @@ std::string toString(std::int32_t value)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 std::string toString(std::int64_t value)
 {
@@ -1198,10 +984,6 @@ std::string toString(std::int64_t value)
   }
 }
 
-
-
-
-
 std::string toString(std::uint8_t value)
 {
   try
@@ -1213,10 +995,6 @@ std::string toString(std::uint8_t value)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 std::string toString(std::uint16_t value)
 {
@@ -1230,10 +1008,6 @@ std::string toString(std::uint16_t value)
   }
 }
 
-
-
-
-
 std::string toString(std::uint32_t value)
 {
   try
@@ -1246,10 +1020,6 @@ std::string toString(std::uint32_t value)
   }
 }
 
-
-
-
-
 std::string toString(std::uint64_t value)
 {
   try
@@ -1261,10 +1031,6 @@ std::string toString(std::uint64_t value)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 std::string toString(float value)
 {
@@ -1280,10 +1046,6 @@ std::string toString(float value)
   }
 }
 
-
-
-
-
 std::string toString(double value)
 {
   try
@@ -1298,10 +1060,6 @@ std::string toString(double value)
   }
 }
 
-
-
-
-
 std::string toString(std::string value)
 {
   try
@@ -1313,10 +1071,6 @@ std::string toString(std::string value)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 std::string toString(T::UInt8_opt value)
 {
@@ -1332,10 +1086,6 @@ std::string toString(T::UInt8_opt value)
   }
 }
 
-
-
-
-
 std::string toString(T::UInt16_opt value)
 {
   try
@@ -1349,10 +1099,6 @@ std::string toString(T::UInt16_opt value)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 std::string toString(T::UInt32_opt value)
 {
@@ -1368,10 +1114,6 @@ std::string toString(T::UInt32_opt value)
   }
 }
 
-
-
-
-
 std::string toString(T::UInt64_opt value)
 {
   try
@@ -1385,10 +1127,6 @@ std::string toString(T::UInt64_opt value)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 std::string toString(T::Int8_opt value)
 {
@@ -1404,10 +1142,6 @@ std::string toString(T::Int8_opt value)
   }
 }
 
-
-
-
-
 std::string toString(T::Int16_opt value)
 {
   try
@@ -1421,10 +1155,6 @@ std::string toString(T::Int16_opt value)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 std::string toString(T::Int32_opt value)
 {
@@ -1440,10 +1170,6 @@ std::string toString(T::Int32_opt value)
   }
 }
 
-
-
-
-
 std::string toString(T::Int64_opt value)
 {
   try
@@ -1458,10 +1184,6 @@ std::string toString(T::Int64_opt value)
   }
 }
 
-
-
-
-
 std::string toString(boost::posix_time::ptime time)
 {
   try
@@ -1473,10 +1195,6 @@ std::string toString(boost::posix_time::ptime time)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 std::string toLowerString(std::string sourceString)
 {
@@ -1498,10 +1216,6 @@ std::string toLowerString(std::string sourceString)
   }
 }
 
-
-
-
-
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
 {
   try
@@ -1513,10 +1227,6 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 int compressData(void *_data, uint _dataSize, void *_compressedData, uint &_compressedDataSize)
 {
@@ -1539,10 +1249,6 @@ int compressData(void *_data, uint _dataSize, void *_compressedData, uint &_comp
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 int decompressData(void *_compressedData,
                    uint _compressedDataSize,
@@ -1570,10 +1276,6 @@ int decompressData(void *_compressedData,
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 void parseLatLonCoordinates(std::string latLonCoordinates, std::vector<T::Coordinate> &coordinates)
 {
@@ -1614,10 +1316,6 @@ void parseLatLonCoordinates(std::string latLonCoordinates, std::vector<T::Coordi
   }
 }
 
-
-
-
-
 void splitString(const char *str, char separator, std::vector<std::string> &partList)
 {
   try
@@ -1656,10 +1354,6 @@ void splitString(const char *str, char separator, std::vector<std::string> &part
   }
 }
 
-
-
-
-
 void splitString(std::string str, char separator, std::vector<std::string> &partList)
 {
   try
@@ -1671,10 +1365,6 @@ void splitString(std::string str, char separator, std::vector<std::string> &part
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
-
-
 
 void splitString(const char *str, char separator, std::set<std::string> &partList)
 {
@@ -1714,10 +1404,6 @@ void splitString(const char *str, char separator, std::set<std::string> &partLis
   }
 }
 
-
-
-
-
 void splitString(std::string str, char separator, std::set<std::string> &partList)
 {
   try
@@ -1729,10 +1415,6 @@ void splitString(std::string str, char separator, std::set<std::string> &partLis
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
-
-
 
 void splitString(const char *str, char separator, std::vector<uint> &partList)
 {
@@ -1772,10 +1454,6 @@ void splitString(const char *str, char separator, std::vector<uint> &partList)
   }
 }
 
-
-
-
-
 void splitString(std::string str, char separator, std::vector<uint> &partList)
 {
   try
@@ -1787,10 +1465,6 @@ void splitString(std::string str, char separator, std::vector<uint> &partList)
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
-
-
 
 void splitString(const char *str, char separator, std::vector<int> &partList)
 {
@@ -1830,10 +1504,6 @@ void splitString(const char *str, char separator, std::vector<int> &partList)
   }
 }
 
-
-
-
-
 void splitString(std::string str, char separator, std::vector<int> &partList)
 {
   try
@@ -1845,10 +1515,6 @@ void splitString(std::string str, char separator, std::vector<int> &partList)
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
-
-
 
 void splitString(const char *str, char separator, std::vector<double> &partList)
 {
@@ -1888,10 +1554,6 @@ void splitString(const char *str, char separator, std::vector<double> &partList)
   }
 }
 
-
-
-
-
 void splitString(std::string str, char separator, std::vector<double> &partList)
 {
   try
@@ -1903,10 +1565,6 @@ void splitString(std::string str, char separator, std::vector<double> &partList)
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
-
-
 
 void splitString(const char *str, char separator, std::vector<float> &partList)
 {
@@ -1946,10 +1604,6 @@ void splitString(const char *str, char separator, std::vector<float> &partList)
   }
 }
 
-
-
-
-
 void splitString(std::string str, char separator, std::vector<float> &partList)
 {
   try
@@ -1961,10 +1615,6 @@ void splitString(std::string str, char separator, std::vector<float> &partList)
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
-
-
 
 void splitString(const char *str, char separator, std::set<float> &partList)
 {
@@ -2004,10 +1654,6 @@ void splitString(const char *str, char separator, std::set<float> &partList)
   }
 }
 
-
-
-
-
 void splitString(std::string str, char separator, std::set<float> &partList)
 {
   try
@@ -2019,10 +1665,6 @@ void splitString(std::string str, char separator, std::set<float> &partList)
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
-
-
 
 void splitString(const char *str, char separator, std::set<int> &partList)
 {
@@ -2062,10 +1704,6 @@ void splitString(const char *str, char separator, std::set<int> &partList)
   }
 }
 
-
-
-
-
 void splitString(std::string str, char separator, std::set<int> &partList)
 {
   try
@@ -2077,10 +1715,6 @@ void splitString(std::string str, char separator, std::set<int> &partList)
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
-
-
 
 void splitString(const char *str, char separator, std::set<double> &partList)
 {
@@ -2120,10 +1754,6 @@ void splitString(const char *str, char separator, std::set<double> &partList)
   }
 }
 
-
-
-
-
 void splitString(std::string str, char separator, std::set<double> &partList)
 {
   try
@@ -2135,10 +1765,6 @@ void splitString(std::string str, char separator, std::set<double> &partList)
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
-
-
 
 std::string getAbsoluteFilePath(std::string filename)
 {
@@ -2162,10 +1788,6 @@ std::string getAbsoluteFilePath(std::string filename)
   }
 }
 
-
-
-
-
 std::string getFileDir(std::string filename)
 {
   try
@@ -2185,10 +1807,6 @@ std::string getFileDir(std::string filename)
   }
 }
 
-
-
-
-
 bool patternMatch(const char *str, std::vector<std::string> &patterns)
 {
   try
@@ -2205,10 +1823,6 @@ bool patternMatch(const char *str, std::vector<std::string> &patterns)
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
-
-
 
 void getFileList(const char *dirName,
                  std::vector<std::string> &filePatterns,
@@ -2288,17 +1902,13 @@ void getFileList(const char *dirName,
   }
 }
 
-
-
-
-
 int timePeriodToSeconds(const char *timePeriod)
 {
   try
   {
     char tmp[100];
-    strcpy(tmp,timePeriod);
-    char *p = strcasestr(tmp,"s");
+    strcpy(tmp, timePeriod);
+    char *p = strcasestr(tmp, "s");
     if (p != nullptr)
     {
       *p = '\0';
@@ -2306,7 +1916,7 @@ int timePeriodToSeconds(const char *timePeriod)
     }
     else
     {
-      char *p = strcasestr(tmp,"m");
+      char *p = strcasestr(tmp, "m");
       if (p != nullptr)
       {
         *p = '\0';
@@ -2314,7 +1924,7 @@ int timePeriodToSeconds(const char *timePeriod)
       }
       else
       {
-        char *p = strcasestr(tmp,"h");
+        char *p = strcasestr(tmp, "h");
         if (p != nullptr)
         {
           *p = '\0';
@@ -2322,11 +1932,11 @@ int timePeriodToSeconds(const char *timePeriod)
         }
         else
         {
-          char *p = strcasestr(tmp,"d");
+          char *p = strcasestr(tmp, "d");
           if (p != nullptr)
           {
             *p = '\0';
-            return (atoi(tmp) * 3600*24);
+            return (atoi(tmp) * 3600 * 24);
           }
           else
           {
@@ -2342,19 +1952,14 @@ int timePeriodToSeconds(const char *timePeriod)
   }
 }
 
-
-
-
-
-std::string toString(std::list<std::string>& parts,char separator)
+std::string toString(std::list<std::string> &parts, char separator)
 {
   try
   {
     std::ostringstream output;
     for (auto s = parts.begin(); s != parts.end(); ++s)
     {
-      if (s != parts.begin())
-        output << separator;
+      if (s != parts.begin()) output << separator;
 
       output << *s;
     }
@@ -2366,18 +1971,14 @@ std::string toString(std::list<std::string>& parts,char separator)
   }
 }
 
-
-
-
-std::string toString(std::set<int>& parts,char separator)
+std::string toString(std::set<int> &parts, char separator)
 {
   try
   {
     std::ostringstream output;
     for (auto s = parts.begin(); s != parts.end(); ++s)
     {
-      if (s != parts.begin())
-        output << separator;
+      if (s != parts.begin()) output << separator;
 
       output << *s;
     }
@@ -2389,18 +1990,14 @@ std::string toString(std::set<int>& parts,char separator)
   }
 }
 
-
-
-
-std::string toString(std::set<float>& parts,char separator)
+std::string toString(std::set<float> &parts, char separator)
 {
   try
   {
     std::ostringstream output;
     for (auto s = parts.begin(); s != parts.end(); ++s)
     {
-      if (s != parts.begin())
-        output << separator;
+      if (s != parts.begin()) output << separator;
 
       output << *s;
     }
@@ -2412,24 +2009,18 @@ std::string toString(std::set<float>& parts,char separator)
   }
 }
 
-
-
-
-
-std::string toString(T::AreaCoordinates& coordinates,char separator1,char separator2)
+std::string toString(T::AreaCoordinates &coordinates, char separator1, char separator2)
 {
   try
   {
     std::ostringstream output;
     for (auto s = coordinates.begin(); s != coordinates.end(); ++s)
     {
-      if (s != coordinates.begin())
-        output << separator2;
+      if (s != coordinates.begin()) output << separator2;
 
       for (auto a = s->begin(); a != s->end(); ++a)
       {
-        if (a != s->begin())
-          output << separator1;
+        if (a != s->begin()) output << separator1;
 
         output << a->x() << separator1 << a->y();
       }
@@ -2442,28 +2033,27 @@ std::string toString(T::AreaCoordinates& coordinates,char separator1,char separa
   }
 }
 
-
-
-
-
-void parseCoordinates(std::string coordinateStr,char separator1,char separator2,T::AreaCoordinates& coordinates)
+void parseCoordinates(std::string coordinateStr,
+                      char separator1,
+                      char separator2,
+                      T::AreaCoordinates &coordinates)
 {
   try
   {
     std::vector<std::string> partList;
 
-    splitString(coordinateStr,separator2,partList);
+    splitString(coordinateStr, separator2, partList);
     for (auto it = partList.begin(); it != partList.end(); ++it)
     {
       T::Coordinate_vec coordinateList;
 
       std::vector<double> cList;
-      splitString(*it,separator1,cList);
+      splitString(*it, separator1, cList);
       size_t sz = cList.size();
       if ((sz % 2) == 0)
       {
-        for (size_t t=0; t<sz; t=t+2)
-          coordinateList.push_back(T::Coordinate(cList[t],cList[t+1]));
+        for (size_t t = 0; t < sz; t = t + 2)
+          coordinateList.push_back(T::Coordinate(cList[t], cList[t + 1]));
       }
       coordinates.push_back(coordinateList);
     }
@@ -2474,23 +2064,19 @@ void parseCoordinates(std::string coordinateStr,char separator1,char separator2,
   }
 }
 
-
-
-
-void tuneLevels(int& level1,int& level2,int newLevel)
+void tuneLevels(int &level1, int &level2, int newLevel)
 {
-  if (level1 <= newLevel  &&  newLevel <= level2)
-    return;
+  if (level1 <= newLevel && newLevel <= level2) return;
 
   int l1 = level1;
   int l2 = level2;
 
   while (newLevel > l2)
   {
-    l1 = l1*10;
-    l2 = l2*10;
+    l1 = l1 * 10;
+    l2 = l2 * 10;
 
-    if (l1 <= newLevel  &&  newLevel <= l2)
+    if (l1 <= newLevel && newLevel <= l2)
     {
       level1 = l1;
       level2 = l2;
@@ -2500,10 +2086,10 @@ void tuneLevels(int& level1,int& level2,int newLevel)
 
   while (newLevel < l1)
   {
-    l1 = l1/10;
-    l2 = l2/10;
+    l1 = l1 / 10;
+    l2 = l2 / 10;
 
-    if (l1 <= newLevel  &&  newLevel <= l2)
+    if (l1 <= newLevel && newLevel <= l2)
     {
       level1 = l1;
       level2 = l2;
@@ -2512,24 +2098,20 @@ void tuneLevels(int& level1,int& level2,int newLevel)
   }
 }
 
-
-
-
-
-
-std::string base64_encode(unsigned char *data,size_t dataSize)
+std::string base64_encode(unsigned char *data, size_t dataSize)
 {
   try
   {
     namespace bai = boost::archive::iterators;
 
-    const std::string base64_padding[] = {"", "==","="};
+    const std::string base64_padding[] = {"", "==", "="};
     std::stringstream os;
 
     // convert binary values to base64 characters
     typedef bai::base64_from_binary
-    // retrieve 6 bit integers from a sequence of 8 bit bytes
-    <bai::transform_width<const char *, 6, 8> > base64_enc;
+        // retrieve 6 bit integers from a sequence of 8 bit bytes
+        <bai::transform_width<const char *, 6, 8>>
+            base64_enc;
 
     std::copy(base64_enc(data), base64_enc(data + dataSize), std::ostream_iterator<char>(os));
 
@@ -2542,9 +2124,6 @@ std::string base64_encode(unsigned char *data,size_t dataSize)
   }
 }
 
-
-
-
 std::string fileToBase64(const char *filename)
 {
   try
@@ -2553,33 +2132,33 @@ std::string fileToBase64(const char *filename)
     if (size <= 0)
     {
       Spine::Exception exception(BCP, "Invalid file size!");
-      exception.addParameter("Filename",filename);
-      exception.addParameter("Size",std::to_string(size));
+      exception.addParameter("Filename", filename);
+      exception.addParameter("Size", std::to_string(size));
       throw exception;
     }
 
-    FILE *file = fopen(filename,"r");
+    FILE *file = fopen(filename, "r");
     if (file == NULL)
     {
       Spine::Exception exception(BCP, "Cannot open the file!");
-      exception.addParameter("Filename",filename);
+      exception.addParameter("Filename", filename);
       throw exception;
     }
 
-    unsigned char *data = new unsigned char[size+1];
-    size_t n = fread(data,1,size,file);
+    unsigned char *data = new unsigned char[size + 1];
+    size_t n = fread(data, 1, size, file);
     if (n <= 0)
     {
       fclose(file);
       delete[] data;
       Spine::Exception exception(BCP, "File read failed!");
-      exception.addParameter("Filename",filename);
+      exception.addParameter("Filename", filename);
       throw exception;
     }
 
     fclose(file);
 
-    std::string st = base64_encode(data,size);
+    std::string st = base64_encode(data, size);
     delete[] data;
 
     return st;
@@ -2589,7 +2168,5 @@ std::string fileToBase64(const char *filename)
     throw Spine::Exception(BCP, "Operation failed!", nullptr);
   }
 }
-
-
 
 }  // Namespace SmartMet
