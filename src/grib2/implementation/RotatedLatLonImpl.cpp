@@ -287,9 +287,9 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
         double lat = y;
         double lon = x;
 
-        mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+        //mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-        //rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
+        rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
         coordinateList.push_back(T::Coordinate(lon,lat));
         x += mDx;
@@ -336,12 +336,12 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     double rotated_lat = mStartY + grid_j * mDy;
     double rotated_lon = mStartX + grid_i * mDx;
 
-    double lat = rotated_lat;
-    double lon = rotated_lon;
+    lat = rotated_lat;
+    lon = rotated_lon;
 
-    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+    // mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-    //rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
+    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
     return true;
   }
@@ -386,9 +386,9 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     double lat = rotated_lat;
     double lon = rotated_lon;
 
-    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+    // mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-    //rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
+    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
     return true;
   }
@@ -593,12 +593,12 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
     if (!mInitialized)
       init();
 
-    double y = lat;
-    double x = lon;
+    y = lat;
+    x = lon;
 
-    mCt_latlon2rotatedLatlon->Transform(1,&x,&y);
+    // mCt_latlon2rotatedLatlon->Transform(1,&x,&y);
 
-    //latlon_to_rotatedLatlon(lat,lon,mSouthPoleLat,mSouthPoleLon,y,x);
+    latlon_to_rotatedLatlon(lat,lon,mSouthPoleLat,mSouthPoleLon,y,x);
     return true;
   }
   catch (...)
@@ -630,9 +630,9 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
     double lat = y;
     double lon = x;
 
-    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+    // mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-    //rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
+    rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
     return true;
   }
