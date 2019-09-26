@@ -111,6 +111,8 @@ int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompr
 
 void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordinate>& coordinates);
 
+std::string stringReplaceAll(std::string st,std::string oldStr,std::string newStr);
+
 void splitString(const char *str,char separator,std::vector<uint>& partList);
 void splitString(std::string str,char separator,std::vector<uint>& partList);
 void splitString(const char *str,char separator,std::vector<int>& partList);

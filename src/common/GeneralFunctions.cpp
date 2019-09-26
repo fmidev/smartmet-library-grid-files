@@ -347,6 +347,25 @@ long long getFileSize(const char *filename)
   }
 }
 
+std::string stringReplaceAll(std::string st,std::string oldStr,std::string newStr)
+{
+  try
+  {
+    std::string s = st;
+    std::size_t fp = s.find(oldStr);
+    while (fp != std::string::npos)
+    {
+      s.replace(fp,oldStr.length(),newStr);
+      fp = s.find(oldStr);
+    }
+    return s;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
 uint stringToId(const char *str, uint len)
 {
   try
