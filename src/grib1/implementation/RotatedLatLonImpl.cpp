@@ -279,8 +279,8 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
     uint ni = mNi;
     uint nj = mNj;
 
-    double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
     double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
     double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
     double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
@@ -310,8 +310,8 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
         double lat = cy;
         double lon = cx;
 
-        //mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
-        rotatedLatlon_to_latlon(cy,cx,southPoleLat,southPoleLon,lat,lon);
+        mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+        //rotatedLatlon_to_latlon(cy,cx,southPoleLat,southPoleLon,lat,lon);
 
 
         T::Coordinate coord(lon,lat);
@@ -392,14 +392,14 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     double rotated_lon = x/1000;
     double rotated_lat = y/1000;
 
-    double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
 
     lat = rotated_lat;
     lon = rotated_lon;
-    //mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
+    //rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
 
     return true;
   }
@@ -472,15 +472,15 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     double rotated_lon = x/1000;
     double rotated_lat = y/1000;
 
-    double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
 
     lat = rotated_lat;
     lon = rotated_lon;
 
-    // mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
+    //rotatedLatlon_to_latlon(rotated_lat,rotated_lon,southPoleLat,southPoleLon,lat,lon);
 
     return true;
   }
@@ -740,14 +740,14 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
     if (!mInitialized)
       init();
 
-    double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
 
     y = lat;
     x = lon;
-    // mCt_latlon2rotatedLatlon->Transform(1,&x,&y);
+    mCt_latlon2rotatedLatlon->Transform(1,&x,&y);
 
-    latlon_to_rotatedLatlon(lat,lon,southPoleLat,southPoleLon,y,x);
+    //latlon_to_rotatedLatlon(lat,lon,southPoleLat,southPoleLon,y,x);
     return true;
   }
   catch (...)
@@ -776,14 +776,14 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
     if (!mInitialized)
       init();
 
-    double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
+    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
+    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
 
     lat = y;
     lon = x;
-    // mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-    rotatedLatlon_to_latlon(y,x,southPoleLat,southPoleLon,lat,lon);
+    //rotatedLatlon_to_latlon(y,x,southPoleLat,southPoleLon,lat,lon);
 
     return true;
   }
@@ -1077,10 +1077,10 @@ void RotatedLatLonImpl::initSpatialReference()
     double npole_lon = mSouthPoleLon;
 
     char proj[200];
-    //sprintf(proj,"+to_meter=.0174532925199433 +proj=ob_tran +o_proj=eqc +o_lon_p=%f +o_lat_p=%f +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+    //sprintf(proj,"+proj=ob_tran +o_proj=lonlat +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
         //npole_lon,npole_lat,dfSemiMajor);
 
-    sprintf(proj,"+proj=ob_tran +o_proj=lonlat +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+    sprintf(proj,"+proj=ob_tran +o_proj=lonlat +lon_0=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
         npole_lon,npole_lat,dfSemiMajor);
 
     OGRErr err = mSpatialReference.SetFromUserInput(proj);

@@ -287,9 +287,9 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
         double lat = y;
         double lon = x;
 
-        //mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+        mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-        rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
+        //rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
         coordinateList.push_back(T::Coordinate(lon,lat));
         x += mDx;
@@ -339,9 +339,9 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     lat = rotated_lat;
     lon = rotated_lon;
 
-    // mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
+    //rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
     return true;
   }
@@ -386,9 +386,9 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     double lat = rotated_lat;
     double lon = rotated_lon;
 
-    // mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-    rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
+    //rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
     return true;
   }
@@ -596,9 +596,9 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
     y = lat;
     x = lon;
 
-    // mCt_latlon2rotatedLatlon->Transform(1,&x,&y);
+    mCt_latlon2rotatedLatlon->Transform(1,&x,&y);
 
-    latlon_to_rotatedLatlon(lat,lon,mSouthPoleLat,mSouthPoleLon,y,x);
+    //latlon_to_rotatedLatlon(lat,lon,mSouthPoleLat,mSouthPoleLon,y,x);
     return true;
   }
   catch (...)
@@ -630,9 +630,9 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
     double lat = y;
     double lon = x;
 
-    // mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
 
-    rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
+    //rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
     return true;
   }
@@ -827,10 +827,10 @@ void RotatedLatLonImpl::initSpatialReference()
     double npole_lon = mSouthPoleLon;
 
     char proj[200];
-    //sprintf(proj,"+to_meter=.0174532925199433 +proj=ob_tran +o_proj=eqc +o_lon_p=%f +o_lat_p=%f +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+    //sprintf(proj,"+proj=ob_tran +o_proj=lonlat +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
     //    npole_lon,npole_lat,dfSemiMajor);
 
-    sprintf(proj,"+proj=ob_tran +o_proj=lonlat +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+    sprintf(proj,"+proj=ob_tran +o_proj=lonlat +lon_0=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
         npole_lon,npole_lat,dfSemiMajor);
 
     OGRErr err = mSpatialReference.SetFromUserInput(proj);
