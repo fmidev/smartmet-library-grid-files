@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 19.9.20
+Version: 19.10.1
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,10 +11,10 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 19.8.12
-BuildRequires: smartmet-library-spine-devel >= 19.9.17
-BuildRequires: smartmet-library-macgyver >= 19.8.2
-BuildRequires: smartmet-library-tron >= 17.9.20
+BuildRequires: smartmet-library-newbase-devel >= 19.9.26
+BuildRequires: smartmet-library-spine-devel >= 19.9.27
+BuildRequires: smartmet-library-macgyver >= 19.9.26
+BuildRequires: smartmet-library-tron >= 19.9.26
 BuildRequires: boost-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal-devel
@@ -36,9 +36,9 @@ Requires: gdal
 Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 19.8.12
-Requires: smartmet-library-macgyver >= 19.8.2
-Requires: smartmet-library-spine >= 19.9.17
+Requires: smartmet-library-newbase >= 19.9.26
+Requires: smartmet-library-macgyver >= 19.9.26
+Requires: smartmet-library-spine >= 19.9.26
 
 %description
 FMI Grid File handling library
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Oct  1 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.10.1-1.fmi
+- Fixed rotated latlon calculations
 * Fri Sep 20 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.9.20-1.fmi
 - Optimized SmartMet::toTimeT for speed (avoid using tzset)
 * Thu Sep 19 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.9.19-1.fmi
