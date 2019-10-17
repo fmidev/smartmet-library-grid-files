@@ -35,6 +35,7 @@ class RequestCounter
     void                saveTopIndexes(const char *filename);
     void                loadTopIndexes(const char *filename);
     void                incCounter(ulonglong key,uint index);
+    bool                isCountingEnabled();
     uint                getCounter(ulonglong key,uint index);
     std::vector<uint>   getTopRequestIndexes(ulonglong key);
     KeyCountList        getTopRequestCounters();

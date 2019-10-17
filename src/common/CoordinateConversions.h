@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Coordinate.h"
+
+#include <vector>
 #include <boost/optional.hpp>
 #include <gdal/ogr_spatialref.h>
 
@@ -30,6 +33,10 @@ void rotatedLatlon_to_latlon(
 
 double latlon_distance(double lat1, double lon1, double lat2, double lon2);
 
+std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocirclePoints(double lon1, double lat1, double lon2, double lat2, std::size_t steps);
+
+
+#if 0
 void getBoundingBox(
     boost::optional<std::string> crs,
     boost::optional<std::string> bboxcrs,
@@ -47,7 +54,7 @@ void getBoundingBox(
     double& yy1,
     double& yy2,
     double& xx2);
-
+#endif
 
 inline double getLongitude(double lon)
 {

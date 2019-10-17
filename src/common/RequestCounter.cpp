@@ -457,6 +457,23 @@ void RequestCounter::setCountingEnabled(bool _enabled)
 
 
 
+bool RequestCounter::isCountingEnabled()
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mCountingEnabled;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void RequestCounter::saveTopIndexes(const char *filename)
 {
   FUNCTION_TRACE

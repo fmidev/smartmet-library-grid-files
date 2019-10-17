@@ -4874,7 +4874,7 @@ void Message::incRequestCounter(uint index) const
   //FUNCTION_TRACE
   try
   {
-    if (mRequestCounterEnabled)
+    if (mRequestCounterEnabled && requestCounter.isCountingEnabled())
     {
       ulonglong key = getRequestCounterKey();
       requestCounter.incCounter(key,index);

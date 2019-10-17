@@ -1186,7 +1186,6 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
         maxValue = gridData[t];
     }
 
-
     std::vector<float> *gridDataPtr = &gridData;
     std::vector<float> tmpGridData;
     if (smooth_size > 0 || smooth_degree > 0)
@@ -1222,10 +1221,15 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
           case T::AreaInterpolationMethod::Linear:
             MyLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
             break;
-
-  //        case T::AreaInterpolationMethod::Nearest:
-  //          MyNearestContourer::line(builder, data, isovalue, worldwrap, *hints);
-  //          break;
+/*
+          case T::AreaInterpolationMethod::Nearest:
+            MyNearestContourer::line(builder, data, isovalue, worldwrap, *hints);
+            MyNearestContourer::fill(builder, data, lo, hi, worldwrap, hints);
+            break;
+*/
+          case T::LevelInterpolationMethod::Logarithmic:
+            MyLogLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
+            break;
 
           default:
             MyLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
@@ -1365,11 +1369,14 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
             case T::AreaInterpolationMethod::Linear:
               MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
               break;
-    /*
             case T::AreaInterpolationMethod::Nearest:
               MyNearestContourer::fill(builder, data, low,high, worldwrap, *hints);
               break;
-    */
+
+            case T::LevelInterpolationMethod::Logarithmic:
+              MyLogLinearContourer::fill(builder, data, low, high, worldwrap, *hints);
+              break;
+
             default:
               MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
               break;

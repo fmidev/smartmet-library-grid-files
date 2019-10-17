@@ -11,6 +11,7 @@
 #include <gdal/ogr_geometry.h>
 #include <gdal/ogr_spatialref.h>
 
+#include <newbase/NFmiLocation.h>
 
 
 
@@ -143,11 +144,61 @@ double latlon_distance(double lat1, double lon1, double lat2, double lon2)
 
 
 
+std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocirclePoints(double lon1, double lat1, double lon2, double lat2, std::size_t steps)
+{
+  try
+  {
+    // Sanity checks
+    if (lon1 == lon2 && lat1 == lat2)
+      throw SmartMet::Spine::Exception(BCP, "Ill-defined isocircle: start and end points are equal");
+
+    if (std::abs(lon1 - lon2) == 180 && std::abs(lat1 - (90 - lat2)) == 90)
+      throw SmartMet::Spine::Exception(BCP, "Ill-defined isocircle: points at opposing ends of the earth");
+
+    if (steps < 1 || steps > 10000)
+      throw SmartMet::Spine::Exception(BCP,"Number of points on isocircle must be 1-10000, not " + boost::lexical_cast<std::string>(steps));
+
+    // Calculate bearing and distance to be travelled
+
+    NFmiLocation startpoint(lon1, lat1);
+    NFmiLocation endpoint(lon2, lat2);
+
+    double bearing = startpoint.Direction(endpoint);
+    double distance = startpoint.Distance(endpoint);
+
+    std::vector<SmartMet::T::Coordinate> coordinates;
+    auto cc = startpoint.GetLocation();
+    coordinates.push_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
+
+    std::vector<double> distances;
+    distances.push_back(0);
+
+    for (std::size_t i = 1; i < steps; i++)
+    {
+      // Should this be fixed? Probably not - the coordinates should behave the same
+      const bool pacific_view = false;
+      double dist = i * distance / steps;
+      auto loc = startpoint.GetLocation(bearing, dist, pacific_view);
+      auto cc = loc.GetLocation();
+      coordinates.push_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
+      distances.push_back(dist / 1000.0);
+    }
+    cc = endpoint.GetLocation();
+    coordinates.push_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
+    distances.push_back(distance / 1000.0);
+
+    return std::make_pair(coordinates, distances);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception::Trace(BCP, "Operation failed!");
+  }
+}
 
 
 
 
-
+#if 0
 void getBoundingBox(
     boost::optional<std::string> crs,
     boost::optional<std::string> bboxcrs,
@@ -359,3 +410,4 @@ void getBoundingBox(
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+#endif
