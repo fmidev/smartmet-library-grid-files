@@ -101,13 +101,13 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
-    if (data == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
+    //if (data == nullptr)
+      //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     long bits_per_value = *mPacking.getBitsPerValue();
     double reference_value = mPacking.getReferenceValue();
 
-    if (dataSize == 0 ||  bits_per_value == 0)
+    if (dataSize == 0  || data == nullptr  ||  bits_per_value == 0)
     {
       if (bitmap != nullptr  &&  bitmapSizeInBytes > 0)
       {

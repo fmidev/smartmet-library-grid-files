@@ -46,6 +46,7 @@ class Message : public GRID::Message
 {
   public:
                         Message();
+                        Message(GribFile *gribFile,uint messageIndex,ulonglong position,ulong size);
                         Message(const Message& other);
     virtual             ~Message();
 
@@ -149,6 +150,8 @@ class Message : public GRID::Message
     void                initGridSection();
     void                initProductSection();
 
+    bool                isRead();
+    void                read();
     void                read(MemoryReader& memoryReader);
     void                write(DataWriter& dataWriter);
     void                print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -160,6 +163,9 @@ class Message : public GRID::Message
 
     /*! \brief The message start position in the file. */
     T::FilePosition     mFilePosition;
+
+    /*! \brief Indicates if the message is already read. */
+    bool                mIsRead;
 
     /*! \brief  A shared pointer to the IndicatorSection object. */
     IndicatorSect_sptr  mIndicatorSection;

@@ -45,6 +45,35 @@ Message::Message()
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
     mPointCacheEnabled = false;
+    mIsRead = false;
+    mMessageSize = 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+Message::Message(GribFile *gribFile,uint messageIndex,ulonglong position,uint size)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mGribFile = gribFile;
+    mFilePosition = position;
+    mMessageIndex = messageIndex;
+    mMessageSize = size;
+    mFmiParameterLevelId = 0;
+    mCacheKey = 0;
+    mOrigCacheKey = 0;
+    mValueDecodingFailed = false;
+    mPointCacheEnabled = false;
+    mIsRead = false;
+    //printf("NEW MESSAGE %u %u %llu\n",mMessageIndex,mFilePosition,mMessageSize);
   }
   catch (...)
   {
@@ -66,6 +95,8 @@ Message::Message(const Message& other)
   {
     mGribFile = nullptr;
     mFilePosition = other.mFilePosition;
+    mMessageSize = other.mMessageSize;
+    mIsRead = true;
 
     if (other.mIndicatorSection)
     {
@@ -876,6 +907,56 @@ void Message::setGridValues(T::ParamValue_vec& values)
 
 
 
+bool Message::isRead()
+{
+  try
+  {
+    return mIsRead;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+void Message::read()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mIsRead)
+      return;
+
+    if (mGribFile == nullptr)
+      SmartMet::Spine::Exception exception(BCP,"No pointer to the grib file!");
+
+    long s = mGribFile->getSize();
+    uchar *d = (uchar*)mGribFile->getMemoryPtr();
+    uchar *e = d + s;
+
+    MemoryReader memoryReader(d,e);
+    memoryReader.setReadPosition(mFilePosition);
+    read(memoryReader);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Message read failed!",nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    exception.addParameter("Message start position",uint64_toHex(mFilePosition));
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method reads and initializes all data related to the current message object.
 
         \param memoryReader  This object controls the access to the memory mapped file.
@@ -886,6 +967,9 @@ void Message::read(MemoryReader& memoryReader)
   FUNCTION_TRACE
   try
   {
+    if (mIsRead)
+      return;
+
     mFilePosition = memoryReader.getGlobalReadPosition();
 
     // Index of the section processed last (=none)
@@ -1081,6 +1165,11 @@ void Message::read(MemoryReader& memoryReader)
 
     if (!mDataSection)
       throw SmartMet::Spine::Exception(BCP,"The data section is missing!");
+
+    if (mMessageSize == 0)
+      mMessageSize = (memoryReader.getGlobalReadPosition() - mFilePosition);
+
+    mIsRead = true;
   }
   catch (...)
   {

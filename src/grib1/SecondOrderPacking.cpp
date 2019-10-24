@@ -168,7 +168,8 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
     std::uint8_t flags = message->getFlags();
 
     if (data == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
+      return;
+      //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     // The documentation of this packing method is just terrible. The basic idea
     // of this packing method should be close to grib2 complex packing, but still

@@ -35,9 +35,11 @@ class GribFile : public GRID::PhysicalGridFile
     std::size_t         getNumberOfMessages();
 
     GRID::Message*      newMessage();
+    GRID::Message*      newMessage(uint messageIndex,ulonglong position,uint size);
     void                addMessage(GRID::Message *message);
     void                addMessage(GRIB1::Message *message);
 
+    void                clearCachedValues(uint hitsRequired,uint timePeriod) const;
     void                read(std::string filename);
     void                read(MemoryReader& memoryReader);
     void                write(std::string filename);
@@ -50,7 +52,7 @@ class GribFile : public GRID::PhysicalGridFile
     void                readMessage(MemoryReader& memoryReader,uint messageIndex);
 
     /*! \brief  The message object pointers. */
-    std::vector<Message*> mMessages;
+    std::map<uint,Message*> mMessages;
 };
 
 }  // namespace GRIB1

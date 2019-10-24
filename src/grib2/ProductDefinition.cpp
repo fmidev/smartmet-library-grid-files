@@ -1156,9 +1156,23 @@ T::TimeString ProductDefinition::getForecastTime(T::TimeString referenceTime) co
 {
   try
   {
+    std::string t1;
+    std::string t2;
+
     const ParameterSettings *p = getParameter();
     if (p != nullptr)
-      return countForecastStartTime(referenceTime,*p);
+      t1 = countForecastStartTime(referenceTime,*p);
+
+    StatisticalSettings *s = getStatistical();
+    if (s != nullptr)
+    {
+      t2 = countForecastEndTime(*s);
+      if (t2 > t1)
+        return t2;
+    }
+
+    if (p != nullptr)
+      return t1;
 
     return referenceTime;
   }

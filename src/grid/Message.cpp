@@ -49,6 +49,7 @@ Message::Message()
   try
   {
     mMessageIndex = 0;
+    mMessageSize = 0;
     mGrib1ParameterLevelId = 0;
     mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
@@ -76,6 +77,7 @@ Message::Message(const Message& message)
   try
   {
     mMessageIndex = message.mMessageIndex;
+    mMessageSize = message.mMessageSize;
     mGribParameterId = message.mGribParameterId;
     mGrib1ParameterLevelId = message.mGrib1ParameterLevelId;
     mGrib2ParameterLevelId = message.mGrib2ParameterLevelId;
@@ -198,6 +200,23 @@ uint Message::getMessageIndex() const
   try
   {
     return mMessageIndex;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+uint Message::getMessageSize() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mMessageSize;
   }
   catch (...)
   {
@@ -4947,6 +4966,24 @@ void Message::refreshIndexes(std::vector<uint>& indexes)
   {
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
+}
+
+
+
+
+
+bool Message::isRead()
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+void Message::read()
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 

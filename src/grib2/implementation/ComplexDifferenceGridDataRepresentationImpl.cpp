@@ -96,8 +96,8 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
-    if (data == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
+    //if (data == nullptr)
+      //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
@@ -114,7 +114,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
     int extraDescrBits = *mNumberOfOctetsExtraDescriptors * 8;
     int non = 0;
 
-    if (numberOfGroups == 0)
+    if (numberOfGroups == 0 || data == nullptr)
     {
       // The number of groups is zero, so all values are set to 'ref'.
 

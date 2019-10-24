@@ -9,7 +9,7 @@ namespace SmartMet
 namespace GRIB2
 {
 
-typedef std::vector<Message*> Message_pvec;
+typedef std::map<uint,Message*> Message_pmap;
 
 
 class GribFile : public GRID::PhysicalGridFile
@@ -30,14 +30,16 @@ class GribFile : public GRID::PhysicalGridFile
     std::size_t     getNumberOfMessages();
 
     GRID::Message*  newMessage();
+    GRID::Message*  newMessage(uint messageIndex,ulonglong position,uint size);
     void            addMessage(GRID::Message *message);
     void            addMessage(GRIB2::Message *message);
 
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void            clearCachedValues(uint hitsRequired,uint timePeriod) const;
     void            read(std::string filename);
     void            read(MemoryReader& memoryReader);
     void            write(std::string filename);
     void            write(DataWriter& dataWriter);
+    void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 
@@ -45,7 +47,7 @@ class GribFile : public GRID::PhysicalGridFile
     void            readMessage(MemoryReader& memoryReader,uint messageIndex);
 
     /*! \brief  The message object pointers. */
-    Message_pvec    mMessages;
+    Message_pmap    mMessages;
 };
 
 }  // namespace GRIB2

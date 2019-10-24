@@ -96,8 +96,8 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
-    if (data == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
+    //if (data == nullptr)
+      //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
@@ -112,7 +112,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
     int groupSizeBits = *mNumberOfBitsForScaledGroupLengths;
     int readPosition = 0;
 
-    if (numberOfGroups == 0)
+    if (numberOfGroups == 0 || data == nullptr)
     {
       // The number of groups is zero, so all values are set to 'ref'.
 

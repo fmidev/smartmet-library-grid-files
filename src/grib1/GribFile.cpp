@@ -3,6 +3,10 @@
 #include "../common/GeneralFunctions.h"
 #include "../common/FileWriter.h"
 #include "../grid/PrintOptions.h"
+#include "../common/ShowFunction.h"
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 namespace SmartMet
 {
@@ -14,6 +18,7 @@ namespace GRIB1
 
 GribFile::GribFile()
 {
+  FUNCTION_TRACE
   try
   {
     mPointCacheEnabled = false;
@@ -31,14 +36,15 @@ GribFile::GribFile()
 GribFile::GribFile(const GribFile& other)
 :GRID::PhysicalGridFile(other)
 {
+  FUNCTION_TRACE
   try
   {
     mPointCacheEnabled = false;
     for (auto msg = other.mMessages.begin(); msg != other.mMessages.end(); ++msg)
     {
-      Message *message = new Message(*(*msg));
+      Message *message = new Message(*(msg->second));
       message->setGribFilePtr(this);
-      mMessages.push_back(message);
+      mMessages.insert(std::pair<uint,Message*>(msg->first,message));
     }
   }
   catch (...)
@@ -55,11 +61,12 @@ GribFile::GribFile(const GribFile& other)
 
 GribFile::~GribFile()
 {
+  FUNCTION_TRACE
   try
   {
     for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
     {
-      delete (*msg);
+      delete (msg->second);
     }
   }
   catch (...)
@@ -75,6 +82,7 @@ GribFile::~GribFile()
 
 GRID::GridFile* GribFile::createGridFile()
 {
+  FUNCTION_TRACE
   try
   {
     return (GRID::GridFile*)new GribFile(*this);
@@ -99,6 +107,7 @@ GRID::GridFile* GribFile::createGridFile()
 
 void GribFile::read(std::string filename)
 {
+  FUNCTION_TRACE
   try
   {
     // Safety checks
@@ -148,6 +157,7 @@ void GribFile::read(std::string filename)
 
 void GribFile::read(MemoryReader& memoryReader)
 {
+  FUNCTION_TRACE
   try
   {
     mIsMemoryMapped = true;
@@ -186,6 +196,7 @@ void GribFile::read(MemoryReader& memoryReader)
 
 void GribFile::write(std::string filename)
 {
+  FUNCTION_TRACE
   try
   {
     FileWriter dataWriter;
@@ -209,11 +220,12 @@ void GribFile::write(std::string filename)
 
 void GribFile::write(DataWriter& dataWriter)
 {
+  FUNCTION_TRACE
   try
   {
     for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
     {
-      (*msg)->write(dataWriter);
+      msg->second->write(dataWriter);
     }
   }
   catch (...)
@@ -228,6 +240,7 @@ void GribFile::write(DataWriter& dataWriter)
 
 void GribFile::deleteUsers()
 {
+  FUNCTION_TRACE
   try
   {
     mUserList.clear();
@@ -242,8 +255,30 @@ void GribFile::deleteUsers()
 
 
 
+void GribFile::clearCachedValues(uint hitsRequired,uint timePeriod) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+    {
+      if (msg->second->isRead())
+        msg->second->clearCachedValues(hitsRequired,timePeriod);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 GRID::Message* GribFile::newMessage()
 {
+  FUNCTION_TRACE
   try
   {
     GRIB1::Message *msg = new GRIB1::Message();
@@ -260,13 +295,39 @@ GRID::Message* GribFile::newMessage()
 
 
 
+GRID::Message* GribFile::newMessage(uint messageIndex,ulonglong position,uint size)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mMessages.find(messageIndex) != mMessages.end())
+    {
+      SmartMet::Spine::Exception exception(BCP,"Message index already exists!");
+      exception.addParameter("MessageIndex",std::to_string(messageIndex));
+      throw exception;
+    }
+
+    GRIB1::Message *msg = new GRIB1::Message(this,messageIndex,position,size);
+    mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
+    return msg;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void GribFile::addMessage(GRID::Message *message)
 {
+  FUNCTION_TRACE
   try
   {
     if (message == nullptr)
       throw SmartMet::Spine::Exception(BCP,"The 'message' parameter points to nullptr!");
-
 
     GRIB1::Message *msg = (GRIB1::Message*)message;
     addMessage(msg);
@@ -283,15 +344,15 @@ void GribFile::addMessage(GRID::Message *message)
 
 void GribFile::addMessage(GRIB1::Message *message)
 {
+  FUNCTION_TRACE
   try
   {
     if (message == nullptr)
       throw SmartMet::Spine::Exception(BCP,"The 'message' parameter points to nullptr!");
 
-
     message->setGribFilePtr(this);
     message->setMessageIndex(mMessages.size());
-    mMessages.push_back(message);
+    mMessages.insert(std::pair<uint,Message*>(mMessages.size(),message));
   }
   catch (...)
   {
@@ -311,6 +372,7 @@ void GribFile::addMessage(GRIB1::Message *message)
 
 T::FileType GribFile::getFileType() const
 {
+  FUNCTION_TRACE
   try
   {
     return T::FileTypeValue::Grib1;
@@ -332,6 +394,7 @@ T::FileType GribFile::getFileType() const
 
 std::string GribFile::getFileTypeString() const
 {
+  FUNCTION_TRACE
   try
   {
     return std::string("GRIB1");
@@ -354,12 +417,17 @@ std::string GribFile::getFileTypeString() const
 
 std::size_t GribFile::getNumberOfMessages()
 {
+  FUNCTION_TRACE
   try
   {
     if (!isMemoryMapped())
       mapToMemory();
 
-    return mMessages.size();
+    if (mMessages.size() == 0)
+      return 0;
+
+    auto last = mMessages.rbegin();
+    return last->first;
   }
   catch (...)
   {
@@ -380,22 +448,22 @@ std::size_t GribFile::getNumberOfMessages()
 
 GRID::Message* GribFile::getMessageByIndex(std::size_t index)
 {
+  FUNCTION_TRACE
   try
   {
     if (!isMemoryMapped())
       mapToMemory();
 
-    if (index >= mMessages.size())
-      return nullptr;
-    /*
+    auto msg = mMessages.find(index);
+    if (msg != mMessages.end())
     {
-      SmartMet::Spine::Exception exception(BCP,"Index out of the range!");
-      exception.addParameter("Index",std::to_string(index));
-      exception.addParameter("Range","0.." + std::to_string(mMessages.size()));
-      throw exception;
+      if (msg->second != nullptr &&  !msg->second->isRead())
+        msg->second->read();
+
+      return msg->second;
     }
-    */
-    return mMessages[index];
+
+    return nullptr;
   }
   catch (...)
   {
@@ -421,6 +489,7 @@ GRID::Message* GribFile::getMessageByIndex(std::size_t index)
 
 T::Data_ptr_vec GribFile::searchMessageLocations(MemoryReader& memoryReader)
 {
+  FUNCTION_TRACE
   try
   {
     std::vector<unsigned char*> gribs;
@@ -510,13 +579,14 @@ T::Data_ptr_vec GribFile::searchMessageLocations(MemoryReader& memoryReader)
 
 void GribFile::readMessage(MemoryReader& memoryReader, uint messageIndex)
 {
+  FUNCTION_TRACE
   try
   {
     Message *message = new Message();
     message->setGribFilePtr(this);
     message->setMessageIndex(messageIndex);
     message->setPointCacheEnabled(mPointCacheEnabled);
-    mMessages.push_back(message);
+    mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
     message->read(memoryReader);
   }
   catch (...)
@@ -538,6 +608,7 @@ void GribFile::readMessage(MemoryReader& memoryReader, uint messageIndex)
 
 void GribFile::print(std::ostream& stream,uint level,uint optionFlags) const
 {
+  FUNCTION_TRACE
   try
   {
     std::size_t messageCount = mMessages.size();
@@ -554,9 +625,9 @@ void GribFile::print(std::ostream& stream,uint level,uint optionFlags) const
     if (optionFlags & GRID::PrintFlag::no_messages)
       return;
 
-    for (std::size_t t=0; t<messageCount; t++)
+    for (auto msg=mMessages.begin();msg!=mMessages.end();++msg)
     {
-      mMessages[t]->print(stream,level+1,optionFlags);
+      msg->second->print(stream,level+1,optionFlags);
     }
   }
   catch (...)

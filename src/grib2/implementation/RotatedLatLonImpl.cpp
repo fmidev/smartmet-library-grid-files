@@ -824,14 +824,16 @@ void RotatedLatLonImpl::initSpatialReference()
     //mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 
     double npole_lat = -mSouthPoleLat;
-    double npole_lon = mSouthPoleLon;
+    double npole_lon = 0;
+    double lon_0 = mSouthPoleLon;
 
     char proj[200];
-    //sprintf(proj,"+proj=ob_tran +o_proj=lonlat +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+
+    //sprintf(proj,"+proj=ob_tran +o_proj=lonlat +lon_0=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
     //    npole_lon,npole_lat,dfSemiMajor);
 
-    sprintf(proj,"+proj=ob_tran +o_proj=lonlat +lon_0=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
-        npole_lon,npole_lat,dfSemiMajor);
+    sprintf(proj,"+proj=ob_tran +o_proj=lonlat +lon_0=%f +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+        lon_0,npole_lon,npole_lat,dfSemiMajor);
 
     OGRErr err = mSpatialReference.SetFromUserInput(proj);
     if (err != OGRERR_NONE)

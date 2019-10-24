@@ -2,9 +2,14 @@
 #include "../common/Exception.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/GeneralFunctions.h"
+#include "../common/ShowFunction.h"
 #include "../identification/GridDef.h"
 #include "../grib1/GribFile.h"
 #include "../grib2/GribFile.h"
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
+
 
 namespace SmartMet
 {
@@ -16,6 +21,7 @@ namespace GRID
 
 GridFile::GridFile()
 {
+  FUNCTION_TRACE
   try
   {
     //mIsMemoryMapped = false;
@@ -41,6 +47,7 @@ GridFile::GridFile()
 
 GridFile::GridFile(const GridFile& other)
 {
+  FUNCTION_TRACE
   try
   {
     mFileName = other.mFileName;
@@ -72,6 +79,7 @@ GridFile::GridFile(const GridFile& other)
 
 GridFile::GridFile(GridFile *gridFile)
 {
+  FUNCTION_TRACE
   try
   {
     mCheckTime = 0;
@@ -97,6 +105,7 @@ GridFile::GridFile(GridFile *gridFile)
 
 GridFile::~GridFile()
 {
+  FUNCTION_TRACE
   try
   {
   }
@@ -128,6 +137,7 @@ GridFile* GridFile::createGridFile()
 
 uint GridFile::getFileId() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -153,6 +163,7 @@ uint GridFile::getFileId() const
 
 uint GridFile::getGroupFlags() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -178,6 +189,7 @@ uint GridFile::getGroupFlags() const
 
 uint GridFile::getProducerId() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -203,6 +215,7 @@ uint GridFile::getProducerId() const
 
 uint GridFile::getGenerationId() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -227,6 +240,7 @@ uint GridFile::getGenerationId() const
 
 std::shared_ptr<GridFile> GridFile::getGridFile()
 {
+  FUNCTION_TRACE
   try
   {
     return mGridFile;
@@ -248,6 +262,7 @@ std::shared_ptr<GridFile> GridFile::getGridFile()
 
 time_t GridFile::getCheckTime() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -272,6 +287,7 @@ time_t GridFile::getCheckTime() const
 
 time_t GridFile::getModificationTime() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -296,6 +312,7 @@ time_t GridFile::getModificationTime() const
 
 std::string GridFile::getDeletionTime() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -321,6 +338,7 @@ std::string GridFile::getDeletionTime() const
 
 uint GridFile::getSourceId() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -340,6 +358,7 @@ uint GridFile::getSourceId() const
 
 void GridFile::addDependence(uint fileId)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -357,6 +376,7 @@ void GridFile::addDependence(uint fileId)
 
 bool GridFile::hasDependence(uint fileId)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -376,6 +396,7 @@ bool GridFile::hasDependence(uint fileId)
 
 void GridFile::addUser(uint fileId)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -399,6 +420,7 @@ void GridFile::addUser(uint fileId)
 
 void GridFile::deleteUsers()
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -421,6 +443,7 @@ void GridFile::deleteUsers()
 
 void GridFile::getUsers(std::set<uint>& userList)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -445,6 +468,7 @@ void GridFile::getUsers(std::set<uint>& userList)
 
 bool GridFile::isMemoryMapped() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -466,10 +490,13 @@ bool GridFile::isMemoryMapped() const
 
 void GridFile::mapToMemory()
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
+    {
       mGridFile->mapToMemory();
+    }
   }
   catch (...)
   {
@@ -485,6 +512,7 @@ void GridFile::mapToMemory()
 
 bool GridFile::isPhysical() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -506,6 +534,7 @@ bool GridFile::isPhysical() const
 
 bool GridFile::isVirtual() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -530,6 +559,7 @@ bool GridFile::isVirtual() const
 
 void GridFile::setGridFile(GridFile *gridFile)
 {
+  FUNCTION_TRACE
   try
   {
     mGridFile.reset(gridFile);
@@ -551,6 +581,7 @@ void GridFile::setGridFile(GridFile *gridFile)
 
 void GridFile::setCheckTime(time_t checkTime)
 {
+  FUNCTION_TRACE
   try
   {
     mCheckTime = checkTime;
@@ -575,6 +606,7 @@ void GridFile::setCheckTime(time_t checkTime)
 
 void GridFile::setFileId(uint fileId)
 {
+  FUNCTION_TRACE
   try
   {
     mFileId = fileId;
@@ -598,6 +630,7 @@ void GridFile::setFileId(uint fileId)
 
 void GridFile::setDeletionTime(std::string deletionTime)
 {
+  FUNCTION_TRACE
   try
   {
     mFileDeletionTime = deletionTime;
@@ -622,6 +655,7 @@ void GridFile::setDeletionTime(std::string deletionTime)
 
 void GridFile::setGroupFlags(uint groupFlags)
 {
+  FUNCTION_TRACE
   try
   {
     mGroupFlags = groupFlags;
@@ -646,6 +680,7 @@ void GridFile::setGroupFlags(uint groupFlags)
 
 void GridFile::setProducerId(uint producerId)
 {
+  FUNCTION_TRACE
   try
   {
     mProducerId = producerId;
@@ -671,6 +706,7 @@ void GridFile::setProducerId(uint producerId)
 
 void GridFile::setGenerationId(uint generationId)
 {
+  FUNCTION_TRACE
   try
   {
     mGenerationId = generationId;
@@ -695,6 +731,7 @@ void GridFile::setGenerationId(uint generationId)
 
 void GridFile::setFileName(std::string fileName)
 {
+  FUNCTION_TRACE
   try
   {
     mFileName = fileName;
@@ -720,6 +757,7 @@ void GridFile::setFileName(std::string fileName)
 
 void GridFile::setSourceId(uint sourceId)
 {
+  FUNCTION_TRACE
   try
   {
     mSourceId = sourceId;
@@ -738,6 +776,7 @@ void GridFile::setSourceId(uint sourceId)
 
 Message* GridFile::newMessage()
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridFile)
@@ -755,8 +794,35 @@ Message* GridFile::newMessage()
 
 
 
+Message* GridFile::newMessage(uint messageIndex,ulonglong position,uint size)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGridFile)
+    {
+      // We do not know yet the type of the file, so we have to store the message position information
+      // temporararily into a map.
+
+      mMessagePositions.insert(std::pair<uint,ulonglong>(messageIndex,position));
+      return nullptr;
+    }
+
+    return mGridFile->newMessage(messageIndex,position,size);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void GridFile::addMessage(Message *message)
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridFile)
@@ -776,6 +842,7 @@ void GridFile::addMessage(Message *message)
 
 void GridFile::setGridFile(uchar fileType)
 {
+  FUNCTION_TRACE
   try
   {
     switch (fileType)
@@ -807,6 +874,7 @@ void GridFile::setGridFile(uchar fileType)
 
 void GridFile::read(std::string filename)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -826,6 +894,7 @@ void GridFile::read(std::string filename)
 
 void GridFile::write(std::string filename)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -850,6 +919,7 @@ void GridFile::write(std::string filename)
 
 void GridFile::write(DataWriter& dataWriter)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -875,6 +945,7 @@ std::string GridFile::getFileName() const
 {
   try
   {
+    FUNCTION_TRACE
     if (mGridFile)
       return mGridFile->getFileName();
 
@@ -898,6 +969,7 @@ std::string GridFile::getFileName() const
 
 std::size_t GridFile::getNumberOfMessages()
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridFile)
@@ -924,6 +996,7 @@ std::size_t GridFile::getNumberOfMessages()
 
 GRID::Message* GridFile::getMessageByIndex(std::size_t index)
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridFile)
@@ -949,6 +1022,7 @@ GRID::Message* GridFile::getMessageByIndex(std::size_t index)
 
 T::FileType GridFile::getFileType() const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridFile)
@@ -974,6 +1048,7 @@ T::FileType GridFile::getFileType() const
 
 std::string GridFile::getFileTypeString() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -991,8 +1066,27 @@ std::string GridFile::getFileTypeString() const
 
 
 
+void GridFile::clearCachedValues(uint hitsRequired,uint timePeriod) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridFile)
+      mGridFile->clearCachedValues(hitsRequired,timePeriod);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool GridFile::getPointCacheEnabled()
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -1012,6 +1106,7 @@ bool GridFile::getPointCacheEnabled()
 
 void GridFile::setPointCacheEnabled(bool enabled)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -1038,6 +1133,7 @@ void GridFile::setPointCacheEnabled(bool enabled)
 
 void GridFile::print(std::ostream& stream,uint level,uint optionFlags) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridFile)

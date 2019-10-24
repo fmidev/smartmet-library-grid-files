@@ -2,9 +2,14 @@
 #include "../common/Exception.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/GeneralFunctions.h"
+#include "../common/ShowFunction.h"
 #include "../identification/GridDef.h"
 #include "../grib1/GribFile.h"
 #include "../grib2/GribFile.h"
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
+
 
 namespace SmartMet
 {
@@ -16,9 +21,13 @@ namespace GRID
 
 PhysicalGridFile::PhysicalGridFile()
 {
+  FUNCTION_TRACE
   try
   {
     mIsMemoryMapped = false;
+    mIsRead = false;
+    mMemoryPtr = nullptr;
+    mFileSize = 0;
   }
   catch (...)
   {
@@ -35,9 +44,12 @@ PhysicalGridFile::PhysicalGridFile()
 PhysicalGridFile::PhysicalGridFile(const PhysicalGridFile& other)
 :GridFile(other)
 {
+  FUNCTION_TRACE
   try
   {
     mIsMemoryMapped = false;
+    mIsRead = false;
+    mMemoryPtr = nullptr;
   }
   catch (...)
   {
@@ -53,6 +65,7 @@ PhysicalGridFile::PhysicalGridFile(const PhysicalGridFile& other)
 
 PhysicalGridFile::~PhysicalGridFile()
 {
+  FUNCTION_TRACE
   try
   {
     if (mMappedFile  &&  mIsMemoryMapped)
@@ -71,6 +84,7 @@ PhysicalGridFile::~PhysicalGridFile()
 
 bool PhysicalGridFile::isMemoryMapped() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -90,14 +104,31 @@ bool PhysicalGridFile::isMemoryMapped() const
 
 void PhysicalGridFile::mapToMemory()
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
+    {
       mGridFile->mapToMemory();
+    }
     else
     {
       if (!mIsMemoryMapped)
-        read(mFileName);
+      {
+        read();
+
+        if (mGridFile  &&  mMessagePositions.size() > 0)
+        {
+          // Now we know the type of the grid file. So we can add predefined
+          // message positions into it.
+
+          for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
+          {
+            mGridFile->newMessage(it->first,it->second,0);
+          }
+          mMessagePositions.clear();
+        }
+      }
     }
   }
   catch (...)
@@ -112,6 +143,7 @@ void PhysicalGridFile::mapToMemory()
 
 bool PhysicalGridFile::isPhysical() const
 {
+  FUNCTION_TRACE
   try
   {
     return true;
@@ -128,6 +160,7 @@ bool PhysicalGridFile::isPhysical() const
 
 bool PhysicalGridFile::isVirtual() const
 {
+  FUNCTION_TRACE
   try
   {
     return false;
@@ -135,6 +168,151 @@ bool PhysicalGridFile::isVirtual() const
   catch (...)
   {
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+long long PhysicalGridFile::getSize()
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mFileSize;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+char* PhysicalGridFile::getMemoryPtr()
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mMemoryPtr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void PhysicalGridFile::setMemoryPtr(char *memoryPtr,long long size)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mMemoryPtr = memoryPtr;
+    mFileSize = size;
+    mIsMemoryMapped = true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
+
+/*! \brief The method memory maps the given file and after that it tries to
+    recognize the type of the file. It creates and initializes GRIB1::PhysicalGridFile
+    or GRIB2::PhysicalGridFile object according to the file type. This object represents
+    the actual content of the current file.
+*/
+
+void PhysicalGridFile::read()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mIsRead)
+      return;  // Already read
+
+    if (!mIsMemoryMapped)
+    {
+      AutoThreadLock lock(&mMemoryMappingLock);
+
+      if (!mIsMemoryMapped)
+      {
+        mFileSize = getFileSize(mFileName.c_str());
+        if (mFileSize < 0)
+          throw SmartMet::Spine::Exception(BCP,"The file '" + mFileName + "' does not exist!");
+
+        MappedFileParams params(mFileName);
+        params.flags = boost::iostreams::mapped_file::readonly;
+        params.length = mFileSize;
+        mMappedFile.reset(new MappedFile(params));
+        mIsMemoryMapped = true;
+        mFileModificationTime = getFileModificationTime(mFileName.c_str());
+
+        mMemoryPtr = const_cast<char*>(mMappedFile->const_data());
+      }
+    }
+
+    auto endAddr = mMemoryPtr + mFileSize;
+
+
+    MemoryReader memoryReader(reinterpret_cast<unsigned char*>(mMemoryPtr),reinterpret_cast<unsigned char*>(endAddr));
+
+    uchar fileType = readFileType(memoryReader);
+
+    switch (fileType)
+    {
+      case T::FileTypeValue::Grib1:
+      {
+        auto file = new GRIB1::GribFile();
+        file->setFileName(mFileName);
+        file->setFileId(mFileId);
+        file->setPointCacheEnabled(mPointCacheEnabled);
+        file->setGroupFlags(mGroupFlags);
+        file->setProducerId(mProducerId);
+        file->setGenerationId(mGenerationId);
+        file->setCheckTime(mCheckTime);
+        file->setMemoryPtr(mMemoryPtr,mFileSize);
+        mGridFile.reset(file);
+      }
+      break;
+
+      case T::FileTypeValue::Grib2:
+      {
+        auto file = new GRIB2::GribFile();
+        file->setFileName(mFileName);
+        file->setFileId(mFileId);
+        file->setPointCacheEnabled(mPointCacheEnabled);
+        file->setGroupFlags(mGroupFlags);
+        file->setProducerId(mProducerId);
+        file->setGenerationId(mGenerationId);
+        file->setCheckTime(mCheckTime);
+        file->setMemoryPtr(mMemoryPtr,mFileSize);
+        mGridFile.reset(file);
+      }
+      break;
+
+      default:
+        throw SmartMet::Spine::Exception(BCP,"Unknown file type!");
+    }
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Read failed!",nullptr);
+    exception.addParameter("File name ",mFileName);
+    throw exception;
   }
 }
 
@@ -152,29 +330,39 @@ bool PhysicalGridFile::isVirtual() const
 
 void PhysicalGridFile::read(std::string filename)
 {
+  FUNCTION_TRACE
   try
   {
-    // Safety checks
-
-    auto fsize = getFileSize(filename.c_str());
-    if (fsize < 0)
-      throw SmartMet::Spine::Exception(BCP,"The file '" + filename + "' does not exist!");
+    if (mIsRead)
+      return;  // Already read
 
     setFileName(filename);
 
-    // Map the entire file
+    if (!mIsMemoryMapped)
+    {
+      AutoThreadLock lock(&mMemoryMappingLock);
 
-    MappedFileParams params(filename);
-    params.flags = boost::iostreams::mapped_file::readonly;
-    params.length = fsize;
-    mMappedFile.reset(new MappedFile(params));
-    mIsMemoryMapped = true;
-    mFileModificationTime = getFileModificationTime(mFileName.c_str());
+      if (!mIsMemoryMapped)
+      {
+        mFileSize = getFileSize(mFileName.c_str());
+        if (mFileSize < 0)
+          throw SmartMet::Spine::Exception(BCP,"The file '" + mFileName + "' does not exist!");
 
-    auto startAddr = const_cast<char*>(mMappedFile->const_data());
-    auto endAddr = startAddr + fsize;
+        MappedFileParams params(mFileName);
+        params.flags = boost::iostreams::mapped_file::readonly;
+        params.length = mFileSize;
+        mMappedFile.reset(new MappedFile(params));
+        mIsMemoryMapped = true;
+        mFileModificationTime = getFileModificationTime(mFileName.c_str());
 
-    MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
+        mMemoryPtr = const_cast<char*>(mMappedFile->const_data());
+      }
+    }
+
+    auto endAddr = mMemoryPtr + mFileSize;
+
+
+    MemoryReader memoryReader(reinterpret_cast<unsigned char*>(mMemoryPtr),reinterpret_cast<unsigned char*>(endAddr));
 
     uchar fileType = readFileType(memoryReader);
 
@@ -190,6 +378,7 @@ void PhysicalGridFile::read(std::string filename)
         file->setProducerId(mProducerId);
         file->setGenerationId(mGenerationId);
         file->setCheckTime(mCheckTime);
+        file->setMemoryPtr(mMemoryPtr,mFileSize);
         mGridFile.reset(file);
         file->read(memoryReader);
       }
@@ -205,6 +394,7 @@ void PhysicalGridFile::read(std::string filename)
         file->setProducerId(mProducerId);
         file->setGenerationId(mGenerationId);
         file->setCheckTime(mCheckTime);
+        file->setMemoryPtr(mMemoryPtr,mFileSize);
         mGridFile.reset(file);
         file->read(memoryReader);
       }
@@ -228,6 +418,7 @@ void PhysicalGridFile::read(std::string filename)
 
 void PhysicalGridFile::write(std::string filename)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -252,6 +443,7 @@ void PhysicalGridFile::write(std::string filename)
 
 void PhysicalGridFile::write(DataWriter& dataWriter)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridFile)
@@ -276,6 +468,7 @@ void PhysicalGridFile::write(DataWriter& dataWriter)
 
 uchar PhysicalGridFile::readFileType(MemoryReader& memoryReader)
 {
+  FUNCTION_TRACE
   try
   {
     memoryReader.setReadPosition(0);
@@ -312,6 +505,7 @@ uchar PhysicalGridFile::readFileType(MemoryReader& memoryReader)
 
 ulonglong PhysicalGridFile::searchFileStartPosition(MemoryReader& memoryReader)
 {
+  FUNCTION_TRACE
   try
   {
     std::vector<unsigned char*> gribs;
@@ -357,6 +551,7 @@ ulonglong PhysicalGridFile::searchFileStartPosition(MemoryReader& memoryReader)
 
 void PhysicalGridFile::print(std::ostream& stream,uint level,uint optionFlags) const
 {
+  FUNCTION_TRACE
   try
   {
     stream << "PhysicalGridFile\n";

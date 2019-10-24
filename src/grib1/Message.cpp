@@ -37,6 +37,7 @@ Message::Message()
   {
     mGribFile = nullptr;
     mFilePosition = 0;
+    mMessageSize = 0;
     mGrib1ParameterLevelId = 0;
     mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
@@ -44,6 +45,35 @@ Message::Message()
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
     mPointCacheEnabled = false;
+    mIsRead = false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+Message::Message(GribFile *gribFile,uint messageIndex,ulonglong position,ulong size)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mGribFile = gribFile;
+    mMessageIndex = messageIndex;
+    mFilePosition = position;
+    mMessageSize = size;
+    mGrib1ParameterLevelId = 0;
+    mGrib2ParameterLevelId = 0;
+    mFmiParameterLevelId = 0;
+    mCacheKey = 0;
+    mOrigCacheKey = 0;
+    mValueDecodingFailed = false;
+    mPointCacheEnabled = false;
+    mIsRead = false;
   }
   catch (...)
   {
@@ -64,7 +94,9 @@ Message::Message(const Message& other)
   try
   {
     mGribFile = nullptr;
+    mIsRead = true;
     mFilePosition = other.mFilePosition;
+    mMessageSize = other.mMessageSize;
 
     if (other.mIndicatorSection)
     {
@@ -279,6 +311,54 @@ void Message::setGribFilePtr(GribFile *gribFile)
 
 
 
+bool Message::isRead()
+{
+  try
+  {
+    return mIsRead;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+void Message::read()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mIsRead)
+      return;
+
+    if (mGribFile == nullptr)
+      SmartMet::Spine::Exception exception(BCP,"No pointer to the grib file!");
+
+    long long s = mGribFile->getSize();
+    uchar *d = (uchar*)mGribFile->getMemoryPtr();
+    uchar *e = d + s;
+
+    MemoryReader memoryReader(d,e);
+    memoryReader.setReadPosition(mFilePosition);
+    read(memoryReader);
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,"Message read failed!",nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    exception.addParameter("Message start position",uint64_toHex(mFilePosition));
+    throw exception;
+  }
+}
+
+
+
+
 
 /*! \brief The method reads and initializes all data related to the current message object.
 
@@ -290,6 +370,9 @@ void Message::read(MemoryReader& memoryReader)
   FUNCTION_TRACE
   try
   {
+    if (mIsRead)
+      return;
+
     mFilePosition = memoryReader.getGlobalReadPosition();
 
     auto rPos = memoryReader.getGlobalReadPosition();
@@ -411,6 +494,11 @@ void Message::read(MemoryReader& memoryReader)
         std::cout << getGridGeometryString() << "\n\n";
       }
     }
+
+    if (mMessageSize == 0)
+      mMessageSize = (memoryReader.getGlobalReadPosition() - mFilePosition);
+
+    mIsRead = true;
   }
   catch (...)
   {

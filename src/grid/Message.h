@@ -53,6 +53,7 @@ class Message
     virtual uint              getProducerId() const;
     virtual uint              getGenerationId() const;
     virtual uint              getMessageIndex() const;
+    virtual uint              getMessageSize() const;
     virtual T::FilePosition   getFilePosition() const;
     virtual T::TimeString     getForecastTime() const;
     virtual short             getForecastType() const;
@@ -225,7 +226,9 @@ class Message
     virtual bool              getCachedValue(uint index,T::ParamValue& value) const;
     virtual void              clearCachedValues(uint hitsRequired,uint timePeriod) const;
 
+    virtual bool              isRead();
     virtual void              print(std::ostream& stream,uint level,uint optionFlags) const;
+    virtual void              read();
     virtual void              read(MemoryReader& memoryReader);
     virtual void              write(DataWriter& dataWriter);
 
@@ -237,6 +240,9 @@ protected:
 
     /*! \brief  The index of the message in the file. */
     uint                      mMessageIndex;
+
+    /*! \brief  The size of the message in bytes. */
+    uint                      mMessageSize;
 
     /*! \brief The grib parameter identifier. */
     T::ParamId                mGribParameterId;
