@@ -427,7 +427,7 @@ std::size_t GribFile::getNumberOfMessages()
       return 0;
 
     auto last = mMessages.rbegin();
-    return last->first;
+    return last->first + 1;
   }
   catch (...)
   {
