@@ -187,7 +187,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
     if (gridSizeStr != nullptr)
     {
-      double m = atof(gridSizeStr);
+      double m = toDouble(gridSizeStr);
       if (m > 0)
       {
         attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
@@ -493,7 +493,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
     if (gridSizeStr != nullptr)
     {
-      double m = atof(gridSizeStr);
+      double m = toDouble(gridSizeStr);
       if (m > 0)
       {
         attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
@@ -732,7 +732,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
     if (gridSizeStr != nullptr)
     {
-      double m = atof(gridSizeStr);
+      double m = toDouble(gridSizeStr);
       if (m > 0)
       {
         attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
@@ -1009,7 +1009,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
     if (gridSizeStr != nullptr)
     {
-      double m = atof(gridSizeStr);
+      double m = toDouble(gridSizeStr);
       if (m > 0)
       {
         attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
@@ -1324,7 +1324,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
     if (gridSizeStr != nullptr)
     {
-      double m = atof(gridSizeStr);
+      double m = toDouble(gridSizeStr);
       if (m > 0)
       {
         attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
@@ -1488,7 +1488,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
     if (gridSizeStr != nullptr)
     {
-      double m = atof(gridSizeStr);
+      double m = toDouble(gridSizeStr);
       if (m > 0)
       {
         attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));

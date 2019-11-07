@@ -535,7 +535,7 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
       p += sprintf(p,"+y");
     }
 
-    sprintf(buf,"%d;id;name;%u;%u;%f;%f;%f;%f;%s;%f;%f;%f;description",
+    sprintf(buf,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;description",
         T::GridProjectionValue::RotatedLatLon,ni,nj,x,y,fabs(dx),fabs(dy),sm,sx,sy,angle);
 
     return std::string(buf);

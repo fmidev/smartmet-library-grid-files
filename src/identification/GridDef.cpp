@@ -3066,6 +3066,8 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  g
       return g1->getGridLatLonCoordinates();
     }
 
+
+
     printf("*** Coordinates not found by the geometry %u\n",geometryId);
     T::Coordinate_vec empty;
     return empty;
@@ -4034,10 +4036,13 @@ void GridDef::loadGeometryDefinitions(const char *filename)
 
     char st[1000];
 
+    uint cnt = 0;
     while (!feof(file))
     {
       if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
       {
+        cnt++;
+        //std::cout << st << "\n";
         GRIB1::GridDefinition *def1 = createGrib1GridDefinition(st);
         if (def1 != nullptr)
         {
@@ -4046,7 +4051,11 @@ void GridDef::loadGeometryDefinitions(const char *filename)
           if (mGridDefinitions1.find(gstr) == mGridDefinitions1.end())
             mGridDefinitions1.insert(std::pair<std::string,GRIB1::GridDefinition*>(gstr,def1));
           else
-            delete def1;
+          {
+            //printf("*** GEOMETRY 1 EXISTS\n");
+            mGridDefinitions1.insert(std::pair<std::string,GRIB1::GridDefinition*>(gstr+std::to_string(cnt),def1));
+            //delete def1;
+          }
         }
 
         GRIB2::GridDefinition *def2 = createGrib2GridDefinition(st);
@@ -4057,7 +4066,11 @@ void GridDef::loadGeometryDefinitions(const char *filename)
           if (mGridDefinitions2.find(gstr) == mGridDefinitions2.end())
             mGridDefinitions2.insert(std::pair<std::string,GRIB2::GridDefinition*>(gstr,def2));
           else
-            delete def2;
+          {
+            //printf("*** GEOMETRY 2 EXISTS\n");
+            mGridDefinitions2.insert(std::pair<std::string,GRIB2::GridDefinition*>(gstr+std::to_string(cnt),def2));
+            //delete def2;
+          }
         }
       }
     }
@@ -4442,7 +4455,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           def1->setGridGeometryName(geometryName);
           def1->initSpatialReference();
 
-          //def1->print(std::cout,0,0);
+          // def1->print(std::cout,0,0);
 
           return def1;
         }
@@ -4728,7 +4741,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setGridGeometryName(geometryName);
           def2->initSpatialReference();
 
-          //def2->print(std::cout,0,0);
+          // def2->print(std::cout,0,0);
           return def2;
         }
         break;
@@ -4875,7 +4888,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setGridGeometryName(geometryName);
           def2->initSpatialReference();
 
-          //def2->print(std::cout,0,0);
+          // def2->print(std::cout,0,0);
 
           return def2;
         }

@@ -808,19 +808,68 @@ ulonglong toUInt64(const char *str)
   }
 }
 
+
+double toDouble2(const char* str)
+{
+  double result = 0;
+  double sign = *str == '-' ? str++, -1 : 1;
+  while (*str >= '0' && *str <= '9')
+  {
+    result *= 10;
+    result += *str - '0';
+    str++;
+  }
+
+  if (*str == ',' || *str == '.')
+  {
+    str++;
+    float multiplier = 0.1;
+    while (*str >= '0' && *str <= '9')
+    {
+      result += (*str - '0') * multiplier;
+      multiplier /= 10;
+      str++;
+    }
+  }
+  result *= sign;
+  if (*str == 'e' || *str == 'E')
+  {
+    str++;
+    float powerer = *str == '-'? str++, 0.1 : 10;
+    float power = 0;
+    while (*str >= '0' && *str <= '9')
+    {
+      power *= 10;
+      power += *str - '0';
+      str++;
+    }
+    result *= pow(powerer, power);
+  }
+  return result;
+}
+
+
 double toDouble(const char *str)
 {
   try
   {
-    if (str == nullptr) return 0.0;
+    // Make sure that the environment variable LC_NUMERIC is defined
+    // correctly (export LC_NUMERIC="en_US.UTF-8").
+
+    if (str == nullptr)
+      return 0.0;
 
     return atof(str);
+    //return toDouble2(str);
   }
   catch (...)
   {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
+
+
+
 
 char toInt8(const std::string &str)
 {

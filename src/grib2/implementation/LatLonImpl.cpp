@@ -298,7 +298,7 @@ std::string LatLonImpl::getGridGeometryString() const
     }
 
 
-    sprintf(buf,"%d;id;name;%u;%u;%f;%f;%f;%f;%s;description",
+    sprintf(buf,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;description",
       T::GridProjectionValue::LatLon,ni,nj,x,y,fabs(dx),fabs(dy),sm);
 
     return std::string(buf);

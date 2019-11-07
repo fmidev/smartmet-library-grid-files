@@ -167,7 +167,7 @@ std::string MercatorImpl::getGridGeometryString() const
       p += sprintf(p,"+y");
     }
 
-    sprintf(buf,"%d;id;name;%d;%d;%f;%f;%f;%f;%s;%f;description",
+    sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;description",
         T::GridProjectionValue::Mercator,mNi,mNj,x,y,fabs(dx),fabs(dy),sm,latin);
 
     return std::string(buf);

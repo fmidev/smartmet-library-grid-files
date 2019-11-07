@@ -477,7 +477,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
     if (gridSizeStr != nullptr)
     {
-      double m = atof(gridSizeStr);
+      double m = toDouble(gridSizeStr);
       if (m > 0)
       {
         attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
@@ -783,7 +783,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
     if (gridSizeStr != nullptr)
     {
-      double m = atof(gridSizeStr);
+      double m = toDouble(gridSizeStr);
       if (m > 0)
       {
         attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
@@ -2120,7 +2120,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
     if (gridSizeStr != nullptr)
     {
-      double m = atof(gridSizeStr);
+      double m = toDouble(gridSizeStr);
       if (m > 0)
       {
         attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
