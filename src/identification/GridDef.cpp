@@ -4786,8 +4786,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           int nj = toInt64(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000000));
           int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = C_INT(round(toDouble(field[7]) * 1000000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000000));
+          int iInc = C_INT(round(toDouble(field[7]) * 1000));
+          int jInc = C_INT(round(toDouble(field[8]) * 1000));
           char *scanningMode = field[9];
           int orientation = C_INT(round(toDouble(field[10])*1000000));
           int laD = C_INT(round(toDouble(field[11]) * 1000000));
@@ -4883,8 +4883,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           def2->setLaD(laD);
           def2->setLoV(orientation);
-          def2->setDx(T::UInt32_opt(iInc*1000000));
-          def2->setDy(T::UInt32_opt(jInc*1000000));
+          def2->setDx(T::UInt32_opt(iInc*1000));
+          def2->setDy(T::UInt32_opt(jInc*1000));
           //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
           def2->setLatin1(T::Int32_opt(latin1));
           def2->setLatin2(T::Int32_opt(latin2));

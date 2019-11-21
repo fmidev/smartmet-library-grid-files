@@ -2300,6 +2300,8 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
     if (llboxStr != nullptr)
     {
+      // The crop area is defined by a latlon bounding box.
+
       std::vector<double> a;
       splitString(llboxStr,',',a);
 
@@ -2312,6 +2314,8 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
     else
     if (centerStr != nullptr)
     {
+      // The crop area is defined by a rectangle and its latlon center coordinates.
+
       std::vector<double> a;
       splitString(centerStr,',',a);
       if (a.size() != 2)
@@ -2322,9 +2326,8 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
       if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
       {
-
-        double mWidth = toDouble(metricWidthStr) * 1000;
-        double mHeight = toDouble(metricHeightStr) * 1000;
+        double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+        double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
         OGRSpatialReference sr_latlon;
         sr_latlon.importFromEPSG(4326);
@@ -2335,33 +2338,40 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
         OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr_wgs84_world_mercator);
         OGRCoordinateTransformation *reverseTransformation = OGRCreateCoordinateTransformation(&sr_wgs84_world_mercator,&sr_latlon);
 
+        // Counting metric coordinates for the rectangle center.
+
         double centerX = a[0];
         double centerY = a[1];
 
         transformation->Transform(1,&centerX,&centerY);
+
+        // Countinging metric coordinates for the rectange corners.
 
         double xx1 = centerX - mWidth/2;
         double yy1 = centerY - mHeight/2;
         double xx2 = centerX + mWidth/2;
         double yy2 = centerY + mHeight/2;
 
+        // Converting metric coordinates to latlon coordinates.
+
         reverseTransformation->Transform(1,&xx1,&yy1);
         reverseTransformation->Transform(1,&xx2,&yy2);
-
-        char tmp[200];
-        sprintf(tmp,"%f,%f,%f,%f",xx1,yy1,xx2,yy2);
-        attributeList.setAttribute("grid.llbox",tmp);
-
-
-        getGridPointByLatLonCoordinates(yy1,xx1,x1,y1);
-        getGridPointByLatLonCoordinates(yy2,xx2,x2,y2);
-
 
         if (transformation != nullptr)
           OCTDestroyCoordinateTransformation(transformation);
 
         if (reverseTransformation != nullptr)
           OCTDestroyCoordinateTransformation(reverseTransformation);
+
+
+        // Converting latlon coordinates to grid points.
+
+        getGridPointByLatLonCoordinates(yy1,xx1,x1,y1);
+        getGridPointByLatLonCoordinates(yy2,xx2,x2,y2);
+
+        char tmp[200];
+        sprintf(tmp,"%f,%f,%f,%f",xx1,yy1,xx2,yy2);
+        attributeList.setAttribute("grid.llbox",tmp);
       }
     }
     else
@@ -2369,7 +2379,10 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
     bool gridRectangle = true;
     T::GridValueList valueList;
+
+    // Picking grid points that are inside the rectangle.
     getGridValueListByRectangle(T::CoordinateTypeValue::GRID_COORDINATES,x1,y1,x2,y2,gridRectangle,valueList);
+
     // valueList.print(std::cout,0,0);
 
     double minX = 0;
@@ -2444,6 +2457,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+
 
 
 
