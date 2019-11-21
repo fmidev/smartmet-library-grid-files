@@ -534,6 +534,40 @@ GridPointValue* GridPointValueList::getNextGridPointValueByPointAndTime(double x
 
 
 
+void GridPointValueList::getGridPointValueArea(double& minX,double& minY,double& maxX,double& maxY)
+{
+  try
+  {
+    minX = 1000000000;
+    minY = 1000000000;
+    maxX = -1000000000;
+    maxY = -1000000000;
+
+    for (uint t=0; t<mLength; t++)
+    {
+      if (mArray[t]->mX < minX)
+        minX = mArray[t]->mX;
+
+      if (mArray[t]->mX > maxX)
+        maxX = mArray[t]->mX;
+
+      if (mArray[t]->mY < minY)
+        minY = mArray[t]->mY;
+
+      if (mArray[t]->mY > maxY)
+        maxY = mArray[t]->mY;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void GridPointValueList::getGridPointValueListByPoint(double x,double y,T::ParamLevel level,GridPointValueList& gridPointValueList)
 {
   try

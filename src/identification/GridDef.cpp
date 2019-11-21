@@ -3205,6 +3205,14 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
       height = d.ny();
       attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)def->reverseYDirection()));
       attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)def->reverseXDirection()));
+
+      double wm = 0;
+      double hm = 0;
+      if (def->getGridCellSize(wm,hm))
+      {
+        attributeList.setAttribute("grid.cell.width",std::to_string(wm));
+        attributeList.setAttribute("grid.cell.height",std::to_string(hm));
+      }
     }
 
 
@@ -3243,18 +3251,9 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
         else
         if (crsStr != nullptr)
         {
-          char* s = (char*)crsStr;
-          if (strncasecmp(s,"PROJCS",6) == 0)
-          {
-            if (sr.importFromWkt(&s) != OGRERR_NONE)
-              throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
-          }
-          else
-          {
-            OGRErr err = sr.SetFromUserInput(crsStr);
-            if (err != OGRERR_NONE)
-              throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
-          }
+          OGRErr err = sr.SetFromUserInput(crsStr);
+          if (err != OGRERR_NONE)
+            throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
         }
 
         OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
@@ -3297,8 +3296,11 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
         double diffx = cc[2] - cc[0];
         double diffy = cc[3] - cc[1];
 
-        double dx = diffx / C_DOUBLE(width);
-        double dy = diffy / C_DOUBLE(height);
+        double dx = diffx / C_DOUBLE(width-1);
+        double dy = diffy / C_DOUBLE(height-1);
+
+        attributeList.setAttribute("grid.cell.width",std::to_string(dx));
+        attributeList.setAttribute("grid.cell.height",std::to_string(dy));
 
 //        printf("DIFF %f %f  %f %f  %d,%d   %f,%f,%f,%f\n",diffx,diffy,dx,dy,width,height,cc[0],cc[1],cc[2],cc[3]);
         uint sz = width*height;
@@ -3400,8 +3402,15 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       height = d.ny();
       attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)def->reverseYDirection()));
       attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)def->reverseXDirection()));
-    }
 
+      double wm = 0;
+      double hm = 0;
+      if (def->getGridCellSize(wm,hm))
+      {
+        attributeList.setAttribute("grid.cell.width",std::to_string(wm));
+        attributeList.setAttribute("grid.cell.height",std::to_string(hm));
+      }
+    }
 
     if ((urnStr != nullptr || crsStr != nullptr)  &&  (bboxStr != nullptr ||  llboxStr != nullptr)  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
     {
@@ -3438,8 +3447,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         else
         if (crsStr != nullptr)
         {
-          char* s = (char*)crsStr;
-          if (sr.importFromWkt(&s) != OGRERR_NONE)
+          if (sr.SetFromUserInput(crsStr) != OGRERR_NONE)
             throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
         }
 
@@ -3483,8 +3491,11 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         double diffx = cc[2] - cc[0];
         double diffy = cc[3] - cc[1];
 
-        double dx = diffx / C_DOUBLE(width);
-        double dy = diffy / C_DOUBLE(height);
+        double dx = diffx / C_DOUBLE(width-1);
+        double dy = diffy / C_DOUBLE(height-1);
+
+        attributeList.setAttribute("grid.cell.width",std::to_string(dx));
+        attributeList.setAttribute("grid.cell.height",std::to_string(dy));
 
         uint sz = width*height;
 
@@ -4775,8 +4786,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           int nj = toInt64(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000000));
           int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = C_INT(round(toDouble(field[7]) * 1000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000));
+          int iInc = C_INT(round(toDouble(field[7]) * 1000000));
+          int jInc = C_INT(round(toDouble(field[8]) * 1000000));
           char *scanningMode = field[9];
           int orientation = C_INT(round(toDouble(field[10])*1000000));
           int laD = C_INT(round(toDouble(field[11]) * 1000000));
@@ -4872,8 +4883,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           def2->setLaD(laD);
           def2->setLoV(orientation);
-          def2->setDx(T::UInt32_opt(iInc*1000));
-          def2->setDy(T::UInt32_opt(jInc*1000));
+          def2->setDx(T::UInt32_opt(iInc*1000000));
+          def2->setDy(T::UInt32_opt(jInc*1000000));
           //def2->setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
           def2->setLatin1(T::Int32_opt(latin1));
           def2->setLatin2(T::Int32_opt(latin2));

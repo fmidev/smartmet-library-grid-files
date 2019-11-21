@@ -83,6 +83,7 @@ class Message
     virtual T::ParamLevelId   getGrib1ParameterLevelId() const;
     virtual T::ParamLevelId   getGrib2ParameterLevelId() const;
 
+    virtual bool              getGridCellSize(double& width,double& height) const;
     virtual T::Coordinate_vec getGridCoordinates() const;
     virtual void              getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours);
     virtual void              getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours);
@@ -127,6 +128,7 @@ class Message
 
     virtual void              getGridValueVector(T::ParamValue_vec& values) const;
     virtual void              getGridValueVectorWithCaching(T::ParamValue_vec& values) const;
+    virtual void              getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamValue_vec& values) const;
     virtual void              getGridValueVectorByGeometry(T::AttributeList& attributeList,T::ParamValue_vec& values) const;
     virtual void              getGridValueVectorByCoordinateList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const;
     virtual void              getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const;

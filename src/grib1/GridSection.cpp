@@ -959,6 +959,24 @@ T::GeometryId GridSection::getGridGeometryId() const
 
 
 
+bool GridSection::getGridCellSize(double& width,double& height) const
+{
+  try
+  {
+    if (mGridDefinition != nullptr)
+      return mGridDefinition->getGridCellSize(width,height);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 /*! \brief The method returns the grid geometry string. This string can be used for comparing
     geometries in different grid files. For example, is is possible that a GRIB 1 message has
     the same geometry string as a GRIB 2 message, which means that they have same geometries.

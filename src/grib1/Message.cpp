@@ -1285,6 +1285,28 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
+bool Message::getGridCellSize(double& width,double& height) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection != nullptr)
+      return mGridSection->getGridCellSize(width,height);
+
+    return false;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid geometry string. This string can be used for comparing
     geometries in different grid files. For example, is is possible that a GRIB 1 message has
     the same geometry string as a GRIB 2 message, which means that they have same geometries.

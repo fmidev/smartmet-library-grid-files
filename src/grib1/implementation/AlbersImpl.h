@@ -17,6 +17,7 @@ class AlbersImpl : public Albers
 
     GridDefinition*   createGridDefinition() const;
 
+    bool              getGridCellSize(double& width,double& height) const;
     T::Coordinate_vec getGridCoordinates() const;
     T::Dimensions     getGridDimensions() const;
     bool              getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;

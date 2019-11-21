@@ -445,6 +445,24 @@ T::Dimensions LambertConformalImpl::getGridDimensions() const
 
 
 
+bool LambertConformalImpl::getGridCellSize(double& width,double& height) const
+{
+  try
+  {
+    width = C_DOUBLE(*mDx) / 1000;
+    height = C_DOUBLE(*mDy) / 1000;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid original (projection) coordinates in the given grid position (= double coordinates).
 
         \param grid_i  The grid i-coordinate.

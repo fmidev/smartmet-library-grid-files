@@ -21,6 +21,7 @@ class GridValueList
 
      void             addGridValue(GridValue& gridValue);
      void             clear();
+     void             getGridValueArea(double& minX,double& minY,double& maxX,double& maxY);
      GridValue*       getGridValuePtrByIndex(uint index) const;
      bool             getGridValueByIndex(uint index,GridValue& gridValue) const;
      bool             getGridValueByCoordinates(double x,double y,GridValue& gridValue) const;

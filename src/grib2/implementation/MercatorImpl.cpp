@@ -275,6 +275,23 @@ T::Dimensions MercatorImpl::getGridDimensions() const
 
 
 
+bool MercatorImpl::getGridCellSize(double& width,double& height) const
+{
+  try
+  {
+    width = C_DOUBLE(*mDi) / 1000000;
+    height = C_DOUBLE(*mDj) / 1000000;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 
 /*! \brief This method calculates the estimated grid position by using the original coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.

@@ -73,6 +73,7 @@ class GridSection : public GRID::MessageSection
 
     // ### Section specific methods
 
+    bool                  getGridCellSize(double& width,double& height) const;
     T::Coordinate_vec     getGridCoordinates() const;
     T::Dimensions         getGridDimensions() const;
     T::GeometryId         getGridGeometryId() const;

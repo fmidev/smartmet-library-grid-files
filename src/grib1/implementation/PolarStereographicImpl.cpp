@@ -270,6 +270,24 @@ T::Dimensions PolarStereographicImpl::getGridDimensions() const
 
 
 
+bool PolarStereographicImpl::getGridCellSize(double& width,double& height) const
+{
+  try
+  {
+    width = C_DOUBLE(mDxInMetres) / 1000;
+    height = C_DOUBLE(mDyInMetres) / 1000;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief This method calculates the estimated grid position by using the original coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.
 

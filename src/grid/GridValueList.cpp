@@ -171,6 +171,41 @@ bool GridValueList::getGridValueByCoordinates(double x,double y,GridValue& gridV
 
 
 
+void GridValueList::getGridValueArea(double& minX,double& minY,double& maxX,double& maxY)
+{
+  try
+  {
+    minX = 1000000000;
+    minY = 1000000000;
+    maxX = -1000000000;
+    maxY = -1000000000;
+
+    uint len = mList.size();
+    for (uint t=0; t<len; t++)
+    {
+      if (mList[t].mX < minX)
+        minX = mList[t].mX;
+
+      if (mList[t].mX > maxX)
+        maxX = mList[t].mX;
+
+      if (mList[t].mY < minY)
+        minY = mList[t].mY;
+
+      if (mList[t].mY > maxY)
+        maxY = mList[t].mY;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 uint GridValueList::getLength() const
 {
   try

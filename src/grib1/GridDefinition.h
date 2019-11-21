@@ -39,6 +39,7 @@ class GridDefinition
     virtual std::string         getGridGeometryString() const;
     virtual std::string         getGridGeometryName();
     virtual void                getGridCellAverageSize(double& width,double& height);
+    virtual bool                getGridCellSize(double& width,double& height) const;
     virtual T::Coordinate_vec   getGridCoordinates() const;
     T::Hash                     getGridHash();
     virtual bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);

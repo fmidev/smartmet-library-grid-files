@@ -24,6 +24,7 @@ class GridPointValueList
      void                 clear();
      bool                 deleteGridPointValueByIndex(uint index);
      int                  getClosestIndex(GridPointValue::ComparisonMethod comparisonMethod,GridPointValue& gridPointValue);
+     void                 getGridPointValueArea(double& minX,double& minY,double& maxX,double& maxY);
      GridPointValue*      getGridPointValueByIndex(uint index);
      GridPointValue*      getGridPointValueByIndexNoCheck(uint index);
      GridPointValue*      getGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,T::TimeString time);

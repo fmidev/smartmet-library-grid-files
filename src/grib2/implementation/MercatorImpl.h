@@ -21,6 +21,7 @@ class MercatorImpl : public Mercator
     T::Dimensions     getGridDimensions() const;
     std::string       getGridGeometryString() const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
+    bool              getGridCellSize(double& width,double& height) const;
 
     bool              setProperty(uint propertyId,long long value);
 

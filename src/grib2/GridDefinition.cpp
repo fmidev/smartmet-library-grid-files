@@ -1383,6 +1383,9 @@ void GridDefinition::getGridCellAverageSize(double& width,double& height)
   FUNCTION_TRACE
   try
   {
+    if (getGridCellSize(width,height))
+      return;
+
     T::Dimensions d = getGridDimensions();
     if (d.getDimensions() == 2)
     {
@@ -1399,6 +1402,25 @@ void GridDefinition::getGridCellAverageSize(double& width,double& height)
     }
     width = 0;
     height = 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getGridCellSize(double& width,double& height) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    width = 0;
+    height = 0;
+    return false;
   }
   catch (...)
   {

@@ -91,6 +91,14 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
     attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
     attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+    }
   }
   catch (...)
   {
@@ -324,6 +332,14 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
     attributeList.setAttribute("grid.height",std::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+    }
   }
   catch (...)
   {
@@ -630,6 +646,14 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
     attributeList.setAttribute("grid.height",std::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+    }
   }
   catch (...)
   {
@@ -869,6 +893,14 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
     attributeList.setAttribute("grid.height",std::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+    }
   }
   catch (...)
   {
@@ -1152,6 +1184,14 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
     attributeList.setAttribute("grid.height",std::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+    }
   }
   catch (...)
   {
@@ -1467,6 +1507,14 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
     attributeList.setAttribute("grid.height",std::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+    }
   }
   catch (...)
   {
@@ -1631,6 +1679,14 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
     attributeList.setAttribute("grid.height",std::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+    }
   }
   catch (...)
   {

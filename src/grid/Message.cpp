@@ -616,6 +616,15 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
     attributeList.setAttribute("grid.height",std::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+    }
+
 /*
     for (auto it=contours.begin(); it != contours.end(); ++it)
     {
@@ -922,6 +931,15 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
     attributeList.setAttribute("grid.width",std::to_string(width));
     attributeList.setAttribute("grid.height",std::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+    }
+
 /*
     for (auto it=contours.begin(); it != contours.end(); ++it)
     {
@@ -1190,6 +1208,15 @@ bool Message::isRelativeUV() const
 */
 
 T::GeometryId Message::getGridGeometryId() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+bool Message::getGridCellSize(double& width,double& height) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2115,6 +2142,13 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
+
+    if (crsStr != nullptr &&  strcasecmp(crsStr,"crop") == 0)
+    {
+      getGridValueVectorByCrop(attributeList,values);
+      return;
+    }
+
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
 
@@ -2188,6 +2222,8 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
     if (geometryIdStr != nullptr  &&  getGridGeometryId() == toInt32(geometryIdStr))
     {
+      // The geometryId is same as the original geometry.
+
       getGridValueVector(values);
       T::Dimensions  d = getGridDimensions();
       attributeList.setAttribute("grid.width",std::to_string(d.nx()));
@@ -2201,40 +2237,6 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
     Identification::gridDef.getGridLatLonCoordinatesByGeometry(attributeList,latLonCoordinates,width,height);
 
-
-/*
-    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
-    const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
-
-    if ((geometryIdStr == nullptr  &&  geometryStringStr == nullptr)  ||  (geometryIdStr != nullptr && getGridGeometryId() == toInt32(geometryIdStr)))
-    {
-      values = getGridValueVector();
-      return;
-    }
-
-    GRIB2::GridDef_ptr def = nullptr;
-
-    if (geometryIdStr != nullptr)
-    {
-      def = Identification::gridDef.getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
-      if (!def)
-        return;
-    }
-
-    std::shared_ptr<GRIB2::GridDefinition> defPtr;
-    if (geometryStringStr != nullptr)
-    {
-      def =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!def)
-        return;
-
-      defPtr.reset(def);
-    }
-
-    T::Coordinate_vec latLonCoordinates;
-    latLonCoordinates = def->getGridLatLonCoordinates();
-*/
-    //printf("*** COORDINATES %lu\n",latLonCoordinates.size());
     if (latLonCoordinates.size() == 0)
     {
       getGridValueVector(values);
@@ -2262,6 +2264,14 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     attributeList.setAttribute("grid.height",std::to_string(height));
     attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
+
+    double wm = 0;
+    double hm = 0;
+    if (getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+    }
   }
   catch (...)
   {
@@ -2269,6 +2279,171 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
   }
 }
 
+
+
+
+
+void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    double x1 = 0;
+    double y1 = 0;
+    double x2 = 0;
+    double y2 = 0;
+
+    //attributeList.print(std::cout,0,0);
+
+    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
+
+    if (llboxStr != nullptr)
+    {
+      std::vector<double> a;
+      splitString(llboxStr,',',a);
+
+      if (a.size() != 4)
+        return;
+
+      getGridPointByLatLonCoordinates(a[1],a[0],x1,y1);
+      getGridPointByLatLonCoordinates(a[3],a[2],x2,y2);
+    }
+    else
+    if (centerStr != nullptr)
+    {
+      std::vector<double> a;
+      splitString(centerStr,',',a);
+      if (a.size() != 2)
+        return;
+
+      const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+      const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+      if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+      {
+
+        double mWidth = toDouble(metricWidthStr) * 1000;
+        double mHeight = toDouble(metricHeightStr) * 1000;
+
+        OGRSpatialReference sr_latlon;
+        sr_latlon.importFromEPSG(4326);
+
+        OGRSpatialReference sr_wgs84_world_mercator;
+        sr_wgs84_world_mercator.importFromEPSG(3395);
+
+        OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr_wgs84_world_mercator);
+        OGRCoordinateTransformation *reverseTransformation = OGRCreateCoordinateTransformation(&sr_wgs84_world_mercator,&sr_latlon);
+
+        double centerX = a[0];
+        double centerY = a[1];
+
+        transformation->Transform(1,&centerX,&centerY);
+
+        double xx1 = centerX - mWidth/2;
+        double yy1 = centerY - mHeight/2;
+        double xx2 = centerX + mWidth/2;
+        double yy2 = centerY + mHeight/2;
+
+        reverseTransformation->Transform(1,&xx1,&yy1);
+        reverseTransformation->Transform(1,&xx2,&yy2);
+
+        char tmp[200];
+        sprintf(tmp,"%f,%f,%f,%f",xx1,yy1,xx2,yy2);
+        attributeList.setAttribute("grid.llbox",tmp);
+
+
+        getGridPointByLatLonCoordinates(yy1,xx1,x1,y1);
+        getGridPointByLatLonCoordinates(yy2,xx2,x2,y2);
+
+
+        if (transformation != nullptr)
+          OCTDestroyCoordinateTransformation(transformation);
+
+        if (reverseTransformation != nullptr)
+          OCTDestroyCoordinateTransformation(reverseTransformation);
+      }
+    }
+    else
+      return;
+
+    bool gridRectangle = true;
+    T::GridValueList valueList;
+    getGridValueListByRectangle(T::CoordinateTypeValue::GRID_COORDINATES,x1,y1,x2,y2,gridRectangle,valueList);
+    // valueList.print(std::cout,0,0);
+
+    double minX = 0;
+    double minY = 0;
+    double maxX = 0;
+    double maxY = 0;
+    valueList.getGridValueArea(minX,minY,maxX,maxY);
+
+    int width = C_INT(round(maxX-minX+1));
+    int height = C_INT(round(maxY-minY+1));
+    uint size = valueList.getLength();
+
+    values.reserve(size);
+    for (uint t=0; t<size; t++)
+    {
+      T::GridValue *val = valueList.getGridValuePtrByIndex(t);
+      if (val != nullptr)
+        values.push_back(val->mValue);
+      else
+        values.push_back(ParamValueMissing);
+    }
+
+    attributeList.setAttribute("grid.original.crs",getWKT());
+    attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
+    attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
+    attributeList.setAttribute("grid.original.projectionType",std::to_string(getGridProjection()));
+    attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
+    attributeList.setAttribute("grid.width",std::to_string(width));
+    attributeList.setAttribute("grid.height",std::to_string(height));
+    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)reverseYDirection()));
+    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)reverseXDirection()));
+
+    T::GridValue *first = valueList.getGridValuePtrByIndex(0);
+    T::GridValue *last = valueList.getGridValuePtrByIndex(size-1);
+
+    if (first != nullptr && last != nullptr)
+    {
+      double lat1 = 0;
+      double lon1 = 0;
+      double lat2 = 0;
+      double lon2 = 0;
+      getGridLatLonCoordinatesByGridPoint(C_UINT(first->mX),C_UINT(first->mY),lat1,lon1);
+      getGridLatLonCoordinatesByGridPoint(C_UINT(last->mX),C_UINT(last->mY),lat2,lon2);
+
+      double xx1 = 0;
+      double yy1 = 0;
+      double xx2 = 0;
+      double yy2 = 0;
+      getGridOriginalCoordinatesByGridPoint(C_UINT(first->mX),C_UINT(first->mY),xx1,yy1);
+      getGridOriginalCoordinatesByGridPoint(C_UINT(last->mX),C_UINT(last->mY),xx2,yy2);
+
+      char tmp[200];
+      sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+      attributeList.setAttribute("grid.llbox",tmp);
+
+      sprintf(tmp,"%f,%f,%f,%f",xx1,yy1,xx2,yy2);
+      attributeList.setAttribute("grid.bbox",tmp);
+    }
+
+    double wm = 0;
+    double hm = 0;
+    if (getGridCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.cell.width",std::to_string(wm));
+      attributeList.setAttribute("grid.cell.height",std::to_string(hm));
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 

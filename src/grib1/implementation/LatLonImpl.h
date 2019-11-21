@@ -17,6 +17,7 @@ class LatLonImpl : public LatLon
 
     GridDefinition*   createGridDefinition() const;
 
+    bool              getGridCellSize(double& width,double& height) const;
     T::Coordinate_vec getGridCoordinates() const;
     T::Dimensions     getGridDimensions() const;
     std::string       getGridGeometryString() const;

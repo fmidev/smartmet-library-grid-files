@@ -340,6 +340,24 @@ T::Dimensions LatLonImpl::getGridDimensions() const
 
 
 
+bool LatLonImpl::getGridCellSize(double& width,double& height) const
+{
+  try
+  {
+    width = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
+    height = C_DOUBLE(*mLatLon.getJDirectionIncrement()) / 1000000;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid original (projection) coordinates by the given latlon position.
 
         \param lat  The latitude value.
