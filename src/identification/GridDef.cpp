@@ -3089,6 +3089,7 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
   {
     //attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
@@ -3099,6 +3100,15 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
+
+
+    if (crsStr != nullptr  &&  strcasecmp(crsStr,"crop") == 0)
+    {
+      if (originalCrsStr == nullptr)
+        return;
+
+      crsStr = originalCrsStr;
+    }
 
 #if 0
     if (llboxStr == nullptr  &&  bboxStr == nullptr)
@@ -3354,6 +3364,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
   {
     //attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
@@ -3364,6 +3375,14 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
+
+    if (crsStr != nullptr  &&  strcasecmp(crsStr,"crop") == 0)
+    {
+      if (originalCrsStr == nullptr)
+        return;
+
+      crsStr = originalCrsStr;
+    }
 
 
     // Checking if the geometry is defined by the geometryId
