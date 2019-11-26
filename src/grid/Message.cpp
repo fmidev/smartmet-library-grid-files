@@ -2372,7 +2372,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
         char tmp[200];
         sprintf(tmp,"%f,%f,%f,%f",xx1,yy1,xx2,yy2);
-        attributeList.setAttribute("grid.llbox",tmp);
+        attributeList.setAttribute("grid.crop.llbox",tmp);
       }
     }
     else
@@ -2448,10 +2448,10 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
       char tmp[200];
       sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
-      attributeList.setAttribute("grid.llbox",tmp);
+      attributeList.setAttribute("grid.crop.llbox",tmp);
 
       sprintf(tmp,"%f,%f,%f,%f",xx1,yy1,xx2,yy2);
-      attributeList.setAttribute("grid.bbox",tmp);
+      attributeList.setAttribute("grid.crop.bbox",tmp);
     }
 
     double wm = 0;

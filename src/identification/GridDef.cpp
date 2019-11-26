@@ -3367,7 +3367,9 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
+    const char *crop_bboxStr = attributeList.getAttributeValue("grid.crop.bbox");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *crop_llboxStr = attributeList.getAttributeValue("grid.crop.llbox");
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
@@ -3380,6 +3382,13 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     {
       if (originalCrsStr == nullptr)
         return;
+
+      if (crop_bboxStr)
+        bboxStr = crop_bboxStr;
+
+      if (crop_llboxStr)
+        llboxStr = crop_llboxStr;
+
 
       crsStr = originalCrsStr;
     }
