@@ -2297,6 +2297,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *centerStr = attributeList.getAttributeValue("grid.center");
+    const char *borderStr = attributeList.getAttributeValue("grid.border");
 
     if (llboxStr != nullptr)
     {
@@ -2376,6 +2377,15 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
     }
     else
       return;
+
+
+    if (borderStr != nullptr &&  strcasecmp(borderStr,"outer") == 0)
+    {
+      x1 = floor(x1);
+      y1 = floor(y1);
+      x2 = ceil(x2);
+      y2 = ceil(y2);
+    }
 
     bool gridRectangle = true;
     T::GridValueList valueList;
