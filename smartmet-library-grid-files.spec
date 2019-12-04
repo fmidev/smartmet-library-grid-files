@@ -32,7 +32,7 @@ Requires: boost-iostreams
 Requires: boost-regex
 Requires: boost-system
 Requires: boost-thread
-Requires: gdal
+Requires: gdal-libs
 Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
