@@ -3213,8 +3213,8 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
       T::Dimensions d = def->getGridDimensions();
       width = d.nx();
       height = d.ny();
-      attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)def->reverseXDirection()));
+      attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)def->reverseYDirection()));
+      attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)def->reverseXDirection()));
 
       double wm = 0;
       double hm = 0;
@@ -3428,8 +3428,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       T::Dimensions d = def->getGridDimensions();
       width = d.nx();
       height = d.ny();
-      attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)def->reverseXDirection()));
+      attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)def->reverseYDirection()));
+      attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)def->reverseXDirection()));
 
       double wm = 0;
       double hm = 0;

@@ -86,10 +86,10 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(d.nx()));
     attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
 
     double wm = 0;
@@ -169,10 +169,10 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(d.nx()));
     attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
   }
   catch (...)
@@ -409,8 +409,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
     attributeList.setAttribute("grid.height",std::to_string(gridHeight));
     attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
     attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
 
     getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,areaInterpolationMethod,smooth_size,smooth_degree,contours);
@@ -482,10 +482,10 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(gridWidth));
     attributeList.setAttribute("grid.height",std::to_string(gridHeight));
-    attributeList.setAttribute("grid.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
 
     getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,areaInterpolationMethod,smooth_size,smooth_degree,contours);
@@ -730,10 +730,10 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
     attributeList.setAttribute("grid.levelInterpolationMethod",std::to_string(levelInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(d.nx()));
     attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
   }
   catch (...)
@@ -1015,10 +1015,10 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
     attributeList.setAttribute("grid.levelInterpolationMethod",std::to_string(levelInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(d.nx()));
     attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
   }
   catch (...)
@@ -1262,10 +1262,10 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(d.nx()));
     attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message2.reverseXDirection()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message2.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
   }
   catch (...)
@@ -1338,10 +1338,10 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(d.nx()));
     attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message2.reverseXDirection()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message2.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
   }
   catch (...)
@@ -1755,10 +1755,10 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(gridWidth));
     attributeList.setAttribute("grid.height",std::to_string(gridHeight));
-    attributeList.setAttribute("grid.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
 
     getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,areaInterpolationMethod,smooth_size,smooth_degree,contours);
@@ -1830,10 +1830,10 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
     attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",std::to_string(gridWidth));
     attributeList.setAttribute("grid.height",std::to_string(gridHeight));
-    attributeList.setAttribute("grid.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
 
     getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,areaInterpolationMethod,smooth_size,smooth_degree,contours);
