@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 19.11.22
+Version: 19.12.4
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -32,7 +32,7 @@ Requires: boost-iostreams
 Requires: boost-regex
 Requires: boost-system
 Requires: boost-thread
-Requires: gdal
+Requires: gdal-libs
 Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
@@ -77,6 +77,11 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Dec  4 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.12.4-1.fmi
+- Added new response attributes
+- Ensure all timesteps use the same bounding box
+- Enable outer border definition for llbox
+- Fixed crop area coordinates
 * Fri Nov 22 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.11.22-1.fmi
 - Added cropping support
 - Geometry parameter fixes
