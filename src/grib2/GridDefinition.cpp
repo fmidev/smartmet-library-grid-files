@@ -1461,7 +1461,7 @@ double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
         //return 6371220;
 
       case 1: // Earth assumed spherical with radius specified by data producer
-        return (*earthSettings.getScaledValueOfEarthMajorAxis());
+        return (*earthSettings.getScaleFactorOfRadiusOfSphericalEarth());
 
       case 2: // Earth assumed oblate spheroid with size as determined by IAU in 1965 (major axis = 6,378,160.0 m, minor axis = 6,356,775.0 m, f = 1/297.0)
         return 6378160;
