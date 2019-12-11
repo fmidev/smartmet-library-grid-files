@@ -134,91 +134,91 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
         if (res != 0)
           return res;
-        res = double_compare(mX,gridPointValue->mX);
+        res = num_compare(mX,gridPointValue->mX);
         if (res != 0)
           return res;
-        res = double_compare(mY,gridPointValue->mY);
+        res = num_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        res = uint_compare(mLevel,gridPointValue->mLevel);
+        res = num_compare(mLevel,gridPointValue->mLevel);
         if (res != 0)
           return res;
-        return double_compare(mValue,gridPointValue->mValue);
+        return num_compare(mValue,gridPointValue->mValue);
 
       case ComparisonMethod::x_y_level_time_value:
-        res = double_compare(mX,gridPointValue->mX);
+        res = num_compare(mX,gridPointValue->mX);
         if (res != 0)
           return res;
-        res = double_compare(mY,gridPointValue->mY);
+        res = num_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        res = uint_compare(mLevel,gridPointValue->mLevel);
+        res = num_compare(mLevel,gridPointValue->mLevel);
         if (res != 0)
           return res;
         res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
         if (res != 0)
           return res;
-        return double_compare(mValue,gridPointValue->mValue);
+        return num_compare(mValue,gridPointValue->mValue);
 
       case ComparisonMethod::y_x_level_time_value:
-        res = double_compare(mY,gridPointValue->mY);
+        res = num_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        res = double_compare(mX,gridPointValue->mX);
+        res = num_compare(mX,gridPointValue->mX);
         if (res != 0)
           return res;
-        res = uint_compare(mLevel,gridPointValue->mLevel);
+        res = num_compare(mLevel,gridPointValue->mLevel);
         if (res != 0)
           return res;
         res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
         if (res != 0)
           return res;
-        return double_compare(mValue,gridPointValue->mValue);
+        return num_compare(mValue,gridPointValue->mValue);
 
       case ComparisonMethod::value_x_y_level_time:
-        res = double_compare(mValue,gridPointValue->mValue);
+        res = num_compare(mValue,gridPointValue->mValue);
         if (res != 0)
           return res;
         res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
         if (res != 0)
           return res;
-        res = double_compare(mX,gridPointValue->mX);
+        res = num_compare(mX,gridPointValue->mX);
         if (res != 0)
           return res;
-        res = double_compare(mY,gridPointValue->mY);
+        res = num_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        return uint_compare(mLevel,gridPointValue->mLevel);
+        return num_compare(mLevel,gridPointValue->mLevel);
 
       case ComparisonMethod::file_message_x_y_level:
-        res = uint_compare(mFileId,gridPointValue->mFileId);
+        res = num_compare(mFileId,gridPointValue->mFileId);
         if (res != 0)
           return res;
-        res = uint_compare(mMessageIndex,gridPointValue->mMessageIndex);
+        res = num_compare(mMessageIndex,gridPointValue->mMessageIndex);
         if (res != 0)
           return res;
-        res = double_compare(mX,gridPointValue->mX);
+        res = num_compare(mX,gridPointValue->mX);
         if (res != 0)
           return res;
-        res = double_compare(mY,gridPointValue->mY);
+        res = num_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        return uint_compare(mLevel,gridPointValue->mLevel);
+        return num_compare(mLevel,gridPointValue->mLevel);
 
       default:
         res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
         if (res != 0)
           return res;
-        res = double_compare(mX,gridPointValue->mX);
+        res = num_compare(mX,gridPointValue->mX);
         if (res != 0)
           return res;
-        res = double_compare(mY,gridPointValue->mY);
+        res = num_compare(mY,gridPointValue->mY);
         if (res != 0)
           return res;
-        res = uint_compare(mLevel,gridPointValue->mLevel);
+        res = num_compare(mLevel,gridPointValue->mLevel);
         if (res != 0)
           return res;
-        return double_compare(mValue,gridPointValue->mValue);
+        return num_compare(mValue,gridPointValue->mValue);
     }
     return 0;
   }

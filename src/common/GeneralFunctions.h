@@ -18,11 +18,16 @@ double int_power(double x, int y);
 double grib_power(long s,long n);
 unsigned long long getTime();
 
-int uint_compare(uint v1,uint v2);
-int int_compare(int v1,int v2);
-int uint64_compare(unsigned long long v1,unsigned long long v2);
-int int64_compare(long long v1,long long v2);
-int double_compare(double v1,double v2);
+int num_compare(char& v1,char& v2);
+int num_compare(uchar& v1,uchar& v2);
+int num_compare(short& v1,short& v2);
+int num_compare(ushort& v1,ushort& v2);
+int num_compare(int& v1,int& v2);
+int num_compare(uint& v1,uint& v2);
+int num_compare(unsigned long long& v1,unsigned long long& v2);
+int num_compare(long long& v1,long long& v2);
+int num_compare(float& v1,float& v2);
+int num_compare(double& v1,double& v2);
 int time_compare(time_t v1,time_t v2);
 void time_usleep(int _sec,int _usec);
 uint stringToId(const char *str,uint len);
@@ -44,7 +49,7 @@ time_t      utcTimeToTimeT(std::string utcTime);
 std::string localTimeFromTimeT(time_t t,const char *tzone);
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
 std::string localTimeToUtc(std::string localTime,boost::local_time::time_zone_ptr tz);
-void splitTimeString(std::string timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second);
+void splitTimeString(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second);
 
 std::string addSeconds(std::string timeStr,int seconds);
 
@@ -114,23 +119,23 @@ void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordin
 std::string stringReplaceAll(std::string st,std::string oldStr,std::string newStr);
 
 void splitString(const char *str,char separator,std::vector<uint>& partList);
-void splitString(std::string str,char separator,std::vector<uint>& partList);
+void splitString(const std::string& str,char separator,std::vector<uint>& partList);
 void splitString(const char *str,char separator,std::vector<int>& partList);
-void splitString(std::string str,char separator,std::vector<int>& partList);
+void splitString(const std::string& str,char separator,std::vector<int>& partList);
 void splitString(const char *str,char separator,std::vector<float>& partList);
-void splitString(std::string str,char separator,std::vector<float>& partList);
+void splitString(const std::string& str,char separator,std::vector<float>& partList);
 void splitString(const char *str,char separator,std::vector<double>& partList);
-void splitString(std::string str,char separator,std::vector<double>& partList);
+void splitString(const std::string& str,char separator,std::vector<double>& partList);
 void splitString(const char *str,char separator,std::vector<std::string>& partList);
-void splitString(std::string str,char separator,std::vector<std::string>& partList);
+void splitString(const std::string& str,char separator,std::vector<std::string>& partList);
 void splitString(const char *str,char separator,std::set<std::string>& partList);
-void splitString(std::string str,char separator,std::set<std::string>& partList);
+void splitString(const std::string& str,char separator,std::set<std::string>& partList);
 void splitString(const char *str,char separator,std::set<float>& partList);
-void splitString(std::string str,char separator,std::set<float>& partList);
+void splitString(const std::string& str,char separator,std::set<float>& partList);
 void splitString(const char *str,char separator,std::set<double>& partList);
-void splitString(std::string str,char separator,std::set<double>& partList);
+void splitString(const std::string& str,char separator,std::set<double>& partList);
 void splitString(const char *str,char separator,std::set<int>& partList);
-void splitString(std::string str,char separator,std::set<int>& partList);
+void splitString(const std::string& str,char separator,std::set<int>& partList);
 
 std::string toString(std::list<std::string>& parts,char separator);
 std::string toString(std::set<int>& parts,char separator);
