@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 19.12.4
+Version: 19.12.5
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Dec  5 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.12.5-1.fmi
+- Fixed GRIB earth radius reader to use provided radius instead of major axis
 * Wed Dec  4 2019 Mika Heiskanen <mika.heiskanen@fmi.fi> - 19.12.4-1.fmi
 - Added new response attributes
 - Ensure all timesteps use the same bounding box
