@@ -63,7 +63,7 @@ void ParameterSettings::read(MemoryReader &memoryReader) {
     mHoursAfterDataCutoff = memoryReader.read_UInt16_opt();
     mMinutesAfterDataCutoff = memoryReader.read_UInt8_opt();
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
-    mForecastTime = memoryReader.read_UInt32_opt();
+    mForecastTime = memoryReader.read_Int32_opt();
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -257,7 +257,7 @@ const T::UInt8_opt &ParameterSettings::getIndicatorOfUnitOfTimeRange() const {
 
 /*! \brief The method returns the value of the {@link mForecastTime} attribute. */
 
-const T::UInt32_opt &ParameterSettings::getForecastTime() const {
+const T::Int32_opt &ParameterSettings::getForecastTime() const {
   try {
     return mForecastTime;
   } catch (...) {
@@ -329,7 +329,7 @@ void ParameterSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUn
   }
 }
 
-void ParameterSettings::setForecastTime(T::UInt32_opt forecastTime) {
+void ParameterSettings::setForecastTime(T::Int32_opt forecastTime) {
   try {
     mForecastTime = forecastTime;
   } catch (...) {

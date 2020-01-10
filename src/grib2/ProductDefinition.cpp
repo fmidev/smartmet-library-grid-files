@@ -1233,20 +1233,25 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
     if (!indicator)
       throw SmartMet::Spine::Exception(BCP, "The 'parameter.indicatorOfUnitOfTimeRange' value not defined!");
 
-    uint forecastTime = *forecastTimeP;
+    int ft = *forecastTimeP;
+    int forecastTime = ft;
+    if (ft < 0)
+      forecastTime = -ft;
+
+    boost::posix_time::time_duration dt;
 
     switch (*indicator)
     {
       case 0: // m Minute
-        tt = refTime + boost::posix_time::time_duration(0,forecastTime,0);
+        dt = boost::posix_time::time_duration(0,forecastTime,0);
         break;
 
       case 1: //  h Hour
-        tt = refTime + boost::posix_time::time_duration(forecastTime,0,0);
+        dt = boost::posix_time::time_duration(forecastTime,0,0);
         break;
 
       case 2: //  D Day
-        tt = refTime + boost::posix_time::time_duration(24*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(24*forecastTime,0,0);
         break;
 
       case 3: //  M Month
@@ -1257,21 +1262,26 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
         throw SmartMet::Spine::Exception(BCP, "Not implemented!");
 
       case 10: //  3h 3 hours
-        tt = refTime + boost::posix_time::time_duration(3*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(3*forecastTime,0,0);
         break;
 
       case 11: //  6h 6 hours
-        tt = refTime + boost::posix_time::time_duration(6*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(6*forecastTime,0,0);
         break;
 
       case 12: //  12h 12 hours
-        tt = refTime + boost::posix_time::time_duration(12*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(12*forecastTime,0,0);
         break;
 
       case 13: //  s Second
-        tt = refTime + boost::posix_time::time_duration(0,0,forecastTime);
+        dt = boost::posix_time::time_duration(0,0,forecastTime);
         break;
     }
+
+    if (ft >= 0)
+      tt = refTime + dt;
+    else
+      tt = refTime - dt;
 
     return toString(tt);
   }

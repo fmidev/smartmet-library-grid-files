@@ -44,8 +44,8 @@ public:
   void setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataCutoff);
   const T::UInt8_opt &getIndicatorOfUnitOfTimeRange() const;
   void setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUnitOfTimeRange);
-  const T::UInt32_opt &getForecastTime() const;
-  void setForecastTime(T::UInt32_opt forecastTime);
+  const T::Int32_opt &getForecastTime() const;
+  void setForecastTime(T::Int32_opt forecastTime);
 
 protected:
   // # Copyright 2005-2015 ECMWF.
@@ -121,7 +121,10 @@ protected:
   // #  Forecast time in units defined by octet 18
   // unsigned[4] forecastTime  : dump;
 
-  T::UInt32_opt mForecastTime;
+  // **** NOTE: It seems that the forecast time can also be negative, which means that
+  // **** the current code generation generates wrong type for this attribute.
+
+  T::Int32_opt mForecastTime;
 
   //
 };

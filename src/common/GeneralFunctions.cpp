@@ -2285,7 +2285,7 @@ std::string fileToBase64(const char *filename)
     }
 
     FILE *file = fopen(filename, "r");
-    if (file == NULL)
+    if (file == nullptr)
     {
       Spine::Exception exception(BCP, "Cannot open the file!");
       exception.addParameter("Filename", filename);
