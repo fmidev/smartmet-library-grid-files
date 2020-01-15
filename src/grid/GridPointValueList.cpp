@@ -784,6 +784,9 @@ void GridPointValueList::sort(GridPointValue::ComparisonMethod comparisonMethod)
 {
   try
   {
+    if (mArray == nullptr || mLength == 0)
+      return;
+
     mComparisonMethod = comparisonMethod;
 
     AutoThreadLock globalLock(&GridPointValueList_sortLock);
