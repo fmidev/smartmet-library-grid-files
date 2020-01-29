@@ -118,7 +118,18 @@ GridPointValueList::~GridPointValueList()
 {
   try
   {
-    clear();
+    if (mArray != nullptr)
+    {
+      for (uint t=0; t<mLength; t++)
+      {
+        if (mArray[t] != nullptr  &&  mReleaseObjects)
+        {
+          delete(mArray[t]);
+          mArray[t] = nullptr;
+        }
+      }
+      delete[] mArray;
+    }
   }
   catch (...)
   {
@@ -263,14 +274,9 @@ void GridPointValueList::clear()
       delete[] mArray;
     }
 
-    mSize = 100;
+    mArray = nullptr;
+    mSize = 0;
     mLength = 0;
-    mArray = new GridPointValuePtr[100];
-
-    for (uint t=0; t<100; t++)
-    {
-      mArray[t] = nullptr;
-    }
   }
   catch (...)
   {

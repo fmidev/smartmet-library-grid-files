@@ -82,13 +82,11 @@ Message::Message(const Message& message)
     mGrib1ParameterLevelId = message.mGrib1ParameterLevelId;
     mGrib2ParameterLevelId = message.mGrib2ParameterLevelId;
     mGribParameterName = message.mGribParameterName;
-    mGribParameterDescription = message.mGribParameterDescription;
     mGribParameterUnits = message.mGribParameterUnits;
     mFmiProducerName = message.mFmiProducerName;
     mFmiParameterId = message.mFmiParameterId;
     mFmiParameterLevelId = message.mFmiParameterLevelId;
     mFmiParameterName = message.mFmiParameterName;
-    mFmiParameterDescription = message.mFmiParameterDescription;
     mFmiParameterUnits = message.mFmiParameterUnits;
     mCdmParameterId = message.mCdmParameterId;
     mCdmParameterName = message.mCdmParameterName;
@@ -472,6 +470,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     //attributeList.print(std::cout,0,0);
 
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
 
@@ -534,6 +533,36 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
           sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
           if (getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
         }
       }
 
@@ -790,6 +819,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
     const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
 
     if (gridSizeStr != nullptr)
@@ -853,6 +883,37 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
             attributeList.setAttribute("grid.bbox",tmp);
         }
       }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
+        }
+      }
+
       attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
     }
 
@@ -1712,28 +1773,6 @@ std::string Message::getGribParameterName() const
 
 
 
-/*! \brief The method returns the grib parameter description.
-
-         \return   The grip parameter description.
-*/
-
-std::string Message::getGribParameterDescription() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mGribParameterDescription;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
 /*! \brief The method returns the grib parameter units.
 
          \return   The grib parameter units.
@@ -1879,28 +1918,6 @@ std::string Message::getFmiParameterName() const
   try
   {
     return mFmiParameterName;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the FMI parameter description.
-
-         \return   The FMI parameter description.
-*/
-
-std::string Message::getFmiParameterDescription() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mFmiParameterDescription;
   }
   catch (...)
   {
@@ -2154,6 +2171,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *s = attributeList.getAttributeValue("grid.areaInterpolationMethod");
@@ -2175,7 +2193,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
       attributeList.setAttribute("grid.crs",getWKT());
       T::Dimensions  d = getGridDimensions();
 
-      if (llboxStr == nullptr)
+      if (llboxStr == nullptr  &&  centerStr == nullptr)
       {
         double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
         uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
@@ -2219,6 +2237,36 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
           sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
           if (getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
         }
       }
 
@@ -2332,51 +2380,23 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
       if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
       {
-        double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-        double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-        OGRSpatialReference sr_latlon;
-        sr_latlon.importFromEPSG(4326);
-
-        OGRSpatialReference sr_wgs84_world_mercator;
-        sr_wgs84_world_mercator.importFromEPSG(3395);
-
-        OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr_wgs84_world_mercator);
-        OGRCoordinateTransformation *reverseTransformation = OGRCreateCoordinateTransformation(&sr_wgs84_world_mercator,&sr_latlon);
-
-        // Counting metric coordinates for the rectangle center.
-
         double centerX = a[0];
         double centerY = a[1];
 
-        transformation->Transform(1,&centerX,&centerY);
+        double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+        double mHeight = toDouble(metricHeightStr) * 1000; // km => m
 
-        // Countinging metric coordinates for the rectange corners.
+        double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
 
-        double xx1 = centerX - mWidth/2;
-        double yy1 = centerY - mHeight/2;
-        double xx2 = centerX + mWidth/2;
-        double yy2 = centerY + mHeight/2;
-
-        // Converting metric coordinates to latlon coordinates.
-
-        reverseTransformation->Transform(1,&xx1,&yy1);
-        reverseTransformation->Transform(1,&xx2,&yy2);
-
-        if (transformation != nullptr)
-          OCTDestroyCoordinateTransformation(transformation);
-
-        if (reverseTransformation != nullptr)
-          OCTDestroyCoordinateTransformation(reverseTransformation);
-
+        latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
         // Converting latlon coordinates to grid points.
 
-        getGridPointByLatLonCoordinates(yy1,xx1,x1,y1);
-        getGridPointByLatLonCoordinates(yy2,xx2,x2,y2);
+        getGridPointByLatLonCoordinates(lat1,lon1,x1,y1);
+        getGridPointByLatLonCoordinates(lat2,lon2,x2,y2);
 
         char tmp[200];
-        sprintf(tmp,"%f,%f,%f,%f",xx1,yy1,xx2,yy2);
+        sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
         attributeList.setAttribute("grid.crop.llbox",tmp);
       }
     }
@@ -3219,28 +3239,6 @@ void Message::setFmiParameterName(std::string fmiParameterName)
 
 
 
-/*! \brief The method sets the value of the 'mFmiParameterDescription' member attribute.
-
-        \param fmiParameterDescr   The new value for the member attribute.
-*/
-
-void Message::setFmiParameterDescription(std::string fmiParameterDescr)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mFmiParameterDescription = fmiParameterDescr;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
 /*! \brief The method sets the value of the 'mFmiParameterUnits' member attribute.
 
         \param fmiParameterUnits   The new value for the member attribute.
@@ -3296,28 +3294,6 @@ void Message::setGribParameterName(std::string gribParameterName)
   try
   {
     mGribParameterName = gribParameterName;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method sets the value of the 'mGribParameterDescription' member attribute.
-
-        \param gribParameterDescr   The new value for the member attribute.
-*/
-
-void Message::setGribParameterDescription(std::string gribParameterDescr)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mGribParameterDescription = gribParameterDescr;
   }
   catch (...)
   {

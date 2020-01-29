@@ -1,6 +1,7 @@
 #include "MessageProcessing.h"
 #include "../common/InterpolationFunctions.h"
 #include "../common/GeneralFunctions.h"
+#include "../common/CoordinateConversions.h"
 #include "../identification/GridDef.h"
 
 namespace SmartMet
@@ -191,6 +192,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
     const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
 
     if (gridSizeStr != nullptr)
@@ -252,6 +254,36 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
           sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
         }
       }
 
@@ -505,6 +537,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
     const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
 
     if (gridSizeStr != nullptr)
@@ -566,6 +599,36 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
           sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
         }
       }
 
@@ -752,6 +815,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
     const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
 
     if (gridSizeStr != nullptr)
@@ -813,6 +877,36 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
           sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
         }
       }
 
@@ -1037,6 +1131,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
     const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
 
     if (gridSizeStr != nullptr)
@@ -1098,6 +1193,36 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
           sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
         }
       }
 
@@ -1360,6 +1485,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
     const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
 
     if (gridSizeStr != nullptr)
@@ -1421,6 +1547,36 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
           sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
         }
       }
 
@@ -1532,6 +1688,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
     const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
 
     if (gridSizeStr != nullptr)
@@ -1593,6 +1750,36 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
           sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
         }
       }
 

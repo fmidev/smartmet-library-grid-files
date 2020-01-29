@@ -5485,48 +5485,6 @@ std::string GridDef::getGribParameterName(GRIB2::Message& message)
 
 
 
-std::string GridDef::getGribParameterDescription(GRIB1::Message& message)
-{
-  FUNCTION_TRACE
-  try
-  {
-    auto p = getGribParameterDefById(message.getGribParameterId());
-    if (p)
-      return p->mParameterDescription;
-
-    return std::string("");
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-std::string GridDef::getGribParameterDescription(GRIB2::Message& message)
-{
-  FUNCTION_TRACE
-  try
-  {
-    auto p = getGribParameterDefById(message.getGribParameterId());
-    if (p)
-      return p->mParameterDescription;
-
-    return std::string("");
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
 std::string GridDef::getGribParameterUnits(GRIB1::Message& message)
 {
   FUNCTION_TRACE

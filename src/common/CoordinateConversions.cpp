@@ -198,6 +198,53 @@ std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocircl
 
 
 
+void latLon_bboxByCenter(double centerX,double centerY,double metricWidth,double metricHeight,double& lon1,double& lat1,double& lon2,double& lat2)
+{
+  try
+  {
+    OGRSpatialReference sr_latlon;
+    sr_latlon.importFromEPSG(4326);
+
+    OGRSpatialReference sr_wgs84_world_mercator;
+    sr_wgs84_world_mercator.importFromEPSG(3395);
+
+    OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr_wgs84_world_mercator);
+    OGRCoordinateTransformation *reverseTransformation = OGRCreateCoordinateTransformation(&sr_wgs84_world_mercator,&sr_latlon);
+
+    transformation->Transform(1,&centerX,&centerY);
+
+    double xx1 = centerX - metricWidth/2;
+    double yy1 = centerY - metricHeight/2;
+    double xx2 = centerX + metricWidth/2;
+    double yy2 = centerY + metricHeight/2;
+
+    // Converting metric coordinates to latlon coordinates.
+
+    reverseTransformation->Transform(1,&xx1,&yy1);
+    reverseTransformation->Transform(1,&xx2,&yy2);
+
+    if (transformation != nullptr)
+      OCTDestroyCoordinateTransformation(transformation);
+
+    if (reverseTransformation != nullptr)
+      OCTDestroyCoordinateTransformation(reverseTransformation);
+
+    lon1 = xx1;
+    lat1 = yy1;
+    lon2 = xx2;
+    lat2 = yy2;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
 #if 0
 void getBoundingBox(
     boost::optional<std::string> crs,

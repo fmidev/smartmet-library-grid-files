@@ -124,8 +124,6 @@ class GridDef
     T::ParamLevelId   getGrib2LevelId(GRIB2::Message& message);
     std::string       getGribParameterName(GRIB1::Message& message);
     std::string       getGribParameterName(GRIB2::Message& message);
-    std::string       getGribParameterDescription(GRIB1::Message& message);
-    std::string       getGribParameterDescription(GRIB2::Message& message);
     std::string       getGribParameterUnits(GRIB1::Message& message);
     std::string       getGribParameterUnits(GRIB2::Message& message);
 

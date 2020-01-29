@@ -487,9 +487,6 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
     sprintf(name,"%smessage[%u].gribParameterName",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mGribParameterName);
 
-    sprintf(name,"%smessage[%u].gribParameterDescription",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,mGribParameterDescription);
-
     sprintf(name,"%smessage[%u].gribParameterUnits",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mGribParameterUnits);
 
@@ -507,9 +504,6 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 
     sprintf(name,"%smessage[%u].fmiParameterName",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mFmiParameterName);
-
-    sprintf(name,"%smessage[%u].fmiParameterDescription",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,mFmiParameterDescription);
 
     sprintf(name,"%smessage[%u].fmiParameterUnits",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,mFmiParameterUnits);
@@ -1459,7 +1453,6 @@ void Message::initParameterInfo()
   {
     mGribParameterId  = Identification::gridDef.getGribParameterId(*this);
     mGribParameterName  = Identification::gridDef.getGribParameterName(*this);
-    mGribParameterDescription  = Identification::gridDef.getGribParameterDescription(*this);
     mGribParameterUnits  = Identification::gridDef.getGribParameterUnits(*this);
     mGrib2ParameterLevelId = Identification::gridDef.getGrib2LevelId(*this);
 
@@ -1469,7 +1462,6 @@ void Message::initParameterInfo()
 
     mFmiParameterId = Identification::gridDef.getFmiParameterId(*this);
     mFmiParameterName = Identification::gridDef.getFmiParameterName(*this);
-    mFmiParameterDescription = Identification::gridDef.getFmiParameterDescription(*this);
     mFmiParameterUnits = Identification::gridDef.getFmiParameterUnits(*this);
     mFmiParameterLevelId = Identification::gridDef.getFmiLevelId(*this);
 
@@ -3719,7 +3711,6 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- filePosition             = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- gribParameterId          = " << toString(mGribParameterId) << "\n";
     stream << space(level) << "- gribParameterName        = " << mGribParameterName << "\n";
-    stream << space(level) << "- gribParameterDescription = " << mGribParameterDescription << "\n";
     stream << space(level) << "- gribParameterUnits       = " << mGribParameterUnits << "\n";
     stream << space(level) << "- parameterLevel           = " << toString(getGridParameterLevel()) << "\n";
     stream << space(level) << "- parameterLevelId         = " << toString(getGridParameterLevelId()) << "\n";
@@ -3728,7 +3719,6 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- fmiParameterId           = " << toString(mFmiParameterId) << "\n";
     stream << space(level) << "- fmiParameterLevelId      = " << toString(mFmiParameterLevelId) << "\n";
     stream << space(level) << "- fmiParameterName         = " << mFmiParameterName << "\n";
-    stream << space(level) << "- fmiParameterDescription  = " << mFmiParameterDescription << "\n";
     stream << space(level) << "- fmiParameterUnits        = " << mFmiParameterUnits << "\n";
     stream << space(level) << "- newbaseParameterId       = " << toString(mNewbaseParameterId) << "\n";
     stream << space(level) << "- cdmParameterId           = " << mCdmParameterId << "\n";

@@ -63,7 +63,6 @@ class Message
     virtual T::ParamId        getFmiParameterId() const;
     virtual T::ParamLevelId   getFmiParameterLevelId() const;
     virtual std::string       getFmiParameterName() const;
-    virtual std::string       getFmiParameterDescription() const;
     virtual std::string       getFmiParameterUnits() const;
     virtual std::string       getCdmParameterId() const;
     virtual std::string       getCdmParameterName() const;
@@ -78,7 +77,6 @@ class Message
 
     virtual T::ParamId        getGribParameterId() const;
     virtual std::string       getGribParameterName() const;
-    virtual std::string       getGribParameterDescription() const;
     virtual std::string       getGribParameterUnits() const;
     virtual T::ParamLevelId   getGrib1ParameterLevelId() const;
     virtual T::ParamLevelId   getGrib2ParameterLevelId() const;
@@ -171,7 +169,6 @@ class Message
     virtual void              setFmiParameterId(T::ParamId fmiParameterId);
     virtual void              setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId);
     virtual void              setFmiParameterName(std::string fmiParameterName);
-    virtual void              setFmiParameterDescription(std::string fmiParameterDescr);
     virtual void              setFmiParameterUnits(std::string fmiParameterUnits);
     virtual void              setCdmParameterId(std::string cdmParameterId);
     virtual void              setCdmParameterName(std::string cdmParameterName);
@@ -185,7 +182,6 @@ class Message
 
     virtual void              setGribParameterId(T::ParamId gribParameterId);
     virtual void              setGribParameterName(std::string gribParameterName);
-    virtual void              setGribParameterDescription(std::string gribParameterDescr);
     virtual void              setGribParameterUnits(std::string gribParameterUnits);
 
     // Grib 1 specific settings
@@ -258,9 +254,6 @@ protected:
     /*! \brief  The grib parameter name. */
     std::string               mGribParameterName;
 
-    /*! \brief  The grib parameter description. */
-    std::string               mGribParameterDescription;
-
     /*! \brief  The grib parameter units. */
     std::string               mGribParameterUnits;
 
@@ -275,9 +268,6 @@ protected:
 
     /*! \brief  The fmi parameter name. */
     std::string               mFmiParameterName;
-
-    /*! \brief  The fmi parameter description. */
-    std::string               mFmiParameterDescription;
 
     /*! \brief  The fmi parameter units. */
     std::string               mFmiParameterUnits;
