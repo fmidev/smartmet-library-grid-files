@@ -961,6 +961,8 @@ void Message::read(MemoryReader& memoryReader)
   FUNCTION_TRACE
   try
   {
+    AutoThreadLock lock(&mThreadLock);
+
     if (mIsRead)
       return;
 
