@@ -2612,6 +2612,14 @@ std::string Message::getWKT() const
 
 
 
+void Message::getSectionPositions(std::set<T::FilePosition>& positions)
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
 /*! \brief The method returns the default area interpolation method
 
         \return   The default area interpolation method.

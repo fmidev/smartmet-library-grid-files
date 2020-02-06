@@ -161,6 +161,35 @@ Message::~Message()
 
 
 
+void Message::getSectionPositions(std::set<T::FilePosition>& positions)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mIndicatorSection)
+      positions.insert(mIndicatorSection->getFilePosition());
+
+    if (mGridSection)
+      positions.insert(mGridSection->getFilePosition());
+
+    if (mProductSection)
+      positions.insert(mProductSection->getFilePosition());
+
+    if (mBitmapSection)
+      positions.insert(mBitmapSection->getFilePosition());
+
+    if (mDataSection)
+      positions.insert(mDataSection->getFilePosition());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 /*! \brief The method can be used for collecting all attributeList details related
     to the current message.
 */

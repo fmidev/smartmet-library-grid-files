@@ -54,6 +54,7 @@ class Message : public GRID::Message
     uint                getGribSubCentre() const;
     uint                getGribGeneratingProcessIdentifier() const;
     uint                getGribTableVersion() const;
+    void                getSectionPositions(std::set<T::FilePosition>& positions);
 
     bool                getGridCellSize(double& width,double& height) const;
     T::Coordinate_vec   getGridCoordinates() const;

@@ -94,8 +94,8 @@ void GribFile::read(std::string filename)
   FUNCTION_TRACE
   try
   {
-    auto fsize = getFileSize(filename.c_str());
-    if (fsize < 0)
+    mFileSize = getFileSize(filename.c_str());
+    if (mFileSize < 0)
       throw SmartMet::Spine::Exception(BCP,"The file '" + filename + "' does not exist!");
 
     setFileName(filename);
@@ -103,12 +103,12 @@ void GribFile::read(std::string filename)
     // Map the entire file
     MappedFileParams params(filename);
     params.flags = boost::iostreams::mapped_file::readonly;
-    params.length = fsize;
+    params.length = mFileSize;
     mMappedFile.reset(new MappedFile(params));
     mIsMemoryMapped = true;
 
-    auto startAddr = const_cast<char*>(mMappedFile->const_data());
-    auto endAddr = startAddr + fsize;
+    mMemoryPtr = const_cast<char*>(mMappedFile->const_data());
+    auto endAddr = mMemoryPtr + mFileSize;
 
     // Making sure that the file is read into the memory.
     /*
@@ -117,7 +117,7 @@ void GribFile::read(std::string filename)
       mapCnt2 += startAddr[t];
     }
     */
-    MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
+    MemoryReader memoryReader(reinterpret_cast<unsigned char*>(mMemoryPtr),reinterpret_cast<unsigned char*>(endAddr));
     read(memoryReader);
   }
   catch (...)

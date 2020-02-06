@@ -81,6 +81,8 @@ class GridFile
     std::shared_ptr<GridFile>   getGridFile();
     virtual Message*            getMessageByIndex(std::size_t index);
     virtual std::size_t         getNumberOfMessages();
+    virtual char*               getMemoryPtr();
+    virtual long long           getSize();
 
     virtual Message*            newMessage();
     virtual Message*            newMessage(uint messageIndex,ulonglong position,uint size);

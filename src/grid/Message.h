@@ -74,6 +74,7 @@ class Message
     virtual uint              getGribSubCentre() const;
     virtual uint              getGribGeneratingProcessIdentifier() const;
     virtual uint              getGribTableVersion() const;
+    virtual void              getSectionPositions(std::set<T::FilePosition>& positions);
 
     virtual T::ParamId        getGribParameterId() const;
     virtual std::string       getGribParameterName() const;

@@ -180,6 +180,9 @@ long long PhysicalGridFile::getSize()
   FUNCTION_TRACE
   try
   {
+    if (!isMemoryMapped())
+      mapToMemory();
+
     return mFileSize;
   }
   catch (...)
@@ -197,6 +200,9 @@ char* PhysicalGridFile::getMemoryPtr()
   FUNCTION_TRACE
   try
   {
+    if (!isMemoryMapped())
+      mapToMemory();
+
     return mMemoryPtr;
   }
   catch (...)

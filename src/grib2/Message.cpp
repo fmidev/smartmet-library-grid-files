@@ -596,6 +596,44 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 
 
 
+void Message::getSectionPositions(std::set<T::FilePosition>& positions)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mIndicatorSection)
+      positions.insert(mIndicatorSection->getFilePosition());
+
+    if (mIdentificationSection)
+      positions.insert(mIdentificationSection->getFilePosition());
+
+    if (mLocalSection)
+      positions.insert(mLocalSection->getFilePosition());
+
+    if (mGridSection)
+      positions.insert(mGridSection->getFilePosition());
+
+    if (mProductSection)
+      positions.insert(mProductSection->getFilePosition());
+
+    if (mRepresentationSection)
+      positions.insert(mRepresentationSection->getFilePosition());
+
+    if (mBitmapSection)
+      positions.insert(mBitmapSection->getFilePosition());
+
+    if (mDataSection)
+      positions.insert(mDataSection->getFilePosition());
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 /*! \brief The method creates the IndicatorSection object if it does not exist. */
 
 void Message::initIndicatorSection()

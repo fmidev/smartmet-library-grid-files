@@ -356,6 +356,46 @@ uint GridFile::getSourceId() const
 
 
 
+char* GridFile::getMemoryPtr()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridFile)
+      mGridFile->getMemoryPtr();
+
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+long long GridFile::getSize()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridFile)
+      mGridFile->getSize();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 void GridFile::addDependence(uint fileId)
 {
   FUNCTION_TRACE
