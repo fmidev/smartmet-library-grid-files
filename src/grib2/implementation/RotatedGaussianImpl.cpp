@@ -91,7 +91,7 @@ void RotatedGaussianImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec RotatedGaussianImpl::getGridCoordinates() const
+T::Coordinate_vec RotatedGaussianImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
 }

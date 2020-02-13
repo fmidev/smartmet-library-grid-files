@@ -295,7 +295,7 @@ GRID::Message* GribFile::newMessage()
 
 
 
-GRID::Message* GribFile::newMessage(uint messageIndex,ulonglong position,uint size)
+GRID::Message* GribFile::newMessage(uint messageIndex,GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -307,7 +307,7 @@ GRID::Message* GribFile::newMessage(uint messageIndex,ulonglong position,uint si
       throw exception;
     }
 
-    GRIB1::Message *msg = new GRIB1::Message(this,messageIndex,position,size);
+    GRIB1::Message *msg = new GRIB1::Message(this,messageIndex,messageInfo);
     mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
     return msg;
   }

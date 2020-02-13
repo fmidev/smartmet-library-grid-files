@@ -17,8 +17,8 @@ class PolarStereographicImpl : public PolarStereographic
 
     GridDefinition*   createGridDefinition() const;
 
-    bool              getGridCellSize(double& width,double& height) const;
-    T::Coordinate_vec getGridCoordinates() const;
+    bool              getGridMetricCellSize(double& width,double& height) const;
+    T::Coordinate_vec getGridOriginalCoordinates() const;
     T::Dimensions     getGridDimensions() const;
     std::string       getGridGeometryString() const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;

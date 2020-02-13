@@ -108,8 +108,8 @@ class GridDef
     bool              getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double& width,double& height);
     bool              getGridDirectionsByGeometryId(T::GeometryId geometryId,bool& reverseXDirection,bool& reverseYDirection);
 
-    T::Coordinate_vec getGridCoordinatesByGeometryId(T::GeometryId  geometryId);
-    void              getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_vec& coordinates,uint& width,uint& height);
+    T::Coordinate_vec getGridOriginalCoordinatesByGeometryId(T::GeometryId  geometryId);
+    void              getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_vec& coordinates,uint& width,uint& height);
 
     T::Coordinate_vec getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId);
     void              getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,uint& width,uint& height);

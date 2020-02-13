@@ -17,8 +17,8 @@ class LambertConformalImpl : public LambertConformal
 
     GridDefinition*   createGridDefinition() const;
 
-    bool              getGridCellSize(double& width,double& height) const;
-    T::Coordinate_vec getGridCoordinates() const;
+    bool              getGridMetricCellSize(double& width,double& height) const;
+    T::Coordinate_vec getGridOriginalCoordinates() const;
     T::Dimensions     getGridDimensions() const;
     std::string       getGridGeometryString() const;
     bool              getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;

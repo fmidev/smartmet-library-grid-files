@@ -50,9 +50,11 @@ Message::Message()
   {
     mMessageIndex = 0;
     mMessageSize = 0;
+    mGeometryId = 0;
     mGrib1ParameterLevelId = 0;
     mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
+    mParameterLevel = 0;
     mDefaultInterpolationMethod = T::AreaInterpolationMethod::Nearest;
     mRequestCounterEnabled = false;
     mLastCacheAccess = time(0);
@@ -78,9 +80,11 @@ Message::Message(const Message& message)
   {
     mMessageIndex = message.mMessageIndex;
     mMessageSize = message.mMessageSize;
+    mGeometryId = message.mGeometryId;
     mGribParameterId = message.mGribParameterId;
     mGrib1ParameterLevelId = message.mGrib1ParameterLevelId;
     mGrib2ParameterLevelId = message.mGrib2ParameterLevelId;
+    mParameterLevel = message.mParameterLevel;
     mGribParameterName = message.mGribParameterName;
     mGribParameterUnits = message.mGribParameterUnits;
     mFmiProducerName = message.mFmiProducerName;
@@ -382,7 +386,7 @@ std::string Message::getGridProjectionString() const
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec Message::getGridCoordinates() const
+T::Coordinate_vec Message::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -435,7 +439,7 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = getGridCoordinates();
+        coordinates = getGridOriginalCoordinates();
         coordinatePtr = &coordinates;
         break;
     }
@@ -599,7 +603,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
     double wm = 0;
     double hm = 0;
-    if (getGridCellSize(wm,hm))
+    if (getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
@@ -622,7 +626,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     T::Coordinate_vec coordinates;
     T::Coordinate_vec latLonCoordinates;
 
-    Identification::gridDef.getGridCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
     if (latLonCoordinates.size() == 0)
     {
@@ -785,7 +789,7 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = getGridCoordinates();
+        coordinates = getGridOriginalCoordinates();
         coordinatePtr = &coordinates;
         break;
     }
@@ -947,7 +951,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
     double wm = 0;
     double hm = 0;
-    if (getGridCellSize(wm,hm))
+    if (getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
@@ -969,7 +973,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     T::Coordinate_vec coordinates;
     T::Coordinate_vec latLonCoordinates;
 
-    Identification::gridDef.getGridCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
     if (latLonCoordinates.size() == 0)
     {
@@ -1280,11 +1284,37 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
-bool Message::getGridCellSize(double& width,double& height) const
+bool Message::getGridMetricCellSize(double& width,double& height) const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
 
+
+
+
+
+bool Message::getGridMetricSize(double& width,double& height) const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
 
 
 
@@ -2284,7 +2314,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
     double wm = 0;
     double hm = 0;
-    if (getGridCellSize(wm,hm))
+    if (getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
@@ -2481,7 +2511,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
     double wm = 0;
     double hm = 0;
-    if (getGridCellSize(wm,hm))
+    if (getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.cell.height",std::to_string(hm));
@@ -2693,6 +2723,24 @@ short Message::getForecastType() const
 */
 
 short Message::getForecastNumber() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+void Message::lockData()
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+void Message::unlockData()
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -5084,7 +5132,8 @@ void Message::incRequestCounter(uint index) const
     if (mRequestCounterEnabled && requestCounter.isCountingEnabled())
     {
       ulonglong key = getRequestCounterKey();
-      requestCounter.incCounter(key,index);
+      if (key > 0)
+        requestCounter.incCounter(key);
     }
   }
   catch (...)

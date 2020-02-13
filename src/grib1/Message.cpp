@@ -17,6 +17,7 @@
 #include "../grid/IndexCache.h"
 #include "../common/ShowFunction.h"
 #include <iostream>
+#include <sys/mman.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -41,6 +42,7 @@ Message::Message()
     mGrib1ParameterLevelId = 0;
     mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
+    mGeometryId = 0;
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
@@ -57,18 +59,21 @@ Message::Message()
 
 
 
-Message::Message(GribFile *gribFile,uint messageIndex,ulonglong position,ulong size)
+Message::Message(GribFile *gribFile,uint messageIndex,GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
   {
     mGribFile = gribFile;
-    mMessageIndex = messageIndex;
-    mFilePosition = position;
-    mMessageSize = size;
+    mFilePosition = messageInfo.mFilePosition;
+    mMessageSize = messageInfo.mMessageSize;
+    mFmiParameterId = messageInfo.mFmiParameterId;
+    mFmiParameterName = messageInfo.mFmiParameterName;
+    mFmiParameterLevelId = messageInfo.mFmiParameterLevelId;
+    mParameterLevel = messageInfo.mParameterLevel;
+    mGeometryId = messageInfo.mGeometryId;
     mGrib1ParameterLevelId = 0;
     mGrib2ParameterLevelId = 0;
-    mFmiParameterLevelId = 0;
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
@@ -722,6 +727,61 @@ void Message::initGridSection()
 
 
 
+void Message::lockData()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mDataLocked)
+      return;
+
+    auto addr = getDataPtr();
+    auto len = getDataSize();
+
+    if (addr != nullptr &&  len > 0)
+    {
+      mlock(addr,len);
+      mDataLocked = true;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+void Message::unlockData()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mDataLocked)
+      return;
+
+    auto addr = getDataPtr();
+    auto len = getDataSize();
+
+    if (addr != nullptr &&  len > 0)
+    {
+      munlock(addr,len);
+      mDataLocked = false;
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
+
 /*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
@@ -1291,9 +1351,13 @@ T::GeometryId Message::getGridGeometryId() const
   try
   {
     if (mGridSection != nullptr)
-      return mGridSection->getGridGeometryId();
+    {
+      T::GeometryId gid = mGridSection->getGridGeometryId();
+      if (gid != 0)
+        return gid;
+    }
 
-    return 0;
+    return mGeometryId;
   }
   catch (...)
   {
@@ -1308,13 +1372,13 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
-bool Message::getGridCellSize(double& width,double& height) const
+bool Message::getGridMetricCellSize(double& width,double& height) const
 {
   FUNCTION_TRACE
   try
   {
     if (mGridSection != nullptr)
-      return mGridSection->getGridCellSize(width,height);
+      return mGridSection->getGridMetricCellSize(width,height);
 
     return false;
   }
@@ -1328,6 +1392,69 @@ bool Message::getGridCellSize(double& width,double& height) const
 
 
 
+
+
+bool Message::getGridMetricSize(double& width,double& height) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection != nullptr)
+      return mGridSection->getGridMetricSize(width,height);
+
+    return false;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection != nullptr)
+      return mGridSection->getGridMetricArea(topLeft,topRight,bottomLeft,bottomRight);
+
+    return false;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection != nullptr)
+      return mGridSection->getGridLatLonArea(topLeft,topRight,bottomLeft,bottomRight);
+
+    return false;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
 
 
 /*! \brief The method returns the grid geometry string. This string can be used for comparing
@@ -1381,6 +1508,7 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
       throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     mGridSection->setGridGeometryId(geometryId);
+    mGeometryId = geometryId;
   }
   catch (...)
   {
@@ -1668,7 +1796,7 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
         \return   The grid coordinates.
 */
 
-T::Coordinate_vec Message::getGridCoordinates() const
+T::Coordinate_vec Message::getGridOriginalCoordinates() const
 {
   FUNCTION_TRACE
   try
@@ -1676,7 +1804,7 @@ T::Coordinate_vec Message::getGridCoordinates() const
     if (mGridSection == nullptr)
       throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
-    return mGridSection->getGridCoordinates();
+    return mGridSection->getGridOriginalCoordinates();
   }
   catch (...)
   {
@@ -2681,7 +2809,7 @@ T::ParamLevel Message::getGridParameterLevel() const
     if (mProductSection != nullptr)
       return static_cast<T::ParamLevel>(mProductSection->getLevel());
 
-    return 0;
+    return mParameterLevel;
   }
   catch (...)
   {

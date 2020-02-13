@@ -117,6 +117,8 @@ void PhysicalGridFile::mapToMemory()
       {
         read();
 
+        AutoThreadLock lock(&mMemoryMappingLock);
+
         if (mGridFile  &&  mMessagePositions.size() > 0)
         {
           // Now we know the type of the grid file. So we can add predefined
@@ -124,7 +126,7 @@ void PhysicalGridFile::mapToMemory()
 
           for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
           {
-            mGridFile->newMessage(it->first,it->second,0);
+            mGridFile->newMessage(it->first,it->second);
           }
           mMessagePositions.clear();
         }

@@ -17,11 +17,11 @@ class MercatorImpl : public Mercator
 
     GridDefinition*   createGridDefinition() const;
 
-    T::Coordinate_vec getGridCoordinates() const;
+    T::Coordinate_vec getGridOriginalCoordinates() const;
     T::Dimensions     getGridDimensions() const;
     std::string       getGridGeometryString() const;
     bool              getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
-    bool              getGridCellSize(double& width,double& height) const;
+    bool              getGridMetricCellSize(double& width,double& height) const;
 
     bool              setProperty(uint propertyId,long long value);
 

@@ -91,7 +91,7 @@ void StretchedSphericalHarmonicImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec StretchedSphericalHarmonicImpl::getGridCoordinates() const
+T::Coordinate_vec StretchedSphericalHarmonicImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
 }

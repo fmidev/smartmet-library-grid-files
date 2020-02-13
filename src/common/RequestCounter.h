@@ -15,9 +15,8 @@ namespace SmartMet
 {
 
 
-typedef std::map<ulonglong,std::map<uint,uint>> PointCounter;
-typedef std::map<ulonglong,std::vector<uint>> PointIndexList;
-typedef std::multimap<uint,ulonglong> KeyCountList;
+typedef std::map<ulonglong,uint> KeyCounter;
+typedef std::multimap<uint,ulonglong> TopList;
 
 
 
@@ -32,29 +31,23 @@ class RequestCounter
     void                clearTopIndexes();
     ulonglong           getTotalRequests();
     void                resetTotalRequests();
-    void                saveTopIndexes(const char *filename);
-    void                loadTopIndexes(const char *filename);
-    void                incCounter(ulonglong key,uint index);
+    void                saveTopCounters(const char *filename);
+    void                loadTopCounters(const char *filename);
+    void                incCounter(ulonglong key);
     bool                isCountingEnabled();
-    uint                getCounter(ulonglong key,uint index);
-    std::vector<uint>   getTopRequestIndexes(ulonglong key);
-    KeyCountList        getTopRequestCounters();
+    uint                getCounter(ulonglong key);
+    TopList             getTopRequestCounters();
     void                multiplyCounters(double multiplier);
-    void                multiplyCounters(ulonglong key,double multiplier);
     void                setCountingEnabled(bool _enabled);
-    void                updateTopRequestIndexes();
-    void                updateTopRequestIndexes(ulonglong key);
+    void                updateTopCounters();
 
   protected:
 
     ulonglong           mTotalRequests;
-    KeyCountList        mTopRequestCounters;
-
+    TopList             mTopRequestCounters;
     bool                mCountingEnabled;
     ThreadLock          mThreadLock;
-    PointCounter        mPointRequestCounter;
-    PointIndexList      mTopRequestIndex;
-
+    KeyCounter          mRequestCounters;
 };
 
 

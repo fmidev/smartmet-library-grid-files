@@ -5,6 +5,7 @@
 #include "../common/Exception.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
+#include "../common/ShowFunction.h"
 
 #include "../grib1/implementation/LatLonImpl.h"
 #include "../grib1/implementation/MercatorImpl.h"
@@ -25,6 +26,8 @@
 #include "../grib1/implementation/StretchedRotatedSphericalHarmonicImpl.h"
 #include "../grib1/implementation/SpaceViewImpl.h"
 
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
+
 
 namespace SmartMet
 {
@@ -37,6 +40,7 @@ namespace GRIB1
 
 GridSection::GridSection()
 {
+  FUNCTION_TRACE
   try
   {
     mMessage = nullptr;
@@ -58,6 +62,7 @@ GridSection::GridSection()
 GridSection::GridSection(const GridSection& other)
 :GRID::MessageSection(other)
 {
+  FUNCTION_TRACE
   try
   {
     mMessage = nullptr;
@@ -101,6 +106,7 @@ GridSection::~GridSection()
 
 void GridSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
 {
+  FUNCTION_TRACE
   try
   {
     char name[300];
@@ -143,6 +149,7 @@ void GridSection::getAttributeList(std::string prefix,T::AttributeList& attribut
 
 bool GridSection::getProperty(uint propertyId,long long& value)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition)
@@ -184,6 +191,7 @@ bool GridSection::getProperty(uint propertyId,long long& value)
 
 bool GridSection::setProperty(uint propertyId,long long value)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition)
@@ -225,6 +233,7 @@ bool GridSection::setProperty(uint propertyId,long long value)
 
 bool GridSection::setProperty(uint propertyId,double value)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition)
@@ -244,6 +253,7 @@ bool GridSection::setProperty(uint propertyId,double value)
 
 void GridSection::setNumberOfVerticalCoordinateValues(long long value)
 {
+  FUNCTION_TRACE
   try
   {
     mNumberOfVerticalCoordinateValues = static_cast<std::uint8_t>(value);
@@ -260,6 +270,7 @@ void GridSection::setNumberOfVerticalCoordinateValues(long long value)
 
 void GridSection::setPvlLocation(long long value)
 {
+  FUNCTION_TRACE
   try
   {
     mPvlLocation = static_cast<std::uint8_t>(value);
@@ -276,6 +287,7 @@ void GridSection::setPvlLocation(long long value)
 
 void GridSection::setDataRepresentationType(long long value)
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -303,6 +315,7 @@ void GridSection::setDataRepresentationType(long long value)
 
 void GridSection::setMessagePtr(Message *message)
 {
+  FUNCTION_TRACE
   try
   {
     mMessage = message;
@@ -324,6 +337,7 @@ void GridSection::setMessagePtr(Message *message)
 
 void GridSection::read(MemoryReader& memoryReader)
 {
+  FUNCTION_TRACE
   try
   {
     mFilePosition = memoryReader.getGlobalReadPosition();
@@ -406,6 +420,7 @@ void GridSection::read(MemoryReader& memoryReader)
 
 void GridSection::write(DataWriter& dataWriter)
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -455,6 +470,7 @@ void GridSection::write(DataWriter& dataWriter)
 
 T::FilePosition GridSection::getFilePosition() const
 {
+  FUNCTION_TRACE
   try
   {
     return mFilePosition;
@@ -476,6 +492,7 @@ T::FilePosition GridSection::getFilePosition() const
 
 std::uint32_t GridSection::getSectionLength() const
 {
+  FUNCTION_TRACE
   try
   {
     return mSectionLength;
@@ -494,6 +511,7 @@ std::uint32_t GridSection::getSectionLength() const
 
 std::string GridSection::getSectionName() const
 {
+  FUNCTION_TRACE
   try
   {
     return std::string("Grid");
@@ -512,6 +530,7 @@ std::string GridSection::getSectionName() const
 
 std::uint8_t GridSection::getSectionNumber() const
 {
+  FUNCTION_TRACE
   try
   {
     return (std::uint8_t)Message::SectionNumber::grid_section;
@@ -533,6 +552,7 @@ std::uint8_t GridSection::getSectionNumber() const
 
 std::string GridSection::getGridProjectionString() const
 {
+  FUNCTION_TRACE
   try
   {
     return Identification::gridDef.getGribTableValue(1,0,"6",mDataRepresentationType);
@@ -559,6 +579,7 @@ std::string GridSection::getGridProjectionString() const
 
 bool GridSection::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -588,6 +609,7 @@ bool GridSection::getGridPointByLatLonCoordinates(double lat,double lon,double& 
 
 bool GridSection::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -617,6 +639,7 @@ bool GridSection::getGridPointByOriginalCoordinates(double x,double y,double& gr
 
 T::Dimensions GridSection::getGridDimensions() const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -641,6 +664,7 @@ T::Dimensions GridSection::getGridDimensions() const
 
 std::size_t GridSection::getGridOriginalRowCount() const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -666,6 +690,7 @@ std::size_t GridSection::getGridOriginalRowCount() const
 
 std::size_t GridSection::getGridOriginalColumnCount(std::size_t row) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -691,6 +716,7 @@ std::size_t GridSection::getGridOriginalColumnCount(std::size_t row) const
 
 std::size_t GridSection::getGridOriginalColumnCount() const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -715,6 +741,7 @@ std::size_t GridSection::getGridOriginalColumnCount() const
 
 std::size_t GridSection::getGridOriginalValueCount() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mNumberOfPoints > 0)
@@ -750,6 +777,7 @@ std::size_t GridSection::getGridOriginalValueCount() const
 
 int GridSection::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -778,6 +806,7 @@ int GridSection::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 
 bool GridSection::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -806,6 +835,7 @@ bool GridSection::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,do
 
 bool GridSection::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -834,6 +864,7 @@ bool GridSection::getGridLatLonCoordinatesByOriginalCoordinates(double x,double 
 
 bool GridSection::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -862,6 +893,7 @@ bool GridSection::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,
 
 bool GridSection::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -890,6 +922,7 @@ bool GridSection::getGridOriginalCoordinatesByGridPosition(double grid_i,double 
 
 bool GridSection::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -918,6 +951,7 @@ bool GridSection::getGridLatLonCoordinatesByGridPosition(double grid_i,double gr
 
 bool GridSection::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -942,6 +976,7 @@ bool GridSection::getGridOriginalCoordinatesByLatLonCoordinates(double lat,doubl
 
 T::GeometryId GridSection::getGridGeometryId() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition != nullptr)
@@ -959,12 +994,73 @@ T::GeometryId GridSection::getGridGeometryId() const
 
 
 
-bool GridSection::getGridCellSize(double& width,double& height) const
+bool GridSection::getGridMetricCellSize(double& width,double& height) const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition != nullptr)
-      return mGridDefinition->getGridCellSize(width,height);
+      return mGridDefinition->getGridMetricCellSize(width,height);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridSection::getGridMetricSize(double& width,double& height) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition != nullptr)
+      return mGridDefinition->getGridMetricSize(width,height);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridSection::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->getGridMetricArea(topLeft,topRight,bottomLeft,bottomRight);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridSection::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->getGridLatLonArea(topLeft,topRight,bottomLeft,bottomRight);
 
     return false;
   }
@@ -987,6 +1083,7 @@ bool GridSection::getGridCellSize(double& width,double& height) const
 
 std::string GridSection::getGridGeometryString() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition != nullptr)
@@ -1018,6 +1115,7 @@ std::string GridSection::getGridGeometryString() const
 
 void GridSection::setGridGeometryId(T::GeometryId geometryId)
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition)
@@ -1041,14 +1139,15 @@ void GridSection::setGridGeometryId(T::GeometryId geometryId)
         \return   The grid coordinates.
 */
 
-T::Coordinate_vec GridSection::getGridCoordinates() const
+T::Coordinate_vec GridSection::getGridOriginalCoordinates() const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
       throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
-    return mGridDefinition->getGridCoordinates();
+    return mGridDefinition->getGridOriginalCoordinates();
   }
   catch (...)
   {
@@ -1070,6 +1169,7 @@ T::Coordinate_vec GridSection::getGridCoordinates() const
 
 T::Coordinate_vec GridSection::getGridLatLonCoordinates() const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -1094,6 +1194,7 @@ T::Coordinate_vec GridSection::getGridLatLonCoordinates() const
 
 T::Hash GridSection::getGridHash() const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -1121,6 +1222,7 @@ T::Hash GridSection::getGridHash() const
 
 bool GridSection::isGridGlobal() const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -1140,6 +1242,7 @@ bool GridSection::isGridGlobal() const
 
 bool GridSection::isRelativeUV() const
 {
+  FUNCTION_TRACE
   try
   {
     if (!mGridDefinition)
@@ -1164,6 +1267,7 @@ bool GridSection::isRelativeUV() const
 
 T::GridProjection GridSection::getGridProjection() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition == nullptr)
@@ -1188,6 +1292,7 @@ T::GridProjection GridSection::getGridProjection() const
 
 T::GridLayout GridSection::getGridLayout() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition == nullptr)
@@ -1209,6 +1314,7 @@ T::GridLayout GridSection::getGridLayout() const
 
 void GridSection::initSpatialReference()
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition != nullptr)
@@ -1231,6 +1337,7 @@ void GridSection::initSpatialReference()
 
 T::SpatialRef* GridSection::getSpatialReference() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition != nullptr)
@@ -1257,6 +1364,7 @@ T::SpatialRef* GridSection::getSpatialReference() const
 
 bool GridSection::reverseXDirection() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition != nullptr)
@@ -1282,6 +1390,7 @@ bool GridSection::reverseXDirection() const
 
 bool GridSection::reverseYDirection() const
 {
+  FUNCTION_TRACE
   try
   {
     if (mGridDefinition != nullptr)
@@ -1308,6 +1417,7 @@ bool GridSection::reverseYDirection() const
 
 GridDefinition* GridSection::createGridDefinition(std::uint8_t  dataRepresentationType)
 {
+  FUNCTION_TRACE
   try
   {
     switch (dataRepresentationType)
@@ -1401,6 +1511,7 @@ GridDefinition* GridSection::createGridDefinition(std::uint8_t  dataRepresentati
 
 void GridSection::print(std::ostream& stream,uint level,uint optionFlags) const
 {
+  FUNCTION_TRACE
   try
   {
     stream << space(level) << "SECTION ["<< toString(getSectionNumber()) << "] " << getSectionName() << "\n";

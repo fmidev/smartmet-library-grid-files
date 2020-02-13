@@ -47,26 +47,8 @@ void RequestCounter::clearCounters()
   try
   {
     AutoThreadLock lock(&mThreadLock);
-    mPointRequestCounter.clear();
+    mRequestCounters.clear();
     mTotalRequests = 0;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-void RequestCounter::clearTopIndexes()
-{
-  FUNCTION_TRACE
-  try
-  {
-    AutoThreadLock lock(&mThreadLock);
-    mTopRequestIndex.clear();
   }
   catch (...)
   {
@@ -94,12 +76,9 @@ void RequestCounter::multiplyCounters(double multiplier)
 
     AutoThreadLock lock(&mThreadLock);
 
-    for (auto it = mPointRequestCounter.begin(); it != mPointRequestCounter.end(); ++it)
+    for (auto it = mRequestCounters.begin(); it != mRequestCounters.end(); ++it)
     {
-      for (auto pp = it->second.begin(); pp != it->second.end(); ++pp)
-      {
-        pp->second = C_UINT(multiplier * C_DOUBLE(pp->second));
-      }
+      it->second = C_UINT(multiplier * C_DOUBLE(it->second));
     }
   }
   catch (...)
@@ -112,183 +91,7 @@ void RequestCounter::multiplyCounters(double multiplier)
 
 
 
-void RequestCounter::multiplyCounters(ulonglong key,double multiplier)
-{
-  FUNCTION_TRACE
-  try
-  {
-    // This method can be used in order make sure that request counters get
-    // smaller if they are not used for awhile.
-
-
-    // Disable the request counting before calling this method.
-
-    if (mCountingEnabled)
-      return;
-
-    AutoThreadLock lock(&mThreadLock);
-
-    auto it = mPointRequestCounter.find(key);
-
-    if (it != mPointRequestCounter.end())
-    {
-      for (auto pp = it->second.begin(); pp != it->second.end(); ++pp)
-      {
-        pp->second = C_UINT(multiplier * C_DOUBLE(pp->second));
-      }
-    }
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-void RequestCounter::updateTopRequestIndexes()
-{
-  FUNCTION_TRACE
-  try
-  {
-    // Disable the request counting before calling this method.
-
-    if (mCountingEnabled)
-      return;
-
-    uint minRequests = 10;
-
-    AutoThreadLock lock(&mThreadLock);
-
-    mTopRequestCounters.clear();
-
-    for (auto it = mPointRequestCounter.begin(); it != mPointRequestCounter.end(); ++it)
-    {
-      std::multimap<uint,uint> cnt;
-      uint count = 0;
-
-      for (auto pp = it->second.begin(); pp != it->second.end(); ++pp)
-      {
-        count += pp->second;
-        if (pp->second >= minRequests)
-          cnt.insert(std::pair<uint,uint>(pp->second,pp->first));
-      }
-
-      mTopRequestCounters.insert(std::pair<uint,ulonglong>(count,it->first));
-
-      uint sz = POINT_CACHE_SIZE;
-      if (cnt.size() < sz)
-        sz = cnt.size();
-
-      auto tt = mTopRequestIndex.find(it->first);
-      if (tt == mTopRequestIndex.end())
-      {
-        std::vector<uint> ivec;
-        ivec.reserve(sz);
-        uint c = 0;
-        for (auto p = cnt.rbegin(); p != cnt.rend()  &&  c < sz; ++p)
-        {
-          ivec.push_back(p->second);
-          c++;
-        }
-        mTopRequestIndex.insert(std::pair<ulonglong,std::vector<uint>>(it->first,ivec));
-      }
-      else
-      {
-        tt->second.clear();
-        tt->second.reserve(sz);
-        uint c = 0;
-        for (auto p = cnt.rbegin(); p != cnt.rend()  &&  c < sz; ++p)
-        {
-          tt->second.push_back(p->second);
-          c++;
-        }
-      }
-    }
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-void RequestCounter::updateTopRequestIndexes(ulonglong key)
-{
-  FUNCTION_TRACE
-  try
-  {
-    // Disable the request counting before calling this method.
-
-    if (mCountingEnabled)
-      return;
-
-    uint minRequests = 4;
-
-    AutoThreadLock lock(&mThreadLock);
-
-    //std::map<uint,ulonglong> maxIndex;
-
-    auto it = mPointRequestCounter.find(key);
-
-    if (it != mPointRequestCounter.end())
-    {
-      std::multimap<uint,uint> cnt;
-      for (auto pp = it->second.begin(); pp != it->second.end(); ++pp)
-      {
-        if (pp->second >= minRequests)
-          cnt.insert(std::pair<uint,uint>(pp->second,pp->first));
-      }
-
-      //if (cnt.rbegin() != cnt.rend())
-      //  maxIndex.insert(std::pair<uint,ulonglong>(cnt.rbegin()->first,it->first));
-
-      uint sz = POINT_CACHE_SIZE;
-      if (cnt.size() < sz)
-        sz = cnt.size();
-
-      auto tt = mTopRequestIndex.find(it->first);
-      if (tt == mTopRequestIndex.end())
-      {
-        std::vector<uint> ivec;
-        ivec.reserve(sz);
-        uint c = 0;
-        for (auto p = cnt.rbegin(); p != cnt.rend()  &&  c < sz; ++p)
-        {
-          ivec.push_back(p->second);
-          c++;
-        }
-        mTopRequestIndex.insert(std::pair<ulonglong,std::vector<uint>>(it->first,ivec));
-      }
-      else
-      {
-        tt->second.clear();
-        tt->second.reserve(sz);
-        uint c = 0;
-        for (auto p = cnt.rbegin(); p != cnt.rend()  &&  c < sz; ++p)
-        {
-          tt->second.push_back(p->second);
-          c++;
-        }
-      }
-    }
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-KeyCountList RequestCounter::getTopRequestCounters()
+TopList RequestCounter::getTopRequestCounters()
 {
   FUNCTION_TRACE
   try
@@ -300,34 +103,6 @@ KeyCountList RequestCounter::getTopRequestCounters()
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
-
-
-
-
-
-std::vector<uint> RequestCounter::getTopRequestIndexes(ulonglong key)
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mCountingEnabled)
-    {
-      AutoThreadLock lock(&mThreadLock);
-
-      auto tt = mTopRequestIndex.find(key);
-      if (tt != mTopRequestIndex.end())
-        return tt->second;
-    }
-
-    std::vector<uint> empty;
-    return empty;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
 
 
 
@@ -367,7 +142,7 @@ void RequestCounter::resetTotalRequests()
 
 
 
-void RequestCounter::incCounter(ulonglong key,uint index)
+void RequestCounter::incCounter(ulonglong key)
 {
   FUNCTION_TRACE
   try
@@ -379,28 +154,14 @@ void RequestCounter::incCounter(ulonglong key,uint index)
 
     mTotalRequests++;
 
-    auto cnt = mPointRequestCounter.find(key);
-    if (cnt == mPointRequestCounter.end())
+    auto cnt = mRequestCounters.find(key);
+    if (cnt == mRequestCounters.end())
     {
-      std::map<uint,uint> cc;
-      cc.insert(std::pair<uint,uint>(index,1));
-      mPointRequestCounter.insert(std::pair<ulonglong,std::map<uint,uint>>(key,cc));
+      mRequestCounters.insert(std::pair<ulonglong,uint>(key,1));
     }
     else
     {
-      auto pp = cnt->second.find(index);
-      if (pp != cnt->second.end())
-      {
-        pp->second++;
-      }
-      else
-      {
-        cnt->second.insert(std::pair<uint,uint>(index,1));
-      }
-/*
-      for (auto p = cnt->second.begin(); p != cnt->second.end(); ++p)
-        printf("%llu:%u: %u\n",key,p->first,p->second);
-*/
+      cnt->second++;
     }
   }
   catch (...)
@@ -413,7 +174,7 @@ void RequestCounter::incCounter(ulonglong key,uint index)
 
 
 
-uint RequestCounter::getCounter(ulonglong key,uint index)
+uint RequestCounter::getCounter(ulonglong key)
 {
   FUNCTION_TRACE
   try
@@ -421,14 +182,11 @@ uint RequestCounter::getCounter(ulonglong key,uint index)
     if (!mCountingEnabled)
       return 0;
 
-    auto cnt = mPointRequestCounter.find(key);
-    if (cnt == mPointRequestCounter.end())
+    auto cnt = mRequestCounters.find(key);
+    if (cnt == mRequestCounters.end())
       return 0;
 
-    if (index < cnt->second.size())
-      return cnt->second[index];
-
-    return 0;
+    return cnt->second;
   }
   catch (...)
   {
@@ -474,7 +232,35 @@ bool RequestCounter::isCountingEnabled()
 
 
 
-void RequestCounter::saveTopIndexes(const char *filename)
+void RequestCounter::updateTopCounters()
+{
+  FUNCTION_TRACE
+  try
+  {
+    // Disable the request counting before calling this method.
+
+    if (mCountingEnabled)
+      return;
+
+    AutoThreadLock lock(&mThreadLock);
+
+    mTopRequestCounters.clear();
+
+    for (auto it = mRequestCounters.begin(); it != mRequestCounters.end(); ++it)
+    {
+      mTopRequestCounters.insert(std::pair<uint,ulonglong>(it->second,it->first));
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+void RequestCounter::saveTopCounters(const char *filename)
 {
   FUNCTION_TRACE
   try
@@ -491,16 +277,7 @@ void RequestCounter::saveTopIndexes(const char *filename)
 
     for (auto rc = mTopRequestCounters.rbegin(); rc != mTopRequestCounters.rend(); ++rc)
     {
-      auto it = mTopRequestIndex.find(rc->second);
-      if (it != mTopRequestIndex.end())
-      {
-        fprintf(file,"%llu;%u;",it->first,rc->first);
-        for (auto pp = it->second.begin(); pp != it->second.end(); ++pp)
-        {
-          fprintf(file,"%u;",*pp);
-        }
-        fprintf(file,"\n");
-      }
+      fprintf(file,"%llu;%u\n",rc->second,rc->first);
     }
     fclose(file);
   }
@@ -514,13 +291,12 @@ void RequestCounter::saveTopIndexes(const char *filename)
 
 
 
-void RequestCounter::loadTopIndexes(const char *filename)
+void RequestCounter::loadTopCounters(const char *filename)
 {
   FUNCTION_TRACE
   try
   {
     AutoThreadLock lock(&mThreadLock);
-    mTopRequestIndex.clear();
     mTopRequestCounters.clear();
 
     FILE *file = fopen(filename,"re");
@@ -559,16 +335,10 @@ void RequestCounter::loadTopIndexes(const char *filename)
           }
         }
 
-        if (c > 2)
+        if (c == 2)
         {
           ulonglong key = toUInt64(field[0]);
           ulong count = toUInt32(field[1]);
-          std::vector<uint> indexes;
-          indexes.reserve(c);
-          for (uint t=2; t<c; t++)
-            indexes.push_back(toUInt32(field[t]));
-
-          mTopRequestIndex.insert(std::pair<ulonglong,std::vector<uint>>(key,indexes));
           mTopRequestCounters.insert(std::pair<uint,ulonglong>(count,key));
         }
       }

@@ -177,7 +177,7 @@ void LambertConformalImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec LambertConformalImpl::getGridCoordinates() const
+T::Coordinate_vec LambertConformalImpl::getGridOriginalCoordinates() const
 {
   try
   {
@@ -305,7 +305,7 @@ T::Dimensions LambertConformalImpl::getGridDimensions() const
 
 
 
-bool LambertConformalImpl::getGridCellSize(double& width,double& height) const
+bool LambertConformalImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try
   {

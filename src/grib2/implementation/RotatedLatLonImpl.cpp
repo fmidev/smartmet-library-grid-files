@@ -210,7 +210,7 @@ void RotatedLatLonImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec RotatedLatLonImpl::getGridCoordinates() const
+T::Coordinate_vec RotatedLatLonImpl::getGridOriginalCoordinates() const
 {
   try
   {
@@ -576,7 +576,7 @@ T::Dimensions RotatedLatLonImpl::getGridDimensions() const
 
 
 
-bool RotatedLatLonImpl::getGridCellSize(double& width,double& height) const
+bool RotatedLatLonImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try
   {
@@ -920,7 +920,7 @@ void RotatedLatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) 
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
 
-      T::Coordinate_vec coordinateList = getGridCoordinates();
+      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
 
       // ### Printing coordinates close to the grid corners.
 

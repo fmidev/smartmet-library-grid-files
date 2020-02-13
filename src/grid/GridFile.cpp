@@ -834,7 +834,7 @@ Message* GridFile::newMessage()
 
 
 
-Message* GridFile::newMessage(uint messageIndex,ulonglong position,uint size)
+Message* GridFile::newMessage(uint messageIndex,MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -844,11 +844,11 @@ Message* GridFile::newMessage(uint messageIndex,ulonglong position,uint size)
       // We do not know yet the type of the file, so we have to store the message position information
       // temporararily into a map.
 
-      mMessagePositions.insert(std::pair<uint,ulonglong>(messageIndex,position));
+      mMessagePositions.insert(std::pair<uint,MessageInfo>(messageIndex,messageInfo));
       return nullptr;
     }
 
-    return mGridFile->newMessage(messageIndex,position,size);
+    return mGridFile->newMessage(messageIndex,messageInfo);
   }
   catch (...)
   {

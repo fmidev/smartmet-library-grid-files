@@ -212,7 +212,7 @@ bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec PolarStereographicImpl::getGridCoordinates() const
+T::Coordinate_vec PolarStereographicImpl::getGridOriginalCoordinates() const
 {
   try
   {
@@ -363,7 +363,7 @@ T::Dimensions PolarStereographicImpl::getGridDimensions() const
 
 
 
-bool PolarStereographicImpl::getGridCellSize(double& width,double& height) const
+bool PolarStereographicImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try
   {
@@ -685,7 +685,7 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
     if (optionFlags & GRID::PrintFlag::coordinates)
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
-      T::Coordinate_vec coordinateList = getGridCoordinates();
+      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
 
       if (!mNx || !mNy)
         return;

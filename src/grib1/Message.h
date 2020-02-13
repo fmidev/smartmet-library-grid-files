@@ -46,7 +46,7 @@ class Message : public GRID::Message
 {
   public:
                         Message();
-                        Message(GribFile *gribFile,uint messageIndex,ulonglong position,ulong size);
+                        Message(GribFile *gribFile,uint messageIndex,GRID::MessageInfo& messageInfo);
                         Message(const Message& other);
     virtual             ~Message();
 
@@ -68,17 +68,21 @@ class Message : public GRID::Message
     uint                getGribGeneratingProcessIdentifier() const;
     uint                getGribTableVersion() const;
     void                getSectionPositions(std::set<T::FilePosition>& positions);
-    bool                getGridCellSize(double& width,double& height) const;
-    T::Coordinate_vec   getGridCoordinates() const;
+
     T::GeometryId       getGridGeometryId() const;
     std::string         getGridGeometryString() const;
     T::Dimensions       getGridDimensions() const;
     T::Hash             getGridHash() const;
+    bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     T::Coordinate_vec   getGridLatLonCoordinates() const;
     bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
     T::GridLayout       getGridLayout() const;
+    bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
+    bool                getGridMetricCellSize(double& width,double& height) const;
+    bool                getGridMetricSize(double& width,double& height) const;
+    T::Coordinate_vec   getGridOriginalCoordinates() const;
     bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
@@ -151,6 +155,9 @@ class Message : public GRID::Message
     void                initGridSection();
     void                initProductSection();
 
+    void                lockData();
+    void                unlockData();
+
     bool                isRead();
     void                read();
     void                read(MemoryReader& memoryReader);
@@ -191,6 +198,8 @@ class Message : public GRID::Message
 
     /*! \brief  A flag that indicates that the data decoding is impossible. */
     mutable bool        mValueDecodingFailed;
+
+    mutable bool        mDataLocked;
 
   public:
 

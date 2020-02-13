@@ -184,7 +184,7 @@ void LatLonImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec LatLonImpl::getGridCoordinates() const
+T::Coordinate_vec LatLonImpl::getGridOriginalCoordinates() const
 {
   try
   {
@@ -237,7 +237,7 @@ T::Coordinate_vec LatLonImpl::getGridLatLonCoordinates() const
 {
   try
   {
-    return getGridCoordinates();
+    return getGridOriginalCoordinates();
   }
   catch (...)
   {
@@ -340,7 +340,7 @@ T::Dimensions LatLonImpl::getGridDimensions() const
 
 
 
-bool LatLonImpl::getGridCellSize(double& width,double& height) const
+bool LatLonImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try
   {
@@ -781,7 +781,7 @@ void LatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) const
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
 
-      T::Coordinate_vec coordinateList = getGridCoordinates();
+      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
 
       // ### Printing coordinates close to the grid corners.
 

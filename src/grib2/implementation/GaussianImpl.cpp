@@ -99,7 +99,7 @@ void GaussianImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec GaussianImpl::getGridCoordinates() const
+T::Coordinate_vec GaussianImpl::getGridOriginalCoordinates() const
 {
   try
   {
@@ -399,7 +399,7 @@ void GaussianImpl::print(std::ostream& stream,uint level,uint optionFlags) const
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
 
-      T::Coordinate_vec coordinateList = getGridCoordinates();
+      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
 
       // ### Printing coordinates close to the grid corners.
 

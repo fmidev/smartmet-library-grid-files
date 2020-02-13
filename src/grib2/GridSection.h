@@ -76,17 +76,20 @@ class GridSection : public GRID::MessageSection
     std::uint8_t          getNumberOfOctetsForNumberOfPoints() const;
     std::uint8_t          getInterpretationOfNumberOfPoints() const;
 
-    T::Coordinate_vec     getGridCoordinates() const;
-    bool                  getGridCellSize(double& width,double& height) const;
     T::Dimensions         getGridDimensions() const;
     T::UInt16_opt         getGridDefinitionTemplateNumber() const;
     T::GeometryId         getGridGeometryId() const;
     std::string           getGridGeometryString() const;
     T::Hash               getGridHash() const;
+    bool                  getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     T::Coordinate_vec     getGridLatLonCoordinates() const;
     bool                  getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     bool                  getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     bool                  getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
+    bool                  getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
+    bool                  getGridMetricCellSize(double& width,double& height) const;
+    bool                  getGridMetricSize(double& width,double& height) const;
+    T::Coordinate_vec     getGridOriginalCoordinates() const;
     bool                  getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     bool                  getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                  getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;

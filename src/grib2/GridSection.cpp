@@ -737,13 +737,13 @@ T::GeometryId GridSection::getGridGeometryId() const
 
 
 
-bool GridSection::getGridCellSize(double& width,double& height) const
+bool GridSection::getGridMetricCellSize(double& width,double& height) const
 {
   FUNCTION_TRACE
   try
   {
     if (mGridDefinition)
-      return mGridDefinition->getGridCellSize(width,height);
+      return mGridDefinition->getGridMetricCellSize(width,height);
 
     return false;
   }
@@ -753,6 +753,65 @@ bool GridSection::getGridCellSize(double& width,double& height) const
   }
 }
 
+
+
+
+
+bool GridSection::getGridMetricSize(double& width,double& height) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->getGridMetricSize(width,height);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridSection::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->getGridMetricArea(topLeft,topRight,bottomLeft,bottomRight);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridSection::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition)
+      return mGridDefinition->getGridLatLonArea(topLeft,topRight,bottomLeft,bottomRight);
+
+    return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 
@@ -794,7 +853,7 @@ std::string GridSection::getGridGeometryString() const
        \return   The grid coordinates.
 */
 
-T::Coordinate_vec GridSection::getGridCoordinates() const
+T::Coordinate_vec GridSection::getGridOriginalCoordinates() const
 {
   FUNCTION_TRACE
   try
@@ -802,7 +861,7 @@ T::Coordinate_vec GridSection::getGridCoordinates() const
     if (mGridDefinition == nullptr)
       throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
-    return mGridDefinition->getGridCoordinates();
+    return mGridDefinition->getGridOriginalCoordinates();
   }
   catch (...)
   {

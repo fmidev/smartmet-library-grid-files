@@ -73,7 +73,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = message1.getGridCoordinates();
+        coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = &coordinates;
         break;
     }
@@ -95,7 +95,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
 
     double wm = 0;
     double hm = 0;
-    if (message1.getGridCellSize(wm,hm))
+    if (message1.getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
@@ -159,7 +159,7 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = message1.getGridCoordinates();
+        coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = &coordinates;
         break;
     }
@@ -310,7 +310,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     T::Coordinate_vec coordinates;
     T::Coordinate_vec latLonCoordinates;
 
-    Identification::gridDef.getGridCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
     if (latLonCoordinates.size() == 0)
     {
@@ -367,7 +367,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
     double wm = 0;
     double hm = 0;
-    if (message1.getGridCellSize(wm,hm))
+    if (message1.getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
@@ -655,7 +655,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
     T::Coordinate_vec coordinates;
     T::Coordinate_vec latLonCoordinates;
 
-    Identification::gridDef.getGridCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
     if (latLonCoordinates.size() == 0)
     {
@@ -712,7 +712,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
     double wm = 0;
     double hm = 0;
-    if (message1.getGridCellSize(wm,hm))
+    if (message1.getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
@@ -781,7 +781,7 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = message1.getGridCoordinates();
+        coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = &coordinates;
         break;
     }
@@ -933,7 +933,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     T::Coordinate_vec coordinates;
     T::Coordinate_vec latLonCoordinates;
 
-    Identification::gridDef.getGridCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
     if (latLonCoordinates.size() == 0)
     {
@@ -990,7 +990,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
     double wm = 0;
     double hm = 0;
-    if (message1.getGridCellSize(wm,hm))
+    if (message1.getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
@@ -1097,7 +1097,7 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = message1.getGridCoordinates();
+        coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = &coordinates;
         break;
     }
@@ -1249,7 +1249,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     T::Coordinate_vec coordinates;
     T::Coordinate_vec latLonCoordinates;
 
-    Identification::gridDef.getGridCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
     if (latLonCoordinates.size() == 0)
     {
@@ -1312,7 +1312,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
     double wm = 0;
     double hm = 0;
-    if (message1.getGridCellSize(wm,hm))
+    if (message1.getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
@@ -1376,7 +1376,7 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = message1.getGridCoordinates();
+        coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = &coordinates;
         break;
     }
@@ -1452,7 +1452,7 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinates = message1.getGridCoordinates();
+        coordinates = message1.getGridOriginalCoordinates();
         coordinatePtr = &coordinates;
         break;
     }
@@ -1603,7 +1603,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
     T::Coordinate_vec coordinates;
     T::Coordinate_vec latLonCoordinates;
 
-    Identification::gridDef.getGridCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
     if (latLonCoordinates.size() == 0)
     {
@@ -1666,7 +1666,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
     double wm = 0;
     double hm = 0;
-    if (message1.getGridCellSize(wm,hm))
+    if (message1.getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
@@ -1806,7 +1806,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     T::Coordinate_vec coordinates;
     T::Coordinate_vec latLonCoordinates;
 
-    Identification::gridDef.getGridCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
     if (latLonCoordinates.size() == 0)
     {
@@ -1869,7 +1869,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
     double wm = 0;
     double hm = 0;
-    if (message1.getGridCellSize(wm,hm))
+    if (message1.getGridMetricCellSize(wm,hm))
     {
       attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));

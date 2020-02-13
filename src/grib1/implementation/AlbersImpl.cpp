@@ -91,7 +91,7 @@ void AlbersImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec AlbersImpl::getGridCoordinates() const
+T::Coordinate_vec AlbersImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP, "Not implemented!");
 }
@@ -124,7 +124,7 @@ T::Dimensions AlbersImpl::getGridDimensions() const
 
 
 
-bool AlbersImpl::getGridCellSize(double& width,double& height) const
+bool AlbersImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try
   {

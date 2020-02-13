@@ -35,7 +35,7 @@ class GribFile : public GRID::PhysicalGridFile
     std::size_t         getNumberOfMessages();
 
     GRID::Message*      newMessage();
-    GRID::Message*      newMessage(uint messageIndex,ulonglong position,uint size);
+    GRID::Message*      newMessage(uint messageIndex,GRID::MessageInfo& messageInfo);
     void                addMessage(GRID::Message *message);
     void                addMessage(GRIB1::Message *message);
 

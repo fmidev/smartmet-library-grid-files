@@ -191,7 +191,7 @@ std::string MercatorImpl::getGridGeometryString() const
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec MercatorImpl::getGridCoordinates() const
+T::Coordinate_vec MercatorImpl::getGridOriginalCoordinates() const
 {
   try
   {
@@ -275,7 +275,7 @@ T::Dimensions MercatorImpl::getGridDimensions() const
 
 
 
-bool MercatorImpl::getGridCellSize(double& width,double& height) const
+bool MercatorImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try
   {
@@ -558,7 +558,7 @@ void MercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
     if (optionFlags & GRID::PrintFlag::coordinates)
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
-      T::Coordinate_vec coordinateList = getGridCoordinates();
+      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
 
       // ### Printing coordinates close to the grid corners.
 

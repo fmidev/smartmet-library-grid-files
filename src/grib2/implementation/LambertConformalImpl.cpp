@@ -307,7 +307,7 @@ bool LambertConformalImpl::setProperty(uint propertyId,long long value)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec LambertConformalImpl::getGridCoordinates() const
+T::Coordinate_vec LambertConformalImpl::getGridOriginalCoordinates() const
 {
   try
   {
@@ -445,7 +445,7 @@ T::Dimensions LambertConformalImpl::getGridDimensions() const
 
 
 
-bool LambertConformalImpl::getGridCellSize(double& width,double& height) const
+bool LambertConformalImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try
   {
@@ -749,7 +749,7 @@ void LambertConformalImpl::print(std::ostream& stream,uint level,uint optionFlag
     if (optionFlags & GRID::PrintFlag::coordinates)
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
-      T::Coordinate_vec coordinateList = getGridCoordinates();
+      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
 
       if (mCt_lambert2latlon == nullptr)
         return;

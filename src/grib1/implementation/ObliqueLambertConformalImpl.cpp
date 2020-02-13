@@ -127,7 +127,7 @@ void ObliqueLambertConformalImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec ObliqueLambertConformalImpl::getGridCoordinates() const
+T::Coordinate_vec ObliqueLambertConformalImpl::getGridOriginalCoordinates() const
 {
   try
   {

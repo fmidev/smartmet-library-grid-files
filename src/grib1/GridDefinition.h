@@ -38,9 +38,6 @@ class GridDefinition
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
     virtual std::string         getGridGeometryName();
-    virtual void                getGridCellAverageSize(double& width,double& height);
-    virtual bool                getGridCellSize(double& width,double& height) const;
-    virtual T::Coordinate_vec   getGridCoordinates() const;
     T::Hash                     getGridHash();
     virtual bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual T::Coordinate_vec   getGridLatLonCoordinates() const;
@@ -48,6 +45,11 @@ class GridDefinition
     virtual bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
     T::GridLayout               getGridLayout();
+    virtual bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
+    virtual void                getGridCellAverageSize(double& width,double& height);
+    virtual bool                getGridMetricCellSize(double& width,double& height) const;
+    virtual bool                getGridMetricSize(double& width,double& height) const;
+    virtual T::Coordinate_vec   getGridOriginalCoordinates() const;
     virtual bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;

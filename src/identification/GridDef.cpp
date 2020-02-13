@@ -3021,18 +3021,18 @@ bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double
 
 
 
-T::Coordinate_vec GridDef::getGridCoordinatesByGeometryId(T::GeometryId  geometryId)
+T::Coordinate_vec GridDef::getGridOriginalCoordinatesByGeometryId(T::GeometryId  geometryId)
 {
   FUNCTION_TRACE
   try
   {
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
     if (g2 != nullptr)
-      return g2->getGridCoordinates();
+      return g2->getGridOriginalCoordinates();
 
     auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
     if (g1 != nullptr)
-      return g1->getGridCoordinates();
+      return g1->getGridOriginalCoordinates();
 
     T::Coordinate_vec empty;
     return empty;
@@ -3082,7 +3082,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  g
 
 
 
-void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_vec& coordinates,uint& width,uint& height)
+void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_vec& coordinates,uint& width,uint& height)
 {
   FUNCTION_TRACE
   try
@@ -3218,7 +3218,7 @@ void GridDef::getGridCoordinatesByGeometry(T::AttributeList& attributeList,T::Co
 
       double wm = 0;
       double hm = 0;
-      if (def->getGridCellSize(wm,hm))
+      if (def->getGridMetricCellSize(wm,hm))
       {
         attributeList.setAttribute("grid.cell.width",std::to_string(wm));
         attributeList.setAttribute("grid.cell.height",std::to_string(hm));
@@ -3374,6 +3374,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
     const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+    const char *gridCellWidthStr = attributeList.getAttributeValue("grid.original.cell.width");
+    const char *gridCellHeightStr = attributeList.getAttributeValue("grid.original.cell.height");
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
@@ -3433,14 +3435,14 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
       double wm = 0;
       double hm = 0;
-      if (def->getGridCellSize(wm,hm))
+      if (def->getGridMetricCellSize(wm,hm))
       {
         attributeList.setAttribute("grid.cell.width",std::to_string(wm));
         attributeList.setAttribute("grid.cell.height",std::to_string(hm));
       }
     }
 
-    if ((urnStr != nullptr || crsStr != nullptr)  &&  (bboxStr != nullptr ||  llboxStr != nullptr)  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
+    if ((urnStr != nullptr || crsStr != nullptr)  &&  (bboxStr != nullptr ||  llboxStr != nullptr) && ((gridWidthStr != nullptr  &&  gridHeightStr != nullptr) ||  (gridCellWidthStr != nullptr  &&  gridCellHeightStr != nullptr)))
     {
       // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
 
@@ -3513,14 +3515,34 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           cc.push_back(lat2);
         }
 
-        width = toUInt32(gridWidthStr);
-        height = toUInt32(gridHeightStr);
-
         double diffx = cc[2] - cc[0];
         double diffy = cc[3] - cc[1];
 
-        double dx = diffx / C_DOUBLE(width-1);
-        double dy = diffy / C_DOUBLE(height-1);
+
+        printf("DIFFX %f  DIFFY=%f\n",diffx,diffy);
+        double dx = 0;
+        double dy = 0;
+
+        if (gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
+        {
+          width = toUInt32(gridWidthStr);
+          height = toUInt32(gridHeightStr);
+
+          dx = diffx / C_DOUBLE(width-1);
+          dy = diffy / C_DOUBLE(height-1);
+        }
+        else
+        {
+          if (gridCellWidthStr != nullptr  &&  gridCellHeightStr != nullptr)
+          {
+            dx = toDouble(gridCellWidthStr);
+            dy = toDouble(gridCellHeightStr);
+
+            width = C_UINT(fabs(diffx) / dx + 1);
+            height = C_UINT(fabs(diffy) / dy + 1);
+          }
+        }
+
 
         attributeList.setAttribute("grid.cell.width",std::to_string(dx));
         attributeList.setAttribute("grid.cell.height",std::to_string(dy));

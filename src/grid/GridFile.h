@@ -14,8 +14,6 @@ namespace SmartMet
 namespace GRID
 {
 
-typedef std::map<uint,ulonglong> MessagePos_map;
-
 
 // ====================================================================================
 /*! \brief The main purpose of this class is to hide differences of different grib/grid
@@ -85,7 +83,7 @@ class GridFile
     virtual long long           getSize();
 
     virtual Message*            newMessage();
-    virtual Message*            newMessage(uint messageIndex,ulonglong position,uint size);
+    virtual Message*            newMessage(uint messageIndex,MessageInfo& messageInfo);
     virtual void                addMessage(Message *message);
 
     virtual void                clearCachedValues(uint hitsRequired,uint timePeriod) const;
@@ -112,7 +110,7 @@ class GridFile
     std::set<uint>              mUserList;
     bool                        mRequestCounterEnabled;
     bool                        mPointCacheEnabled;
-    MessagePos_map              mMessagePositions;
+    MessageInfo_map             mMessagePositions;
 
 };
 

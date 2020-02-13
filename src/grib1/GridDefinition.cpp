@@ -234,6 +234,62 @@ void GridDefinition::setGridGeometryName(std::string geometryName)
 
 
 
+bool GridDefinition::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
+{
+  FUNCTION_TRACE
+  try
+  {
+    T::Dimensions d = getGridDimensions();
+    if (d.getDimensions() != 2)
+      return false;
+
+    if (!getGridLatLonArea(topLeft,topRight,bottomLeft,bottomRight))
+      return false;
+
+    OGRSpatialReference sr_latlon;
+    sr_latlon.importFromEPSG(4326);
+
+    OGRSpatialReference sr_wgs84_world_mercator;
+    sr_wgs84_world_mercator.importFromEPSG(3395);
+
+    OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr_wgs84_world_mercator);
+
+    if (transformation == nullptr)
+      return false;
+
+    double x = topLeft.x();
+    double y = topLeft.y();
+    transformation->Transform(1,&x,&y);
+    topLeft.set(x,y);
+
+    x = topRight.x();
+    y = topRight.y();
+    transformation->Transform(1,&x,&y);
+    topRight.set(x,y);
+
+    x = bottomLeft.x();
+    y = bottomLeft.y();
+    transformation->Transform(1,&x,&y);
+    bottomLeft.set(x,y);
+
+    x = bottomRight.x();
+    y = bottomRight.y();
+    transformation->Transform(1,&x,&y);
+    bottomRight.set(x,y);
+
+    OCTDestroyCoordinateTransformation(transformation);
+
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 bool GridDefinition::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
   FUNCTION_TRACE
@@ -368,7 +424,7 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
     if (d.getDimensions() != 2  || grid_i >= d.nx() || grid_j >= d.ny())
       return false;
 
-    T::Coordinate_vec originalCoordinates = getGridCoordinates();
+    T::Coordinate_vec originalCoordinates = getGridOriginalCoordinates();
     uint c = grid_j * d.nx() + grid_i;
     if (c >= C_UINT(originalCoordinates.size()))
       return false;
@@ -416,7 +472,7 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,doub
        \return   The grid coordinates.
 */
 
-T::Coordinate_vec GridDefinition::getGridCoordinates() const
+T::Coordinate_vec GridDefinition::getGridOriginalCoordinates() const
 {
   FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
@@ -464,7 +520,7 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
         throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
     }
 
-    T::Coordinate_vec originalCoordinates = getGridCoordinates();
+    T::Coordinate_vec originalCoordinates = getGridOriginalCoordinates();
     T::Coordinate_vec latLonCoordinates;
 
     latLonCoordinates.reserve(originalCoordinates.size());
@@ -1478,7 +1534,7 @@ void GridDefinition::getGridCellAverageSize(double& width,double& height)
   FUNCTION_TRACE
   try
   {
-    if (getGridCellSize(width,height))
+    if (getGridMetricCellSize(width,height))
       return;
 
     T::Dimensions d = getGridDimensions();
@@ -1508,7 +1564,7 @@ void GridDefinition::getGridCellAverageSize(double& width,double& height)
 
 
 
-bool GridDefinition::getGridCellSize(double& width,double& height) const
+bool GridDefinition::getGridMetricCellSize(double& width,double& height) const
 {
   FUNCTION_TRACE
   try
@@ -1516,6 +1572,35 @@ bool GridDefinition::getGridCellSize(double& width,double& height) const
     width = 0;
     height = 0;
     return false;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDefinition::getGridMetricSize(double& width,double& height) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    double w = 0;
+    double h = 0;
+
+    if (!getGridMetricCellSize(w,h))
+      return false;
+
+    T::Dimensions d = getGridDimensions();
+    if (d.getDimensions() != 2)
+      return false;
+
+    width = d.nx() * w;
+    height = d.ny() * h;
+    return true;
   }
   catch (...)
   {

@@ -97,7 +97,7 @@ void StretchedRotatedLatLonImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec StretchedRotatedLatLonImpl::getGridCoordinates() const
+T::Coordinate_vec StretchedRotatedLatLonImpl::getGridOriginalCoordinates() const
 {
   try
   {

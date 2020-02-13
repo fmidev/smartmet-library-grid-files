@@ -25,6 +25,23 @@ namespace SmartMet
 namespace GRID
 {
 
+struct MessageInfo
+{
+  ulonglong          mFilePosition;
+  uint               mMessageSize;
+  uint               mProducerId;
+  uint               mGenerationId;
+  T::ParamId         mFmiParameterId;
+  std::string        mFmiParameterName;
+  T::ParamLevelId    mFmiParameterLevelId;
+  T::ParamLevel      mParameterLevel;
+  T::ForecastType    mForecastType;
+  T::ForecastNumber  mForecastNumber;
+  T::GeometryId      mGeometryId;
+};
+
+typedef std::map<uint,MessageInfo> MessageInfo_map;
+
 
 typedef std::map<uint,T::ParamValue> PointCache;
 
@@ -82,26 +99,29 @@ class Message
     virtual T::ParamLevelId   getGrib1ParameterLevelId() const;
     virtual T::ParamLevelId   getGrib2ParameterLevelId() const;
 
-    virtual bool              getGridCellSize(double& width,double& height) const;
-    virtual T::Coordinate_vec getGridCoordinates() const;
+    virtual T::Dimensions     getGridDimensions() const;
+    virtual T::GeometryId     getGridGeometryId() const;
+    virtual std::string       getGridGeometryString() const;
+    virtual T::Hash           getGridHash() const;
     virtual void              getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours);
     virtual void              getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours);
     virtual void              getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours);
     virtual void              getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours);
     virtual void              getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours);
     virtual void              getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours);
+    virtual bool              getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual T::Coordinate_vec getGridLatLonCoordinates() const;
-    virtual T::Dimensions     getGridDimensions() const;
-    virtual T::GeometryId     getGridGeometryId() const;
-    virtual std::string       getGridGeometryString() const;
-    virtual T::Hash           getGridHash() const;
     virtual bool              getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     virtual bool              getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     virtual bool              getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
+    virtual T::GridLayout     getGridLayout() const;
+    virtual bool              getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
+    virtual bool              getGridMetricCellSize(double& width,double& height) const;
+    virtual bool              getGridMetricSize(double& width,double& height) const;
+    virtual T::Coordinate_vec getGridOriginalCoordinates() const;
     virtual bool              getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     virtual bool              getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool              getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
-    virtual T::GridLayout     getGridLayout() const;
     virtual std::size_t       getGridOriginalColumnCount(std::size_t row) const;
     virtual std::size_t       getGridOriginalColumnCount() const;
     virtual std::size_t       getGridOriginalRowCount() const;
@@ -225,6 +245,9 @@ class Message
     virtual bool              getCachedValue(uint index,T::ParamValue& value) const;
     virtual void              clearCachedValues(uint hitsRequired,uint timePeriod) const;
 
+    virtual void              lockData();
+    virtual void              unlockData();
+
     virtual bool              isRead();
     virtual void              print(std::ostream& stream,uint level,uint optionFlags) const;
     virtual void              read();
@@ -266,6 +289,12 @@ protected:
 
     /*! \brief  The fmi parameter level identifier. */
     T::ParamLevelId           mFmiParameterLevelId;
+
+    /*! \brief  The parameter level. */
+    T::ParamLevel             mParameterLevel;
+
+    /*! \brief  The geometry identifier. */
+    T::GeometryId             mGeometryId;
 
     /*! \brief  The fmi parameter name. */
     std::string               mFmiParameterName;
