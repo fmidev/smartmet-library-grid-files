@@ -3519,7 +3519,6 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         double diffy = cc[3] - cc[1];
 
 
-        printf("DIFFX %f  DIFFY=%f\n",diffx,diffy);
         double dx = 0;
         double dy = 0;
 
