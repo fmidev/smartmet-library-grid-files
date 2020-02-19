@@ -3054,7 +3054,7 @@ T::ParamLevelId Message::getGridParameterLevelId() const
   FUNCTION_TRACE
   try
   {
-    if (mProductSection)
+    if (!mProductSection)
       throw SmartMet::Spine::Exception(BCP,"The 'mProductSection' attribute points to nullptr!");
 
     return mFmiParameterLevelId;
