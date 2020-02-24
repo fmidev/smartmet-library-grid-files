@@ -174,6 +174,110 @@ void RequestCounter::incCounter(ulonglong key)
 
 
 
+void RequestCounter::incGeometryHitCounter(uint geometryId,uint index)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mCountingEnabled)
+      return;
+
+    AutoThreadLock lock(&mThreadLock);
+
+    auto geom = mGeometryHitCounter.find(geometryId);
+    if (geom != mGeometryHitCounter.end())
+    {
+      auto cnt = geom->second.find(index);
+      if (cnt == geom->second.end())
+      {
+        geom->second.insert(std::pair<uint,uint>(index,1));
+      }
+      else
+      {
+        cnt->second++;
+      }
+    }
+    else
+    {
+      HitCounter hitCounter;
+      hitCounter.insert(std::pair<uint,uint>(index,1));
+      mGeometryHitCounter.insert(std::pair<uint,HitCounter>(geometryId,hitCounter));
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+void RequestCounter::setGeometryHitCounter(uint geometryId,uint index,uint count)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mCountingEnabled)
+      return;
+
+    auto geom = mGeometryHitCounter.find(geometryId);
+    if (geom != mGeometryHitCounter.end())
+    {
+      auto cnt = geom->second.find(index);
+      if (cnt == geom->second.end())
+      {
+        geom->second.insert(std::pair<uint,uint>(index,count));
+      }
+      else
+      {
+        cnt->second = count;
+      }
+    }
+    else
+    {
+      HitCounter hitCounter;
+      hitCounter.insert(std::pair<uint,uint>(index,count));
+      mGeometryHitCounter.insert(std::pair<uint,HitCounter>(geometryId,hitCounter));
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+HitCounter RequestCounter::getGeometryHitCounters(uint geometryId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    HitCounter hitCounter;
+    if (!mCountingEnabled)
+      return hitCounter;
+
+    AutoThreadLock lock(&mThreadLock);
+
+    auto geom = mGeometryHitCounter.find(geometryId);
+    if (geom != mGeometryHitCounter.end())
+      return geom->second;
+
+    return hitCounter;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 uint RequestCounter::getCounter(ulonglong key)
 {
   FUNCTION_TRACE
@@ -260,7 +364,8 @@ void RequestCounter::updateTopCounters()
 
 
 
-void RequestCounter::saveTopCounters(const char *filename)
+
+void RequestCounter::saveGeometryHitCounters(const char *filename)
 {
   FUNCTION_TRACE
   try
@@ -275,9 +380,12 @@ void RequestCounter::saveTopCounters(const char *filename)
       throw exception;
     }
 
-    for (auto rc = mTopRequestCounters.rbegin(); rc != mTopRequestCounters.rend(); ++rc)
+    for (auto geom = mGeometryHitCounter.rbegin(); geom != mGeometryHitCounter.rend(); ++geom)
     {
-      fprintf(file,"%llu;%u\n",rc->second,rc->first);
+      for (auto it = geom->second.begin();it != geom->second.end();++it)
+      {
+        fprintf(file,"%u;%u;%u\n",geom->first,it->first,it->second);
+      }
     }
     fclose(file);
   }
@@ -291,13 +399,13 @@ void RequestCounter::saveTopCounters(const char *filename)
 
 
 
-void RequestCounter::loadTopCounters(const char *filename)
+void RequestCounter::loadGeometryHitCounters(const char *filename)
 {
   FUNCTION_TRACE
   try
   {
     AutoThreadLock lock(&mThreadLock);
-    mTopRequestCounters.clear();
+    mGeometryHitCounter.clear();
 
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
@@ -335,11 +443,12 @@ void RequestCounter::loadTopCounters(const char *filename)
           }
         }
 
-        if (c == 2)
+        if (c >= 3)
         {
-          ulonglong key = toUInt64(field[0]);
-          ulong count = toUInt32(field[1]);
-          mTopRequestCounters.insert(std::pair<uint,ulonglong>(count,key));
+          uint geometryId = toUInt32(field[0]);
+          uint index = toUInt32(field[1]);
+          ulong count = toUInt32(field[2]);
+          setGeometryHitCounter(geometryId,index,count);
         }
       }
     }

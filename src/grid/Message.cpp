@@ -5134,6 +5134,10 @@ void Message::incRequestCounter(uint index) const
       ulonglong key = getRequestCounterKey();
       if (key > 0)
         requestCounter.incCounter(key);
+
+      int geometryId = getGridGeometryId();
+      if (geometryId > 0)
+        requestCounter.incGeometryHitCounter(geometryId,index);
     }
   }
   catch (...)
