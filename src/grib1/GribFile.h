@@ -1,3 +1,4 @@
+#if 0
 #pragma once
 
 #include "Message.h"
@@ -57,3 +58,4 @@ class GribFile : public GRID::PhysicalGridFile
 
 }  // namespace GRIB1
 }  // namespace SmartMet
+#endif

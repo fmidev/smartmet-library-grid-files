@@ -24,7 +24,7 @@ namespace SmartMet
 namespace GRIB1
 {
 
-class GribFile;
+//class GribFile;
 
 
 /*
@@ -46,7 +46,7 @@ class Message : public GRID::Message
 {
   public:
                         Message();
-                        Message(GribFile *gribFile,uint messageIndex,GRID::MessageInfo& messageInfo);
+                        Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& messageInfo);
                         Message(const Message& other);
     virtual             ~Message();
 
@@ -61,7 +61,6 @@ class Message : public GRID::Message
     short               getForecastType() const;
     short               getForecastNumber() const;
 
-    GribFile*           getGribFile() const;
     uint                getGribVersion() const;
     uint                getGribCentre() const;
     uint                getGribSubCentre() const;
@@ -125,9 +124,6 @@ class Message : public GRID::Message
     void                setGridValues(T::ParamValue_vec& values);
     void                setGridValueCompressionMethod(ushort compressionMethod);
 
-    void                setGribFilePtr(GribFile *gribFile);
-
-
     // ### Message/file type specific methods
 
     BitmapSect_sptr     getBitmapSection() const;
@@ -166,8 +162,6 @@ class Message : public GRID::Message
 
 
   private:
-
-    GribFile*           mGribFile;
 
     /*! \brief The message start position in the file. */
     T::FilePosition     mFilePosition;

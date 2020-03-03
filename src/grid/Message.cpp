@@ -51,6 +51,7 @@ Message::Message()
     mMessageIndex = 0;
     mMessageSize = 0;
     mGeometryId = 0;
+    mGridFilePtr = nullptr;
     mGrib1ParameterLevelId = 0;
     mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
@@ -60,6 +61,7 @@ Message::Message()
     mLastCacheAccess = time(0);
     mCacheHitCounter = 0;
     mPointCacheEnabled = false;
+    mFileType = 0;
   }
   catch (...)
   {
@@ -78,6 +80,7 @@ Message::Message(const Message& message)
   FUNCTION_TRACE
   try
   {
+    mGridFilePtr = message.mGridFilePtr;
     mMessageIndex = message.mMessageIndex;
     mMessageSize = message.mMessageSize;
     mGeometryId = message.mGeometryId;
@@ -102,6 +105,7 @@ Message::Message(const Message& message)
     mLastCacheAccess = time(0);
     mCacheHitCounter = 0;
     mPointCacheEnabled = message.mPointCacheEnabled;
+    mFileType = message.mFileType;
   }
   catch (...)
   {
@@ -219,6 +223,23 @@ uint Message::getMessageSize() const
   try
   {
     return mMessageSize;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void Message::setGridFilePtr(GridFile *gridFilePtr)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mGridFilePtr = gridFilePtr;
   }
   catch (...)
   {
@@ -460,7 +481,6 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
-
 
 
 

@@ -1,3 +1,5 @@
+#if 0
+
 #include "GribFile.h"
 #include "../common/Exception.h"
 #include "../common/FileWriter.h"
@@ -717,3 +719,6 @@ void GribFile::print(std::ostream& stream,uint level,uint optionFlags) const
 
 }  // namespace GRIB2
 }  // namespace SmartMet
+
+
+#endif

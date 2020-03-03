@@ -1,5 +1,5 @@
 #include "Message.h"
-#include "GribFile.h"
+//#include "GribFile.h"
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "../common/Dimensions.h"
@@ -15,6 +15,7 @@
 #include "../identification/GridDef.h"
 #include "../grid/ValueCache.h"
 #include "../grid/IndexCache.h"
+#include "../grid/GridFile.h"
 #include "../common/ShowFunction.h"
 #include <iostream>
 #include <sys/mman.h>
@@ -36,7 +37,6 @@ Message::Message()
   FUNCTION_TRACE
   try
   {
-    mGribFile = nullptr;
     mFilePosition = 0;
     mMessageSize = 0;
     mGrib1ParameterLevelId = 0;
@@ -48,6 +48,7 @@ Message::Message()
     mValueDecodingFailed = false;
     mPointCacheEnabled = false;
     mIsRead = false;
+    mFileType = T::FileTypeValue::Grib1;
   }
   catch (...)
   {
@@ -59,12 +60,12 @@ Message::Message()
 
 
 
-Message::Message(GribFile *gribFile,uint messageIndex,GRID::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
   {
-    mGribFile = gribFile;
+    mGridFilePtr = gridFile;
     mFilePosition = messageInfo.mFilePosition;
     mMessageSize = messageInfo.mMessageSize;
     mFmiParameterId = messageInfo.mFmiParameterId;
@@ -79,6 +80,7 @@ Message::Message(GribFile *gribFile,uint messageIndex,GRID::MessageInfo& message
     mValueDecodingFailed = false;
     mPointCacheEnabled = false;
     mIsRead = false;
+    mFileType = T::FileTypeValue::Grib1;
   }
   catch (...)
   {
@@ -98,10 +100,11 @@ Message::Message(const Message& other)
   FUNCTION_TRACE
   try
   {
-    mGribFile = nullptr;
+    mGridFilePtr = nullptr;
     mIsRead = true;
     mFilePosition = other.mFilePosition;
     mMessageSize = other.mMessageSize;
+    mFileType = other.mFileType;
 
     if (other.mIndicatorSection)
     {
@@ -317,28 +320,6 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 
 
 
-/*! \brief The method sets the GribFile pointer for the current message object. This allows
-     the message object to access information in the current grib file.
-
-        \param gribFile  The pointer to the GribFile object.
-*/
-
-void Message::setGribFilePtr(GribFile *gribFile)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mGribFile = gribFile;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
 bool Message::isRead()
 {
   try
@@ -364,11 +345,11 @@ void Message::read()
     if (mIsRead)
       return;
 
-    if (mGribFile == nullptr)
+    if (mGridFilePtr == nullptr)
       SmartMet::Spine::Exception exception(BCP,"No pointer to the grib file!");
 
-    long long s = mGribFile->getSize();
-    uchar *d = (uchar*)mGribFile->getMemoryPtr();
+    long long s = mGridFilePtr->getSize();
+    uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();
     uchar *e = d + s;
 
     MemoryReader memoryReader(d,e);
@@ -517,7 +498,7 @@ void Message::read(MemoryReader& memoryReader)
       }
       else
       {
-        std::cout << "\n** GRIB1 Geometry not configured : " << mGribFile->getFileName() << "\n";
+        std::cout << "\n** GRIB1 Geometry not configured : " << mGridFilePtr->getFileName() << "\n";
         std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
         std::cout << getGridGeometryString() << "\n\n";
       }
@@ -740,7 +721,7 @@ void Message::lockData()
 
     if (addr != nullptr &&  len > 0)
     {
-      mlock(addr,len);
+      mlock2(addr,len,MCL_CURRENT|MCL_FUTURE);
       mDataLocked = true;
     }
   }
@@ -775,8 +756,6 @@ void Message::unlockData()
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
-
-
 
 
 
@@ -1112,28 +1091,6 @@ void Message::setGridValues(T::ParamValue_vec& values)
 
 
 
-/*! \brief The method returns the pointer to the GribFile object.
-
-        \return   The pointer of the GribFile object.
-*/
-
-GribFile* Message::getGribFile() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mGribFile;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
 /*! \brief The method returns the reference time of the current grid. The forecast
     times are calculated from this.
 
@@ -1455,6 +1412,9 @@ bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
     throw exception;
   }
 }
+
+
+
 
 
 /*! \brief The method returns the grid geometry string. This string can be used for comparing
@@ -1847,38 +1807,6 @@ T::Coordinate_vec Message::getGridLatLonCoordinates() const
 
 
 
-/*! \brief The method returns the grid original (projection) coordinates by the given grid position.
-
-        \param grid_i  The grid i-position.
-        \param grid_j  The grid j-position.
-        \param x       The x-coordinate in the original projection is returned in this parameter.
-        \param y       The y-coordinate in the original projection is returned in this parameter.
-        \return        The method return true if the original coordinates were succesfully returned.
-*/
-/*
-
-bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGridSection == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
-
-    return mGridSection->getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y);
-  }
-  catch (...)
-  {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
-    exception.addParameter("Message index",std::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-*/
-
-
-
-
 /*! \brief The method returns the grid original (projection) coordinates by the given latlon position.
 
         \param lat  The latitude value.
@@ -1949,8 +1877,8 @@ uint Message::getFileId() const
   {
     try
     {
-      if (mGribFile != nullptr)
-        return mGribFile->getFileId();
+      if (mGridFilePtr != nullptr)
+        return mGridFilePtr->getFileId();
 
       return 0;
     }
@@ -1960,7 +1888,6 @@ uint Message::getFileId() const
     }
   }
 }
-
 
 
 
@@ -1977,8 +1904,8 @@ uint Message::getProducerId() const
   FUNCTION_TRACE
   try
   {
-    if (mGribFile != nullptr)
-      return mGribFile->getProducerId();
+    if (mGridFilePtr != nullptr)
+      return mGridFilePtr->getProducerId();
 
     return 0;
   }
@@ -2003,8 +1930,8 @@ uint Message::getGenerationId() const
   FUNCTION_TRACE
   try
   {
-    if (mGribFile != nullptr)
-      return mGribFile->getGenerationId();
+    if (mGridFilePtr != nullptr)
+      return mGridFilePtr->getGenerationId();
 
     return 0;
   }
@@ -3058,6 +2985,9 @@ bool Message::isRelativeUV() const
 }
 
 
+
+
+
 /*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
 
         \return   The method returns 'true' if the grid horizontal values are in the reverse
@@ -3370,6 +3300,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
   {
     stream << "\n" << space(level) << "########## MESSAGE [" << mMessageIndex << "] ##########\n\n";
     stream << space(level) << "- filePosition            = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
+    stream << space(level) << "- fileType                = " << toString(mFileType) << "\n";
     stream << space(level) << "- gribParameterId         = " << toString(mGribParameterId) << "\n";
     stream << space(level) << "- gribParameterName       = " << mGribParameterName << "\n";
     stream << space(level) << "- gribParameterUnits      = " << mGribParameterUnits << "\n";
