@@ -1,5 +1,5 @@
 #include "Message.h"
-#include "GribFile.h"
+//#include "GribFile.h"
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "GridSection.h"
@@ -12,6 +12,7 @@
 #include "../grid/ValueCache.h"
 #include "../grid/IndexCache.h"
 #include "../grid/Typedefs.h"
+#include "../grid/GridFile.h"
 #include "../common/BitArrayWriter.h"
 #include "../common/Dimensions.h"
 #include "../common/Exception.h"
@@ -39,7 +40,6 @@ Message::Message()
   FUNCTION_TRACE
   try
   {
-    mGribFile = nullptr;
     mFilePosition = 0;
     mGeometryId = 0;
     mFmiParameterLevelId = 0;
@@ -50,6 +50,7 @@ Message::Message()
     mIsRead = false;
     mMessageSize = 0;
     mDataLocked = false;
+    mFileType = T::FileTypeValue::Grib2;
   }
   catch (...)
   {
@@ -61,12 +62,12 @@ Message::Message()
 
 
 
-Message::Message(GribFile *gribFile,uint messageIndex,GRID::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
   {
-    mGribFile = gribFile;
+    mGridFilePtr = gridFile;
     mMessageIndex = messageIndex;
     mFilePosition = messageInfo.mFilePosition;
     mMessageSize = messageInfo.mMessageSize;
@@ -81,6 +82,7 @@ Message::Message(GribFile *gribFile,uint messageIndex,GRID::MessageInfo& message
     mPointCacheEnabled = false;
     mIsRead = false;
     mDataLocked = false;
+    mFileType = T::FileTypeValue::Grib2;
 
     //printf("NEW MESSAGE %u %u %llu\n",mMessageIndex,mFilePosition,mMessageSize);
   }
@@ -102,7 +104,7 @@ Message::Message(const Message& other)
   FUNCTION_TRACE
   try
   {
-    mGribFile = nullptr;
+    mGridFilePtr = nullptr;
     mFilePosition = other.mFilePosition;
     mMessageSize = other.mMessageSize;
     mIsRead = true;
@@ -847,29 +849,6 @@ void Message::initDataSection()
 
 
 
-/*! \brief The method sets the GribFile pointer for the current message object. This allows
-     the message object to access information in the current grib file.
-
-        \param gribFile  The pointer to the GribFile object.
-*/
-
-void Message::setGribFilePtr(GribFile *gribFile)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mGribFile = gribFile;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
 void Message::lockData()
 {
   FUNCTION_TRACE
@@ -883,7 +862,7 @@ void Message::lockData()
 
     if (addr != nullptr &&  len > 0)
     {
-      mlock(addr,len);
+      mlock2(addr,len,MCL_CURRENT|MCL_FUTURE);
       mDataLocked = true;
     }
   }
@@ -1040,11 +1019,11 @@ void Message::read()
     if (mIsRead)
       return;
 
-    if (mGribFile == nullptr)
-      SmartMet::Spine::Exception exception(BCP,"No pointer to the grib file!");
+    if (mGridFilePtr == nullptr)
+      SmartMet::Spine::Exception exception(BCP,"No pointer to the grid file!");
 
-    long s = mGribFile->getSize();
-    uchar *d = (uchar*)mGribFile->getMemoryPtr();
+    long s = mGridFilePtr->getSize();
+    uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();
     uchar *e = d + s;
 
     MemoryReader memoryReader(d,e);
@@ -1351,28 +1330,6 @@ void Message::write(DataWriter& dataWriter)
 
 
 
-/*! \brief The method returns the pointer to the GribFile object.
-
-        \return   The pointer of the GribFile object.
-*/
-
-GribFile* Message::getGribFile() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mGribFile;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
 /*! \brief The method returns the GRIB 2 centre identifer.
 
         \return   The GRIB 2 centre identifier.
@@ -1597,7 +1554,7 @@ void Message::initParameterInfo()
       }
       else
       {
-        std::cout << "\n** GRIB2 Geometry not configured : " << mGribFile->getFileName() << "\n";
+        std::cout << "\n** GRIB2 Geometry not configured : " << mGridFilePtr->getFileName() << "\n";
         std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
         std::cout << getGridGeometryString() << "\n\n";
           //SmartMet::Spine::Exception exception(BCP,"Geometry not found");
@@ -2549,8 +2506,8 @@ uint Message::getFileId() const
   FUNCTION_TRACE
   try
   {
-    if (mGribFile != nullptr)
-      return mGribFile->getFileId();
+    if (mGridFilePtr != nullptr)
+      return mGridFilePtr->getFileId();
 
     return 0;
   }
@@ -2575,8 +2532,8 @@ uint Message::getProducerId() const
   FUNCTION_TRACE
   try
   {
-    if (mGribFile != nullptr)
-      return mGribFile->getProducerId();
+    if (mGridFilePtr != nullptr)
+      return mGridFilePtr->getProducerId();
 
     return 0;
   }
@@ -2601,8 +2558,8 @@ uint Message::getGenerationId() const
   FUNCTION_TRACE
   try
   {
-    if (mGribFile != nullptr)
-      return mGribFile->getGenerationId();
+    if (mGridFilePtr != nullptr)
+      return mGridFilePtr->getGenerationId();
 
     return 0;
   }
@@ -2899,7 +2856,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     {
       SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
       exception.addParameter("Message index",std::to_string(mMessageIndex));
-      exception.addParameter("Filename",mGribFile->getFileName());
+      exception.addParameter("Filename",mGridFilePtr->getFileName());
       exception.printError();
       mValueDecodingFailed = true;
     }
@@ -3482,7 +3439,6 @@ T::GridLayout Message::getGridLayout() const
 
 
 
-
 /*! \brief The method returns the number of rows used in the original grid.
 
         \return   The number of the grid rows.
@@ -3893,6 +3849,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
   {
     stream << "\n" << space(level) << "########## MESSAGE [" << mMessageIndex << "] ##########\n\n";
     stream << space(level) << "- filePosition             = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
+    stream << space(level) << "- fileType                 = " << toString(mFileType) << "\n";
     stream << space(level) << "- gribParameterId          = " << toString(mGribParameterId) << "\n";
     stream << space(level) << "- gribParameterName        = " << mGribParameterName << "\n";
     stream << space(level) << "- gribParameterUnits       = " << mGribParameterUnits << "\n";

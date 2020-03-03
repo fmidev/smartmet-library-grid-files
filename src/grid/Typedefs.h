@@ -28,9 +28,7 @@ typedef std::string ParamId;
 typedef std::int32_t ParamLevel;
 typedef std::uint8_t ParamLevelId;
 typedef float ParamValue;
-//#define ParamValueMissing FLT_MAX
 #define ParamValueMissing -16777216
-//std::numeric_limits<double>::quiet_NaN()
 
 typedef std::vector<ParamId> ParamId_vec;
 typedef std::vector<ParamLevel> ParamLevel_vec;
@@ -117,7 +115,8 @@ class FileTypeValue
     static const FileType Unknown = 0;
     static const FileType Grib1   = 1;
     static const FileType Grib2   = 2;
-    static const FileType Virtual = 3;
+    static const FileType Grib    = 3;  // Contains Grib1 and Grib2 messages
+    static const FileType Virtual = 10;
 };
 
 

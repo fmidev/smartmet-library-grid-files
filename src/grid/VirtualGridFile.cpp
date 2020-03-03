@@ -108,10 +108,6 @@ bool VirtualGridFile::isMemoryMapped() const
 {
   try
   {
-    if (mGridFile)
-      return mGridFile->isMemoryMapped();
-
-
     for (auto it = mPhysicalGridFileList.begin(); it != mPhysicalGridFileList.end(); ++it)
     {
       if (!(*it)->isMemoryMapped())
@@ -134,16 +130,9 @@ void VirtualGridFile::mapToMemory()
 {
   try
   {
-    if (mGridFile)
+    for (auto it = mPhysicalGridFileList.begin(); it != mPhysicalGridFileList.end(); ++it)
     {
-      return mGridFile->mapToMemory();
-    }
-    else
-    {
-      for (auto it = mPhysicalGridFileList.begin(); it != mPhysicalGridFileList.end(); ++it)
-      {
-        (*it)->mapToMemory();
-      }
+      (*it)->mapToMemory();
     }
   }
   catch (...)

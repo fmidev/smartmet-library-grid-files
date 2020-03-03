@@ -17,8 +17,8 @@ namespace SmartMet
 namespace GRID
 {
 
-
 typedef std::unique_ptr<MappedFile> MappedFile_uptr;
+typedef std::vector<std::pair<uchar,ulonglong>> MessagePos_vec;
 
 
 // ====================================================================================
@@ -30,37 +30,42 @@ typedef std::unique_ptr<MappedFile> MappedFile_uptr;
 class PhysicalGridFile : public GridFile
 {
   public:
-                      PhysicalGridFile();
-                      PhysicalGridFile(const PhysicalGridFile& other);
-    virtual           ~PhysicalGridFile();
+                          PhysicalGridFile();
+                          PhysicalGridFile(const PhysicalGridFile& other);
+    virtual               ~PhysicalGridFile();
 
-    virtual char*     getMemoryPtr();
-    virtual long long getSize();
-    virtual bool      isPhysical() const;
-    virtual bool      isVirtual() const;
-    virtual bool      isMemoryMapped() const;
-    virtual void      mapToMemory();
-    virtual void      setMemoryPtr(char *memoryPtr,long long size);
+    virtual Message*      getMessageByIndex(std::size_t index);
+    virtual char*         getMemoryPtr();
+    virtual std::size_t   getNumberOfMessages();
+    virtual long long     getSize();
+    virtual bool          isPhysical() const;
+    virtual bool          isVirtual() const;
+    virtual bool          isMemoryMapped() const;
+    virtual void          mapToMemory();
 
-    virtual void      print(std::ostream& stream,uint level,uint optionFlags) const;
-    virtual void      read(std::string filename);
-    virtual void      write(std::string filename);
-    virtual void      write(DataWriter& dataWriter);
+    virtual void          print(std::ostream& stream,uint level,uint optionFlags) const;
+    virtual void          read(std::string filename);
+    virtual void          read(MemoryReader& memoryReader);
+    virtual void          write(std::string filename);
+    virtual void          write(DataWriter& dataWriter);
 
   private:
 
-    void              read();
-    uchar             readFileType(MemoryReader& memoryReader);
-    ulonglong         searchFileStartPosition(MemoryReader& memoryReader);
+    //void                  read();
+    GRID::Message*        createMessage(uint messageIndex,GRID::MessageInfo& messageInfo);
+    void                  readGrib1Message(MemoryReader& memoryReader, uint messageIndex);
+    void                  readGrib2Message(MemoryReader& memoryReader, uint messageIndex);
+    uchar                 readMessageType(MemoryReader& memoryReader);
+    MessagePos_vec        searchMessageLocations(MemoryReader& memoryReader);
 
   protected:
 
-    bool              mIsMemoryMapped;
-    bool              mIsRead;
-    char*             mMemoryPtr;
-    long long         mFileSize;
-    ThreadLock        mMemoryMappingLock;
-    MappedFile_uptr   mMappedFile;
+    bool                  mIsMemoryMapped;
+    bool                  mIsRead;
+    char*                 mMemoryPtr;
+    long long             mFileSize;
+    ThreadLock            mMemoryMappingLock;
+    MappedFile_uptr       mMappedFile;
 };
 
 

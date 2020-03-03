@@ -41,10 +41,9 @@ struct MessageInfo
 };
 
 typedef std::map<uint,MessageInfo> MessageInfo_map;
-
-
 typedef std::map<uint,T::ParamValue> PointCache;
 
+class GridFile;
 
 // ====================================================================================
 /*!
@@ -186,6 +185,7 @@ class Message
     virtual bool              reverseYDirection() const;
 
     virtual void              setMessageIndex(uint index);
+    virtual void              setGridFilePtr(GridFile *gridFilePtr);
 
     virtual void              setFmiParameterId(T::ParamId fmiParameterId);
     virtual void              setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId);
@@ -318,6 +318,8 @@ protected:
      * instead of this message
      * */
     uint                      mVirtualFileId;
+    GridFile*                 mGridFilePtr;
+    uchar                     mFileType;
 
     short                     mDefaultInterpolationMethod;
 
@@ -329,7 +331,6 @@ protected:
     mutable PointCache        mPointCache;
     mutable uint              mCacheHitCounter;
     mutable time_t            mLastCacheAccess;
-
 };
 
 

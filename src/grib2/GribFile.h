@@ -1,3 +1,4 @@
+#if 0
 #pragma once
 
 #include "../grid/PhysicalGridFile.h"
@@ -52,3 +53,4 @@ class GribFile : public GRID::PhysicalGridFile
 
 }  // namespace GRIB2
 }  // namespace SmartMet
+#endif

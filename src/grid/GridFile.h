@@ -65,7 +65,6 @@ class GridFile
     virtual void                deleteUsers();
     virtual void                getUsers(std::set<uint>& userList);
 
-    virtual void                setGridFile(GridFile *gridFile);
     virtual void                setFileId(uint fileId);
     virtual void                setGroupFlags(uint groupFlags);
     virtual void                setProducerId(uint producerId);
@@ -73,16 +72,14 @@ class GridFile
     virtual void                setFileName(std::string  fileName);
     virtual void                setCheckTime(time_t checkTime);
     virtual void                setSourceId(uint sourceId);
-    virtual void                setGridFile(uchar fileType);
     virtual void                setDeletionTime(std::string deletionTime);
 
-    std::shared_ptr<GridFile>   getGridFile();
     virtual Message*            getMessageByIndex(std::size_t index);
     virtual std::size_t         getNumberOfMessages();
     virtual char*               getMemoryPtr();
     virtual long long           getSize();
 
-    virtual Message*            newMessage();
+    virtual Message*            newMessage(T::FileType fileType);
     virtual Message*            newMessage(uint messageIndex,MessageInfo& messageInfo);
     virtual void                addMessage(Message *message);
 
@@ -97,7 +94,6 @@ class GridFile
 
   protected:
 
-    std::shared_ptr<GridFile>   mGridFile;              // The actual implementation of GRIB1/GRIB2/Virtual-file.
     std::string                 mFileName;
     uint                        mFileId;
     time_t                      mFileModificationTime;
@@ -111,6 +107,7 @@ class GridFile
     bool                        mRequestCounterEnabled;
     bool                        mPointCacheEnabled;
     MessageInfo_map             mMessagePositions;
+    std::map<uint,Message*>     mMessages;
 
 };
 
