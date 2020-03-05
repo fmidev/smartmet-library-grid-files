@@ -1534,39 +1534,64 @@ double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
   FUNCTION_TRACE
   try
   {
+    double defaultValue =  6371229;
+    double value = 0;
+
     auto shape = earthSettings.getShapeOfTheEarth();
     if (!shape)
-    {
-      return 6371229;
-    }
+      return defaultValue;
+
+    double radius_sf = *earthSettings.getScaleFactorOfRadiusOfSphericalEarth();
+    double radius_v = *earthSettings.getScaledValueOfRadiusOfSphericalEarth();
+
+    if (radius_sf == 0)
+      radius_sf = 1;
+
+    double major_sf = (*earthSettings.getScaleFactorOfEarthMajorAxis());
+    double major_v = (*earthSettings.getScaledValueOfEarthMajorAxis());
+
+    if (major_sf == 0)
+      major_sf = 1;
 
     switch (*shape)
     {
       case 0: // Earth assumed spherical with radius = 6,367,470.0 m
-        return 6367470;
-        //return 6371220;
+        value = 6367470;
+        break;
 
       case 1: // Earth assumed spherical with radius specified by data producer
-        return (*earthSettings.getScaleFactorOfRadiusOfSphericalEarth());
+        value = radius_sf * radius_v;
+        break;
 
       case 2: // Earth assumed oblate spheroid with size as determined by IAU in 1965 (major axis = 6,378,160.0 m, minor axis = 6,356,775.0 m, f = 1/297.0)
-        return 6378160;
+        value = 6378160;
+        break;
 
       case 3: // Earth assumed oblate spheroid with major and minor axes specified by data producer
-        return (*earthSettings.getScaledValueOfEarthMajorAxis());
+        value = major_sf * major_v;
+        break;
 
       case 4: // Earth assumed oblate spheroid as defined in IAG-GRS80 model (major axis = 6,378,137.0 m, minor axis = 6,356,752.314 m, f = 1/298.257222101)
-        return 6378137;
+        value = 6378137;
+        break;
 
       case 5: // Earth assumed represented by WGS84 (as used by ICAO since 1998)
-        return 6378137;
+        value = 6378137;
+        break;
 
       case 6: // Earth assumed spherical with radius of 6,371,229.0 m
-        return 6371229;
+        value = 6371229;
+        break;
 
       default:
-        return 6371229;
+        value = 6371229;
+        break;
     }
+
+    if (abs(value-defaultValue) < 10000)
+      return value;
+
+    return defaultValue;
   }
   catch (...)
   {
@@ -1583,38 +1608,69 @@ double GridDefinition::getMinorAxis(EarthShapeSettings& earthSettings)
   FUNCTION_TRACE
   try
   {
+    double defaultValue = 0;
+    double value = 0;
     auto shape = earthSettings.getShapeOfTheEarth();
     if (!shape)
-    {
       return 0;
-    }
+
+    double radius_sf = *earthSettings.getScaleFactorOfRadiusOfSphericalEarth();
+    double radius_v = *earthSettings.getScaledValueOfRadiusOfSphericalEarth();
+
+    if (radius_sf == 0)
+      radius_sf = 1;
+/*
+    double major_sf = (*earthSettings.getScaleFactorOfEarthMajorAxis());
+    double major_v = (*earthSettings.getScaledValueOfEarthMajorAxis());
+
+    if (major_sf == 0)
+      major_sf = 1;
+*/
+    double minor_sf = (*earthSettings.getScaleFactorOfEarthMinorAxis());
+    double minor_v = (*earthSettings.getScaledValueOfEarthMinorAxis());
+
+    if (minor_sf == 0)
+      minor_sf = 1;
 
     switch (*shape)
     {
       case 0: // Earth assumed spherical with radius = 6,367,470.0 m
-        return 0;
+        value = 0;
+        break;
 
       case 1: // Earth assumed spherical with radius specified by data producer
-        return (*earthSettings.getScaledValueOfEarthMinorAxis());
+        value = radius_sf * radius_v;
+        break;
 
       case 2: // Earth assumed oblate spheroid with size as determined by IAU in 1965 (major axis = 6,378,160.0 m, minor axis = 6,356,775.0 m, f = 1/297.0)
-        return 6356775;
+        value = 6356775;
+        break;
 
       case 3: // Earth assumed oblate spheroid with major and minor axes specified by data producer
-        return (*earthSettings.getScaledValueOfEarthMinorAxis());
+        value = minor_sf * minor_v;
+        break;
 
       case 4: // Earth assumed oblate spheroid as defined in IAG-GRS80 model (major axis = 6,378,137.0 m, minor axis = 6,356,752.314 m, f = 1/298.257222101)
-        return 6356752.314;
+        value = 6356752.314;
+        break;
 
       case 5: // Earth assumed represented by WGS84 (as used by ICAO since 1998)
-        return 0;
+        value = 0;
+        break;
 
       case 6: // Earth assumed spherical with radius of 6,371,229.0 m
-        return 0;
+        value = 0;
+        break;
 
       default:
-        return 0;
+        value = 0;
+        break;
     }
+
+    if (value != 0)
+      return value;
+
+    return defaultValue;
   }
   catch (...)
   {
@@ -1632,40 +1688,74 @@ double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
   FUNCTION_TRACE
   try
   {
+    double defaultValue = 0;
+    double value = 0;
+
     auto shape = earthSettings.getShapeOfTheEarth();
     if (!shape)
-    {
       return 0;
-    }
+/*
+    double radius_sf = *earthSettings.getScaleFactorOfRadiusOfSphericalEarth();
+    double radius_v = *earthSettings.getScaledValueOfRadiusOfSphericalEarth();
+
+    if (radius_sf == 0)
+      radius_sf = 1;
+*/
+    double major_sf = (*earthSettings.getScaleFactorOfEarthMajorAxis());
+    double major_v = (*earthSettings.getScaledValueOfEarthMajorAxis());
+
+    if (major_sf == 0)
+      major_sf = 1;
+
+    double minor_sf = (*earthSettings.getScaleFactorOfEarthMinorAxis());
+    double minor_v = (*earthSettings.getScaledValueOfEarthMinorAxis());
+
+    if (minor_sf == 0)
+      minor_sf = 1;
+
 
     switch (*shape)
     {
       case 0: // Earth assumed spherical with radius = 6,367,470.0 m
-        return 0;
+        value = 0;
+        break;
 
       case 1: // Earth assumed spherical with radius specified by data producer
-        return (1.0 / (1.0 - (C_DOUBLE(*earthSettings.getScaledValueOfEarthMinorAxis()) / C_DOUBLE(*earthSettings.getScaledValueOfEarthMajorAxis()))));
-
-        return (*earthSettings.getScaledValueOfEarthMinorAxis());
+        value = 0;
+        break;
 
       case 2: // Earth assumed oblate spheroid with size as determined by IAU in 1965 (major axis = 6,378,160.0 m, minor axis = 6,356,775.0 m, f = 1/297.0)
-        return 1000000 * 1/297.0;
+        value = 1000000 * 1/297.0;
+        break;
 
       case 3: // Earth assumed oblate spheroid with major and minor axes specified by data producer
-        return (1.0 / (1.0 - (C_DOUBLE(*earthSettings.getScaledValueOfEarthMinorAxis()) / C_DOUBLE(*earthSettings.getScaledValueOfEarthMajorAxis()))));
+        if (minor_v > 0 &&  major_v > 0)
+          value = (1.0 / (1.0 - (minor_sf * minor_v) / (major_sf * major_v)));
+        else
+          value = 0;
+        break;
 
       case 4: // Earth assumed oblate spheroid as defined in IAG-GRS80 model (major axis = 6,378,137.0 m, minor axis = 6,356,752.314 m, f = 1/298.257222101)
-        return 6356752.314;
+        value = 6356752.314;
+        break;
 
       case 5: // Earth assumed represented by WGS84 (as used by ICAO since 1998)
-        return (1000000 * 1/298.257222101);
+        value = (1000000 * 1/298.257222101);
+        break;
 
       case 6: // Earth assumed spherical with radius of 6,371,229.0 m
-        return 0;
+        value = 0;
+        break;
 
       default:
-        return 0;
+        value = 0;
+        break;
     }
+
+    if (value != 0)
+      return value;
+
+    return defaultValue;
   }
   catch (...)
   {

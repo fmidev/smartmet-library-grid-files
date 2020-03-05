@@ -862,7 +862,7 @@ void Message::lockData()
 
     if (addr != nullptr &&  len > 0)
     {
-      mlock2(addr,len,MCL_CURRENT|MCL_FUTURE);
+      mlock(addr,len);
       mDataLocked = true;
     }
   }

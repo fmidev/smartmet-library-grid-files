@@ -799,44 +799,12 @@ void RotatedLatLonImpl::initSpatialReference()
 
     // ### Set geographic coordinate system.
 
-    /*
-    const char *pszGeogName = "UNKNOWN";
-    const char *pszDatumName = "UNKNOWN";
-    const char *pszSpheroidName = "UNKNOWN";
-    */
-    double dfSemiMajor = 0.0;
-    //double dfInvFlattening = 0.0;
 
-    auto radius = mEarthShape.getScaledValueOfRadiusOfSphericalEarth();
-
-    if ((!radius) || (*radius == 0))
-    {
-      T::UInt32_opt majorAxis(0);
-      majorAxis = mEarthShape.getScaledValueOfEarthMajorAxis();
-
-      T::UInt32_opt minorAxis(0);
-      minorAxis = mEarthShape.getScaledValueOfEarthMinorAxis();
-
-      if (!(majorAxis  &&  minorAxis && *majorAxis > 0 && *minorAxis > 0))
-      {
-        // dfSemiMajor = 6371229;
-        dfSemiMajor = getMajorAxis(mEarthShape);
-        //dfInvFlattening = 0.0;
-      }
-      else
-      {
-        if (majorAxis)
-          dfSemiMajor = *majorAxis;
-
-        //if (minorAxis)
-        //  dfInvFlattening = 1.0 / (1.0 - (*minorAxis / dfSemiMajor));
-      }
-    }
-    else
-    {
-      dfSemiMajor = *radius;
-      //dfInvFlattening = 0.0;
-    }
+    //const char *pszGeogName = "UNKNOWN";
+    //const char *pszDatumName = "UNKNOWN";
+    //const char *pszSpheroidName = "UNKNOWN";
+    double dfSemiMajor = getMajorAxis(mEarthShape);
+    //double dfInvFlattening = getFlattening(mEarthShape);
 
     //mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 
