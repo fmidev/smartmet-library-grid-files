@@ -562,13 +562,39 @@ void ProductSection::read(MemoryReader& memoryReader)
       mDataPtr = memoryReader.getReadPtr();
       mDataSize = mSectionLength - 40;
 
-      if (memoryReader.read_uint8() == 0x1E)
+      auto t = memoryReader.read_uint8();
+
+      switch (t)
       {
-        memoryReader.setReadPosition(rPos + 49);
-        mForecastNumber = memoryReader.read_uint8();
-        if (mForecastNumber > 0)
-          mForecastType = 3;
+        case 0xC:
+        case 0xF:
+        case 0x10:
+        case 0x17:
+          memoryReader.setReadPosition(rPos + 49);
+          mForecastNumber = memoryReader.read_uint16();
+          break;
+
+        case 0x1:
+        case 0xD:
+        case 0xE:
+        case 0x12:
+        case 0x1A:
+        case 0x1B:
+        case 0x1C:
+        case 0x1D:
+        case 0x1E:
+        case 0x1F:
+        case 0x24:
+        case 0x25:
+        case 0x31:
+        case 0x32:
+          memoryReader.setReadPosition(rPos + 49);
+          mForecastNumber = memoryReader.read_uint8();
+          break;
       }
+
+      if (mForecastNumber > 0)
+        mForecastType = 3;
     }
 
     memoryReader.setReadPosition(rPos + mSectionLength);
