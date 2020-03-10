@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 20.3.5
+Version: 20.3.10
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -12,8 +12,8 @@ Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 20.2.13
-BuildRequires: smartmet-library-spine-devel >= 20.2.13
-BuildRequires: smartmet-library-macgyver >= 20.2.5
+BuildRequires: smartmet-library-spine-devel >= 20.3.9
+BuildRequires: smartmet-library-macgyver >= 20.3.5
 BuildRequires: smartmet-library-tron >= 19.12.4
 BuildRequires: boost-devel
 BuildRequires: gcc-c++
@@ -37,8 +37,8 @@ Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 20.2.13
-Requires: smartmet-library-macgyver >= 20.2.5
-Requires: smartmet-library-spine >= 20.2.13
+Requires: smartmet-library-macgyver >= 20.3.5
+Requires: smartmet-library-spine >= 20.3.9
 
 %description
 FMI Grid File handling library
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Mar 10 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.3.10-1.fmi
+- Expanded perturbation number detection functionality
 * Thu Mar  5 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.3.5-1.fmi
 - Integrated GRIB1 and GRIB2 handling to be able to support both versions in a single file
 * Tue Feb 25 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.2.25-1.fmi
