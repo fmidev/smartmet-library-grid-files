@@ -116,7 +116,8 @@ class FileTypeValue
     static const FileType Grib1   = 1;
     static const FileType Grib2   = 2;
     static const FileType Grib    = 3;  // Contains Grib1 and Grib2 messages
-    static const FileType Virtual = 10;
+    static const FileType Fmig1   = 10;
+    static const FileType Virtual = 200;
 };
 
 

@@ -4,9 +4,9 @@
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
 #include "../identification/GridDef.h"
-#include "../grib1/GribFile.h"
-#include "../grib2/GribFile.h"
+#include "../grib1/Message.h"
 #include "../grib2/Message.h"
+#include "../fmig1/Message.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -174,6 +174,13 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
       case T::FileTypeValue::Grib2:
       {
         GRIB2::Message *msg = new GRIB2::Message(this,messageIndex,messageInfo);
+        mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
+        return msg;
+      }
+
+      case T::FileTypeValue::Fmig1:
+      {
+        FMIG1::Message *msg = new FMIG1::Message(this,messageIndex,messageInfo);
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
@@ -408,6 +415,10 @@ void PhysicalGridFile::read(MemoryReader& memoryReader)
         case T::FileTypeValue::Grib2:
           readGrib2Message(memoryReader2,i);
           break;
+
+        case T::FileTypeValue::Fmig1:
+          readFmig1Message(memoryReader,i);
+          break;
       }
     }
   }
@@ -447,6 +458,35 @@ void PhysicalGridFile::readGrib1Message(MemoryReader& memoryReader, uint message
   }
 }
 
+
+
+
+
+/*! \brief This method is used in order to read a single message from the grib file. The new
+    message object will be greated and added to the message list. Notice that this method
+    is a private and it is called internally during the file reading.
+
+        \param memoryReader  This object controls the access to the memory mapped file.
+        \param messageIndex  Index of the message
+*/
+
+void PhysicalGridFile::readFmig1Message(MemoryReader& memoryReader, uint messageIndex)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FMIG1::Message *message = new FMIG1::Message();
+    message->setGridFilePtr(this);
+    message->setMessageIndex(messageIndex);
+    message->setPointCacheEnabled(mPointCacheEnabled);
+    mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
+    message->read(memoryReader);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,"Message addition failed!",nullptr);
+  }
+}
 
 
 
@@ -572,6 +612,21 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
     // thus making sure all reads inside the loop succeed.
 
     auto fileStartPtr = memoryReader.getReadPtr();
+
+
+    if (memoryReader.peek_string("FMIG"))
+    {
+      FMIG1::Message msg;
+      msg.read(memoryReader);
+
+      uint len = msg.getTimeStepCount();
+      for (uint t=0; t<len; t++)
+        gribs.push_back(std::pair<uchar,ulonglong>(T::FileTypeValue::Fmig1,0));
+
+      return gribs;
+    }
+
+
 
     while (memoryReader.getReadPtr() < memoryReader.getEndPtr())
     {
@@ -811,6 +866,15 @@ uchar PhysicalGridFile::readMessageType(MemoryReader& memoryReader)
         return T::FileTypeValue::Grib2;
 
     }
+    if (d[0] == 'F'  &&  d[1] == 'M'  &&  d[2] == 'I'  &&  d[3] == 'G')
+    {
+      // This is a grib file.
+
+      if (d[4] == 1)
+        return T::FileTypeValue::Fmig1;
+
+    }
+
     return T::FileTypeValue::Unknown;
   }
   catch (...)

@@ -19,6 +19,9 @@ namespace GRIB1
 std::map<uint,T::Coordinate_vec> coordinateCache;
 
 
+double gTransformCache[5];
+
+
 /*! \brief The constructor of the class. */
 
 GridDefinition::GridDefinition()
@@ -586,6 +589,13 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
   FUNCTION_TRACE
   try
   {
+    if (mGeometryId != 0  &&  C_INT(gTransformCache[0]) == mGeometryId &&  gTransformCache[1] == lat  &&  gTransformCache[2] == lon)
+    {
+      x = gTransformCache[3];
+      y = gTransformCache[4];
+      return true;
+    }
+
     if (mCoordinateTranformation_latlon2orig == nullptr)
     {
       OGRSpatialReference sr_latlon;
@@ -603,6 +613,13 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
     y = lat;
 
     mCoordinateTranformation_latlon2orig->Transform(1,&x,&y);
+
+    gTransformCache[0] = mGeometryId;
+    gTransformCache[1] = lat;
+    gTransformCache[2] = lon;
+    gTransformCache[3] = x;
+    gTransformCache[4] = y;
+
     return true;
   }
   catch (...)

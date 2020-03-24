@@ -121,6 +121,9 @@ void LatLonImpl::init() const
 {
   try
   {
+    if (mInitialized)
+      return;
+
     mStartY = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
     mStartX = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000);
 
