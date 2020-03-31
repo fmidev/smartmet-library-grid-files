@@ -50,6 +50,7 @@ std::string localTimeFromTimeT(time_t t,const char *tzone);
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
 std::string localTimeToUtc(std::string localTime,boost::local_time::time_zone_ptr tz);
 void splitTimeString(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second);
+void splitTimeString(const std::string& timeStr, short &year, uchar &month, uchar &day, uchar &hour, uchar &minute, uchar &second);
 
 std::string addSeconds(std::string timeStr,int seconds);
 
@@ -109,6 +110,7 @@ std::string toString(T::Int64_opt value);
 std::string toString(boost::posix_time::ptime time);
 
 std::string toLowerString(std::string sourceString);
+std::string toUpperString(std::string sourceString);
 
 
 int compressData(void *_data,uint _dataSize,void *_compressedData,uint& _compressedDataSize);

@@ -352,6 +352,13 @@ void Message::read(MemoryReader& memoryReader)
     uchar format = 0;
     memoryReader >> format;
 
+    memoryReader >> mTimeStepCount;
+    memoryReader >> mWidth;
+    memoryReader >> mHeight;
+
+    mPixelCount = mWidth * mHeight;
+
+
     uint headerLen = 0;
     memoryReader >> headerLen;
 
@@ -359,30 +366,23 @@ void Message::read(MemoryReader& memoryReader)
     memoryReader.read_data(header,headerLen);
     header[headerLen] = '\0';
 
-    printf("%s\n",header);
+    //printf("%s\n",header);
 
     std::vector<std::string> partList;
     splitString((char*)header,'\t',partList);
 
     uint len = partList.size();
-    printf("PARTLIST LEN %u\n",len);
+    // printf("PARTLIST LEN %u\n",len);
     for (uint t=0; t<len; t=t+2)
     {
-      printf("[%s][%s]\n",partList[t].c_str(),partList[t+1].c_str());
+      // printf("[%s][%s]\n",partList[t].c_str(),partList[t+1].c_str());
       if ((t+1) < len)
         mAttributeList.addAttribute(partList[t],partList[t+1]);
       else
         mAttributeList.addAttribute(partList[t],"");
     }
 
-    mAttributeList.print(std::cout,0,0);
-
-    memoryReader >> mWidth;
-    memoryReader >> mHeight;
-
-    mPixelCount = mWidth * mHeight;
-
-    memoryReader >> mTimeStepCount;
+    // mAttributeList.print(std::cout,0,0);
 
     mPixelSize = 2*sizeof(float) + mTimeStepCount * sizeof(ushort);
     mDataSize = mPixelCount * mPixelSize;
@@ -440,6 +440,30 @@ void Message::read(MemoryReader& memoryReader)
     const char *geometryId = mAttributeList.getAttributeValue("geometry.id");
     if (geometryId != nullptr)
       mGeometryId = toInt32(geometryId);
+
+    const char *gribParameterId = mAttributeList.getAttributeValue("param.grib.id");
+    if (gribParameterId != nullptr)
+      mGribParameterId = gribParameterId;
+
+    const char *gribParameterName = mAttributeList.getAttributeValue("param.grib.name");
+    if (gribParameterName != nullptr)
+      mGribParameterName = gribParameterName;
+
+    const char *cdmParameterId = mAttributeList.getAttributeValue("param.cdm.id");
+    if (cdmParameterId != nullptr)
+      mCdmParameterId = cdmParameterId;
+
+    const char *cdmParameterName = mAttributeList.getAttributeValue("param.cdm.name");
+    if (cdmParameterName != nullptr)
+      mCdmParameterName = cdmParameterName;
+
+    const char *newbaseParameterId = mAttributeList.getAttributeValue("param.newbase.id");
+    if (newbaseParameterId != nullptr)
+      mNewbaseParameterId= newbaseParameterId;
+
+    const char *newbaseParameterName = mAttributeList.getAttributeValue("param.newbase.name");
+    if (newbaseParameterName != nullptr)
+      mNewbaseParameterName = newbaseParameterName;
 
     mGeometryDef = Identification::gridDef.getGrib1DefinitionByGeometryId(mGeometryId);
 
