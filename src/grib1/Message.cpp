@@ -66,6 +66,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
   try
   {
     mGridFilePtr = gridFile;
+    mMessageIndex = messageIndex;
     mFilePosition = messageInfo.mFilePosition;
     mMessageSize = messageInfo.mMessageSize;
     mFmiParameterId = messageInfo.mFmiParameterId;

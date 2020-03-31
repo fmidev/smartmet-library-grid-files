@@ -4221,11 +4221,11 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           GRIB1::LatLonImpl *def1 = new GRIB1::LatLonImpl();
           GRIB1::GridAreaSettings gridArea;
-          //GRIB1::ResolutionFlagsSettings resolutionFlags;
           GRIB1::ScanningModeSettings scanningMode1;
 
-          //resolutionFlags.setResolutionAndComponentFlags(128);
-          //gridArea.setResolutionFlags(resolutionFlags);
+          GRIB1::ResolutionFlagsSettings resolutionFlags;
+          resolutionFlags.setResolutionAndComponentFlags(128);
+          gridArea.setResolutionFlags(resolutionFlags);
 
           gridArea.setLatitudeOfFirstGridPoint(latitude);
           gridArea.setLongitudeOfFirstGridPoint(longitude);

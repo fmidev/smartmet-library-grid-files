@@ -55,6 +55,7 @@ class PhysicalGridFile : public GridFile
     GRID::Message*        createMessage(uint messageIndex,GRID::MessageInfo& messageInfo);
     void                  readGrib1Message(MemoryReader& memoryReader, uint messageIndex);
     void                  readGrib2Message(MemoryReader& memoryReader, uint messageIndex);
+    void                  readFmig1Message(MemoryReader& memoryReader, uint messageIndex);
     uchar                 readMessageType(MemoryReader& memoryReader);
     MessagePos_vec        searchMessageLocations(MemoryReader& memoryReader);
 
