@@ -28,6 +28,14 @@ objdir = obj
 
 DEFINES = -DUNIX -D_REENTRANT
 
+# Boost 1.69
+
+ifneq "$(wildcard /usr/include/boost169)" ""
+  INCLUDES += -I/usr/include/boost169
+  LIBS += -L/usr/lib64/boost169
+endif
+
+
 ifeq ($(CXX), clang++)
 
  FLAGS = \
@@ -38,7 +46,7 @@ ifeq ($(CXX), clang++)
 	-Wno-padded \
 	-Wno-missing-prototypes
 
- INCLUDES = \
+ INCLUDES += \
 	-isystem $(includedir) \
 	-isystem $(includedir)/smartmet
 
@@ -52,7 +60,6 @@ else
 	-Wno-multichar \
 	-Wno-pmf-conversions \
 	-Wpointer-arith \
-	-Wcast-qual \
 	-Wredundant-decls \
 	-Wwrite-strings \
 	-Wno-sign-promo \
@@ -62,7 +69,7 @@ else
 
  FLAGS_RELEASE = -Wuninitialized
 
- INCLUDES = \
+ INCLUDES += \
 	-I$(includedir) \
 	-I$(includedir)/smartmet
 
@@ -74,7 +81,7 @@ CFLAGS         = $(DEFINES) $(FLAGS) $(FLAGS_RELEASE) -DNDEBUG -O2 -g
 CFLAGS_DEBUG   = $(DEFINES) $(FLAGS) $(FLAGS_DEBUG)   -Werror  -Og -g
 CFLAGS_PROFILE = $(DEFINES) $(FLAGS) $(FLAGS_PROFILE) -DNDEBUG -O2 -g -pg
 
-LIBS = -L$(libdir) \
+LIBS += -L$(libdir) \
 	-L/usr/local/lib -lopenjpeg \
 	-lsmartmet-newbase \
 	-lsmartmet-spine \

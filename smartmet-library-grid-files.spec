@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 20.4.3
+Version: 20.4.18
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,11 +11,11 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 20.2.13
-BuildRequires: smartmet-library-spine-devel >= 20.3.9
-BuildRequires: smartmet-library-macgyver >= 20.3.5
-BuildRequires: smartmet-library-tron >= 19.12.4
-BuildRequires: boost-devel
+BuildRequires: smartmet-library-newbase-devel >= 20.4.18
+BuildRequires: smartmet-library-spine-devel >= 20.4.18
+BuildRequires: smartmet-library-macgyver >= 20.4.18
+BuildRequires: smartmet-library-tron >= 20.4.18
+BuildRequires: boost169-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal-devel
 BuildRequires: make
@@ -26,19 +26,19 @@ BuildRequires: openjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: libjasper-devel
 Provides: %{SPECNAME}
-Requires: boost-date-time
-Requires: boost-filesystem
-Requires: boost-iostreams
-Requires: boost-regex
-Requires: boost-system
-Requires: boost-thread
+Requires: boost169-date-time
+Requires: boost169-filesystem
+Requires: boost169-iostreams
+Requires: boost169-regex
+Requires: boost169-system
+Requires: boost169-thread
 Requires: gdal-libs
 Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 20.2.13
-Requires: smartmet-library-macgyver >= 20.3.5
-Requires: smartmet-library-spine >= 20.3.9
+Requires: smartmet-library-newbase >= 20.4.18
+Requires: smartmet-library-macgyver >= 20.4.18
+Requires: smartmet-library-spine >= 20.4.18
 
 %description
 FMI Grid File handling library
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Sat Apr 18 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.4.18-1.fmi
+- Upgrade to Boost 1.69
 * Fri Apr  3 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.4.3-1.fmi
 - Improved time string handling
 - Added a generic Message class for handling grids
