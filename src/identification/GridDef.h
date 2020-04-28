@@ -133,6 +133,7 @@ class GridDef
     bool              getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId,FmiParameterDef& paramDef);
     bool              getFmiParameterDefByName(std::string fmiParamName,FmiParameterDef& paramDef);
     bool              getFmiProducerByName(std::string fmiProducerName,FmiProducerId_grib& producer);
+    bool              getFmiProducerByFmiId(uint fmiProducerId,FmiProducerId_grib& producer);
 
     T::ParamId        getFmiParameterId(GRIB1::Message& message);
     T::ParamId        getFmiParameterId(GRIB2::Message& message);
@@ -147,6 +148,7 @@ class GridDef
     std::string       getFmiParameterUnits(GRIB2::Message& message);
 
     bool              getNewbaseParameterDefById(T::ParamId newbaseParamId,NewbaseParameterDef& paramDef);
+    bool              getNewbaseParameterDefByName(std::string newbaseParamName,NewbaseParameterDef& paramDef);
     bool              getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParameterDef& paramDef);
     bool              getNewbaseParameterMappingByFmiId(T::ParamId fmiParamId,FmiParameterId_newbase& paramMapping);
 
@@ -246,6 +248,7 @@ class GridDef
     FmiParamDef_cptr        getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId);
     FmiParamDef_cptr        getFmiParameterDefByName(std::string fmiParamName);
     FmiProducerId_grib_cptr getFmiProducerByName(std::string fmiProducerName);
+    FmiProducerId_grib_cptr getFmiProducerByFmiId(uint fmiProducerId);
     NewbaseParamDef_cptr    getNewbaseParameterDefById(T::ParamId newbaseParamId);
     NewbaseParamDef_cptr    getNewbaseParameterDefByName(std::string newbaseParamName);
     FmiParamId_newbase_cptr getFmiParameterIdByNewbaseId(T::ParamId newbaseParamId);

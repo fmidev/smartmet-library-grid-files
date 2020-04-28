@@ -6194,6 +6194,28 @@ bool GridDef::getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParamet
 
 
 
+bool GridDef::getNewbaseParameterDefByName(std::string newbaseParamName,NewbaseParameterDef& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto p = GridDef::getNewbaseParameterDefByName(newbaseParamName);
+    if (p == nullptr)
+      return false;
+
+    paramDef = *p;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool GridDef::getNewbaseParameterMappingByFmiId(T::ParamId fmiParamId,FmiParameterId_newbase& paramMapping)
 {
   try
@@ -6617,6 +6639,28 @@ FmiProducerId_grib_cptr GridDef::getFmiProducerByName(std::string fmiProducerNam
 
 
 
+FmiProducerId_grib_cptr GridDef::getFmiProducerByFmiId(uint fmiProducerId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_producersFromGrib_records.begin(); it != mFmi_producersFromGrib_records.end(); ++it)
+    {
+      if (it->mProducerId == fmiProducerId)
+        return &(*it);
+    }
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool GridDef::getFmiProducerByName(std::string fmiProducerName,FmiProducerId_grib& producer)
 {
   FUNCTION_TRACE
@@ -6626,6 +6670,31 @@ bool GridDef::getFmiProducerByName(std::string fmiProducerName,FmiProducerId_gri
     AutoThreadLock lock(&mThreadLock);
 
     auto p = getFmiProducerByName(fmiProducerName);
+    if (p == nullptr)
+      return false;
+
+    producer = *p;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridDef::getFmiProducerByFmiId(uint fmiProducerId,FmiProducerId_grib& producer)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto p = getFmiProducerByFmiId(fmiProducerId);
     if (p == nullptr)
       return false;
 

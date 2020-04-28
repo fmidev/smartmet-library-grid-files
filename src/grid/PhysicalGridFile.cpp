@@ -189,7 +189,9 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Filename",mFileName);
+    throw exception;
   }
 }
 
@@ -367,7 +369,7 @@ void PhysicalGridFile::read(std::string filename)
   catch (...)
   {
     SmartMet::Spine::Exception exception(BCP,"Read failed!",nullptr);
-    exception.addParameter("File name ",filename);
+    exception.addParameter("Filename ",filename);
     throw exception;
   }
 }
@@ -424,7 +426,9 @@ void PhysicalGridFile::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Filename",mFileName);
+    throw exception;
   }
 }
 
