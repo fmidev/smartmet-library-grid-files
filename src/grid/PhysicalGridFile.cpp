@@ -736,7 +736,10 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
       auto pos = mMessagePositions.find(index);
       if (pos != mMessagePositions.end())
       {
-        createMessage(pos->first,pos->second);
+        auto msg = mMessages.find(index);
+        if (msg == mMessages.end())
+          createMessage(pos->first,pos->second);
+
         mMessagePositions.erase(pos);
       }
     }
