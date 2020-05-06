@@ -12,6 +12,7 @@
 #include "FmiParameterId_newbase.h"
 #include "FmiProducerId_grib.h"
 #include "LevelDef.h"
+#include "ForecastTypeDef.h"
 #include "NewbaseParameterDef.h"
 #include "TimeRangeDef.h"
 #include "UnitDefinition.h"
@@ -140,6 +141,7 @@ class GridDef
     bool              getFmiLevelDef(uint levelId,LevelDef& levelDef);
     T::ParamLevelId   getFmiLevelId(GRIB1::Message& message);
     T::ParamLevelId   getFmiLevelId(GRIB2::Message& message);
+    bool              getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecastTypeDef);
     std::string       getFmiParameterName(GRIB1::Message& message);
     std::string       getFmiParameterName(GRIB2::Message& message);
     std::string       getFmiParameterDescription(GRIB1::Message& message);
@@ -225,6 +227,7 @@ class GridDef
 
     void                    loadFmiParameterDefinitions(const char *filename);
     void                    loadFmiLevelDefinitions(const char *filename);
+    void                    loadFmiForecastTypeDefinitions(const char *filename);
     void                    loadFmiParameterId_grib(const char *filename);
     void                    loadFmiParameterId_grib1(const char *filename);
     void                    loadFmiParameterId_grib2(const char *filename);
@@ -244,6 +247,7 @@ class GridDef
     GribParamDef_cptr       getGribParameterDefById(T::ParamId gribParamId);
     FmiParamDef_cptr        getFmiParameterDefById(T::ParamId fmiParamId);
     LevelDef_cptr           getFmiLevelDef(uint levelId);
+    ForecastTypeDef_cptr    getFmiForecastTypeDef(int forecastType);
     FmiParamDef_cptr        getFmiParameterDefByGribId(T::ParamId gribParamId);
     FmiParamDef_cptr        getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId);
     FmiParamDef_cptr        getFmiParameterDefByName(std::string fmiParamName);
@@ -307,6 +311,10 @@ class GridDef
     string_vec              mFmi_levelDef_files;
     time_t                  mFmi_levelDef_modificationTime;
     LevelDef_vec            mFmi_levelDef_records;
+
+    string_vec              mFmi_forecastTypeDef_files;
+    time_t                  mFmi_forecastTypeDef_modificationTime;
+    ForecastTypeDef_vec     mFmi_forecastTypeDef_records;
 
     string_vec              mFmi_parametersFromGrib_files;
     time_t                  mFmi_parametersFromGrib_modificationTime;
