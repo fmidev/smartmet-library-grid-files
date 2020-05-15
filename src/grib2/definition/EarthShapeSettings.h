@@ -44,7 +44,7 @@ public:
   void setScaledValueOfEarthMinorAxis(T::UInt32_opt scaledValueOfEarthMinorAxis);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -135,6 +135,24 @@ protected:
   //   # IAU in 1965
   //   transient earthMajorAxis = 6378160.0;
   //   transient earthMinorAxis = 6356775.0;
+  //   alias earthMajorAxisInMetres=earthMajorAxis;
+  //   alias earthMinorAxisInMetres=earthMinorAxis;
+  // }
+  // _if (shapeOfTheEarth == 3){
+  //   # Major and minor axes specified (in km) by data producer
+  //   meta earthMajorAxis from_scale_factor_scaled_value(
+  //        scaleFactorOfEarthMajorAxis, scaledValueOfEarthMajorAxis);
+  //   meta earthMinorAxis from_scale_factor_scaled_value(
+  //        scaleFactorOfEarthMinorAxis, scaledValueOfEarthMinorAxis);
+  //   meta earthMajorAxisInMetres scale(earthMajorAxis, thousand, one, zero);
+  //   meta earthMinorAxisInMetres scale(earthMinorAxis, thousand, one, zero);
+  // }
+  // _if (shapeOfTheEarth == 7){
+  //   # Major and minor axes specified (in m) by data producer
+  //   meta earthMajorAxis from_scale_factor_scaled_value(
+  //        scaleFactorOfEarthMajorAxis, scaledValueOfEarthMajorAxis);
+  //   meta earthMinorAxis from_scale_factor_scaled_value(
+  //        scaleFactorOfEarthMinorAxis, scaledValueOfEarthMinorAxis);
   //   alias earthMajorAxisInMetres=earthMajorAxis;
   //   alias earthMinorAxisInMetres=earthMinorAxis;
   // }

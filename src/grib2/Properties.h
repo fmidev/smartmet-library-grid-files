@@ -132,7 +132,7 @@ class Property
             static const uint Ny                                      = FirstProperty + 1;
             static const uint LatitudeOfFirstGridPoint                = FirstProperty + 2;
             static const uint LongitudeOfFirstGridPoint               = FirstProperty + 3;
-            static const uint ResolutionAndComponentFlag              = FirstProperty + 4;
+            static const uint ResolutionAndComponentFlags             = FirstProperty + 4;
             static const uint LaD                                     = FirstProperty + 5;
             static const uint OrientationOfTheGrid                    = FirstProperty + 6;
             static const uint Dx                                      = FirstProperty + 7;

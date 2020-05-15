@@ -68,7 +68,7 @@ public:
   void setLongitudeOfSouthernPole(T::UInt32_opt longitudeOfSouthernPole);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -78,7 +78,7 @@ protected:
   // #
   //
   // # TEMPLATE 3.30, Lambert conformal
-  // include "template.3.shape_of_the_earth.def";
+  // include "grib2/template.3.shape_of_the_earth.def";
 
   mutable EarthShapeSettings mEarthShape;
 
@@ -121,7 +121,7 @@ protected:
   // alias Lo1InDegrees = longitudeOfFirstGridPointInDegrees;
   // #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,oneConstant) : no_copy;
   //
-  // include "template.3.resolution_flags.def";
+  // include "grib2/template.3.resolution_flags.def";
 
   mutable ResolutionSettings mResolution;
 
@@ -167,7 +167,7 @@ protected:
   std::uint8_t mProjectionCentreFlag;
 
   //
-  // include "template.3.scanning_mode.def";
+  // include "grib2/template.3.scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 

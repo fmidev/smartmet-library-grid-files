@@ -39,7 +39,7 @@ public:
   void setEps(EpsSettings &eps);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -49,11 +49,11 @@ protected:
   // #
   // # TEMPLATE 4.54, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for partitioned parameters
   //
-  // include "template.4.53.def"
+  // include "grib2/template.4.53.def"
 
   mutable PartitionedProduct mPartitionedProduct;
 
-  // include "template.4.eps.def"
+  // include "grib2/template.4.eps.def"
 
   mutable EpsSettings mEps;
 

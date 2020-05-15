@@ -58,7 +58,7 @@ public:
   void setTimeIncrement(T::UInt32_opt timeIncrement);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -67,7 +67,6 @@ protected:
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // label "statistical processing";
   // #  Year of end of overall time interval
   // unsigned[2] yearOfEndOfOverallTimeInterval =0 : edition_specific;
 

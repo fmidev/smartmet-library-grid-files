@@ -39,7 +39,7 @@ public:
   void setHorizontal(HorizontalSettings &horizontal);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -50,11 +50,11 @@ protected:
   //
   // # TEMPLATE 4.1100, Hovmöller-type grid with no averaging or other statistical processing
   //
-  // include "template.4.parameter.def"
+  // include "grib2/template.4.parameter.def"
 
   mutable ParameterSettings mParameter;
 
-  // include "template.4.horizontal.def"
+  // include "grib2/template.4.horizontal.def"
 
   mutable HorizontalSettings mHorizontal;
 };

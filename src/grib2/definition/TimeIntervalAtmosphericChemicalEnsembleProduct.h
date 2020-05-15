@@ -45,7 +45,7 @@ public:
   void setStatistical(StatisticalSettings &statistical);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -54,21 +54,22 @@ protected:
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # TEMPLATE 4.43, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
+  // # TEMPLATE 4.43, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for
+  // atmospheric chemical constituents
   //
-  // include "template.4.parameter_chemical.def"
+  // include "grib2/template.4.parameter_chemical.def"
 
   mutable ParameterChemicalSettings mParameterChemical;
 
-  // include "template.4.horizontal.def"
+  // include "grib2/template.4.horizontal.def"
 
   mutable HorizontalSettings mHorizontal;
 
-  // include "template.4.eps.def"
+  // include "grib2/template.4.eps.def"
 
   mutable EpsSettings mEps;
 
-  // include "template.4.statistical.def"
+  // include "grib2/template.4.statistical.def"
 
   mutable StatisticalSettings mStatistical;
 };

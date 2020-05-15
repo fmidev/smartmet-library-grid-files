@@ -60,7 +60,7 @@ public:
   void setCoefsSecond(float coefsSecond);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -73,7 +73,7 @@ protected:
   // # START 2/template.5.1 ----------------------------------------------------------------------
   // # TEMPLATE 5.1, Matrix values at grid point -simple packing
   //
-  // include "template.5.packing.def";
+  // include "grib2/template.5.packing.def";
 
   mutable PackingSettings mPacking;
 

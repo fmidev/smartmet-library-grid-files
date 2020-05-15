@@ -53,7 +53,7 @@ public:
   void setScaledValueOfCentralWaveNumber(T::UInt32_opt scaledValueOfCentralWaveNumber);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -68,6 +68,9 @@ protected:
   //
   // # START 2/template.4.30 ----------------------------------------------------------------------
   // # TEMPLATE 4.30, Satellite Product
+  //
+  // # Note: This template is deprecated. Template 4.31 should be used instead.
+  //
   // #  Parameter category
   // codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
 

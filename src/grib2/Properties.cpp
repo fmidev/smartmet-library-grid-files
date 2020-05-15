@@ -68,7 +68,7 @@ Property::Property()
     addProperty("Grib2.GridSection.PolarStereographic.Ny",GridSection::PolarStereographic::Ny);
     addProperty("Grib2.GridSection.PolarStereographic.LatitudeOfFirstGridPoint",GridSection::PolarStereographic::LatitudeOfFirstGridPoint);
     addProperty("Grib2.GridSection.PolarStereographic.LongitudeOfFirstGridPoint",GridSection::PolarStereographic::LongitudeOfFirstGridPoint);
-    addProperty("Grib2.GridSection.PolarStereographic.ResolutionAndComponentFlag",GridSection::PolarStereographic::ResolutionAndComponentFlag);
+    addProperty("Grib2.GridSection.PolarStereographic.ResolutionAndComponentFlags",GridSection::PolarStereographic::ResolutionAndComponentFlags);
     addProperty("Grib2.GridSection.PolarStereographic.LaD",GridSection::PolarStereographic::LaD);
     addProperty("Grib2.GridSection.PolarStereographic.OrientationOfTheGrid",GridSection::PolarStereographic::OrientationOfTheGrid);
     addProperty("Grib2.GridSection.PolarStereographic.Dx",GridSection::PolarStereographic::Dx);

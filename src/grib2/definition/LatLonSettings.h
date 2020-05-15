@@ -40,7 +40,7 @@ public:
   void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -49,7 +49,7 @@ protected:
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // include "template.3.grid.def";
+  // include "grib2/template.3.grid.def";
 
   mutable GridSettings mGrid;
 
@@ -72,7 +72,7 @@ protected:
   // alias Dj =  jDirectionIncrement;
   // alias Dy =  jDirectionIncrement;
   //
-  // include "template.3.scanning_mode.def";
+  // include "grib2/template.3.scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 
@@ -123,7 +123,7 @@ protected:
   //   iterator latlon(numberOfPoints,missingValue,values,
   //                   longitudeFirstInDegrees,DiInDegrees  ,
   //                   Ni,Nj,iScansNegatively,
-  //                   latitudeFirstInDegrees, DjInDegrees,jScansPositively);
+  //                   latitudeFirstInDegrees, DjInDegrees,jScansPositively, jPointsAreConsecutive);
   //   nearest regular(values,radius,Ni,Nj);
   // }
   // meta latLonValues latlonvalues(values);

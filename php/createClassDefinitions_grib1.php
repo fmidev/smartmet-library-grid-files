@@ -79,6 +79,7 @@ $nohash = array (
  * - unsigned[1], unsigned[2], unsigned[4]
  * - signed[1], signed[2], signed[3], signed[4]
  * - ascii[4]
+ * - pad
  */
 
 define ( 'PADDING', 30 );
@@ -143,10 +144,12 @@ function process_template($file, $name, $class, $outdir)
       'signed\s*\[2\]' => 'std::int16_t',
       'signed\s*\[3\]' => 'std::int24_t',
       'signed\s*\[4\]' => 'std::int32_t',
-      'ascii\s*\[4\]' => 'std::uint32_t'
+      'ascii\s*\[4\]' => 'std::uint32_t',
+      'pad' => 'pad'
   );
 
   $realtypes = array (
+      'std::array<char,1>' => 'const std::array<char,1> &',
       'std::array<char,16>' => 'const std::array<char,16> &',
       'float' => 'float',
       'ibmfloat' => 'ibmfloat',
@@ -157,7 +160,8 @@ function process_template($file, $name, $class, $outdir)
       'std::int8_t' => 'std::int8_t',
       'std::int16_t' => 'std::int16_t',
       'std::int24_t' => 'std::int24_t',
-      'std::int32_t' => 'std::int32_t'
+      'std::int32_t' => 'std::int32_t',
+      'pad' => 'pad'
   );
 
   // Generated member names in order of generation
@@ -299,8 +303,9 @@ function process_template($file, $name, $class, $outdir)
     } else
     {
       $modRow = str_replace ( ".", "_", $row );
+      
       foreach ( $variables as $vartype => $cpptype )
-      {
+      {      
         if (preg_match ( "/\s*$vartype\s+(\w+)/", $modRow, $matches ))
         {
           if (is_phony_data ( $row ))
@@ -317,13 +322,27 @@ function process_template($file, $name, $class, $outdir)
 
             $realtype = $realtypes [$cpptype];
 
-            $protected .= "$cpptype m$Var;\n";
+            if (substr ( $vartype, 0, 3 ) != "pad")
+              $protected .= "$cpptype m$Var;\n";
 
             $cpptypes [$Var] = $cpptype;
 
     	    $prefix = "";    	    
     	    if (isset($nohash["m$Var"])) { $prefix = "//"; }
 
+            if (substr ( $vartype, 0, 3 ) == "pad")
+            {
+              $prefix = "//";
+            
+             $p1 = strpos ( $modRow, "(" );
+             $p2 = strpos ( $modRow, ")" );  
+             if ($p2 > $p1 )
+             {
+                $n = substr ( $modRow, $p1+1, $p2-$p1-1);
+                $members [$Var] = "PAD:" . $n;
+              }
+            }
+            else
             if (substr ( $vartype, 0, 4 ) == "byte")
             {
               $body .= "$realtype get$Var() const;\n";
@@ -473,7 +492,8 @@ function process_template($file, $name, $class, $outdir)
 
   foreach ( $members as $Var => $type )
   {
-    $cpp .= "m$Var = other.m$Var;\n";
+    if (substr($type,0,3) != "PAD")
+      $cpp .= "m$Var = other.m$Var;\n";
   }
 
   $cpp .= "} catch (...) {throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);}}\n\n";
@@ -501,6 +521,11 @@ function process_template($file, $name, $class, $outdir)
 
     if ($type == "class")
       $cpp .= "m$Var.read(memoryReader);\n";
+    else
+    if (substr($type,0,3) == "PAD")
+    {     
+      $cpp .= "for (uint t=0; t<" . substr($type,4) . ";t++) memoryReader.read_uint8();\n";
+    }
     else
     {
       $cpp .= "m$Var = ";
@@ -540,6 +565,11 @@ function process_template($file, $name, $class, $outdir)
 
     if ($type == "class")
       $cpp .= "m$Var.write(dataWriter);\n";
+    else
+    if (substr($type,0,3) == "PAD")
+    {     
+      $cpp .= "for (uint t=0; t<" . substr($type,4) . ";t++) dataWriter.write_uint8(0);\n";
+    }
     else if ($cpptype == "std::int24_t")
       $cpp .= "dataWriter.write_int24(m$Var);\n";
     else if ($cpptype == "std::uint24_t")
@@ -574,7 +604,11 @@ function process_template($file, $name, $class, $outdir)
     {
       $cpp .= "sprintf(name,\"%s${class}.\",prefix.c_str());\n";
       $cpp .= "m${member}.getAttributeList(name,attributeList);\n";
-    } 
+    }
+    else 
+    if (substr($type,0,3) == "PAD")
+    {
+    }     
     else
     {
       $cpp .= "sprintf(name,\"%s${class}.$member\",prefix.c_str());\n";
@@ -612,7 +646,11 @@ function process_template($file, $name, $class, $outdir)
       $prefix = "";
       if (isset($nohash["m${member}"])) { $prefix = "//";}
       $hash .= "${prefix} boost::hash_combine(seed,m${member}.countHash());\n";
-    } 
+    }
+    else 
+    if (substr($type,0,3) == "PAD")
+    {
+    }     
     else
     {
       $cpp .= "stream << space(level) << \"- $member = \" << toString(m${member}) << \"\\n\";\n";
@@ -681,8 +719,13 @@ function process_template($file, $name, $class, $outdir)
 // Assuming string of form 'include "filename.def" ... ' return filename
 function extract_include($line)
 {
-  preg_match ( '/\s*include\s+"([\w.]+)\.def"/', $line, $matches );
-  return $matches [1];
+//  print $line . "\n";
+//  preg_match ( '/\s*include\s+"([\w.]+)\.def"/', $line, $matches );
+//  return $matches [1];
+
+  $name = substr ( $line, strpos ( $line, "\"grib1/" ) + 7, - 1 );
+  $name2 = substr ( $name, 0, strpos ( $name, ".def" ) );
+  return $name2;
 }
 
 
@@ -692,7 +735,7 @@ function extract_include($line)
 // Assuming string of form 'template commonBlock "grib1/filename.def" ... ' return filename
 function extract_template($line)
 {
-  $templateDir = "/usr/share/grib_api/definitions/";
+  $templateDir = "/usr/share/eccodes/definitions/";
   $name = substr ( $line, strpos ( $line, "\"" ) + 1, - 1 );
   $name2 = substr ( $name, 0, strpos ( $name, "\"" ) );
   return $templateDir . $name2;

@@ -32,7 +32,7 @@ public:
   virtual T::Hash countHash();
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -63,6 +63,7 @@ protected:
   //           referenceValue,
   //           binaryScaleFactor,
   //           decimalScaleFactor,
+  //           optimizeScaleFactor,
   //
   //           GRIBEXShBugPresent,
   //           unpackedSubsetPrecision,
@@ -94,6 +95,7 @@ protected:
   //           referenceValue,
   //           binaryScaleFactor,
   //           decimalScaleFactor,
+  //           optimizeScaleFactor,
   //
   //           GRIBEXShBugPresent,
   //           unpackedSubsetPrecision,
@@ -123,6 +125,7 @@ protected:
   //           referenceValue,
   //           binaryScaleFactor,
   //           decimalScaleFactor,
+  //           optimizeScaleFactor,
   //
   //           GRIBEXShBugPresent,
   //           unpackedSubsetPrecision,

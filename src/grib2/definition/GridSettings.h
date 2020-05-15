@@ -49,7 +49,7 @@ public:
   void setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -123,7 +123,7 @@ protected:
   // alias Lo1  = longitudeOfFirstGridPoint;
   // #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
   //
-  // include "template.3.resolution_flags.def"
+  // include "grib2/template.3.resolution_flags.def"
 
   mutable ResolutionSettings mResolution;
 

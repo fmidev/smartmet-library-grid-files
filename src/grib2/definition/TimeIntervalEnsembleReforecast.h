@@ -48,7 +48,7 @@ public:
   void setStatistical(StatisticalSettings &statistical);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -59,23 +59,23 @@ protected:
   //
   // # TEMPLATE 4.61, Individual ensemble re-forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
   //
-  // include "template.4.parameter.def"
+  // include "grib2/template.4.parameter.def"
 
   mutable ParameterSettings mParameter;
 
-  // include "template.4.horizontal.def"
+  // include "grib2/template.4.horizontal.def"
 
   mutable HorizontalSettings mHorizontal;
 
-  // include "template.4.eps.def"
+  // include "grib2/template.4.eps.def"
 
   mutable EpsSettings mEps;
 
-  // include "template.4.reforecast.def"
+  // include "grib2/template.4.reforecast.def"
 
   mutable ReforecastSettings mReforecast;
 
-  // include "template.4.statistical.def"
+  // include "grib2/template.4.statistical.def"
 
   mutable StatisticalSettings mStatistical;
 };

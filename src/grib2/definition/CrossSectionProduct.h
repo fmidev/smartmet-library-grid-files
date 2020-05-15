@@ -39,7 +39,7 @@ public:
   void setPointInTime(PointInTimeSettings &pointInTime);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -50,11 +50,11 @@ protected:
   //
   // # TEMPLATE 4.1000, Cross section of analysis and forecast at a point in time
   //
-  // include "template.4.parameter.def"
+  // include "grib2/template.4.parameter.def"
 
   mutable ParameterSettings mParameter;
 
-  // include "template.4.point_in_time.def";
+  // include "grib2/template.4.point_in_time.def";
 
   mutable PointInTimeSettings mPointInTime;
 };

@@ -41,7 +41,7 @@ public:
   void setLongitudeOfLastGridPoint(std::int24_t longitudeOfLastGridPoint);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -66,7 +66,7 @@ protected:
   // meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lo1 = longitudeOfFirstGridPoint;
   //
-  // include "resolution_flags.def";
+  // include "grib1/resolution_flags.def";
 
   mutable ResolutionFlagsSettings mResolutionFlags;
 

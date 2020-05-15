@@ -36,7 +36,7 @@ public:
   void setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForecastsInEnsemble);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -44,8 +44,6 @@ protected:
   // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
-  //
-  // label "EPS information";
   //
   // #  Type of ensemble forecast
   // codetable[1] typeOfEnsembleForecast ('4.6.table',masterDir,localDir) = 255 : dump;
@@ -67,11 +65,13 @@ protected:
 
   // alias totalNumber=numberOfForecastsInEnsemble;
   //
-  // #  Rules for TIGGE and S2S
+  // #  Rules for TIGGE, S2S and UERRA
   // if (productionStatusOfProcessedData == 4 ||
   //     productionStatusOfProcessedData == 5 ||
   //     productionStatusOfProcessedData == 6 ||
-  //     productionStatusOfProcessedData == 7)
+  //     productionStatusOfProcessedData == 7 ||
+  //     productionStatusOfProcessedData == 8 ||
+  //     productionStatusOfProcessedData == 9)
   // {
   //     alias mars.number=perturbationNumber;
   // }

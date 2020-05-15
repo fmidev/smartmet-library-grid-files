@@ -50,7 +50,7 @@ public:
   void setEnsembleForecastNumbers(T::UInt8_opt ensembleForecastNumbers);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -62,23 +62,23 @@ protected:
   // # TEMPLATE 4.13, Derived forecasts based on a cluster of ensemble members over a rectangular area at a horizontal level or in a horizontal layer in a continuous or
   // non-continuous time interval
   //
-  // include "template.4.parameter.def"
+  // include "grib2/template.4.parameter.def"
 
   mutable ParameterSettings mParameter;
 
-  // include "template.4.horizontal.def"
+  // include "grib2/template.4.horizontal.def"
 
   mutable HorizontalSettings mHorizontal;
 
-  // include "template.4.derived.def"
+  // include "grib2/template.4.derived.def"
 
   mutable DerivedSettings mDerived;
 
-  // include "template.4.rectangular_cluster.def"
+  // include "grib2/template.4.rectangular_cluster.def"
 
   mutable RectangularClusterSettings mRectangularCluster;
 
-  // include "template.4.statistical.def"
+  // include "grib2/template.4.statistical.def"
 
   mutable StatisticalSettings mStatistical;
 
