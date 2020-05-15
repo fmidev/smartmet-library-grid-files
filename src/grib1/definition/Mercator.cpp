@@ -62,10 +62,13 @@ void Mercator::read(MemoryReader &memoryReader) {
     mNj = memoryReader.read_int16();
     mGridArea.read(memoryReader);
     mLatin = memoryReader.read_int24();
-    memoryReader.read_uint8();  // *** This field was not automatically generated
+    for (uint t = 0; t < 1; t++)
+      memoryReader.read_uint8();
     mScanningMode.read(memoryReader);
     mDiInMetres = memoryReader.read_int24();
     mDjInMetres = memoryReader.read_int24();
+    for (uint t = 0; t < 8; t++)
+      memoryReader.read_uint8();
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -82,10 +85,13 @@ void Mercator::write(DataWriter &dataWriter) {
     dataWriter << mNj;
     mGridArea.write(dataWriter);
     dataWriter.write_int24(mLatin);
-    dataWriter.write_uint8(0);       // *** This field was not automatically generated
+    for (uint t = 0; t < 1; t++)
+      dataWriter.write_uint8(0);
     mScanningMode.write(dataWriter);
     dataWriter.write_int24(mDiInMetres);
     dataWriter.write_int24(mDjInMetres);
+    for (uint t = 0; t < 8; t++)
+      dataWriter.write_uint8(0);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

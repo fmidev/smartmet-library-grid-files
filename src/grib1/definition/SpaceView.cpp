@@ -86,6 +86,8 @@ void SpaceView::read(MemoryReader &memoryReader) {
     mNrInRadiusOfEarth = memoryReader.read_uint24();
     mXo = memoryReader.read_uint16();
     mYo = memoryReader.read_uint16();
+    for (uint t = 0; t < 6; t++)
+      memoryReader.read_uint8();
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -112,6 +114,8 @@ void SpaceView::write(DataWriter &dataWriter) {
     dataWriter.write_uint24(mNrInRadiusOfEarth);
     dataWriter << mXo;
     dataWriter << mYo;
+    for (uint t = 0; t < 6; t++)
+      dataWriter.write_uint8(0);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

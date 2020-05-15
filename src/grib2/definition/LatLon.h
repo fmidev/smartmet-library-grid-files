@@ -39,7 +39,7 @@ public:
   void setLatLon(LatLonSettings &latLon);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -50,11 +50,11 @@ protected:
   //
   // # TEMPLATE 3.0, Latitude/longitude (or equidistant cylindrical, or Plate Carree)
   //
-  // include "template.3.shape_of_the_earth.def";
+  // include "grib2/template.3.shape_of_the_earth.def";
 
   mutable EarthShapeSettings mEarthShape;
 
-  // include "template.3.latlon.def";
+  // include "grib2/template.3.latlon.def";
 
   mutable LatLonSettings mLatLon;
 };

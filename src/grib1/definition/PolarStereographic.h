@@ -55,7 +55,7 @@ public:
   void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -98,7 +98,7 @@ protected:
   // meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lo1 = longitudeOfFirstGridPoint;
   //
-  // include "resolution_flags.def";
+  // include "grib1/resolution_flags.def";
 
   mutable ResolutionFlagsSettings mResolutionFlags;
 
@@ -151,12 +151,13 @@ protected:
   // alias yFirst=latitudeOfFirstGridPointInDegrees;
   // alias xFirst=longitudeOfFirstGridPointInDegrees;
   //
-  // include "scanning_mode.def";
+  // include "grib1/scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 
   //
   // pad padding_grid5_1(4);
+
   //
   // meta numberOfDataPoints number_of_points(Nx,Ny,PLPresent,pl) : dump;
   // alias numberOfPoints=numberOfDataPoints;
@@ -168,11 +169,14 @@ protected:
   //           latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
   //           southPoleOnProjectionPlane,
   //           orientationOfTheGridInDegrees,
+  //           LaDInDegrees,
   //           Dx,Dy,
   //           iScansNegatively,
   //           jScansPositively,
   //           jPointsAreConsecutive,
   //           alternativeRowScanning);
+  //
+  // nearest polar_stereographic(values,radius,Nx,Ny);
   //
 };
 

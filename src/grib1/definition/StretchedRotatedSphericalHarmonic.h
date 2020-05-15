@@ -49,7 +49,7 @@ public:
   void setGridStretching(GridStretchingSettings &gridStretching);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -64,7 +64,7 @@ protected:
   // constant gridDefinitionTemplateNumber     = 53;
   //
   // template commonBlock "grib1/grid_definition_spherical_harmonics.def";
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -120,18 +120,19 @@ protected:
   // #  Set to zero
   // # (reserved)
   // pad padding_grid50_1(18);
+
   //
   // # For now, to make section2 happy
   // constant Nj = 0;
   //
   // # Rotation parameters
-  // include "grid_rotation.def"
+  // include "grib1/grid_rotation.def"
 
   mutable RotationSettings mRotation;
 
   //
   // # Stretching parameters
-  // include "grid_stretching.def"
+  // include "grib1/grid_stretching.def"
 
   mutable GridStretchingSettings mGridStretching;
 };

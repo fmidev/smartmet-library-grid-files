@@ -13,7 +13,6 @@
 #include "../../grid/Typedefs.h"
 #include "../GridDefinition.h"
 #include "GridStretchingSettings.h"
-#include "RotationSettings.h"
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -43,13 +42,11 @@ public:
   void setRepresentationType(std::uint8_t representationType);
   std::uint8_t getRepresentationMode() const;
   void setRepresentationMode(std::uint8_t representationMode);
-  RotationSettings *getRotation() const;
-  void setRotation(RotationSettings &rotation);
   GridStretchingSettings *getGridStretching() const;
   void setGridStretching(GridStretchingSettings &gridStretching);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -64,7 +61,7 @@ protected:
   // constant gridDefinitionTemplateNumber     = 52;
   //
   // template commonBlock "grib1/grid_definition_spherical_harmonics.def";
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -120,18 +117,13 @@ protected:
   // #  Set to zero
   // # (reserved)
   // pad padding_grid50_1(18);
+
   //
   // # For now, to make section2 happy
   // constant Nj = 0;
   //
-  // # Rotation parameters
-  // include  "grid_rotation.def"
-
-  mutable RotationSettings mRotation;
-
-  //
   // # Stretching parameters
-  // include "grid_stretching.def"
+  // include "grib1/grid_stretching.def"
 
   mutable GridStretchingSettings mGridStretching;
 };

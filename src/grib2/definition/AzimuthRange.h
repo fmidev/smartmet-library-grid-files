@@ -52,7 +52,7 @@ public:
   void setAzimuthalWidth(T::Int16_opt azimuthalWidth);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -110,7 +110,7 @@ protected:
 
   // alias Dstart =  offsetFromOriginToInnerBound;
   //
-  // include "template.3.scanning_mode.def";
+  // include "grib2/template.3.scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 

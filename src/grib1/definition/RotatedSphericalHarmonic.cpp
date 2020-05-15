@@ -62,6 +62,8 @@ void RotatedSphericalHarmonic::read(MemoryReader &memoryReader) {
     mM = memoryReader.read_uint16();
     mRepresentationType = memoryReader.read_uint8();
     mRepresentationMode = memoryReader.read_uint8();
+    for (uint t = 0; t < 18; t++)
+      memoryReader.read_uint8();
     mRotation.read(memoryReader);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
@@ -80,6 +82,8 @@ void RotatedSphericalHarmonic::write(DataWriter &dataWriter) {
     dataWriter << mM;
     dataWriter << mRepresentationType;
     dataWriter << mRepresentationMode;
+    for (uint t = 0; t < 18; t++)
+      dataWriter.write_uint8(0);
     mRotation.write(dataWriter);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);

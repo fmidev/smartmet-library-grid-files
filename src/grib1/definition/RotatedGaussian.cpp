@@ -63,6 +63,8 @@ void RotatedGaussian::read(MemoryReader &memoryReader) {
     mIDirectionIncrement = memoryReader.read_uint16();
     mN = memoryReader.read_uint16();
     mScanningMode.read(memoryReader);
+    for (uint t = 0; t < 4; t++)
+      memoryReader.read_uint8();
     mRotation.read(memoryReader);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
@@ -82,6 +84,8 @@ void RotatedGaussian::write(DataWriter &dataWriter) {
     dataWriter << mIDirectionIncrement;
     dataWriter << mN;
     mScanningMode.write(dataWriter);
+    for (uint t = 0; t < 4; t++)
+      dataWriter.write_uint8(0);
     mRotation.write(dataWriter);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);

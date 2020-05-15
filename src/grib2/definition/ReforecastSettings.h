@@ -42,8 +42,6 @@ public:
   void setSecondOfModelVersion(T::UInt8_opt secondOfModelVersion);
 
 protected:
-  // label "S2S reforecasts";
-  //
   // # The Model Version Date
   // # This is the date when the reforecast is produced with a particular version of the model
   //

@@ -36,7 +36,7 @@ public:
   void setNormalProduct(NormalProduct &normalProduct);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -48,8 +48,11 @@ protected:
   // # TEMPLATE 4.7, Analysis or forecast error at a horizontal level or in a horizontal layer at a point in time
   // # Same as 4.0 Should not be used
   //
-  // include "template.4.0.def"
+  // include "grib2/template.4.0.def"
+
   mutable NormalProduct mNormalProduct;
+
+  //
 };
 
 } // namespace GRIB2

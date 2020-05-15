@@ -5013,7 +5013,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           ////def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
           //def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
 
-          def2->setResolutionAndComponentFlag(0x30);
+          def2->setResolutionAndComponentFlags(0x30);
 
           def2->setGridGeometryId(geometryId);
           def2->setGridGeometryName(geometryName);

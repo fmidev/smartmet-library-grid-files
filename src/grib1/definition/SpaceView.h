@@ -63,7 +63,7 @@ public:
   void setYo(std::uint16_t yo);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -106,7 +106,7 @@ protected:
   // meta geography.longitudeOfSubSatellitePointInDegrees  scale(longitudeOfSubSatellitePoint,oneConstant,grib1divider,truncateDegrees) : dump;
   // alias Lap=longitudeOfSubSatellitePoint;
   //
-  // include "resolution_flags.def";
+  // include "grib1/resolution_flags.def";
 
   mutable ResolutionFlagsSettings mResolutionFlags;
 
@@ -136,7 +136,7 @@ protected:
 
   // alias geography.YpInGridLengths=YpInGridLengths;
   //
-  // include "scanning_mode.def";
+  // include "grib1/scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 
@@ -147,7 +147,7 @@ protected:
 
   // meta geography.orientationOfTheGridInDegrees  scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
   //
-  // unsigned[3] NrInRadiusOfEarth : edition_specific,no_copy;
+  // unsigned[3] NrInRadiusOfEarth : edition_specific,can_be_missing,no_copy;
 
   std::uint24_t mNrInRadiusOfEarth;
 
@@ -174,6 +174,7 @@ protected:
   // #Ce      while Space view is 40 for ECMWF (44 in GRIB specification)
   // if ( centre != 98 ) {
   //   pad padding_grid90_1(6);
+
   // }
   //
   // meta numberOfDataPoints number_of_points(Ni,Nj,PLPresent,pl) : dump;

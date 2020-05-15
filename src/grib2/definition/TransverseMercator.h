@@ -68,7 +68,7 @@ public:
   void setY2(T::Int32_opt y2);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -79,7 +79,7 @@ protected:
   //
   // # TEMPLATE 3.12, Transverse Mercator
   //
-  // include "template.3.shape_of_the_earth.def";
+  // include "grib2/template.3.shape_of_the_earth.def";
 
   mutable EarthShapeSettings mEarthShape;
 
@@ -116,7 +116,7 @@ protected:
   // alias LoR = longitudeOfReferencePoint;
   // meta geography.longitudeOfReferencePointInDegrees scale(longitudeOfReferencePoint,oneConstant,grib2divider,truncateDegrees) : dump;
   //
-  // include "template.3.resolution_flags.def";
+  // include "grib2/template.3.resolution_flags.def";
 
   mutable ResolutionSettings mResolution;
 
@@ -146,7 +146,7 @@ protected:
   // alias falseNorthing = YR;
   // meta geography.YRInMetres scale(YR,one,hundred) : dump;
   //
-  // include "template.3.scanning_mode.def";
+  // include "grib2/template.3.scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 

@@ -47,8 +47,8 @@ public:
   void setStandardParallelInMicrodegrees(T::Int32_opt standardParallelInMicrodegrees);
   const T::Int32_opt &getCentralLongitudeInMicrodegrees() const;
   void setCentralLongitudeInMicrodegrees(T::Int32_opt centralLongitudeInMicrodegrees);
-  std::uint8_t getResolutionAndComponentFlag() const;
-  void setResolutionAndComponentFlag(std::uint8_t resolutionAndComponentFlag);
+  std::uint8_t getResolutionAndComponentFlags() const;
+  void setResolutionAndComponentFlags(std::uint8_t resolutionAndComponentFlags);
   const T::UInt32_opt &getXDirectionGridLengthInMillimetres() const;
   void setXDirectionGridLengthInMillimetres(T::UInt32_opt xDirectionGridLengthInMillimetres);
   const T::UInt32_opt &getYDirectionGridLengthInMillimetres() const;
@@ -57,7 +57,7 @@ public:
   void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -69,7 +69,7 @@ protected:
   //
   // # START 2/template.3.140 ----------------------------------------------------------------------
   // # TEMPLATE 3.140, Lambert azimuthal equal area projection
-  // include "template.3.shape_of_the_earth.def";
+  // include "grib2/template.3.shape_of_the_earth.def";
 
   mutable EarthShapeSettings mEarthShape;
 
@@ -121,9 +121,9 @@ protected:
   // alias centralLongitude=centralLongitudeInMicrodegrees;
   //
   // #  Resolution and component flag
-  // flags[1] resolutionAndComponentFlag 'grib2/tables/[tablesVersion]/3.3.table' : dump ;
+  // flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump ;
 
-  std::uint8_t mResolutionAndComponentFlag;
+  std::uint8_t mResolutionAndComponentFlags;
 
   //
   // #  Dx - X-direction grid length in millimetres
@@ -140,7 +140,7 @@ protected:
 
   // alias Dy  = yDirectionGridLengthInMillimetres ;
   //
-  // include "template.3.scanning_mode.def";
+  // include "grib2/template.3.scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 

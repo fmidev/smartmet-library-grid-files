@@ -1,5 +1,5 @@
 CREATE_CLASS_DEFINITIONS = ../../../php/createClassDefinitions_grib2.php
-T_DIR = /usr/share/grib_api/definitions/grib2
+T_DIR = /usr/share/eccodes/definitions/grib2
 T_TARGET_DIR = .
 
 H_FILES = \
@@ -90,6 +90,18 @@ H_FILES = \
   PartitionedEnsembleProduct.h \
   EnsembleReforecast.h \
   TimeIntervalEnsembleReforecast.h \
+  Product_49.h \
+  Product_55.h \
+  Product_56.h \
+  Product_57.h \
+  Product_58.h \
+  Product_59.h \
+  Product_67.h \
+  Product_68.h \
+  Product_70.h \
+  Product_71.h \
+  Product_72.h \
+  Product_73.h \
   TimeIntervalCategoricalForecast.h \
   CharacterStringProduct.h \
   CrossSectionProduct.h \
@@ -216,6 +228,18 @@ CPP_FILES = \
   PartitionedEnsembleProduct.cpp \
   EnsembleReforecast.cpp \
   TimeIntervalEnsembleReforecast.cpp \
+  Product_49.cpp \
+  Product_55.cpp \
+  Product_56.cpp \
+  Product_57.cpp \
+  Product_58.cpp \
+  Product_59.cpp \
+  Product_67.cpp \
+  Product_68.cpp \
+  Product_70.cpp \
+  Product_71.cpp \
+  Product_72.cpp \
+  Product_73.cpp \
   TimeIntervalCategoricalForecast.cpp \
   CharacterStringProduct.cpp \
   CrossSectionProduct.cpp \
@@ -542,6 +566,42 @@ EnsembleReforecast.h: $(T_DIR)/template.4.60.def $(CREATE_CLASS_DEFINITIONS)
 
 TimeIntervalEnsembleReforecast.h: $(T_DIR)/template.4.61.def $(CREATE_CLASS_DEFINITIONS)
 	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.61.def $(T_TARGET_DIR)
+
+Product_49.h: $(T_DIR)/template.4.49.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.49.def $(T_TARGET_DIR)
+
+Product_55.h: $(T_DIR)/template.4.55.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.55.def $(T_TARGET_DIR)
+
+Product_56.h: $(T_DIR)/template.4.56.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.56.def $(T_TARGET_DIR)
+
+Product_57.h: $(T_DIR)/template.4.57.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.57.def $(T_TARGET_DIR)
+
+Product_58.h: $(T_DIR)/template.4.58.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.58.def $(T_TARGET_DIR)
+
+Product_59.h: $(T_DIR)/template.4.59.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.59.def $(T_TARGET_DIR)
+
+Product_67.h: $(T_DIR)/template.4.67.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.67.def $(T_TARGET_DIR)
+
+Product_68.h: $(T_DIR)/template.4.68.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.68.def $(T_TARGET_DIR)
+
+Product_70.h: $(T_DIR)/template.4.70.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.70.def $(T_TARGET_DIR)
+
+Product_71.h: $(T_DIR)/template.4.71.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.71.def $(T_TARGET_DIR)
+
+Product_72.h: $(T_DIR)/template.4.72.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.72.def $(T_TARGET_DIR)
+
+Product_73.h: $(T_DIR)/template.4.73.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.73.def $(T_TARGET_DIR)
 
 TimeIntervalCategoricalForecast.h: $(T_DIR)/template.4.91.def $(CREATE_CLASS_DEFINITIONS)
 	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.91.def $(T_TARGET_DIR)

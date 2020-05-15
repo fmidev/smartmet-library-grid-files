@@ -38,7 +38,7 @@ public:
   void setBitsPerValue(T::UInt8_opt bitsPerValue);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -69,6 +69,9 @@ protected:
 
   T::Int16_opt mDecimalScaleFactor;
 
+  //
+  // # Try different values of binaryScaleFactor and decimalScaleFactor to reduce packing error
+  // transient optimizeScaleFactor = 0;
   //
   //
   // #  Number of bits used for each packed value for simple packing, or for each group reference value for complex packing or spatial differencing

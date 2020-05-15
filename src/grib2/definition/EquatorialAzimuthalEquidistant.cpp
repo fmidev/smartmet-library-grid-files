@@ -20,7 +20,7 @@ namespace GRIB2 {
 
 EquatorialAzimuthalEquidistant::EquatorialAzimuthalEquidistant() {
   try {
-    mResolutionAndComponentFlag = 0;
+    mResolutionAndComponentFlags = 0;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -35,7 +35,7 @@ EquatorialAzimuthalEquidistant::EquatorialAzimuthalEquidistant(const EquatorialA
     mNumberOfPointsAlongYAxis = other.mNumberOfPointsAlongYAxis;
     mLatitudeOfTangencyPoint = other.mLatitudeOfTangencyPoint;
     mLongitudeOfTangencyPoint = other.mLongitudeOfTangencyPoint;
-    mResolutionAndComponentFlag = other.mResolutionAndComponentFlag;
+    mResolutionAndComponentFlags = other.mResolutionAndComponentFlags;
     mDx = other.mDx;
     mDy = other.mDy;
     mProjectionCenterFlag = other.mProjectionCenterFlag;
@@ -62,7 +62,7 @@ void EquatorialAzimuthalEquidistant::read(MemoryReader &memoryReader) {
     mNumberOfPointsAlongYAxis = memoryReader.read_UInt32_opt();
     mLatitudeOfTangencyPoint = memoryReader.read_Int32_opt();
     mLongitudeOfTangencyPoint = memoryReader.read_UInt32_opt();
-    mResolutionAndComponentFlag = memoryReader.read_uint8();
+    mResolutionAndComponentFlags = memoryReader.read_uint8();
     mDx = memoryReader.read_UInt32_opt();
     mDy = memoryReader.read_UInt32_opt();
     mProjectionCenterFlag = memoryReader.read_UInt8_opt();
@@ -84,7 +84,7 @@ void EquatorialAzimuthalEquidistant::write(DataWriter &dataWriter) {
     dataWriter << mNumberOfPointsAlongYAxis;
     dataWriter << mLatitudeOfTangencyPoint;
     dataWriter << mLongitudeOfTangencyPoint;
-    dataWriter << mResolutionAndComponentFlag;
+    dataWriter << mResolutionAndComponentFlags;
     dataWriter << mDx;
     dataWriter << mDy;
     dataWriter << mProjectionCenterFlag;
@@ -113,8 +113,8 @@ void EquatorialAzimuthalEquidistant::getAttributeList(std::string prefix, T::Att
     attributeList.addAttribute(name, toString(mLatitudeOfTangencyPoint));
     sprintf(name, "%sEquatorialAzimuthalEquidistant.LongitudeOfTangencyPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfTangencyPoint));
-    sprintf(name, "%sEquatorialAzimuthalEquidistant.ResolutionAndComponentFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mResolutionAndComponentFlag));
+    sprintf(name, "%sEquatorialAzimuthalEquidistant.ResolutionAndComponentFlags", prefix.c_str());
+    attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
     sprintf(name, "%sEquatorialAzimuthalEquidistant.Dx", prefix.c_str());
     attributeList.addAttribute(name, toString(mDx));
     sprintf(name, "%sEquatorialAzimuthalEquidistant.Dy", prefix.c_str());
@@ -143,7 +143,7 @@ void EquatorialAzimuthalEquidistant::print(std::ostream &stream, uint level, uin
     stream << space(level) << "- NumberOfPointsAlongYAxis = " << toString(mNumberOfPointsAlongYAxis) << "\n";
     stream << space(level) << "- LatitudeOfTangencyPoint = " << toString(mLatitudeOfTangencyPoint) << "\n";
     stream << space(level) << "- LongitudeOfTangencyPoint = " << toString(mLongitudeOfTangencyPoint) << "\n";
-    stream << space(level) << "- ResolutionAndComponentFlag = " << toString(mResolutionAndComponentFlag) << "\n";
+    stream << space(level) << "- ResolutionAndComponentFlags = " << toString(mResolutionAndComponentFlags) << "\n";
     stream << space(level) << "- Dx = " << toString(mDx) << "\n";
     stream << space(level) << "- Dy = " << toString(mDy) << "\n";
     stream << space(level) << "- ProjectionCenterFlag = " << toString(mProjectionCenterFlag) << "\n";
@@ -166,7 +166,7 @@ T::Hash EquatorialAzimuthalEquidistant::countHash() {
       boost::hash_combine(seed, *mLatitudeOfTangencyPoint);
     if (mLongitudeOfTangencyPoint)
       boost::hash_combine(seed, *mLongitudeOfTangencyPoint);
-    // boost::hash_combine(seed,mResolutionAndComponentFlag);
+    boost::hash_combine(seed, mResolutionAndComponentFlags);
     if (mDx)
       boost::hash_combine(seed, *mDx);
     if (mDy)
@@ -245,11 +245,11 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getLongitudeOfTangencyPoint
   }
 }
 
-/*! \brief The method returns the value of the {@link mResolutionAndComponentFlag} attribute. */
+/*! \brief The method returns the value of the {@link mResolutionAndComponentFlags} attribute. */
 
-std::uint8_t EquatorialAzimuthalEquidistant::getResolutionAndComponentFlag() const {
+std::uint8_t EquatorialAzimuthalEquidistant::getResolutionAndComponentFlags() const {
   try {
-    return mResolutionAndComponentFlag;
+    return mResolutionAndComponentFlags;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -335,9 +335,9 @@ void EquatorialAzimuthalEquidistant::setLongitudeOfTangencyPoint(T::UInt32_opt l
   }
 }
 
-void EquatorialAzimuthalEquidistant::setResolutionAndComponentFlag(std::uint8_t resolutionAndComponentFlag) {
+void EquatorialAzimuthalEquidistant::setResolutionAndComponentFlags(std::uint8_t resolutionAndComponentFlags) {
   try {
-    mResolutionAndComponentFlag = resolutionAndComponentFlag;
+    mResolutionAndComponentFlags = resolutionAndComponentFlags;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

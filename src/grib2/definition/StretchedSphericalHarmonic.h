@@ -39,7 +39,7 @@ public:
   void setStretching(StretchingSettings &stretching);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -50,11 +50,11 @@ protected:
   //
   // # TEMPLATE 3.52, Stretched spherical harmonic coefficients
   //
-  // include "template.3.spherical_harmonics.def";
+  // include "grib2/template.3.spherical_harmonics.def";
 
   mutable SphericalHarmonicSettings mSphericalHarmonic;
 
-  // include "template.3.stretching.def";
+  // include "grib2/template.3.stretching.def";
 
   mutable StretchingSettings mStretching;
 };

@@ -49,7 +49,7 @@ public:
   void setDjInMetres(std::int24_t djInMetres);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -78,7 +78,7 @@ protected:
   // alias Nx=Nj;
   // alias geography.Nj=Nj;
   //
-  // include "grid_first_last_resandcomp.def";
+  // include "grib1/grid_first_last_resandcomp.def";
 
   mutable GridAreaSettings mGridArea;
 
@@ -90,6 +90,7 @@ protected:
   // meta geography.LaDInDegrees scale(Latin,oneConstant,grib1divider,truncateDegrees) : dump;
   //
   // pad padding_grid1_1(1);
+
   //
   // # for change_scanning_direction
   // alias yFirst=latitudeOfFirstGridPointInDegrees;
@@ -97,7 +98,7 @@ protected:
   // alias xFirst=longitudeOfFirstGridPointInDegrees;
   // alias xLast=longitudeOfLastGridPointInDegrees;
   //
-  // include "scanning_mode.def";
+  // include "grib1/scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 
@@ -121,6 +122,7 @@ protected:
   // constant orientationOfTheGridInDegrees=0;
   //
   // pad padding_grid1_2(8);
+
   //
   // meta numberOfDataPoints number_of_points(Ni,Nj) : dump;
   // alias numberOfPoints=numberOfDataPoints;

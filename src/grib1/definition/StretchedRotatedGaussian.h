@@ -53,7 +53,7 @@ public:
   void setGridStretching(GridStretchingSettings &gridStretching);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -67,7 +67,7 @@ protected:
   // constant gridDefinitionTemplateNumber     = 43;
   //
   // template commonBlock "grib1/grid_definition_gaussian.def";
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -92,7 +92,7 @@ protected:
   //
   // # Latitudes and Longitudes of the first and the last points
   // # Resolution and component flags
-  // include "grid_first_last_resandcomp.def";
+  // include "grib1/grid_first_last_resandcomp.def";
 
   mutable GridAreaSettings mGridArea;
 
@@ -119,12 +119,13 @@ protected:
   // alias xFirst=longitudeOfFirstGridPointInDegrees;
   // alias xLast=longitudeOfLastGridPointInDegrees;
   //
-  // include "scanning_mode.def";
+  // include "grib1/scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 
   //
   // pad padding_grid4_1(4);
+
   //
   // alias latitudeFirstInDegrees  = latitudeOfFirstGridPointInDegrees;
   // alias longitudeFirstInDegrees = longitudeOfFirstGridPointInDegrees;
@@ -183,13 +184,13 @@ protected:
   //
   //
   // # Rotation parameters
-  // include "grid_rotation.def"
+  // include "grib1/grid_rotation.def"
 
   mutable RotationSettings mRotation;
 
   //
   // # Stretching parameters
-  // include "grid_stretching.def"
+  // include "grib1/grid_stretching.def"
 
   mutable GridStretchingSettings mGridStretching;
 };

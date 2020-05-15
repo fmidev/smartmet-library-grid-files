@@ -108,11 +108,23 @@ $templates = array (
     "4.46" => "AggregateAerosolProduct",
     "4.47" => "TimeIntervalAerosolEnsembleProduct",
     "4.48" => "AerosolOpticalPropertiesProduct",
+    "4.49" => "Product_49",
     "4.51" => "CategoricalForecast",
     "4.53" => "PartitionedProduct",
     "4.54" => "PartitionedEnsembleProduct",
+    "4.55" => "Product_55",
+    "4.56" => "Product_56",
+    "4.57" => "Product_57",
+    "4.58" => "Product_58",
+    "4.59" => "Product_59",
     "4.60" => "EnsembleReforecast",
     "4.61" => "TimeIntervalEnsembleReforecast",
+    "4.67" => "Product_67",
+    "4.68" => "Product_68",
+    "4.70" => "Product_70",
+    "4.71" => "Product_71",
+    "4.72" => "Product_72",
+    "4.73" => "Product_73",
     "4.91" => "TimeIntervalCategoricalForecast",
     "4.254" => "CharacterStringProduct",
     "4.311" => "AuxiliarySatelliteProduct",
@@ -754,8 +766,12 @@ function process_template($file, $name, $class, $outdir)
 // Assuming string of form 'include "template.filename.def" ... ' return filename
 function extract_include($line)
 {
-  preg_match ( '/\s*include\s+"template\.([\w.]+)\.def"/', $line, $matches );
-  return $matches [1];
+//  preg_match ( '/\s*include\s+"template\.([\w.]+)\.def"/', $line, $matches );
+//  return $matches [1];
+
+  $name = substr ( $line, strpos ( $line, "\"grib2/template." ) + 16, - 1 );
+  $name2 = substr ( $name, 0, strpos ( $name, ".def" ) );
+  return $name2;
 }
 
 

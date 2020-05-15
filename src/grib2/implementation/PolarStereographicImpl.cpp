@@ -157,8 +157,8 @@ bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
         setLongitudeOfFirstGridPoint(value);
         return true;
 
-      case Property::GridSection::PolarStereographic::ResolutionAndComponentFlag:
-        setResolutionAndComponentFlag(value);
+      case Property::GridSection::PolarStereographic::ResolutionAndComponentFlags:
+        setResolutionAndComponentFlags(value);
         return true;
 
       case Property::GridSection::PolarStereographic::LaD:

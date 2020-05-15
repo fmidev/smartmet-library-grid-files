@@ -45,7 +45,7 @@ public:
   void setCcsdsRsi(T::UInt16_opt ccsdsRsi);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -54,13 +54,13 @@ protected:
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // # TEMPLATE 5.42, Grid point and spectral data - CCSDS
+  // # TEMPLATE 5.42, Grid point and spectral data - CCSDS recommended lossless compression
   //
-  // include "template.5.packing.def";
+  // include "grib2/template.5.packing.def";
 
   mutable PackingSettings mPacking;
 
-  // include "template.5.original_values.def";
+  // include "grib2/template.5.original_values.def";
 
   mutable OriginalValuesSettings mOriginalValues;
 
@@ -69,9 +69,15 @@ protected:
 
   T::UInt8_opt mCcsdsFlags;
 
+  // alias ccsdsCompressionOptionsMask=ccsdsFlags;
   //
   // flagbit AEC_DATA_SIGNED_OPTION_MASK(ccsdsFlags,0)     = 0;
-  // flagbit AEC_DATA_3BYTE_OPTION_MASK(ccsdsFlags,1)      = 0;
+  //
+  // # AEC_DATA_3BYTE_OPTION_MASK was switched on in order to allow data stored
+  // # with 17 <=bitsPerValue<= 24 to be stored in 3 rather than 4 bytes.
+  // # This eliminates discretization errors that were occuring when it was off.
+  // flagbit AEC_DATA_3BYTE_OPTION_MASK(ccsdsFlags,1)      = 1;
+  //
   // flagbit AEC_DATA_MSB_OPTION_MASK(ccsdsFlags,2)        = 1;
   // flagbit AEC_DATA_PREPROCESS_OPTION_MASK(ccsdsFlags,3) = 1;
   // flagbit AEC_RESTRICTED_OPTION_MASK(ccsdsFlags,4)      = 0;
@@ -84,6 +90,8 @@ protected:
   // unsigned[2] ccsdsRsi = 128      : dump;
 
   T::UInt16_opt mCcsdsRsi;
+
+  // alias referenceSampleInterval=ccsdsRsi;
 };
 
 } // namespace GRIB2

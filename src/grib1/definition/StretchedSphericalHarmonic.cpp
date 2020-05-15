@@ -39,7 +39,6 @@ StretchedSphericalHarmonic::StretchedSphericalHarmonic(const StretchedSphericalH
     mM = other.mM;
     mRepresentationType = other.mRepresentationType;
     mRepresentationMode = other.mRepresentationMode;
-    mRotation = other.mRotation;
     mGridStretching = other.mGridStretching;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
@@ -63,7 +62,8 @@ void StretchedSphericalHarmonic::read(MemoryReader &memoryReader) {
     mM = memoryReader.read_uint16();
     mRepresentationType = memoryReader.read_uint8();
     mRepresentationMode = memoryReader.read_uint8();
-    mRotation.read(memoryReader);
+    for (uint t = 0; t < 18; t++)
+      memoryReader.read_uint8();
     mGridStretching.read(memoryReader);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
@@ -82,7 +82,8 @@ void StretchedSphericalHarmonic::write(DataWriter &dataWriter) {
     dataWriter << mM;
     dataWriter << mRepresentationType;
     dataWriter << mRepresentationMode;
-    mRotation.write(dataWriter);
+    for (uint t = 0; t < 18; t++)
+      dataWriter.write_uint8(0);
     mGridStretching.write(dataWriter);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
@@ -109,8 +110,6 @@ void StretchedSphericalHarmonic::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sStretchedSphericalHarmonic.RepresentationMode", prefix.c_str());
     attributeList.addAttribute(name, toString(mRepresentationMode));
     sprintf(name, "%sStretchedSphericalHarmonic.", prefix.c_str());
-    mRotation.getAttributeList(name, attributeList);
-    sprintf(name, "%sStretchedSphericalHarmonic.", prefix.c_str());
     mGridStretching.getAttributeList(name, attributeList);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
@@ -132,7 +131,6 @@ void StretchedSphericalHarmonic::print(std::ostream &stream, uint level, uint op
     stream << space(level) << "- M = " << toString(mM) << "\n";
     stream << space(level) << "- RepresentationType = " << toString(mRepresentationType) << "\n";
     stream << space(level) << "- RepresentationMode = " << toString(mRepresentationMode) << "\n";
-    mRotation.print(stream, level + 1, optionFlags);
     mGridStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
@@ -149,7 +147,6 @@ T::Hash StretchedSphericalHarmonic::countHash() {
     boost::hash_combine(seed, mM);
     boost::hash_combine(seed, mRepresentationType);
     boost::hash_combine(seed, mRepresentationMode);
-    boost::hash_combine(seed, mRotation.countHash());
     boost::hash_combine(seed, mGridStretching.countHash());
     return seed;
   } catch (...) {
@@ -221,16 +218,6 @@ std::uint8_t StretchedSphericalHarmonic::getRepresentationMode() const {
   }
 }
 
-/*! \brief The method returns the pointer to the {@link mRotation} attribute. */
-
-RotationSettings *StretchedSphericalHarmonic::getRotation() const {
-  try {
-    return static_cast<RotationSettings *>(&mRotation);
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
-  }
-}
-
 /*! \brief The method returns the pointer to the {@link mGridStretching} attribute. */
 
 GridStretchingSettings *StretchedSphericalHarmonic::getGridStretching() const {
@@ -276,14 +263,6 @@ void StretchedSphericalHarmonic::setRepresentationType(std::uint8_t representati
 void StretchedSphericalHarmonic::setRepresentationMode(std::uint8_t representationMode) {
   try {
     mRepresentationMode = representationMode;
-  } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
-  }
-}
-
-void StretchedSphericalHarmonic::setRotation(RotationSettings &rotation) {
-  try {
-    mRotation = rotation;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

@@ -63,7 +63,7 @@ public:
   void setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -76,7 +76,8 @@ protected:
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 30;
   //
-  // template commonBlock "grib1/grid_definition_lambert.def";// # Copyright 2005-2015 ECMWF.
+  // template commonBlock "grib1/grid_definition_lambert.def";
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -125,7 +126,7 @@ protected:
   // #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,thousand);
   //
   // #  Resolution and component flags
-  // include "resolution_flags.def";
+  // include "grib1/resolution_flags.def";
 
   mutable ResolutionFlagsSettings mResolutionFlags;
 
@@ -173,7 +174,7 @@ protected:
   // alias yFirst=latitudeOfFirstGridPointInDegrees;
   // alias xFirst=longitudeOfFirstGridPointInDegrees;
   //
-  // include "scanning_mode.def";
+  // include "grib1/scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 
@@ -242,8 +243,10 @@ protected:
   // nearest lambert_conformal(values,radius,Nx,Ny);
   //
   // pad padding_grid3_1(2);
+
   //
   // # END   1/grid_definition.lambert_conformal ----------------------------------------------------------------------
+  //
   //
 };
 

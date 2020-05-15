@@ -20,7 +20,7 @@ namespace GRIB2 {
 
 PolarStereographic::PolarStereographic() {
   try {
-    mResolutionAndComponentFlag = 0;
+    mResolutionAndComponentFlags = 0;
     mProjectionCentreFlag = 0;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
@@ -36,7 +36,7 @@ PolarStereographic::PolarStereographic(const PolarStereographic &other) : GridDe
     mNy = other.mNy;
     mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
     mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
-    mResolutionAndComponentFlag = other.mResolutionAndComponentFlag;
+    mResolutionAndComponentFlags = other.mResolutionAndComponentFlags;
     mLaD = other.mLaD;
     mOrientationOfTheGrid = other.mOrientationOfTheGrid;
     mDx = other.mDx;
@@ -65,7 +65,7 @@ void PolarStereographic::read(MemoryReader &memoryReader) {
     mNy = memoryReader.read_UInt32_opt();
     mLatitudeOfFirstGridPoint = memoryReader.read_Int32_opt();
     mLongitudeOfFirstGridPoint = memoryReader.read_UInt32_opt();
-    mResolutionAndComponentFlag = memoryReader.read_uint8();
+    mResolutionAndComponentFlags = memoryReader.read_uint8();
     mLaD = memoryReader.read_Int32_opt();
     mOrientationOfTheGrid = memoryReader.read_Int32_opt();
     mDx = memoryReader.read_UInt32_opt();
@@ -89,7 +89,7 @@ void PolarStereographic::write(DataWriter &dataWriter) {
     dataWriter << mNy;
     dataWriter << mLatitudeOfFirstGridPoint;
     dataWriter << mLongitudeOfFirstGridPoint;
-    dataWriter << mResolutionAndComponentFlag;
+    dataWriter << mResolutionAndComponentFlags;
     dataWriter << mLaD;
     dataWriter << mOrientationOfTheGrid;
     dataWriter << mDx;
@@ -120,8 +120,8 @@ void PolarStereographic::getAttributeList(std::string prefix, T::AttributeList &
     attributeList.addAttribute(name, toString(mLatitudeOfFirstGridPoint));
     sprintf(name, "%sPolarStereographic.LongitudeOfFirstGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfFirstGridPoint));
-    sprintf(name, "%sPolarStereographic.ResolutionAndComponentFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mResolutionAndComponentFlag));
+    sprintf(name, "%sPolarStereographic.ResolutionAndComponentFlags", prefix.c_str());
+    attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
     sprintf(name, "%sPolarStereographic.LaD", prefix.c_str());
     attributeList.addAttribute(name, toString(mLaD));
     sprintf(name, "%sPolarStereographic.OrientationOfTheGrid", prefix.c_str());
@@ -154,7 +154,7 @@ void PolarStereographic::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "- Ny = " << toString(mNy) << "\n";
     stream << space(level) << "- LatitudeOfFirstGridPoint = " << toString(mLatitudeOfFirstGridPoint) << "\n";
     stream << space(level) << "- LongitudeOfFirstGridPoint = " << toString(mLongitudeOfFirstGridPoint) << "\n";
-    stream << space(level) << "- ResolutionAndComponentFlag = " << toString(mResolutionAndComponentFlag) << "\n";
+    stream << space(level) << "- ResolutionAndComponentFlags = " << toString(mResolutionAndComponentFlags) << "\n";
     stream << space(level) << "- LaD = " << toString(mLaD) << "\n";
     stream << space(level) << "- OrientationOfTheGrid = " << toString(mOrientationOfTheGrid) << "\n";
     stream << space(level) << "- Dx = " << toString(mDx) << "\n";
@@ -179,7 +179,7 @@ T::Hash PolarStereographic::countHash() {
       boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
       boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
-    // boost::hash_combine(seed,mResolutionAndComponentFlag);
+    boost::hash_combine(seed, mResolutionAndComponentFlags);
     if (mLaD)
       boost::hash_combine(seed, *mLaD);
     if (mOrientationOfTheGrid)
@@ -261,11 +261,11 @@ const T::UInt32_opt &PolarStereographic::getLongitudeOfFirstGridPoint() const {
   }
 }
 
-/*! \brief The method returns the value of the {@link mResolutionAndComponentFlag} attribute. */
+/*! \brief The method returns the value of the {@link mResolutionAndComponentFlags} attribute. */
 
-std::uint8_t PolarStereographic::getResolutionAndComponentFlag() const {
+std::uint8_t PolarStereographic::getResolutionAndComponentFlags() const {
   try {
-    return mResolutionAndComponentFlag;
+    return mResolutionAndComponentFlags;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -371,9 +371,9 @@ void PolarStereographic::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfF
   }
 }
 
-void PolarStereographic::setResolutionAndComponentFlag(std::uint8_t resolutionAndComponentFlag) {
+void PolarStereographic::setResolutionAndComponentFlags(std::uint8_t resolutionAndComponentFlags) {
   try {
-    mResolutionAndComponentFlag = resolutionAndComponentFlag;
+    mResolutionAndComponentFlags = resolutionAndComponentFlags;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

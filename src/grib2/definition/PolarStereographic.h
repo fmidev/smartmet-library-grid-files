@@ -43,8 +43,8 @@ public:
   void setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint);
   const T::UInt32_opt &getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridPoint);
-  std::uint8_t getResolutionAndComponentFlag() const;
-  void setResolutionAndComponentFlag(std::uint8_t resolutionAndComponentFlag);
+  std::uint8_t getResolutionAndComponentFlags() const;
+  void setResolutionAndComponentFlags(std::uint8_t resolutionAndComponentFlags);
   const T::Int32_opt &getLaD() const;
   void setLaD(T::Int32_opt laD);
   const T::Int32_opt &getOrientationOfTheGrid() const;
@@ -59,7 +59,7 @@ public:
   void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -71,7 +71,7 @@ protected:
   //
   // # START 2/template.3.20 ----------------------------------------------------------------------
   // # TEMPLATE 3.20, Polar stereographic projection
-  // include "template.3.shape_of_the_earth.def";
+  // include "grib2/template.3.shape_of_the_earth.def";
 
   mutable EarthShapeSettings mEarthShape;
 
@@ -112,10 +112,9 @@ protected:
   // alias Lo1 =  longitudeOfFirstGridPoint;
   //
   // #  Resolution and component flag
-  // # NOTE 1 NOT FOUND
-  // flags[1] resolutionAndComponentFlag 'grib2/tables/[tablesVersion]/3.3.table' : dump;
+  // flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump;
 
-  std::uint8_t mResolutionAndComponentFlag;
+  std::uint8_t mResolutionAndComponentFlags;
 
   //
   // #  LaD - Latitude where Dx and Dy are specified
@@ -128,7 +127,8 @@ protected:
   // alias latitudeWhereDxAndDyAreSpecifiedInDegrees=LaDInDegrees;
   //
   // #  LoV - orientation of the grid
-  // # NOTE 2 NOT FOUND
+  // #  LoV is the longitude value of the meridian which is parallel to the y-axis (or columns of the grid)
+  // #  along which latitude increases as the y-coordinate increases
   // signed[4] orientationOfTheGrid  : edition_specific;
 
   T::Int32_opt mOrientationOfTheGrid;
@@ -137,7 +137,7 @@ protected:
   // meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // #  Dx - X-direction grid length
-  // # NOTE 3: Grid length is in units of 10-3 m at the latitude specified by LaD
+  // #  Grid length is in units of 10-3 m at the latitude specified by LaD
   // unsigned[4] Dx  : edition_specific;
 
   T::UInt32_opt mDx;
@@ -146,7 +146,7 @@ protected:
   // alias xDirectionGridLength=Dx;
   //
   // #  Dy - Y-direction grid length
-  // # NOTE 3: Grid length is in units of 10-3 m at the latitude specified by LaD
+  // #  Grid length is in units of 10-3 m at the latitude specified by LaD
   // unsigned[4] Dy  : edition_specific;
 
   T::UInt32_opt mDy;
@@ -164,7 +164,7 @@ protected:
   // # If bit 1 is 1, then the South Pole is on the projection plane
   // flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO bit 1
   //
-  // include "template.3.scanning_mode.def";
+  // include "grib2/template.3.scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 
@@ -175,11 +175,14 @@ protected:
   //           latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
   //           southPoleOnProjectionPlane,
   //           orientationOfTheGridInDegrees,
+  //           LaDInDegrees,
   //           DxInMetres,DyInMetres,
   //           iScansNegatively,
   //           jScansPositively,
   //           jPointsAreConsecutive,
   //           alternativeRowScanning);
+  //
+  // nearest polar_stereographic(values,radius,Nx,Ny);
   //
   //
   // # END   2/template.3.20 ----------------------------------------------------------------------

@@ -52,11 +52,11 @@ public:
   void setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataCutoff);
   const T::UInt8_opt &getIndicatorOfUnitOfTimeRange() const;
   void setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUnitOfTimeRange);
-  const T::UInt32_opt &getForecastTime() const;
-  void setForecastTime(T::UInt32_opt forecastTime);
+  const T::Int32_opt &getForecastTime() const;
+  void setForecastTime(T::Int32_opt forecastTime);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -64,8 +64,6 @@ protected:
   // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
-  //
-  // label "Parameter information";
   //
   // #  Parameter category
   // codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
@@ -106,14 +104,12 @@ protected:
   T::UInt8_opt mTypeOfGeneratingProcess;
 
   //
-  // #  Background generating process identifier
-  // # (defined by originating centre)
+  // #  Background generating process identifier (defined by originating centre)
   // unsigned[1] backgroundProcess = 255 : edition_specific;
 
   T::UInt8_opt mBackgroundProcess;
 
   // alias backgroundGeneratingProcessIdentifier=backgroundProcess;
-  //
   //
   // #  Analysis or forecast generating processes identifier
   // # (defined by originating centre)
@@ -123,7 +119,6 @@ protected:
 
   //
   // #  Hours of observational data cut-off after reference time
-  // # NOTE 1 NOT FOUND
   // unsigned[2] hoursAfterDataCutoff =missing() : edition_specific,can_be_missing;
 
   T::UInt16_opt mHoursAfterDataCutoff;
@@ -142,15 +137,15 @@ protected:
 
   T::UInt8_opt mIndicatorOfUnitOfTimeRange;
 
-  // codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
+  // alias defaultStepUnits = one; # 1 means Hour. See code table 4.4
+  // template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_units.def";
+  // codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
   // (The above is a phony setting)
   //
-  // #  Forecast time in units defined by octet 18
-  // unsigned[4] forecastTime  : dump;
+  // #  Forecast time in units defined by octet 18 (GRIB-29: supports negative forecast time)
+  // signed[4] forecastTime  : dump;
 
-  T::UInt32_opt mForecastTime;
-
-  //
+  T::Int32_opt mForecastTime;
 };
 
 } // namespace GRIB2

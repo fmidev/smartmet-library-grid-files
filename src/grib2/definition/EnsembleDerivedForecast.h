@@ -45,7 +45,7 @@ public:
   void setDerived(DerivedSettings &derived);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -56,19 +56,19 @@ protected:
   //
   // # TEMPLATE 4.2, Derived forecast based on all ensemble members at a horizontal level or in a horizontal layer at a point in time
   //
-  // include "template.4.parameter.def";
+  // include "grib2/template.4.parameter.def";
 
   mutable ParameterSettings mParameter;
 
-  // include "template.4.point_in_time.def";
+  // include "grib2/template.4.point_in_time.def";
 
   mutable PointInTimeSettings mPointInTime;
 
-  // include "template.4.horizontal.def";
+  // include "grib2/template.4.horizontal.def";
 
   mutable HorizontalSettings mHorizontal;
 
-  // include "template.4.derived.def";
+  // include "grib2/template.4.derived.def";
 
   mutable DerivedSettings mDerived;
 };
