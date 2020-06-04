@@ -7,6 +7,8 @@
 # 4) ReverseConversionFunction
 #
 
+90001;171029;
+
 # Minimum temperature at 2m since previous post-processing
 # MINT2M-C => UNKNOWN
 #1;1000000000;
@@ -2554,6 +2556,9 @@
 # Surface soil wetness in m at level 1
 # SOILWET1-M => UNKNOWN
 #598;1000000000;
+
+# SOILWET-M3M3;m;Surface soil wetness
+598;40;;
 
 # Pressure on station level
 # PSTL-HPA => UNKNOWN

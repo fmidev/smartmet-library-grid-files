@@ -113,6 +113,9 @@ class Message : public GRID::Message
     uint                mPixelCount;
     uint                mWidth;
     uint                mHeight;
+    ushort              mForecastNumbers;
+    uint                mTableIndex;
+    uint                mValueIndex;
     short               mForecastType;
     short               mForecastNumber;
     uint                mTimeStepCount;

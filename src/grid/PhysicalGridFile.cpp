@@ -753,6 +753,16 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
 
     AutoThreadLock lock(&mMemoryMappingLock);
 
+    auto msg = mMessages.find(index);
+    if (msg != mMessages.end())
+    {
+      if (msg->second != nullptr &&  !msg->second->isRead())
+      {
+        msg->second->read();
+      }
+      return msg->second;
+    }
+
     if (mMessagePositions.size() > 0)
     {
       auto pos = mMessagePositions.find(index);
@@ -761,12 +771,10 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
         auto msg = mMessages.find(index);
         if (msg == mMessages.end())
           createMessage(pos->first,pos->second);
-
-        mMessagePositions.erase(pos);
       }
     }
 
-    auto msg = mMessages.find(index);
+    msg = mMessages.find(index);
     if (msg != mMessages.end())
     {
       if (msg->second != nullptr &&  !msg->second->isRead())

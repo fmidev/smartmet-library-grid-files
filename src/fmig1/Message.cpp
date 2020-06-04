@@ -34,7 +34,10 @@ Message::Message()
     mMessageSize = 0;
     mWidth = 0;
     mHeight = 0;
+    mForecastNumbers = 1;
     mPixelCount = 0;
+    mTableIndex = 0;
+    mValueIndex = 0;
     mGrib1ParameterLevelId = 0;
     mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
@@ -68,6 +71,9 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mMessageIndex = messageIndex;
     mWidth = 0;
     mHeight = 0;
+    mForecastNumbers = 1;
+    mTableIndex = 0;
+    mValueIndex = 0;
     mPixelCount = 0;
     mMessageSize = messageInfo.mMessageSize;
     mFmiParameterId = messageInfo.mFmiParameterId;
@@ -109,6 +115,9 @@ Message::Message(const Message& other)
     mIsRead = true;
     mWidth = other.mWidth;
     mHeight = other.mHeight;
+    mForecastNumbers = other.mForecastNumbers;
+    mTableIndex = other.mTableIndex;
+    mValueIndex = other.mValueIndex;
     mPixelCount = other.mPixelCount;
     mForecastType = 1;
     mForecastNumber = -1;
@@ -356,6 +365,27 @@ void Message::read(MemoryReader& memoryReader)
     memoryReader >> mWidth;
     memoryReader >> mHeight;
 
+    mTableIndex = mMessageIndex;
+    mValueIndex = 0;
+
+    if (format == 2)
+    {
+      memoryReader >> mForecastNumbers;
+      mTableIndex = mMessageIndex / mForecastNumbers;
+      mValueIndex = mMessageIndex % mForecastNumbers;
+
+      for (ushort n=0; n<mForecastNumbers;n++)
+      {
+        short fn = 0;
+        memoryReader >> fn;
+
+        if (n == mValueIndex)
+          mForecastNumber = fn;
+      }
+    }
+
+    //printf("MESSAGE %u => %u,%u (%u %u %u)\n",mMessageIndex,mTableIndex,mValueIndex,mForecastNumber,mForecastNumbers,mTimeStepCount);
+
     mPixelCount = mWidth * mHeight;
 
 
@@ -384,7 +414,7 @@ void Message::read(MemoryReader& memoryReader)
 
     // mAttributeList.print(std::cout,0,0);
 
-    mPixelSize = 2*sizeof(float) + mTimeStepCount * sizeof(ushort);
+    mPixelSize = 2*sizeof(float) + mTimeStepCount * mForecastNumbers * sizeof(ushort);
     mDataSize = mPixelCount * mPixelSize;
 
     for (uint t=0; t<mTimeStepCount; t++)
@@ -404,7 +434,7 @@ void Message::read(MemoryReader& memoryReader)
       if (t == 0)
         mReferenceTime = tm;
 
-      if (t == mMessageIndex)
+      if (t == mTableIndex)
         mForecastTime = tm;
 
 //      mTimeSteps.push_back(std::string(tm));
@@ -1495,7 +1525,7 @@ bool Message::getValueByIndex(uint index,T::ParamValue& value) const
     float d = (maxValue-minValue)/65530;
     ushort val = 0;
 
-    memoryReader.setReadPosition(pixelPos + 2*sizeof(float) + mMessageIndex * sizeof(ushort));
+    memoryReader.setReadPosition(pixelPos + 2*sizeof(float) + mTableIndex * mForecastNumbers * sizeof(ushort) + mValueIndex * sizeof(ushort));
     memoryReader >> val;
 
     if (value == 0xFFFF)
