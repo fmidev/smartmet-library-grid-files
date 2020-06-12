@@ -39,7 +39,7 @@ public:
   void setEps(EpsSettings &eps);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -51,11 +51,11 @@ protected:
   // # TEMPLATE 4.33, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for simulated (synthetic) satellite
   // data
   //
-  // include "template.4.32.def"
+  // include "grib2/template.4.32.def"
 
   mutable SimulatedSatelliteProduct mSimulatedSatelliteProduct;
 
-  // include "template.4.eps.def"
+  // include "grib2/template.4.eps.def"
 
   mutable EpsSettings mEps;
 

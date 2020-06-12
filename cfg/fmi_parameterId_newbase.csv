@@ -88,9 +88,6 @@
 # Ice concentration
 # ICNCT-PRCNT => IceConcentration
 24;384;;;
-# Ice concentration
-# ICNCT-PRCNT => IceConcentration
-24;384;MUL{$,100.000000};DIV{$,100.000000};
 # Ice thickness
 # ITHK-CM => IceThickness
 25;385;;;
@@ -531,7 +528,7 @@
 # Q-KGKG => SpecificHumidity
 138;12;MUL{$,1000.000000};DIV{$,1000.000000};
 # Specific Humidity in kg/kg
-# Q-KGKG => NEWBASE-PARAMETER[4788]
+# Q-KGKG => SoundingMixingRatio500m
 138;4788;MUL{$,1000.000000};DIV{$,1000.000000};
 # Pressure in Pascals
 # P-PA => Pressure
@@ -704,7 +701,7 @@
 # N-PRCNT => TotalCloudCover
 187;79;MUL{$,100.000000};DIV{$,100.000000};
 # Total Cloud Cover in %
-# N-PRCNT => NEWBASE-PARAMETER[1395]
+# N-PRCNT => TotalCloudCover2
 187;1395;;;
 # Stability index (-50 -> 50)
 # KINDEX-N => KIndex
@@ -737,7 +734,7 @@
 # NL-PRCNT => LowCloudCover
 196;273;MUL{$,100.000000};DIV{$,100.000000};
 # Low Cloud Amount
-# NL-PRCNT => NEWBASE-PARAMETER[1396]
+# NL-PRCNT => LowCloudCover2
 196;1396;;;
 # Medium Cloud Amount
 # NM-PRCNT => MediumCloudCover
@@ -746,7 +743,7 @@
 # NM-PRCNT => MediumCloudCover
 197;274;MUL{$,100.000000};DIV{$,100.000000};
 # Medium Cloud Amount
-# NM-PRCNT => NEWBASE-PARAMETER[1397]
+# NM-PRCNT => MediumCloudCover2
 197;1397;;;
 # High Cloud Amount
 # NH-PRCNT => HighCloudCover
@@ -755,7 +752,7 @@
 # NH-PRCNT => HighCloudCover
 198;275;MUL{$,100.000000};DIV{$,100.000000};
 # High Cloud Amount
-# NH-PRCNT => NEWBASE-PARAMETER[1398]
+# NH-PRCNT => HighCloudCover2
 198;1398;;;
 # ALBEDO in %
 # ALBEDO-PRCNT => UNKNOWN
@@ -832,6 +829,9 @@
 # Snow Depth in Meters
 # SD-M => SnowDepth
 217;51;;;
+# Snow Depth in Meters
+# SD-M => SnowDepth
+217;51;MUL{$,100.000000};DIV{$,100.000000};
 # Snow Depth in Meters
 # SD-M => WaterEquivalentOfSnow
 217;266;;;
@@ -1196,13 +1196,13 @@
 # MAXICE-N => MaximumIcingIndex
 277;367;;;
 # Sea ice velocity (U) in m/s
-# IVELU-MS => NEWBASE-PARAMETER[396]
+# IVELU-MS => GroundWaterLevel
 278;396;;;
 # Sea ice velocity (U) in m/s
 # IVELU-MS => EastwardIceVelocity
 278;1149;;;
 # Sea ice velocity (V) in m/s
-# IVELV-MS => NEWBASE-PARAMETER[397]
+# IVELV-MS => GroundWaterLevelIndex
 279;397;;;
 # Sea ice velocity (V) in m/s
 # IVELV-MS => NorthwardIceVelocity
@@ -1352,6 +1352,9 @@
 # Long wave radiation accumulation
 # RADLWA-JM2 => RadiationLWAccumulation
 317;1160;;;
+# Global radiation accumulation
+# RADGLOA-JM2 => CrossSectionDirection
+318;117;;;
 # Global radiation accumulation
 # RADGLOA-JM2 => RadiationGlobalAccumulation
 318;1159;;;
@@ -1803,8 +1806,8 @@
 # RRR-KGM2 => PrecipitationRate
 441;49;;;
 # Total Precipitation rate in kg m-2
-# RRR-KGM2 => PrecipitationAmount
-441;50;;;
+# RRR-KGM2 => Precipitation1h
+441;353;MUL{$,0.010000};DIV{$,0.010000};
 # Total Precipitation rate in kg m-2
 # RRR-KGM2 => Precipitation1h
 441;353;;;
@@ -1877,9 +1880,12 @@
 # UI-N => UNKNOWN
 460;0;;;
 
-# Multiplicity Of The Flash, strikes / 5min / area 30kmx30km
+# Multiplicity Of The Flash, strikes / time unit / area
 # FL-MPLTY-N => FlashMultiplicity
 461;262;;;
+# Multiplicity Of The Flash, strikes / time unit / area
+# FL-MPLTY-N => FlashMultiplicity
+461;262;MUL{$,900.000000};DIV{$,900.000000};
 # Significant wave length in m
 # LWS-M => SigWaveLength
 462;179;;;
@@ -2029,9 +2035,6 @@
 # RADLW-WM2 => RadiationLW
 500;315;;;
 # Short wave radiation
-# RADSW-WM2 => CrossSectionDirection
-501;117;;;
-# Short wave radiation
 # RADSW-WM2 => RadiationSW
 501;316;;;
 # Global radiation
@@ -2053,10 +2056,6 @@
 # Max temperature in Celsius on the preceding 24 hours period of the date-value
 # TMAX-24-C => MaximumTemperature24h
 507;358;;;
-
-# Min temperature in Celsius on the preceding 24 hours period of the date-value
-# TMIN-24-C => MinimumTemperature24h
-508;359;;;
 
 # Min temperature in Celsius on the preceding 24 hours period of the date-value
 # TMIN-24-C => MinimumTemperature24h
@@ -2376,7 +2375,7 @@
 # EFI-WG => EFIWindGust
 588;558;;;
 # Extreme forecast index for precipitation
-# EFI-RR => EFIWindPrecipitation
+# EFI-RR => EFIPrecipitation
 589;559;;;
 # Graupel rate in mm/h
 # GRR-MMH => PrecipitationRateGraupel
@@ -2799,8 +2798,9 @@
 # GRAUPMR-KGKG => GraupelMixingRatio
 693;1202;;;
 # Height of cloud layer in feet
-# CL-FT => CloudBase
-694;500;;;
+# CL-FT => UNKNOWN
+694;0;;;
+
 # Instant precipitation in kg/m2
 # PRI-KGM2 => PrecipitationInstantTotal
 695;1208;;;
@@ -2936,8 +2936,9 @@
 # SNOWMR-KGKG => SnowMixingRatio
 767;1200;;;
 # Height of cloud layer in feet, second parameter
-# CL-2-FT => CloudBase2
-768;1229;;;
+# CL-2-FT => UNKNOWN
+768;0;;;
+
 # Relative humidity, 0 to 1
 # RH-0TO1 => Humidity
 769;13;MUL{$,100.000000};DIV{$,100.000000};
@@ -3655,6 +3656,9 @@
 # PROB-RR3-3 => ProbabilityOfPrecipitation3h05mm
 1014;949;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of Precipitation #4 in 3h
+# PROB-RR3-4 => NEWBASE-PARAMETER[100]
+1015;100;;;
+# Probability of Precipitation #4 in 3h
 # PROB-RR3-4 => ProbabilityOfPrecipitation3h1mm
 1015;950;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of Precipitation #5 in 3h
@@ -3896,9 +3900,8 @@
 1083;0;;;
 
 # Ice proportion
-# ICEC-0TO1 => UNKNOWN
-1084;0;;;
-
+# ICEC-0TO1 => IceConcentration
+1084;384;MUL{$,100.000000};DIV{$,100.000000};
 # Gravity wave stress U-component
 # UGWD-NM2S => UNKNOWN
 1085;0;;;
@@ -4037,7 +4040,7 @@
 # EWSH-MS => SoundingEffectiveBulkShear
 1126;4785;;;
 # Effective wind shear in m/s
-# EWSH-MS => NEWBASE-PARAMETER[4789]
+# EWSH-MS => SoundingMaximumEBS
 1126;4789;;;
 # Temperature of LPL (Lifted Parcel Level) in K
 # LPL-K => UNKNOWN
@@ -4086,22 +4089,22 @@
 # PROB-VV2-6 => ProbabilityOfVisibility2Limit6
 1141;1358;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-1 => ProbabilityOfCeilingLimit1
+# PROB-CEIL-1 => ProbabilityOfCeilingLimit1
 1142;1339;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-2 => ProbabilityOfCeilingLimit2
+# PROB-CEIL-2 => ProbabilityOfCeilingLimit2
 1143;1340;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-3 => ProbabilityOfCeilingLimit3
+# PROB-CEIL-3 => ProbabilityOfCeilingLimit3
 1144;1341;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-4 => ProbabilityOfCeilingLimit4
+# PROB-CEIL-4 => ProbabilityOfCeilingLimit4
 1145;1342;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-5 => ProbabilityOfCeilingLimit5
+# PROB-CEIL-5 => ProbabilityOfCeilingLimit5
 1146;1343;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of cloud ceiling being lower than some threshold value
-# PROB-CLFT-6 => ProbabilityOfCeilingLimit6
+# PROB-CEIL-6 => ProbabilityOfCeilingLimit6
 1147;1344;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of CB-clouds
 # PROB-CBTCU-1 => ProbabilityOfCBOrTCU
@@ -4230,9 +4233,8 @@
 # TMAX-24-K => MaximumTemperature24h
 1187;358;SUM{$,-273.15};SUM{$,273.15};
 # Minimum temperature in Kelvin on the preceding 24 hours period of the date-value
-# TMIN-24-K => UNKNOWN
-1188;0;;;
-
+# TMIN-24-K => MinimumTemperature24h
+1188;359;SUM{$,-273.15};SUM{$,273.15};
 # 0th fractal dewpoint temperature in EPS
 # F0-TD2M-C => UNKNOWN
 1189;0;;;
@@ -4286,20 +4288,20 @@
 # RACC-KGM2 => PrecipitationWater
 1202;857;;;
 # Growing degree days
-# GDD-C => NEWBASE-PARAMETER[1387]
+# GDD-C => GrowingDegreeDays
 1203;1387;;;
 
 # Convective available potential energy shear
-# CAPES-JKG => NEWBASE-PARAMETER[1392]
+# CAPES-JKG => CAPEShear
 1204;1392;;;
 # Probability of reaching wind gust speed more than given value threshold, aggregated over area and/or time
-# PROB-WG-AGG-1 => NEWBASE-PARAMETER[1388]
+# PROB-WG-AGG-1 => ProbabilityOfGustLimit1Aggregation1
 1205;1388;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of hail, aggregated over area and/or time
-# PROB-HAIL-AGG-1 => NEWBASE-PARAMETER[1390]
+# PROB-HAIL-AGG-1 => ProbabilityOfHailLimit1Aggregation1
 1206;1390;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of reaching some precipitation threshold value, aggregated over area and/or time
-# PROB-RR-AGG-1 => NEWBASE-PARAMETER[1389]
+# PROB-RR-AGG-1 => ProbabilityOfPrecLimit1Aggregation1
 1207;1389;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of reaching some precipitation threshold value in 6h
 # PROB-RR6-1 => ProbabilityOfPr6Limit1
@@ -4323,25 +4325,25 @@
 1214;0;;;
 
 # 0th fractal global radiation in EPS
-# F0-RADGLO-WM2 => NEWBASE-PARAMETER[4672]
+# F0-RADGLO-WM2 => RadiationGlobalF0
 1215;4672;;;
 # 10th fractal global radiation in EPS
-# F10-RADGLO-WM2 => NEWBASE-PARAMETER[4673]
+# F10-RADGLO-WM2 => RadiationGlobalF10
 1216;4673;;;
 # 25th fractal global radiation in EPS
-# F25-RADGLO-WM2 => NEWBASE-PARAMETER[4674]
+# F25-RADGLO-WM2 => RadiationGlobalF25
 1217;4674;;;
 # 50th fractal global radiation in EPS
-# F50-RADGLO-WM2 => NEWBASE-PARAMETER[4675]
+# F50-RADGLO-WM2 => RadiationGlobalF50
 1218;4675;;;
 # 75th fractal global radiation in EPS
-# F75-RADGLO-WM2 => NEWBASE-PARAMETER[4676]
+# F75-RADGLO-WM2 => RadiationGlobalF75
 1219;4676;;;
 # 90th fractal global radiation in EPS
-# F90-RADGLO-WM2 => NEWBASE-PARAMETER[4677]
+# F90-RADGLO-WM2 => RadiationGlobalF90
 1220;4677;;;
 # 100th fractal global radiation in EPS
-# F100-RADGLO-WM2 => NEWBASE-PARAMETER[4678]
+# F100-RADGLO-WM2 => RadiationGlobalF100
 1221;4678;;;
 # Pressure anomaly (departure)
 # PANM-PA => UNKNOWN
@@ -4364,46 +4366,46 @@
 1226;0;;;
 
 # Snow drift index
-# SNOWDRIFT-N => NEWBASE-PARAMETER[1393]
+# SNOWDRIFT-N => SnowDriftIndex
 1227;1393;;;
 # Snow load
 # SNOWLOAD-KGM2 => SnowLoad
 1228;850;;;
 # Shift Of Tails for precipitation
-# SOT-RR-N => NEWBASE-PARAMETER[1399]
+# SOT-RR-N => MonthlyMaximumSnowDepth
 1229;1399;;;
 # Shift Of Tails for precipitation
-# SOT-RR-N => NEWBASE-PARAMETER[1401]
+# SOT-RR-N => SOTPrecipitation
 1229;1401;;;
 # Shift Of Tails for wind gusts
-# SOT-WG-N => NEWBASE-PARAMETER[1400]
+# SOT-WG-N => SOTWindGust
 1230;1400;;;
 # Extreme Forecast Index for wind gusts
 # EFI-WG--1TO1 => EFIWindGust
 1232;558;;;
 # Extreme Forecast Index for precipitation
-# EFI-RR--1TO1 => EFIWindPrecipitation
+# EFI-RR--1TO1 => EFIPrecipitation
 1233;559;;;
 # 0th fractal snowload in EPS
-# F0-SNOWLOAD-KGM2 => NEWBASE-PARAMETER[4679]
+# F0-SNOWLOAD-KGM2 => SnowLoadF0
 1235;4679;;;
 # 10th fractal snowload in EPS
-# F10-SNOWLOAD-KGM2 => NEWBASE-PARAMETER[4680]
+# F10-SNOWLOAD-KGM2 => SnowLoadF10
 1236;4680;;;
 # 25th fractal snowload in EPS
-# F25-SNOWLOAD-KGM2 => NEWBASE-PARAMETER[4681]
+# F25-SNOWLOAD-KGM2 => SnowLoadF25
 1237;4681;;;
 # 50th fractal snowload in EPS
-# F50-SNOWLOAD-KGM2 => NEWBASE-PARAMETER[4682]
+# F50-SNOWLOAD-KGM2 => SnowLoadF50
 1238;4682;;;
 # 75th fractal snowload in EPS
-# F75-SNOWLOAD-KGM2 => NEWBASE-PARAMETER[4683]
+# F75-SNOWLOAD-KGM2 => SnowLoadF75
 1239;4683;;;
 # 90th fractal snowload in EPS
-# F90-SNOWLOAD-KGM2 => NEWBASE-PARAMETER[4684]
+# F90-SNOWLOAD-KGM2 => SnowLoadF90
 1240;4684;;;
 # 100th fractal snowload in EPS
-# F100-SNOWLOAD-KGM2 => NEWBASE-PARAMETER[4685]
+# F100-SNOWLOAD-KGM2 => SnowLoadF100
 1241;4685;;;
 # Mean value of snowload in EPS
 # SNOWLOAD-MEAN-KGM2 => UNKNOWN
@@ -4446,33 +4448,26 @@
 1254;0;;;
 
 # 0th fractal precipitation in EPS
-# F0-RR-24-MM => UNKNOWN
-1255;0;;;
-
+# F0-RR-24-MM => Precipitation24hF0
+1255;4719;;;
 # 10th fractal precipitation in EPS
-# F10-RR-24-MM => UNKNOWN
-1256;0;;;
-
+# F10-RR-24-MM => Precipitation24hF10
+1256;4717;;;
 # 25th fractal precipitation in EPS
-# F25-RR-24-MM => UNKNOWN
-1257;0;;;
-
+# F25-RR-24-MM => Precipitation24hF25
+1257;4716;;;
 # 50th fractal precipitation in EPS
-# F50-RR-24-MM => UNKNOWN
-1258;0;;;
-
+# F50-RR-24-MM => Precipitation24hF50
+1258;4715;;;
 # 75th fractal precipitation in EPS
-# F75-RR-24-MM => UNKNOWN
-1259;0;;;
-
+# F75-RR-24-MM => Precipitation24hF75
+1259;4714;;;
 # 90th fractal precipitation in EPS
-# F90-RR-24-MM => UNKNOWN
-1260;0;;;
-
+# F90-RR-24-MM => Precipitation24hF90
+1260;4713;;;
 # 100th fractal precipitation in EPS
-# F100-RR-24-MM => UNKNOWN
-1261;0;;;
-
+# F100-RR-24-MM => Precipitation24hF100
+1261;4711;;;
 # Height of last LFC in meters
 # LFC-LAST-M => UNKNOWN
 1262;0;;;
@@ -4486,65 +4481,369 @@
 1264;0;;;
 
 # Probability of fog
-# PROB-FOG-1 => UNKNOWN
-1265;0;;;
-
+# PROB-FOG-1 => FogProbabilityLimit1
+1265;1412;MUL{$,100.000000};DIV{$,100.000000};
 # 0th fractal 24h total precipitation in EPS
-# F0-RR-24-KGM2 => UNKNOWN
-1267;0;;;
-
+# F0-RR-24-KGM2 => Precipitation24hF0
+1267;4719;;;
 # 10th fractal 24h total precipitation in EPS
-# F10-RR-24-KGM2 => UNKNOWN
-1268;0;;;
-
+# F10-RR-24-KGM2 => Precipitation24hF10
+1268;4717;;;
 # 25th fractal 24h total precipitation in EPS
-# F25-RR-24-KGM2 => UNKNOWN
-1269;0;;;
-
+# F25-RR-24-KGM2 => Precipitation24hF25
+1269;4716;;;
 # 50th fractal 24h total precipitation in EPS
-# F50-RR-24-KGM2 => UNKNOWN
-1270;0;;;
-
+# F50-RR-24-KGM2 => Precipitation24hF50
+1270;4715;;;
 # 75th fractal 24h total precipitation in EPS
-# F75-RR-24-KGM2 => UNKNOWN
-1271;0;;;
-
+# F75-RR-24-KGM2 => Precipitation24hF75
+1271;4714;;;
 # 90th fractal 24h total precipitation in EPS
-# F90-RR-24-KGM2 => UNKNOWN
-1272;0;;;
-
+# F90-RR-24-KGM2 => Precipitation24hF90
+1272;4713;;;
 # 100th fractal 24h total precipitation in EPS
-# F100-RR-24-KGM2 => UNKNOWN
-1273;0;;;
+# F100-RR-24-KGM2 => Precipitation24hF100
+1273;4711;;;
+# 0th fractal 120h total precipitation in EPS
+# F0-RR-120-KGM2 => Precipitation120hF0
+1274;1420;;;
+# 10th fractal 120h total precipitation in EPS
+# F10-RR-120-KGM2 => Precipitation120hF10
+1275;1419;;;
+# 25th fractal 120h total precipitation in EPS
+# F25-RR-120-KGM2 => Precipitation120hF25
+1276;1418;;;
+# 50th fractal 120h total precipitation in EPS
+# F50-RR-120-KGM2 => Precipitation120hF50
+1277;1417;;;
+# 75th fractal 120h total precipitation in EPS
+# F75-RR-120-KGM2 => Precipitation120hF75
+1278;1416;;;
+# 90th fractal 120h total precipitation in EPS
+# F90-RR-120-KGM2 => Precipitation120hF90
+1279;1415;;;
+# 100th fractal 120h total precipitation in EPS
+# F100-RR-120-KGM2 => Precipitation120hF100
+1280;1414;;;
+# Convective severity index
+# CSI-N => ConvectiveSeverityIndex
+1281;1411;;;
+# Probability of flash (lightning), aggregated over area and/or time
+# PROB-FLASH-AGG-1 => ProbabilityOfLightningAggregation1
+1282;1413;MUL{$,100.000000};DIV{$,100.000000};
+# Probability of reaching some CSI threshold value
+# PROB-CSI-1 => ProbabilityOfConvectiveSeverityIndexLimit1
+1283;1421;MUL{$,100.000000};DIV{$,100.000000};
+# Probability of reaching some CSI threshold value
+# PROB-CSI-2 => ProbabilityOfConvectiveSeverityIndexLimit2
+1284;1422;MUL{$,100.000000};DIV{$,100.000000};
+# Probability of reaching some CSI threshold value
+# PROB-CSI-3 => ProbabilityOfConvectiveSeverityIndexLimit3
+1285;1423;MUL{$,100.000000};DIV{$,100.000000};
+# Land-Sea mask
+# LSM-0TO1 => UNKNOWN
+1286;0;;;
+
+# 0th fractal wind gust speed in EPS
+# F0-IFFG-MS => WindGustF0
+1288;1123;;;
+# 10th fractal wind gust speed in EPS
+# F10-IFFG-MS => WindGustF10
+1289;1122;;;
+# 25th fractal wind gust speed in EPS
+# F25-IFFG-MS => WindGustF25
+1290;1121;;;
+# 50th fractal wind gust speed in EPS
+# F50-IFFG-MS => WindGustF50
+1291;1120;;;
+# 75th fractal wind gust speed in EPS
+# F75-IFFG-MS => WindGustF75
+1292;1119;;;
+# 90th fractal wind gust speed in EPS
+# F90-IFFG-MS => WindGustF90
+1293;1118;;;
+# 100th fractal wind gust speed in EPS
+# F100-IFFG-MS => WindGustF100
+1294;1117;;;
+# Precipitation phase as calculated by "Koistinen algorithm"
+# PRECPHASE-0TO1 => SurfaceWaterPhase
+1295;706;MUL{$,100.000000};DIV{$,100.000000};
+# 100th fractal low and middle cloudiness in EPS
+# F100-NLM-PRCNT => LowAndMiddleCloudCoverF100
+1296;1425;;;
+# 90th fractal low and middle cloudiness in EPS
+# F90-NLM-PRCNT => LowAndMiddleCloudCoverF90
+1297;1426;;;
+# 75th fractal low and middle cloudiness in EPS
+# F75-NLM-PRCNT => LowAndMiddleCloudCoverF75
+1298;1427;;;
+# 50th fractal low and middle cloudiness in EPS
+# F50-NLM-PRCNT => LowAndMiddleCloudCoverF50
+1299;1428;;;
+# 25th fractal low and middle cloudiness in EPS
+# F25-NLM-PRCNT => LowAndMiddleCloudCoverF25
+1300;1429;;;
+# 10th fractal low and middle cloudiness in EPS
+# F10-NLM-PRCNT => LowAndMiddleCloudCoverF10
+1301;1430;;;
+# 0th fractal low and middle cloudiness in EPS
+# F0-NLM-PRCNT => LowAndMiddleCloudCoverF0
+1302;1431;;;
+# 10th fractal sea temperature in EPS
+# F10-TSEA-K => UNKNOWN
+1303;0;;;
+
+# 90th fractal sea temperature in EPS
+# F90-TSEA-K => UNKNOWN
+1304;0;;;
+
+# 0th fractal total column water vapour
+# F0-TOTCWV-KGM2 => UNKNOWN
+1305;0;;;
+
+# 2.5th fractal total column water vapour
+# F2.5-TOTCWV-KGM2 => UNKNOWN
+1306;0;;;
+
+# 10th fractal total column water vapour
+# F10-TOTCWV-KGM2 => UNKNOWN
+1307;0;;;
+
+# 25th fractal total column water vapour
+# F25-TOTCWV-KGM2 => UNKNOWN
+1308;0;;;
+
+# 50th fractal total column water vapour
+# F50-TOTCWV-KGM2 => UNKNOWN
+1309;0;;;
+
+# 75th fractal total column water vapour
+# F75-TOTCWV-KGM2 => UNKNOWN
+1310;0;;;
+
+# 90th fractal total column water vapour
+# F90-TOTCWV-KGM2 => UNKNOWN
+1311;0;;;
+
+# 97.5th fractal total column water vapour
+# F97.5-TOTCWV-KGM2 => UNKNOWN
+1312;0;;;
+
+# 100th fractal total column water vapour
+# F100-TOTCWV-KGM2 => UNKNOWN
+1313;0;;;
+
+# 90th fractal precipitation in EPS
+# F90-RRR-KGM2 => UNKNOWN
+1314;0;;;
+
+# 2.5th fractal precipitation in EPS
+# F2.5-RR-24-MM => UNKNOWN
+1315;0;;;
+
+# 97.5th fractal precipitation in EPS
+# F97.5-RR-24-MM => UNKNOWN
+1316;0;;;
+
+# 100th fractal monthly precipitation in EPS
+# F100-MRR-KGM2 => UNKNOWN
+1317;0;;;
+
+# 97.5th fractal monthly precipitation in EPS
+# F97.5-MRR-KGM2 => UNKNOWN
+1318;0;;;
+
+# 90th fractal monthly precipitation in EPS
+# F90-MRR-KGM2 => UNKNOWN
+1319;0;;;
+
+# 75th fractal monthly precipitation in EPS
+# F75-MRR-KGM2 => UNKNOWN
+1320;0;;;
+
+# 50th fractal monthly precipitation in EPS
+# F50-MRR-KGM2 => UNKNOWN
+1321;0;;;
+
+# 25th fractal monthly precipitation in EPS
+# F25-MRR-KGM2 => UNKNOWN
+1322;0;;;
+
+# 10th fractal monthly precipitation in EPS
+# F10-MRR-KGM2 => UNKNOWN
+1323;0;;;
+
+# 2.5th fractal monthly precipitation in EPS
+# F2.5-MRR-KGM2 => UNKNOWN
+1324;0;;;
+
+# 0th fractal monthly precipitation in EPS
+# F0-MRR-KGM2 => UNKNOWN
+1325;0;;;
+
+# Nearby weather index
+# NEARW-N => NearbyWeatherNumber
+1326;1432;;;
+# Snow fall over the last 120 hours water equivalent
+# SN-120-MM => UNKNOWN
+1327;0;;;
+
+# 0th fractal snowfall in EPS
+# F0-SN-24-MM => SnowAccumulation24hF0
+1328;1439;;;
+# 10th fractal snowfall in EPS
+# F10-SN-24-MM => SnowAccumulation24hF10
+1329;1438;;;
+# 25th fractal snowfall in EPS
+# F25-SN-24-MM => SnowAccumulation24hF25
+1330;1437;;;
+# 50th fractal snowfall in EPS
+# F50-SN-24-MM => SnowAccumulation24hF50
+1331;1436;;;
+# 75th fractal snowfall in EPS
+# F75-SN-24-MM => SnowAccumulation24hF75
+1332;1435;;;
+# 90th fractal snowfall in EPS
+# F90-SN-24-MM => SnowAccumulation24hF90
+1333;1434;;;
+# 100th fractal snowfall in EPS
+# F100-SN-24-MM => SnowAccumulation24hF100
+1334;1433;;;
+# 0th fractal snowfall in EPS
+# F0-SN-120-MM => SnowAccumulation120hF0
+1340;1446;;;
+# 10th fractal snowfall in EPS
+# F10-SN-120-MM => SnowAccumulation120hF10
+1341;1445;;;
+# 25th fractal snowfall in EPS
+# F25-SN-120-MM => SnowAccumulation120hF25
+1342;1444;;;
+# 50th fractal snowfall in EPS
+# F50-SN-120-MM => SnowAccumulation120hF50
+1343;1443;;;
+# 75th fractal snowfall in EPS
+# F75-SN-120-MM => SnowAccumulation120hF75
+1344;1442;;;
+# 90th fractal snowfall in EPS
+# F90-SN-120-MM => SnowAccumulation120hF90
+1345;1441;;;
+# 100th fractal snowfall in EPS
+# F100-SN-120-MM => SnowAccumulation120hF100
+1346;1440;;;
+# Total column liquid water
+# TCLW-KGM2 => UNKNOWN
+1347;0;;;
+
+# Total column cloud ice water
+# TCIW-KGM2 => UNKNOWN
+1348;0;;;
+
+# Height of convective cloud top
+# HCCT-M => UNKNOWN
+1349;0;;;
 
 # 0th fractal 120h total precipitation in EPS
-# F0-RR-120-KGM2 => UNKNOWN
-1274;0;;;
+# F0-RR-120-MM => UNKNOWN
+1350;0;;;
 
 # 10th fractal 120h total precipitation in EPS
-# F10-RR-120-KGM2 => UNKNOWN
-1275;0;;;
+# F10-RR-120-MM => UNKNOWN
+1351;0;;;
 
 # 25th fractal 120h total precipitation in EPS
-# F25-RR-120-KGM2 => UNKNOWN
-1276;0;;;
+# F25-RR-120-MM => UNKNOWN
+1352;0;;;
 
 # 50th fractal 120h total precipitation in EPS
-# F50-RR-120-KGM2 => UNKNOWN
-1277;0;;;
+# F50-RR-120-MM => UNKNOWN
+1353;0;;;
 
 # 75th fractal 120h total precipitation in EPS
-# F75-RR-120-KGM2 => UNKNOWN
-1278;0;;;
+# F75-RR-120-MM => UNKNOWN
+1354;0;;;
 
 # 90th fractal 120h total precipitation in EPS
-# F90-RR-120-KGM2 => UNKNOWN
-1279;0;;;
+# F90-RR-120-MM => UNKNOWN
+1355;0;;;
 
 # 100th fractal 120h total precipitation in EPS
-# F100-RR-120-KGM2 => UNKNOWN
-1280;0;;;
+# F100-RR-120-MM => UNKNOWN
+1356;0;;;
 
-# Convective severity index
-# CSI-N => NEWBASE-PARAMETER[1411]
-1281;1411;;;
+# Water equivalent of snow cover in m
+# SD-TM2 => WaterEquivalentOfSnow
+1357;266;MUL{$,1000.000000};DIV{$,1000.000000};
+# Probability of frost
+# PROB-FROST-1 => FrostProbability
+1358;372;MUL{$,100.000000};DIV{$,100.000000};
+# Probability of severe frost
+# PROB-FROST-2 => SevereFrostProbability
+1359;373;MUL{$,100.000000};DIV{$,100.000000};
+# Probability of reaching POT of 1
+# PROB-POT-1 => NEWBASE-PARAMETER[1447]
+1360;1447;MUL{$,100.000000};DIV{$,100.000000};
+# Probability of reaching POT of 30
+# PROB-POT-2 => NEWBASE-PARAMETER[1448]
+1361;1448;MUL{$,100.000000};DIV{$,100.000000};
+# Probability of reaching POT of 60
+# PROB-POT-3 => NEWBASE-PARAMETER[1449]
+1362;1449;MUL{$,100.000000};DIV{$,100.000000};
+# Solid Precipitation over last 24 hours water equivalent
+# RRS-24-MM => UNKNOWN
+1363;0;;;
+
+# 0th fractal RRS in EPS
+# F0-RRS-24-MM => SnowAccumulation24hF0
+1364;1439;;;
+# 10th fractal RRS in EPS
+# F10-RRS-24-MM => SnowAccumulation24hF10
+1365;1438;;;
+# 25th fractal RRS in EPS
+# F25-RRS-24-MM => SnowAccumulation24hF25
+1366;1437;;;
+# 50th fractal 24h RRS in EPS
+# F50-RRS-24-MM => SnowAccumulation24hF50
+1367;1436;;;
+# 75th fractal 24h RRS in EPS
+# F75-RRS-24-MM => SnowAccumulation24hF75
+1368;1435;;;
+# 90th fractal 24h RRS in EPS
+# F90-RRS-24-MM => SnowAccumulation24hF90
+1369;1434;;;
+# 100th fractal 24h RRS in EPS
+# F100-RRS-24-MM => SnowAccumulation24hF100
+1370;1433;;;
+# Eastward surface stress due to turbulent processes, instantaneous
+# IEWSS-NM2S => UNKNOWN
+1371;0;;;
+
+# Northward surface stress due to turbulent processes, instantaneous
+# INSSS-NM2S => UNKNOWN
+1372;0;;;
+
+# Boundary layer dissipation, accumulated
+# BLDIS-JM2 => UNKNOWN
+1373;0;;;
+
+# Cloud ceiling height in meters. The height above the Earths surface of the base of the lowest layer of cloud with a covering of more than 50% of the model grid box. Cloud ceiling is a measurement used in the aviation industry to indicate airport landing conditions.
+# CEIL-M => CloudBase
+1374;500;MUL{$,3.280800};DIV{$,3.280800};
+# High vegetation cover
+# CVH-N => UNKNOWN
+1375;0;;;
+
+# Low vegetation cover
+# CVL-N => UNKNOWN
+1376;0;;;
+
+# Leaf area index high vegitation
+# LAI_HV-M2M2 => UNKNOWN
+1377;0;;;
+
+# Leaf area index low vegitation
+# LAI_LV-M2M2 => UNKNOWN
+1378;0;;;
+
+# Cloud ceiling height in meters, second possible implementation of parameter
+# CEIL-2-M => CloudBase2
+1379;1229;MUL{$,3.280800};DIV{$,3.280800};

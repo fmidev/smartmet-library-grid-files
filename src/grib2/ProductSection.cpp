@@ -44,6 +44,18 @@
 #include "implementation/AreaProcessedCrossSectionProductImpl.h"                // 4.1002
 #include "implementation/HovmollerProductImpl.h"                                // 4.1100
 #include "implementation/ProcessedHovmollerProductImpl.h"                       // 4.1101
+#include "implementation/Product_49Impl.h"
+#include "implementation/Product_55Impl.h"
+#include "implementation/Product_56Impl.h"
+#include "implementation/Product_57Impl.h"
+#include "implementation/Product_58Impl.h"
+#include "implementation/Product_59Impl.h"
+#include "implementation/Product_67Impl.h"
+#include "implementation/Product_68Impl.h"
+#include "implementation/Product_70Impl.h"
+#include "implementation/Product_71Impl.h"
+#include "implementation/Product_72Impl.h"
+#include "implementation/Product_73Impl.h"
 
 #include <iostream>
 
@@ -273,7 +285,7 @@ void ProductSection::read(MemoryReader& memoryReader)
     memoryReader >> mProductDefinitionTemplateNumber;
     if (missing(mProductDefinitionTemplateNumber))
     {
-      SmartMet::Spine::Exception exception(BCP,"Product definition template number cannot be missing");
+      SmartMet::Spine::Exception exception(BCP,"Product definition template number cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-2));
       throw exception;
     }
@@ -281,6 +293,12 @@ void ProductSection::read(MemoryReader& memoryReader)
     if (mProductDefinitionTemplateNumber)
     {
       auto productDefinition = createProductDefinition((*mProductDefinitionTemplateNumber));
+      if (productDefinition == nullptr)
+      {
+        SmartMet::Spine::Exception exception(BCP,"Product definition template not supported!");
+        exception.addParameter("Template number",std::to_string(*mProductDefinitionTemplateNumber));
+        throw exception;
+      }
       mProductDefinition.reset(productDefinition);
       productDefinition->read(memoryReader);
     }
@@ -878,6 +896,42 @@ ProductDefinition* ProductSection::createProductDefinition(std::uint16_t product
 
       case Template::ProcessedHovmollerProduct:
         return new ProcessedHovmollerProductImpl();
+
+      case Template::Product_49:
+        return new Product_49Impl();
+
+      case Template::Product_55:
+        return new Product_55Impl();
+
+      case Template::Product_56:
+        return new Product_56Impl();
+
+      case Template::Product_57:
+        return new Product_57Impl();
+
+      case Template::Product_58:
+        return new Product_58Impl();
+
+      case Template::Product_59:
+        return new Product_59Impl();
+
+      case Template::Product_67:
+        return new Product_67Impl();
+
+      case Template::Product_68:
+        return new Product_68Impl();
+
+      case Template::Product_70:
+        return new Product_70Impl();
+
+      case Template::Product_71:
+        return new Product_71Impl();
+
+      case Template::Product_72:
+        return new Product_72Impl();
+
+      case Template::Product_73:
+        return new Product_73Impl();
     }
 
     return nullptr;

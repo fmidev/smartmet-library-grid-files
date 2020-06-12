@@ -1,5 +1,5 @@
 CREATE_CLASS_DEFINITIONS = ../../../php/createClassDefinitions_grib1.php
-T_DIR = /usr/share/grib_api/definitions/grib1
+T_DIR = /usr/share/eccodes/definitions/grib1
 T_TARGET_DIR = .
 
 H_FILES = \

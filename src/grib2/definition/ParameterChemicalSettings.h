@@ -46,11 +46,11 @@ public:
   void setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataCutoff);
   const T::UInt8_opt &getIndicatorOfUnitOfTimeRange() const;
   void setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUnitOfTimeRange);
-  const T::UInt32_opt &getStartStep() const;
-  void setStartStep(T::UInt32_opt startStep);
+  const T::Int32_opt &getStartStep() const;
+  void setStartStep(T::Int32_opt startStep);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -59,8 +59,6 @@ protected:
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // label "Parameter information";
-  //
   // #  Parameter category
   // codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir): dump;
 
@@ -68,7 +66,7 @@ protected:
 
   //
   // #  Parameter number
-  // codetable[1] parameterNumber ('4.2.[discipline:l].[parameterCategory:l].table',masterDir,localDir)  : dump;
+  // codetable[1] parameterNumber ('4.2.[discipline:l].[parameterCategory:l].table',masterDir,localDir) : dump;
 
   T::UInt8_opt mParameterNumber;
 
@@ -76,19 +74,18 @@ protected:
   // meta parameterName  codetable_title(parameterNumber) : dump;
   //
   // # Atmospheric chemical or physical constitutent type
-  // codetable[2] constituentType ('4.230.table',masterDir,localDir)  : dump;
+  // codetable[2] constituentType ('4.230.table',masterDir,localDir) : dump;
 
   T::UInt16_opt mConstituentType;
 
   //
   // #  Type of generating process
-  // codetable[1] typeOfGeneratingProcess ('4.3.table',masterDir,localDir)  : dump;
+  // codetable[1] typeOfGeneratingProcess ('4.3.table',masterDir,localDir) : dump;
 
   T::UInt8_opt mTypeOfGeneratingProcess;
 
   //
-  // #  Background generating process identifier
-  // # (defined by originating centre)
+  // #  Background generating process identifier (defined by originating centre)
   // unsigned[1] backgroundProcess = 255 : edition_specific;
 
   T::UInt8_opt mBackgroundProcess;
@@ -97,14 +94,14 @@ protected:
   //
   // #  Analysis or forecast generating processes identifier
   // # (defined by originating centre)
-  // unsigned[1] generatingProcessIdentifier  : dump;
+  // unsigned[1] generatingProcessIdentifier : dump;
 
   T::UInt8_opt mGeneratingProcessIdentifier;
 
   //
   // #  Hours of observational data cut-off after reference time
   // # NOTE 1 NOT FOUND
-  // unsigned[2] hoursAfterDataCutoff = missing()  : edition_specific,can_be_missing;
+  // unsigned[2] hoursAfterDataCutoff = missing() : edition_specific,can_be_missing;
 
   T::UInt16_opt mHoursAfterDataCutoff;
 
@@ -118,21 +115,22 @@ protected:
   // alias minutesAfterReferenceTimeOfDataCutoff=minutesAfterDataCutoff;
   //
   // #  Indicator of unit of time range
-  // codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir)  : dump;
+  // codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir) : dump;
 
   T::UInt8_opt mIndicatorOfUnitOfTimeRange;
 
-  // codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
+  // alias defaultStepUnits = one; # 1 means Hour. See code table 4.4
+  // template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_units.def";
+  // codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
   // (The above is a phony setting)
   //
   // #  Forecast time in units defined by indicatorOfUnitOfTimeRange
-  // unsigned[4] startStep  : dump;
+  // signed[4] startStep : dump;
 
-  T::UInt32_opt mStartStep;
+  T::Int32_opt mStartStep;
 
   //
   // alias forecastTime=startStep;
-  //
 };
 
 } // namespace GRIB2

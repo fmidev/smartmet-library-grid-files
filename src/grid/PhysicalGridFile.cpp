@@ -110,7 +110,18 @@ void PhysicalGridFile::mapToMemory()
     {
       mFileSize = getFileSize(mFileName.c_str());
       if (mFileSize < 0)
-        throw SmartMet::Spine::Exception(BCP,"The file '" + mFileName + "' does not exist!");
+      {
+        SmartMet::Spine::Exception exception(BCP,"The file does not exist!");
+        exception.addParameter("Filename",mFileName);
+        throw exception;
+      }
+
+      if (mFileSize == 0)
+      {
+        SmartMet::Spine::Exception exception(BCP,"The file size is zero!");
+        exception.addParameter("Filename",mFileName);
+        throw exception;
+      }
 
       MappedFileParams params(mFileName);
       params.flags = boost::iostreams::mapped_file::readonly;
@@ -348,7 +359,18 @@ void PhysicalGridFile::read(std::string filename)
       {
         mFileSize = getFileSize(mFileName.c_str());
         if (mFileSize < 0)
-          throw SmartMet::Spine::Exception(BCP,"The file '" + mFileName + "' does not exist!");
+        {
+          SmartMet::Spine::Exception exception(BCP,"The file does not exist!");
+          exception.addParameter("Filename",mFileName);
+          throw exception;
+        }
+
+        if (mFileSize == 0)
+        {
+          SmartMet::Spine::Exception exception(BCP,"The file size is zero!");
+          exception.addParameter("Filename",mFileName);
+          throw exception;
+        }
 
         MappedFileParams params(mFileName);
         params.flags = boost::iostreams::mapped_file::readonly;
@@ -731,6 +753,16 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
 
     AutoThreadLock lock(&mMemoryMappingLock);
 
+    auto msg = mMessages.find(index);
+    if (msg != mMessages.end())
+    {
+      if (msg->second != nullptr &&  !msg->second->isRead())
+      {
+        msg->second->read();
+      }
+      return msg->second;
+    }
+
     if (mMessagePositions.size() > 0)
     {
       auto pos = mMessagePositions.find(index);
@@ -739,12 +771,10 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
         auto msg = mMessages.find(index);
         if (msg == mMessages.end())
           createMessage(pos->first,pos->second);
-
-        mMessagePositions.erase(pos);
       }
     }
 
-    auto msg = mMessages.find(index);
+    msg = mMessages.find(index);
     if (msg != mMessages.end())
     {
       if (msg->second != nullptr &&  !msg->second->isRead())

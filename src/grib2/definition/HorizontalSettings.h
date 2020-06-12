@@ -42,7 +42,7 @@ public:
   void setScaledValueOfSecondFixedSurface(T::UInt32_opt scaledValueOfSecondFixedSurface);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -105,6 +105,10 @@ protected:
   //   'tropopause' = {typeOfFirstFixedSurface=7; typeOfSecondFixedSurface=255;}
   //   'nominalTop' = {typeOfFirstFixedSurface=8; typeOfSecondFixedSurface=255; }
   //   'seaBottom' = {typeOfFirstFixedSurface=9;    typeOfSecondFixedSurface=255;}
+  //
+  //   # Note: We already had 'entireAtmosphere' mapped before adding this one so had to choose another name
+  //   'atmosphere' = {typeOfFirstFixedSurface=10;    typeOfSecondFixedSurface=255;}
+  //
   //   'isothermal' = {typeOfFirstFixedSurface=20;   typeOfSecondFixedSurface=255;}
   //   'isobaricInPa' = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=255; pressureUnits='Pa'; }
   //   'isobaricInhPa' = {typeOfFirstFixedSurface=100; pressureUnits='hPa'; typeOfSecondFixedSurface=255;}

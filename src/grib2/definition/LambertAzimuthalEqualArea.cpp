@@ -20,7 +20,7 @@ namespace GRIB2 {
 
 LambertAzimuthalEqualArea::LambertAzimuthalEqualArea() {
   try {
-    mResolutionAndComponentFlag = 0;
+    mResolutionAndComponentFlags = 0;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -37,7 +37,7 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const LambertAzimuthalEqual
     mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
     mStandardParallelInMicrodegrees = other.mStandardParallelInMicrodegrees;
     mCentralLongitudeInMicrodegrees = other.mCentralLongitudeInMicrodegrees;
-    mResolutionAndComponentFlag = other.mResolutionAndComponentFlag;
+    mResolutionAndComponentFlags = other.mResolutionAndComponentFlags;
     mXDirectionGridLengthInMillimetres = other.mXDirectionGridLengthInMillimetres;
     mYDirectionGridLengthInMillimetres = other.mYDirectionGridLengthInMillimetres;
     mScanningMode = other.mScanningMode;
@@ -65,7 +65,7 @@ void LambertAzimuthalEqualArea::read(MemoryReader &memoryReader) {
     mLongitudeOfFirstGridPoint = memoryReader.read_Int32_opt();
     mStandardParallelInMicrodegrees = memoryReader.read_Int32_opt();
     mCentralLongitudeInMicrodegrees = memoryReader.read_Int32_opt();
-    mResolutionAndComponentFlag = memoryReader.read_uint8();
+    mResolutionAndComponentFlags = memoryReader.read_uint8();
     mXDirectionGridLengthInMillimetres = memoryReader.read_UInt32_opt();
     mYDirectionGridLengthInMillimetres = memoryReader.read_UInt32_opt();
     mScanningMode.read(memoryReader);
@@ -88,7 +88,7 @@ void LambertAzimuthalEqualArea::write(DataWriter &dataWriter) {
     dataWriter << mLongitudeOfFirstGridPoint;
     dataWriter << mStandardParallelInMicrodegrees;
     dataWriter << mCentralLongitudeInMicrodegrees;
-    dataWriter << mResolutionAndComponentFlag;
+    dataWriter << mResolutionAndComponentFlags;
     dataWriter << mXDirectionGridLengthInMillimetres;
     dataWriter << mYDirectionGridLengthInMillimetres;
     mScanningMode.write(dataWriter);
@@ -120,8 +120,8 @@ void LambertAzimuthalEqualArea::getAttributeList(std::string prefix, T::Attribut
     attributeList.addAttribute(name, toString(mStandardParallelInMicrodegrees));
     sprintf(name, "%sLambertAzimuthalEqualArea.CentralLongitudeInMicrodegrees", prefix.c_str());
     attributeList.addAttribute(name, toString(mCentralLongitudeInMicrodegrees));
-    sprintf(name, "%sLambertAzimuthalEqualArea.ResolutionAndComponentFlag", prefix.c_str());
-    attributeList.addAttribute(name, toString(mResolutionAndComponentFlag));
+    sprintf(name, "%sLambertAzimuthalEqualArea.ResolutionAndComponentFlags", prefix.c_str());
+    attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
     sprintf(name, "%sLambertAzimuthalEqualArea.XDirectionGridLengthInMillimetres", prefix.c_str());
     attributeList.addAttribute(name, toString(mXDirectionGridLengthInMillimetres));
     sprintf(name, "%sLambertAzimuthalEqualArea.YDirectionGridLengthInMillimetres", prefix.c_str());
@@ -150,7 +150,7 @@ void LambertAzimuthalEqualArea::print(std::ostream &stream, uint level, uint opt
     stream << space(level) << "- LongitudeOfFirstGridPoint = " << toString(mLongitudeOfFirstGridPoint) << "\n";
     stream << space(level) << "- StandardParallelInMicrodegrees = " << toString(mStandardParallelInMicrodegrees) << "\n";
     stream << space(level) << "- CentralLongitudeInMicrodegrees = " << toString(mCentralLongitudeInMicrodegrees) << "\n";
-    stream << space(level) << "- ResolutionAndComponentFlag = " << toString(mResolutionAndComponentFlag) << "\n";
+    stream << space(level) << "- ResolutionAndComponentFlags = " << toString(mResolutionAndComponentFlags) << "\n";
     stream << space(level) << "- XDirectionGridLengthInMillimetres = " << toString(mXDirectionGridLengthInMillimetres) << "\n";
     stream << space(level) << "- YDirectionGridLengthInMillimetres = " << toString(mYDirectionGridLengthInMillimetres) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
@@ -176,7 +176,7 @@ T::Hash LambertAzimuthalEqualArea::countHash() {
       boost::hash_combine(seed, *mStandardParallelInMicrodegrees);
     if (mCentralLongitudeInMicrodegrees)
       boost::hash_combine(seed, *mCentralLongitudeInMicrodegrees);
-    // boost::hash_combine(seed,mResolutionAndComponentFlag);
+    boost::hash_combine(seed, mResolutionAndComponentFlags);
     if (mXDirectionGridLengthInMillimetres)
       boost::hash_combine(seed, *mXDirectionGridLengthInMillimetres);
     if (mYDirectionGridLengthInMillimetres)
@@ -273,11 +273,11 @@ const T::Int32_opt &LambertAzimuthalEqualArea::getCentralLongitudeInMicrodegrees
   }
 }
 
-/*! \brief The method returns the value of the {@link mResolutionAndComponentFlag} attribute. */
+/*! \brief The method returns the value of the {@link mResolutionAndComponentFlags} attribute. */
 
-std::uint8_t LambertAzimuthalEqualArea::getResolutionAndComponentFlag() const {
+std::uint8_t LambertAzimuthalEqualArea::getResolutionAndComponentFlags() const {
   try {
-    return mResolutionAndComponentFlag;
+    return mResolutionAndComponentFlags;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -369,9 +369,9 @@ void LambertAzimuthalEqualArea::setCentralLongitudeInMicrodegrees(T::Int32_opt c
   }
 }
 
-void LambertAzimuthalEqualArea::setResolutionAndComponentFlag(std::uint8_t resolutionAndComponentFlag) {
+void LambertAzimuthalEqualArea::setResolutionAndComponentFlags(std::uint8_t resolutionAndComponentFlags) {
   try {
-    mResolutionAndComponentFlag = resolutionAndComponentFlag;
+    mResolutionAndComponentFlags = resolutionAndComponentFlags;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

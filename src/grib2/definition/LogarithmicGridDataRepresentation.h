@@ -38,7 +38,7 @@ public:
   void setPreProcessingParameter(float preProcessingParameter);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -47,12 +47,11 @@ protected:
   // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
   // #
   //
-  // label "grib 2 Section 5 template 5.61";
   // # START 2/template.5.61 ----------------------------------------------------------------------
   // # Grid point data - Simple packing with logarithmic preprocessing
   // constant typeOfPreProcessing=1;
   //
-  // include "template.5.packing.def";
+  // include "grib2/template.5.packing.def";
 
   mutable PackingSettings mPacking;
 

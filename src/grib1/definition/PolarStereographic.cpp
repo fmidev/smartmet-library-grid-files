@@ -74,6 +74,8 @@ void PolarStereographic::read(MemoryReader &memoryReader) {
     mDyInMetres = memoryReader.read_uint24();
     mProjectionCentreFlag = memoryReader.read_uint8();
     mScanningMode.read(memoryReader);
+    for (uint t = 0; t < 4; t++)
+      memoryReader.read_uint8();
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -96,6 +98,8 @@ void PolarStereographic::write(DataWriter &dataWriter) {
     dataWriter.write_uint24(mDyInMetres);
     dataWriter << mProjectionCentreFlag;
     mScanningMode.write(dataWriter);
+    for (uint t = 0; t < 4; t++)
+      dataWriter.write_uint8(0);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

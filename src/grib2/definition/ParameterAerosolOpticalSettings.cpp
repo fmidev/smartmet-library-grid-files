@@ -85,7 +85,7 @@ void ParameterAerosolOpticalSettings::read(MemoryReader &memoryReader) {
     mHoursAfterDataCutoff = memoryReader.read_UInt16_opt();
     mMinutesAfterDataCutoff = memoryReader.read_UInt8_opt();
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
-    mForecastTime = memoryReader.read_UInt32_opt();
+    mForecastTime = memoryReader.read_Int32_opt();
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -455,7 +455,7 @@ const T::UInt8_opt &ParameterAerosolOpticalSettings::getIndicatorOfUnitOfTimeRan
 
 /*! \brief The method returns the value of the {@link mForecastTime} attribute. */
 
-const T::UInt32_opt &ParameterAerosolOpticalSettings::getForecastTime() const {
+const T::Int32_opt &ParameterAerosolOpticalSettings::getForecastTime() const {
   try {
     return mForecastTime;
   } catch (...) {
@@ -615,7 +615,7 @@ void ParameterAerosolOpticalSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt
   }
 }
 
-void ParameterAerosolOpticalSettings::setForecastTime(T::UInt32_opt forecastTime) {
+void ParameterAerosolOpticalSettings::setForecastTime(T::Int32_opt forecastTime) {
   try {
     mForecastTime = forecastTime;
   } catch (...) {

@@ -156,6 +156,7 @@ void GridDef::init(const char* configFile)
       "smartmet.library.grid-files.grib2.timeRangeDef[]",
       "smartmet.library.grid-files.fmi.parameterDef[]",
       "smartmet.library.grid-files.fmi.levelDef[]",
+      "smartmet.library.grid-files.fmi.forecastTypeDef[]",
       "smartmet.library.grid-files.fmi.geometryDef[]",
       "smartmet.library.grid-files.fmi.parametersFromGrib[]",
       "smartmet.library.grid-files.fmi.parametersFromGrib1[]",
@@ -200,6 +201,7 @@ void GridDef::init(const char* configFile)
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.grib2.timeRangeDef",mGrib2_timeRangeDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parameterDef",mFmi_parameterDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelDef",mFmi_levelDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.forecastTypeDef",mFmi_forecastTypeDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.geometryDef",mFmi_geometryDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib",mFmi_parametersFromGrib_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib1",mFmi_parametersFromGrib1_files);
@@ -454,6 +456,18 @@ void GridDef::updateFmi()
       }
       mFmi_levelDef_modificationTime = tt;
     }
+
+    tt = getModificationTime(mFmi_forecastTypeDef_files);
+    if (tt != mFmi_forecastTypeDef_modificationTime)
+    {
+      mFmi_forecastTypeDef_records.clear();
+      for (auto it = mFmi_forecastTypeDef_files.begin(); it != mFmi_forecastTypeDef_files.end(); ++it)
+      {
+        loadFmiForecastTypeDefinitions(it->c_str());
+      }
+      mFmi_forecastTypeDef_modificationTime = tt;
+    }
+
 
     tt = getModificationTime(mFmi_parametersFromGrib_files);
     if (tt != mFmi_parametersFromGrib_modificationTime)
@@ -1376,6 +1390,31 @@ bool GridDef::getFmiLevelDef(uint levelId,LevelDef& levelDef)
 
 
 
+bool GridDef::getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecastTypeDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoThreadLock lock(&mThreadLock);
+
+    auto def = getFmiForecastTypeDef(forecastTypeId);
+    if (def == nullptr)
+      return false;
+
+    forecastTypeDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool GridDef::getGrib1LevelDef(uint levelId,LevelDef& levelDef)
 {
   FUNCTION_TRACE
@@ -1434,6 +1473,28 @@ LevelDef_cptr GridDef::getFmiLevelDef(uint levelId)
     for (auto it = mFmi_levelDef_records.begin(); it != mFmi_levelDef_records.end(); ++it)
     {
       if (it->mLevelId == levelId)
+        return &(*it);
+    }
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+ForecastTypeDef_cptr GridDef::getFmiForecastTypeDef(int forecastTypeId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_forecastTypeDef_records.begin(); it != mFmi_forecastTypeDef_records.end(); ++it)
+    {
+      if (it->mForecastTypeId == forecastTypeId)
         return &(*it);
     }
     return nullptr;
@@ -2220,6 +2281,77 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
             rec.mDescription = field[2];
 
           mFmi_levelDef_records.push_back(rec);
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *file = fopen(filename,"re");
+    if (file == nullptr)
+    {
+      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 2)
+        {
+          ForecastTypeDef rec;
+
+          if (field[0][0] != '\0')
+            rec. mForecastTypeId = toInt64(field[0]);
+
+          if (field[1][0] != '\0')
+            rec.mName = field[1];
+
+          if (field[2][0] != '\0')
+            rec.mDescription = field[2];
+
+          mFmi_forecastTypeDef_records.push_back(rec);
         }
       }
     }
@@ -4881,7 +5013,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           ////def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
           //def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
 
-          def2->setResolutionAndComponentFlag(0x30);
+          def2->setResolutionAndComponentFlags(0x30);
 
           def2->setGridGeometryId(geometryId);
           def2->setGridGeometryName(geometryName);

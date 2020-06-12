@@ -66,7 +66,7 @@ public:
   void setYo(T::UInt32_opt yo);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -78,7 +78,7 @@ protected:
   //
   // # START 2/template.3.90 ----------------------------------------------------------------------
   // # TEMPLATE 3.90, Space view perspective or orthographic
-  // include "template.3.shape_of_the_earth.def";
+  // include "grib2/template.3.shape_of_the_earth.def";
 
   mutable EarthShapeSettings mEarthShape;
 
@@ -114,7 +114,7 @@ protected:
   // meta  geography.latitudeOfSubSatellitePointInDegrees   scale(latitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
   // meta  geography.longitudeOfSubSatellitePointInDegrees   scale(longitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
   //
-  // include "template.3.resolution_flags.def";
+  // include "grib2/template.3.resolution_flags.def";
 
   mutable ResolutionSettings mResolution;
 
@@ -134,7 +134,7 @@ protected:
   // alias geography.dy=dy;
   //
   // #  Xp - X-coordinate of sub-satellite point
-  // # (in units of 10-3 grid length expressed as an integer)
+  // # (in units of 10^-3 grid length expressed as an integer)
   // unsigned[4] Xp  : no_copy;
 
   T::UInt32_opt mXp;
@@ -143,7 +143,7 @@ protected:
   // alias xCoordinateOfSubSatellitePoint=XpInGridLengths;
   //
   // #  Yp - Y-coordinate of sub-satellite point
-  // # (in units of 10-3 grid length expressed as an integer)
+  // # (in units of 10^-3 grid length expressed as an integer)
   // unsigned[4] Yp  : no_copy;
 
   T::UInt32_opt mYp;
@@ -151,12 +151,13 @@ protected:
   // meta  geography.YpInGridLengths scale(Yp,one,thousand) : dump;
   // alias yCoordinateOfSubSatellitePoint=YpInGridLengths;
   //
-  // include "template.3.scanning_mode.def";
+  // include "grib2/template.3.scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 
   //
-  // #  Orientation of the grid; i.e., the angle between the increasing Y-axis and the meridian of the sub-satellite point in the direction of increasing latitude
+  // #  Orientation of the grid; i.e. the angle between the increasing Y-axis and the meridian
+  // # of the sub-satellite point in the direction of increasing latitude
   // signed[4] orientationOfTheGrid : edition_specific;
 
   T::Int32_opt mOrientationOfTheGrid;
@@ -165,8 +166,8 @@ protected:
   //     scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
   //
   // #  Nr - altitude of the camera from the Earth's centre, measured in units of the Earth's
-  // # (equatorial)
-  // unsigned[4] Nr : edition_specific,no_copy;
+  // # (equatorial) radius multiplied by a scale factor of 10^6
+  // unsigned[4] Nr : edition_specific,can_be_missing,no_copy;
 
   T::UInt32_opt mNr;
 
@@ -189,6 +190,19 @@ protected:
   // alias yCoordinateOfOriginOfSectorImage=Yo;
   // alias geography.Yo=Yo;
   //
+  // iterator space_view(numberOfPoints, missingValue, values, radius,
+  //           earthIsOblate,
+  //           earthMajorAxis, earthMinorAxis,
+  //           Nx, Ny,
+  //           latitudeOfSubSatellitePointInDegrees,
+  //           longitudeOfSubSatellitePointInDegrees,
+  //           dx, dy, XpInGridLengths, YpInGridLengths,
+  //           orientationOfTheGridInDegrees,
+  //           NrInRadiusOfEarth, Xo, Yo,
+  //           iScansNegatively,
+  //           jScansPositively,
+  //           jPointsAreConsecutive,
+  //           alternativeRowScanning);
 };
 
 } // namespace GRIB2

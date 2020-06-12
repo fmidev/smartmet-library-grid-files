@@ -86,6 +86,8 @@ void Albers::read(MemoryReader &memoryReader) {
     mLatin2 = memoryReader.read_int24();
     mLatitudeOfSouthernPole = memoryReader.read_int24();
     mLongitudeOfSouthernPole = memoryReader.read_int24();
+    for (uint t = 0; t < 2; t++)
+      memoryReader.read_uint8();
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -112,6 +114,8 @@ void Albers::write(DataWriter &dataWriter) {
     dataWriter.write_int24(mLatin2);
     dataWriter.write_int24(mLatitudeOfSouthernPole);
     dataWriter.write_int24(mLongitudeOfSouthernPole);
+    for (uint t = 0; t < 2; t++)
+      dataWriter.write_uint8(0);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

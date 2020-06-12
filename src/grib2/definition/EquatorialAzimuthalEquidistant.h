@@ -43,8 +43,8 @@ public:
   void setLatitudeOfTangencyPoint(T::Int32_opt latitudeOfTangencyPoint);
   const T::UInt32_opt &getLongitudeOfTangencyPoint() const;
   void setLongitudeOfTangencyPoint(T::UInt32_opt longitudeOfTangencyPoint);
-  std::uint8_t getResolutionAndComponentFlag() const;
-  void setResolutionAndComponentFlag(std::uint8_t resolutionAndComponentFlag);
+  std::uint8_t getResolutionAndComponentFlags() const;
+  void setResolutionAndComponentFlags(std::uint8_t resolutionAndComponentFlags);
   const T::UInt32_opt &getDx() const;
   void setDx(T::UInt32_opt dx);
   const T::UInt32_opt &getDy() const;
@@ -55,7 +55,7 @@ public:
   void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -66,7 +66,7 @@ protected:
   //
   //
   // # TEMPLATE 3.110, Equatorial azimuthal equidistant projection
-  // include "template.3.shape_of_the_earth.def";
+  // include "grib2/template.3.shape_of_the_earth.def";
 
   mutable EarthShapeSettings mEarthShape;
 
@@ -101,9 +101,9 @@ protected:
   //
   // alias Lo1  = longitudeOfTangencyPoint;
   // #  Resolution and component flag
-  // flags[1] resolutionAndComponentFlag 'grib2/tables/[tablesVersion]/3.3.table' : dump ;
+  // flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump ;
 
-  std::uint8_t mResolutionAndComponentFlag;
+  std::uint8_t mResolutionAndComponentFlags;
 
   //
   // #  Dx - X-direction grid length in units of 10 -3 m as measured at the point of the axis
@@ -124,7 +124,7 @@ protected:
   T::UInt8_opt mProjectionCenterFlag;
 
   //
-  // include "template.3.scanning_mode.def";
+  // include "grib2/template.3.scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 

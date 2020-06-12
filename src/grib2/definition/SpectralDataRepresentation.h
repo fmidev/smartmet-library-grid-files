@@ -38,7 +38,7 @@ public:
   void setRealPartOf00(float realPartOf00);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -48,7 +48,7 @@ protected:
   // #
   //
   // # TEMPLATE 5.50, Spectral data - simple packing
-  // include "template.5.packing.def";
+  // include "grib2/template.5.packing.def";
 
   mutable PackingSettings mPacking;
 

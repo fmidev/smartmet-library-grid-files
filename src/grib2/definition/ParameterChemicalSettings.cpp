@@ -65,7 +65,7 @@ void ParameterChemicalSettings::read(MemoryReader &memoryReader) {
     mHoursAfterDataCutoff = memoryReader.read_UInt16_opt();
     mMinutesAfterDataCutoff = memoryReader.read_UInt8_opt();
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
-    mStartStep = memoryReader.read_UInt32_opt();
+    mStartStep = memoryReader.read_Int32_opt();
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -275,7 +275,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getIndicatorOfUnitOfTimeRange() c
 
 /*! \brief The method returns the value of the {@link mStartStep} attribute. */
 
-const T::UInt32_opt &ParameterChemicalSettings::getStartStep() const {
+const T::Int32_opt &ParameterChemicalSettings::getStartStep() const {
   try {
     return mStartStep;
   } catch (...) {
@@ -355,7 +355,7 @@ void ParameterChemicalSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indic
   }
 }
 
-void ParameterChemicalSettings::setStartStep(T::UInt32_opt startStep) {
+void ParameterChemicalSettings::setStartStep(T::Int32_opt startStep) {
   try {
     mStartStep = startStep;
   } catch (...) {

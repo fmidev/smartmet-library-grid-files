@@ -63,7 +63,7 @@ public:
   void setNC(T::UInt16_opt nC);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -75,7 +75,7 @@ protected:
   //
   // # TEMPLATE 3.1000, Cross-section grid, with points equally spaced on the horizontal
   //
-  // include "template.3.shape_of_the_earth.def";
+  // include "grib2/template.3.shape_of_the_earth.def";
 
   mutable EarthShapeSettings mEarthShape;
 
@@ -118,7 +118,7 @@ protected:
   //
   // alias Lo1 =  longitudeOfFirstGridPoint;
   //
-  // include "template.3.scanning_mode.def";
+  // include "grib2/template.3.scanning_mode.def";
 
   mutable ScanningModeSettings mScanningMode;
 

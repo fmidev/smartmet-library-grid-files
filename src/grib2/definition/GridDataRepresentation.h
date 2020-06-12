@@ -39,7 +39,7 @@ public:
   void setOriginalValues(OriginalValuesSettings &originalValues);
 
 protected:
-  // # Copyright 2005-2015 ECMWF.
+  // # Copyright 2005-2017 ECMWF.
   // #
   // # This software is licensed under the terms of the Apache Licence Version 2.0
   // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -50,11 +50,11 @@ protected:
   //
   // # TEMPLATE 5.0, Grid point data - simple packing
   //
-  // include "template.5.packing.def";
+  // include "grib2/template.5.packing.def";
 
   mutable PackingSettings mPacking;
 
-  // include "template.5.original_values.def";
+  // include "grib2/template.5.original_values.def";
 
   mutable OriginalValuesSettings mOriginalValues;
 
