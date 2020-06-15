@@ -62,6 +62,7 @@ Message::Message()
     mCacheHitCounter = 0;
     mPointCacheEnabled = false;
     mFileType = 0;
+    mVirtualFileId = 0;
   }
   catch (...)
   {
