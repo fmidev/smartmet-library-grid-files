@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <macgyver/StringConversion.h>
 #include <macgyver/TimeParser.h>
+#include <macgyver/TimeZones.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,7 +32,9 @@ namespace fs = boost::filesystem;
 
 namespace SmartMet
 {
-ThreadLock timeThreadLock;
+//ThreadLock timeThreadLock;
+Fmi::TimeZones itsTimeZones;
+
 
 std::string uint64_toHex(unsigned long long value)
 {
@@ -503,6 +506,27 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
 {
   try
   {
+    const char *tzo = "UTC";
+    if (tzone == nullptr || tzone[0] == '\0')
+      tzone = getenv("TZ");
+
+    if (tzone == nullptr || tzone[0] == '\0')
+      tzone = (char*)tzo;
+
+    auto zone = itsTimeZones.time_zone_from_string(tzone);
+    // boost::local_time::local_date_time t(utc_ptime, tz);
+
+    boost::posix_time::time_duration td(tm->tm_hour,tm->tm_min,tm->tm_sec,0);
+    boost::gregorian::date d(tm->tm_year + 1900,tm->tm_mon + 1,tm->tm_mday);
+    boost::posix_time::ptime pt(d, td);
+
+    boost::local_time::local_date_time ldt(pt.date(), pt.time_of_day(), zone, boost::local_time::local_date_time::EXCEPTION_ON_ERROR);
+    boost::posix_time::ptime t = ldt.utc_time();
+
+    time_t tt = (t - boost::posix_time::from_time_t(0)).total_seconds();
+    return tt;
+
+/*
     AutoThreadLock lock(&timeThreadLock);
 
     time_t ret;
@@ -520,7 +544,10 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
     else
       unsetenv("TZ");
     tzset();
+
+    printf("TIME %lu %lu (%s)\n",tt,ret,tzone);
     return ret;
+*/
   }
   catch (...)
   {
@@ -532,6 +559,45 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
 {
   try
   {
+    const char *tzo = "UTC";
+    if (tzone == nullptr || tzone[0] == '\0')
+      tzone = getenv("TZ");
+
+    if (tzone == nullptr || tzone[0] == '\0')
+      tzone = (char*)tzo;
+
+    auto zone = itsTimeZones.time_zone_from_string(tzone);
+
+    boost::posix_time::ptime pt(boost::gregorian::date(1970,1,1));
+    pt = pt + boost::posix_time::seconds(static_cast<long>(t));
+    boost::local_time::local_date_time ldt(pt, zone);
+    boost::posix_time::ptime ltp = ldt.local_time();
+
+
+    std::tm timetm = boost::gregorian::to_tm(ltp.date());
+    boost::posix_time::time_duration td = ltp.time_of_day();
+
+    tt->tm_year = timetm.tm_year;
+    tt->tm_mon = timetm.tm_mon;
+    tt->tm_mday = timetm.tm_mday;
+    tt->tm_year = timetm.tm_year;
+    tt->tm_hour = static_cast<int>(td.hours());
+    tt->tm_min = static_cast<int>(td.minutes());
+    tt->tm_sec = static_cast<int>(td.seconds());
+    tt->tm_isdst = timetm.tm_isdst; // -1; // -1 used when dst info is unknown
+
+    /*
+    printf("%04d%02d%02dT%02d%02d%02d  ",
+            tt->tm_year + 1900,
+            tt->tm_mon + 1,
+            tt->tm_mday,
+            tt->tm_hour,
+            tt->tm_min,
+            tt->tm_sec);
+*/
+    return tt;
+
+    /*
     AutoThreadLock lock(&timeThreadLock);
 
     char *tz;
@@ -551,7 +617,17 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
       unsetenv("TZ");
     tzset();
 
+
+    printf("%04d%02d%02dT%02d%02d%02d\n",
+            tt->tm_year + 1900,
+            tt->tm_mon + 1,
+            tt->tm_mday,
+            tt->tm_hour,
+            tt->tm_min,
+            tt->tm_sec);
+
     return tt;
+    */
   }
   catch (...)
   {
@@ -565,8 +641,7 @@ time_t localTimeToTimeT(std::string localTime, const char *tzone)
   {
     if (localTime.length() != 15)
     {
-      SmartMet::Spine::Exception exception(BCP,
-                                           "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+      SmartMet::Spine::Exception exception(BCP,"Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
       exception.addParameter("timestamp", localTime);
       throw exception;
     }
@@ -597,6 +672,7 @@ time_t utcTimeToTimeT(std::string utcTime)
 {
   try
   {
+    //printf("utcTimeToTimeT %s\n",utcTime.c_str());
     if (utcTime.length() != 15)
       throw SmartMet::Spine::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
 

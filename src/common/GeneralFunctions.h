@@ -53,6 +53,8 @@ void splitTimeString(const std::string& timeStr,int& year,int& month,int& day,in
 void splitTimeString(const std::string& timeStr, short &year, uchar &month, uchar &day, uchar &hour, uchar &minute, uchar &second);
 
 std::string addSeconds(std::string timeStr,int seconds);
+time_t mktime_tz(struct tm *tm, const char *tzone);
+struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone);
 
 
 time_t toTimeT(boost::posix_time::ptime tim);
