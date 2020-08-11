@@ -31,6 +31,15 @@ std::vector<std::pair<long long,T::ByteData>> wkbCache;
 ThreadLock wkbCacheThreadLock;
 
 
+#define GRID_POINT_CACHE_SIZE 300
+
+std::vector<T::Point> gridPointsCache[GRID_POINT_CACHE_SIZE];
+std::size_t gridPointCacheHash[GRID_POINT_CACHE_SIZE] = {0};
+uint hashCounter = 0;
+ThreadLock pointCacheThreadLock;
+
+
+
 
 extern void convertWkbCoordinates(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation);
 
@@ -153,10 +162,34 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
 {
   try
   {
-    std::set<unsigned long long> cList;
     uint numOfPoints = polygonPoints.size();
     if (numOfPoints == 0)
       return;
+
+    std::size_t hash = 0;
+    boost::hash_combine(hash,gridWidth);
+    boost::hash_combine(hash,gridHeight);
+
+    for (uint t=0; t<numOfPoints; t++)
+    {
+      boost::hash_combine(hash,polygonPoints[t].x());
+      boost::hash_combine(hash,polygonPoints[t].y());
+    }
+
+    for (uint t=0; t<GRID_POINT_CACHE_SIZE; t++)
+    {
+      if (gridPointCacheHash[t] == hash)
+      {
+        AutoThreadLock lock(&pointCacheThreadLock);
+        if (gridPointCacheHash[t] == hash)
+        {
+          gridPoints = gridPointsCache[t];
+          return;
+        }
+      }
+    }
+
+    std::set<unsigned long long> cList;
 
     // It the last polygon point is not same than the first point, then we should add it to the list.
 
@@ -267,6 +300,12 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
 
       gridPoints.push_back(T::Point(x,y));
     }
+
+    AutoThreadLock lock(&pointCacheThreadLock);
+    uint idx = hashCounter % GRID_POINT_CACHE_SIZE;
+    gridPointsCache[idx] = gridPoints;
+    gridPointCacheHash[idx] = hash;
+    hashCounter++;;
   }
   catch (...)
   {
@@ -285,6 +324,32 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
   {
     if (polygonPath.size() == 0)
       return;
+
+    std::size_t hash = 0;
+    boost::hash_combine(hash,gridWidth);
+    boost::hash_combine(hash,gridHeight);
+    for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+    {
+      uint numOfPoints = polygonPoints->size();
+      for (uint t=0; t<numOfPoints; t++)
+      {
+        boost::hash_combine(hash,(*polygonPoints)[t].x());
+        boost::hash_combine(hash,(*polygonPoints)[t].y());
+      }
+    }
+
+    for (uint t=0; t<GRID_POINT_CACHE_SIZE; t++)
+    {
+      if (gridPointCacheHash[t] == hash)
+      {
+        AutoThreadLock lock(&pointCacheThreadLock);
+        if (gridPointCacheHash[t] == hash)
+        {
+          gridPoints = gridPointsCache[t];
+          return;
+        }
+      }
+    }
 
     std::set<unsigned long long> cList;
 
@@ -428,6 +493,12 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
 
       gridPoints.push_back(T::Point(x,y));
     }
+
+    AutoThreadLock lock(&pointCacheThreadLock);
+    uint idx = hashCounter % GRID_POINT_CACHE_SIZE;
+    gridPointsCache[idx] = gridPoints;
+    gridPointCacheHash[idx] = hash;
+    hashCounter++;;
   }
   catch (...)
   {

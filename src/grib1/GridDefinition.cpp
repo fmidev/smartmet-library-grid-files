@@ -357,6 +357,14 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
     if (d.getDimensions() != 2  || grid_i >= d.nx() || grid_j >= d.ny())
       return false;
 
+    double x = 0;
+    double y = 0;
+    if (getGridOriginalCoordinatesByGridPosition((double)grid_i,(double)grid_j,x,y))
+    {
+      if (getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon))
+        return true;
+    }
+
     T::Coordinate_vec coordinates = getGridLatLonCoordinates();
     uint c = grid_j*d.nx() + grid_i;
     if (c < coordinates.size())

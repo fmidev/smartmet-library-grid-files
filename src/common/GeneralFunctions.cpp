@@ -526,6 +526,7 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
     time_t tt = (t - boost::posix_time::from_time_t(0)).total_seconds();
     return tt;
 
+
 /*
     AutoThreadLock lock(&timeThreadLock);
 
@@ -809,7 +810,7 @@ std::string localTimeToUtc(std::string localTime, boost::local_time::time_zone_p
 {
   try
   {
-    auto ptime = boost::posix_time::from_iso_string(localTime);
+    auto ptime = Fmi::TimeParser::parse_iso(localTime);
     boost::local_time::local_date_time localTime(ptime, tz);
     auto lTime = Fmi::TimeParser::make_time(localTime.date(), localTime.time_of_day(), tz);
     return Fmi::to_iso_string(lTime.utc_time());
@@ -1485,7 +1486,7 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
 {
   try
   {
-    return boost::posix_time::ptime(boost::posix_time::from_iso_string(timeStr));
+    return Fmi::TimeParser::parse_iso(timeStr);
   }
   catch (...)
   {
