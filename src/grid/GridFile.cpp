@@ -33,6 +33,7 @@ GridFile::GridFile()
     mGenerationId = 0;
     mCheckTime = 0;
     mSourceId = 0;
+    mDeletionTime = 0;
   }
   catch (...)
   {
@@ -54,7 +55,7 @@ GridFile::GridFile(const GridFile& other)
     mFileName = other.mFileName;
     mFileId = other.mFileId;
     mFileModificationTime = other.mFileModificationTime;
-    mFileDeletionTime = other.mFileDeletionTime;
+    mDeletionTime = other.mDeletionTime;
     mGroupFlags = other.mGroupFlags;
     mProducerId = other.mProducerId;
     mGenerationId = other.mGenerationId;
@@ -267,12 +268,12 @@ time_t GridFile::getModificationTime() const
       \return  The expected deletion time of the grid file.
 */
 
-std::string GridFile::getDeletionTime() const
+std::string GridFile::getDeletionTimeStr() const
 {
   FUNCTION_TRACE
   try
   {
-    return mFileDeletionTime;
+    return utcTimeFromTimeT(mDeletionTime);
   }
   catch (...)
   {
@@ -280,6 +281,22 @@ std::string GridFile::getDeletionTime() const
   }
 }
 
+
+
+
+
+time_t GridFile::getDeletionTime() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mDeletionTime;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 
@@ -556,7 +573,30 @@ void GridFile::setDeletionTime(std::string deletionTime)
   FUNCTION_TRACE
   try
   {
-    mFileDeletionTime = deletionTime;
+    mDeletionTime = utcTimeToTimeT(deletionTime);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
+/*! \brief The method sets time the expected deletion time of the current grid file.
+
+      \param deletionTime   The deletion time of the grid file.
+*/
+
+void GridFile::setDeletionTime(time_t deletionTime)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mDeletionTime = deletionTime;
   }
   catch (...)
   {
@@ -1013,7 +1053,7 @@ void GridFile::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "GridFile\n";
     stream << space(level) << "- fileName         = " << getFileName() << "\n";
     stream << space(level) << "- fileId           = " << mFileId << "\n";
-    stream << space(level) << "- deletionTime     = " << mFileDeletionTime << "\n";
+    stream << space(level) << "- deletionTime     = " << getDeletionTimeStr() << "\n";
     stream << space(level) << "- groupFlags       = " << mGroupFlags << "\n";
     stream << space(level) << "- producerId       = " << mProducerId << "\n";
     stream << space(level) << "- generationId     = " << mGenerationId << "\n";

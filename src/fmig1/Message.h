@@ -43,6 +43,7 @@ class Message : public GRID::Message
     uint                getGenerationId() const;
     T::FilePosition     getFilePosition() const;
     T::TimeString       getForecastTime() const;
+    time_t              getForecastTimeT() const;
     short               getForecastType() const;
     short               getForecastNumber() const;
 
@@ -110,6 +111,7 @@ class Message : public GRID::Message
 
     std::string         mReferenceTime;
     std::string         mForecastTime;
+    time_t              mForecastTimeT;
     uint                mPixelCount;
     uint                mWidth;
     uint                mHeight;

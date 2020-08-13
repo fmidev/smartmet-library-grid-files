@@ -150,6 +150,13 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
     if (message->getDataPtr() == nullptr || message->getDataSize() == 0)
     {
       //printf("-- no data\n");
+
+      if (!mBitsPerValue)
+      {
+        value = mReferenceValue;
+        return true;
+      }
+
       return false;
     }
 

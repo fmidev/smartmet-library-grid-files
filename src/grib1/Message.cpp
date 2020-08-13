@@ -49,6 +49,7 @@ Message::Message()
     mPointCacheEnabled = false;
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
+    mForecastTimeT = 0;
   }
   catch (...)
   {
@@ -82,6 +83,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mPointCacheEnabled = false;
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
+    mForecastTimeT = 0;
   }
   catch (...)
   {
@@ -106,6 +108,8 @@ Message::Message(const Message& other)
     mFilePosition = other.mFilePosition;
     mMessageSize = other.mMessageSize;
     mFileType = other.mFileType;
+    mForecastTime = other.mForecastTime;
+    mForecastTimeT = other.mForecastTimeT;
 
     if (other.mIndicatorSection)
     {
@@ -507,6 +511,13 @@ void Message::read(MemoryReader& memoryReader)
 
     if (mMessageSize == 0)
       mMessageSize = (memoryReader.getGlobalReadPosition() - mFilePosition);
+
+
+    if (mProductSection)
+    {
+      mForecastTime = mProductSection->getForecastTime();
+      mForecastTimeT = utcTimeToTimeT(mForecastTime);
+    }
 
     mIsRead = true;
   }
@@ -1131,10 +1142,31 @@ T::TimeString Message::getForecastTime() const
   FUNCTION_TRACE
   try
   {
-    if (mProductSection)
-      return mProductSection->getForecastTime();
+    return mForecastTime;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
 
-    return "";
+
+
+
+
+/*! \brief The method returns the forecast time of the current grid.
+
+        \return   The forecast time.
+*/
+
+time_t Message::getForecastTimeT() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mForecastTimeT;
   }
   catch (...)
   {

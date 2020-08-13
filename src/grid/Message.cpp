@@ -344,6 +344,21 @@ T::TimeString Message::getForecastTime() const
 
 
 
+/*! \brief The method returns the forecast start time. This is calculated from the reference
+    time and other time parameters (=> NormalProduct->parameter()).
+
+        \return   The forecast start time of the current message.
+*/
+
+time_t Message::getForecastTimeT() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
 /*! \brief The method returns the hash of the grid.
 
         \return   The hash of the grid.

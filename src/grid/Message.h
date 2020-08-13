@@ -72,6 +72,7 @@ class Message
     virtual uint              getMessageSize() const;
     virtual T::FilePosition   getFilePosition() const;
     virtual T::TimeString     getForecastTime() const;
+    virtual time_t            getForecastTimeT() const;
     virtual short             getForecastType() const;
     virtual short             getForecastNumber() const;
 

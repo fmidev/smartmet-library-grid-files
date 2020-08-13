@@ -155,7 +155,16 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
   try
   {
     if (message->getDataPtr() == nullptr || message->getDataSize() == 0)
+    {
+      if (!mBitsPerValue)
+      {
+        // If 'bitsPerValue' is zero then all values are same as the reference value
+        value = mReferenceValue;
+        return true;
+      }
+
       return false;
+    }
 
     if (index >= message->getGridOriginalValueCount())
       return false;

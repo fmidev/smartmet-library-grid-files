@@ -492,7 +492,9 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
 
     message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values1);
     message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values2);
-    timeInterpolation(values1,values2,message1.getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod,gridValues);
+
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),tt,timeInterpolationMethod,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
 
@@ -1995,7 +1997,9 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
 
     message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values1);
     message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values2);
-    timeInterpolation(values1,values2,message1.getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod,gridValues);
+
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),tt,timeInterpolationMethod,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
 
@@ -2119,7 +2123,8 @@ void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1
     message1.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,value1);
     message2.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,value2);
 
-    value = timeInterpolation(value1,value2,message1.getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod);
+    time_t tt = utcTimeToTimeT(newTime);
+    value = timeInterpolation(value1,value2,message1.getForecastTimeT(),message2.getForecastTimeT(),tt,timeInterpolationMethod);
   }
   catch (...)
   {
@@ -2174,7 +2179,8 @@ void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& mes
     tuneLevels(nextTimeLevel1,nextTimeLevel2,newLevel);
     nextValue = levelInterpolation(nextTimePrevLevel,nextTimeNextLevel,nextTimeLevel1,nextTimeLevel2,newLevel,levelInterpolationMethod);
 
-    value = timeInterpolation(prevValue,nextValue,message1.getForecastTime(),message3.getForecastTime(),newTime,timeInterpolationMethod);
+    time_t tt = utcTimeToTimeT(newTime);
+    value = timeInterpolation(prevValue,nextValue,message1.getForecastTimeT(),message3.getForecastTimeT(),tt,timeInterpolationMethod);
 
     //printf("VALUE %f  %d\n",value,newLevel);
   }
@@ -2250,7 +2256,8 @@ void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& mes
     message1.getGridValueListByCircle(coordinateType,origoX,origoY,radius,values1);
     message2.getGridValueListByCircle(coordinateType,origoX,origoY,radius,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod,valueList);
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),tt,timeInterpolationMethod,valueList);
   }
   catch (...)
   {
@@ -2293,7 +2300,8 @@ void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& 
     message1.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,values1);
     message2.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod,valueList);
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),tt,timeInterpolationMethod,valueList);
   }
   catch (...)
   {
@@ -2337,7 +2345,8 @@ void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& me
     message1.getGridValueListByPolygon(coordinateType,polygonPoints,values1);
     message2.getGridValueListByPolygon(coordinateType,polygonPoints,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod,valueList);
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),tt,timeInterpolationMethod,valueList);
   }
   catch (...)
   {
@@ -2403,7 +2412,8 @@ void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message
     message1.getGridValueListByPolygonPath(coordinateType,polygonPath,values1);
     message2.getGridValueListByPolygonPath(coordinateType,polygonPath,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod,valueList);
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),tt,timeInterpolationMethod,valueList);
   }
   catch (...)
   {
@@ -2467,8 +2477,9 @@ void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Mess
 
     if (prevTimeLevel1 == nextTimeLevel1  &&  prevTimeLevel2 == nextTimeLevel2)
     {
-      timeInterpolation(prevTimePrevLevel,nextTimePrevLevel,message1.getForecastTime(),message3.getForecastTime(),newTime,timeInterpolationMethod,prevValues);
-      timeInterpolation(prevTimeNextLevel,nextTimeNextLevel,message2.getForecastTime(),message4.getForecastTime(),newTime,timeInterpolationMethod,nextValues);
+      time_t tt = utcTimeToTimeT(newTime);
+      timeInterpolation(prevTimePrevLevel,nextTimePrevLevel,message1.getForecastTimeT(),message3.getForecastTimeT(),tt,timeInterpolationMethod,prevValues);
+      timeInterpolation(prevTimeNextLevel,nextTimeNextLevel,message2.getForecastTimeT(),message4.getForecastTimeT(),tt,timeInterpolationMethod,nextValues);
 
       tuneLevels(prevTimeLevel1,prevTimeLevel2,newLevel);
 
@@ -2523,8 +2534,8 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
   try
   {
     time_t tt = utcTimeToTimeT(newTime);
-    time_t t1 = utcTimeToTimeT(message1.getForecastTime());
-    time_t t2 = utcTimeToTimeT(message2.getForecastTime());
+    time_t t1 = message1.getForecastTimeT();
+    time_t t2 = message2.getForecastTimeT();
 
     if (timeInterpolationMethod == T::TimeInterpolationMethod::Undefined  || timeInterpolationMethod == T::TimeInterpolationMethod::None ||
         (timeInterpolationMethod == T::TimeInterpolationMethod::Nearest  &&  (tt-t1) <= (t2-tt)) ||
@@ -2546,7 +2557,7 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
     message1.getGridValueVectorWithCaching(values1);
     message2.getGridValueVectorWithCaching(values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod,values);
+    timeInterpolation(values1,values2,t1,t2,tt,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -2624,7 +2635,8 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
     T::ParamValue_vec gridValues2;
     message2.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,gridValues2);
 
-    timeInterpolation(gridValues1,gridValues2,message1.getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod,values);
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(gridValues1,gridValues2,message1.getForecastTimeT(),message2.getForecastTimeT(),tt,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -2679,7 +2691,8 @@ void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message&
     message1.getGridValueVectorByGeometry(attributeList,values1);
     message2.getGridValueVectorByGeometry(attributeList,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTime(),message2.getForecastTime(),newTime,timeInterpolationMethod,values);
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),tt,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -2701,7 +2714,8 @@ void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& me
     getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,values1);
     getGridValueVectorByLevel(message3,message4,newLevel,levelInterpolationMethod,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTime(),message3.getForecastTime(),newTime,timeInterpolationMethod,values);
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message3.getForecastTimeT(),tt,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -2728,7 +2742,8 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Mes
     getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,values1);
     getGridValueVectorByLevelAndGeometry(message3,message4,newLevel,attributeList,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTime(),message3.getForecastTime(),newTime,timeInterpolationMethod,values);
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message3.getForecastTimeT(),tt,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -2755,7 +2770,8 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRI
     getGridValueVectorByLevelAndCoordinateList(message1,message2,newLevel,coordinateType,coordinates,attributeList,values1);
     getGridValueVectorByLevelAndCoordinateList(message3,message4,newLevel,coordinateType,coordinates,attributeList,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTime(),message3.getForecastTime(),newTime,timeInterpolationMethod,values);
+    time_t tt = utcTimeToTimeT(newTime);
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message3.getForecastTimeT(),tt,timeInterpolationMethod,values);
   }
   catch (...)
   {

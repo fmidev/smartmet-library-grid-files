@@ -51,6 +51,7 @@ Message::Message()
     mDataSize = 0;
     mDataStartPtr = nullptr;
     mDataEndPtr = nullptr;
+    mForecastTimeT = 0;
   }
   catch (...)
   {
@@ -92,6 +93,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mDataSize = 0;
     mDataStartPtr = nullptr;
     mDataEndPtr = nullptr;
+    mForecastTimeT = 0;
   }
   catch (...)
   {
@@ -115,6 +117,8 @@ Message::Message(const Message& other)
     mIsRead = true;
     mWidth = other.mWidth;
     mHeight = other.mHeight;
+    mForecastTime = other.mForecastTime;
+    mForecastTimeT = other.mForecastTimeT;
     mForecastNumbers = other.mForecastNumbers;
     mTableIndex = other.mTableIndex;
     mValueIndex = other.mValueIndex;
@@ -435,7 +439,10 @@ void Message::read(MemoryReader& memoryReader)
         mReferenceTime = tm;
 
       if (t == mTableIndex)
+      {
         mForecastTime = tm;
+        mForecastTimeT = utcTimeToTimeT(mForecastTime);
+      }
 
 //      mTimeSteps.push_back(std::string(tm));
     }
@@ -543,6 +550,25 @@ T::TimeString Message::getForecastTime() const
   try
   {
     return mForecastTime;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+time_t Message::getForecastTimeT() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mForecastTimeT;
   }
   catch (...)
   {

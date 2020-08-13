@@ -51,6 +51,7 @@ Message::Message()
     mMessageSize = 0;
     mDataLocked = false;
     mFileType = T::FileTypeValue::Grib2;
+    mForecastTimeT = 0;
   }
   catch (...)
   {
@@ -83,6 +84,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mIsRead = false;
     mDataLocked = false;
     mFileType = T::FileTypeValue::Grib2;
+    mForecastTimeT = 0;
 
     //printf("NEW MESSAGE %u %u %llu\n",mMessageIndex,mFilePosition,mMessageSize);
   }
@@ -108,6 +110,8 @@ Message::Message(const Message& other)
     mFilePosition = other.mFilePosition;
     mMessageSize = other.mMessageSize;
     mIsRead = true;
+    mForecastTime = other.mForecastTime;
+    mForecastTimeT = other.mForecastTimeT;
 
     if (other.mIndicatorSection)
     {
@@ -1256,6 +1260,12 @@ void Message::read(MemoryReader& memoryReader)
 
     if (mMessageSize == 0)
       mMessageSize = (memoryReader.getGlobalReadPosition() - mFilePosition);
+
+    if (mIdentificationSection != nullptr &&  mProductSection != nullptr)
+    {
+      mForecastTime = mProductSection->getForecastTime(mIdentificationSection->getReferenceTime());
+      mForecastTimeT = utcTimeToTimeT(mForecastTime);
+    }
 
     mIsRead = true;
   }
@@ -3145,13 +3155,7 @@ T::TimeString Message::getForecastTime() const
   FUNCTION_TRACE
   try
   {
-    if (mIdentificationSection == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mIdentificationSection' attribute points to nullptr!");
-
-    if (mProductSection == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductSection' attribute points to nullptr!");
-
-    return mProductSection->getForecastTime(mIdentificationSection->getReferenceTime());
+    return mForecastTime;
   }
   catch (...)
   {
@@ -3161,6 +3165,29 @@ T::TimeString Message::getForecastTime() const
   }
 }
 
+
+
+
+
+/*! \brief The method returns the forecast time of the current grid.
+
+        \return   The forecast time.
+*/
+
+time_t Message::getForecastTimeT() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mForecastTimeT;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",std::to_string(mMessageIndex));
+    throw exception;
+  }
+}
 
 
 
@@ -3274,7 +3301,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       return ParamValueMissing;
 
     addCachedValue(idx,values[idx]);
-    //printf("--- ValueFromVector %u,%u : %f\n",grid_i,grid_j,values[idx]);
+    printf("--- ValueFromVector %u,%u : %f\n",grid_i,grid_j,values[idx]);
+    print(std::cout,0,0);
     return values[idx];
   }
   catch (...)

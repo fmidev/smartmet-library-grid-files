@@ -678,15 +678,31 @@ T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,std::
     time_t t1 = utcTimeToTimeT(time1);
     time_t t2 = utcTimeToTimeT(time2);
 
-    if (t1 == tt)
+    return timeInterpolation(value1,value2,t1,t2,tt,timeInterpolationMethod);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod)
+{
+  try
+  {
+    if (t1 == newTime)
       return value1;
 
-    if (t2 == tt)
+    if (t2 == newTime)
       return value2;
 
     double timeDiff = C_DOUBLE(t2 - t1);
-    double diff1 = C_DOUBLE(tt - t1);
-    double diff2 = C_DOUBLE(t2 - tt);
+    double diff1 = C_DOUBLE(newTime - t1);
+    double diff2 = C_DOUBLE(t2 - newTime);
 
     switch (timeInterpolationMethod)
     {
@@ -757,20 +773,36 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
 {
   try
   {
-    if (values1.size() != values2.size())
-      throw SmartMet::Spine::Exception(BCP,"Value vectors are not the same size!");
-
     time_t tt = utcTimeToTimeT(newTime);
     time_t t1 = utcTimeToTimeT(time1);
     time_t t2 = utcTimeToTimeT(time2);
 
-    if (t1 == tt)
+    timeInterpolation(values1,values2,t1,t2,tt,timeInterpolationMethod,newValues);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues)
+{
+  try
+  {
+    if (values1.size() != values2.size())
+      throw SmartMet::Spine::Exception(BCP,"Value vectors are not the same size!");
+
+    if (t1 == newTime)
     {
       newValues = values1;
       return;
     }
 
-    if (t2 == tt)
+    if (t2 == newTime)
     {
       newValues = values2;
       return;
@@ -778,8 +810,8 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
 
 
     double timeDiff = C_DOUBLE(t2 - t1);
-    double diff1 = C_DOUBLE(tt - t1);
-    double diff2 = C_DOUBLE(t2 - tt);
+    double diff1 = C_DOUBLE(newTime - t1);
+    double diff2 = C_DOUBLE(t2 - newTime);
 
     uint sz = values1.size();
     newValues.reserve(sz);
@@ -875,31 +907,46 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
 
 
 
-void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::string timeStr1,std::string timeStr2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList)
+void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList)
+{
+  try
+  {
+    time_t tt = utcTimeToTimeT(newTime);
+    time_t t1 = utcTimeToTimeT(time1);
+    time_t t2 = utcTimeToTimeT(time2);
+
+    timeInterpolation(values1,values2,t1,t2,tt,timeInterpolationMethod,valueList);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::GridValueList& valueList)
 {
   try
   {
     if (values1.getLength() != values2.getLength())
       throw SmartMet::Spine::Exception(BCP,"Value lists are not the same size!");
 
-    boost::posix_time::ptime ftime = toTimeStamp(newTime);
-    boost::posix_time::ptime ftime1 = toTimeStamp(timeStr1);
-    boost::posix_time::ptime ftime2 = toTimeStamp(timeStr2);
-
-    if (ftime1 == ftime)
+    if (t1 == newTime)
     {
       valueList = values1;
       return;
     }
 
-    if (ftime2 == ftime)
+    if (t2 == newTime)
     {
       valueList = values2;
       return;
     }
 
-    time_t diff1 = toTimeT(ftime) - toTimeT(ftime1);
-    time_t diff2 = toTimeT(ftime2) - toTimeT(ftime1);
+    time_t diff1 = newTime - t1;
+    time_t diff2 = t2 - newTime;
 
     uint len1 = values1.getLength();
     uint len2 = values2.getLength();

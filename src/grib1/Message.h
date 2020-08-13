@@ -58,6 +58,7 @@ class Message : public GRID::Message
     uint                getGenerationId() const;
     T::FilePosition     getFilePosition() const;
     T::TimeString       getForecastTime() const;
+    time_t              getForecastTimeT() const;
     short               getForecastType() const;
     short               getForecastNumber() const;
 
@@ -194,6 +195,9 @@ class Message : public GRID::Message
     mutable bool        mValueDecodingFailed;
 
     mutable bool        mDataLocked;
+
+    T::TimeString       mForecastTime;
+    time_t              mForecastTimeT;
 
   public:
 

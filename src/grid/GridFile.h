@@ -47,7 +47,8 @@ class GridFile
     virtual uint                getGenerationId() const;
     virtual std::string         getFileName() const;
     virtual time_t              getModificationTime() const;
-    virtual std::string         getDeletionTime() const;
+    virtual std::string         getDeletionTimeStr() const;
+    virtual time_t              getDeletionTime() const;
     virtual T::FileType         getFileType() const;
     virtual std::string         getFileTypeString() const;
     virtual time_t              getCheckTime() const;
@@ -72,6 +73,7 @@ class GridFile
     virtual void                setFileName(std::string  fileName);
     virtual void                setCheckTime(time_t checkTime);
     virtual void                setSourceId(uint sourceId);
+    virtual void                setDeletionTime(time_t deletionTime);
     virtual void                setDeletionTime(std::string deletionTime);
 
     virtual Message*            getMessageByIndex(std::size_t index);
@@ -97,7 +99,7 @@ class GridFile
     std::string                 mFileName;
     uint                        mFileId;
     time_t                      mFileModificationTime;
-    std::string                 mFileDeletionTime;      // The file should not be accessed after this time
+    time_t                      mDeletionTime;      // The file should not be accessed after this time
     uint                        mGroupFlags;
     uint                        mProducerId;
     uint                        mGenerationId;

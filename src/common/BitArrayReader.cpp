@@ -118,6 +118,7 @@ void BitArrayReader::setReadPosition(ulonglong _readPosition)
     This is the case if the current read position has reached the end of the bit array/stream.
 */
 
+/*
 bool BitArrayReader::readBit()
 {
   try
@@ -148,7 +149,7 @@ bool BitArrayReader::readBit()
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
-
+*/
 
 
 
@@ -164,6 +165,7 @@ bool BitArrayReader::readBit()
     the same thing in every read operation, which makes the implementation faster.
 */
 
+/*
 bool BitArrayReader::readBitNoCheck()
 {
   try
@@ -183,7 +185,7 @@ bool BitArrayReader::readBitNoCheck()
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
-
+*/
 
 
 
@@ -244,6 +246,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int& value)
         \param value          The result value of the read bits.
 */
 
+/*
 void BitArrayReader::readBits(unsigned int numberOfBits,unsigned int& value)
 {
   try
@@ -281,7 +284,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,unsigned int& value)
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
-
+*/
 
 
 

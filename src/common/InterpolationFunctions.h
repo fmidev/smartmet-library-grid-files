@@ -16,9 +16,14 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,int l
 void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int level1,int level2,int newLevel,short levelInterpolationMethod,T::ParamValue_vec& values);
 void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int level1,int level2,int newLevel,short levelInterpolationMethod,T::GridValueList& valueList);
 
+T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod);
 T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod);
+
+void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues);
 void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues);
-void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::string timeStr1,std::string timeStr2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList);
+
+void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::GridValueList& valueList);
+void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList);
 
 }
 
