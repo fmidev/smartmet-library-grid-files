@@ -17,7 +17,7 @@ std::string uint64_toHex(unsigned long long value);
 double int_power(double x, int y);
 double grib_power(long s,long n);
 unsigned long long getTime();
-
+/*
 int num_compare(char& v1,char& v2);
 int num_compare(uchar& v1,uchar& v2);
 int num_compare(short& v1,short& v2);
@@ -29,6 +29,9 @@ int num_compare(long long& v1,long long& v2);
 int num_compare(float& v1,float& v2);
 int num_compare(double& v1,double& v2);
 int time_compare(time_t v1,time_t v2);
+*/
+
+
 void time_usleep(int _sec,int _usec);
 uint stringToId(const char *str,uint len);
 uint stringToId(const char *str);
@@ -155,5 +158,147 @@ void tuneLevels(int& level1,int& level2,int newLevel);
 
 std::string fileToBase64(const char *filename);
 std::string base64_encode(unsigned char *data,size_t dataSize);
+
+
+inline int num_compare(uint& v1, uint& v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+inline int num_compare(char& v1, char& v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+inline int num_compare(uchar& v1, uchar& v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+inline int num_compare(short& v1, short& v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+inline int num_compare(ushort& v1, ushort& v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+inline int num_compare(int& v1, int& v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+inline int num_compare(unsigned long long& v1, unsigned long long& v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+inline int num_compare(long long& v1, long long& v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+inline int num_compare(float& v1, float& v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+inline int num_compare(double& v1, double& v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+inline int time_compare(time_t v1, time_t v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
 
 }

@@ -28,6 +28,9 @@
 #include "Exception.h"
 #include "GeneralDefinitions.h"
 
+#define NUM(a) (a-'0')
+
+
 namespace fs = boost::filesystem;
 
 namespace SmartMet
@@ -50,6 +53,7 @@ std::string uint64_toHex(unsigned long long value)
   }
 }
 
+#if 0
 int num_compare(uint& v1, uint& v2)
 {
   try
@@ -225,6 +229,8 @@ int time_compare(time_t v1, time_t v2)
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
+#endif
+
 
 void time_usleep(int _sec, int _usec)
 {
@@ -1482,11 +1488,32 @@ std::string toUpperString(std::string sourceString)
   }
 }
 
+
+
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
 {
   try
   {
-    return Fmi::TimeParser::parse_iso(timeStr);
+    if (timeStr.length() <  15)
+      SmartMet::Spine::Exception(BCP, "Invalid time string!");
+
+    const char *s = timeStr.c_str();
+
+    int year = NUM(s[0])*1000 + NUM(s[1])*100 + NUM(s[2])*10 + NUM(s[3]);
+    int month = NUM(s[4])*10 + NUM(s[5]);
+    int day = NUM(s[6])*10 + NUM(s[7]);
+    int hour = NUM(s[9])*10 + NUM(s[10]);
+    int minute = NUM(s[11])*10 + NUM(s[12]);
+    int second = NUM(s[13])*10 + NUM(s[14]);
+
+    return boost::posix_time::ptime(boost::gregorian::date(year, month, day),
+                                      boost::posix_time::hours(hour) +
+                                          boost::posix_time::minutes(minute) +
+                                          boost::posix_time::seconds(second));
+
+
+
+    //return Fmi::TimeParser::parse_iso(timeStr);
   }
   catch (...)
   {

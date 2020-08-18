@@ -5,6 +5,7 @@
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/ShowFunction.h"
+#include <boost/functional/hash.hpp>
 #include <iostream>
 
 
@@ -17,9 +18,8 @@ namespace GRIB1
 {
 
 std::map<uint,T::Coordinate_vec> coordinateCache;
-
-
-double gTransformCache[5];
+std::map <std::size_t,T::Coordinate> transformCache1;
+std::map <std::size_t,T::Coordinate> transformCache2;
 
 
 /*! \brief The constructor of the class. */
@@ -597,10 +597,15 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
   FUNCTION_TRACE
   try
   {
-    if (mGeometryId != 0  &&  C_INT(gTransformCache[0]) == mGeometryId &&  gTransformCache[1] == lat  &&  gTransformCache[2] == lon)
+    std::size_t hash = mHash;
+    boost::hash_combine(hash,lat);
+    boost::hash_combine(hash,lon);
+
+    auto it = transformCache1.find(hash);
+    if (it != transformCache1.end())
     {
-      x = gTransformCache[3];
-      y = gTransformCache[4];
+      x = it->second.x();
+      y = it->second.y();
       return true;
     }
 
@@ -622,11 +627,10 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
 
     mCoordinateTranformation_latlon2orig->Transform(1,&x,&y);
 
-    gTransformCache[0] = mGeometryId;
-    gTransformCache[1] = lat;
-    gTransformCache[2] = lon;
-    gTransformCache[3] = x;
-    gTransformCache[4] = y;
+    if (transformCache1.size() >= 1000000)
+      transformCache1.clear();
+
+    transformCache1.insert(std::pair<std::size_t,T::Coordinate>(hash,T::Coordinate(x,y)));
 
     return true;
   }
@@ -1842,10 +1846,30 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
   FUNCTION_TRACE
   try
   {
+    std::size_t hash = mHash;
+    boost::hash_combine(hash,lat);
+    boost::hash_combine(hash,lon);
+
+    auto it = transformCache2.find(hash);
+    if (it != transformCache2.end())
+    {
+      grid_i = it->second.x();
+      grid_j = it->second.y();
+      return true;
+    }
+
     double x = 0, y = 0;
     getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
 
-    return getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
+    if (getGridPointByOriginalCoordinates(x,y,grid_i,grid_j))
+    {
+      if (transformCache2.size() >= 1000000)
+        transformCache2.clear();
+
+      transformCache2.insert(std::pair<std::size_t,T::Coordinate>(hash,T::Coordinate(grid_i,grid_j)));
+      return true;
+    }
+    return false;
   }
   catch (...)
   {
