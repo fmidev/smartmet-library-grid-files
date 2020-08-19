@@ -946,7 +946,7 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_
     }
 
     time_t diff1 = newTime - t1;
-    time_t diff2 = t2 - newTime;
+    time_t diff2 = t2 - t1;
 
     uint len1 = values1.getLength();
     uint len2 = values2.getLength();
