@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 20.8.18
+Version: 20.8.19
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -13,7 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 20.6.16
 BuildRequires: smartmet-library-spine-devel >= 20.8.11
-BuildRequires: smartmet-library-macgyver >= 20.8.7
+BuildRequires: smartmet-library-macgyver >= 20.8.14
 BuildRequires: smartmet-library-tron >= 20.4.18
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -37,7 +37,7 @@ Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 20.6.16
-Requires: smartmet-library-macgyver >= 20.8.7
+Requires: smartmet-library-macgyver >= 20.8.14
 Requires: smartmet-library-spine >= 20.8.11
 
 %description
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Aug 19 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.8.19-1.fmi
+- Fixed speed optimized version of time interpolation
 * Tue Aug 18 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.8.18-1.fmi
 - More speed improvements
 * Fri Aug 14 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.8.14-1.fmi
