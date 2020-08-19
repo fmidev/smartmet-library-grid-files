@@ -1154,7 +1154,7 @@ T::TimeString ProductSection::getReferenceTime() const
     char ts[100];
     if (mYearOfCentury != 0xFF  &&  mMonth != 0xFF  &&  mDay != 0xFF)
     {
-      sprintf(ts,"%04u%02u%02uT%02u%02u00",C_UINT(2000+mYearOfCentury),mMonth,mDay,mHour,mMinute);
+      sprintf(ts,"%04u%02u%02uT%02u%02u00",C_UINT((mCenturyOfReferenceTimeOfData-1)*100+mYearOfCentury),mMonth,mDay,mHour,mMinute);
       return std::string(ts);
     }
     return std::string("19000101T000000");
