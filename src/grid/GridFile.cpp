@@ -573,7 +573,8 @@ void GridFile::setDeletionTime(std::string deletionTime)
   FUNCTION_TRACE
   try
   {
-    mDeletionTime = utcTimeToTimeT(deletionTime);
+    if (deletionTime.length() == 15)
+      mDeletionTime = utcTimeToTimeT(deletionTime);
   }
   catch (...)
   {
