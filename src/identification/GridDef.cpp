@@ -53,6 +53,7 @@
 #include "../grib2/implementation/HovmollerImpl.h"                          //  "3.1100"
 #include "../grib2/implementation/TimeSectionImpl.h"                        //  "3.1200"
 
+#include <macgyver/StringConversion.h>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
@@ -616,7 +617,7 @@ std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tab
       if (it->mGribVersion == gribVersion  &&  it->mTableVersion == tableVersion  &&  it->mTable == table  &&  it->mNumber == number)
         return it->mValue;
     }
-    return std::to_string(number);
+    return Fmi::to_string(number);
   }
   catch (...)
   {
@@ -3345,15 +3346,15 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
       T::Dimensions d = def->getGridDimensions();
       width = d.nx();
       height = d.ny();
-      attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)def->reverseXDirection()));
+      attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)def->reverseYDirection()));
+      attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)def->reverseXDirection()));
 
       double wm = 0;
       double hm = 0;
       if (def->getGridMetricCellSize(wm,hm))
       {
-        attributeList.setAttribute("grid.cell.width",std::to_string(wm));
-        attributeList.setAttribute("grid.cell.height",std::to_string(hm));
+        attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
+        attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
       }
     }
 
@@ -3441,8 +3442,8 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
         double dx = diffx / C_DOUBLE(width-1);
         double dy = diffy / C_DOUBLE(height-1);
 
-        attributeList.setAttribute("grid.cell.width",std::to_string(dx));
-        attributeList.setAttribute("grid.cell.height",std::to_string(dy));
+        attributeList.setAttribute("grid.cell.width",Fmi::to_string(dx));
+        attributeList.setAttribute("grid.cell.height",Fmi::to_string(dy));
 
 //        printf("DIFF %f %f  %f %f  %d,%d   %f,%f,%f,%f\n",diffx,diffy,dx,dy,width,height,cc[0],cc[1],cc[2],cc[3]);
         uint sz = width*height;
@@ -3562,15 +3563,15 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       T::Dimensions d = def->getGridDimensions();
       width = d.nx();
       height = d.ny();
-      attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)def->reverseYDirection()));
-      attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)def->reverseXDirection()));
+      attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)def->reverseYDirection()));
+      attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)def->reverseXDirection()));
 
       double wm = 0;
       double hm = 0;
       if (def->getGridMetricCellSize(wm,hm))
       {
-        attributeList.setAttribute("grid.cell.width",std::to_string(wm));
-        attributeList.setAttribute("grid.cell.height",std::to_string(hm));
+        attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
+        attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
       }
     }
 
@@ -3675,8 +3676,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         }
 
 
-        attributeList.setAttribute("grid.cell.width",std::to_string(dx));
-        attributeList.setAttribute("grid.cell.height",std::to_string(dy));
+        attributeList.setAttribute("grid.cell.width",Fmi::to_string(dx));
+        attributeList.setAttribute("grid.cell.height",Fmi::to_string(dy));
 
         uint sz = width*height;
 
@@ -4253,7 +4254,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
           else
           {
             //printf("*** GEOMETRY 1 EXISTS\n");
-            mGridDefinitions1.insert(std::pair<std::string,GRIB1::GridDefinition*>(gstr+std::to_string(cnt),def1));
+            mGridDefinitions1.insert(std::pair<std::string,GRIB1::GridDefinition*>(gstr+Fmi::to_string(cnt),def1));
             //delete def1;
           }
         }
@@ -4268,7 +4269,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
           else
           {
             //printf("*** GEOMETRY 2 EXISTS\n");
-            mGridDefinitions2.insert(std::pair<std::string,GRIB2::GridDefinition*>(gstr+std::to_string(cnt),def2));
+            mGridDefinitions2.insert(std::pair<std::string,GRIB2::GridDefinition*>(gstr+Fmi::to_string(cnt),def2));
             //delete def2;
           }
         }

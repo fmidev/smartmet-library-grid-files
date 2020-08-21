@@ -1192,7 +1192,7 @@ std::string toString(std::int8_t value)
 {
   try
   {
-    return std::to_string(C_INT(value));
+    return Fmi::to_string(C_INT(value));
   }
   catch (...)
   {
@@ -1204,7 +1204,7 @@ std::string toString(std::int16_t value)
 {
   try
   {
-    return std::to_string(value);
+    return Fmi::to_string(value);
   }
   catch (...)
   {
@@ -1216,7 +1216,7 @@ std::string toString(std::int32_t value)
 {
   try
   {
-    return std::to_string(value);
+    return Fmi::to_string(value);
   }
   catch (...)
   {
@@ -1228,7 +1228,7 @@ std::string toString(std::int64_t value)
 {
   try
   {
-    return std::to_string(value);
+    return Fmi::to_string(value);
   }
   catch (...)
   {
@@ -1240,7 +1240,7 @@ std::string toString(std::uint8_t value)
 {
   try
   {
-    return std::to_string(C_UINT(value));
+    return Fmi::to_string(C_UINT(value));
   }
   catch (...)
   {
@@ -1252,7 +1252,7 @@ std::string toString(std::uint16_t value)
 {
   try
   {
-    return std::to_string(value);
+    return Fmi::to_string(value);
   }
   catch (...)
   {
@@ -1264,7 +1264,7 @@ std::string toString(std::uint32_t value)
 {
   try
   {
-    return std::to_string(value);
+    return Fmi::to_string(value);
   }
   catch (...)
   {
@@ -1276,7 +1276,7 @@ std::string toString(std::uint64_t value)
 {
   try
   {
-    return std::to_string(value);
+    return Fmi::to_string(value);
   }
   catch (...)
   {
@@ -1330,7 +1330,7 @@ std::string toString(T::UInt8_opt value)
   {
     if (!value) return std::string("");
 
-    return std::to_string(C_UINT(*value));
+    return Fmi::to_string(C_UINT(*value));
   }
   catch (...)
   {
@@ -1344,7 +1344,7 @@ std::string toString(T::UInt16_opt value)
   {
     if (!value) return std::string("");
 
-    return std::to_string(*value);
+    return Fmi::to_string(*value);
   }
   catch (...)
   {
@@ -1358,7 +1358,7 @@ std::string toString(T::UInt32_opt value)
   {
     if (!value) return std::string("");
 
-    return std::to_string(*value);
+    return Fmi::to_string(*value);
   }
   catch (...)
   {
@@ -1372,7 +1372,7 @@ std::string toString(T::UInt64_opt value)
   {
     if (!value) return std::string("");
 
-    return std::to_string(*value);
+    return Fmi::to_string(*value);
   }
   catch (...)
   {
@@ -1386,7 +1386,7 @@ std::string toString(T::Int8_opt value)
   {
     if (!value) return std::string("");
 
-    return std::to_string(C_INT(*value));
+    return Fmi::to_string(C_INT(*value));
   }
   catch (...)
   {
@@ -1400,7 +1400,7 @@ std::string toString(T::Int16_opt value)
   {
     if (!value) return std::string("");
 
-    return std::to_string(*value);
+    return Fmi::to_string(*value);
   }
   catch (...)
   {
@@ -1414,7 +1414,7 @@ std::string toString(T::Int32_opt value)
   {
     if (!value) return std::string("");
 
-    return std::to_string(*value);
+    return Fmi::to_string(*value);
   }
   catch (...)
   {
@@ -1428,7 +1428,7 @@ std::string toString(T::Int64_opt value)
   {
     if (!value) return std::string("");
 
-    return std::to_string(*value);
+    return Fmi::to_string(*value);
   }
   catch (...)
   {

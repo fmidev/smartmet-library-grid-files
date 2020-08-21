@@ -9,6 +9,7 @@
 #include "../common/ShowFunction.h"
 #include "../common/MemoryWriter.h"
 #include "../identification/GridDef.h"
+#include <macgyver/StringConversion.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -483,14 +484,14 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
 
     getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-    attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
   }
   catch (...)
   {
@@ -519,8 +520,8 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
       double m = toDouble(gridSizeStr);
       if (m > 0)
       {
-        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(getGridHeight())*m)));
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(getGridHeight())*m)));
       }
     }
 
@@ -606,7 +607,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
         }
       }
 
-      attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(getGridProjection()));
     }
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
@@ -630,19 +631,19 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
       coordinateType = toUInt8(coordinateTypeStr);
 
     attributeList.setAttribute("grid.original.crs",getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
 
     double wm = 0;
     double hm = 0;
     if (getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
@@ -652,8 +653,8 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
       getGridIsobands(contourLowValues,contourHighValues,attributeList,contours);
 
       T::Dimensions  d = getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
       return;
     }
 
@@ -692,8 +693,8 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
 
 
 /*
@@ -762,14 +763,14 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
 
     getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(gridWidth));
-    attributeList.setAttribute("grid.height",std::to_string(gridHeight));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
   }
   catch (...)
   {
@@ -832,14 +833,14 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
 
     getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-    attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
 
   }
   catch (...)
@@ -867,8 +868,8 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
       double m = toDouble(gridSizeStr);
       if (m > 0)
       {
-        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(getGridHeight())*m)));
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(getGridHeight())*m)));
       }
     }
 
@@ -954,7 +955,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
         }
       }
 
-      attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(getGridProjection()));
     }
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
@@ -978,19 +979,19 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
       coordinateType = toUInt8(coordinateTypeStr);
 
     attributeList.setAttribute("grid.original.crs",getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
 
     double wm = 0;
     double hm = 0;
     if (getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
@@ -999,8 +1000,8 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     {
       getGridIsolines(contourValues,attributeList,contours);
       T::Dimensions  d = getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
       return;
     }
 
@@ -1040,8 +1041,8 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
 
 
 /*
@@ -1112,14 +1113,14 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
 
     getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(gridWidth));
-    attributeList.setAttribute("grid.height",std::to_string(gridHeight));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
   }
   catch (...)
   {
@@ -1565,7 +1566,7 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
       default:
       {
         SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
-        exception.addParameter("Coordinate Type",std::to_string(coordinateType));
+        exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
     }
@@ -2249,8 +2250,8 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
       double m = toDouble(gridSizeStr);
       if (m > 0)
       {
-        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(getGridHeight())*m)));
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(getGridHeight())*m)));
       }
     }
 
@@ -2336,24 +2337,24 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
         }
       }
 
-      attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(getGridProjection()));
     }
 
     attributeList.setAttribute("grid.original.crs",getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)reverseXDirection()));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
 
     double wm = 0;
     double hm = 0;
     if (getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
 
 
@@ -2365,8 +2366,8 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
       getGridValueVector(values);
       T::Dimensions  d = getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
       return;
     }
 
@@ -2380,8 +2381,8 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     {
       getGridValueVector(values);
       T::Dimensions  d = getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
       return;
     }
 
@@ -2389,8 +2390,8 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     //T::ParamValue_vec gridValues;
     getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,values);
 
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
   }
   catch (...)
   {
@@ -2507,16 +2508,16 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
     }
 
     attributeList.setAttribute("grid.original.crs",getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(getGridHeight()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)isGridGlobal()));
-    attributeList.setAttribute("grid.original.projectionType",std::to_string(getGridProjection()));
-    attributeList.setAttribute("grid.projectionType",std::to_string(getGridProjection()));
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)reverseXDirection()));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
+    attributeList.setAttribute("grid.original.projectionType",Fmi::to_string(getGridProjection()));
+    attributeList.setAttribute("grid.projectionType",Fmi::to_string(getGridProjection()));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
 
     T::GridValue *first = valueList.getGridValuePtrByIndex(0);
     T::GridValue *last = valueList.getGridValuePtrByIndex(size-1);
@@ -2549,8 +2550,8 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
     double hm = 0;
     if (getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
     }
   }
   catch (...)
@@ -3586,7 +3587,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
       default:
       {
         SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
-        exception.addParameter("Coordinate Type",std::to_string(coordinateType));
+        exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
     }
@@ -3637,7 +3638,7 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
       default:
       {
         SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
-        exception.addParameter("Coordinate Type",std::to_string(coordinateType));
+        exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
     }
@@ -4346,7 +4347,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
         default:
         {
           SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
-          exception.addParameter("Coordinate Type",std::to_string(coordinateType));
+          exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
           throw exception;
         }
       }
@@ -4420,7 +4421,7 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
       default:
       {
         SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
-        exception.addParameter("Coordinate Type",std::to_string(coordinateType));
+        exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
     }

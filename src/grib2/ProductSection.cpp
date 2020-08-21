@@ -58,6 +58,7 @@
 #include "implementation/Product_73Impl.h"
 
 #include <iostream>
+#include <macgyver/StringConversion.h>
 
 namespace SmartMet
 {
@@ -296,7 +297,7 @@ void ProductSection::read(MemoryReader& memoryReader)
       if (productDefinition == nullptr)
       {
         SmartMet::Spine::Exception exception(BCP,"Product definition template not supported!");
-        exception.addParameter("Template number",std::to_string(*mProductDefinitionTemplateNumber));
+        exception.addParameter("Template number",Fmi::to_string(*mProductDefinitionTemplateNumber));
         throw exception;
       }
       mProductDefinition.reset(productDefinition);
@@ -754,7 +755,7 @@ void ProductSection::setProductDefinition(std::uint16_t productTemplateId)
     if (productDefintion == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Cannot create product definition!");
-      exception.addParameter("Product",std::to_string(productTemplateId));
+      exception.addParameter("Product",Fmi::to_string(productTemplateId));
       throw exception;
     }
 

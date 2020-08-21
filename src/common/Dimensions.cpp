@@ -1,6 +1,7 @@
 #include "Dimensions.h"
 #include "Exception.h"
 #include "GeneralFunctions.h"
+#include <macgyver/StringConversion.h>
 
 
 namespace SmartMet
@@ -150,7 +151,7 @@ uint Dimensions::nx() const
       return mSizes[0];
 
     SmartMet::Spine::Exception exception(BCP,"No such dimension!");
-    exception.addParameter("Dimensions",std::to_string(mDimensions));
+    exception.addParameter("Dimensions",Fmi::to_string(mDimensions));
     throw exception;
   }
   catch (...)

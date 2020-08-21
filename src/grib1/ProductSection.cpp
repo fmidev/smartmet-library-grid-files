@@ -4,6 +4,7 @@
 #include "../common/GeneralFunctions.h"
 #include "../identification/GridDef.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <macgyver/StringConversion.h>
 
 
 namespace SmartMet
@@ -1648,7 +1649,7 @@ void ProductSection::setMonth(std::uint8_t month)
     if (month < 1 ||  month > 12)
     {
       SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
-      exception.addParameter("Value",std::to_string(month));
+      exception.addParameter("Value",Fmi::to_string(month));
       exception.addParameter("Value Range","1..12");
       throw exception;
     }
@@ -1672,7 +1673,7 @@ void ProductSection::setDay(std::uint8_t day)
     if (day < 1 ||  day > 31)
     {
       SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
-      exception.addParameter("Value",std::to_string(day));
+      exception.addParameter("Value",Fmi::to_string(day));
       exception.addParameter("Value Range","1..31");
       throw exception;
     }
@@ -1696,7 +1697,7 @@ void ProductSection::setHour(std::uint8_t hour)
     if (hour > 23)
     {
       SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
-      exception.addParameter("Value",std::to_string(hour));
+      exception.addParameter("Value",Fmi::to_string(hour));
       exception.addParameter("Value Range","0..23");
       throw exception;
     }
@@ -1720,7 +1721,7 @@ void ProductSection::setMinute(std::uint8_t minute)
     if (minute > 59)
     {
       SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
-      exception.addParameter("Value",std::to_string(minute));
+      exception.addParameter("Value",Fmi::to_string(minute));
       exception.addParameter("Value Range","0..59");
       throw exception;
     }

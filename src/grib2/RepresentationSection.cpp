@@ -19,6 +19,7 @@
 #include "implementation/ComplexSphericalHarmonicsDataRepresentationImpl.h"  // "5.50000"
 
 #include <iostream>
+#include <macgyver/StringConversion.h>
 
 namespace SmartMet
 {
@@ -578,7 +579,7 @@ void RepresentationSection::setRepresentationDefinition(std::uint16_t templateNu
     if (representationDefinition == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Unsupported template number!");
-      exception.addParameter("Template number",std::to_string(templateNumber));
+      exception.addParameter("Template number",Fmi::to_string(templateNumber));
       throw exception;
     }
 
@@ -642,7 +643,7 @@ RepresentationDefinition* RepresentationSection::createRepresentationDefinition(
     }
 
     Spine::Exception exception(BCP,"Unknown representation definition template number!'");
-    exception.addParameter("Template number",std::to_string(templateNumber));
+    exception.addParameter("Template number",Fmi::to_string(templateNumber));
     throw exception;
   }
   catch (...)

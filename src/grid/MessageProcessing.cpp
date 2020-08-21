@@ -3,6 +3,7 @@
 #include "../common/GeneralFunctions.h"
 #include "../common/CoordinateConversions.h"
 #include "../identification/GridDef.h"
+#include <macgyver/StringConversion.h>
 
 namespace SmartMet
 {
@@ -81,24 +82,24 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
     getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
-    attributeList.setAttribute("grid.levelInterpolationMethod",std::to_string(levelInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-    attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
+    attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
 
     double wm = 0;
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
   }
   catch (...)
@@ -166,15 +167,15 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
 
     getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-    attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
   }
   catch (...)
   {
@@ -200,8 +201,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
       double m = toDouble(gridSizeStr);
       if (m > 0)
       {
-        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
       }
     }
 
@@ -287,7 +288,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
         }
       }
 
-      attributeList.setAttribute("grid.projectionType",std::to_string(message1.getGridProjection()));
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
     }
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
@@ -295,8 +296,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     {
       getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,contours);
       T::Dimensions  d = message1.getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
       return;
     }
 
@@ -356,21 +357,21 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
 
     double wm = 0;
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
   }
   catch (...)
@@ -435,15 +436,15 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
         break;
     }
 
-    attributeList.setAttribute("grid.levelInterpolationMethod",std::to_string(levelInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(gridWidth));
-    attributeList.setAttribute("grid.height",std::to_string(gridHeight));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
 
     getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,areaInterpolationMethod,smooth_size,smooth_degree,contours);
   }
@@ -512,15 +513,15 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
         break;
     }
 
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(gridWidth));
-    attributeList.setAttribute("grid.height",std::to_string(gridHeight));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
 
     getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,areaInterpolationMethod,smooth_size,smooth_degree,contours);
   }
@@ -547,8 +548,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
       double m = toDouble(gridSizeStr);
       if (m > 0)
       {
-        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
       }
     }
 
@@ -634,7 +635,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
         }
       }
 
-      attributeList.setAttribute("grid.projectionType",std::to_string(message1.getGridProjection()));
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
     }
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
@@ -642,8 +643,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
     {
       getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,contours);
       T::Dimensions  d = message1.getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
       return;
     }
 
@@ -703,21 +704,21 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
 
     double wm = 0;
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
   }
   catch (...)
@@ -790,16 +791,16 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
 
     getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.levelInterpolationMethod",std::to_string(levelInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-    attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
   }
   catch (...)
   {
@@ -825,8 +826,8 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
       double m = toDouble(gridSizeStr);
       if (m > 0)
       {
-        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
       }
     }
 
@@ -912,7 +913,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
         }
       }
 
-      attributeList.setAttribute("grid.projectionType",std::to_string(message1.getGridProjection()));
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
     }
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
@@ -920,8 +921,8 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     {
       getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,contours);
       T::Dimensions  d = message1.getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
       return;
     }
 
@@ -981,21 +982,21 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
-    attributeList.setAttribute("grid.ogiginal.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
+    attributeList.setAttribute("grid.ogiginal.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
 
     double wm = 0;
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
   }
   catch (...)
@@ -1032,9 +1033,9 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& m
 
     getIsobands(gridValues,&gridLatLonCoordinates,gridWidth,gridHeight,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(gridWidth));
-    attributeList.setAttribute("grid.height",std::to_string(gridHeight));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
   }
   catch (...)
   {
@@ -1106,16 +1107,16 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
 
     getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.levelInterpolationMethod",std::to_string(levelInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-    attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
   }
   catch (...)
   {
@@ -1141,8 +1142,8 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
       double m = toDouble(gridSizeStr);
       if (m > 0)
       {
-        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
       }
     }
 
@@ -1228,7 +1229,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
         }
       }
 
-      attributeList.setAttribute("grid.projectionType",std::to_string(message1.getGridProjection()));
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
     }
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
@@ -1236,8 +1237,8 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     {
       getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,contours);
       T::Dimensions  d = message1.getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
       return;
     }
 
@@ -1302,22 +1303,22 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
 
     double wm = 0;
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
   }
   catch (...)
@@ -1385,15 +1386,15 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
 
     getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.levelInterpolationMethod",std::to_string(levelInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-    attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message2.reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message2.reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
   }
   catch (...)
   {
@@ -1461,15 +1462,15 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
 
     getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    //attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-    attributeList.setAttribute("grid.height",std::to_string(d.ny()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message2.reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    //attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message2.reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
   }
   catch (...)
   {
@@ -1495,8 +1496,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
       double m = toDouble(gridSizeStr);
       if (m > 0)
       {
-        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
       }
     }
 
@@ -1582,7 +1583,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
         }
       }
 
-      attributeList.setAttribute("grid.projectionType",std::to_string(message1.getGridProjection()));
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
     }
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
@@ -1590,8 +1591,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
     {
       getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,contours);
       T::Dimensions  d = message1.getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
       return;
     }
 
@@ -1656,22 +1657,22 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
 
     double wm = 0;
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
   }
   catch (...)
@@ -1698,8 +1699,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
       double m = toDouble(gridSizeStr);
       if (m > 0)
       {
-        attributeList.setAttribute("grid.width",std::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
-        attributeList.setAttribute("grid.height",std::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
       }
     }
 
@@ -1785,7 +1786,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
         }
       }
 
-      attributeList.setAttribute("grid.projectionType",std::to_string(message1.getGridProjection()));
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
     }
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
@@ -1793,8 +1794,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     {
       getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,contours);
       T::Dimensions  d = message1.getGridDimensions();
-      attributeList.setAttribute("grid.width",std::to_string(d.nx()));
-      attributeList.setAttribute("grid.height",std::to_string(d.ny()));
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
       return;
     }
 
@@ -1859,22 +1860,22 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
-    attributeList.setAttribute("grid.original.width",std::to_string(message1.getGridWidth()));
-    attributeList.setAttribute("grid.original.height",std::to_string(message1.getGridHeight()));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
-    attributeList.setAttribute("grid.width",std::to_string(width));
-    attributeList.setAttribute("grid.height",std::to_string(height));
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
 
     double wm = 0;
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
-      attributeList.setAttribute("grid.original.cell.width",std::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",std::to_string(hm));
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
   }
   catch (...)
@@ -1940,15 +1941,15 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
         break;
     }
 
-    attributeList.setAttribute("grid.levelInterpolationMethod",std::to_string(levelInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(gridWidth));
-    attributeList.setAttribute("grid.height",std::to_string(gridHeight));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
 
     getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,areaInterpolationMethod,smooth_size,smooth_degree,contours);
   }
@@ -2017,15 +2018,15 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
         break;
     }
 
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(gridWidth));
-    attributeList.setAttribute("grid.height",std::to_string(gridHeight));
-    attributeList.setAttribute("grid.original.relativeUV",std::to_string((int)message1.isRelativeUV()));
-    attributeList.setAttribute("grid.original.global",std::to_string((int)message1.isGridGlobal()));
-    attributeList.setAttribute("grid.original.reverseYDirection",std::to_string((int)message1.reverseYDirection()));
-    attributeList.setAttribute("grid.original.reverseXDirection",std::to_string((int)message1.reverseXDirection()));
-    attributeList.setAttribute("contour.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
 
     getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,areaInterpolationMethod,smooth_size,smooth_degree,contours);
   }
@@ -2062,9 +2063,9 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& m
 
     getIsolines(gridValues,&gridLatLonCoordinates,gridWidth,gridHeight,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.width",std::to_string(gridWidth));
-    attributeList.setAttribute("grid.height",std::to_string(gridHeight));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
   }
   catch (...)
   {
@@ -2583,9 +2584,9 @@ void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::M
     if (areaInterpolationMethodStr != nullptr)
       areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.levelInterpolationMethod",std::to_string(levelInterpolationMethod));
-    attributeList.setAttribute("grid.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
+    attributeList.setAttribute("grid.coordinateType",Fmi::to_string(coordinateType));
 
     if (coordinates.size() == 0)
       return;
@@ -2622,9 +2623,9 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
     if (areaInterpolationMethodStr != nullptr)
       areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
-    attributeList.setAttribute("grid.areaInterpolationMethod",std::to_string(areaInterpolationMethod));
-    attributeList.setAttribute("grid.timeInterpolationMethod",std::to_string(timeInterpolationMethod));
-    attributeList.setAttribute("grid.coordinateType",std::to_string(coordinateType));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("grid.coordinateType",Fmi::to_string(coordinateType));
 
     if (coordinates.size() == 0)
       return;

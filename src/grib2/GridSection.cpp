@@ -37,6 +37,7 @@
 #include "implementation/TimeSectionImpl.h"                        //  "3.1200"
 
 #include <iostream>
+#include <macgyver/StringConversion.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -1734,7 +1735,7 @@ GridDefinition* GridSection::createGridDefinition(std::uint16_t templateNumber)
         return new TimeSectionImpl();
       default:
         throw SmartMet::Spine::Exception(BCP,"Unknown grid definition template number '" +
-                                 std::to_string(templateNumber) + "'!");
+                                 Fmi::to_string(templateNumber) + "'!");
     }
   }
   catch (...)

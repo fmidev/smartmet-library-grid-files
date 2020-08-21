@@ -7,6 +7,7 @@
 #include "../common/Exception.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
+#include <macgyver/StringConversion.h>
 
 
 namespace SmartMet
@@ -462,7 +463,7 @@ void DataSection::setDataDefinition(ushort compressionMethod)
     if (dataDefinition == nullptr)
     {
       SmartMet::Spine::Exception exception(BCP,"Unsupported compression method!");
-      exception.addParameter("CompressionMethod",std::to_string(compressionMethod));
+      exception.addParameter("CompressionMethod",Fmi::to_string(compressionMethod));
       throw exception;
     }
 

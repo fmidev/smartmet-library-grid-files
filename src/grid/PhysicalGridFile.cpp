@@ -7,6 +7,7 @@
 #include "../grib1/Message.h"
 #include "../grib2/Message.h"
 #include "../fmig1/Message.h"
+#include <macgyver/StringConversion.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -162,7 +163,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
     if (mMessages.find(messageIndex) != mMessages.end())
     {
       SmartMet::Spine::Exception exception(BCP,"Message index already exists!");
-      exception.addParameter("MessageIndex",std::to_string(messageIndex));
+      exception.addParameter("MessageIndex",Fmi::to_string(messageIndex));
       throw exception;
     }
 
@@ -597,7 +598,7 @@ void PhysicalGridFile::readGrib2Message(MemoryReader& memoryReader, uint message
       {
         delete message;
         SmartMet::Spine::Exception exception(BCP,"Incomplete message in the GRIB2 file!");
-        exception.addParameter("Message index",std::to_string(messageIndex));
+        exception.addParameter("Message index",Fmi::to_string(messageIndex));
         throw exception;
       }
 
@@ -708,7 +709,7 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
         valid = false;
         //SmartMet::Spine::Exception exception(BCP,"The GRIB size ('totalLength') is out of the limits!");
         //exception.addParameter("Read position",uint64_toHex(memoryReader.getReadPosition()));
-        //exception.addParameter("totalLength",std::to_string(totalLength));
+        //exception.addParameter("totalLength",Fmi::to_string(totalLength));
         //throw exception;
       }
 

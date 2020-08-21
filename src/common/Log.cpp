@@ -2,6 +2,7 @@
 #include "Exception.h"
 #include "AutoThreadLock.h"
 #include "GeneralFunctions.h"
+#include <macgyver/StringConversion.h>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -67,8 +68,8 @@ void Log::init(bool _enabled,const char *_filename,uint _maxSize,uint _truncateS
     if (_maxSize < _truncateSize)
     {
       SmartMet::Spine::Exception exception(BCP,"The '_maxSize' parameter is smaller than the '_truncateSize' parameter!");
-      exception.addParameter("maxSize",std::to_string(_maxSize));
-      exception.addParameter("truncateSize",std::to_string(_truncateSize));
+      exception.addParameter("maxSize",Fmi::to_string(_maxSize));
+      exception.addParameter("truncateSize",Fmi::to_string(_truncateSize));
       throw exception;
     }
 

@@ -5,6 +5,7 @@
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/BitArrayWriter.h"
+#include <macgyver/StringConversion.h>
 
 
 namespace SmartMet
@@ -233,8 +234,8 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
     if (bitmap != nullptr  &&  numOfValues > (bitmapSizeInBytes*8))
     {
       SmartMet::Spine::Exception exception(BCP,"The bitmap does not contain enough bits!");
-      exception.addParameter("Number of values",std::to_string(numOfValues));
-      exception.addParameter("MaxBits in bitmap",std::to_string(bitmapSizeInBytes*8));
+      exception.addParameter("Number of values",Fmi::to_string(numOfValues));
+      exception.addParameter("MaxBits in bitmap",Fmi::to_string(bitmapSizeInBytes*8));
       throw exception;
     }
 
@@ -308,10 +309,10 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
           if (bytepos >= dataSize)
           {
             SmartMet::Spine::Exception exception(BCP,"Trying to access data outside of the memory area!");
-            exception.addParameter("Value index",std::to_string(i));
-            exception.addParameter("Num of values",std::to_string(numOfValues));
-            exception.addParameter("Data size",std::to_string(dataSize));
-            exception.addParameter("Requested position",std::to_string(bytepos));
+            exception.addParameter("Value index",Fmi::to_string(i));
+            exception.addParameter("Num of values",Fmi::to_string(numOfValues));
+            exception.addParameter("Data size",Fmi::to_string(dataSize));
+            exception.addParameter("Requested position",Fmi::to_string(bytepos));
             throw exception;
           }
 
