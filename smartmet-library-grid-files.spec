@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 20.8.20
+Version: 20.8.21
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,9 +11,9 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 20.6.16
-BuildRequires: smartmet-library-spine-devel >= 20.8.11
-BuildRequires: smartmet-library-macgyver >= 20.8.14
+BuildRequires: smartmet-library-newbase-devel >= 20.8.21
+BuildRequires: smartmet-library-spine-devel >= 20.8.21
+BuildRequires: smartmet-library-macgyver >= 20.8.21
 BuildRequires: smartmet-library-tron >= 20.4.18
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -36,9 +36,9 @@ Requires: gdal-libs
 Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 20.6.16
-Requires: smartmet-library-macgyver >= 20.8.14
-Requires: smartmet-library-spine >= 20.8.11
+Requires: smartmet-library-newbase >= 20.8.21
+Requires: smartmet-library-macgyver >= 20.8.21
+Requires: smartmet-library-spine >= 20.8.21
 
 %description
 FMI Grid File handling library
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Aug 21 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.8.21-1.fmi
+- Upgrade to fmt 6.2
 * Thu Aug 20 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.8.20-1.fmi
 - Bug fix to filesys2smartmet functions
 * Wed Aug 19 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.8.19-2.fmi
