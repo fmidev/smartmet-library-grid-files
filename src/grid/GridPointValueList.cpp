@@ -39,14 +39,16 @@ GridPointValueList::GridPointValueList()
   {
     mComparisonMethod = GridPointValue::ComparisonMethod::none;
     mReleaseObjects = true;
-    mSize = 100;
+    mSize = 0;
     mLength = 0;
+    mArray = nullptr;
+/*
     mArray = new GridPointValuePtr[100];
-
     for (uint t=0; t<100; t++)
     {
       mArray[t] = nullptr;
     }
+  */
   }
   catch (...)
   {
@@ -118,18 +120,18 @@ GridPointValueList::~GridPointValueList()
 {
   try
   {
-    if (mArray != nullptr)
+    if (mArray == nullptr)
+      return;
+
+    if (mReleaseObjects && mLength > 0)
     {
       for (uint t=0; t<mLength; t++)
       {
-        if (mArray[t] != nullptr  &&  mReleaseObjects)
-        {
+        if (mArray[t] != nullptr)
           delete(mArray[t]);
-          mArray[t] = nullptr;
-        }
       }
-      delete[] mArray;
     }
+    delete[] mArray;
   }
   catch (...)
   {
@@ -261,19 +263,18 @@ void GridPointValueList::clear()
 {
   try
   {
-    if (mArray != nullptr)
+    if (mArray == nullptr)
+      return;
+
+    if (mReleaseObjects  && mLength > 0)
     {
       for (uint t=0; t<mLength; t++)
       {
-        if (mArray[t] != nullptr  &&  mReleaseObjects)
-        {
+        if (mArray[t] != nullptr)
           delete(mArray[t]);
-          mArray[t] = nullptr;
-        }
       }
-      delete[] mArray;
     }
-
+    delete[] mArray;
     mArray = nullptr;
     mSize = 0;
     mLength = 0;

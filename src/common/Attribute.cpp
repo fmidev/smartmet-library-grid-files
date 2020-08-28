@@ -1,6 +1,7 @@
 #include "Attribute.h"
 #include "Exception.h"
 #include "GeneralFunctions.h"
+#include <boost/functional/hash.hpp>
 
 
 
@@ -84,6 +85,25 @@ Attribute& Attribute::operator=(const Attribute& attribute)
     mValue = attribute.mValue;
 
     return *this;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+std::size_t Attribute::getHash()
+{
+  try
+  {
+    std::size_t hash = 0;
+    boost::hash_combine(hash,mName);
+    boost::hash_combine(hash,mValue);
+
+    return hash;
   }
   catch (...)
   {

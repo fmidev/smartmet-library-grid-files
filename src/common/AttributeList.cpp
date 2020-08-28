@@ -1,6 +1,7 @@
 #include "AttributeList.h"
 #include "Exception.h"
 #include "GeneralFunctions.h"
+#include <boost/functional/hash.hpp>
 
 
 namespace SmartMet
@@ -407,6 +408,26 @@ const char* AttributeList::getAttributeValueByIndex(unsigned int index) const
     }
 
     return nullptr;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+std::size_t AttributeList::getHash()
+{
+  try
+  {
+    std::size_t hash = 0;
+    for (auto it = mAttributeVector.begin(); it != mAttributeVector.end(); ++it)
+      boost::hash_combine(hash,(*it)->getHash());
+
+    return hash;
   }
   catch (...)
   {

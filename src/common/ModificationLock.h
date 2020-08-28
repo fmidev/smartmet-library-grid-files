@@ -3,6 +3,9 @@
 #include "ThreadLock.h"
 #include <string>
 
+// #define TRACE LOCK 1
+
+
 namespace SmartMet
 {
 
@@ -22,15 +25,19 @@ class ModificationLock
     void            lock();
     void            unlock();
 
+#ifdef TRACE_LOCK
     std::string     getFilename();
     uint            getLine();
+#endif
 
   protected:
 
     ThreadLock      mThreadLock;
     int             mReadCounter;
+#ifdef TRACE_LOCK
     std::string     mFilename;
     uint            mLine;
+#endif
 };
 
 

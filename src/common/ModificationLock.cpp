@@ -7,11 +7,14 @@ namespace SmartMet
 {
 
 
+
 ModificationLock::ModificationLock()
 {
   try
   {
+#ifdef TRACE_LOCK
     mLine = 0;
+#endif
     mReadCounter = 0;
   }
   catch (...)
@@ -63,8 +66,10 @@ void ModificationLock::readLock(const char *filename,uint line)
   try
   {
     mThreadLock.lock();
+#ifdef TRACE_LOCK
     mLine = line;
     mFilename = filename;
+#endif
     mReadCounter++;
     mThreadLock.unlock();
   }
@@ -82,11 +87,13 @@ void ModificationLock::readUnlock()
   try
   {
     mThreadLock.lock();
+#ifdef TRACE_LOCK
     if (mLine > 0)
     {
       mFilename = "";
       mLine = 0;
     }
+#endif
     mReadCounter--;
     mThreadLock.unlock();
   }
@@ -133,8 +140,10 @@ void ModificationLock::writeLock(const char *filename,uint line)
       mThreadLock.lock();
       if (mReadCounter == 0)
       {
+#ifdef TRACE_LOCK
         mLine = line;
         mFilename = filename;
+#endif
         return;
       }
 
@@ -156,11 +165,13 @@ void ModificationLock::writeUnlock()
 {
   try
   {
+#ifdef TRACE_LOCK
     if (mLine > 0)
     {
       mFilename = "";
       mLine = 0;
     }
+#endif
     mThreadLock.unlock();
   }
   catch (...)
@@ -203,6 +214,7 @@ void ModificationLock::unlock()
 
 
 
+#ifdef TRACE_LOCK
 
 std::string ModificationLock::getFilename()
 {
@@ -231,6 +243,7 @@ uint ModificationLock::getLine()
     throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
   }
 }
+#endif
 
 
 }

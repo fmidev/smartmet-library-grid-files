@@ -3302,8 +3302,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       return ParamValueMissing;
 
     addCachedValue(idx,values[idx]);
-    printf("--- ValueFromVector %u,%u : %f\n",grid_i,grid_j,values[idx]);
-    print(std::cout,0,0);
     return values[idx];
   }
   catch (...)

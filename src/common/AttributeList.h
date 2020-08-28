@@ -32,6 +32,7 @@ class AttributeList
     const char*     getAttributeValue(const char *name) const;
     size_t          getAttributeValues(const char *name,std::vector<std::string>& values) const;
     const char*     getAttributeValueByIndex(unsigned int index) const;
+    std::size_t     getHash();
     void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
  protected:
