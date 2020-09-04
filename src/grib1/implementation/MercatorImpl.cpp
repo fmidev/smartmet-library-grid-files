@@ -190,11 +190,11 @@ std::string MercatorImpl::getGridGeometryString() const
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec MercatorImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec MercatorImpl::getGridOriginalCoordinates() const
 {
   try
   {
-    T::Coordinate_vec coordinateList;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     if (mCt_latlon2mercator == nullptr)
       return coordinateList;
@@ -217,7 +217,7 @@ T::Coordinate_vec MercatorImpl::getGridOriginalCoordinates() const
 
     mCt_latlon2mercator->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
 
-    coordinateList.reserve(ni*nj);
+    coordinateList->reserve(ni*nj);
 
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < nj; j++)
@@ -227,7 +227,7 @@ T::Coordinate_vec MercatorImpl::getGridOriginalCoordinates() const
       for (uint i=0; i < ni; i++)
       {
         T::Coordinate coord(x,y);
-        coordinateList.push_back(coord);
+        coordinateList->push_back(coord);
         x += di;
       }
       y += dj;
@@ -582,7 +582,7 @@ void MercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
     if (optionFlags & GRID::PrintFlag::coordinates)
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
-      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
+      T::Coordinate_svec coordinateList = getGridOriginalCoordinates();
 
       int nx = C_INT(mNi);
       int ny = C_INT(mNj);
@@ -595,7 +595,7 @@ void MercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
         {
           if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
           {
-            T::Coordinate coord = coordinateList.at(c);
+            T::Coordinate coord = coordinateList->at(c);
 
             if (mCt_mercator2latlon)
             {

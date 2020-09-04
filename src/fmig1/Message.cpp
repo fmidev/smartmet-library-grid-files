@@ -1089,13 +1089,13 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
         \return   The grid coordinates.
 */
 
-T::Coordinate_vec Message::getGridOriginalCoordinates() const
+T::Coordinate_svec Message::getGridOriginalCoordinates() const
 {
   FUNCTION_TRACE
   try
   {
-    T::Coordinate_vec coordinates;
-    return coordinates;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
+    return coordinateList;
   }
   catch (...)
   {
@@ -1116,13 +1116,13 @@ T::Coordinate_vec Message::getGridOriginalCoordinates() const
         \return   The grid latlon coordinates.
 */
 
-T::Coordinate_vec Message::getGridLatLonCoordinates() const
+T::Coordinate_svec Message::getGridLatLonCoordinates() const
 {
   FUNCTION_TRACE
   try
   {
-    T::Coordinate_vec coordinates;
-    return coordinates;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
+    return coordinateList;
   }
   catch (...)
   {

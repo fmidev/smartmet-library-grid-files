@@ -92,7 +92,7 @@ void AlbersImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec AlbersImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec AlbersImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
 }

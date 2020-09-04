@@ -12,18 +12,18 @@ class HovmollerImpl : public Hovmoller
 {
   public:
 
-                      HovmollerImpl();
-                      HovmollerImpl(const HovmollerImpl& other);
-    virtual           ~HovmollerImpl();
+                        HovmollerImpl();
+                        HovmollerImpl(const HovmollerImpl& other);
+    virtual             ~HovmollerImpl();
 
-    GridDefinition*   createGridDefinition() const;
+    GridDefinition*     createGridDefinition() const;
 
-    T::Coordinate_vec getGridOriginalCoordinates() const;
-    T::Dimensions     getGridDimensions() const;
-    bool              getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
+    T::Coordinate_svec  getGridOriginalCoordinates() const;
+    T::Dimensions       getGridDimensions() const;
+    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
 
-    void              initSpatialReference();
-    void              read(MemoryReader& memoryReader);
+    void                initSpatialReference();
+    void                read(MemoryReader& memoryReader);
 };
 
 }

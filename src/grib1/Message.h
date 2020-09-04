@@ -74,7 +74,7 @@ class Message : public GRID::Message
     T::Dimensions       getGridDimensions() const;
     T::Hash             getGridHash() const;
     bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
-    T::Coordinate_vec   getGridLatLonCoordinates() const;
+    T::Coordinate_svec  getGridLatLonCoordinates() const;
     bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
@@ -82,7 +82,7 @@ class Message : public GRID::Message
     bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     bool                getGridMetricCellSize(double& width,double& height) const;
     bool                getGridMetricSize(double& width,double& height) const;
-    T::Coordinate_vec   getGridOriginalCoordinates() const;
+    T::Coordinate_svec  getGridOriginalCoordinates() const;
     bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
@@ -93,6 +93,7 @@ class Message : public GRID::Message
     int                 getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
     void                getGridOriginalValueVector(T::ParamValue_vec& values) const;
     bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
+    bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
     bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     T::GridProjection   getGridProjection() const;
     void                getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;

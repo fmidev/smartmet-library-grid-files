@@ -177,11 +177,11 @@ void LambertConformalImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec LambertConformalImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec LambertConformalImpl::getGridOriginalCoordinates() const
 {
   try
   {
-    T::Coordinate_vec coordinateList;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return coordinateList;
@@ -189,7 +189,7 @@ T::Coordinate_vec LambertConformalImpl::getGridOriginalCoordinates() const
     if (!mInitialized)
       init();
 
-    coordinateList.reserve(mNx*mNy);
+    coordinateList->reserve(mNx*mNy);
 
     double y = mStartY;
     for (uint j=0; j < mNy; j++)
@@ -199,7 +199,7 @@ T::Coordinate_vec LambertConformalImpl::getGridOriginalCoordinates() const
       for (uint i=0; i < mNx; i++)
       {
         T::Coordinate coord(x,y);
-        coordinateList.push_back(coord);
+        coordinateList->push_back(coord);
         x += mDx;
       }
       y += mDy;

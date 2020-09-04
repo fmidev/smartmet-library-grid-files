@@ -2396,7 +2396,7 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
         \return   The grid coordinates.
 */
 
-T::Coordinate_vec Message::getGridOriginalCoordinates() const
+T::Coordinate_svec Message::getGridOriginalCoordinates() const
 {
   FUNCTION_TRACE
   try
@@ -2425,7 +2425,7 @@ T::Coordinate_vec Message::getGridOriginalCoordinates() const
         \return   The grid latlon coordinates.
 */
 
-T::Coordinate_vec Message::getGridLatLonCoordinates() const
+T::Coordinate_svec Message::getGridLatLonCoordinates() const
 {
   FUNCTION_TRACE
   try
@@ -3375,6 +3375,31 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
   }
 }
 
+
+
+
+
+bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+    bool res = mGridSection->getGridPointByLatLonCoordinatesNoCache(lat,lon,grid_i,grid_j);
+    //printf("LATLON %f,%f => %f,%f  => %u,%u\n",lat,lon,grid_i,grid_j,(uint)grid_i,(uint)grid_j);
+
+    //std::cout << getForecastTime() << " VALUE " << getGridValueByGridPoint((uint)grid_i,(uint)grid_j) << "\n";
+    return res;
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
 
 
 

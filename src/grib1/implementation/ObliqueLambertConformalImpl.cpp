@@ -127,11 +127,11 @@ void ObliqueLambertConformalImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec ObliqueLambertConformalImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec ObliqueLambertConformalImpl::getGridOriginalCoordinates() const
 {
   try
   {
-    T::Coordinate_vec coordinateList;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     uint nx = mNx;
     uint ny = mNy;
@@ -151,7 +151,7 @@ T::Coordinate_vec ObliqueLambertConformalImpl::getGridOriginalCoordinates() cons
 
     mCt_latlon2lambert->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
 
-    coordinateList.reserve(nx*ny);
+    coordinateList->reserve(nx*ny);
 
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < ny; j++)
@@ -161,7 +161,7 @@ T::Coordinate_vec ObliqueLambertConformalImpl::getGridOriginalCoordinates() cons
       for (uint i=0; i < nx; i++)
       {
         T::Coordinate coord(x,y);
-        coordinateList.push_back(coord);
+        coordinateList->push_back(coord);
         x += dx;
       }
       y += dy;

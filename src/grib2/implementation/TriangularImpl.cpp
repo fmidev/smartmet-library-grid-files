@@ -91,7 +91,7 @@ void TriangularImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec TriangularImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec TriangularImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
 }

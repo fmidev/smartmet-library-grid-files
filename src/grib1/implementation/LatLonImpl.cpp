@@ -172,11 +172,11 @@ void LatLonImpl::init() const
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec LatLonImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec LatLonImpl::getGridOriginalCoordinates() const
 {
   try
   {
-    T::Coordinate_vec coordinateList;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     if (!mInitialized)
       init();
@@ -184,7 +184,7 @@ T::Coordinate_vec LatLonImpl::getGridOriginalCoordinates() const
     if (mNi == 0 ||  mNj == 0)
       return coordinateList;
 
-    coordinateList.reserve(mNi*mNj);
+    coordinateList->reserve(mNi*mNj);
 
     double y = mStartY;
     for (uint j=0; j < mNj; j++)
@@ -192,7 +192,7 @@ T::Coordinate_vec LatLonImpl::getGridOriginalCoordinates() const
       double x = mStartX;
       for (uint i=0; i < mNi; i++)
       {
-        coordinateList.push_back(T::Coordinate(getLongitude(x),y));
+        coordinateList->push_back(T::Coordinate(getLongitude(x),y));
         x += mDx;
       }
       y += mDy;
@@ -218,7 +218,7 @@ T::Coordinate_vec LatLonImpl::getGridOriginalCoordinates() const
         \return   The grid latlon coordinates.
 */
 
-T::Coordinate_vec LatLonImpl::getGridLatLonCoordinates() const
+T::Coordinate_svec LatLonImpl::getGridLatLonCoordinates() const
 {
   try
   {
@@ -812,7 +812,7 @@ void LatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) const
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
 
-      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
+      T::Coordinate_svec coordinateList = getGridOriginalCoordinates();
 
       // ### Printing coordinates close to the grid corners.
 
@@ -827,7 +827,7 @@ void LatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) const
         {
           if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
           {
-            T::Coordinate coord = coordinateList.at(c);
+            T::Coordinate coord = coordinateList->at(c);
             sprintf(str,"* [%03d,%03d] %f,%f",x,y,coord.x(),coord.y());
             stream << space(level+2) << str << "\n";
           }

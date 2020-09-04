@@ -11,18 +11,18 @@ namespace GRIB2
 class EquatorialAzimuthalEquidistantImpl : public EquatorialAzimuthalEquidistant
 {
   public:
-                      EquatorialAzimuthalEquidistantImpl();
-                      EquatorialAzimuthalEquidistantImpl(const EquatorialAzimuthalEquidistantImpl& other);
-    virtual           ~EquatorialAzimuthalEquidistantImpl();
+                        EquatorialAzimuthalEquidistantImpl();
+                        EquatorialAzimuthalEquidistantImpl(const EquatorialAzimuthalEquidistantImpl& other);
+    virtual             ~EquatorialAzimuthalEquidistantImpl();
 
-    GridDefinition*   createGridDefinition() const;
+    GridDefinition*     createGridDefinition() const;
 
-    T::Coordinate_vec getGridOriginalCoordinates() const;
-    T::Dimensions     getGridDimensions() const;
-    bool              getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
+    T::Coordinate_svec  getGridOriginalCoordinates() const;
+    T::Dimensions       getGridDimensions() const;
+    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
 
-    void              initSpatialReference();
-    void              read(MemoryReader& memoryReader);
+    void                initSpatialReference();
+    void                read(MemoryReader& memoryReader);
 };
 
 }

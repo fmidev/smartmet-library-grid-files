@@ -97,11 +97,11 @@ void StretchedRotatedLatLonImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec StretchedRotatedLatLonImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec StretchedRotatedLatLonImpl::getGridOriginalCoordinates() const
 {
   try
   {
-    T::Coordinate_vec coordinateList;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     uint ni = mNi;
     uint nj = mNj;
@@ -119,7 +119,7 @@ T::Coordinate_vec StretchedRotatedLatLonImpl::getGridOriginalCoordinates() const
     if ((scanMode & 0x40) == 0)
       jDirectionIncrement = -jDirectionIncrement;
 
-    coordinateList.reserve(ni*nj);
+    coordinateList->reserve(ni*nj);
 
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < nj; j++)
@@ -133,7 +133,7 @@ T::Coordinate_vec StretchedRotatedLatLonImpl::getGridOriginalCoordinates() const
         double cx = getLongitude(x/1000);
         double cy = y/1000;
         T::Coordinate coord(cx,cy);
-        coordinateList.push_back(coord);
+        coordinateList->push_back(coord);
         x += iDirectionIncrement;
       }
       y += jDirectionIncrement;

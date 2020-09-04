@@ -15,7 +15,9 @@ Dimensions::Dimensions()
   try
   {
     mDimensions = 0;
-    mSizes = nullptr;
+    mSizes[0] = 0;
+    mSizes[1] = 0;
+    mSizes[2] = 0;
   }
   catch (...)
   {
@@ -32,11 +34,9 @@ Dimensions::Dimensions(const Dimensions& dimensions)
   try
   {
     mDimensions = dimensions.mDimensions;
-    if (mDimensions > 0)
-    {
-      mSizes = new uint[mDimensions];
-      memcpy(mSizes,dimensions.mSizes,mDimensions*sizeof(uint));
-    }
+    mSizes[0] = dimensions.mSizes[0];
+    mSizes[1] = dimensions.mSizes[1];
+    mSizes[2] = dimensions.mSizes[2];
   }
   catch (...)
   {
@@ -54,8 +54,9 @@ Dimensions::Dimensions(uint nx)
   try
   {
     mDimensions = 1;
-    mSizes = new uint[mDimensions];
     mSizes[0] = nx;
+    mSizes[1] = 0;
+    mSizes[2] = 0;
   }
   catch (...)
   {
@@ -72,9 +73,9 @@ Dimensions::Dimensions(uint nx,uint ny)
   try
   {
     mDimensions = 2;
-    mSizes = new uint[mDimensions];
     mSizes[0] = nx;
     mSizes[1] = ny;
+    mSizes[2] = 0;
   }
   catch (...)
   {
@@ -91,29 +92,9 @@ Dimensions::Dimensions(uint nx,uint ny,uint nz)
   try
   {
     mDimensions = 3;
-    mSizes = new uint[mDimensions];
     mSizes[0] = nx;
     mSizes[1] = ny;
     mSizes[2] = nz;
-  }
-  catch (...)
-  {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
-  }
-}
-
-
-
-
-
-Dimensions::Dimensions(uint dimensions,uint *sizeArray)
-{
-  try
-  {
-    mDimensions = dimensions;
-    mSizes = new uint[mDimensions];
-    for (uint t=0; t<mDimensions; t++)
-      mSizes[t] = sizeArray[t];
   }
   catch (...)
   {
@@ -129,8 +110,6 @@ Dimensions::~Dimensions()
 {
   try
   {
-    if (mSizes != nullptr)
-      delete[] mSizes;
   }
   catch (...)
   {

@@ -597,6 +597,25 @@ bool GridSection::getGridPointByLatLonCoordinates(double lat,double lon,double& 
 
 
 
+bool GridSection::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGridDefinition)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+
+    return mGridDefinition->getGridPointByLatLonCoordinatesNoCache(lat,lon,grid_i,grid_j);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 /*! \brief This method calculates the estimated grid position by using the original coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.
 
@@ -1139,7 +1158,7 @@ void GridSection::setGridGeometryId(T::GeometryId geometryId)
         \return   The grid coordinates.
 */
 
-T::Coordinate_vec GridSection::getGridOriginalCoordinates() const
+T::Coordinate_svec GridSection::getGridOriginalCoordinates() const
 {
   FUNCTION_TRACE
   try
@@ -1167,7 +1186,7 @@ T::Coordinate_vec GridSection::getGridOriginalCoordinates() const
         \return   The grid latlon coordinates.
 */
 
-T::Coordinate_vec GridSection::getGridLatLonCoordinates() const
+T::Coordinate_svec GridSection::getGridLatLonCoordinates() const
 {
   FUNCTION_TRACE
   try

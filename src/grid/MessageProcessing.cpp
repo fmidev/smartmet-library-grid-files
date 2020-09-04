@@ -59,7 +59,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
     getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,gridValues);
 
     T::Dimensions d = message1.getGridDimensions();
-    T::Coordinate_vec coordinates;
+    T::Coordinate_svec coordinates;
     T::Coordinate_vec *coordinatePtr = nullptr;
 
     switch (coordinateType)
@@ -67,7 +67,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
         coordinates = message1.getGridLatLonCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -75,7 +75,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -145,7 +145,7 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
     getGridValueVectorByTime(message1,message2,newTime,timeInterpolationMethod,gridValues);
 
     T::Dimensions d = message1.getGridDimensions();
-    T::Coordinate_vec coordinates;
+    T::Coordinate_svec coordinates;
     T::Coordinate_vec *coordinatePtr = nullptr;
 
     switch (coordinateType)
@@ -153,7 +153,7 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
         coordinates = message1.getGridLatLonCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -161,7 +161,7 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -308,12 +308,12 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
     uint width = 0;
     uint height = 0;
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (latLonCoordinates.size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
       getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,contours);
       return;
@@ -343,14 +343,14 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinatePtr = &latLonCoordinates;
+        coordinatePtr = latLonCoordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -655,12 +655,12 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
     uint width = 0;
     uint height = 0;
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (latLonCoordinates.size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
       getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,contours);
       return;
@@ -690,14 +690,14 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinatePtr = &latLonCoordinates;
+        coordinatePtr = latLonCoordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -769,7 +769,7 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
     getGridValueVectorByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,gridValues);
 
     T::Dimensions d = message1.getGridDimensions();
-    T::Coordinate_vec coordinates;
+    T::Coordinate_svec coordinates;
     T::Coordinate_vec *coordinatePtr = nullptr;
 
     switch (coordinateType)
@@ -777,7 +777,7 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
         coordinates = message1.getGridLatLonCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -785,7 +785,7 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -933,12 +933,12 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
     uint width = 0;
     uint height = 0;
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (latLonCoordinates.size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
       getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,contours);
       return;
@@ -968,14 +968,14 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinatePtr = &latLonCoordinates;
+        coordinatePtr = latLonCoordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -1085,7 +1085,7 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
     getGridValueVectorByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,gridValues);
 
     T::Dimensions d = message1.getGridDimensions();
-    T::Coordinate_vec coordinates;
+    T::Coordinate_svec coordinates;
     T::Coordinate_vec *coordinatePtr = nullptr;
 
     switch (coordinateType)
@@ -1093,7 +1093,7 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
         coordinates = message1.getGridLatLonCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -1101,7 +1101,7 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -1249,12 +1249,12 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
     uint width = 0;
     uint height = 0;
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (latLonCoordinates.size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
       getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,contours);
       return;
@@ -1289,14 +1289,14 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinatePtr = &latLonCoordinates;
+        coordinatePtr = latLonCoordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -1364,7 +1364,7 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
       smoothDegree = toSize_t(smoothDegreeStr);
 
     T::Dimensions d = message1.getGridDimensions();
-    T::Coordinate_vec coordinates;
+    T::Coordinate_svec coordinates;
     T::Coordinate_vec *coordinatePtr = nullptr;
 
     switch (coordinateType)
@@ -1372,7 +1372,7 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
         coordinates = message1.getGridLatLonCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -1380,7 +1380,7 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -1440,7 +1440,7 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
       smoothDegree = toSize_t(smoothDegreeStr);
 
     T::Dimensions d = message1.getGridDimensions();
-    T::Coordinate_vec coordinates;
+    T::Coordinate_svec coordinates;
     T::Coordinate_vec *coordinatePtr = nullptr;
 
     switch (coordinateType)
@@ -1448,7 +1448,7 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
         coordinates = message1.getGridLatLonCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -1456,7 +1456,7 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = message1.getGridOriginalCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -1603,12 +1603,12 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
     uint width = 0;
     uint height = 0;
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (latLonCoordinates.size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
       getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,contours);
       return;
@@ -1643,14 +1643,14 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinatePtr = &latLonCoordinates;
+        coordinatePtr = latLonCoordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -1806,12 +1806,12 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
     uint width = 0;
     uint height = 0;
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (latLonCoordinates.size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
       getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,contours);
       return;
@@ -1846,14 +1846,14 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinatePtr = &latLonCoordinates;
+        coordinatePtr = latLonCoordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 

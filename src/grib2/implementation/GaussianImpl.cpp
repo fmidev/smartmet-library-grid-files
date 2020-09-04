@@ -99,11 +99,11 @@ void GaussianImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec GaussianImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec GaussianImpl::getGridOriginalCoordinates() const
 {
   try
   {
-    T::Coordinate_vec coordinateList;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     if (!mGaussian.getGrid()->getNi())
       throw SmartMet::Spine::Exception(BCP,"i-coordinated does not exist!");
@@ -127,7 +127,7 @@ T::Coordinate_vec GaussianImpl::getGridOriginalCoordinates() const
 
     double *lats = GRID::gaussianLatitudeCache.getLatitudes(nj,n);
 
-    coordinateList.reserve(ni*nj);
+    coordinateList->reserve(ni*nj);
 
     for (uint j=0; j < nj; j++)
     {
@@ -139,7 +139,7 @@ T::Coordinate_vec GaussianImpl::getGridOriginalCoordinates() const
         double cx = x/1000000;
         double cy = y; ;
         T::Coordinate coord(cx,cy);
-        coordinateList.push_back(coord);
+        coordinateList->push_back(coord);
         x += iDirectionIncrement;
       }
     }
@@ -368,7 +368,7 @@ void GaussianImpl::print(std::ostream& stream,uint level,uint optionFlags) const
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
 
-      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
+      T::Coordinate_svec coordinateList = getGridOriginalCoordinates();
 
       // ### Printing coordinates close to the grid corners.
 
@@ -386,7 +386,7 @@ void GaussianImpl::print(std::ostream& stream,uint level,uint optionFlags) const
         {
           if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
           {
-            T::Coordinate coord = coordinateList.at(c);
+            T::Coordinate coord = coordinateList->at(c);
 
             sprintf(str,"* [%03d,%03d] %f,%f",x,y,coord.x(),coord.y());
             stream << space(level+2) << str << "\n";

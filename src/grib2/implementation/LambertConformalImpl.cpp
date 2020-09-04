@@ -307,11 +307,11 @@ bool LambertConformalImpl::setProperty(uint propertyId,long long value)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec LambertConformalImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec LambertConformalImpl::getGridOriginalCoordinates() const
 {
   try
   {
-    T::Coordinate_vec coordinateList;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
       return coordinateList;
@@ -325,7 +325,7 @@ T::Coordinate_vec LambertConformalImpl::getGridOriginalCoordinates() const
     uint nx = (*mNx);
     uint ny = (*mNy);
 
-    coordinateList.reserve(nx*ny);
+    coordinateList->reserve(nx*ny);
 
     double y = mStartY;
     for (uint j=0; j < ny; j++)
@@ -335,7 +335,7 @@ T::Coordinate_vec LambertConformalImpl::getGridOriginalCoordinates() const
       for (uint i=0; i < nx; i++)
       {
         T::Coordinate coord(x,y);
-        coordinateList.push_back(coord);
+        coordinateList->push_back(coord);
         x += mDxx;
       }
       y += mDyy;
@@ -718,7 +718,7 @@ void LambertConformalImpl::print(std::ostream& stream,uint level,uint optionFlag
     if (optionFlags & GRID::PrintFlag::coordinates)
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
-      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
+      T::Coordinate_svec coordinateList = getGridOriginalCoordinates();
 
       if (mCt_lambert2latlon == nullptr)
         return;
@@ -736,7 +736,7 @@ void LambertConformalImpl::print(std::ostream& stream,uint level,uint optionFlag
         {
           if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
           {
-            T::Coordinate coord = coordinateList.at(c);
+            T::Coordinate coord = coordinateList->at(c);
 
             if (mCt_lambert2latlon)
             {

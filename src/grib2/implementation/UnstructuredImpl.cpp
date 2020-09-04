@@ -91,7 +91,7 @@ void UnstructuredImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec UnstructuredImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec UnstructuredImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
 }

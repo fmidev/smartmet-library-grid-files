@@ -40,7 +40,7 @@ class GridDefinition
     virtual std::string         getGridGeometryName();
     T::Hash                     getGridHash();
     virtual bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
-    virtual T::Coordinate_vec   getGridLatLonCoordinates() const;
+    virtual T::Coordinate_svec  getGridLatLonCoordinates() const;
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
@@ -49,7 +49,7 @@ class GridDefinition
     virtual void                getGridCellAverageSize(double& width,double& height);
     virtual bool                getGridMetricCellSize(double& width,double& height) const;
     virtual bool                getGridMetricSize(double& width,double& height) const;
-    virtual T::Coordinate_vec   getGridOriginalCoordinates() const;
+    virtual T::Coordinate_svec  getGridOriginalCoordinates() const;
     virtual bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
@@ -59,6 +59,7 @@ class GridDefinition
     virtual std::uint32_t       getGridOriginalValueCount() const;
     virtual int                 getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
     virtual bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
+    virtual bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     virtual T::GridProjection   getGridProjection() const;
     virtual uint                getTemplateNumber() const;

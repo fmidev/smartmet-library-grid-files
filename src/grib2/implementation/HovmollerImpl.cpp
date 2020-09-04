@@ -91,7 +91,7 @@ void HovmollerImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec HovmollerImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec HovmollerImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
 }

@@ -69,8 +69,6 @@ namespace Identification
 GridDef gridDef;
 
 
-
-
 /*! \brief The constructor of the class. */
 
 GridDef::GridDef()
@@ -3154,7 +3152,7 @@ bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double
 
 
 
-T::Coordinate_vec GridDef::getGridOriginalCoordinatesByGeometryId(T::GeometryId  geometryId)
+T::Coordinate_svec GridDef::getGridOriginalCoordinatesByGeometryId(T::GeometryId  geometryId)
 {
   FUNCTION_TRACE
   try
@@ -3167,7 +3165,7 @@ T::Coordinate_vec GridDef::getGridOriginalCoordinatesByGeometryId(T::GeometryId 
     if (g1 != nullptr)
       return g1->getGridOriginalCoordinates();
 
-    T::Coordinate_vec empty;
+    T::Coordinate_svec empty(new T::Coordinate_vec());
     return empty;
   }
   catch (...)
@@ -3180,7 +3178,7 @@ T::Coordinate_vec GridDef::getGridOriginalCoordinatesByGeometryId(T::GeometryId 
 
 
 
-T::Coordinate_vec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId)
+T::Coordinate_svec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId)
 {
   try
   {
@@ -3199,10 +3197,8 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  g
       return g1->getGridLatLonCoordinates();
     }
 
-
-
-    printf("*** Coordinates not found by the geometry %u\n",geometryId);
-    T::Coordinate_vec empty;
+//    printf("*** Coordinates not found by the geometry %u\n",geometryId);
+    T::Coordinate_svec empty(new T::Coordinate_vec());
     return empty;
   }
   catch (...)
@@ -3215,12 +3211,11 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  g
 
 
 
-void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_vec& coordinates,uint& width,uint& height)
+void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,T::CoordinateType coordinateType,T::Coordinate_svec& coordinates,uint& width,uint& height)
 {
   FUNCTION_TRACE
   try
   {
-    //attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
@@ -3243,75 +3238,6 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
       crsStr = originalCrsStr;
     }
 
-#if 0
-    if (llboxStr == nullptr  &&  bboxStr == nullptr)
-    {
-      const char *crsStr = attributeList.getAttributeValue("grid.crs");
-      const char *bboxcrsStr = attributeList.getAttributeValue("grid.bboxcrs");
-      const char *cxStr = attributeList.getAttributeValue("grid.cx");
-      const char *cyStr = attributeList.getAttributeValue("grid.cy");
-      const char *resolutionStr = attributeList.getAttributeValue("grid.resolution");
-
-      boost::shared_ptr<OGRSpatialReference> ogr_crs;
-      boost::optional<std::string> crs;
-      boost::optional<std::string> bboxcrs;
-      boost::optional<int> xsize;
-      boost::optional<int> ysize;
-      boost::optional<double> x1;
-      boost::optional<double> y1;
-      boost::optional<double> x2;
-      boost::optional<double> y2;
-      boost::optional<double> cx;
-      boost::optional<double> cy;
-      boost::optional<double> resolution;
-      bool latlon_center = false;
-      double xx1 = 0.0;
-      double yy1 = 0.0;
-      double yy2 = 0.0;
-      double xx2 = 0.0;
-
-      if (crsStr != nullptr)
-        crs = crsStr;
-
-      if (bboxcrsStr != nullptr)
-        bboxcrs = bboxcrsStr;
-
-      if (gridWidthStr != nullptr)
-        xsize = atoi(gridWidthStr);
-
-      if (gridHeightStr != nullptr)
-        ysize = atoi(gridHeightStr);
-
-      if (cxStr != nullptr)
-        cx = atoi(cxStr);
-
-      if (cyStr != nullptr)
-        cy = atoi(cyStr);
-
-      if (resolutionStr != nullptr)
-        resolution = atoi(resolutionStr);
-
-      getBoundingBox(
-        crs,
-        bboxcrs,
-        xsize,
-        ysize,
-        x1,
-        y1,
-        x2,
-        y2,
-        cx,
-        cy,
-        resolution,
-        latlon_center,
-        xx1,
-        yy1,
-        yy2,
-        xx2);
-
-      printf("NEW BOX %f,%f,%f,%f\n",xx1,yy1,xx2,yy2);
-    }
-#endif
     // Checking if the geometry is defined by the geometryId
 
     GRIB2::GridDef_ptr def = nullptr;
@@ -3446,37 +3372,67 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
         attributeList.setAttribute("grid.cell.height",Fmi::to_string(dy));
 
 //        printf("DIFF %f %f  %f %f  %d,%d   %f,%f,%f,%f\n",diffx,diffy,dx,dy,width,height,cc[0],cc[1],cc[2],cc[3]);
-        uint sz = width*height;
 
-        coordinates.reserve(sz);
-        latLonCoordinates.reserve(sz);
+        std::size_t hash = attributeList.getHash();
 
-        double yy = cc[1];
-        for (uint y=0; y<height; y++)
         {
-          double xx = cc[0];
-          for (uint x=0; x<width; x++)
+          AutoReadLock lock(&mCoordinateCacheModificationLock);
+          auto it = mCoordinateCache.find(hash);
+          if (it != mCoordinateCache.end())
           {
-            double lon = xx;
-            double lat = yy;
-
-            //rotatedLatlon_to_latlon(yy,xx,60.0,20.0,lat,lon);
-
-            transformation->Transform(1,&lon,&lat);
-            latLonCoordinates.push_back(T::Coordinate(getLongitude(lon),lat));
-            coordinates.push_back(T::Coordinate(xx,yy));
-
-            //if (x < 10  &&  y < 10) printf("%u,%u : %f,%f => %f,%f\n",x,y,xx,yy,lon,lat);
-
-            xx = xx + dx;
+            latLonCoordinates = it->second.latlonCoordinates;
+            coordinates = it->second.originalCoordinates;
           }
-          yy = yy + dy;
         }
-        if (transformation != nullptr)
-          OCTDestroyCoordinateTransformation(transformation);
 
-        if (reverseTransformation != nullptr)
-          OCTDestroyCoordinateTransformation(reverseTransformation);
+        if (!latLonCoordinates || latLonCoordinates->size() == 0)
+        {
+          uint sz = width*height;
+
+          if (!latLonCoordinates)
+            latLonCoordinates.reset(new T::Coordinate_vec());
+
+          if (!coordinates)
+            coordinates.reset(new T::Coordinate_vec());
+
+          coordinates->reserve(sz);
+          latLonCoordinates->reserve(sz);
+
+          double yy = cc[1];
+          for (uint y=0; y<height; y++)
+          {
+            double xx = cc[0];
+            for (uint x=0; x<width; x++)
+            {
+              double lon = xx;
+              double lat = yy;
+
+              //rotatedLatlon_to_latlon(yy,xx,60.0,20.0,lat,lon);
+
+              transformation->Transform(1,&lon,&lat);
+              latLonCoordinates->push_back(T::Coordinate(getLongitude(lon),lat));
+              coordinates->push_back(T::Coordinate(xx,yy));
+
+              //if (x < 10  &&  y < 10) printf("%u,%u : %f,%f => %f,%f\n",x,y,xx,yy,lon,lat);
+
+              xx = xx + dx;
+            }
+            yy = yy + dy;
+          }
+          if (transformation != nullptr)
+            OCTDestroyCoordinateTransformation(transformation);
+
+          if (reverseTransformation != nullptr)
+            OCTDestroyCoordinateTransformation(reverseTransformation);
+
+
+          CoordinateRec rec;
+          rec.latlonCoordinates = latLonCoordinates;
+          rec.originalCoordinates = coordinates;
+
+          AutoWriteLock lock(&mCoordinateCacheModificationLock);
+          mCoordinateCache.insert(std::pair<std::size_t,CoordinateRec>(hash,rec));
+        }
       }
     }
   }
@@ -3490,7 +3446,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
 
 
-void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_vec& latLonCoordinates,uint& width,uint& height)
+void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList,T::Coordinate_svec& latLonCoordinates,uint& width,uint& height)
 {
   FUNCTION_TRACE
   try
@@ -3679,42 +3635,68 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         attributeList.setAttribute("grid.cell.width",Fmi::to_string(dx));
         attributeList.setAttribute("grid.cell.height",Fmi::to_string(dy));
 
-        uint sz = width*height;
 
-        latLonCoordinates.reserve(sz);
-
-        double yy = cc[1];
-        for (uint y=0; y<height; y++)
+        std::size_t hash = attributeList.getHash();
         {
-          double xx = cc[0];
-          for (uint x=0; x<width; x++)
+          AutoReadLock lock(&mCoordinateCacheModificationLock);
+          auto it = mCoordinateCache.find(hash);
+          if (it != mCoordinateCache.end())
           {
-            double lon = xx;
-            double lat = yy;
-
-            transformation->Transform(1,&lon,&lat);
-            latLonCoordinates.push_back(T::Coordinate(getLongitude(lon),lat));
-
-            //printf("%f,%f => %f,%f\n",xx,yy,lon,lat);
-
-            xx = xx + dx;
+            //printf("########### HASH FOUND %ld #################\n",hash);
+            latLonCoordinates = it->second.latlonCoordinates;
           }
-          yy = yy + dy;
         }
 
-        if (transformation != nullptr)
-          OCTDestroyCoordinateTransformation(transformation);
+        if (!latLonCoordinates || latLonCoordinates->size() == 0)
+        {
+          //printf("########### NOT FOUND %ld #################\n",hash);
 
-        if (reverseTransformation != nullptr)
-          OCTDestroyCoordinateTransformation(reverseTransformation);
+          uint sz = width*height;
+
+          if (!latLonCoordinates)
+            latLonCoordinates.reset(new T::Coordinate_vec());
+
+          latLonCoordinates->reserve(sz);
+
+          double yy = cc[1];
+          for (uint y=0; y<height; y++)
+          {
+            double xx = cc[0];
+            for (uint x=0; x<width; x++)
+            {
+              double lon = xx;
+              double lat = yy;
+
+              transformation->Transform(1,&lon,&lat);
+              latLonCoordinates->push_back(T::Coordinate(getLongitude(lon),lat));
+
+              //printf("%f,%f => %f,%f\n",xx,yy,lon,lat);
+
+              xx = xx + dx;
+            }
+            yy = yy + dy;
+          }
+
+          if (transformation != nullptr)
+            OCTDestroyCoordinateTransformation(transformation);
+
+          if (reverseTransformation != nullptr)
+            OCTDestroyCoordinateTransformation(reverseTransformation);
+
+          CoordinateRec rec;
+          rec.latlonCoordinates = latLonCoordinates;
+          //rec.originalCoordinates = coordinates;
+          AutoWriteLock lock(&mCoordinateCacheModificationLock);
+          mCoordinateCache.insert(std::pair<std::size_t,CoordinateRec>(hash,rec));
+        }
       }
     }
 
-    if (latLonCoordinates.size() > 0)
+    if (latLonCoordinates->size() > 0)
     {
-      int last = latLonCoordinates.size() - 1;
+      int last = latLonCoordinates->size() - 1;
       char tmp[100];
-      sprintf(tmp,"%f,%f,%f,%f",latLonCoordinates[0].x(),latLonCoordinates[0].y(),latLonCoordinates[last].x(),latLonCoordinates[last].y());
+      sprintf(tmp,"%f,%f,%f,%f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
       attributeList.setAttribute("grid.llbox",tmp);
     }
   }
@@ -3948,7 +3930,7 @@ bool GridDef::getGridDirectionsByGeometryId(T::GeometryId  geometryId,bool& reve
 
 
 
-T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::GeometryId  geometryId)
+T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::GeometryId  geometryId)
 {
   FUNCTION_TRACE
   try
@@ -3956,7 +3938,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
     updateCheck();
     AutoThreadLock lock(&mThreadLock);
 
-    T::Coordinate_vec coordinates;
+    T::Coordinate_svec coordinates(new T::Coordinate_vec());
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
     {
@@ -3968,7 +3950,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
           double grid_j = 0;
           if (def2->getGridPointByLatLonCoordinates(C_DOUBLE(lat),C_DOUBLE(lon)/10,grid_i,grid_j))
           {
-            coordinates.push_back(T::Coordinate(grid_i,grid_j));
+            coordinates->push_back(T::Coordinate(grid_i,grid_j));
           }
         }
       }
@@ -3981,7 +3963,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
           double grid_j = 0;
           if (def2->getGridPointByLatLonCoordinates(C_DOUBLE(lat)/10,C_DOUBLE(lon),grid_i,grid_j))
           {
-            coordinates.push_back(T::Coordinate(grid_i,grid_j));
+            coordinates->push_back(T::Coordinate(grid_i,grid_j));
           }
         }
       }
@@ -3999,7 +3981,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
           double grid_j = 0;
           if (def1->getGridPointByLatLonCoordinates(C_DOUBLE(lat),C_DOUBLE(lon)/10,grid_i,grid_j))
           {
-            coordinates.push_back(T::Coordinate(grid_i,grid_j));
+            coordinates->push_back(T::Coordinate(grid_i,grid_j));
           }
         }
       }
@@ -4012,7 +3994,7 @@ T::Coordinate_vec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geom
           double grid_j = 0;
           if (def1->getGridPointByLatLonCoordinates(C_DOUBLE(lat)/10,C_DOUBLE(lon),grid_i,grid_j))
           {
-            coordinates.push_back(T::Coordinate(grid_i,grid_j));
+            coordinates->push_back(T::Coordinate(grid_i,grid_j));
           }
         }
       }
@@ -4102,7 +4084,7 @@ bool GridDef::getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geomet
 
 
 
-bool GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_vec& coordinates)
+bool GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_svec& coordinates)
 {
   FUNCTION_TRACE
   try

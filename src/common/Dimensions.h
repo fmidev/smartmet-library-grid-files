@@ -17,7 +17,6 @@ class Dimensions
                 Dimensions(uint nx);
                 Dimensions(uint nx,uint ny);
                 Dimensions(uint nx,uint ny,uint nz);
-                Dimensions(uint dimensions,uint *sizes);
     virtual     ~Dimensions();
 
     uint        nx() const;
@@ -31,7 +30,7 @@ class Dimensions
   private:
 
     uint        mDimensions;
-    uint*       mSizes;
+    uint        mSizes[3];
 };
 
 }

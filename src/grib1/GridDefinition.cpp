@@ -17,7 +17,7 @@ namespace SmartMet
 namespace GRIB1
 {
 
-std::map<uint,T::Coordinate_vec> coordinateCache;
+std::map<uint,T::Coordinate_svec> coordinateCache;
 std::map <std::size_t,T::Coordinate> transformCache1;
 std::map <std::size_t,T::Coordinate> transformCache2;
 
@@ -365,12 +365,12 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
         return true;
     }
 
-    T::Coordinate_vec coordinates = getGridLatLonCoordinates();
+    T::Coordinate_svec coordinates = getGridLatLonCoordinates();
     uint c = grid_j*d.nx() + grid_i;
-    if (c < coordinates.size())
+    if (c < coordinates->size())
     {
-      lon = getLongitude(coordinates[c].x());
-      lat = coordinates[c].y();
+      lon = getLongitude((*coordinates)[c].x());
+      lat = (*coordinates)[c].y();
       return true;
     }
     return false;
@@ -435,13 +435,13 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
     if (d.getDimensions() != 2  || grid_i >= d.nx() || grid_j >= d.ny())
       return false;
 
-    T::Coordinate_vec originalCoordinates = getGridOriginalCoordinates();
+    T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
     uint c = grid_j * d.nx() + grid_i;
-    if (c >= C_UINT(originalCoordinates.size()))
+    if (c >= C_UINT(originalCoordinates->size()))
       return false;
 
-    x = originalCoordinates[c].x();
-    y = originalCoordinates[c].y();
+    x = (*originalCoordinates)[c].x();
+    y = (*originalCoordinates)[c].y();
 
     return true;
   }
@@ -483,7 +483,7 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,doub
        \return   The grid coordinates.
 */
 
-T::Coordinate_vec GridDefinition::getGridOriginalCoordinates() const
+T::Coordinate_svec GridDefinition::getGridOriginalCoordinates() const
 {
   FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
@@ -501,7 +501,7 @@ T::Coordinate_vec GridDefinition::getGridOriginalCoordinates() const
         \return   The grid latlon coordinates.
 */
 
-T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
+T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
 {
   FUNCTION_TRACE
   try
@@ -531,25 +531,25 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
         throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
     }
 
-    T::Coordinate_vec originalCoordinates = getGridOriginalCoordinates();
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
+    T::Coordinate_svec latLonCoordinates(new T::Coordinate_vec());
 
-    latLonCoordinates.reserve(originalCoordinates.size());
+    latLonCoordinates->reserve(originalCoordinates->size());
 
 
-    for (auto it = originalCoordinates.begin(); it != originalCoordinates.end(); ++it)
+    for (auto it = originalCoordinates->begin(); it != originalCoordinates->end(); ++it)
     {
       double lat = it->y();
       double lon = it->x();
 
       mCoordinateTranformation_orig2latlon->Transform(1,&lon,&lat);
 
-      latLonCoordinates.push_back(T::Coordinate(lon,lat));
+      latLonCoordinates->push_back(T::Coordinate(lon,lat));
     }
 
     if (geomId != 0)
     {
-      coordinateCache.insert(std::pair<uint,T::Coordinate_vec>(geomId,latLonCoordinates));
+      coordinateCache.insert(std::pair<uint,T::Coordinate_svec>(geomId,latLonCoordinates));
     }
 
     return latLonCoordinates;
@@ -1877,6 +1877,36 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
   }
 }
 
+
+
+
+
+/*! \brief This method calculates the estimated grid position by using the latlon coordinates.
+    The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.
+    This method could be overridden in the child classes in order to make
+    the implementation faster.
+
+        \param lat     The latitude.
+        \param lon     The longitude.
+        \param grid_i  The returned grid i-position.
+        \param grid_j  The returned grid j-position.
+        \return        Returns 'false' if the given coordinates are outside of the grid.
+*/
+
+bool GridDefinition::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    double x = 0, y = 0;
+    getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
+    return getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
 
 
 

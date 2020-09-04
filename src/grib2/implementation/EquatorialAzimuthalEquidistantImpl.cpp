@@ -91,7 +91,7 @@ void EquatorialAzimuthalEquidistantImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec EquatorialAzimuthalEquidistantImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec EquatorialAzimuthalEquidistantImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
 }

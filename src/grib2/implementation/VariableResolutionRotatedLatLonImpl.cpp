@@ -91,7 +91,7 @@ void VariableResolutionRotatedLatLonImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec VariableResolutionRotatedLatLonImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec VariableResolutionRotatedLatLonImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
 }

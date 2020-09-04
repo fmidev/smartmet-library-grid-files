@@ -91,7 +91,7 @@ void RotatedSphericalHarmonicImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec RotatedSphericalHarmonicImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec RotatedSphericalHarmonicImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP, "Not implemented!");
 }

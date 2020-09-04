@@ -854,7 +854,7 @@ std::string GridSection::getGridGeometryString() const
        \return   The grid coordinates.
 */
 
-T::Coordinate_vec GridSection::getGridOriginalCoordinates() const
+T::Coordinate_svec GridSection::getGridOriginalCoordinates() const
 {
   FUNCTION_TRACE
   try
@@ -882,7 +882,7 @@ T::Coordinate_vec GridSection::getGridOriginalCoordinates() const
         \return   The grid latlon coordinates.
 */
 
-T::Coordinate_vec GridSection::getGridLatLonCoordinates() const
+T::Coordinate_svec GridSection::getGridLatLonCoordinates() const
 {
   FUNCTION_TRACE
   try
@@ -1121,6 +1121,26 @@ bool GridSection::getGridPointByLatLonCoordinates(double lat,double lon,double& 
       throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+bool GridSection::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+
+    return mGridDefinition->getGridPointByLatLonCoordinatesNoCache(lat,lon,grid_i,grid_j);
   }
   catch (...)
   {

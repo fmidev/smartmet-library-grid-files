@@ -202,14 +202,14 @@ void RotatedLatLonImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec RotatedLatLonImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec RotatedLatLonImpl::getGridOriginalCoordinates() const
 {
   try
   {
     if (!mInitialized)
       init();
 
-    T::Coordinate_vec coordinateList;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     uint ni = mNi;
     uint nj = mNj;
@@ -227,7 +227,7 @@ T::Coordinate_vec RotatedLatLonImpl::getGridOriginalCoordinates() const
     if ((scanningMode & 0x40) == 0)
       jDirectionIncrement = -jDirectionIncrement;
 
-    coordinateList.reserve(ni*nj);
+    coordinateList->reserve(ni*nj);
 
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < nj; j++)
@@ -241,7 +241,7 @@ T::Coordinate_vec RotatedLatLonImpl::getGridOriginalCoordinates() const
         double cx = x/1000;
         double cy = y/1000;
         T::Coordinate coord(cx,cy);
-        coordinateList.push_back(coord);
+        coordinateList->push_back(coord);
         x += iDirectionIncrement;
       }
       y += jDirectionIncrement;
@@ -267,14 +267,14 @@ T::Coordinate_vec RotatedLatLonImpl::getGridOriginalCoordinates() const
         \return   The grid latlon coordinates.
 */
 
-T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
+T::Coordinate_svec RotatedLatLonImpl::getGridLatLonCoordinates() const
 {
   try
   {
     if (!mInitialized)
       init();
 
-    T::Coordinate_vec coordinateList;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     uint ni = mNi;
     uint nj = mNj;
@@ -294,7 +294,7 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
     if ((scanningMode & 0x40) == 0)
       jDirectionIncrement = -jDirectionIncrement;
 
-    coordinateList.reserve(ni*nj);
+    coordinateList->reserve(ni*nj);
 
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < nj; j++)
@@ -315,7 +315,7 @@ T::Coordinate_vec RotatedLatLonImpl::getGridLatLonCoordinates() const
 
 
         T::Coordinate coord(lon,lat);
-        coordinateList.push_back(coord);
+        coordinateList->push_back(coord);
         x += iDirectionIncrement;
       }
       y += jDirectionIncrement;
@@ -1171,7 +1171,7 @@ void RotatedLatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) 
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
 
-      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
+      T::Coordinate_svec coordinateList = getGridOriginalCoordinates();
 
       // ### Printing coordinates close to the grid corners.
 
@@ -1186,7 +1186,7 @@ void RotatedLatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) 
         {
           if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
           {
-            T::Coordinate coord = coordinateList.at(c);
+            T::Coordinate coord = coordinateList->at(c);
             sprintf(str,"* [%03d,%03d] %f,%f",x,y,coord.x(),coord.y());
             stream << space(level+2) << str << "\n";
           }

@@ -212,11 +212,11 @@ bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec PolarStereographicImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinates() const
 {
   try
   {
-    T::Coordinate_vec coordinateList;
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     if (!mNx || !mNy)
       return coordinateList;
@@ -245,7 +245,7 @@ T::Coordinate_vec PolarStereographicImpl::getGridOriginalCoordinates() const
 
     mCt_latlon2pst->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
 
-    coordinateList.reserve(nx*ny);
+    coordinateList->reserve(nx*ny);
 
     double y = latitudeOfFirstGridPoint;
     for (uint j=0; j < ny; j++)
@@ -255,7 +255,7 @@ T::Coordinate_vec PolarStereographicImpl::getGridOriginalCoordinates() const
       for (uint i=0; i < nx; i++)
       {
         T::Coordinate coord(x,y);
-        coordinateList.push_back(coord);
+        coordinateList->push_back(coord);
         x += dx;
       }
       y += dy;
@@ -652,7 +652,7 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
     if (optionFlags & GRID::PrintFlag::coordinates)
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
-      T::Coordinate_vec coordinateList = getGridOriginalCoordinates();
+      T::Coordinate_svec coordinateList = getGridOriginalCoordinates();
 
       if (!mNx || !mNy)
         return;
@@ -671,7 +671,7 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
         {
           if ((y < 5  ||  y >= ny-5)  &&  (x < 5  ||  x >= nx-5))
           {
-            T::Coordinate coord = coordinateList.at(c);
+            T::Coordinate coord = coordinateList->at(c);
 
             if (mCt_pst2latlon)
             {

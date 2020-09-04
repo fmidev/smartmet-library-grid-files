@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 namespace SmartMet
@@ -28,6 +29,7 @@ class Coordinate
 };
 
 typedef std::vector<T::Coordinate> Coordinate_vec;
+typedef std::shared_ptr<std::vector<T::Coordinate>> Coordinate_svec;
 typedef std::vector<Coordinate_vec> AreaCoordinates;
 typedef std::vector<std::vector<T::Coordinate>> Polygon_vec;
 

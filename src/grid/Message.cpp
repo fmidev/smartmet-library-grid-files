@@ -424,7 +424,7 @@ std::string Message::getGridProjectionString() const
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec Message::getGridOriginalCoordinates() const
+T::Coordinate_svec Message::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -462,15 +462,13 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
     getGridValueVectorWithCaching(gridValues);
 
     T::Dimensions d = getGridDimensions();
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec *coordinatePtr = nullptr;
+    T::Coordinate_svec coordinates;
 
     switch (coordinateType)
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
         coordinates = getGridLatLonCoordinates();
-        coordinatePtr = &coordinates;
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -478,11 +476,10 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = getGridOriginalCoordinates();
-        coordinatePtr = &coordinates;
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinates.get(),d.nx(),d.ny(),contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
@@ -660,19 +657,19 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
     uint width = 0;
     uint height = 0;
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (latLonCoordinates.size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
       getGridIsobands(contourLowValues,contourHighValues,attributeList,contours);
       return;
     }
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,gridValues);
+    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,*latLonCoordinates,areaInterpolationMethod,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
 
@@ -680,14 +677,14 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinatePtr = &latLonCoordinates;
+        coordinatePtr = latLonCoordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -811,7 +808,7 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
     getGridValueVector(gridValues);
 
     T::Dimensions d = getGridDimensions();
-    T::Coordinate_vec coordinates;
+    T::Coordinate_svec coordinates;
     T::Coordinate_vec *coordinatePtr = nullptr;
 
     switch (coordinateType)
@@ -819,7 +816,7 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
         coordinates = getGridLatLonCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
@@ -827,7 +824,7 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
         coordinates = getGridOriginalCoordinates();
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -1007,12 +1004,12 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
     uint width = 0;
     uint height = 0;
-    T::Coordinate_vec coordinates;
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
 
     Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
 
-    if (latLonCoordinates.size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
       getGridIsolines(contourValues,attributeList,contours);
       return;
@@ -1020,7 +1017,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,gridValues);
+    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,*latLonCoordinates,areaInterpolationMethod,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
 
@@ -1028,14 +1025,14 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        coordinatePtr = &latLonCoordinates;
+        coordinatePtr = latLonCoordinates.get();
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-        coordinatePtr = &coordinates;
+        coordinatePtr = coordinates.get();
         break;
     }
 
@@ -1139,7 +1136,7 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
         \return   The grid latlon coordinates.
 */
 
-T::Coordinate_vec Message::getGridLatLonCoordinates() const
+T::Coordinate_svec Message::getGridLatLonCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1528,6 +1525,15 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 */
 
 bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j)  const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j)  const
 {
   throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2373,11 +2379,11 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
     uint width = 0;
     uint height = 0;
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec latLonCoordinates;
 
     Identification::gridDef.getGridLatLonCoordinatesByGeometry(attributeList,latLonCoordinates,width,height);
 
-    if (latLonCoordinates.size() == 0)
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
       getGridValueVector(values);
       T::Dimensions  d = getGridDimensions();
@@ -2388,7 +2394,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
 
     //T::ParamValue_vec gridValues;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,latLonCoordinates,areaInterpolationMethod,values);
+    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,*latLonCoordinates,areaInterpolationMethod,values);
 
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
@@ -4471,7 +4477,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::None:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
+          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
           {
             T::ParamValue value = getGridValueByGridPoint_noInterpolation(grid_i,grid_j);
             values.push_back(value);
@@ -4486,7 +4492,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::Nearest:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
+          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
           {
             T::ParamValue value = getGridValueByGridPoint_nearest(grid_i,grid_j);
             values.push_back(value);
@@ -4501,7 +4507,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::Linear:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
+          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
           {
             //T::ParamValue value = getGridValueByGridPoint_nearest(grid_i,grid_j);
             T::ParamValue value = getGridValueByGridPoint_linearInterpolation(grid_i,grid_j);
@@ -4517,7 +4523,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::Min:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
+          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
           {
             T::ParamValue value = getGridValueByGridPoint_min(grid_i,grid_j);
             values.push_back(value);
@@ -4532,7 +4538,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::Max:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
+          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
           {
             T::ParamValue value = getGridValueByGridPoint_max(grid_i,grid_j);
             values.push_back(value);
@@ -4547,7 +4553,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::External:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
+          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
           {
             T::ParamValue value = getGridValueByGridPoint_nearest(grid_i,grid_j);
             values.push_back(value);
@@ -4562,7 +4568,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       default:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j))
+          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
           {
             T::ParamValue value = getGridValueByGridPoint_nearest(grid_i,grid_j);
             values.push_back(value);

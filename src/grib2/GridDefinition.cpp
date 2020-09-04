@@ -19,7 +19,7 @@ namespace GRIB2
 {
 
 
-std::map<uint,T::Coordinate_vec> coordinateCache;
+std::map<uint,T::Coordinate_svec> coordinateCache;
 std::map <std::size_t,T::Coordinate> transformCache1;
 std::map <std::size_t,T::Coordinate> transformCache2;
 
@@ -889,7 +889,7 @@ void GridDefinition::setGridGeometryName(std::string geometryName)
         \return   The grid coordinates.
 */
 
-T::Coordinate_vec GridDefinition::getGridOriginalCoordinates() const
+T::Coordinate_svec GridDefinition::getGridOriginalCoordinates() const
 {
   FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
@@ -917,7 +917,7 @@ uint GridDefinition::getTemplateNumber() const
         \return   The grid latlon coordinates.
 */
 
-T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
+T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
 {
   FUNCTION_TRACE
   try
@@ -946,12 +946,12 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
         throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
     }
 
-    T::Coordinate_vec originalCoordinates = getGridOriginalCoordinates();
-    T::Coordinate_vec latLonCoordinates;
+    T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
+    T::Coordinate_svec latLonCoordinates(new T::Coordinate_vec());
 
-    latLonCoordinates.reserve(originalCoordinates.size());
+    latLonCoordinates->reserve(originalCoordinates->size());
 
-    for (auto it = originalCoordinates.begin(); it != originalCoordinates.end(); ++it)
+    for (auto it = originalCoordinates->begin(); it != originalCoordinates->end(); ++it)
     {
       double lat = it->y();
       double lon = it->x();
@@ -960,12 +960,12 @@ T::Coordinate_vec GridDefinition::getGridLatLonCoordinates() const
 
       //printf("CONV %f,%f => %f,%f\n",it->y(),it->x(),lon,lat);
 
-      latLonCoordinates.push_back(T::Coordinate(lon,lat));
+      latLonCoordinates->push_back(T::Coordinate(lon,lat));
     }
 
     if (geomId != 0)
     {
-      coordinateCache.insert(std::pair<uint,T::Coordinate_vec>(geomId,latLonCoordinates));
+      coordinateCache.insert(std::pair<uint,T::Coordinate_svec>(geomId,latLonCoordinates));
     }
 
     return latLonCoordinates;
@@ -998,13 +998,13 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
     if (d.getDimensions() != 2  || grid_i >= d.nx() || grid_j >= d.ny())
       return false;
 
-    T::Coordinate_vec originalCoordinates = getGridOriginalCoordinates();
+    T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
     uint c = grid_j * d.nx() + grid_i;
-    if (c >= originalCoordinates.size())
+    if (c >= originalCoordinates->size())
       return false;
 
-    x = originalCoordinates[c].x();
-    y = originalCoordinates[c].y();
+    x = (*originalCoordinates)[c].x();
+    y = (*originalCoordinates)[c].y();
 
     return true;
   }
@@ -1236,6 +1236,26 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
 
 
 
+bool GridDefinition::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    double x = 0, y = 0;
+
+    getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
+    return getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid latlon coordinates in the given grid point (= integer coordinates).
 
         \param grid_i  The grid i-coordinate.
@@ -1262,12 +1282,12 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
         return true;
     }
 
-    T::Coordinate_vec coordinates = getGridLatLonCoordinates();
+    T::Coordinate_svec coordinates = getGridLatLonCoordinates();
     uint c = grid_j*d.nx() + grid_i;
-    if (c < coordinates.size())
+    if (c < coordinates->size())
     {
-      lon = getLongitude(coordinates[c].x());
-      lat = coordinates[c].y();
+      lon = getLongitude((*coordinates)[c].x());
+      lat = (*coordinates)[c].y();
       return true;
     }
     return false;

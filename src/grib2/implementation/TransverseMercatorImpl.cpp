@@ -92,7 +92,7 @@ void TransverseMercatorImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_vec TransverseMercatorImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec TransverseMercatorImpl::getGridOriginalCoordinates() const
 {
   throw SmartMet::Spine::Exception(BCP, "The method not implemented!");
 }
