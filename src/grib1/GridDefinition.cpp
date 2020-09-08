@@ -604,18 +604,23 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
   FUNCTION_TRACE
   try
   {
-    std::size_t hash = mHash;
-    boost::hash_combine(hash,lat);
-    boost::hash_combine(hash,lon);
-
+    std::size_t hash = 0;
+    uint geomId = getGridGeometryId();
+    if (geomId != 0)
     {
-      AutoReadLock lock(&transformCache1ModificationLock);
-      auto it = transformCache1.find(hash);
-      if (it != transformCache1.end())
+      boost::hash_combine(hash,geomId);
+      boost::hash_combine(hash,lat);
+      boost::hash_combine(hash,lon);
+
       {
-        x = it->second.x();
-        y = it->second.y();
-        return true;
+        AutoReadLock lock(&transformCache1ModificationLock);
+        auto it = transformCache1.find(hash);
+        if (it != transformCache1.end())
+        {
+          x = it->second.x();
+          y = it->second.y();
+          return true;
+        }
       }
     }
 
@@ -636,12 +641,14 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
     y = lat;
 
     mCoordinateTranformation_latlon2orig->Transform(1,&x,&y);
+    if (hash != 0)
+    {
+      AutoWriteLock lock(&transformCache1ModificationLock);
+      if (transformCache1.size() >= 1000000)
+        transformCache1.clear();
 
-    AutoWriteLock lock(&transformCache1ModificationLock);
-    if (transformCache1.size() >= 1000000)
-      transformCache1.clear();
-
-    transformCache1.insert(std::pair<std::size_t,T::Coordinate>(hash,T::Coordinate(x,y)));
+      transformCache1.insert(std::pair<std::size_t,T::Coordinate>(hash,T::Coordinate(x,y)));
+    }
 
     return true;
   }
@@ -1857,18 +1864,23 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
   FUNCTION_TRACE
   try
   {
-    std::size_t hash = mHash;
-    boost::hash_combine(hash,lat);
-    boost::hash_combine(hash,lon);
-
+    std::size_t hash = 0;
+    uint geomId = getGridGeometryId();
+    if (geomId != 0)
     {
-      AutoReadLock lock(&transformCache2ModificationLock);
-      auto it = transformCache2.find(hash);
-      if (it != transformCache2.end())
+      boost::hash_combine(hash,geomId);
+      boost::hash_combine(hash,lat);
+      boost::hash_combine(hash,lon);
+
       {
-        grid_i = it->second.x();
-        grid_j = it->second.y();
-        return true;
+        AutoReadLock lock(&transformCache2ModificationLock);
+        auto it = transformCache2.find(hash);
+        if (it != transformCache2.end())
+        {
+          grid_i = it->second.x();
+          grid_j = it->second.y();
+          return true;
+        }
       }
     }
 
@@ -1877,11 +1889,14 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
 
     if (getGridPointByOriginalCoordinates(x,y,grid_i,grid_j))
     {
-      AutoWriteLock lock(&transformCache2ModificationLock);
-      if (transformCache2.size() >= 1000000)
-        transformCache2.clear();
+      if (hash != 0)
+      {
+        AutoWriteLock lock(&transformCache2ModificationLock);
+        if (transformCache2.size() >= 1000000)
+          transformCache2.clear();
 
-      transformCache2.insert(std::pair<std::size_t,T::Coordinate>(hash,T::Coordinate(grid_i,grid_j)));
+        transformCache2.insert(std::pair<std::size_t,T::Coordinate>(hash,T::Coordinate(grid_i,grid_j)));
+      }
       return true;
     }
     return false;
