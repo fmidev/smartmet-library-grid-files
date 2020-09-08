@@ -488,8 +488,9 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
     if (!mInitialized)
       init();
 
+    printf("getGridOriginalCoordinatesByGridPosition startY=%f dyy=%f  startX=%f  mDxx=%f\n",mStartY,mDyy,mStartX,mDxx);
     y = mStartY + grid_j * mDyy;
-    x = mStartX = grid_i * mDxx;
+    x = mStartX + grid_i * mDxx;
 
     return true;
   }
