@@ -15,6 +15,7 @@
 #include "EpsSettings.h"
 #include "HorizontalSettings.h"
 #include "PointInTimeSettings.h"
+#include "PostprocSettings.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -34,6 +35,8 @@ public:
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
+  PostprocSettings *getPostproc() const;
+  void setPostproc(PostprocSettings &postproc);
   PointInTimeSettings *getPointInTime() const;
   void setPointInTime(PointInTimeSettings &pointInTime);
   HorizontalSettings *getHorizontal() const;
@@ -54,6 +57,8 @@ protected:
   // # EFAS: Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time
   //
   // include "grib2/template.4.parameter_postproc.def"
+
+  mutable PostprocSettings mPostproc;
 
   // include "grib2/template.4.point_in_time.def";
 

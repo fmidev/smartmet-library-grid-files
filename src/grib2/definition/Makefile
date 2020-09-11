@@ -7,6 +7,7 @@ H_FILES = \
 	ScanningModeSettings.h \
 	RotationSettings.h \
 	GridSettings.h \
+	PostprocSettings.h \
 	ResolutionSettings.h \
 	StretchingSettings.h \
 	LatLonSettings.h \
@@ -145,6 +146,7 @@ CPP_FILES = \
 	ScanningModeSettings.cpp \
 	RotationSettings.cpp \
 	GridSettings.cpp \
+	PostprocSettings.cpp \
 	ResolutionSettings.cpp \
 	StretchingSettings.cpp \
 	LatLonSettings.cpp \
@@ -445,6 +447,9 @@ PointInTimeSettings.h: $(T_DIR)/template.4.point_in_time.def $(CREATE_CLASS_DEFI
 
 ProbabilitySettings.h: $(T_DIR)/template.4.probability.def $(CREATE_CLASS_DEFINITIONS)
 	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.probability.def $(T_TARGET_DIR)
+
+PostprocSettings.h: $(T_DIR)/template.4.eps.def $(CREATE_CLASS_DEFINITIONS)
+	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.parameter_postproc.def $(T_TARGET_DIR)
 
 RectangularClusterSettings.h: $(T_DIR)/template.4.rectangular_cluster.def $(CREATE_CLASS_DEFINITIONS)
 	$(CREATE_CLASS_DEFINITIONS) $(T_DIR)/template.4.rectangular_cluster.def $(T_TARGET_DIR)

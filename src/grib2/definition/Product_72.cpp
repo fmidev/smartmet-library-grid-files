@@ -29,6 +29,7 @@ Product_72::Product_72() {
 
 Product_72::Product_72(const Product_72 &other) : ProductDefinition(other) {
   try {
+    mPostproc = other.mPostproc;
     mHorizontal = other.mHorizontal;
     mStatistical = other.mStatistical;
   } catch (...) {
@@ -48,6 +49,7 @@ Product_72::~Product_72() {
 
 void Product_72::read(MemoryReader &memoryReader) {
   try {
+    mPostproc.read(memoryReader);
     mHorizontal.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
@@ -62,6 +64,7 @@ void Product_72::read(MemoryReader &memoryReader) {
 
 void Product_72::write(DataWriter &dataWriter) {
   try {
+    mPostproc.write(dataWriter);
     mHorizontal.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
@@ -78,6 +81,8 @@ void Product_72::write(DataWriter &dataWriter) {
 void Product_72::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
+    sprintf(name, "%sProduct_72.", prefix.c_str());
+    mPostproc.getAttributeList(name, attributeList);
     sprintf(name, "%sProduct_72.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
     sprintf(name, "%sProduct_72.", prefix.c_str());
@@ -97,6 +102,7 @@ void Product_72::getAttributeList(std::string prefix, T::AttributeList &attribut
 void Product_72::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "Product_72\n";
+    mPostproc.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
@@ -109,6 +115,7 @@ void Product_72::print(std::ostream &stream, uint level, uint optionFlags) const
 T::Hash Product_72::countHash() {
   try {
     std::size_t seed = 0;
+    boost::hash_combine(seed, mPostproc.countHash());
     boost::hash_combine(seed, mHorizontal.countHash());
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
@@ -131,6 +138,16 @@ ProductDefinition *Product_72::createProductDefinition() const {
   }
 }
 
+/*! \brief The method returns the pointer to the {@link mPostproc} attribute. */
+
+PostprocSettings *Product_72::getPostproc() const {
+  try {
+    return static_cast<PostprocSettings *>(&mPostproc);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
 /*! \brief The method returns the pointer to the {@link mHorizontal} attribute. */
 
 HorizontalSettings *Product_72::getHorizontal() const {
@@ -146,6 +163,14 @@ HorizontalSettings *Product_72::getHorizontal() const {
 StatisticalSettings *Product_72::getStatistical() const {
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+void Product_72::setPostproc(PostprocSettings &postproc) {
+  try {
+    mPostproc = postproc;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

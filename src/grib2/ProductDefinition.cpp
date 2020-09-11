@@ -1092,6 +1092,10 @@ const T::UInt8_opt ProductDefinition::getGribParameterCategory() const
     if (p != nullptr)
       return p->getParameterCategory();
 
+    const PostprocSettings *pp = getPostproc();
+    if (pp != nullptr)
+      return pp->getParameterCategory();
+
     return val;
   }
   catch (...)
@@ -1113,6 +1117,10 @@ const T::UInt8_opt ProductDefinition::getGribParameterNumber() const
     if (p != nullptr)
       return p->getParameterNumber();
 
+    const PostprocSettings *pp = getPostproc();
+    if (pp != nullptr)
+      return pp->getParameterNumber();
+
     return val;
   }
   catch (...)
@@ -1133,6 +1141,10 @@ T::UInt8_opt ProductDefinition::getGeneratingProcessIdentifier() const
     const ParameterSettings *p = getParameter();
     if (p != nullptr)
       return p->getGeneratingProcessIdentifier();
+
+    const PostprocSettings *pp = getPostproc();
+    if (pp != nullptr)
+      return pp->getGeneratingProcessIdentifier();
 
     return val;
   }
@@ -1160,8 +1172,17 @@ T::TimeString ProductDefinition::getForecastTime(T::TimeString referenceTime) co
     std::string t2;
 
     const ParameterSettings *p = getParameter();
+    const PostprocSettings *pp = nullptr;
     if (p != nullptr)
+    {
       t1 = countForecastStartTime(referenceTime,*p);
+    }
+    else
+    {
+      pp = getPostproc();
+      if (pp != nullptr)
+        t1 = countForecastStartTime(referenceTime,*pp);
+    }
 
     StatisticalSettings *s = getStatistical();
     if (s != nullptr)
@@ -1171,7 +1192,7 @@ T::TimeString ProductDefinition::getForecastTime(T::TimeString referenceTime) co
         return t2;
     }
 
-    if (p != nullptr)
+    if (p != nullptr ||  pp != nullptr)
       return t1;
 
     return referenceTime;
@@ -1193,7 +1214,18 @@ T::TimeString ProductDefinition::getForecastTime(T::TimeString referenceTime) co
 
 T::ParamLevel ProductDefinition::getGribParameterLevel() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  try
+  {
+    auto horizontal = getHorizontal();
+    if (horizontal && horizontal->getScaledValueOfFirstFixedSurface())
+      return *horizontal->getScaledValueOfFirstFixedSurface();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
 }
 
 
@@ -1208,7 +1240,21 @@ T::ParamLevel ProductDefinition::getGribParameterLevel() const
 
 T::ParamLevelId ProductDefinition::getGribParameterLevelId() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  try
+  {
+    auto horizontal = getHorizontal();
+    if (horizontal->getScaledValueOfFirstFixedSurface())
+      return *horizontal->getTypeOfFirstFixedSurface();
+
+    if (horizontal->getScaledValueOfSecondFixedSurface())
+      return *horizontal->getTypeOfSecondFixedSurface();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
 }
 
 
@@ -1216,6 +1262,86 @@ T::ParamLevelId ProductDefinition::getGribParameterLevelId() const
 
 
 T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const
+{
+  try
+  {
+    T::TimeStamp refTime = toTimeStamp(referenceTime);
+    T::TimeStamp tt = refTime;
+
+    auto forecastTimeP = parameter.getForecastTime();
+    if (!forecastTimeP)
+    {
+      //parameter.print(std::cout,0,0);
+      throw SmartMet::Spine::Exception(BCP, "The 'parameter.forecastTime' value not defined!");
+    }
+
+    auto indicator = parameter.getIndicatorOfUnitOfTimeRange();
+    if (!indicator)
+      throw SmartMet::Spine::Exception(BCP, "The 'parameter.indicatorOfUnitOfTimeRange' value not defined!");
+
+    int ft = *forecastTimeP;
+    int forecastTime = ft;
+    if (ft < 0)
+      forecastTime = -ft;
+
+    boost::posix_time::time_duration dt;
+
+    switch (*indicator)
+    {
+      case 0: // m Minute
+        dt = boost::posix_time::time_duration(0,forecastTime,0);
+        break;
+
+      case 1: //  h Hour
+        dt = boost::posix_time::time_duration(forecastTime,0,0);
+        break;
+
+      case 2: //  D Day
+        dt = boost::posix_time::time_duration(24*forecastTime,0,0);
+        break;
+
+      case 3: //  M Month
+      case 4: //  Y Year
+      case 5: //  10Y Decade (10 years)
+      case 6: //  30Y Normal (30 years)
+      case 7: //  C Century (100 years)
+        throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+
+      case 10: //  3h 3 hours
+        dt = boost::posix_time::time_duration(3*forecastTime,0,0);
+        break;
+
+      case 11: //  6h 6 hours
+        dt = boost::posix_time::time_duration(6*forecastTime,0,0);
+        break;
+
+      case 12: //  12h 12 hours
+        dt = boost::posix_time::time_duration(12*forecastTime,0,0);
+        break;
+
+      case 13: //  s Second
+        dt = boost::posix_time::time_duration(0,0,forecastTime);
+        break;
+    }
+
+    if (ft >= 0)
+      tt = refTime + dt;
+    else
+      tt = refTime - dt;
+
+    return toString(tt);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+
+
+
+T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceTime,const PostprocSettings& parameter) const
 {
   try
   {
@@ -1404,6 +1530,15 @@ CategoricalSettings* ProductDefinition::getCategorical() const
   return nullptr;
 }
 
+
+
+
+
+PostprocSettings* ProductDefinition::getPostproc() const
+{
+  // The method is possible implemented in a child class.
+  return nullptr;
+}
 
 
 

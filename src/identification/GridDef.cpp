@@ -5126,7 +5126,59 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::LambertAzimuthalEqualArea:
-          break;
+        {
+          if (c < 12)
+            return nullptr;
+
+          uint geometryId = toInt64(field[1]);
+          char *geometryName = field[2];
+          int ni = toInt64(field[3]);
+          int nj = toInt64(field[4]);
+          int longitude = C_INT(round(toDouble(field[5])*1000000));
+          int latitude = C_INT(round(toDouble(field[6])*1000000));
+          int iInc = C_INT(toInt64(field[7]));
+          int jInc = C_INT(toInt64(field[8]));
+          char *scanningMode = field[9];
+          int standardParallel = C_INT(round(toDouble(field[10])*1000000));
+          int centralLongitude = C_INT(round(toDouble(field[11])*1000000));
+
+          GRIB2::LambertAzimuthalEqualAreaImpl *def2 = new GRIB2::LambertAzimuthalEqualAreaImpl();
+          GRIB2::ScanningModeSettings scanningMode2;
+
+          if (strcasecmp(scanningMode,"+x+y") == 0)
+            scanningMode2.setScanningMode(0x40);
+          else
+          if (strcasecmp(scanningMode,"-x+y") == 0)
+            scanningMode2.setScanningMode(0x80+0x40);
+          else
+          if (strcasecmp(scanningMode,"+x-y") == 0)
+            scanningMode2.setScanningMode(0);
+          else
+          if (strcasecmp(scanningMode,"-x-y") == 0)
+            scanningMode2.setScanningMode(0x80);
+
+          def2->setScanningMode(scanningMode2);
+
+          def2->setNumberOfPointsAlongXAxis(T::UInt32_opt(ni));
+          def2->setNumberOfPointsAlongYAxis(T::UInt32_opt(nj));
+          def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+          def2->setLongitudeOfFirstGridPoint(T::Int32_opt(longitude));
+
+          def2->setStandardParallelInMicrodegrees(T::Int32_opt(standardParallel));
+          def2->setCentralLongitudeInMicrodegrees(T::Int32_opt(centralLongitude));
+          def2->setXDirectionGridLengthInMillimetres(T::UInt32_opt(iInc*1000));
+          def2->setYDirectionGridLengthInMillimetres(T::UInt32_opt(jInc*1000));
+
+          def2->setResolutionAndComponentFlags(0x30);
+          def2->setGridGeometryId(geometryId);
+          def2->setGridGeometryName(geometryName);
+          def2->initSpatialReference();
+
+          // def2->print(std::cout,0,0);
+
+          return def2;
+        }
+        break;
 
         case T::GridProjectionValue::CrossSection:
           break;
@@ -5681,6 +5733,7 @@ uint GridDef::countParameterMatchPoints(GRIB2::Message& message,const Grib2Param
       return 0;
 
     const GRIB2::ParameterSettings *s = productDefinition->getParameter();
+    const GRIB2::PostprocSettings *pp = productDefinition->getPostproc();
     const GRIB2::HorizontalSettings *h = productDefinition->getHorizontal();
     const GRIB2::StatisticalSettings *stat = productDefinition->getStatistical();
 
@@ -5731,6 +5784,45 @@ uint GridDef::countParameterMatchPoints(GRIB2::Message& message,const Grib2Param
         matchPoints++;
       }
     }
+
+    if (pp != nullptr)
+    {
+      if (pp->getParameterCategory())
+      {
+        if (p.mParameterCategory != *pp->getParameterCategory())
+          return 0;
+
+        matchPoints++;
+      }
+      else
+      {
+        return 0;
+      }
+
+      if (pp->getParameterNumber())
+      {
+        if (p.mParameterNumber != *pp->getParameterNumber())
+          return 0;
+
+        matchPoints++;
+      }
+      else
+      {
+        return 0;
+      }
+
+      if (p.mTypeOfGeneratingProcess)
+      {
+        if (!pp->getTypeOfGeneratingProcess())
+          return 0;
+
+        if (p.mTypeOfGeneratingProcess != *pp->getTypeOfGeneratingProcess())
+          return 0;
+
+        matchPoints++;
+      }
+    }
+
 
     if (stat != nullptr)
     {

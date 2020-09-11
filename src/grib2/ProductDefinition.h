@@ -4,6 +4,7 @@
 #include "../common/MemoryReader.h"
 #include "../common/AttributeList.h"
 #include "../grib2/definition/ParameterSettings.h"
+#include "../grib2/definition/PostprocSettings.h"
 #include "../grib2/definition/HorizontalSettings.h"
 #include "../grib2/definition/StatisticalSettings.h"
 #include "../grib2/definition/EpsSettings.h"
@@ -54,6 +55,8 @@ class ProductDefinition
     virtual ProbabilitySettings*        getProbability() const;
     virtual PercentileSettings*         getPercentile() const;
     virtual CategoricalSettings*        getCategorical() const;
+    virtual PostprocSettings*           getPostproc() const;
+
 
   protected:
 
@@ -61,6 +64,7 @@ class ProductDefinition
     // several child classes that need to do the same calculations.
 
     T::TimeString                       countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const;
+    T::TimeString                       countForecastStartTime(T::TimeString referenceTime,const PostprocSettings& parameter) const;
     T::TimeString                       countForecastEndTime(const StatisticalSettings& stat) const;
 
     virtual bool                        getProperty_ParameterSettings(uint propertyId,long long& value);

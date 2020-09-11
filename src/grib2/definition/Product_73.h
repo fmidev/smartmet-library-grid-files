@@ -14,6 +14,7 @@
 #include "../ProductDefinition.h"
 #include "EpsSettings.h"
 #include "HorizontalSettings.h"
+#include "PostprocSettings.h"
 #include "StatisticalSettings.h"
 
 namespace SmartMet {
@@ -34,6 +35,8 @@ public:
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
+  PostprocSettings *getPostproc() const;
+  void setPostproc(PostprocSettings &postproc);
   HorizontalSettings *getHorizontal() const;
   void setHorizontal(HorizontalSettings &horizontal);
   EpsSettings *getEps() const;
@@ -54,6 +57,8 @@ protected:
   // # EFAS: Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
   //
   // include "grib2/template.4.parameter_postproc.def"
+
+  mutable PostprocSettings mPostproc;
 
   // include "grib2/template.4.horizontal.def"
 

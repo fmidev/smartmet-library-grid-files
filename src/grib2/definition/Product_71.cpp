@@ -29,6 +29,7 @@ Product_71::Product_71() {
 
 Product_71::Product_71(const Product_71 &other) : ProductDefinition(other) {
   try {
+    mPostproc = other.mPostproc;
     mPointInTime = other.mPointInTime;
     mHorizontal = other.mHorizontal;
     mEps = other.mEps;
@@ -49,6 +50,7 @@ Product_71::~Product_71() {
 
 void Product_71::read(MemoryReader &memoryReader) {
   try {
+    mPostproc.read(memoryReader);
     mPointInTime.read(memoryReader);
     mHorizontal.read(memoryReader);
     mEps.read(memoryReader);
@@ -64,6 +66,7 @@ void Product_71::read(MemoryReader &memoryReader) {
 
 void Product_71::write(DataWriter &dataWriter) {
   try {
+    mPostproc.write(dataWriter);
     mPointInTime.write(dataWriter);
     mHorizontal.write(dataWriter);
     mEps.write(dataWriter);
@@ -81,6 +84,8 @@ void Product_71::write(DataWriter &dataWriter) {
 void Product_71::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
+    sprintf(name, "%sProduct_71.", prefix.c_str());
+    mPostproc.getAttributeList(name, attributeList);
     sprintf(name, "%sProduct_71.", prefix.c_str());
     mPointInTime.getAttributeList(name, attributeList);
     sprintf(name, "%sProduct_71.", prefix.c_str());
@@ -102,6 +107,7 @@ void Product_71::getAttributeList(std::string prefix, T::AttributeList &attribut
 void Product_71::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "Product_71\n";
+    mPostproc.print(stream, level + 1, optionFlags);
     mPointInTime.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
     mEps.print(stream, level + 1, optionFlags);
@@ -115,6 +121,7 @@ void Product_71::print(std::ostream &stream, uint level, uint optionFlags) const
 T::Hash Product_71::countHash() {
   try {
     std::size_t seed = 0;
+    boost::hash_combine(seed, mPostproc.countHash());
     boost::hash_combine(seed, mPointInTime.countHash());
     boost::hash_combine(seed, mHorizontal.countHash());
     boost::hash_combine(seed, mEps.countHash());
@@ -133,6 +140,16 @@ uint Product_71::getTemplateNumber() const {
 ProductDefinition *Product_71::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new Product_71(*this));
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+/*! \brief The method returns the pointer to the {@link mPostproc} attribute. */
+
+PostprocSettings *Product_71::getPostproc() const {
+  try {
+    return static_cast<PostprocSettings *>(&mPostproc);
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
@@ -163,6 +180,14 @@ HorizontalSettings *Product_71::getHorizontal() const {
 EpsSettings *Product_71::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
+  } catch (...) {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+void Product_71::setPostproc(PostprocSettings &postproc) {
+  try {
+    mPostproc = postproc;
   } catch (...) {
     throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }

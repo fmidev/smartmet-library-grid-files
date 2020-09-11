@@ -76,6 +76,7 @@ $templates = array (
     "4.rectangular_cluster" => "RectangularClusterSettings",
     "4.reforecast" => "ReforecastSettings",
     "4.statistical" => "StatisticalSettings",
+    "4.parameter_postproc" => "PostprocSettings",
 
     "4.0" => "NormalProduct",
     "4.1" => "EnsembleForecast",

@@ -3360,11 +3360,11 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- gribParameterName       = " << mGribParameterName << "\n";
     stream << space(level) << "- gribParameterUnits      = " << mGribParameterUnits << "\n";
     stream << space(level) << "- parameterLevel          = " << toString(getGridParameterLevel()) << "\n";
-    stream << space(level) << "- parameterLevelId        = " << toString(getGridParameterLevelId()) << "\n";
-    stream << space(level) << "- parameterLevelIdString  = " << getGridParameterLevelIdString() << "\n";
+    stream << space(level) << "- fmiParameterLevelId     = " << toString(mFmiParameterLevelId) << "\n";
+    stream << space(level) << "- grib1ParameterLevelId   = " << toString(mGrib1ParameterLevelId) << "\n";
+    stream << space(level) << "- grib2ParameterLevelId   = " << toString(mGrib2ParameterLevelId) << "\n";
     stream << space(level) << "- fmiProducerName         = " << mFmiProducerName << "\n";
     stream << space(level) << "- fmiParameterId          = " << toString(mFmiParameterId) << "\n";
-    stream << space(level) << "- fmiParameterLevelId     = " << toString(mFmiParameterLevelId) << "\n";
     stream << space(level) << "- fmiParameterName        = " << mFmiParameterName << "\n";
     stream << space(level) << "- fmiParameterUnits       = " << mFmiParameterUnits << "\n";
     stream << space(level) << "- newbaseParameterId      = " << mNewbaseParameterId << "\n";
