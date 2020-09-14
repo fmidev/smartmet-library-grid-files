@@ -16,6 +16,7 @@ ModificationLock::ModificationLock()
     mLine = 0;
 #endif
     mReadCounter = 0;
+    mLockingEnabled = true;
   }
   catch (...)
   {
@@ -47,6 +48,9 @@ void ModificationLock::readLock()
 {
   try
   {
+    if (!mLockingEnabled)
+      return;
+
     mThreadLock.lock();
     mReadCounter++;
     mThreadLock.unlock();
@@ -65,6 +69,9 @@ void ModificationLock::readLock(const char *filename,uint line)
 {
   try
   {
+    if (!mLockingEnabled)
+      return;
+
     mThreadLock.lock();
 #ifdef TRACE_LOCK
     mLine = line;
@@ -86,6 +93,9 @@ void ModificationLock::readUnlock()
 {
   try
   {
+    if (!mLockingEnabled)
+      return;
+
     mThreadLock.lock();
 #ifdef TRACE_LOCK
     if (mLine > 0)
@@ -111,6 +121,9 @@ void ModificationLock::writeLock()
 {
   try
   {
+    if (!mLockingEnabled)
+      return;
+
     while (true)
     {
       mThreadLock.lock();
@@ -135,6 +148,9 @@ void ModificationLock::writeLock(const char *filename,uint line)
 {
   try
   {
+    if (!mLockingEnabled)
+      return;
+
     while (true)
     {
       mThreadLock.lock();
@@ -165,6 +181,9 @@ void ModificationLock::writeUnlock()
 {
   try
   {
+    if (!mLockingEnabled)
+      return;
+
 #ifdef TRACE_LOCK
     if (mLine > 0)
     {
@@ -188,6 +207,9 @@ void ModificationLock::lock()
 {
   try
   {
+    if (!mLockingEnabled)
+      return;
+
     mThreadLock.lock();
   }
   catch (...)
@@ -203,7 +225,26 @@ void ModificationLock::unlock()
 {
   try
   {
+    if (!mLockingEnabled)
+      return;
+
     mThreadLock.unlock();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+void ModificationLock::setLockingEnabled(bool lockingEnabled)
+{
+  try
+  {
+    mLockingEnabled = lockingEnabled;
   }
   catch (...)
   {

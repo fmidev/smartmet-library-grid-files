@@ -24,6 +24,7 @@ class ModificationLock
     void            writeUnlock();
     void            lock();
     void            unlock();
+    void            setLockingEnabled(bool lockingEnabled);
 
 #ifdef TRACE_LOCK
     std::string     getFilename();
@@ -34,6 +35,7 @@ class ModificationLock
 
     ThreadLock      mThreadLock;
     int             mReadCounter;
+    bool            mLockingEnabled;
 #ifdef TRACE_LOCK
     std::string     mFilename;
     uint            mLine;
