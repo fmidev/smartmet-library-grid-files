@@ -31,7 +31,7 @@ DEFINES = -DUNIX -D_REENTRANT
 # Boost 1.69
 
 ifneq "$(wildcard /usr/include/boost169)" ""
-  INCLUDES += -I/usr/include/boost169
+  INCLUDES += -isystem /usr/include/boost169
   LIBS += -L/usr/lib64/boost169
 endif
 
@@ -41,13 +41,13 @@ ifeq ($(CXX), clang++)
  FLAGS = \
 	-std=c++11 -fPIC -MD -fno-omit-frame-pointer \
 	-Weverything \
+	-Wimplicit-int \
 	-Wno-c++98-compat \
 	-Wno-float-equal \
 	-Wno-padded \
 	-Wno-missing-prototypes
 
  INCLUDES += \
-	-isystem $(includedir) \
 	-isystem $(includedir)/smartmet
 
 else
@@ -70,7 +70,6 @@ else
  FLAGS_RELEASE = -Wuninitialized
 
  INCLUDES += \
-	-I$(includedir) \
 	-I$(includedir)/smartmet
 
 endif
