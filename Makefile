@@ -172,7 +172,7 @@ profile: all
 
 
 $(LIBFILE): $(OBJFILES)
-	$(CXX) $(CFLAGS) -shared -rdynamic -o $(LIBFILE) $(OBJFILES) $(LIBS)
+	$(CC) $(LDFLAGS) -shared -rdynamic -o $(LIBFILE) $(OBJFILES) $(LIBS)
 
 clean: 
 	rm -f src/*~ src/*/*~ src/*/*/*~
