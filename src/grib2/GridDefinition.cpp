@@ -1685,7 +1685,7 @@ double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
         break;
     }
 
-    if (abs(value-defaultValue) < 10000)
+    if (std::abs(value-defaultValue) < 10000)
       return value;
 
     return defaultValue;
