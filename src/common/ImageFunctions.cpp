@@ -897,7 +897,7 @@ int png_save(const char *filename,uint *image,int image_width,int image_height)
     ptr = (uchar*)image + y * image_width * psize;
   }
 
-  delete pixel;
+  delete[] pixel;
 
   png_writeClose(handle);
 
