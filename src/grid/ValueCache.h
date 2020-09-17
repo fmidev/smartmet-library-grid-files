@@ -28,8 +28,12 @@ namespace GRID
 */
 // ====================================================================================
 
-typedef unsigned long long UInt64;
+// jasper library defines uchar as unsigned char in jas_config.h :(
+#ifndef uchar
 typedef unsigned char uchar;
+#endif
+
+typedef unsigned long long UInt64;
 typedef uchar *puchar;
 
 

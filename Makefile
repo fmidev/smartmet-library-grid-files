@@ -40,8 +40,6 @@ ifeq ($(CXX), clang++)
 
  FLAGS = \
 	-std=c++11 -fPIC -MD -fno-omit-frame-pointer \
-	-Weverything \
-	-Wimplicit-int \
 	-Wno-c++98-compat \
 	-Wno-float-equal \
 	-Wno-padded \
