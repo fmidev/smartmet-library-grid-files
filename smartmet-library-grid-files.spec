@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 20.9.15
+Version: 20.9.18
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -13,7 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 20.9.11
 BuildRequires: smartmet-library-spine-devel >= 20.9.14
-BuildRequires: smartmet-library-macgyver >= 20.9.3
+BuildRequires: smartmet-library-macgyver >= 20.9.15
 BuildRequires: smartmet-library-tron >= 20.4.18
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -37,7 +37,7 @@ Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 20.9.11
-Requires: smartmet-library-macgyver >= 20.9.3
+Requires: smartmet-library-macgyver >= 20.9.15
 Requires: smartmet-library-spine >= 20.9.14
 
 %description
@@ -77,6 +77,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Sep 18 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.9.18-1.fmi
+- Performance improvements
+- delete[] fix
 * Tue Sep 15 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.9.15-1.fmi
 - ModificationLocks can now be disabled if the modifications are known to be safe
 * Mon Sep 14 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.9.14-1.fmi
