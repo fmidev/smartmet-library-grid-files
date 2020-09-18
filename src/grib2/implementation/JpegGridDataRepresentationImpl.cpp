@@ -1,10 +1,13 @@
 #include "JpegGridDataRepresentationImpl.h"
-#include "../../common/Exception.h"
+
 #include "../../common/BitArrayReader.h"
-#include "../../common/GeneralFunctions.h"
+#include "../../common/Exception.h"
 #include "../../common/GeneralDefinitions.h"
+#include "../../common/GeneralFunctions.h"
 #include "../Message.h"
-#include <jasper/jasper.h>
+
+#include <jasper/jas_image.h>
+#include <jasper/jas_init.h>
 
 //#include <openjpeg-1.5/openjpeg.h>
 #include <cstring>
@@ -17,37 +20,21 @@ namespace SmartMet
 {
 namespace GRIB2
 {
-
 /*! \brief The constructor of the class. */
 
-JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl()
-{
-}
-
-
-
-
+JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl() {}
 
 /*! \brief The copy constructor of the class. */
 
-JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl(const JpegGridDataRepresentationImpl& other)
-:JpegGridDataRepresentation(other)
+JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl(
+    const JpegGridDataRepresentationImpl& other)
+    : JpegGridDataRepresentation(other)
 {
 }
-
-
-
-
 
 /*! \brief The destructor of the class. */
 
-JpegGridDataRepresentationImpl::~JpegGridDataRepresentationImpl()
-{
-}
-
-
-
-
+JpegGridDataRepresentationImpl::~JpegGridDataRepresentationImpl() {}
 
 /*! \brief The method creates a duplicate of the current object. */
 
@@ -55,17 +42,13 @@ RepresentationDefinition* JpegGridDataRepresentationImpl::createRepresentationDe
 {
   try
   {
-    return (RepresentationDefinition*) new JpegGridDataRepresentationImpl(*this);
+    return (RepresentationDefinition*)new JpegGridDataRepresentationImpl(*this);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
-
-
-
-
 
 /*! \brief The method reads and initializes all data related to the current object.
     The purpose of this method is to get access to the read operation that takes place
@@ -85,83 +68,75 @@ void JpegGridDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-
-
-
-
-void JpegGridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec& values)
+void JpegGridDataRepresentationImpl::encodeValues(Message* message, T::ParamValue_vec& values)
 {
   try
   {
     // UNDER CONSTRUCTION
-/*
-    jas_stream_t *output = jas_stream_fopen("/tmp/jasper_test.jpg", "w+b");
-    if (output == nullptr)
-    {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open output image file!");
-      throw exception;
-    }
+    /*
+        jas_stream_t *output = jas_stream_fopen("/tmp/jasper_test.jpg", "w+b");
+        if (output == nullptr)
+        {
+          SmartMet::Spine::Exception exception(BCP,"Cannot open output image file!");
+          throw exception;
+        }
 
-    jas_cmprof_t *outprof = jas_cmprof_createfromclrspc(JAS_CLRSPC_SRGB);
-    if (outprof == nullptr)
-    {
-      SmartMet::Spine::Exception exception(BCP,"Cannot create sRGB profile!");
-      throw exception;
-    }
+        jas_cmprof_t *outprof = jas_cmprof_createfromclrspc(JAS_CLRSPC_SRGB);
+        if (outprof == nullptr)
+        {
+          SmartMet::Spine::Exception exception(BCP,"Cannot create sRGB profile!");
+          throw exception;
+        }
 
-    jas_image_t *newimage = jas_image_chclrspc(image, outprof, JAS_CMXFORM_INTENT_PER);
-    if (newimage == nullptr)
-    {
-      SmartMet::Spine::Exception exception(BCP,"Cannot convert to sRGB!");
-      throw exception;
-    }
+        jas_image_t *newimage = jas_image_chclrspc(image, outprof, JAS_CMXFORM_INTENT_PER);
+        if (newimage == nullptr)
+        {
+          SmartMet::Spine::Exception exception(BCP,"Cannot convert to sRGB!");
+          throw exception;
+        }
 
-    jas_image_destroy(image);
-    jas_cmprof_destroy(outprof);
-    image = newimage;
+        jas_image_destroy(image);
+        jas_cmprof_destroy(outprof);
+        image = newimage;
 
 
-    jas_tmr_start(&enctmr);
-    if (jas_image_encode(image, output, cmdopts->outfmt, cmdopts->outopts))
-    {
-      fprintf(stderr, "error: cannot encode image\n");
-      exit(EXIT_FAILURE);
-    }
+        jas_tmr_start(&enctmr);
+        if (jas_image_encode(image, output, cmdopts->outfmt, cmdopts->outopts))
+        {
+          fprintf(stderr, "error: cannot encode image\n");
+          exit(EXIT_FAILURE);
+        }
 
-    jas_stream_flush(output);
-    jas_tmr_stop(&enctmr);
+        jas_stream_flush(output);
+        jas_tmr_stop(&enctmr);
 
-    if (jas_stream_close(output))
-    {
-      SmartMet::Spine::Exception exception(BCP,"Cannot close output image file!");
-      throw exception;
-    }
+        if (jas_stream_close(output))
+        {
+          SmartMet::Spine::Exception exception(BCP,"Cannot close output image file!");
+          throw exception;
+        }
 
-    cmdopts_destroy(cmdopts);
-    jas_image_destroy(image);
-    jas_image_clearfmts();
-    */
+        cmdopts_destroy(cmdopts);
+        jas_image_destroy(image);
+        jas_image_clearfmts();
+        */
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
   }
 }
 
-
-
-
-
-void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void JpegGridDataRepresentationImpl::decodeValues(Message* message,
+                                                  T::ParamValue_vec& decodedValues) const
 {
   try
   {
-    if (jas_init())
-      return;
+    if (jas_init()) return;
 
     std::size_t numOfValues = message->getGridOriginalValueCount();
     T::Data_ptr data = message->getDataPtr();
@@ -169,23 +144,22 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
-    if (numOfValues == 0 ||  data == nullptr  ||  dataSize == 0)
-      return;
-/*
-    char filename[100];
-    sprintf(filename,"/tmp/smartmet-library-grid_jpg2000_decoding_%llu.jpg",getTime());
-    FILE *file = fopen(filename,"we");
-    fwrite(data,dataSize,1,file);
-    fclose(file);
-    jas_stream_t *instream = jas_stream_fopen(filename, "rb");
-    */
+    if (numOfValues == 0 || data == nullptr || dataSize == 0) return;
+    /*
+        char filename[100];
+        sprintf(filename,"/tmp/smartmet-library-grid_jpg2000_decoding_%llu.jpg",getTime());
+        FILE *file = fopen(filename,"we");
+        fwrite(data,dataSize,1,file);
+        fclose(file);
+        jas_stream_t *instream = jas_stream_fopen(filename, "rb");
+        */
 
-    jas_stream_t *instream = jas_stream_memopen((char*)data,(size_t)dataSize);
+    jas_stream_t* instream = jas_stream_memopen((char*)data, (size_t)dataSize);
     if (instream == nullptr)
     {
-      //remove(filename);
+      // remove(filename);
       SmartMet::Spine::Exception exception(BCP, "Cannot open the JPG-2000 file!");
-      //exception.addParameter("Filename",filename);
+      // exception.addParameter("Filename",filename);
       throw exception;
     }
 
@@ -193,39 +167,37 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     if (fmtid < 0)
     {
       jas_stream_close(instream);
-      //remove(filename);
+      // remove(filename);
       SmartMet::Spine::Exception exception(BCP, "Not a JPG-2000 image!");
-      //exception.addParameter("Filename",filename);
+      // exception.addParameter("Filename",filename);
       throw exception;
     }
 
-
     /* Decode the image. */
 
-    jas_image_t *image = jas_image_decode(instream, fmtid, 0);
+    jas_image_t* image = jas_image_decode(instream, fmtid, 0);
 
     if (image == nullptr)
     {
       jas_stream_close(instream);
-      //remove(filename);
+      // remove(filename);
       SmartMet::Spine::Exception exception(BCP, "Cannot decode the JPG-2000 image!");
-      //exception.addParameter("Filename",filename);
+      // exception.addParameter("Filename",filename);
       throw exception;
     }
 
-    //int numcmpts = jas_image_numcmpts(image);
+    // int numcmpts = jas_image_numcmpts(image);
     int width = jas_image_cmptwidth(image, 0);
     int height = jas_image_cmptheight(image, 0);
-    //int depth = jas_image_cmptprec(image, 0);
+    // int depth = jas_image_cmptprec(image, 0);
 
-    //int sz = width*height;
+    // int sz = width*height;
 
     // int rawsz = jas_image_rawsize(image);
     // printf("IMAGE %d x %d x %d => %d (%d)\n",width,height,depth,sz,rawsz);
 
-
-    jas_matrix_t *matrix = jas_matrix_create(height,width);
-    jas_image_readcmpt(image,0,0,0,width,height,matrix);
+    jas_matrix_t* matrix = jas_matrix_create(height, width);
+    jas_image_readcmpt(image, 0, 0, 0, width, height, matrix);
 
     // Vector to return
     decodedValues.clear();
@@ -234,10 +206,11 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     // Sanity checks
     auto bits_per_value = mPacking.getBitsPerValue();
     if (!bits_per_value)
-      throw SmartMet::Spine::Exception(BCP,"GridDataRepresentation number of bits per value must be > 0");
+      throw SmartMet::Spine::Exception(
+          BCP, "GridDataRepresentation number of bits per value must be > 0");
 
     // Number of bits per value
-    //const unsigned int nbits = *bits_per_value;
+    // const unsigned int nbits = *bits_per_value;
 
     // Reference value R, IEEE 32-bit floating point value
     // TODO: GRIB1 USES IBM-FLOATS INSTEAD OF IEEE-754!!!!!
@@ -261,10 +234,9 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     {
       T::Data_ptr bmap = bitmap;
       unsigned char tmp = 0;
-      if (bmap == nullptr)
-        bmap = &tmp;
+      if (bmap == nullptr) bmap = &tmp;
 
-      BitArrayReader bitmapReader(bmap,bitmapSizeInBytes*8);
+      BitArrayReader bitmapReader(bmap, bitmapSizeInBytes * 8);
 
       uint pos = 0;
       for (int i = 0; i < C_INT(numOfValues); i++)
@@ -296,18 +268,13 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     jas_image_destroy(image);
     jas_image_clearfmts();
     jas_stream_close(instream);
-    //remove(filename);
+    // remove(filename);
   }
   catch (...)
   {
     throw SmartMet::Spine::Exception(BCP, "JPEG decodeValues failed!", nullptr);
   }
 }
-
-
-
-
-
 
 #if 0
 
@@ -632,8 +599,6 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
   }
 }
 #endif
-
-
 
 }  // namespace GRIB2
 }  // namespace SmartMet
