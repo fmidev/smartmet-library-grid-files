@@ -136,6 +136,8 @@ class Message
     virtual T::GridProjection   getGridProjection() const;
     virtual void                getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;
     virtual std::string         getGridProjectionString() const;
+    virtual std::size_t         getGridColumnCount() const;
+    virtual std::size_t         getGridRowCount() const;
     virtual uint                getGridWidth() const;
     virtual uint                getGridHeight() const;
 

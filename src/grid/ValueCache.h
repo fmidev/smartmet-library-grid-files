@@ -29,7 +29,11 @@ namespace GRID
 // ====================================================================================
 
 typedef unsigned long long UInt64;
-typedef unsigned char uchar;
+
+#ifndef uchar
+  typedef unsigned char uchar;
+#endif
+
 typedef uchar *puchar;
 
 

@@ -20,6 +20,8 @@ class LambertConformalImpl : public LambertConformal
     bool                getGridMetricCellSize(double& width,double& height) const;
     T::Coordinate_svec  getGridOriginalCoordinates() const;
     T::Dimensions       getGridDimensions() const;
+    std::size_t         getGridColumnCount() const;
+    std::size_t         getGridRowCount() const;
     std::string         getGridGeometryString() const;
     bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;

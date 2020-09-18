@@ -327,6 +327,35 @@ T::Dimensions LambertAzimuthalEqualAreaImpl::getGridDimensions() const
 
 
 
+std::size_t LambertAzimuthalEqualAreaImpl::getGridColumnCount() const
+{
+  try
+  {
+    return *mNumberOfPointsAlongXAxis;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+std::size_t LambertAzimuthalEqualAreaImpl::getGridRowCount() const
+{
+  try
+  {
+    return *mNumberOfPointsAlongYAxis;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
 /*! \brief This method calculates the estimated grid position by using the latlon coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.
 

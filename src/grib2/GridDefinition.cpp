@@ -1002,12 +1002,14 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
   FUNCTION_TRACE
   try
   {
-    T::Dimensions d = getGridDimensions();
-    if (d.getDimensions() != 2  || grid_i >= d.nx() || grid_j >= d.ny())
+    auto rows = getGridRowCount();
+    auto cols = getGridColumnCount();
+
+    if (grid_i >= cols || grid_j >= rows)
       return false;
 
     T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
-    uint c = grid_j * d.nx() + grid_i;
+    uint c = grid_j * cols + grid_i;
     if (c >= originalCoordinates->size())
       return false;
 
@@ -1090,6 +1092,46 @@ T::Dimensions GridDefinition::getGridDimensions() const
 {
   FUNCTION_TRACE
   throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+}
+
+
+
+
+
+std::size_t GridDefinition::getGridColumnCount() const
+{
+  try
+  {
+    auto d = getGridDimensions();
+    if (d.getDimensions() > 1)
+      return d.ny();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+std::size_t GridDefinition::getGridRowCount() const
+{
+  try
+  {
+    auto d = getGridDimensions();
+    if (d.getDimensions() == 2)
+      return d.ny();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
 }
 
 
@@ -1290,8 +1332,10 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
   FUNCTION_TRACE
   try
   {
-    T::Dimensions d = getGridDimensions();
-    if (d.getDimensions() != 2  || grid_i >= d.nx() || grid_j >= d.ny())
+    auto rows = getGridRowCount();
+    auto cols = getGridColumnCount();
+
+    if (grid_i >= cols || grid_j >= rows)
       return false;
 
     double x = 0;
@@ -1303,7 +1347,7 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
     }
 
     T::Coordinate_svec coordinates = getGridLatLonCoordinates();
-    uint c = grid_j*d.nx() + grid_i;
+    uint c = grid_j*cols + grid_i;
     if (c < coordinates->size())
     {
       lon = getLongitude((*coordinates)[c].x());

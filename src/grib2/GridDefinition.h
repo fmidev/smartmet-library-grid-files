@@ -55,6 +55,8 @@ class GridDefinition
     virtual bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     T::GridProjection           getGridProjection();
+    virtual std::size_t         getGridColumnCount() const;
+    virtual std::size_t         getGridRowCount() const;
     virtual uint                getTemplateNumber() const;
     T::SpatialRef*              getSpatialReference();
     virtual void                initSpatialReference();

@@ -20,6 +20,7 @@ class ModificationLock
     void            readLock(const char *filename,uint line);
     void            readUnlock();
     void            writeLock();
+    void            writeLockWhenInsideReadLock();
     void            writeLock(const char *filename,uint line);
     void            writeUnlock();
     void            lock();

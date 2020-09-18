@@ -3212,17 +3212,16 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       return ParamValueMissing;
     }
 
-    auto d = getGridDimensions();
-    if (d.getDimensions() != 2)
+    auto rows = getGridRowCount();
+    auto cols = getGridColumnCount();
+
+    if (grid_j >= rows)
       return ParamValueMissing;
 
-    if (grid_j >= d.ny())
+    if (grid_i >= cols &&  !isGridGlobal())
       return ParamValueMissing;
 
-    if (grid_i >= d.nx() &&  !isGridGlobal())
-      return ParamValueMissing;
-
-    uint idx = grid_j * d.nx() + (grid_i % d.nx());
+    uint idx = grid_j * cols + (grid_i % cols);
 
     incRequestCounter(idx);
 
@@ -3269,7 +3268,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       else
       {
         T::IndexVector indexVector;
-        mBitmapSection->getIndexVector((d.nx()*d.ny()),indexVector);
+        mBitmapSection->getIndexVector(cols*rows,indexVector);
         GRID::indexCache.addIndexVector(hash,indexVector);
         if (indexVector[idx] < 0)
           return ParamValueMissing;
@@ -3478,6 +3477,60 @@ T::GridLayout Message::getGridLayout() const
       throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
     return mGridSection->getGridLayout();
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the number of rows used in the grid.
+
+        \return   The number of the grid rows.
+*/
+
+std::size_t Message::getGridRowCount() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+    return mGridSection->getGridRowCount();
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the number of columns used in the grid.
+
+        \return       The number of columns in the given grid row.
+*/
+
+std::size_t Message::getGridColumnCount() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+    return mGridSection->getGridColumnCount();
   }
   catch (...)
   {

@@ -445,6 +445,37 @@ T::Dimensions LambertConformalImpl::getGridDimensions() const
 
 
 
+std::size_t LambertConformalImpl::getGridColumnCount() const
+{
+  try
+  {
+    return *mNx;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+std::size_t LambertConformalImpl::getGridRowCount() const
+{
+  try
+  {
+    return *mNy;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 bool LambertConformalImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try

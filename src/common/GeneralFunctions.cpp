@@ -436,7 +436,7 @@ long long getFileSize(const char *filename)
   }
 }
 
-std::string stringReplaceAll(std::string st,std::string oldStr,std::string newStr)
+std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std::string newStr)
 {
   try
   {
@@ -642,7 +642,7 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
   }
 }
 
-time_t localTimeToTimeT(std::string localTime, const char *tzone)
+time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
 {
   try
   {
@@ -675,7 +675,7 @@ time_t localTimeToTimeT(std::string localTime, const char *tzone)
   }
 }
 
-time_t utcTimeToTimeT(std::string utcTime)
+time_t utcTimeToTimeT(const std::string& utcTime)
 {
   try
   {
@@ -799,7 +799,7 @@ std::string utcTimeFromTimeT(time_t t)
   }
 }
 
-std::string localTimeToUtcTime(std::string localTime, const char *tzone)
+std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
 {
   try
   {
@@ -812,7 +812,7 @@ std::string localTimeToUtcTime(std::string localTime, const char *tzone)
   }
 }
 
-std::string localTimeToUtc(std::string localTime, boost::local_time::time_zone_ptr tz)
+std::string localTimeToUtc(const std::string& localTime, boost::local_time::time_zone_ptr tz)
 {
   try
   {
@@ -827,7 +827,7 @@ std::string localTimeToUtc(std::string localTime, boost::local_time::time_zone_p
   }
 }
 
-std::string utcTimeToLocalTime(std::string utcTime, const char *tzone)
+std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
 {
   try
   {
@@ -852,7 +852,7 @@ time_t toTimeT(boost::posix_time::ptime tim)
   }
 }
 
-std::string addSeconds(std::string timeStr, int seconds)
+std::string addSeconds(const std::string& timeStr, int seconds)
 {
   try
   {
@@ -1312,7 +1312,7 @@ std::string toString(double value)
   }
 }
 
-std::string toString(std::string value)
+std::string toString(const std::string& value)
 {
   try
   {
@@ -1448,7 +1448,21 @@ std::string toString(boost::posix_time::ptime time)
   }
 }
 
-std::string toLowerString(std::string sourceString)
+std::string toLowerString(const char *sourceString)
+{
+  try
+  {
+    std::string s(sourceString);
+    return toLowerString(s);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+
+std::string toLowerString(const std::string& sourceString)
 {
   try
   {
@@ -1468,7 +1482,20 @@ std::string toLowerString(std::string sourceString)
   }
 }
 
-std::string toUpperString(std::string sourceString)
+std::string toUpperString(const char *sourceString)
+{
+  try
+  {
+    std::string s(sourceString);
+    return toUpperString(s);
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+  }
+}
+
+std::string toUpperString(const std::string& sourceString)
 {
   try
   {
@@ -1570,7 +1597,7 @@ int decompressData(void *_compressedData,
   }
 }
 
-void parseLatLonCoordinates(std::string latLonCoordinates, std::vector<T::Coordinate> &coordinates)
+void parseLatLonCoordinates(const std::string& latLonCoordinates, std::vector<T::Coordinate> &coordinates)
 {
   try
   {
@@ -2059,7 +2086,7 @@ void splitString(const std::string& str, char separator, std::set<double> &partL
   }
 }
 
-std::string getAbsoluteFilePath(std::string filename)
+std::string getAbsoluteFilePath(const std::string& filename)
 {
   try
   {
@@ -2081,7 +2108,7 @@ std::string getAbsoluteFilePath(std::string filename)
   }
 }
 
-std::string getFileDir(std::string filename)
+std::string getFileDir(const std::string& filename)
 {
   try
   {
@@ -2328,7 +2355,7 @@ std::string toString(T::AreaCoordinates &coordinates, char separator1, char sepa
   }
 }
 
-void parseCoordinates(std::string coordinateStr,
+void parseCoordinates(const std::string& coordinateStr,
                       char separator1,
                       char separator2,
                       T::AreaCoordinates &coordinates)

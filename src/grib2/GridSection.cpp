@@ -1261,6 +1261,57 @@ T::GridProjection GridSection::getGridProjection() const
      \return   The number of the grid rows.
 */
 
+std::size_t GridSection::getGridRowCount() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition != nullptr)
+      return mGridDefinition->getGridRowCount();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the number of columns used in the given original grid row.
+
+      \return       The number of columns in the given grid row.
+*/
+
+std::size_t GridSection::getGridColumnCount() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition != nullptr)
+      return mGridDefinition->getGridColumnCount();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
+/*! \brief The method returns the number of rows used in the original grid.
+
+     \return   The number of the grid rows.
+*/
+
 std::size_t GridSection::getGridOriginalRowCount() const
 {
   FUNCTION_TRACE

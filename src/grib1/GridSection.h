@@ -100,6 +100,8 @@ class GridSection : public GRID::MessageSection
     bool                  getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     T::GridProjection     getGridProjection() const;
     std::string           getGridProjectionString() const;
+    std::size_t           getGridColumnCount() const;
+    std::size_t           getGridRowCount() const;
     T::SpatialRef*        getSpatialReference() const;
     void                  initSpatialReference();
     bool                  isGridGlobal() const;

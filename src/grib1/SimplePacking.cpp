@@ -13,6 +13,8 @@ namespace SmartMet
 namespace GRIB1
 {
 
+const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
+
 
 /*! \brief The constructor of the class. */
 
@@ -155,6 +157,10 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
 {
   try
   {
+    T::Data_ptr bitmap = message->getBitmapDataPtr();
+    if (bitmap != nullptr && (bitmap[index / 8] & bitmask[index % 8]) == 0)
+      return false;
+
     if (message->getDataPtr() == nullptr || message->getDataSize() == 0)
     {
       if (!mBitsPerValue)
@@ -181,10 +187,38 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
     }
 
     uint X = 0;
+    uint a = mBitsPerValue % 8;
 
-    BitArrayReader bitArrayReader(mData,mDataSize*8);
-    bitArrayReader.setReadPosition(index*mBitsPerValue);
-    bitArrayReader.readBits(mBitsPerValue,X);
+    if (a != 0)
+    {
+      BitArrayReader bitArrayReader(mData,mDataSize*8);
+      bitArrayReader.setReadPosition(index*mBitsPerValue);
+      bitArrayReader.readBits(mBitsPerValue,X);
+    }
+    else
+    {
+      uint b = mBitsPerValue / 8;
+      MemoryReader memoryReader(mData,mDataSize);
+      memoryReader.setReadPosition(index * b);
+      switch (b)
+      {
+        case 1:
+          X = memoryReader.read_uint8();
+          break;
+
+        case 2:
+          X = memoryReader.read_uint16();
+          break;
+
+        case 3:
+          X = memoryReader.read_uint24();
+          break;
+
+        case 4:
+          X = memoryReader.read_uint32();
+          break;
+      }
+    }
 
     double Y = mRDfac + X * mEDfac;
 
@@ -221,8 +255,6 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
     std::uint8_t bitsPerValue = message->getBitsPerValue();
     // std::uint8_t flags = message->getFlags();
 
-    const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
-
     // Vector to return
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
@@ -257,9 +289,6 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
       return;
     }
 
-    // Number of bits per value
-    unsigned int nbits = bitsPerValue;
-
     // Reference value R, IEEE 32-bit floating point value
     // TODO: GRIB1 USES IBM-FLOATS INSTEAD OF IEEE-754!!!!!
     double R = referenceValue;
@@ -289,50 +318,179 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
     // For now we'll settle for the safe option of reading one byte at a time.
     // TODO: Optimize for speed.
 
-    unsigned int bitsleft = 0;  // How many bits in register
-    unsigned int bits = 0;      // The actual bits in register
-    std::uint64_t bytepos = 0;  // Byte position
+    uint a = bitsPerValue % 8;
 
-    std::size_t ss = ((numOfValues * bitsPerValue) / 8) + 1;
-    if (dataSize < ss)
-      dataSize = message->getDataSizeMax();
-
-    for (std::uint32_t i = 0; i < numOfValues; i++)
+    if (a != 0)
     {
-      if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
-        decodedValues.push_back(ParamValueMissing);
+      BitArrayReader bitArrayReader(data,dataSize*8);
+
+      if (bitmap == nullptr)
+      {
+        for (std::uint32_t i = 0; i < numOfValues; i++)
+        {
+          uint X = 0;
+          bitArrayReader.readBits(bitsPerValue,X);
+
+          double Y = RDfac + X * EDfac;
+          if (round(Y) == 9999)
+            decodedValues.push_back(ParamValueMissing);
+          else
+            decodedValues.push_back(Y);
+        }
+      }
       else
       {
-        // Read bits still missing from completing the request
-        while (bitsleft < nbits)
+        for (std::uint32_t i = 0; i < numOfValues; i++)
         {
-          if (bytepos >= dataSize)
+          if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
+            decodedValues.push_back(ParamValueMissing);
+          else
           {
-            SmartMet::Spine::Exception exception(BCP,"Trying to access data outside of the memory area!");
-            exception.addParameter("Value index",Fmi::to_string(i));
-            exception.addParameter("Num of values",Fmi::to_string(numOfValues));
-            exception.addParameter("Data size",Fmi::to_string(dataSize));
-            exception.addParameter("Requested position",Fmi::to_string(bytepos));
-            throw exception;
+            uint X = 0;
+            bitArrayReader.readBits(bitsPerValue,X);
+
+            double Y = RDfac + X * EDfac;
+            if (round(Y) == 9999)
+              decodedValues.push_back(ParamValueMissing);
+            else
+              decodedValues.push_back(Y);
           }
-
-          bits = (bits << 8) | data[bytepos++];
-          bitsleft += 8;
         }
+      }
+    }
+    else
+    {
+      uint b = bitsPerValue / 8;
+      MemoryReader memoryReader(data,dataSize);
+      switch (b)
+      {
+        case 1:
+          if (bitmap == nullptr)
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              uint X = memoryReader.read_uint8();
+              double Y = RDfac + X * EDfac;
+              if (round(Y) == 9999)
+                decodedValues.push_back(ParamValueMissing);
+              else
+                decodedValues.push_back(Y);
+            }
+          }
+          else
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
+                decodedValues.push_back(ParamValueMissing);
+              else
+              {
+                uint X = memoryReader.read_uint8();
+                double Y = RDfac + X * EDfac;
+                if (round(Y) == 9999)
+                  decodedValues.push_back(ParamValueMissing);
+                else
+                  decodedValues.push_back(Y);
+              }
+            }
+          }
+          break;
 
-        // Calculate the value, keeping only the highest nbits
-        unsigned int X = (bits >> (bitsleft - nbits));  //  & ((1 << nbits) - 1);
+        case 2:
+          if (bitmap == nullptr)
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              uint X = memoryReader.read_uint16();
+              double Y = RDfac + X * EDfac;
+              if (round(Y) == 9999)
+                decodedValues.push_back(ParamValueMissing);
+              else
+                decodedValues.push_back(Y);
+            }
+          }
+          else
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
+                decodedValues.push_back(ParamValueMissing);
+              else
+              {
+                uint X = memoryReader.read_uint16();
+                double Y = RDfac + X * EDfac;
+                if (round(Y) == 9999)
+                  decodedValues.push_back(ParamValueMissing);
+                else
+                  decodedValues.push_back(Y);
+              }
+            }
+          }
+          break;
 
-        // We used nbits many bits
-        bitsleft -= nbits;
-        bits = bits & ((1 << bitsleft) - 1);
+        case 3:
+          if (bitmap == nullptr)
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              uint X = memoryReader.read_uint24();
+              double Y = RDfac + X * EDfac;
+              if (round(Y) == 9999)
+                decodedValues.push_back(ParamValueMissing);
+              else
+                decodedValues.push_back(Y);
+            }
+          }
+          else
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
+                decodedValues.push_back(ParamValueMissing);
+              else
+              {
+                uint X = memoryReader.read_uint24();
+                double Y = RDfac + X * EDfac;
+                if (round(Y) == 9999)
+                  decodedValues.push_back(ParamValueMissing);
+                else
+                  decodedValues.push_back(Y);
+              }
+            }
+          }
+          break;
 
-        // Output the calculated value
-        double Y = RDfac + X * EDfac;
-        if (round(Y) == 9999)
-          decodedValues.push_back(ParamValueMissing);
-        else
-          decodedValues.push_back(Y);
+        case 4:
+          if (bitmap == nullptr)
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              uint X = memoryReader.read_uint32();
+              double Y = RDfac + X * EDfac;
+              if (round(Y) == 9999)
+                decodedValues.push_back(ParamValueMissing);
+              else
+                decodedValues.push_back(Y);
+            }
+          }
+          else
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
+                decodedValues.push_back(ParamValueMissing);
+              else
+              {
+                uint X = memoryReader.read_uint32();
+                double Y = RDfac + X * EDfac;
+                if (round(Y) == 9999)
+                  decodedValues.push_back(ParamValueMissing);
+                else
+                  decodedValues.push_back(Y);
+              }
+            }
+          }
+          break;
       }
     }
   }

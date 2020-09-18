@@ -340,6 +340,36 @@ T::Dimensions LatLonImpl::getGridDimensions() const
 
 
 
+std::size_t LatLonImpl::getGridColumnCount() const
+{
+  try
+  {
+    return *mLatLon.getGrid()->getNi();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+std::size_t LatLonImpl::getGridRowCount() const
+{
+  try
+  {
+    return *mLatLon.getGrid()->getNj();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 bool LatLonImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try

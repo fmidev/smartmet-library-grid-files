@@ -21,6 +21,8 @@ class RotatedLatLonImpl : public RotatedLatLon
     bool                getGridMetricCellSize(double& width,double& height) const;
     T::Coordinate_svec  getGridOriginalCoordinates() const;
     T::Dimensions       getGridDimensions() const;
+    std::size_t         getGridColumnCount() const;
+    std::size_t         getGridRowCount() const;
     std::string         getGridGeometryString() const;
     T::Coordinate_svec  getGridLatLonCoordinates() const;
     bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;

@@ -41,21 +41,21 @@ float ieee2ibm(float value);
 
 int timePeriodToSeconds(const char *timePeriod);
 
-time_t localTimeToTimeT(std::string localTime,const char *tzone);
+time_t localTimeToTimeT(const std::string& localTime,const char *tzone);
 /*
 std::string localTimeToUtcTime(std::string localTime,const char *tzone);
 std::string utcTimeToLocalTime(std::string utcTime,const char *tzone);
 */
 
 std::string utcTimeFromTimeT(time_t t);
-time_t      utcTimeToTimeT(std::string utcTime);
+time_t      utcTimeToTimeT(const std::string& utcTime);
 std::string localTimeFromTimeT(time_t t,const char *tzone);
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
-std::string localTimeToUtc(std::string localTime,boost::local_time::time_zone_ptr tz);
+std::string localTimeToUtc(const std::string& localTime,boost::local_time::time_zone_ptr tz);
 void splitTimeString(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second);
 void splitTimeString(const std::string& timeStr, short &year, uchar &month, uchar &day, uchar &hour, uchar &minute, uchar &second);
 
-std::string addSeconds(std::string timeStr,int seconds);
+std::string addSeconds(const std::string& timeStr,int seconds);
 time_t mktime_tz(struct tm *tm, const char *tzone);
 struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone);
 
@@ -63,8 +63,8 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone);
 time_t toTimeT(boost::posix_time::ptime tim);
 time_t getFileModificationTime(const char *filename);
 long long getFileSize(const char *filename);
-std::string getAbsoluteFilePath(std::string filename);
-std::string getFileDir(std::string filename);
+std::string getAbsoluteFilePath(const std::string& filename);
+std::string getFileDir(const std::string& filename);
 
 std::string space(uint size);
 
@@ -99,7 +99,7 @@ std::string toString(std::uint8_t value);
 std::string toString(std::uint16_t value);
 std::string toString(std::uint32_t value);
 std::string toString(std::uint64_t value);
-std::string toString(std::string value);
+std::string toString(const std::string& value);
 std::string toString(float value);
 std::string toString(double value);
 std::string toString(std::array<char,16> value);
@@ -114,16 +114,18 @@ std::string toString(T::Int64_opt value);
 
 std::string toString(boost::posix_time::ptime time);
 
-std::string toLowerString(std::string sourceString);
-std::string toUpperString(std::string sourceString);
+std::string toLowerString(const char *sourceString);
+std::string toLowerString(const std::string& sourceString);
+std::string toUpperString(const char *sourceString);
+std::string toUpperString(const std::string& sourceString);
 
 
 int compressData(void *_data,uint _dataSize,void *_compressedData,uint& _compressedDataSize);
 int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompressedData,uint& _decompressedDataSize);
 
-void parseLatLonCoordinates(std::string latLonCoordinates,std::vector<T::Coordinate>& coordinates);
+void parseLatLonCoordinates(const std::string& latLonCoordinates,std::vector<T::Coordinate>& coordinates);
 
-std::string stringReplaceAll(std::string st,std::string oldStr,std::string newStr);
+std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std::string newStr);
 
 void splitString(const char *str,char separator,std::vector<uint>& partList);
 void splitString(const std::string& str,char separator,std::vector<uint>& partList);
@@ -149,7 +151,7 @@ std::string toString(std::set<int>& parts,char separator);
 std::string toString(std::set<float>& parts,char separator);
 std::string toString(T::AreaCoordinates& coordinates,char separator1,char separator2);
 
-void parseCoordinates(std::string coordinateStr,char separator1,char separator2,T::AreaCoordinates& coordinates);
+void parseCoordinates(const std::string& coordinateStr,char separator1,char separator2,T::AreaCoordinates& coordinates);
 
 
 bool patternMatch(const char *str,std::vector<std::string>& patterns);

@@ -2213,6 +2213,60 @@ bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i
         \return   The number of the grid rows.
 */
 
+std::size_t Message::getGridRowCount() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+    return mGridSection->getGridRowCount();
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the number of columns used in the given original grid row.
+
+        \return       The number of columns in the given grid row.
+*/
+
+std::size_t Message::getGridColumnCount() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection == nullptr)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+    return mGridSection->getGridColumnCount();
+  }
+  catch (...)
+  {
+    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the number of rows used in the original grid.
+
+        \return   The number of the grid rows.
+*/
+
 std::size_t Message::getGridOriginalRowCount() const
 {
   FUNCTION_TRACE

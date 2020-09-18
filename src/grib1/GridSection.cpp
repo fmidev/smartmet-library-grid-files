@@ -675,6 +675,56 @@ T::Dimensions GridSection::getGridDimensions() const
 
 
 
+/*! \brief The method returns the number of rows used in the grid.
+
+        \return   The number of the grid rows.
+*/
+
+std::size_t GridSection::getGridRowCount() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGridDefinition)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+
+    return mGridDefinition->getGridRowCount();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the number of columns used in the grid.
+
+        \return       The number of columns in the given grid row.
+*/
+
+std::size_t GridSection::getGridColumnCount() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGridDefinition)
+      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+
+    return mGridDefinition->getGridColumnCount();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
 
 /*! \brief The method returns the number of rows used in the original grid.
 

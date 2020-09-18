@@ -144,6 +144,31 @@ void ModificationLock::writeLock()
 
 
 
+void ModificationLock::writeLockWhenInsideReadLock()
+{
+  try
+  {
+    if (!mLockingEnabled)
+      return;
+
+    while (true)
+    {
+      mThreadLock.lock();
+      if (mReadCounter == 1)
+        return;
+
+      mThreadLock.unlock();
+      time_usleep(0,100);
+    }
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
 void ModificationLock::writeLock(const char *filename,uint line)
 {
   try

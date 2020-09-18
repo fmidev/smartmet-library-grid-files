@@ -3,6 +3,7 @@
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/BitArrayWriter.h"
+#include "../../common/MemoryReader.h"
 #include "../Message.h"
 
 #include <limits>
@@ -12,6 +13,7 @@ namespace SmartMet
 namespace GRIB2
 {
 
+const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
 
 
 /*! \brief The constructor of the class. */
@@ -147,6 +149,10 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
 {
   try
   {
+    T::Data_ptr bitmap = message->getBitmapDataPtr();
+    if (bitmap != nullptr &&  (bitmap[index / 8] & bitmask[index % 8]) == 0)
+      return false;
+
     if (message->getDataPtr() == nullptr || message->getDataSize() == 0)
     {
       //printf("-- no data\n");
@@ -172,9 +178,38 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
     }
 
     uint X = 0;
-    BitArrayReader bitArrayReader(mData,mDataSize*8);
-    bitArrayReader.setReadPosition(index*mBitsPerValue);
-    bitArrayReader.readBits(mBitsPerValue,X);
+    uint a = mBitsPerValue % 8;
+
+    if (a != 0)
+    {
+      BitArrayReader bitArrayReader(mData,mDataSize*8);
+      bitArrayReader.setReadPosition(index*mBitsPerValue);
+      bitArrayReader.readBits(mBitsPerValue,X);
+    }
+    else
+    {
+      uint b = mBitsPerValue / 8;
+      MemoryReader memoryReader(mData,mDataSize);
+      memoryReader.setReadPosition(index * b);
+      switch (b)
+      {
+        case 1:
+          X = memoryReader.read_uint8();
+          break;
+
+        case 2:
+          X = memoryReader.read_uint16();
+          break;
+
+        case 3:
+          X = memoryReader.read_uint24();
+          break;
+
+        case 4:
+          X = memoryReader.read_uint32();
+          break;
+      }
+    }
 
     value = (mRDfac + X * mEDfac);
     //printf("-- VAL %f\n",value);
@@ -200,8 +235,6 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
-
-    const int bitmask[] = {128, 64, 32, 16, 8, 4, 2, 1};
 
     if (numOfValues == 0)
       return;
@@ -252,22 +285,162 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     const double RDfac = R * Dfac;
     const double EDfac = Efac * Dfac;
 
-    BitArrayReader bitArrayReader(data,dataSize*8);
+    uint a = nbits % 8;
 
-    for (std::uint32_t i = 0; i < numOfValues; i++)
+    if (a != 0)
     {
-      if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
+      BitArrayReader bitArrayReader(data,dataSize*8);
+
+      if (bitmap == nullptr)
       {
-        decodedValues.push_back(ParamValueMissing);
+        for (std::uint32_t i = 0; i < numOfValues; i++)
+        {
+          ulonglong X = 0;
+          bitArrayReader.readBits(nbits,X);
+
+          // Output the caclulated value
+          double Y = RDfac + X * EDfac;
+          decodedValues.push_back(Y);
+        }
       }
       else
       {
-        ulonglong X = 0;
-        bitArrayReader.readBits(nbits,X);
+        for (std::uint32_t i = 0; i < numOfValues; i++)
+        {
+          if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+          {
+            decodedValues.push_back(ParamValueMissing);
+          }
+          else
+          {
+            ulonglong X = 0;
+            bitArrayReader.readBits(nbits,X);
 
-        // Output the caclulated value
-        double Y = RDfac + X * EDfac;
-        decodedValues.push_back(Y);
+            // Output the caclulated value
+            double Y = RDfac + X * EDfac;
+            decodedValues.push_back(Y);
+          }
+        }
+      }
+    }
+    else
+    {
+      uint b = nbits / 8;
+      MemoryReader memoryReader(data,dataSize);
+
+      switch (b)
+      {
+        case 1:
+          if (bitmap == nullptr)
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              ulonglong X = memoryReader.read_uint8();
+              double Y = RDfac + X * EDfac;
+              decodedValues.push_back(Y);
+            }
+          }
+          else
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+              {
+                decodedValues.push_back(ParamValueMissing);
+              }
+              else
+              {
+                ulonglong X = memoryReader.read_uint8();
+                double Y = RDfac + X * EDfac;
+                decodedValues.push_back(Y);
+              }
+            }
+          }
+          break;
+
+        case 2:
+          if (bitmap == nullptr)
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              ulonglong X = memoryReader.read_uint16();
+              double Y = RDfac + X * EDfac;
+              decodedValues.push_back(Y);
+            }
+          }
+          else
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+              {
+                decodedValues.push_back(ParamValueMissing);
+              }
+              else
+              {
+                ulonglong X = memoryReader.read_uint16();
+                double Y = RDfac + X * EDfac;
+                decodedValues.push_back(Y);
+              }
+            }
+          }
+          break;
+
+        case 3:
+          if (bitmap == nullptr)
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              ulonglong X = memoryReader.read_uint24();
+              double Y = RDfac + X * EDfac;
+              decodedValues.push_back(Y);
+            }
+          }
+          else
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+              {
+                decodedValues.push_back(ParamValueMissing);
+              }
+              else
+              {
+                ulonglong X = memoryReader.read_uint24();
+                double Y = RDfac + X * EDfac;
+                decodedValues.push_back(Y);
+              }
+            }
+          }
+          break;
+
+        case 4:
+          if (bitmap == nullptr)
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              ulonglong X = memoryReader.read_uint32();
+              double Y = RDfac + X * EDfac;
+              decodedValues.push_back(Y);
+            }
+          }
+          else
+          {
+            for (std::uint32_t i = 0; i < numOfValues; i++)
+            {
+              if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
+              {
+                decodedValues.push_back(ParamValueMissing);
+              }
+              else
+              {
+                ulonglong X = memoryReader.read_uint32();
+                double Y = RDfac + X * EDfac;
+                decodedValues.push_back(Y);
+              }
+            }
+          }
+          break;
       }
     }
 

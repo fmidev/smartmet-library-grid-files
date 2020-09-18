@@ -89,6 +89,8 @@ class Message : public GRID::Message
     T::ParamLevelId     getGridParameterLevelId() const;
     std::string         getGridParameterLevelIdString() const;
     void                getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
+    std::size_t         getGridColumnCount() const;
+    std::size_t         getGridRowCount() const;
     T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const;
     void                getGridValueVector(T::ParamValue_vec& values) const;
     T::TimeString       getReferenceTime() const;

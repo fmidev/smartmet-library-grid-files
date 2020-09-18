@@ -1168,8 +1168,7 @@ uint Message::getGridWidth() const
   FUNCTION_TRACE
   try
   {
-    T::Dimensions d = getGridDimensions();
-    return d.nx();
+    return getGridColumnCount();
   }
   catch (...)
   {
@@ -1186,8 +1185,7 @@ uint Message::getGridHeight() const
   FUNCTION_TRACE
   try
   {
-    T::Dimensions d = getGridDimensions();
-    return d.ny();
+    return getGridRowCount();
   }
   catch (...)
   {
@@ -1195,6 +1193,29 @@ uint Message::getGridHeight() const
   }
 }
 
+
+
+
+
+std::size_t Message::getGridRowCount() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+/*! \brief The method returns the number of columns used in the given original grid row.
+
+        \param row    The grid row index (= j-position).
+        \return       The number of columns in the given grid row.
+*/
+
+std::size_t Message::getGridColumnCount() const
+{
+  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+}
 
 
 

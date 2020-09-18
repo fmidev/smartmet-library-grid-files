@@ -270,6 +270,40 @@ T::Dimensions PolarStereographicImpl::getGridDimensions() const
 
 
 
+std::size_t PolarStereographicImpl::getGridColumnCount() const
+{
+  try
+  {
+    return mNx;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+std::size_t PolarStereographicImpl::getGridRowCount() const
+{
+  try
+  {
+    return mNy;
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+
+
+
 bool PolarStereographicImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try

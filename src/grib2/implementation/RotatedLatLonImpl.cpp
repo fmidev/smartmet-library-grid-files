@@ -576,6 +576,36 @@ T::Dimensions RotatedLatLonImpl::getGridDimensions() const
 
 
 
+std::size_t RotatedLatLonImpl::getGridColumnCount() const
+{
+  try
+  {
+    return *mLatLon.getGrid()->getNi();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
+std::size_t RotatedLatLonImpl::getGridRowCount() const
+{
+  try
+  {
+    return *mLatLon.getGrid()->getNj();
+  }
+  catch (...)
+  {
+    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+  }
+}
+
+
+
+
 bool RotatedLatLonImpl::getGridMetricCellSize(double& width,double& height) const
 {
   try
