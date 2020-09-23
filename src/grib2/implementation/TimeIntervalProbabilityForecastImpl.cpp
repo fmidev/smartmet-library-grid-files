@@ -1,5 +1,5 @@
 #include "TimeIntervalProbabilityForecastImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 
 namespace SmartMet
@@ -49,7 +49,7 @@ ProductDefinition* TimeIntervalProbabilityForecastImpl::createProductDefinition(
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void TimeIntervalProbabilityForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -99,7 +99,7 @@ T::ParamLevel TimeIntervalProbabilityForecastImpl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -123,7 +123,7 @@ T::ParamLevelId TimeIntervalProbabilityForecastImpl::getGribParameterLevelId() c
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

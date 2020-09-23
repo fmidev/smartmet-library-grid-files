@@ -1,5 +1,5 @@
 #include "DataDefinition.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -40,7 +40,7 @@ DataDefinition::~DataDefinition()
 
 uint DataDefinition::getTemplateNumber() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -56,7 +56,7 @@ uint DataDefinition::getTemplateNumber() const
 
 void DataDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 

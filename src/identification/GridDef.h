@@ -17,7 +17,8 @@
 #include "TimeRangeDef.h"
 #include "UnitDefinition.h"
 
-#include "../common/AutoThreadLock.h"
+#include "../common/AutoWriteLock.h"
+#include "../common/AutoReadLock.h"
 #include "../common/ConfigurationFile.h"
 #include "../grib1/Message.h"
 #include "../grib2/Message.h"
@@ -277,7 +278,7 @@ class GridDef
 
     bool                    mInitialized;
     time_t                  mLastCheckTime;
-    ThreadLock              mThreadLock;
+    ModificationLock        mModificationLock;
 
     string_vec              mGrib_parameterDef_files;
     time_t                  mGrib_parameterDef_modificationTime;

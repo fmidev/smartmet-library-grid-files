@@ -1,5 +1,5 @@
 #include "Grib1ParameterDef.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 
 
@@ -21,7 +21,7 @@ Grib1ParameterDef::Grib1ParameterDef()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -45,7 +45,7 @@ Grib1ParameterDef::Grib1ParameterDef(const Grib1ParameterDef& parameter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -59,7 +59,7 @@ Grib1ParameterDef::~Grib1ParameterDef()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -91,7 +91,7 @@ void Grib1ParameterDef::print(std::ostream& stream,uint level,uint optionFlags) 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

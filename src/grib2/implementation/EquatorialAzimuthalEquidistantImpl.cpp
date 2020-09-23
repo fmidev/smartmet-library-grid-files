@@ -1,5 +1,5 @@
 #include "EquatorialAzimuthalEquidistantImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {
@@ -49,7 +49,7 @@ GridDefinition* EquatorialAzimuthalEquidistantImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void EquatorialAzimuthalEquidistantImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -93,7 +93,7 @@ void EquatorialAzimuthalEquidistantImpl::read(MemoryReader& memoryReader)
 
 T::Coordinate_svec EquatorialAzimuthalEquidistantImpl::getGridOriginalCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
+  throw Fmi::Exception(BCP,"The method not implemented!");
 }
 
 
@@ -119,7 +119,7 @@ T::Dimensions EquatorialAzimuthalEquidistantImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -148,7 +148,7 @@ bool EquatorialAzimuthalEquidistantImpl::getGridPointByLatLonCoordinates(double 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -166,11 +166,11 @@ void EquatorialAzimuthalEquidistantImpl::initSpatialReference()
 
     auto dfCenterLat = mLatitudeOfTangencyPoint;
     if (!dfCenterLat)
-      throw SmartMet::Spine::Exception(BCP,"The 'latitudeOfTangencyPoint' value is missing!");
+      throw Fmi::Exception(BCP,"The 'latitudeOfTangencyPoint' value is missing!");
 
     auto dfCenterLong = mLongitudeOfTangencyPoint;
     if (!dfCenterLong)
-      throw SmartMet::Spine::Exception(BCP,"The 'longitudeOfTangencyPoint' value is missing!");
+      throw Fmi::Exception(BCP,"The 'longitudeOfTangencyPoint' value is missing!");
 
 
     // ### Set geographic coordinate system.
@@ -200,14 +200,14 @@ void EquatorialAzimuthalEquidistantImpl::initSpatialReference()
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
-      SmartMet::Spine::Exception exception(BCP,"The spatial reference is not valid!");
+      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

@@ -1,5 +1,5 @@
 #include "Product_58Impl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 
 namespace SmartMet
@@ -48,7 +48,7 @@ ProductDefinition* Product_58Impl::createProductDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -74,7 +74,7 @@ void Product_58Impl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -98,7 +98,7 @@ T::ParamLevel Product_58Impl::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -122,7 +122,7 @@ T::ParamLevelId Product_58Impl::getGribParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

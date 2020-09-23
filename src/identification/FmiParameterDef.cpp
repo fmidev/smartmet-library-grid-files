@@ -1,5 +1,5 @@
 #include "FmiParameterDef.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 
 
@@ -22,7 +22,7 @@ FmiParameterDef::FmiParameterDef()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -46,7 +46,7 @@ FmiParameterDef::FmiParameterDef(const FmiParameterDef& parameterDef)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -61,7 +61,7 @@ FmiParameterDef::~FmiParameterDef()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -87,7 +87,7 @@ void FmiParameterDef::print(std::ostream& stream,uint level,uint optionFlags) co
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

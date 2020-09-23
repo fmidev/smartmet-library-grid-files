@@ -1,7 +1,7 @@
 #include "JpegGridDataRepresentationImpl.h"
 
 #include "../../common/BitArrayReader.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include "../Message.h"
@@ -46,7 +46,7 @@ RepresentationDefinition* JpegGridDataRepresentationImpl::createRepresentationDe
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -68,7 +68,7 @@ void JpegGridDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -81,21 +81,21 @@ void JpegGridDataRepresentationImpl::encodeValues(Message* message, T::ParamValu
         jas_stream_t *output = jas_stream_fopen("/tmp/jasper_test.jpg", "w+b");
         if (output == nullptr)
         {
-          SmartMet::Spine::Exception exception(BCP,"Cannot open output image file!");
+          Fmi::Exception exception(BCP,"Cannot open output image file!");
           throw exception;
         }
 
         jas_cmprof_t *outprof = jas_cmprof_createfromclrspc(JAS_CLRSPC_SRGB);
         if (outprof == nullptr)
         {
-          SmartMet::Spine::Exception exception(BCP,"Cannot create sRGB profile!");
+          Fmi::Exception exception(BCP,"Cannot create sRGB profile!");
           throw exception;
         }
 
         jas_image_t *newimage = jas_image_chclrspc(image, outprof, JAS_CMXFORM_INTENT_PER);
         if (newimage == nullptr)
         {
-          SmartMet::Spine::Exception exception(BCP,"Cannot convert to sRGB!");
+          Fmi::Exception exception(BCP,"Cannot convert to sRGB!");
           throw exception;
         }
 
@@ -116,7 +116,7 @@ void JpegGridDataRepresentationImpl::encodeValues(Message* message, T::ParamValu
 
         if (jas_stream_close(output))
         {
-          SmartMet::Spine::Exception exception(BCP,"Cannot close output image file!");
+          Fmi::Exception exception(BCP,"Cannot close output image file!");
           throw exception;
         }
 
@@ -127,7 +127,7 @@ void JpegGridDataRepresentationImpl::encodeValues(Message* message, T::ParamValu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -158,7 +158,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
     if (instream == nullptr)
     {
       // remove(filename);
-      SmartMet::Spine::Exception exception(BCP, "Cannot open the JPG-2000 file!");
+      Fmi::Exception exception(BCP, "Cannot open the JPG-2000 file!");
       // exception.addParameter("Filename",filename);
       throw exception;
     }
@@ -168,7 +168,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
     {
       jas_stream_close(instream);
       // remove(filename);
-      SmartMet::Spine::Exception exception(BCP, "Not a JPG-2000 image!");
+      Fmi::Exception exception(BCP, "Not a JPG-2000 image!");
       // exception.addParameter("Filename",filename);
       throw exception;
     }
@@ -181,7 +181,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
     {
       jas_stream_close(instream);
       // remove(filename);
-      SmartMet::Spine::Exception exception(BCP, "Cannot decode the JPG-2000 image!");
+      Fmi::Exception exception(BCP, "Cannot decode the JPG-2000 image!");
       // exception.addParameter("Filename",filename);
       throw exception;
     }
@@ -206,7 +206,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
     // Sanity checks
     auto bits_per_value = mPacking.getBitsPerValue();
     if (!bits_per_value)
-      throw SmartMet::Spine::Exception(
+      throw Fmi::Exception(
           BCP, "GridDataRepresentation number of bits per value must be > 0");
 
     // Number of bits per value
@@ -272,7 +272,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "JPEG decodeValues failed!", nullptr);
+    throw Fmi::Exception(BCP, "JPEG decodeValues failed!", nullptr);
   }
 }
 
@@ -291,7 +291,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
 
 void jpeg_error_callback(const char* msg, void* data)
 {
-  throw SmartMet::Spine::Exception(BCP, "JPEG Error: " + std::string(msg));
+  throw Fmi::Exception(BCP, "JPEG Error: " + std::string(msg));
 }
 
 
@@ -302,7 +302,7 @@ void jpeg_error_callback(const char* msg, void* data)
 
 void jpeg_warning_callback(const char* msg, void* data)
 {
-  throw SmartMet::Spine::Exception(BCP, "JPEG Warning: " + std::string(msg));
+  throw Fmi::Exception(BCP, "JPEG Warning: " + std::string(msg));
 }
 
 
@@ -363,20 +363,20 @@ void decode_raw_jpeg_values(T::ParamValue_vec& values,
 #endif
 
     if (image->x0 != 0)
-      throw SmartMet::Spine::Exception(BCP,"Expecting JPEG x0 to be zero in grib data");
+      throw Fmi::Exception(BCP,"Expecting JPEG x0 to be zero in grib data");
 
     if (image->y0 != 0)
-      throw SmartMet::Spine::Exception(BCP,"Expecting JPEG y0 to be zero in grib data");
+      throw Fmi::Exception(BCP,"Expecting JPEG y0 to be zero in grib data");
 
     if (image->numcomps != 1)
-      throw SmartMet::Spine::Exception(BCP,"Expecting JPEG numcomps to be one in grib data");
+      throw Fmi::Exception(BCP,"Expecting JPEG numcomps to be one in grib data");
 
     //if (image->icc_profile_len != 0)
-    //  throw SmartMet::Spine::Exception(BCP,"Expecting JPEG not to have a color profile in grib data");
+    //  throw Fmi::Exception(BCP,"Expecting JPEG not to have a color profile in grib data");
 
     std::size_t sz = static_cast<std::size_t>(image->x1 * image->y1);
     if (numOfValues != sz  &&  (bitmap == nullptr || (bitmapSizeInBytes*8) < sz))
-      throw SmartMet::Spine::Exception(BCP,"Expecting " + std::to_string(numOfValues) + " JPEG values, got " +
+      throw Fmi::Exception(BCP,"Expecting " + std::to_string(numOfValues) + " JPEG values, got " +
                                std::to_string(image->x1) + "*" + std::to_string(image->y1) + "=" +
                                std::to_string(image->x1 * image->y1) + " instead");
 
@@ -435,7 +435,7 @@ void decode_raw_jpeg_values(T::ParamValue_vec& values,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Jpeg decoder failed!", nullptr);
+    throw Fmi::Exception(BCP, "Jpeg decoder failed!", nullptr);
   }
 }
 
@@ -458,7 +458,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     // data this will not be supported.
 
     //if (bitmap != nullptr)
-    //  throw SmartMet::Spine::Exception(BCP,"Bitmap + jpeg2000 encoded grib data not supported");
+    //  throw Fmi::Exception(BCP,"Bitmap + jpeg2000 encoded grib data not supported");
 
     // Vector to return
     decodedValues.clear();
@@ -470,7 +470,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     // Sanity checks
     auto bits_per_value = mPacking.getBitsPerValue();
     if (!bits_per_value)
-      throw SmartMet::Spine::Exception(BCP,"GridDataRepresentation number of bits per value must be > 0");
+      throw Fmi::Exception(BCP,"GridDataRepresentation number of bits per value must be > 0");
 
     // Number of bits per value
     const unsigned int nbits = *bits_per_value;
@@ -564,7 +564,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
       image = opj_decode(dinfo, cio);
 
       if (!image)
-        throw SmartMet::Spine::Exception(BCP,"Failed to decode JPEG data");
+        throw Fmi::Exception(BCP,"Failed to decode JPEG data");
 
       // Unpack the values
 
@@ -595,7 +595,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "JPEG decodeValues failed!", nullptr);
+    throw Fmi::Exception(BCP, "JPEG decodeValues failed!", nullptr);
   }
 }
 #endif

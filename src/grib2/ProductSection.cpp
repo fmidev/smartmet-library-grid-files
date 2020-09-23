@@ -1,7 +1,7 @@
 #include "ProductSection.h"
 #include "Message.h"
 #include "../identification/GridDef.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 
 #include "implementation/NormalProductImpl.h"                                   // 4.0
@@ -77,7 +77,7 @@ ProductSection::ProductSection()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed failed!",nullptr);
   }
 }
 
@@ -109,7 +109,7 @@ ProductSection::ProductSection(const ProductSection& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed failed!",nullptr);
   }
 }
 
@@ -149,7 +149,7 @@ void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -171,7 +171,7 @@ void ProductSection::setMessagePtr(Message *message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -208,7 +208,7 @@ bool ProductSection::getProperty(uint propertyId,long long& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -245,7 +245,7 @@ bool ProductSection::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -267,7 +267,7 @@ void ProductSection::read(MemoryReader& memoryReader)
     memoryReader >> mSectionLength;
     if (missing(mSectionLength))
     {
-      SmartMet::Spine::Exception exception(BCP,"Section 4 length cannot be missing!");
+      Fmi::Exception exception(BCP,"Section 4 length cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-4));
       throw exception;
     }
@@ -278,7 +278,7 @@ void ProductSection::read(MemoryReader& memoryReader)
 /*
     if (!missing(mNV) && *mNV != 0)
     {
-      SmartMet::Spine::Exception exception(BCP,"ProductSection does not support optional coordinates yet");
+      Fmi::Exception exception(BCP,"ProductSection does not support optional coordinates yet");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-2));
       throw exception;
     }
@@ -286,7 +286,7 @@ void ProductSection::read(MemoryReader& memoryReader)
     memoryReader >> mProductDefinitionTemplateNumber;
     if (missing(mProductDefinitionTemplateNumber))
     {
-      SmartMet::Spine::Exception exception(BCP,"Product definition template number cannot be missing!");
+      Fmi::Exception exception(BCP,"Product definition template number cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-2));
       throw exception;
     }
@@ -296,7 +296,7 @@ void ProductSection::read(MemoryReader& memoryReader)
       auto productDefinition = createProductDefinition((*mProductDefinitionTemplateNumber));
       if (productDefinition == nullptr)
       {
-        SmartMet::Spine::Exception exception(BCP,"Product definition template not supported!");
+        Fmi::Exception exception(BCP,"Product definition template not supported!");
         exception.addParameter("Template number",Fmi::to_string(*mProductDefinitionTemplateNumber));
         throw exception;
       }
@@ -315,7 +315,7 @@ void ProductSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed failed!",nullptr);
+    throw Fmi::Exception(BCP,"Operation failed failed!",nullptr);
   }
 }
 
@@ -334,11 +334,11 @@ void ProductSection::write(DataWriter& dataWriter)
   {
 
     if (!mProductDefinition)
-      throw SmartMet::Spine::Exception(BCP,"Missing product definition");
+      throw Fmi::Exception(BCP,"Missing product definition");
 
     if (!missing(mNV) && *mNV != 0)
     {
-      throw SmartMet::Spine::Exception(BCP,"ProductSection does not support optional coordinates yet");
+      throw Fmi::Exception(BCP,"ProductSection does not support optional coordinates yet");
     }
 
     mFilePosition = dataWriter.getWritePosition();
@@ -375,7 +375,7 @@ void ProductSection::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -396,7 +396,7 @@ T::FilePosition ProductSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -420,7 +420,7 @@ std::uint32_t ProductSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -438,7 +438,7 @@ std::string ProductSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -456,7 +456,7 @@ std::uint8_t ProductSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -479,7 +479,7 @@ std::uint8_t ProductSection::getNumberOfSection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -495,7 +495,7 @@ T::UInt16_opt ProductSection::getNV() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -512,7 +512,7 @@ std::string ProductSection::getProductDefinitionString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -531,7 +531,7 @@ std::uint16_t ProductSection::getProductDefinitionTemplateNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -551,13 +551,13 @@ T::TimeString ProductSection::getForecastTime(T::TimeString referenceTime) const
   try
   {
     if (mProductDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getForecastTime(referenceTime);
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -572,13 +572,13 @@ const T::UInt8_opt ProductSection::getGribParameterCategory() const
   try
   {
     if (mProductDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getGribParameterCategory();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -592,13 +592,13 @@ const T::UInt8_opt ProductSection::getGribParameterNumber() const
   try
   {
     if (mProductDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getGribParameterNumber();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -618,13 +618,13 @@ std::uint8_t ProductSection::getGribParameterLevelId() const
   try
   {
     if (mProductDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getGribParameterLevelId();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -644,13 +644,13 @@ T::ParamLevel ProductSection::getGribParameterLevel() const
   try
   {
     if (mProductDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getGribParameterLevel();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -670,7 +670,7 @@ short ProductSection::getForecastType() const
   try
   {
     if (mProductDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     const EpsSettings *eps = mProductDefinition->getEps();
     if (eps != nullptr)
@@ -684,7 +684,7 @@ short ProductSection::getForecastType() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -704,7 +704,7 @@ short ProductSection::getForecastNumber() const
   try
   {
     if (mProductDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     const EpsSettings *eps = mProductDefinition->getEps();
     if (eps != nullptr)
@@ -718,7 +718,7 @@ short ProductSection::getForecastNumber() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -736,7 +736,7 @@ void ProductSection::setNV(T::UInt16_opt nv)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -754,7 +754,7 @@ void ProductSection::setProductDefinition(std::uint16_t productTemplateId)
 
     if (productDefintion == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot create product definition!");
+      Fmi::Exception exception(BCP,"Cannot create product definition!");
       exception.addParameter("Product",Fmi::to_string(productTemplateId));
       throw exception;
     }
@@ -764,7 +764,7 @@ void ProductSection::setProductDefinition(std::uint16_t productTemplateId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Creation of a product definition failed!",nullptr);
+    throw Fmi::Exception(BCP,"Creation of a product definition failed!",nullptr);
   }
 }
 
@@ -939,7 +939,7 @@ ProductDefinition* ProductSection::createProductDefinition(std::uint16_t product
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Creation of a product definition failed!",nullptr);
+    throw Fmi::Exception(BCP,"Creation of a product definition failed!",nullptr);
   }
 }
 
@@ -955,7 +955,7 @@ ProductDefinition* ProductSection::getProductDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Creation of a product definition failed!",nullptr);
+    throw Fmi::Exception(BCP,"Creation of a product definition failed!",nullptr);
   }
 }
 
@@ -967,13 +967,13 @@ T::UInt8_opt ProductSection::getGeneratingProcessIdentifier() const
   try
   {
     if (mProductDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mProductDefinition' attribute points to nullptr!");
 
     return mProductDefinition->getGeneratingProcessIdentifier();
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("ProductDefinitionTemplateNumber",toString(getProductDefinitionTemplateNumber()));
     throw exception;
   }
@@ -1009,7 +1009,7 @@ void ProductSection::print(std::ostream& stream,uint level,uint optionFlags) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

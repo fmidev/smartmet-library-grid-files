@@ -1,5 +1,5 @@
 #include "FmiParameterId_newbase.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 
 
@@ -16,7 +16,7 @@ FmiParameterId_newbase::FmiParameterId_newbase()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -35,7 +35,7 @@ FmiParameterId_newbase::FmiParameterId_newbase(const FmiParameterId_newbase& par
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -50,7 +50,7 @@ FmiParameterId_newbase::~FmiParameterId_newbase()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -71,7 +71,7 @@ void FmiParameterId_newbase::print(std::ostream& stream,uint level,uint optionFl
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

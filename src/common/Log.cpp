@@ -1,7 +1,7 @@
 #include "Log.h"
-#include "Exception.h"
 #include "AutoThreadLock.h"
 #include "GeneralFunctions.h"
+#include <macgyver/Exception.h>
 #include <macgyver/StringConversion.h>
 
 #include <sys/types.h>
@@ -25,7 +25,7 @@ Log::Log()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -46,7 +46,7 @@ Log::~Log()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -61,13 +61,13 @@ void Log::init(bool _enabled,const char *_filename,uint _maxSize,uint _truncateS
   {
     if (_filename == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"The '_filename' parameter points to nullptr!");
+      Fmi::Exception exception(BCP,"The '_filename' parameter points to nullptr!");
       throw exception;
     }
 
     if (_maxSize < _truncateSize)
     {
-      SmartMet::Spine::Exception exception(BCP,"The '_maxSize' parameter is smaller than the '_truncateSize' parameter!");
+      Fmi::Exception exception(BCP,"The '_maxSize' parameter is smaller than the '_truncateSize' parameter!");
       exception.addParameter("maxSize",Fmi::to_string(_maxSize));
       exception.addParameter("truncateSize",Fmi::to_string(_truncateSize));
       throw exception;
@@ -83,7 +83,7 @@ void Log::init(bool _enabled,const char *_filename,uint _maxSize,uint _truncateS
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -107,14 +107,14 @@ void Log::open()
     file = fopen(filename.c_str(),"we");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open the file for writing!");
+      Fmi::Exception exception(BCP,"Cannot open the file for writing!");
       exception.addParameter("filename",filename);
       throw exception;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -138,14 +138,14 @@ void Log::openForAppend()
     file = fopen(filename.c_str(),"ae");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open the file for append!");
+      Fmi::Exception exception(BCP,"Cannot open the file for append!");
       exception.addParameter("filename",filename);
       throw exception;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -166,7 +166,7 @@ void Log::close()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -183,7 +183,7 @@ void Log::disable()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -200,7 +200,7 @@ void Log::enable()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -216,7 +216,7 @@ bool Log::isEnabled()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -232,7 +232,7 @@ FILE* Log::getFileHandle()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -248,7 +248,7 @@ std::string Log::getFileName()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -264,7 +264,7 @@ uint Log::getMaxSize()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -280,7 +280,7 @@ uint Log::getTruncateSize()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -297,7 +297,7 @@ UInt64 Log::getEventCounter()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -316,7 +316,7 @@ uint Log::getSize()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -332,7 +332,7 @@ void  Log::lock()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -348,7 +348,7 @@ void  Log::unlock()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -369,7 +369,7 @@ void Log::print(const char *_event)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -392,7 +392,7 @@ void Log::print(time_t _time,const char *_event)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -415,7 +415,7 @@ void Log::print(time_t _time,const char *_filename,uint _line,const char *_funct
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -436,7 +436,7 @@ void Log::print(void *_data,uint _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -509,7 +509,7 @@ void Log::truncate()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

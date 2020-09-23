@@ -442,9 +442,9 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "//   you should write them into the '${class}Impl.*' files.\n";
   $cpp .= "// ***********************************************************************\n\n"; 
   $cpp .= "#include \"${class}.h\"\n";
-  $cpp .= "#include \"../../common/Exception.h\"\n";
   $cpp .= "#include \"../../common/GeneralFunctions.h\"\n";
   $cpp .= "#include \"../../common/GeneralDefinitions.h\"\n";
+  $cpp .= "#include <macgyver/Exception.h>\n";
   $cpp .= "#include <iostream>\n";
   $cpp .= "#include <boost/functional/hash.hpp>\n";
   $cpp .= "\n";

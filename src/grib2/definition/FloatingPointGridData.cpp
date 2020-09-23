@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "FloatingPointGridData.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 FloatingPointGridData::FloatingPointGridData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -30,7 +30,7 @@ FloatingPointGridData::FloatingPointGridData() {
 FloatingPointGridData::FloatingPointGridData(const FloatingPointGridData &other) : DataDefinition(other) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -47,7 +47,7 @@ FloatingPointGridData::~FloatingPointGridData() {
 void FloatingPointGridData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -59,7 +59,7 @@ void FloatingPointGridData::read(MemoryReader &memoryReader) {
 void FloatingPointGridData::write(DataWriter &dataWriter) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -72,7 +72,7 @@ void FloatingPointGridData::write(DataWriter &dataWriter) {
 void FloatingPointGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -87,7 +87,7 @@ void FloatingPointGridData::print(std::ostream &stream, uint level, uint optionF
   try {
     stream << space(level) << "FloatingPointGridData\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -98,7 +98,7 @@ T::Hash FloatingPointGridData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -112,7 +112,7 @@ DataDefinition *FloatingPointGridData::createDataDefinition() const {
   try {
     return static_cast<DataDefinition *>(new FloatingPointGridData(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

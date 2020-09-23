@@ -2,7 +2,7 @@
 #include "Message.h"
 #include "../identification/GridDef.h"
 #include "../common/Dimensions.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/ShowFunction.h"
@@ -49,7 +49,7 @@ GridSection::GridSection()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -82,7 +82,7 @@ GridSection::GridSection(const GridSection& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -132,7 +132,7 @@ void GridSection::getAttributeList(std::string prefix,T::AttributeList& attribut
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -174,7 +174,7 @@ bool GridSection::getProperty(uint propertyId,long long& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -216,7 +216,7 @@ bool GridSection::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -243,7 +243,7 @@ bool GridSection::setProperty(uint propertyId,double value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -260,7 +260,7 @@ void GridSection::setNumberOfVerticalCoordinateValues(long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -277,7 +277,7 @@ void GridSection::setPvlLocation(long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -299,7 +299,7 @@ void GridSection::setDataRepresentationType(long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -322,7 +322,7 @@ void GridSection::setMessagePtr(Message *message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -395,7 +395,7 @@ void GridSection::read(MemoryReader& memoryReader)
     }
     catch (...)
     {
-      SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+      Fmi::Exception exception(BCP,"Operation failed!",nullptr);
       exception.printError();
     }
 
@@ -405,7 +405,7 @@ void GridSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -424,7 +424,7 @@ void GridSection::write(DataWriter& dataWriter)
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"Grid definition is missing!");
+      throw Fmi::Exception(BCP,"Grid definition is missing!");
 
     mSectionLength = 0;
     mFilePosition = dataWriter.getWritePosition();
@@ -455,7 +455,7 @@ void GridSection::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -477,7 +477,7 @@ T::FilePosition GridSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -499,7 +499,7 @@ std::uint32_t GridSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -518,7 +518,7 @@ std::string GridSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -537,7 +537,7 @@ std::uint8_t GridSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -559,7 +559,7 @@ std::string GridSection::getGridProjectionString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -583,13 +583,13 @@ bool GridSection::getGridPointByLatLonCoordinates(double lat,double lon,double& 
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -603,13 +603,13 @@ bool GridSection::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,d
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridPointByLatLonCoordinatesNoCache(lat,lon,grid_i,grid_j);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -632,13 +632,13 @@ bool GridSection::getGridPointByOriginalCoordinates(double x,double y,double& gr
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -662,13 +662,13 @@ T::Dimensions GridSection::getGridDimensions() const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridDimensions();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -686,13 +686,13 @@ std::size_t GridSection::getGridRowCount() const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridRowCount();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -711,13 +711,13 @@ std::size_t GridSection::getGridColumnCount() const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridColumnCount();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -737,13 +737,13 @@ std::size_t GridSection::getGridOriginalRowCount() const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalRowCount();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -763,13 +763,13 @@ std::size_t GridSection::getGridOriginalColumnCount(std::size_t row) const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalColumnCount(row);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -789,13 +789,13 @@ std::size_t GridSection::getGridOriginalColumnCount() const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalColumnCount();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -817,13 +817,13 @@ std::size_t GridSection::getGridOriginalValueCount() const
       return mNumberOfPoints;
 
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalValueCount();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -850,13 +850,13 @@ int GridSection::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalValueIndex(grid_i,grid_j);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -879,13 +879,13 @@ bool GridSection::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,do
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLatLonCoordinatesByGridPoint(grid_i,grid_j,lat,lon);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -908,13 +908,13 @@ bool GridSection::getGridLatLonCoordinatesByOriginalCoordinates(double x,double 
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -937,13 +937,13 @@ bool GridSection::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalCoordinatesByGridPoint(grid_i,grid_j,x,y);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -966,13 +966,13 @@ bool GridSection::getGridOriginalCoordinatesByGridPosition(double grid_i,double 
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -995,13 +995,13 @@ bool GridSection::getGridLatLonCoordinatesByGridPosition(double grid_i,double gr
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLatLonCoordinatesByGridPosition(grid_i,grid_j,lat,lon);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1024,13 +1024,13 @@ bool GridSection::getGridOriginalCoordinatesByLatLonCoordinates(double lat,doubl
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1055,7 +1055,7 @@ T::GeometryId GridSection::getGridGeometryId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1075,7 +1075,7 @@ bool GridSection::getGridMetricCellSize(double& width,double& height) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1095,7 +1095,7 @@ bool GridSection::getGridMetricSize(double& width,double& height) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1115,7 +1115,7 @@ bool GridSection::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRig
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1135,7 +1135,7 @@ bool GridSection::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRig
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1163,7 +1163,7 @@ std::string GridSection::getGridGeometryString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1192,7 +1192,7 @@ void GridSection::setGridGeometryId(T::GeometryId geometryId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1214,13 +1214,13 @@ T::Coordinate_svec GridSection::getGridOriginalCoordinates() const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridOriginalCoordinates();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1242,13 +1242,13 @@ T::Coordinate_svec GridSection::getGridLatLonCoordinates() const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLatLonCoordinates();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1267,13 +1267,13 @@ T::Hash GridSection::getGridHash() const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridHash();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1295,13 +1295,13 @@ bool GridSection::isGridGlobal() const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->isGridGlobal();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1315,13 +1315,13 @@ bool GridSection::isRelativeUV() const
   try
   {
     if (!mGridDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->isRelativeUV();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1340,13 +1340,13 @@ T::GridProjection GridSection::getGridProjection() const
   try
   {
     if (mGridDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridProjection();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1365,13 +1365,13 @@ T::GridLayout GridSection::getGridLayout() const
   try
   {
     if (mGridDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
 
     return mGridDefinition->getGridLayout();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1391,7 +1391,7 @@ void GridSection::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1416,7 +1416,7 @@ T::SpatialRef* GridSection::getSpatialReference() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1443,7 +1443,7 @@ bool GridSection::reverseXDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1469,7 +1469,7 @@ bool GridSection::reverseYDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1498,7 +1498,7 @@ GridDefinition* GridSection::createGridDefinition(std::uint8_t  dataRepresentati
         return new MercatorImpl();
 
       case 2: // Gnomonic projection
-        throw SmartMet::Spine::Exception(BCP,"'Gnomonic projection' not implemented!");
+        throw Fmi::Exception(BCP,"'Gnomonic projection' not implemented!");
 
       case 3: // Lambert conformal, secant or tangent, conic or bi-polar, projection
         return new LambertConformalImpl();
@@ -1510,16 +1510,16 @@ GridDefinition* GridSection::createGridDefinition(std::uint8_t  dataRepresentati
         return new PolarStereographicImpl();
 
       case 6: // Fmi Transverse Mercator (UTM) projection
-        throw SmartMet::Spine::Exception(BCP,"'Fmi Transverse Mercator' not implemented!");
+        throw Fmi::Exception(BCP,"'Fmi Transverse Mercator' not implemented!");
 
       case 7: // Simple polyconic projection
-        throw SmartMet::Spine::Exception(BCP,"'Simple polyconic' not implemented!");
+        throw Fmi::Exception(BCP,"'Simple polyconic' not implemented!");
 
       case 8: // Albers equal-area, secant or tangent, conic or bi-polar, projection
         return new AlbersImpl();
 
       case 9: // Miller's cylindrical projection
-        throw SmartMet::Spine::Exception(BCP,"'Miller's cylindrical' Not implemented!");
+        throw Fmi::Exception(BCP,"'Miller's cylindrical' Not implemented!");
 
       case 10: // Rotated latitude/longitude grid
         return new RotatedLatLonImpl();
@@ -1558,12 +1558,12 @@ GridDefinition* GridSection::createGridDefinition(std::uint8_t  dataRepresentati
         return new SpaceViewImpl();
 
       default:
-        throw SmartMet::Spine::Exception(BCP,"Unsupported grid definition!");
+        throw Fmi::Exception(BCP,"Unsupported grid definition!");
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1597,7 +1597,7 @@ void GridSection::print(std::ostream& stream,uint level,uint optionFlags) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

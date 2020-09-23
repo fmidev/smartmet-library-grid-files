@@ -1,7 +1,7 @@
 #include "Dimensions.h"
-#include "Exception.h"
 #include "GeneralFunctions.h"
 #include <macgyver/StringConversion.h>
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -21,7 +21,7 @@ Dimensions::Dimensions()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -40,7 +40,7 @@ Dimensions::Dimensions(const Dimensions& dimensions)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -60,7 +60,7 @@ Dimensions::Dimensions(uint nx)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -79,7 +79,7 @@ Dimensions::Dimensions(uint nx,uint ny)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -98,7 +98,7 @@ Dimensions::Dimensions(uint nx,uint ny,uint nz)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -113,7 +113,7 @@ Dimensions::~Dimensions()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -129,13 +129,13 @@ uint Dimensions::nx() const
     if (mDimensions >= 1)
       return mSizes[0];
 
-    SmartMet::Spine::Exception exception(BCP,"No such dimension!");
+    Fmi::Exception exception(BCP,"No such dimension!");
     exception.addParameter("Dimensions",Fmi::to_string(mDimensions));
     throw exception;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -150,11 +150,11 @@ uint Dimensions::ny() const
     if (mDimensions >= 2)
       return mSizes[1];
 
-    throw SmartMet::Spine::Exception(BCP,"No such dimension!");
+    throw Fmi::Exception(BCP,"No such dimension!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -169,11 +169,11 @@ uint Dimensions::nz() const
     if (mDimensions >= 3)
       return mSizes[2];
 
-    throw SmartMet::Spine::Exception(BCP,"No such dimension!");
+    throw Fmi::Exception(BCP,"No such dimension!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -189,7 +189,7 @@ uint Dimensions::getDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -204,11 +204,11 @@ uint Dimensions::getSize(uint dimension) const
     if (dimension < mDimensions)
       return mSizes[dimension];
 
-    throw SmartMet::Spine::Exception(BCP,"No such dimension!");
+    throw Fmi::Exception(BCP,"No such dimension!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -227,7 +227,7 @@ void Dimensions::print(std::ostream& stream,uint level,uint optionFlags) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

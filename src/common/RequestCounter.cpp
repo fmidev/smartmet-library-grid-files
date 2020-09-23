@@ -2,7 +2,7 @@
 #include "AutoThreadLock.h"
 #include "ShowFunction.h"
 #include "GeneralFunctions.h"
-#include "Exception.h"
+#include <macgyver/Exception.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -25,7 +25,7 @@ RequestCounter::RequestCounter()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -52,7 +52,7 @@ void RequestCounter::clearCounters()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -83,7 +83,7 @@ void RequestCounter::multiplyCounters(double multiplier)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -100,7 +100,7 @@ TopList RequestCounter::getTopRequestCounters()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -117,7 +117,7 @@ ulonglong RequestCounter::getTotalRequests()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -134,7 +134,7 @@ void RequestCounter::resetTotalRequests()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -166,7 +166,7 @@ void RequestCounter::incCounter(ulonglong key)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -206,7 +206,7 @@ void RequestCounter::incGeometryHitCounter(uint geometryId,uint index)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -243,7 +243,7 @@ void RequestCounter::setGeometryHitCounter(uint geometryId,uint index,uint count
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -270,7 +270,7 @@ HitCounter RequestCounter::getGeometryHitCounters(uint geometryId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -294,7 +294,7 @@ uint RequestCounter::getCounter(ulonglong key)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -311,7 +311,7 @@ void RequestCounter::setCountingEnabled(bool _enabled)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -328,7 +328,7 @@ bool RequestCounter::isCountingEnabled()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -357,7 +357,7 @@ void RequestCounter::updateTopCounters()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -375,7 +375,7 @@ void RequestCounter::saveGeometryHitCounters(const char *filename)
     FILE *file = fopen(filename,"w");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"File creation failed!");
+      Fmi::Exception exception(BCP,"File creation failed!");
       exception.addParameter("Filename",filename);
       throw exception;
     }
@@ -391,7 +391,7 @@ void RequestCounter::saveGeometryHitCounters(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -412,7 +412,7 @@ void RequestCounter::loadGeometryHitCounters(const char *filename)
     {
       return;
       /*
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
       */
@@ -456,7 +456,7 @@ void RequestCounter::loadGeometryHitCounters(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

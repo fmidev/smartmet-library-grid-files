@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "VariableResolutionLatLon.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 VariableResolutionLatLon::VariableResolutionLatLon() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -32,7 +32,7 @@ VariableResolutionLatLon::VariableResolutionLatLon(const VariableResolutionLatLo
     mEarthShape = other.mEarthShape;
     mVariableLatLon = other.mVariableLatLon;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -51,7 +51,7 @@ void VariableResolutionLatLon::read(MemoryReader &memoryReader) {
     mEarthShape.read(memoryReader);
     mVariableLatLon.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -65,7 +65,7 @@ void VariableResolutionLatLon::write(DataWriter &dataWriter) {
     mEarthShape.write(dataWriter);
     mVariableLatLon.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -83,7 +83,7 @@ void VariableResolutionLatLon::getAttributeList(std::string prefix, T::Attribute
     sprintf(name, "%sVariableResolutionLatLon.", prefix.c_str());
     mVariableLatLon.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -100,7 +100,7 @@ void VariableResolutionLatLon::print(std::ostream &stream, uint level, uint opti
     mEarthShape.print(stream, level + 1, optionFlags);
     mVariableLatLon.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -113,7 +113,7 @@ T::Hash VariableResolutionLatLon::countHash() {
     boost::hash_combine(seed, mVariableLatLon.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -127,7 +127,7 @@ GridDefinition *VariableResolutionLatLon::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new VariableResolutionLatLon(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -137,7 +137,7 @@ EarthShapeSettings *VariableResolutionLatLon::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -147,7 +147,7 @@ VariableLatLonSettings *VariableResolutionLatLon::getVariableLatLon() const {
   try {
     return static_cast<VariableLatLonSettings *>(&mVariableLatLon);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -155,7 +155,7 @@ void VariableResolutionLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -163,7 +163,7 @@ void VariableResolutionLatLon::setVariableLatLon(VariableLatLonSettings &variabl
   try {
     mVariableLatLon = variableLatLon;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

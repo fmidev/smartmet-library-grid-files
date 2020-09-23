@@ -1,5 +1,5 @@
 #include "HovmollerImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {
@@ -49,7 +49,7 @@ GridDefinition* HovmollerImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void HovmollerImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -93,7 +93,7 @@ void HovmollerImpl::read(MemoryReader& memoryReader)
 
 T::Coordinate_svec HovmollerImpl::getGridOriginalCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
+  throw Fmi::Exception(BCP,"The method not implemented!");
 }
 
 
@@ -116,7 +116,7 @@ T::Dimensions HovmollerImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -145,7 +145,7 @@ bool HovmollerImpl::getGridPointByLatLonCoordinates(double lat,double lon,double
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -168,7 +168,7 @@ void HovmollerImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

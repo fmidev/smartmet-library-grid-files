@@ -1,7 +1,7 @@
 #include "SimplePacking.h"
 #include "Message.h"
 #include "GribFile.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/BitArrayWriter.h"
@@ -33,7 +33,7 @@ SimplePacking::SimplePacking()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -59,7 +59,7 @@ SimplePacking::SimplePacking(const SimplePacking& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -76,7 +76,7 @@ SimplePacking::~SimplePacking()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -93,7 +93,7 @@ PackingMethod SimplePacking::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -109,7 +109,7 @@ DataDefinition* SimplePacking::createDataDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -145,7 +145,7 @@ void SimplePacking::init(Message *message) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -231,7 +231,7 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -265,7 +265,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
 
     if (bitmap != nullptr  &&  numOfValues > (bitmapSizeInBytes*8))
     {
-      SmartMet::Spine::Exception exception(BCP,"The bitmap does not contain enough bits!");
+      Fmi::Exception exception(BCP,"The bitmap does not contain enough bits!");
       exception.addParameter("Number of values",Fmi::to_string(numOfValues));
       exception.addParameter("MaxBits in bitmap",Fmi::to_string(bitmapSizeInBytes*8));
       throw exception;
@@ -496,7 +496,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -610,7 +610,7 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -633,7 +633,7 @@ void SimplePacking::print(std::ostream& stream,uint level,uint optionFlags) cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

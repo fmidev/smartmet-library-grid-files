@@ -1,6 +1,6 @@
 #include "ProductDefinition.h"
 #include "Properties.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include <boost/date_time/gregorian/gregorian.hpp>
 
@@ -41,7 +41,7 @@ ProductDefinition::~ProductDefinition()
 
 ProductDefinition* ProductDefinition::createProductDefinition() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -90,7 +90,7 @@ bool ProductDefinition::getProperty(uint propertyId,long long& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -149,7 +149,7 @@ bool ProductDefinition::getProperty_ParameterSettings(uint propertyId,long long&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -196,7 +196,7 @@ bool ProductDefinition::getProperty_HorizontalSettings(uint propertyId,long long
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -275,7 +275,7 @@ bool ProductDefinition::getProperty_StatisticalSettings(uint propertyId,long lon
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -310,7 +310,7 @@ bool ProductDefinition::getProperty_EpsSettings(uint propertyId,long long& value
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -341,7 +341,7 @@ bool ProductDefinition::getProperty_DerivedSettings(uint propertyId,long long& v
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -420,7 +420,7 @@ bool ProductDefinition::getProperty_RectangularClusterSettings(uint propertyId,l
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -471,7 +471,7 @@ bool ProductDefinition::getProperty_ProbabilitySettings(uint propertyId,long lon
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -498,7 +498,7 @@ bool ProductDefinition::getProperty_PercentileSettings(uint propertyId,long long
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -549,7 +549,7 @@ bool ProductDefinition::getProperty_CategoricalSettings(uint propertyId,long lon
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -599,7 +599,7 @@ bool ProductDefinition::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -658,7 +658,7 @@ bool ProductDefinition::setProperty_ParameterSettings(uint propertyId,long long 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -705,7 +705,7 @@ bool ProductDefinition::setProperty_HorizontalSettings(uint propertyId,long long
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -784,7 +784,7 @@ bool ProductDefinition::setProperty_StatisticalSettings(uint propertyId,long lon
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -819,7 +819,7 @@ bool ProductDefinition::setProperty_EpsSettings(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -850,7 +850,7 @@ bool ProductDefinition::setProperty_DerivedSettings(uint propertyId,long long va
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -929,7 +929,7 @@ bool ProductDefinition::setProperty_RectangularClusterSettings(uint propertyId,l
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -980,7 +980,7 @@ bool ProductDefinition::setProperty_ProbabilitySettings(uint propertyId,long lon
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1007,7 +1007,7 @@ bool ProductDefinition::setProperty_PercentileSettings(uint propertyId,long long
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1058,7 +1058,7 @@ bool ProductDefinition::setProperty_CategoricalSettings(uint propertyId,long lon
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1076,7 +1076,7 @@ void ProductDefinition::getAttributeList(std::string prefix,T::AttributeList& at
 
 uint ProductDefinition::getTemplateNumber() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -1100,7 +1100,7 @@ const T::UInt8_opt ProductDefinition::getGribParameterCategory() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1125,7 +1125,7 @@ const T::UInt8_opt ProductDefinition::getGribParameterNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1150,7 +1150,7 @@ T::UInt8_opt ProductDefinition::getGeneratingProcessIdentifier() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1199,7 +1199,7 @@ T::TimeString ProductDefinition::getForecastTime(T::TimeString referenceTime) co
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1224,7 +1224,7 @@ T::ParamLevel ProductDefinition::getGribParameterLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1253,7 +1253,7 @@ T::ParamLevelId ProductDefinition::getGribParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1272,12 +1272,12 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
     if (!forecastTimeP)
     {
       //parameter.print(std::cout,0,0);
-      throw SmartMet::Spine::Exception(BCP, "The 'parameter.forecastTime' value not defined!");
+      throw Fmi::Exception(BCP, "The 'parameter.forecastTime' value not defined!");
     }
 
     auto indicator = parameter.getIndicatorOfUnitOfTimeRange();
     if (!indicator)
-      throw SmartMet::Spine::Exception(BCP, "The 'parameter.indicatorOfUnitOfTimeRange' value not defined!");
+      throw Fmi::Exception(BCP, "The 'parameter.indicatorOfUnitOfTimeRange' value not defined!");
 
     int ft = *forecastTimeP;
     int forecastTime = ft;
@@ -1305,7 +1305,7 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
       case 5: //  10Y Decade (10 years)
       case 6: //  30Y Normal (30 years)
       case 7: //  C Century (100 years)
-        throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+        throw Fmi::Exception(BCP, "Not implemented!");
 
       case 10: //  3h 3 hours
         dt = boost::posix_time::time_duration(3*forecastTime,0,0);
@@ -1333,7 +1333,7 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1352,12 +1352,12 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
     if (!forecastTimeP)
     {
       //parameter.print(std::cout,0,0);
-      throw SmartMet::Spine::Exception(BCP, "The 'parameter.forecastTime' value not defined!");
+      throw Fmi::Exception(BCP, "The 'parameter.forecastTime' value not defined!");
     }
 
     auto indicator = parameter.getIndicatorOfUnitOfTimeRange();
     if (!indicator)
-      throw SmartMet::Spine::Exception(BCP, "The 'parameter.indicatorOfUnitOfTimeRange' value not defined!");
+      throw Fmi::Exception(BCP, "The 'parameter.indicatorOfUnitOfTimeRange' value not defined!");
 
     int ft = *forecastTimeP;
     int forecastTime = ft;
@@ -1385,7 +1385,7 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
       case 5: //  10Y Decade (10 years)
       case 6: //  30Y Normal (30 years)
       case 7: //  C Century (100 years)
-        throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+        throw Fmi::Exception(BCP, "Not implemented!");
 
       case 10: //  3h 3 hours
         dt = boost::posix_time::time_duration(3*forecastTime,0,0);
@@ -1413,7 +1413,7 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1437,7 +1437,7 @@ T::TimeString ProductDefinition::countForecastEndTime(const StatisticalSettings&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1553,7 +1553,7 @@ PostprocSettings* ProductDefinition::getPostproc() const
 
 void ProductDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 

@@ -48,7 +48,7 @@ ProductDefinition* DeprecatedSatelliteProductImpl::createProductDefinition() con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -74,7 +74,7 @@ void DeprecatedSatelliteProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -92,7 +92,7 @@ void DeprecatedSatelliteProductImpl::read(MemoryReader& memoryReader)
 T::TimeString DeprecatedSatelliteProductImpl::getForecastTime(T::TimeString referenceTime) const
 {
   return referenceTime;
-  //throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  //throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -107,7 +107,7 @@ T::TimeString DeprecatedSatelliteProductImpl::getForecastTime(T::TimeString refe
 T::ParamLevel DeprecatedSatelliteProductImpl::getGribParameterLevel() const
 {
   return 0;
-  //throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  //throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -122,7 +122,7 @@ T::ParamLevel DeprecatedSatelliteProductImpl::getGribParameterLevel() const
 T::ParamLevelId DeprecatedSatelliteProductImpl::getGribParameterLevelId() const
 {
   return 0;
-  //throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  //throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 

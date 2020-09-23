@@ -1,5 +1,5 @@
 #include "LambertConformalImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/CoordinateConversions.h"
@@ -33,7 +33,7 @@ LambertConformalImpl::LambertConformalImpl()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -58,7 +58,7 @@ LambertConformalImpl::LambertConformalImpl(const LambertConformalImpl& other):La
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -83,7 +83,7 @@ LambertConformalImpl::~LambertConformalImpl()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -147,7 +147,7 @@ void LambertConformalImpl::init() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -164,7 +164,7 @@ GridDefinition* LambertConformalImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -190,7 +190,7 @@ void LambertConformalImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -291,7 +291,7 @@ bool LambertConformalImpl::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -345,7 +345,7 @@ T::Coordinate_svec LambertConformalImpl::getGridOriginalCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -410,7 +410,7 @@ std::string LambertConformalImpl::getGridGeometryString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -437,7 +437,7 @@ T::Dimensions LambertConformalImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -453,7 +453,7 @@ std::size_t LambertConformalImpl::getGridColumnCount() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -468,7 +468,7 @@ std::size_t LambertConformalImpl::getGridRowCount() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -486,7 +486,7 @@ bool LambertConformalImpl::getGridMetricCellSize(double& width,double& height) c
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -526,7 +526,7 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -573,7 +573,7 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -601,7 +601,7 @@ bool LambertConformalImpl::reverseXDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -628,7 +628,7 @@ bool LambertConformalImpl::reverseYDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -645,19 +645,19 @@ void LambertConformalImpl::initSpatialReference()
 
     auto dfStdP1 = mLatin1;
     if (!dfStdP1)
-      throw SmartMet::Spine::Exception(BCP,"The 'latin1' value is missing!");
+      throw Fmi::Exception(BCP,"The 'latin1' value is missing!");
 
     auto dfStdP2 = mLatin2;
     if (!dfStdP2)
-      throw SmartMet::Spine::Exception(BCP,"The 'latin2' value is missing!");
+      throw Fmi::Exception(BCP,"The 'latin2' value is missing!");
 
     auto dfCenterLat = mLaD;
     if (!dfCenterLat)
-      throw SmartMet::Spine::Exception(BCP,"The 'laD' value is missing!");
+      throw Fmi::Exception(BCP,"The 'laD' value is missing!");
 
     auto dfCenterLong = mLoV;
     if (!dfCenterLong)
-      throw SmartMet::Spine::Exception(BCP,"The 'loV' value is missing!");
+      throw Fmi::Exception(BCP,"The 'loV' value is missing!");
 
     auto southPoleLon = mLongitudeOfSouthernPole;
     auto southPoleLat = mLatitudeOfSouthernPole;
@@ -669,7 +669,7 @@ void LambertConformalImpl::initSpatialReference()
       southPoleLat = -90 * 1000000;
 
     //if ((*southPoleLon != 0) || (*southPoleLat != (-90 * 1000000)))
-    //  throw SmartMet::Spine::Exception(BCP,"A projection with a rotated pole is not supported!");
+    //  throw Fmi::Exception(BCP,"A projection with a rotated pole is not supported!");
 
 
     // ### Set geographic coordinate system.
@@ -701,7 +701,7 @@ void LambertConformalImpl::initSpatialReference()
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
-      SmartMet::Spine::Exception exception(BCP,"The spatial reference is not valid!");
+      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
@@ -715,15 +715,15 @@ void LambertConformalImpl::initSpatialReference()
 
     mCt_latlon2lambert = OGRCreateCoordinateTransformation(&sr_latlon,mSr_lambertConformal);
     if (mCt_latlon2lambert == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
 
     mCt_lambert2latlon = OGRCreateCoordinateTransformation(mSr_lambertConformal,&sr_latlon);
     if (mCt_lambert2latlon == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -788,7 +788,7 @@ void LambertConformalImpl::print(std::ostream& stream,uint level,uint optionFlag
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

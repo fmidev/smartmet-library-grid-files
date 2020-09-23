@@ -1,5 +1,5 @@
 #include "StretchedSphericalHarmonicImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {
@@ -49,7 +49,7 @@ GridDefinition* StretchedSphericalHarmonicImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void StretchedSphericalHarmonicImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -93,7 +93,7 @@ void StretchedSphericalHarmonicImpl::read(MemoryReader& memoryReader)
 
 T::Coordinate_svec StretchedSphericalHarmonicImpl::getGridOriginalCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -116,7 +116,7 @@ T::Dimensions StretchedSphericalHarmonicImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -145,7 +145,7 @@ bool StretchedSphericalHarmonicImpl::getGridPointByLatLonCoordinates(double lat,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -168,7 +168,7 @@ void StretchedSphericalHarmonicImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

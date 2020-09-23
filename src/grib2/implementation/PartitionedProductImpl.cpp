@@ -1,5 +1,5 @@
 #include "PartitionedProductImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -49,7 +49,7 @@ ProductDefinition* PartitionedProductImpl::createProductDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void PartitionedProductImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -92,7 +92,7 @@ void PartitionedProductImpl::read(MemoryReader& memoryReader)
 
 T::TimeString PartitionedProductImpl::getForecastTime(T::TimeString referenceTime) const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -106,7 +106,7 @@ T::TimeString PartitionedProductImpl::getForecastTime(T::TimeString referenceTim
 
 T::ParamLevel PartitionedProductImpl::getGribParameterLevel() const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -120,7 +120,7 @@ T::ParamLevel PartitionedProductImpl::getGribParameterLevel() const
 
 T::ParamLevelId PartitionedProductImpl::getGribParameterLevelId() const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 

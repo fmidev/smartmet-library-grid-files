@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "AerosolEnsembleProduct.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 AerosolEnsembleProduct::AerosolEnsembleProduct() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -34,7 +34,7 @@ AerosolEnsembleProduct::AerosolEnsembleProduct(const AerosolEnsembleProduct &oth
     mHorizontal = other.mHorizontal;
     mEps = other.mEps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -55,7 +55,7 @@ void AerosolEnsembleProduct::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mEps.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -71,7 +71,7 @@ void AerosolEnsembleProduct::write(DataWriter &dataWriter) {
     mHorizontal.write(dataWriter);
     mEps.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -93,7 +93,7 @@ void AerosolEnsembleProduct::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sAerosolEnsembleProduct.", prefix.c_str());
     mEps.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -112,7 +112,7 @@ void AerosolEnsembleProduct::print(std::ostream &stream, uint level, uint option
     mHorizontal.print(stream, level + 1, optionFlags);
     mEps.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -127,7 +127,7 @@ T::Hash AerosolEnsembleProduct::countHash() {
     boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -141,7 +141,7 @@ ProductDefinition *AerosolEnsembleProduct::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new AerosolEnsembleProduct(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -151,7 +151,7 @@ ParameterAerosolSettings *AerosolEnsembleProduct::getParameterAerosol() const {
   try {
     return static_cast<ParameterAerosolSettings *>(&mParameterAerosol);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -161,7 +161,7 @@ PointInTimeSettings *AerosolEnsembleProduct::getPointInTime() const {
   try {
     return static_cast<PointInTimeSettings *>(&mPointInTime);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -171,7 +171,7 @@ HorizontalSettings *AerosolEnsembleProduct::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -181,7 +181,7 @@ EpsSettings *AerosolEnsembleProduct::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -189,7 +189,7 @@ void AerosolEnsembleProduct::setParameterAerosol(ParameterAerosolSettings &param
   try {
     mParameterAerosol = parameterAerosol;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -197,7 +197,7 @@ void AerosolEnsembleProduct::setPointInTime(PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -205,7 +205,7 @@ void AerosolEnsembleProduct::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -213,7 +213,7 @@ void AerosolEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

@@ -1,5 +1,5 @@
 #include "CrossSectionImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {
@@ -49,7 +49,7 @@ GridDefinition* CrossSectionImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void CrossSectionImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -93,7 +93,7 @@ void CrossSectionImpl::read(MemoryReader& memoryReader)
 
 T::Coordinate_svec CrossSectionImpl::getGridOriginalCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
+  throw Fmi::Exception(BCP,"The method not implemented!");
 }
 
 
@@ -119,7 +119,7 @@ T::Dimensions CrossSectionImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -148,7 +148,7 @@ bool CrossSectionImpl::getGridPointByLatLonCoordinates(double lat,double lon,dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -171,7 +171,7 @@ void CrossSectionImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

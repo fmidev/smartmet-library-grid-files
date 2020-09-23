@@ -1,5 +1,5 @@
 #include "StretchedLatLonImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/Dimensions.h"
 #include "../../common/CoordinateConversions.h"
 
@@ -51,7 +51,7 @@ GridDefinition* StretchedLatLonImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -77,7 +77,7 @@ void StretchedLatLonImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -142,7 +142,7 @@ T::Coordinate_svec StretchedLatLonImpl::getGridOriginalCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -169,7 +169,7 @@ T::Dimensions StretchedLatLonImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -195,7 +195,7 @@ bool StretchedLatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -266,7 +266,7 @@ bool StretchedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,do
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -299,14 +299,14 @@ void StretchedLatLonImpl::initSpatialReference()
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
-      SmartMet::Spine::Exception exception(BCP,"The spatial reference is not valid!");
+      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

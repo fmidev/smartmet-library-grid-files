@@ -1,6 +1,6 @@
 #include "RotatedLatLonImpl.h"
 #include "../Properties.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/CoordinateConversions.h"
@@ -34,7 +34,7 @@ RotatedLatLonImpl::RotatedLatLonImpl()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -65,7 +65,7 @@ RotatedLatLonImpl::RotatedLatLonImpl(const RotatedLatLonImpl& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -90,7 +90,7 @@ RotatedLatLonImpl::~RotatedLatLonImpl()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -142,7 +142,7 @@ void RotatedLatLonImpl::init() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -160,7 +160,7 @@ GridDefinition* RotatedLatLonImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -186,7 +186,7 @@ void RotatedLatLonImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -251,7 +251,7 @@ T::Coordinate_svec RotatedLatLonImpl::getGridOriginalCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -325,7 +325,7 @@ T::Coordinate_svec RotatedLatLonImpl::getGridLatLonCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -405,7 +405,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -486,7 +486,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -557,7 +557,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -628,7 +628,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -692,7 +692,7 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -716,7 +716,7 @@ T::Dimensions RotatedLatLonImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -734,7 +734,7 @@ bool RotatedLatLonImpl::getGridMetricCellSize(double& width,double& height) cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -770,7 +770,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -807,7 +807,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -892,7 +892,7 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -920,7 +920,7 @@ bool RotatedLatLonImpl::reverseXDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -947,7 +947,7 @@ bool RotatedLatLonImpl::reverseYDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -988,7 +988,7 @@ bool RotatedLatLonImpl::getProperty(uint propertyId,long long& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1030,7 +1030,7 @@ bool RotatedLatLonImpl::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1056,7 +1056,7 @@ bool RotatedLatLonImpl::setProperty(uint propertyId,double value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1104,14 +1104,14 @@ void RotatedLatLonImpl::initSpatialReference()
 
     OGRErr err = mSpatialReference.SetFromUserInput(proj);
     if (err != OGRERR_NONE)
-      throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(proj) + "'!");
+      throw Fmi::Exception(BCP, "Invalid crs '" + std::string(proj) + "'!");
 
     // ### Validate the spatial reference.
 /*
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
-      SmartMet::Spine::Exception exception(BCP,"The spatial reference is not valid!");
+      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
@@ -1135,16 +1135,16 @@ void RotatedLatLonImpl::initSpatialReference()
 
     mCt_latlon2rotatedLatlon = OGRCreateCoordinateTransformation(&sr_latlon,mSr_rotatedLatlon);
     if (mCt_latlon2rotatedLatlon == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
 
     mCt_rotatedLatlon2latlon = OGRCreateCoordinateTransformation(mSr_rotatedLatlon,&sr_latlon);
     if (mCt_rotatedLatlon2latlon == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1197,7 +1197,7 @@ void RotatedLatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

@@ -1,6 +1,6 @@
 #include "DataDefinition.h"
 #include "Message.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
 
@@ -57,7 +57,7 @@ PackingMethod DataDefinition::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -72,7 +72,7 @@ bool DataDefinition::getValueByIndex(Message *message,uint index,T::ParamValue& 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -107,7 +107,7 @@ void DataDefinition::write(DataWriter& dataWriter)
 
 DataDefinition* DataDefinition::createDataDefinition() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -116,7 +116,7 @@ DataDefinition* DataDefinition::createDataDefinition() const
 
 void DataDefinition::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -125,7 +125,7 @@ void DataDefinition::decodeValues(Message *message,T::ParamValue_vec& decodedVal
 
 void DataDefinition::encodeValues(Message *message,T::ParamValue_vec& values)
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -147,7 +147,7 @@ void DataDefinition::print(std::ostream& stream,uint level,uint optionFlags) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

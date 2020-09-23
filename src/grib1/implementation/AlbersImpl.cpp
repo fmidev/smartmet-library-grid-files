@@ -1,5 +1,5 @@
 #include "AlbersImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {
@@ -49,7 +49,7 @@ GridDefinition* AlbersImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void AlbersImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -93,7 +93,7 @@ void AlbersImpl::read(MemoryReader& memoryReader)
 
 T::Coordinate_svec AlbersImpl::getGridOriginalCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -116,7 +116,7 @@ T::Dimensions AlbersImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -134,7 +134,7 @@ bool AlbersImpl::getGridMetricCellSize(double& width,double& height) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -163,7 +163,7 @@ bool AlbersImpl::getGridPointByLatLonCoordinates(double lat,double lon,double& g
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -187,7 +187,7 @@ void AlbersImpl::initSpatialReference()
     auto southPoleLat = mLatitudeOfSouthernPole;
 
     if ((southPoleLon != 0) || (southPoleLat != (-90 * 1000000)))
-      throw SmartMet::Spine::Exception(BCP,"A projection with a rotated pole is not supported!");
+      throw Fmi::Exception(BCP,"A projection with a rotated pole is not supported!");
 
 
     // ### Set geographic coordinate system.
@@ -222,14 +222,14 @@ void AlbersImpl::initSpatialReference()
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
-      SmartMet::Spine::Exception exception(BCP,"The spatial reference is not valid!");
+      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

@@ -14,7 +14,7 @@ FileWriter::FileWriter()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -33,7 +33,7 @@ FileWriter::~FileWriter()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -50,13 +50,13 @@ void FileWriter::createFile(const char *_filename)
     mFileHandle = fopen(_filename,"we");
     if (mFileHandle)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot create a file!");
+      Fmi::Exception exception(BCP,"Cannot create a file!");
       exception.addParameter("Filename",mFilename);
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void FileWriter::closeFile()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -88,13 +88,13 @@ ulonglong FileWriter::getWritePosition()
   try
   {
     if (mFileHandle == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"No file defined!");
+      throw Fmi::Exception(BCP,"No file defined!");
 
     return ftell(mFileHandle);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -107,13 +107,13 @@ ulonglong FileWriter::getMaxWritePosition()
   try
   {
     if (mFileHandle == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"No file defined!");
+      throw Fmi::Exception(BCP,"No file defined!");
 
     return mMaxFilePosition;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -126,13 +126,13 @@ void FileWriter::setWritePosition(ulonglong _pos)
   try
   {
     if (mFileHandle == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"No file defined!");
+      throw Fmi::Exception(BCP,"No file defined!");
 
     fseek(mFileHandle,_pos,SEEK_SET);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -145,7 +145,7 @@ void FileWriter::write_data(void *_data,ulonglong _size)
   try
   {
     if (mFileHandle == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"No file defined!");
+      throw Fmi::Exception(BCP,"No file defined!");
 
     fwrite(_data,_size,1,mFileHandle);
 /*
@@ -156,7 +156,7 @@ void FileWriter::write_data(void *_data,ulonglong _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

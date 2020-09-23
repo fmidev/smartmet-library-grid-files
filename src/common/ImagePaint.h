@@ -1,9 +1,9 @@
 #pragma once
 
 #include "ImageFunctions.h"
-#include "Exception.h"
 #include "MemoryReader.h"
 #include "ShowFunction.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {

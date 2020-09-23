@@ -1,5 +1,5 @@
 #include "Typedefs.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -33,7 +33,7 @@ std::string get_fileTypeString(FileType fileType)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -66,7 +66,7 @@ std::string get_gridLayoutString(GridLayout layout)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -105,7 +105,7 @@ std::string get_areaInterpolationMethodString(short interpolationMethod)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -144,7 +144,7 @@ std::string get_timeInterpolationMethodString(short interpolationMethod)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -186,7 +186,7 @@ std::string get_levelInterpolationMethodString(short interpolationMethod)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -274,7 +274,7 @@ std::string get_gridProjectionString(GridProjection projection)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

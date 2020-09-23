@@ -1,5 +1,5 @@
 #include "AzimuthRangeImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/Dimensions.h"
 
 
@@ -51,7 +51,7 @@ GridDefinition* AzimuthRangeImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -77,7 +77,7 @@ void AzimuthRangeImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -95,7 +95,7 @@ void AzimuthRangeImpl::read(MemoryReader& memoryReader)
 
 T::Coordinate_svec AzimuthRangeImpl::getGridOriginalCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
+  throw Fmi::Exception(BCP,"The method not implemented!");
 }
 
 
@@ -118,7 +118,7 @@ T::Dimensions AzimuthRangeImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -147,7 +147,7 @@ bool AzimuthRangeImpl::getGridPointByLatLonCoordinates(double lat,double lon,dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -170,7 +170,7 @@ void AzimuthRangeImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

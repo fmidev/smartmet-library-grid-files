@@ -1,6 +1,6 @@
 #include "BitmapSection.h"
 #include "Message.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/BitArrayReader.h"
@@ -31,7 +31,7 @@ BitmapSection::BitmapSection()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed",nullptr);
   }
 }
 
@@ -65,7 +65,7 @@ BitmapSection::BitmapSection(const BitmapSection& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Copy constructor failed",nullptr);
+    throw Fmi::Exception(BCP,"Copy constructor failed",nullptr);
   }
 }
 
@@ -87,7 +87,7 @@ BitmapSection::~BitmapSection()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -117,7 +117,7 @@ void BitmapSection::getAttributeList(std::string prefix,T::AttributeList& attrib
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -139,7 +139,7 @@ void BitmapSection::setMessagePtr(Message *message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -171,7 +171,7 @@ void BitmapSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -201,7 +201,7 @@ void BitmapSection::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -222,7 +222,7 @@ T::FilePosition BitmapSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -243,7 +243,7 @@ std::uint32_t BitmapSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -261,7 +261,7 @@ std::string BitmapSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -279,7 +279,7 @@ std::uint8_t BitmapSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -297,7 +297,7 @@ T::Data_ptr BitmapSection::getBitmapDataPtr() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -315,7 +315,7 @@ std::size_t BitmapSection::getBitmapDataSizeInBytes() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -337,7 +337,7 @@ long long BitmapSection::getHash()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -366,7 +366,7 @@ void BitmapSection::getIndexVector(uint numOfValues,T::IndexVector& indexVector)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -382,7 +382,7 @@ void BitmapSection::setNumberOfUnusedBits(std::uint8_t unusedBits)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -398,7 +398,7 @@ void BitmapSection::setTableReference(std::uint16_t reference)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -430,7 +430,7 @@ void BitmapSection::setBitmapData(T::Data_ptr data,std::size_t size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -458,7 +458,7 @@ void BitmapSection::print(std::ostream& stream,uint level,uint optionFlags) cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

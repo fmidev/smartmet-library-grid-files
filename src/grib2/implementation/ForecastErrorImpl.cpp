@@ -1,5 +1,5 @@
 #include "ForecastErrorImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -49,7 +49,7 @@ ProductDefinition* ForecastErrorImpl::createProductDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void ForecastErrorImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -92,7 +92,7 @@ void ForecastErrorImpl::read(MemoryReader& memoryReader)
 
 T::TimeString ForecastErrorImpl::getForecastTime(T::TimeString referenceTime) const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -106,7 +106,7 @@ T::TimeString ForecastErrorImpl::getForecastTime(T::TimeString referenceTime) co
 
 T::ParamLevel ForecastErrorImpl::getGribParameterLevel() const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -120,7 +120,7 @@ T::ParamLevel ForecastErrorImpl::getGribParameterLevel() const
 
 T::ParamLevelId ForecastErrorImpl::getGribParameterLevelId() const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 

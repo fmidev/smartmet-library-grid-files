@@ -1,6 +1,5 @@
 #include "Message.h"
 #include "../common/CoordinateConversions.h"
-#include "../common/Exception.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/GraphFunctions.h"
@@ -10,6 +9,8 @@
 #include "../common/MemoryWriter.h"
 #include "../identification/GridDef.h"
 #include <macgyver/StringConversion.h>
+#include <macgyver/Exception.h>
+#include <macgyver/FastMath.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -67,7 +68,7 @@ Message::Message()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -111,7 +112,7 @@ Message::Message(const Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -135,7 +136,7 @@ Message::~Message()
 
 void Message::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -150,7 +151,7 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 
 uint Message::getFileId() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -165,7 +166,7 @@ uint Message::getFileId() const
 
 uint Message::getProducerId() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -180,7 +181,7 @@ uint Message::getProducerId() const
 
 uint Message::getGenerationId() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -195,7 +196,7 @@ uint Message::getGenerationId() const
 
 T::FilePosition Message::getFilePosition() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -211,7 +212,7 @@ uint Message::getMessageIndex() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -228,7 +229,7 @@ uint Message::getMessageSize() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -245,7 +246,7 @@ void Message::setGridFilePtr(GridFile *gridFilePtr)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -262,7 +263,7 @@ void Message::setMessageIndex(uint index)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -278,7 +279,7 @@ void Message::setMessageIndex(uint index)
 
 T::TimeString Message::getReferenceTime() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -296,7 +297,7 @@ uint Message::getGribVersion() const
 
 uint Message::getGribCentre() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -305,7 +306,7 @@ uint Message::getGribCentre() const
 
 uint Message::getGribSubCentre() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -314,7 +315,7 @@ uint Message::getGribSubCentre() const
 
 uint Message::getGribGeneratingProcessIdentifier() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -323,7 +324,7 @@ uint Message::getGribGeneratingProcessIdentifier() const
 
 uint Message::getGribTableVersion() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -338,7 +339,7 @@ uint Message::getGribTableVersion() const
 
 T::TimeString Message::getForecastTime() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -353,7 +354,7 @@ T::TimeString Message::getForecastTime() const
 
 time_t Message::getForecastTimeT() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -367,7 +368,7 @@ time_t Message::getForecastTimeT() const
 
 T::Hash Message::getGridHash() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -381,7 +382,7 @@ T::Hash Message::getGridHash() const
 
 T::GridProjection Message::getGridProjection() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -395,7 +396,7 @@ T::GridProjection Message::getGridProjection() const
 
 T::GridLayout Message::getGridLayout() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -409,7 +410,7 @@ T::GridLayout Message::getGridLayout() const
 
 std::string Message::getGridProjectionString() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -426,7 +427,7 @@ std::string Message::getGridProjectionString() const
 
 T::Coordinate_svec Message::getGridOriginalCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -492,7 +493,7 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -704,7 +705,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -771,7 +772,7 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -842,7 +843,7 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1053,7 +1054,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1121,7 +1122,7 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1138,7 +1139,7 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
 
 T::Coordinate_svec Message::getGridLatLonCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1156,7 +1157,7 @@ T::Coordinate_svec Message::getGridLatLonCoordinates() const
 
 T::Dimensions Message::getGridDimensions() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1172,7 +1173,7 @@ uint Message::getGridWidth() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1189,7 +1190,7 @@ uint Message::getGridHeight() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1199,7 +1200,7 @@ uint Message::getGridHeight() const
 
 std::size_t Message::getGridRowCount() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1214,7 +1215,7 @@ std::size_t Message::getGridRowCount() const
 
 std::size_t Message::getGridColumnCount() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1227,7 +1228,7 @@ std::size_t Message::getGridColumnCount() const
 
 std::size_t Message::getGridOriginalRowCount() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1242,7 +1243,7 @@ std::size_t Message::getGridOriginalRowCount() const
 
 std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1257,7 +1258,7 @@ std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
 
 std::size_t Message::getGridOriginalColumnCount() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1271,7 +1272,7 @@ std::size_t Message::getGridOriginalColumnCount() const
 
 std::size_t Message::getGridOriginalValueCount() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1293,7 +1294,7 @@ std::size_t Message::getGridOriginalValueCount() const
 
 int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1309,7 +1310,7 @@ int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 
 bool Message::isGridGlobal() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1318,7 +1319,7 @@ bool Message::isGridGlobal() const
 
 bool Message::isRelativeUV() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1332,7 +1333,7 @@ bool Message::isRelativeUV() const
 
 T::GeometryId Message::getGridGeometryId() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1341,7 +1342,7 @@ T::GeometryId Message::getGridGeometryId() const
 
 bool Message::getGridMetricCellSize(double& width,double& height) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1350,7 +1351,7 @@ bool Message::getGridMetricCellSize(double& width,double& height) const
 
 bool Message::getGridMetricSize(double& width,double& height) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1359,7 +1360,7 @@ bool Message::getGridMetricSize(double& width,double& height) const
 
 bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1368,7 +1369,7 @@ bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
 
 bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1384,7 +1385,7 @@ bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
 
 std::string Message::getGridGeometryString() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1404,7 +1405,7 @@ std::string Message::getGridGeometryString() const
 
 void Message::setGridGeometryId(T::GeometryId geometryId)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1420,7 +1421,7 @@ void Message::setGridGeometryId(T::GeometryId geometryId)
 
 void Message::setGridValues(T::ParamValue_vec& values)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1438,7 +1439,7 @@ void Message::setGridValues(T::ParamValue_vec& values)
 
 bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1456,7 +1457,7 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
 
 bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1474,7 +1475,7 @@ bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j
 
 bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1492,7 +1493,7 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,do
 
 bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1510,7 +1511,7 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,doub
 
 bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1528,7 +1529,7 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
 
 bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1547,7 +1548,7 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 
 bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j)  const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1556,7 +1557,7 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
 
 bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j)  const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1592,7 +1593,7 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
 
       default:
       {
-        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
+        Fmi::Exception exception(BCP,"Unknow coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
@@ -1601,7 +1602,7 @@ float Message::getGridPointAngle(T::CoordinateType coordinateType,double x,doubl
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1702,7 +1703,7 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1746,7 +1747,7 @@ void Message::getGridPointAngles(std::vector<float>& angles) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1767,7 +1768,7 @@ void Message::getGridPointAngles(std::vector<float>& angles) const
 
 bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1783,7 +1784,7 @@ bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i
 
 void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1837,7 +1838,7 @@ T::ParamId Message::getGribParameterId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1859,7 +1860,7 @@ std::string Message::getGribParameterName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1881,7 +1882,7 @@ std::string Message::getGribParameterUnits() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1904,7 +1905,7 @@ T::ParamLevelId Message::getGrib1ParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1927,7 +1928,7 @@ T::ParamLevelId Message::getGrib2ParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1949,7 +1950,7 @@ std::string Message::getFmiProducerName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1971,7 +1972,7 @@ T::ParamId Message::getFmiParameterId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1993,7 +1994,7 @@ T::ParamLevelId Message::getFmiParameterLevelId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2015,7 +2016,7 @@ std::string Message::getFmiParameterName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2037,7 +2038,7 @@ std::string Message::getFmiParameterUnits() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2059,7 +2060,7 @@ std::string Message::getCdmParameterId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2081,7 +2082,7 @@ std::string Message::getCdmParameterName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2103,7 +2104,7 @@ std::string Message::getNewbaseParameterId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2125,7 +2126,7 @@ std::string Message::getNewbaseParameterName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2144,7 +2145,7 @@ std::string Message::getNewbaseParameterName() const
 
 T::ParamLevel Message::getGridParameterLevel() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2159,7 +2160,7 @@ T::ParamLevel Message::getGridParameterLevel() const
 
 T::ParamLevelId Message::getGridParameterLevelId() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2173,7 +2174,7 @@ T::ParamLevelId Message::getGridParameterLevelId() const
 
 std::string Message::getGridParameterLevelIdString() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2189,7 +2190,7 @@ std::string Message::getGridParameterLevelIdString() const
 
 T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2205,7 +2206,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
 T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2221,7 +2222,7 @@ T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) 
 
 void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2237,7 +2238,7 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
 
 void Message::getGridValueVector(T::ParamValue_vec& values) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2422,7 +2423,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2500,10 +2501,10 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
     if (borderStr != nullptr &&  strcasecmp(borderStr,"outer") == 0)
     {
-      x1 = floor(x1);
-      y1 = floor(y1);
-      x2 = ceil(x2);
-      y2 = ceil(y2);
+      x1 = Fmi::floor(x1);
+      y1 = Fmi::floor(y1);
+      x2 = Fmi::ceil(x2);
+      y2 = Fmi::ceil(y2);
     }
 
     bool gridRectangle = true;
@@ -2583,7 +2584,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2638,7 +2639,7 @@ void Message::getGridValueVectorWithCaching(T::ParamValue_vec& values) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2660,7 +2661,7 @@ void Message::getGridValueVectorWithCaching(T::ParamValue_vec& values) const
 
 void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2671,7 +2672,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
 void Message::initSpatialReference()
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2685,7 +2686,7 @@ void Message::initSpatialReference()
 
 T::SpatialRef* Message::getSpatialReference() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2699,7 +2700,7 @@ T::SpatialRef* Message::getSpatialReference() const
 
 std::string Message::getWKT() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2708,7 +2709,7 @@ std::string Message::getWKT() const
 
 void Message::getSectionPositions(std::set<T::FilePosition>& positions)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2728,7 +2729,7 @@ short Message::getDefaultInterpolationMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2745,7 +2746,7 @@ short Message::getDefaultInterpolationMethod() const
 
 bool Message::reverseXDirection() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2760,7 +2761,7 @@ bool Message::reverseXDirection() const
 
 bool Message::reverseYDirection() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2774,7 +2775,7 @@ bool Message::reverseYDirection() const
 
 short Message::getForecastType() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2788,7 +2789,7 @@ short Message::getForecastType() const
 
 short Message::getForecastNumber() const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2797,7 +2798,7 @@ short Message::getForecastNumber() const
 
 void Message::lockData()
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2806,7 +2807,7 @@ void Message::lockData()
 
 void Message::unlockData()
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -2829,7 +2830,7 @@ bool Message::setProperty(uint propertyId,char value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2853,7 +2854,7 @@ bool Message::setProperty(uint propertyId,short value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2877,7 +2878,7 @@ bool Message::setProperty(uint propertyId,int value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2901,7 +2902,7 @@ bool Message::setProperty(uint propertyId,long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2925,7 +2926,7 @@ bool Message::setProperty(uint propertyId,unsigned char value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2949,7 +2950,7 @@ bool Message::setProperty(uint propertyId,unsigned short value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2973,7 +2974,7 @@ bool Message::setProperty(uint propertyId,unsigned int value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2997,7 +2998,7 @@ bool Message::setProperty(uint propertyId,unsigned long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3014,7 +3015,7 @@ bool Message::setProperty(uint propertyId,unsigned long value)
 
 bool Message::setProperty(uint propertyId,long long value)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -3030,7 +3031,7 @@ bool Message::setProperty(uint propertyId,long long value)
 
 bool Message::setProperty(uint propertyId,double value)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -3046,7 +3047,7 @@ bool Message::setProperty(uint propertyId,double value)
 
 bool Message::getProperty(uint propertyId,long long& value)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -3062,7 +3063,7 @@ bool Message::getProperty(uint propertyId,long long& value)
 
 bool Message::getProperty(const char *propertyName,long long& value)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -3085,7 +3086,7 @@ bool Message::setProperty(const char *propertyName,char value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3109,7 +3110,7 @@ bool Message::setProperty(const char *propertyName,short value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3133,7 +3134,7 @@ bool Message::setProperty(const char *propertyName,int value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3157,7 +3158,7 @@ bool Message::setProperty(const char *propertyName,long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3181,7 +3182,7 @@ bool Message::setProperty(const char *propertyName,unsigned char value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3205,7 +3206,7 @@ bool Message::setProperty(const char *propertyName,unsigned short value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3229,7 +3230,7 @@ bool Message::setProperty(const char *propertyName,unsigned int value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3253,7 +3254,7 @@ bool Message::setProperty(const char *propertyName,unsigned long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3270,7 +3271,7 @@ bool Message::setProperty(const char *propertyName,unsigned long value)
 
 bool Message::setProperty(const char *propertyName,long long value)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -3286,7 +3287,7 @@ bool Message::setProperty(const char *propertyName,long long value)
 
 bool Message::setProperty(const char *propertyName,double value)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -3307,7 +3308,7 @@ void Message::setFmiParameterId(T::ParamId fmiParameterId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3329,7 +3330,7 @@ void Message::setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3351,7 +3352,7 @@ void Message::setFmiParameterName(std::string fmiParameterName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3373,7 +3374,7 @@ void Message::setFmiParameterUnits(std::string fmiParameterUnits)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3395,7 +3396,7 @@ void Message::setGribParameterId(T::ParamId gribParameterId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3417,7 +3418,7 @@ void Message::setGribParameterName(std::string gribParameterName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3439,7 +3440,7 @@ void Message::setGribParameterUnits(std::string gribParameterUnits)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3461,7 +3462,7 @@ void Message::setGrib1ParameterLevelId(T::ParamLevelId grib1ParameterLevelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3483,7 +3484,7 @@ void Message::setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3505,7 +3506,7 @@ void Message::setCdmParameterId(std::string cdmParameterId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3527,7 +3528,7 @@ void Message::setCdmParameterName(std::string cdmParameterName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3549,7 +3550,7 @@ void Message::setNewbaseParameterId(std::string newbaseParameterId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3571,7 +3572,7 @@ void Message::setNewbaseParameterName(std::string newbaseParameterName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3613,7 +3614,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
 
       default:
       {
-        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
+        Fmi::Exception exception(BCP,"Unknow coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
@@ -3623,7 +3624,7 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
   catch (...)
   {
     mRequestCounterEnabled = false;
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3664,7 +3665,7 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
 
       default:
       {
-        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
+        Fmi::Exception exception(BCP,"Unknow coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
@@ -3674,7 +3675,7 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
   catch (...)
   {
     mRequestCounterEnabled = false;
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3698,8 +3699,8 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
     double x = grid_i;
     double y = grid_j;
 
-    uint x1 = C_UINT(floor(x));
-    uint y1 = C_UINT(floor(y));
+    uint x1 = C_UINT(Fmi::floor(x));
+    uint y1 = C_UINT(Fmi::floor(y));
     uint x2 = x1+1;
     uint y2 = y1+1;
 
@@ -3753,7 +3754,7 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3787,7 +3788,7 @@ void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint ve
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3972,7 +3973,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
   catch (...)
   {
     mRequestCounterEnabled = false;
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4004,7 +4005,7 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4130,7 +4131,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
   catch (...)
   {
     mRequestCounterEnabled = false;
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4265,7 +4266,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
   catch (...)
   {
     mRequestCounterEnabled = false;
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4373,7 +4374,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
 
         default:
         {
-          SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
+          Fmi::Exception exception(BCP,"Unknow coordinate type!",nullptr);
           exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
           throw exception;
         }
@@ -4382,7 +4383,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4447,7 +4448,7 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
 
       default:
       {
-        SmartMet::Spine::Exception exception(BCP,"Unknow coordinate type!",nullptr);
+        Fmi::Exception exception(BCP,"Unknow coordinate type!",nullptr);
         exception.addParameter("Coordinate Type",Fmi::to_string(coordinateType));
         throw exception;
       }
@@ -4467,7 +4468,7 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4600,12 +4601,12 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
           }
         }
         break;
-        // throw SmartMet::Spine::Exception(BCP,"Unknown 'areaInterpolationMethod' parameter value!");
+        // throw Fmi::Exception(BCP,"Unknown 'areaInterpolationMethod' parameter value!");
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4685,12 +4686,12 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
           values.push_back(value);
         }
         return;
-        // throw SmartMet::Spine::Exception(BCP,"Unknown 'areaInterpolationMethod' parameter value!");
+        // throw Fmi::Exception(BCP,"Unknown 'areaInterpolationMethod' parameter value!");
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4742,12 +4743,12 @@ T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,dou
 
       default:
         return getGridValueByGridPoint_nearest(grid_i,grid_j);
-        // throw SmartMet::Spine::Exception(BCP,"Unknown 'areaInterpolationMethod' parameter value!");
+        // throw Fmi::Exception(BCP,"Unknown 'areaInterpolationMethod' parameter value!");
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4782,7 +4783,7 @@ T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,shor
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4817,7 +4818,7 @@ void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4852,7 +4853,7 @@ void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4872,11 +4873,11 @@ T::ParamValue Message::getGridValueByGridPoint_noInterpolation(double grid_i,dou
   FUNCTION_TRACE
   try
   {
-    return getGridValueByGridPoint(floor(grid_i),floor(grid_j));
+    return getGridValueByGridPoint(Fmi::floor(grid_i),Fmi::floor(grid_j));
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4899,8 +4900,8 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
     double x = grid_i;
     double y = grid_j;
 
-    uint x1 = C_UINT(floor(x));
-    uint y1 = C_UINT(floor(y));
+    uint x1 = C_UINT(Fmi::floor(x));
+    uint y1 = C_UINT(Fmi::floor(y));
     uint x2 = x1+1;
     uint y2 = y1+1;
 
@@ -4930,7 +4931,7 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4953,8 +4954,8 @@ T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) 
     double x = grid_i;
     double y = grid_j;
 
-    uint x1 = C_UINT(floor(x));
-    uint y1 = C_UINT(floor(y));
+    uint x1 = C_UINT(Fmi::floor(x));
+    uint y1 = C_UINT(Fmi::floor(y));
     uint x2 = C_UINT(x1+1);
     uint y2 = C_UINT(y1+1);
 
@@ -4968,7 +4969,7 @@ T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4991,8 +4992,8 @@ T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) 
     double x = grid_i;
     double y = grid_j;
 
-    uint x1 = C_UINT(floor(x));
-    uint y1 = C_UINT(floor(y));
+    uint x1 = C_UINT(Fmi::floor(x));
+    uint y1 = C_UINT(Fmi::floor(y));
     uint x2 = C_UINT(x1+1);
     uint y2 = C_UINT(y1+1);
 
@@ -5007,7 +5008,7 @@ T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5032,8 +5033,8 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
     double x = grid_i;
     double y = grid_j;
 
-    uint x1 = C_UINT(floor(x));
-    uint y1 = C_UINT(floor(y));
+    uint x1 = C_UINT(Fmi::floor(x));
+    uint y1 = C_UINT(Fmi::floor(y));
     uint x2 = C_UINT(x1+1);
     uint y2 = C_UINT(y1+1);
 
@@ -5048,7 +5049,7 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5070,7 +5071,7 @@ void Message::setPointCacheEnabled(bool enabled)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5101,7 +5102,7 @@ void Message::addCachedValue(uint index,T::ParamValue value) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5136,7 +5137,7 @@ bool Message::getCachedValue(uint index,T::ParamValue& value) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5173,7 +5174,7 @@ void Message::clearCachedValues(uint hitsRequired,uint timePeriod) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5206,7 +5207,7 @@ void Message::incRequestCounter(uint index) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5240,7 +5241,7 @@ ulonglong Message::getRequestCounterKey() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5269,7 +5270,7 @@ void Message::refreshIndexes(std::vector<uint>& indexes)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5279,7 +5280,7 @@ void Message::refreshIndexes(std::vector<uint>& indexes)
 
 bool Message::isRead()
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -5288,7 +5289,7 @@ bool Message::isRead()
 
 void Message::read()
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -5302,7 +5303,7 @@ void Message::read()
 
 void Message::read(MemoryReader& memoryReader)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -5316,7 +5317,7 @@ void Message::read(MemoryReader& memoryReader)
 
 void Message::write(DataWriter& dataWriter)
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -5332,7 +5333,7 @@ void Message::write(DataWriter& dataWriter)
 
 void Message::print(std::ostream& stream,uint level,uint optionFlags) const
 {
-  throw SmartMet::Spine::Exception(BCP,"This method should be implemented in the child class!");
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 

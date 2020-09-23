@@ -1,5 +1,5 @@
 #include "MessageSection.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -57,7 +57,7 @@ void MessageSection::getAttributeList(std::string prefix,T::AttributeList& attri
 
 T::FilePosition MessageSection::getFilePosition() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -71,7 +71,7 @@ T::FilePosition MessageSection::getFilePosition() const
 
 std::uint32_t MessageSection::getSectionLength() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -82,7 +82,7 @@ std::uint32_t MessageSection::getSectionLength() const
 
 std::uint8_t MessageSection::getSectionNumber() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -93,7 +93,7 @@ std::uint8_t MessageSection::getSectionNumber() const
 
 std::string MessageSection::getSectionName() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -109,7 +109,7 @@ std::string MessageSection::getSectionName() const
 
 void MessageSection::print(std::ostream& stream,uint level,uint optionFlags) const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 

@@ -1,5 +1,5 @@
 #include "IrregularLatLonImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/Dimensions.h"
 
 namespace SmartMet
@@ -50,7 +50,7 @@ GridDefinition* IrregularLatLonImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -76,7 +76,7 @@ void IrregularLatLonImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -94,7 +94,7 @@ void IrregularLatLonImpl::read(MemoryReader& memoryReader)
 
 T::Coordinate_svec IrregularLatLonImpl::getGridOriginalCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
+  throw Fmi::Exception(BCP,"The method not implemented!");
 }
 
 
@@ -117,7 +117,7 @@ T::Dimensions IrregularLatLonImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -146,7 +146,7 @@ bool IrregularLatLonImpl::getGridPointByLatLonCoordinates(double lat,double lon,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -169,7 +169,7 @@ void IrregularLatLonImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

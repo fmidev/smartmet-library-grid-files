@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "MatrixDataRepresentation.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -23,7 +23,7 @@ MatrixDataRepresentation::MatrixDataRepresentation() {
     mCoefsFirst = 0;
     mCoefsSecond = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -45,7 +45,7 @@ MatrixDataRepresentation::MatrixDataRepresentation(const MatrixDataRepresentatio
     mCoefsFirst = other.mCoefsFirst;
     mCoefsSecond = other.mCoefsSecond;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void MatrixDataRepresentation::read(MemoryReader &memoryReader) {
     mCoefsFirst = memoryReader.read_float();
     mCoefsSecond = memoryReader.read_float();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -100,7 +100,7 @@ void MatrixDataRepresentation::write(DataWriter &dataWriter) {
     dataWriter << mCoefsFirst;
     dataWriter << mCoefsSecond;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -140,7 +140,7 @@ void MatrixDataRepresentation::getAttributeList(std::string prefix, T::Attribute
     sprintf(name, "%sMatrixDataRepresentation.CoefsSecond", prefix.c_str());
     attributeList.addAttribute(name, toString(mCoefsSecond));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -168,7 +168,7 @@ void MatrixDataRepresentation::print(std::ostream &stream, uint level, uint opti
     stream << space(level) << "- CoefsFirst = " << toString(mCoefsFirst) << "\n";
     stream << space(level) << "- CoefsSecond = " << toString(mCoefsSecond) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -202,7 +202,7 @@ T::Hash MatrixDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -216,7 +216,7 @@ RepresentationDefinition *MatrixDataRepresentation::createRepresentationDefiniti
   try {
     return static_cast<RepresentationDefinition *>(new MatrixDataRepresentation(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -226,7 +226,7 @@ PackingSettings *MatrixDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -236,7 +236,7 @@ const T::UInt8_opt &MatrixDataRepresentation::getMatrixBitmapsPresent() const {
   try {
     return mMatrixBitmapsPresent;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -246,7 +246,7 @@ const T::UInt32_opt &MatrixDataRepresentation::getNumberOfCodedValues() const {
   try {
     return mNumberOfCodedValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -256,7 +256,7 @@ const T::UInt16_opt &MatrixDataRepresentation::getFirstDimension() const {
   try {
     return mFirstDimension;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -266,7 +266,7 @@ const T::UInt16_opt &MatrixDataRepresentation::getSecondDimension() const {
   try {
     return mSecondDimension;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -276,7 +276,7 @@ const T::UInt8_opt &MatrixDataRepresentation::getFirstDimensionCoordinateValueDe
   try {
     return mFirstDimensionCoordinateValueDefinition;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -286,7 +286,7 @@ const T::UInt8_opt &MatrixDataRepresentation::getNC1() const {
   try {
     return mNC1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -296,7 +296,7 @@ const T::UInt8_opt &MatrixDataRepresentation::getSecondDimensionCoordinateValueD
   try {
     return mSecondDimensionCoordinateValueDefinition;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -306,7 +306,7 @@ const T::UInt8_opt &MatrixDataRepresentation::getNC2() const {
   try {
     return mNC2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -316,7 +316,7 @@ const T::UInt8_opt &MatrixDataRepresentation::getFirstDimensionPhysicalSignifica
   try {
     return mFirstDimensionPhysicalSignificance;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -326,7 +326,7 @@ const T::UInt8_opt &MatrixDataRepresentation::getSecondDimensionPhysicalSignific
   try {
     return mSecondDimensionPhysicalSignificance;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -336,7 +336,7 @@ float MatrixDataRepresentation::getCoefsFirst() const {
   try {
     return mCoefsFirst;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -346,7 +346,7 @@ float MatrixDataRepresentation::getCoefsSecond() const {
   try {
     return mCoefsSecond;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -354,7 +354,7 @@ void MatrixDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -362,7 +362,7 @@ void MatrixDataRepresentation::setMatrixBitmapsPresent(T::UInt8_opt matrixBitmap
   try {
     mMatrixBitmapsPresent = matrixBitmapsPresent;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -370,7 +370,7 @@ void MatrixDataRepresentation::setNumberOfCodedValues(T::UInt32_opt numberOfCode
   try {
     mNumberOfCodedValues = numberOfCodedValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -378,7 +378,7 @@ void MatrixDataRepresentation::setFirstDimension(T::UInt16_opt firstDimension) {
   try {
     mFirstDimension = firstDimension;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -386,7 +386,7 @@ void MatrixDataRepresentation::setSecondDimension(T::UInt16_opt secondDimension)
   try {
     mSecondDimension = secondDimension;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -394,7 +394,7 @@ void MatrixDataRepresentation::setFirstDimensionCoordinateValueDefinition(T::UIn
   try {
     mFirstDimensionCoordinateValueDefinition = firstDimensionCoordinateValueDefinition;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -402,7 +402,7 @@ void MatrixDataRepresentation::setNC1(T::UInt8_opt nC1) {
   try {
     mNC1 = nC1;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -410,7 +410,7 @@ void MatrixDataRepresentation::setSecondDimensionCoordinateValueDefinition(T::UI
   try {
     mSecondDimensionCoordinateValueDefinition = secondDimensionCoordinateValueDefinition;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -418,7 +418,7 @@ void MatrixDataRepresentation::setNC2(T::UInt8_opt nC2) {
   try {
     mNC2 = nC2;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -426,7 +426,7 @@ void MatrixDataRepresentation::setFirstDimensionPhysicalSignificance(T::UInt8_op
   try {
     mFirstDimensionPhysicalSignificance = firstDimensionPhysicalSignificance;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -434,7 +434,7 @@ void MatrixDataRepresentation::setSecondDimensionPhysicalSignificance(T::UInt8_o
   try {
     mSecondDimensionPhysicalSignificance = secondDimensionPhysicalSignificance;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -442,7 +442,7 @@ void MatrixDataRepresentation::setCoefsFirst(float coefsFirst) {
   try {
     mCoefsFirst = coefsFirst;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -450,7 +450,7 @@ void MatrixDataRepresentation::setCoefsSecond(float coefsSecond) {
   try {
     mCoefsSecond = coefsSecond;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

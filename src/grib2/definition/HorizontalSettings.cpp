@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "HorizontalSettings.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 HorizontalSettings::HorizontalSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -36,7 +36,7 @@ HorizontalSettings::HorizontalSettings(const HorizontalSettings &other) {
     mScaleFactorOfSecondFixedSurface = other.mScaleFactorOfSecondFixedSurface;
     mScaledValueOfSecondFixedSurface = other.mScaledValueOfSecondFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -59,7 +59,7 @@ void HorizontalSettings::read(MemoryReader &memoryReader) {
     mScaleFactorOfSecondFixedSurface = memoryReader.read_Int8_opt();
     mScaledValueOfSecondFixedSurface = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -77,7 +77,7 @@ void HorizontalSettings::write(DataWriter &dataWriter) {
     dataWriter << mScaleFactorOfSecondFixedSurface;
     dataWriter << mScaledValueOfSecondFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -103,7 +103,7 @@ void HorizontalSettings::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sHorizontalSettings.ScaledValueOfSecondFixedSurface", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfSecondFixedSurface));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -124,7 +124,7 @@ void HorizontalSettings::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "- ScaleFactorOfSecondFixedSurface = " << toString(mScaleFactorOfSecondFixedSurface) << "\n";
     stream << space(level) << "- ScaledValueOfSecondFixedSurface = " << toString(mScaledValueOfSecondFixedSurface) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -147,7 +147,7 @@ T::Hash HorizontalSettings::countHash() {
       boost::hash_combine(seed, *mScaledValueOfSecondFixedSurface);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -157,7 +157,7 @@ const T::UInt8_opt &HorizontalSettings::getTypeOfFirstFixedSurface() const {
   try {
     return mTypeOfFirstFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -167,7 +167,7 @@ const T::Int8_opt &HorizontalSettings::getScaleFactorOfFirstFixedSurface() const
   try {
     return mScaleFactorOfFirstFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -177,7 +177,7 @@ const T::UInt32_opt &HorizontalSettings::getScaledValueOfFirstFixedSurface() con
   try {
     return mScaledValueOfFirstFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -187,7 +187,7 @@ const T::UInt8_opt &HorizontalSettings::getTypeOfSecondFixedSurface() const {
   try {
     return mTypeOfSecondFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -197,7 +197,7 @@ const T::Int8_opt &HorizontalSettings::getScaleFactorOfSecondFixedSurface() cons
   try {
     return mScaleFactorOfSecondFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -207,7 +207,7 @@ const T::UInt32_opt &HorizontalSettings::getScaledValueOfSecondFixedSurface() co
   try {
     return mScaledValueOfSecondFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -215,7 +215,7 @@ void HorizontalSettings::setTypeOfFirstFixedSurface(T::UInt8_opt typeOfFirstFixe
   try {
     mTypeOfFirstFixedSurface = typeOfFirstFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -223,7 +223,7 @@ void HorizontalSettings::setScaleFactorOfFirstFixedSurface(T::Int8_opt scaleFact
   try {
     mScaleFactorOfFirstFixedSurface = scaleFactorOfFirstFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -231,7 +231,7 @@ void HorizontalSettings::setScaledValueOfFirstFixedSurface(T::UInt32_opt scaledV
   try {
     mScaledValueOfFirstFixedSurface = scaledValueOfFirstFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -239,7 +239,7 @@ void HorizontalSettings::setTypeOfSecondFixedSurface(T::UInt8_opt typeOfSecondFi
   try {
     mTypeOfSecondFixedSurface = typeOfSecondFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -247,7 +247,7 @@ void HorizontalSettings::setScaleFactorOfSecondFixedSurface(T::Int8_opt scaleFac
   try {
     mScaleFactorOfSecondFixedSurface = scaleFactorOfSecondFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -255,7 +255,7 @@ void HorizontalSettings::setScaledValueOfSecondFixedSurface(T::UInt32_opt scaled
   try {
     mScaledValueOfSecondFixedSurface = scaledValueOfSecondFixedSurface;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

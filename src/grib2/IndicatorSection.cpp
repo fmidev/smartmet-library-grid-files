@@ -1,7 +1,7 @@
 #include "IndicatorSection.h"
 #include "Message.h"
 #include "../identification/GridDef.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 
 #include <iostream>
@@ -32,7 +32,7 @@ IndicatorSection::IndicatorSection()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -57,7 +57,7 @@ IndicatorSection::IndicatorSection(const IndicatorSection& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -99,7 +99,7 @@ void IndicatorSection::getAttributeList(std::string prefix,T::AttributeList& att
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -121,7 +121,7 @@ void IndicatorSection::setMessagePtr(Message *message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -144,7 +144,7 @@ bool IndicatorSection::getProperty(uint propertyId,long long& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -177,7 +177,7 @@ bool IndicatorSection::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -202,7 +202,7 @@ void IndicatorSection::read(MemoryReader& memoryReader)
     memoryReader >> mDiscipline;
     if (missing(mDiscipline))
     {
-      SmartMet::Spine::Exception exception(BCP,"Discipline cannot be missing!");
+      Fmi::Exception exception(BCP,"Discipline cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
     }
@@ -210,7 +210,7 @@ void IndicatorSection::read(MemoryReader& memoryReader)
     memoryReader >> mEditionNumber;
     if (missing(mEditionNumber))
     {
-      SmartMet::Spine::Exception exception(BCP,"GRIB edition number cannot be missing!");
+      Fmi::Exception exception(BCP,"GRIB edition number cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
     }
@@ -219,7 +219,7 @@ void IndicatorSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -237,11 +237,11 @@ void IndicatorSection::write(DataWriter& dataWriter)
   try
   {
     if (missing(mDiscipline))
-      throw SmartMet::Spine::Exception(BCP,"Discipline cannot be missing!");
+      throw Fmi::Exception(BCP,"Discipline cannot be missing!");
 
     mEditionNumber = 2;
     //if (missing(mEditionNumber))
-    //  throw SmartMet::Spine::Exception(BCP,"GRIB edition number cannot be missing!");
+    //  throw Fmi::Exception(BCP,"GRIB edition number cannot be missing!");
 
 
     mFilePosition = dataWriter.getWritePosition();
@@ -254,7 +254,7 @@ void IndicatorSection::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -275,7 +275,7 @@ T::FilePosition IndicatorSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -296,7 +296,7 @@ std::uint32_t IndicatorSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -314,7 +314,7 @@ std::string IndicatorSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -332,7 +332,7 @@ std::uint8_t IndicatorSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -348,7 +348,7 @@ T::UInt16_opt IndicatorSection::getReserved() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -364,7 +364,7 @@ T::UInt8_opt IndicatorSection::getDiscipline() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -380,7 +380,7 @@ T::UInt8_opt IndicatorSection::getEditionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -396,7 +396,7 @@ std::uint64_t IndicatorSection::getTotalLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -412,7 +412,7 @@ std::string IndicatorSection::getDisciplineString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -428,7 +428,7 @@ void IndicatorSection::setDiscipline(std::uint8_t discipline)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -444,7 +444,7 @@ void IndicatorSection::setEditionNumber(std::uint8_t editionNumber)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -460,7 +460,7 @@ void IndicatorSection::setTotalLength(std::uint64_t totalLength)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -489,7 +489,7 @@ void IndicatorSection::print(std::ostream& stream,uint level,uint optionFlags) c
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

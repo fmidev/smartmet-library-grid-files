@@ -1,5 +1,5 @@
 #include "PhysicalGridFile.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralDefinitions.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
@@ -33,7 +33,7 @@ PhysicalGridFile::PhysicalGridFile()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -55,7 +55,7 @@ PhysicalGridFile::PhysicalGridFile(const PhysicalGridFile& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Copy constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Copy constructor failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ PhysicalGridFile::~PhysicalGridFile()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -93,7 +93,7 @@ bool PhysicalGridFile::isMemoryMapped() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -112,14 +112,14 @@ void PhysicalGridFile::mapToMemory()
       mFileSize = getFileSize(mFileName.c_str());
       if (mFileSize < 0)
       {
-        SmartMet::Spine::Exception exception(BCP,"The file does not exist!");
+        Fmi::Exception exception(BCP,"The file does not exist!");
         exception.addParameter("Filename",mFileName);
         throw exception;
       }
 
       if (mFileSize == 0)
       {
-        SmartMet::Spine::Exception exception(BCP,"The file size is zero!");
+        Fmi::Exception exception(BCP,"The file size is zero!");
         exception.addParameter("Filename",mFileName);
         throw exception;
       }
@@ -147,7 +147,7 @@ void PhysicalGridFile::mapToMemory()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -162,7 +162,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
   {
     if (mMessages.find(messageIndex) != mMessages.end())
     {
-      SmartMet::Spine::Exception exception(BCP,"Message index already exists!");
+      Fmi::Exception exception(BCP,"Message index already exists!");
       exception.addParameter("MessageIndex",Fmi::to_string(messageIndex));
       throw exception;
     }
@@ -201,7 +201,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Filename",mFileName);
     throw exception;
   }
@@ -220,7 +220,7 @@ bool PhysicalGridFile::isPhysical() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -237,7 +237,7 @@ bool PhysicalGridFile::isVirtual() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -257,7 +257,7 @@ long long PhysicalGridFile::getSize()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -277,7 +277,7 @@ char* PhysicalGridFile::getMemoryPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -307,7 +307,7 @@ void PhysicalGridFile::read()
       {
         mFileSize = getFileSize(mFileName.c_str());
         if (mFileSize < 0)
-          throw SmartMet::Spine::Exception(BCP,"The file '" + mFileName + "' does not exist!");
+          throw Fmi::Exception(BCP,"The file '" + mFileName + "' does not exist!");
 
         MappedFileParams params(mFileName);
         params.flags = boost::iostreams::mapped_file::readonly;
@@ -324,7 +324,7 @@ void PhysicalGridFile::read()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Read failed!",nullptr);
+    Fmi::Exception exception(BCP,"Read failed!",nullptr);
     exception.addParameter("File name ",mFileName);
     throw exception;
   }
@@ -361,14 +361,14 @@ void PhysicalGridFile::read(std::string filename)
         mFileSize = getFileSize(mFileName.c_str());
         if (mFileSize < 0)
         {
-          SmartMet::Spine::Exception exception(BCP,"The file does not exist!");
+          Fmi::Exception exception(BCP,"The file does not exist!");
           exception.addParameter("Filename",mFileName);
           throw exception;
         }
 
         if (mFileSize == 0)
         {
-          SmartMet::Spine::Exception exception(BCP,"The file size is zero!");
+          Fmi::Exception exception(BCP,"The file size is zero!");
           exception.addParameter("Filename",mFileName);
           throw exception;
         }
@@ -391,7 +391,7 @@ void PhysicalGridFile::read(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Read failed!",nullptr);
+    Fmi::Exception exception(BCP,"Read failed!",nullptr);
     exception.addParameter("Filename ",filename);
     throw exception;
   }
@@ -449,7 +449,7 @@ void PhysicalGridFile::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Filename",mFileName);
     throw exception;
   }
@@ -481,7 +481,7 @@ void PhysicalGridFile::readGrib1Message(MemoryReader& memoryReader, uint message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Message addition failed!",nullptr);
+    throw Fmi::Exception(BCP,"Message addition failed!",nullptr);
   }
 }
 
@@ -511,7 +511,7 @@ void PhysicalGridFile::readFmig1Message(MemoryReader& memoryReader, uint message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Message addition failed!",nullptr);
+    throw Fmi::Exception(BCP,"Message addition failed!",nullptr);
   }
 }
 
@@ -556,7 +556,7 @@ void PhysicalGridFile::readGrib2Message(MemoryReader& memoryReader, uint message
     {
       if ((memoryReader.getReadPtr() +4) > memoryReader.getEndPtr())
       {
-        std::cout << CODE_LOCATION << ": Memory area end reached!\n";
+        // std::cout << CODE_LOCATION << ": Memory area end reached!\n";
         break;
       }
 
@@ -597,7 +597,7 @@ void PhysicalGridFile::readGrib2Message(MemoryReader& memoryReader, uint message
       if (!message->hasRequiredSections())
       {
         delete message;
-        SmartMet::Spine::Exception exception(BCP,"Incomplete message in the GRIB2 file!");
+        Fmi::Exception exception(BCP,"Incomplete message in the GRIB2 file!");
         exception.addParameter("Message index",Fmi::to_string(messageIndex));
         throw exception;
       }
@@ -608,7 +608,7 @@ void PhysicalGridFile::readGrib2Message(MemoryReader& memoryReader, uint message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Message addition failed!",nullptr);
+    throw Fmi::Exception(BCP,"Message addition failed!",nullptr);
   }
 }
 
@@ -707,7 +707,7 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
       if ((memoryReader.getReadPosition() + totalLength-16) > memoryReader.getDataSize())
       {
         valid = false;
-        //SmartMet::Spine::Exception exception(BCP,"The GRIB size ('totalLength') is out of the limits!");
+        //Fmi::Exception exception(BCP,"The GRIB size ('totalLength') is out of the limits!");
         //exception.addParameter("Read position",uint64_toHex(memoryReader.getReadPosition()));
         //exception.addParameter("totalLength",Fmi::to_string(totalLength));
         //throw exception;
@@ -729,7 +729,7 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Message search failed!",nullptr);
+    throw Fmi::Exception(BCP,"Message search failed!",nullptr);
   }
 }
 
@@ -794,7 +794,7 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -825,7 +825,7 @@ std::size_t PhysicalGridFile::getNumberOfMessages()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -841,7 +841,7 @@ void PhysicalGridFile::write(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Write failed!",nullptr);
+    Fmi::Exception exception(BCP,"Write failed!",nullptr);
     exception.addParameter("File name ",filename);
     throw exception;
   }
@@ -864,7 +864,7 @@ void PhysicalGridFile::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Write failed!",nullptr);
+    Fmi::Exception exception(BCP,"Write failed!",nullptr);
     throw exception;
   }
 }
@@ -917,7 +917,7 @@ uchar PhysicalGridFile::readMessageType(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -956,7 +956,7 @@ ulonglong PhysicalGridFile::searchFileStartPosition(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Message search failed!",nullptr);
+    throw Fmi::Exception(BCP,"Message search failed!",nullptr);
   }
 }
 */
@@ -981,7 +981,7 @@ void PhysicalGridFile::print(std::ostream& stream,uint level,uint optionFlags) c
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

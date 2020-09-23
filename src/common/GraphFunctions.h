@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Exception.h"
 #include "Point.h"
 #include "Coordinate.h"
 #include "Typedefs.h"
 
+#include <macgyver/Exception.h>
 #include <newbase/NFmiSvgPath.h>
 #include <set>
 #include <gdal/ogr_spatialref.h>

@@ -1,5 +1,5 @@
 #include "SpectralDataRepresentationImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {
@@ -47,7 +47,7 @@ RepresentationDefinition* SpectralDataRepresentationImpl::createRepresentationDe
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -73,7 +73,7 @@ void SpectralDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -83,7 +83,7 @@ void SpectralDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 void SpectralDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
-  throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
+  throw Fmi::Exception(BCP,"The method not implemented!");
 }
 
 

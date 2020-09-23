@@ -1,6 +1,6 @@
 #include "GridFile.h"
 #include "PrintOptions.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralDefinitions.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
@@ -37,7 +37,7 @@ GridFile::GridFile()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -65,7 +65,7 @@ GridFile::GridFile(const GridFile& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -88,7 +88,7 @@ GridFile::GridFile(GridFile *gridFile)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -109,7 +109,7 @@ GridFile::~GridFile()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -120,7 +120,7 @@ GridFile::~GridFile()
 
 GridFile* GridFile::createGridFile()
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -142,7 +142,7 @@ uint GridFile::getFileId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -165,7 +165,7 @@ uint GridFile::getGroupFlags() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -188,7 +188,7 @@ uint GridFile::getProducerId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -211,7 +211,7 @@ uint GridFile::getGenerationId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -233,7 +233,7 @@ time_t GridFile::getCheckTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -255,7 +255,7 @@ time_t GridFile::getModificationTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -277,7 +277,7 @@ std::string GridFile::getDeletionTimeStr() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -294,7 +294,7 @@ time_t GridFile::getDeletionTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -316,7 +316,7 @@ uint GridFile::getSourceId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -333,7 +333,7 @@ char* GridFile::getMemoryPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -350,7 +350,7 @@ long long GridFile::getSize()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -366,7 +366,7 @@ void GridFile::addDependence(uint fileId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -383,7 +383,7 @@ bool GridFile::hasDependence(uint fileId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -401,7 +401,7 @@ void GridFile::addUser(uint fileId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -418,7 +418,7 @@ void GridFile::deleteUsers()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -435,7 +435,7 @@ void GridFile::getUsers(std::set<uint>& userList)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -454,7 +454,7 @@ bool GridFile::isMemoryMapped() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -472,7 +472,7 @@ void GridFile::mapToMemory()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -491,7 +491,7 @@ bool GridFile::isPhysical() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -510,7 +510,7 @@ bool GridFile::isVirtual() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -532,7 +532,7 @@ void GridFile::setCheckTime(time_t checkTime)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -555,7 +555,7 @@ void GridFile::setFileId(uint fileId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -578,7 +578,7 @@ void GridFile::setDeletionTime(std::string deletionTime)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -601,7 +601,7 @@ void GridFile::setDeletionTime(time_t deletionTime)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -624,7 +624,7 @@ void GridFile::setGroupFlags(uint groupFlags)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -647,7 +647,7 @@ void GridFile::setProducerId(uint producerId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -671,7 +671,7 @@ void GridFile::setGenerationId(uint generationId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -695,7 +695,7 @@ void GridFile::setFileName(std::string fileName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -718,7 +718,7 @@ void GridFile::setSourceId(uint sourceId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -760,7 +760,7 @@ Message* GridFile::newMessage(T::FileType fileType)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -778,7 +778,7 @@ Message* GridFile::newMessage(uint messageIndex,MessageInfo& messageInfo)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -792,7 +792,7 @@ void GridFile::addMessage(Message *message)
   try
   {
     if (message == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'message' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'message' parameter points to nullptr!");
 
     message->setGridFilePtr(this);
     message->setMessageIndex(mMessages.size());
@@ -801,7 +801,7 @@ void GridFile::addMessage(Message *message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -817,7 +817,7 @@ void GridFile::read(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Read failed!",nullptr);
+    Fmi::Exception exception(BCP,"Read failed!",nullptr);
     exception.addParameter("File name ",filename);
     throw exception;
   }
@@ -835,7 +835,7 @@ void GridFile::write(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Write failed!",nullptr);
+    Fmi::Exception exception(BCP,"Write failed!",nullptr);
     exception.addParameter("File name ",filename);
     throw exception;
   }
@@ -858,7 +858,7 @@ void GridFile::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Write failed!",nullptr);
+    Fmi::Exception exception(BCP,"Write failed!",nullptr);
     throw exception;
   }
 }
@@ -881,7 +881,7 @@ std::string GridFile::getFileName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -904,7 +904,7 @@ std::size_t GridFile::getNumberOfMessages()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -924,11 +924,11 @@ GRID::Message* GridFile::getMessageByIndex(std::size_t index)
   FUNCTION_TRACE
   try
   {
-    throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+    throw Fmi::Exception(BCP,"Not implemented!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -951,7 +951,7 @@ T::FileType GridFile::getFileType() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -974,7 +974,7 @@ std::string GridFile::getFileTypeString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -995,7 +995,7 @@ void GridFile::clearCachedValues(uint hitsRequired,uint timePeriod) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1012,7 +1012,7 @@ bool GridFile::getPointCacheEnabled()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1029,7 +1029,7 @@ void GridFile::setPointCacheEnabled(bool enabled)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1070,7 +1070,7 @@ void GridFile::print(std::ostream& stream,uint level,uint optionFlags) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

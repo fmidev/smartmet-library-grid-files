@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Exception.h"
 #include "Typedefs.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {
@@ -53,11 +53,11 @@ class BitArrayReader
       try
       {
         if (mData == nullptr)
-          throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
+          throw Fmi::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
         if ((mReadPosition + 1) > mNumberOfBits)
         {
-          SmartMet::Spine::Exception exception(BCP,"Cannot read a bit outside of the memory area !");
+          Fmi::Exception exception(BCP,"Cannot read a bit outside of the memory area !");
           exception.addParameter("Read position",std::to_string(mReadPosition));
           exception.addParameter("Number of bits",std::to_string(mNumberOfBits));
           throw exception;
@@ -75,7 +75,7 @@ class BitArrayReader
       }
       catch (...)
       {
-        throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+        throw Fmi::Exception(BCP,"Operation failed!",nullptr);
       }
     }
 
@@ -95,7 +95,7 @@ class BitArrayReader
       }
       catch (...)
       {
-        throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+        throw Fmi::Exception(BCP,"Operation failed!",nullptr);
       }
     }
 
@@ -112,18 +112,18 @@ class BitArrayReader
       try
       {
         if (mData == nullptr)
-          throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
+          throw Fmi::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
         if (numberOfBits > 32)
         {
-          SmartMet::Spine::Exception exception(BCP,"Cannot read more than 32 bits into 'unsigned int'!");
+          Fmi::Exception exception(BCP,"Cannot read more than 32 bits into 'unsigned int'!");
           exception.addParameter("Requested bits",std::to_string(numberOfBits));
           throw exception;
         }
 
         if ((mReadPosition + numberOfBits) > mNumberOfBits)
         {
-          SmartMet::Spine::Exception exception(BCP,"Cannot read bits outside of the memory area !");
+          Fmi::Exception exception(BCP,"Cannot read bits outside of the memory area !");
           exception.addParameter("Read position",std::to_string(mReadPosition));
           exception.addParameter("Number of bits",std::to_string(mNumberOfBits));
           exception.addParameter("Requested bits",std::to_string(numberOfBits));
@@ -141,7 +141,7 @@ class BitArrayReader
       }
       catch (...)
       {
-        throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+        throw Fmi::Exception(BCP,"Operation failed!",nullptr);
       }
     }
 

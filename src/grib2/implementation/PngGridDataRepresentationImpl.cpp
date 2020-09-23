@@ -1,5 +1,5 @@
 #include "PngGridDataRepresentationImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/BitArrayReader.h"
 #include "../Message.h"
@@ -78,7 +78,7 @@ RepresentationDefinition* PngGridDataRepresentationImpl::createRepresentationDef
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -104,7 +104,7 @@ void PngGridDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -123,7 +123,7 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
     std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
     //if (data == nullptr)
-      //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
+      //throw Fmi::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     long bits_per_value = *mPacking.getBitsPerValue();
     double reference_value = mPacking.getReferenceValue();
@@ -161,33 +161,33 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
 
     if (png_sig_cmp(data,0,8) != 0)
     {
-      throw SmartMet::Spine::Exception(BCP,"Invalid PNG!");
+      throw Fmi::Exception(BCP,"Invalid PNG!");
     }
 
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
     if (png == nullptr)
     {
-      throw SmartMet::Spine::Exception(BCP,"PNG decoding failed!");
+      throw Fmi::Exception(BCP,"PNG decoding failed!");
     }
 
     png_infop info = png_create_info_struct(png);
     if (info == nullptr)
     {
       png_destroy_read_struct(&png,&info,nullptr);
-      throw SmartMet::Spine::Exception(BCP,"PNG decoding error!");
+      throw Fmi::Exception(BCP,"PNG decoding error!");
     }
 
     png_infop theEnd = png_create_info_struct(png);
     if (theEnd == nullptr)
     {
       png_destroy_read_struct(&png,&info,&theEnd);
-      throw SmartMet::Spine::Exception(BCP,"PNG decoding error!");
+      throw Fmi::Exception(BCP,"PNG decoding error!");
     }
 
     if (setjmp(png_jmpbuf(png)))
     {
       png_destroy_read_struct(&png,&info,&theEnd);
-      throw SmartMet::Spine::Exception(BCP,"PNG decoding error!");
+      throw Fmi::Exception(BCP,"PNG decoding error!");
     }
 
     png_uint_32 width = 0;
@@ -230,7 +230,7 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

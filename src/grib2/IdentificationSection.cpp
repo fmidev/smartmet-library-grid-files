@@ -1,7 +1,7 @@
 #include "IdentificationSection.h"
 #include "Message.h"
 #include "../identification/GridDef.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 
 #include <iostream>
@@ -28,7 +28,7 @@ IdentificationSection::IdentificationSection()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -73,7 +73,7 @@ IdentificationSection::IdentificationSection(const IdentificationSection& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -96,7 +96,7 @@ IdentificationSection::~IdentificationSection()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -168,7 +168,7 @@ void IdentificationSection::getAttributeList(std::string prefix,T::AttributeList
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -190,7 +190,7 @@ void IdentificationSection::setMessagePtr(Message *message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -267,7 +267,7 @@ bool IdentificationSection::getProperty(uint propertyId,long long& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -344,7 +344,7 @@ bool IdentificationSection::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -368,7 +368,7 @@ void IdentificationSection::read(MemoryReader& memoryReader)
     memoryReader >> mSectionLength;
     if (missing(mSectionLength))
     {
-      SmartMet::Spine::Exception exception(BCP,"Section length cannot be missing!");
+      Fmi::Exception exception(BCP,"Section length cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-4));
       throw exception;
     }
@@ -378,7 +378,7 @@ void IdentificationSection::read(MemoryReader& memoryReader)
     memoryReader >> mCentre;
     if (missing(mCentre))
     {
-      SmartMet::Spine::Exception exception(BCP,"GRIB centre cannot be missing!");
+      Fmi::Exception exception(BCP,"GRIB centre cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-2));
       throw exception;
     }
@@ -391,7 +391,7 @@ void IdentificationSection::read(MemoryReader& memoryReader)
     memoryReader >> mYear;
     if (missing(mYear))
     {
-      SmartMet::Spine::Exception exception(BCP,"GRIB data year cannot be missing!");
+      Fmi::Exception exception(BCP,"GRIB data year cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-2));
       throw exception;
     }
@@ -399,7 +399,7 @@ void IdentificationSection::read(MemoryReader& memoryReader)
     memoryReader >> mMonth;
     if (missing(mMonth))
     {
-      SmartMet::Spine::Exception exception(BCP,"GRIB data month cannot be missing!");
+      Fmi::Exception exception(BCP,"GRIB data month cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
     }
@@ -407,7 +407,7 @@ void IdentificationSection::read(MemoryReader& memoryReader)
     memoryReader >> mDay;
     if (missing(mDay))
     {
-      SmartMet::Spine::Exception exception(BCP,"GRIB data day cannot be missing!");
+      Fmi::Exception exception(BCP,"GRIB data day cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
     }
@@ -415,7 +415,7 @@ void IdentificationSection::read(MemoryReader& memoryReader)
     memoryReader >> mHour;
     if (missing(mHour))
     {
-      SmartMet::Spine::Exception exception(BCP,"GRIB data hour cannot be missing!");
+      Fmi::Exception exception(BCP,"GRIB data hour cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
     }
@@ -423,7 +423,7 @@ void IdentificationSection::read(MemoryReader& memoryReader)
     memoryReader >> mMinute;
     if (missing(mMinute))
     {
-      SmartMet::Spine::Exception exception(BCP,"GRIB data minute cannot be missing!");
+      Fmi::Exception exception(BCP,"GRIB data minute cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
     }
@@ -431,7 +431,7 @@ void IdentificationSection::read(MemoryReader& memoryReader)
     memoryReader >> mSecond;
     if (missing(mSecond))
     {
-      SmartMet::Spine::Exception exception(BCP,"GRIB data second cannot be missing!");
+      Fmi::Exception exception(BCP,"GRIB data second cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
     }
@@ -454,7 +454,7 @@ void IdentificationSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -474,25 +474,25 @@ void IdentificationSection::write(DataWriter& dataWriter)
     const std::size_t section_fixed_size = 21;
 
     if (missing(mCentre))
-      throw SmartMet::Spine::Exception(BCP,"GRIB centre cannot be missing!");
+      throw Fmi::Exception(BCP,"GRIB centre cannot be missing!");
 
     if (missing(mYear))
-      throw SmartMet::Spine::Exception(BCP,"GRIB data year cannot be missing!");
+      throw Fmi::Exception(BCP,"GRIB data year cannot be missing!");
 
     if (missing(mMonth))
-      throw SmartMet::Spine::Exception(BCP,"GRIB data month cannot be missing!");
+      throw Fmi::Exception(BCP,"GRIB data month cannot be missing!");
 
     if (missing(mDay))
-      throw SmartMet::Spine::Exception(BCP,"GRIB data day cannot be missing!");
+      throw Fmi::Exception(BCP,"GRIB data day cannot be missing!");
 
     if (missing(mHour))
-      throw SmartMet::Spine::Exception(BCP,"GRIB data hour cannot be missing!");
+      throw Fmi::Exception(BCP,"GRIB data hour cannot be missing!");
 
     if (missing(mMinute))
-      throw SmartMet::Spine::Exception(BCP,"GRIB data minute cannot be missing!");
+      throw Fmi::Exception(BCP,"GRIB data minute cannot be missing!");
 
     if (missing(mSecond))
-      throw SmartMet::Spine::Exception(BCP,"GRIB data second cannot be missing!");
+      throw Fmi::Exception(BCP,"GRIB data second cannot be missing!");
 
     mFilePosition = dataWriter.getWritePosition();
     mSectionLength = section_fixed_size + mDataSize;
@@ -519,7 +519,7 @@ void IdentificationSection::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -540,7 +540,7 @@ T::FilePosition IdentificationSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -564,7 +564,7 @@ std::uint32_t IdentificationSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -582,7 +582,7 @@ std::string IdentificationSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -600,7 +600,7 @@ std::uint8_t IdentificationSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -619,7 +619,7 @@ T::UInt8_opt IdentificationSection::getNumberOfSection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -643,7 +643,7 @@ T::TimeString IdentificationSection::getReferenceTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -658,7 +658,7 @@ T::UInt16_opt IdentificationSection::getCentre() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -674,7 +674,7 @@ T::UInt16_opt IdentificationSection::getSubCentre() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -691,7 +691,7 @@ T::UInt8_opt IdentificationSection::getTablesVersion() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -707,7 +707,7 @@ T::UInt8_opt IdentificationSection::getLocalTablesVersion() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -723,7 +723,7 @@ T::UInt8_opt IdentificationSection::getSignificanceOfReferenceTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -739,7 +739,7 @@ T::UInt16_opt IdentificationSection::getYear() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -755,7 +755,7 @@ T::UInt8_opt IdentificationSection::getMonth() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -771,7 +771,7 @@ T::UInt8_opt IdentificationSection::getDay() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -787,7 +787,7 @@ T::UInt8_opt IdentificationSection::getHour() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -803,7 +803,7 @@ T::UInt8_opt IdentificationSection::getMinute() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -819,7 +819,7 @@ T::UInt8_opt IdentificationSection::getSecond() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -835,7 +835,7 @@ T::UInt8_opt IdentificationSection::getProductionStatusOfProcessedData() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -851,7 +851,7 @@ T::UInt8_opt IdentificationSection::getTypeOfProcessedData() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -867,7 +867,7 @@ T::Data_ptr IdentificationSection::getReservedDataPtr() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -883,7 +883,7 @@ void IdentificationSection::setCentre(T::UInt16_opt centre)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -899,7 +899,7 @@ void IdentificationSection::setSubCentre(T::UInt16_opt subCentre)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -915,7 +915,7 @@ void IdentificationSection::setTablesVersion(T::UInt8_opt tablesVersion)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -931,7 +931,7 @@ void IdentificationSection::setLocalTablesVersion(T::UInt8_opt localTablesVersio
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -947,7 +947,7 @@ void IdentificationSection::setSignificanceOfReferenceTime(T::UInt8_opt signific
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -963,7 +963,7 @@ void IdentificationSection::setYear(T::UInt16_opt year)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -977,7 +977,7 @@ void IdentificationSection::setMonth(T::UInt8_opt month)
   {
     if (month  &&  ((*month) < 1 || (*month) > 12))
     {
-      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      Fmi::Exception exception(BCP,"The given value is not in the acceptable value range!");
       exception.addParameter("Value",toString(month));
       exception.addParameter("Value Range","1..12");
       throw exception;
@@ -987,7 +987,7 @@ void IdentificationSection::setMonth(T::UInt8_opt month)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1001,7 +1001,7 @@ void IdentificationSection::setDay(T::UInt8_opt day)
   {
     if (day  &&  ((*day) < 1 ||  (*day) > 31))
     {
-      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      Fmi::Exception exception(BCP,"The given value is not in the acceptable value range!");
       exception.addParameter("Value",toString(day));
       exception.addParameter("Value Range","1..31");
       throw exception;
@@ -1011,7 +1011,7 @@ void IdentificationSection::setDay(T::UInt8_opt day)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1025,7 +1025,7 @@ void IdentificationSection::setHour(T::UInt8_opt hour)
   {
     if (hour  && (*hour) > 23)
     {
-      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      Fmi::Exception exception(BCP,"The given value is not in the acceptable value range!");
       exception.addParameter("Value",toString(hour));
       exception.addParameter("Value Range","0..23");
       throw exception;
@@ -1035,7 +1035,7 @@ void IdentificationSection::setHour(T::UInt8_opt hour)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1049,7 +1049,7 @@ void IdentificationSection::setMinute(T::UInt8_opt minute)
   {
     if (minute && (*minute) > 59)
     {
-      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      Fmi::Exception exception(BCP,"The given value is not in the acceptable value range!");
       exception.addParameter("Value",toString(minute));
       exception.addParameter("Value Range","0..59");
       throw exception;
@@ -1059,7 +1059,7 @@ void IdentificationSection::setMinute(T::UInt8_opt minute)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1073,7 +1073,7 @@ void IdentificationSection::setSecond(T::UInt8_opt second)
   {
     if (second  && (*second) > 59)
     {
-      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      Fmi::Exception exception(BCP,"The given value is not in the acceptable value range!");
       exception.addParameter("Value",toString(second));
       exception.addParameter("Value Range","0..59");
       throw exception;
@@ -1083,7 +1083,7 @@ void IdentificationSection::setSecond(T::UInt8_opt second)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1099,7 +1099,7 @@ void IdentificationSection::setProductionStatusOfProcessedData(T::UInt8_opt prod
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1115,7 +1115,7 @@ void IdentificationSection::setTypeOfProcessedData(T::UInt8_opt typeOfProcessedD
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1155,7 +1155,7 @@ void IdentificationSection::print(std::ostream& stream,uint level,uint optionFla
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

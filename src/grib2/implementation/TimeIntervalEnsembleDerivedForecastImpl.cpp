@@ -1,5 +1,5 @@
 #include "TimeIntervalEnsembleDerivedForecastImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 
 namespace SmartMet
@@ -49,7 +49,7 @@ ProductDefinition* TimeIntervalEnsembleDerivedForecastImpl::createProductDefinit
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void TimeIntervalEnsembleDerivedForecastImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -99,7 +99,7 @@ T::ParamLevel TimeIntervalEnsembleDerivedForecastImpl::getGribParameterLevel() c
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -123,7 +123,7 @@ T::ParamLevelId TimeIntervalEnsembleDerivedForecastImpl::getGribParameterLevelId
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

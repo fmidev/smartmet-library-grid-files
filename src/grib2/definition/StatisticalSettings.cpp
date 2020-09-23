@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "StatisticalSettings.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 StatisticalSettings::StatisticalSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -44,7 +44,7 @@ StatisticalSettings::StatisticalSettings(const StatisticalSettings &other) {
     mIndicatorOfUnitForTimeIncrement = other.mIndicatorOfUnitForTimeIncrement;
     mTimeIncrement = other.mTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void StatisticalSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitForTimeIncrement = memoryReader.read_UInt8_opt();
     mTimeIncrement = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -101,7 +101,7 @@ void StatisticalSettings::write(DataWriter &dataWriter) {
     dataWriter << mIndicatorOfUnitForTimeIncrement;
     dataWriter << mTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -143,7 +143,7 @@ void StatisticalSettings::getAttributeList(std::string prefix, T::AttributeList 
     sprintf(name, "%sStatisticalSettings.TimeIncrement", prefix.c_str());
     attributeList.addAttribute(name, toString(mTimeIncrement));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -172,7 +172,7 @@ void StatisticalSettings::print(std::ostream &stream, uint level, uint optionFla
     stream << space(level) << "- IndicatorOfUnitForTimeIncrement = " << toString(mIndicatorOfUnitForTimeIncrement) << "\n";
     stream << space(level) << "- TimeIncrement = " << toString(mTimeIncrement) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -211,7 +211,7 @@ T::Hash StatisticalSettings::countHash() {
       boost::hash_combine(seed, *mTimeIncrement);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -221,7 +221,7 @@ const T::UInt16_opt &StatisticalSettings::getYearOfEndOfOverallTimeInterval() co
   try {
     return mYearOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -231,7 +231,7 @@ const T::UInt8_opt &StatisticalSettings::getMonthOfEndOfOverallTimeInterval() co
   try {
     return mMonthOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -241,7 +241,7 @@ const T::UInt8_opt &StatisticalSettings::getDayOfEndOfOverallTimeInterval() cons
   try {
     return mDayOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -251,7 +251,7 @@ const T::UInt8_opt &StatisticalSettings::getHourOfEndOfOverallTimeInterval() con
   try {
     return mHourOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -261,7 +261,7 @@ const T::UInt8_opt &StatisticalSettings::getMinuteOfEndOfOverallTimeInterval() c
   try {
     return mMinuteOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -271,7 +271,7 @@ const T::UInt8_opt &StatisticalSettings::getSecondOfEndOfOverallTimeInterval() c
   try {
     return mSecondOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -281,7 +281,7 @@ const T::UInt8_opt &StatisticalSettings::getNumberOfTimeRange() const {
   try {
     return mNumberOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -291,7 +291,7 @@ const T::UInt32_opt &StatisticalSettings::getNumberOfMissingInStatisticalProcess
   try {
     return mNumberOfMissingInStatisticalProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -301,7 +301,7 @@ const T::UInt8_opt &StatisticalSettings::getTypeOfStatisticalProcessing() const 
   try {
     return mTypeOfStatisticalProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -311,7 +311,7 @@ const T::UInt8_opt &StatisticalSettings::getTypeOfTimeIncrement() const {
   try {
     return mTypeOfTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -321,7 +321,7 @@ const T::UInt8_opt &StatisticalSettings::getIndicatorOfUnitForTimeRange() const 
   try {
     return mIndicatorOfUnitForTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -331,7 +331,7 @@ const T::UInt32_opt &StatisticalSettings::getLengthOfTimeRange() const {
   try {
     return mLengthOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -341,7 +341,7 @@ const T::UInt8_opt &StatisticalSettings::getIndicatorOfUnitForTimeIncrement() co
   try {
     return mIndicatorOfUnitForTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -351,7 +351,7 @@ const T::UInt32_opt &StatisticalSettings::getTimeIncrement() const {
   try {
     return mTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -359,7 +359,7 @@ void StatisticalSettings::setYearOfEndOfOverallTimeInterval(T::UInt16_opt yearOf
   try {
     mYearOfEndOfOverallTimeInterval = yearOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -367,7 +367,7 @@ void StatisticalSettings::setMonthOfEndOfOverallTimeInterval(T::UInt8_opt monthO
   try {
     mMonthOfEndOfOverallTimeInterval = monthOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -375,7 +375,7 @@ void StatisticalSettings::setDayOfEndOfOverallTimeInterval(T::UInt8_opt dayOfEnd
   try {
     mDayOfEndOfOverallTimeInterval = dayOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -383,7 +383,7 @@ void StatisticalSettings::setHourOfEndOfOverallTimeInterval(T::UInt8_opt hourOfE
   try {
     mHourOfEndOfOverallTimeInterval = hourOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -391,7 +391,7 @@ void StatisticalSettings::setMinuteOfEndOfOverallTimeInterval(T::UInt8_opt minut
   try {
     mMinuteOfEndOfOverallTimeInterval = minuteOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -399,7 +399,7 @@ void StatisticalSettings::setSecondOfEndOfOverallTimeInterval(T::UInt8_opt secon
   try {
     mSecondOfEndOfOverallTimeInterval = secondOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -407,7 +407,7 @@ void StatisticalSettings::setNumberOfTimeRange(T::UInt8_opt numberOfTimeRange) {
   try {
     mNumberOfTimeRange = numberOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -415,7 +415,7 @@ void StatisticalSettings::setNumberOfMissingInStatisticalProcess(T::UInt32_opt n
   try {
     mNumberOfMissingInStatisticalProcess = numberOfMissingInStatisticalProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -423,7 +423,7 @@ void StatisticalSettings::setTypeOfStatisticalProcessing(T::UInt8_opt typeOfStat
   try {
     mTypeOfStatisticalProcessing = typeOfStatisticalProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -431,7 +431,7 @@ void StatisticalSettings::setTypeOfTimeIncrement(T::UInt8_opt typeOfTimeIncremen
   try {
     mTypeOfTimeIncrement = typeOfTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -439,7 +439,7 @@ void StatisticalSettings::setIndicatorOfUnitForTimeRange(T::UInt8_opt indicatorO
   try {
     mIndicatorOfUnitForTimeRange = indicatorOfUnitForTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -447,7 +447,7 @@ void StatisticalSettings::setLengthOfTimeRange(T::UInt32_opt lengthOfTimeRange) 
   try {
     mLengthOfTimeRange = lengthOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -455,7 +455,7 @@ void StatisticalSettings::setIndicatorOfUnitForTimeIncrement(T::UInt8_opt indica
   try {
     mIndicatorOfUnitForTimeIncrement = indicatorOfUnitForTimeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -463,7 +463,7 @@ void StatisticalSettings::setTimeIncrement(T::UInt32_opt timeIncrement) {
   try {
     mTimeIncrement = timeIncrement;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

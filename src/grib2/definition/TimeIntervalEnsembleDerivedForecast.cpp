@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "TimeIntervalEnsembleDerivedForecast.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 TimeIntervalEnsembleDerivedForecast::TimeIntervalEnsembleDerivedForecast() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -34,7 +34,7 @@ TimeIntervalEnsembleDerivedForecast::TimeIntervalEnsembleDerivedForecast(const T
     mDerived = other.mDerived;
     mStatistical = other.mStatistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -55,7 +55,7 @@ void TimeIntervalEnsembleDerivedForecast::read(MemoryReader &memoryReader) {
     mDerived.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -71,7 +71,7 @@ void TimeIntervalEnsembleDerivedForecast::write(DataWriter &dataWriter) {
     mDerived.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -93,7 +93,7 @@ void TimeIntervalEnsembleDerivedForecast::getAttributeList(std::string prefix, T
     sprintf(name, "%sTimeIntervalEnsembleDerivedForecast.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -112,7 +112,7 @@ void TimeIntervalEnsembleDerivedForecast::print(std::ostream &stream, uint level
     mDerived.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -127,7 +127,7 @@ T::Hash TimeIntervalEnsembleDerivedForecast::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -141,7 +141,7 @@ ProductDefinition *TimeIntervalEnsembleDerivedForecast::createProductDefinition(
   try {
     return static_cast<ProductDefinition *>(new TimeIntervalEnsembleDerivedForecast(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -151,7 +151,7 @@ ParameterSettings *TimeIntervalEnsembleDerivedForecast::getParameter() const {
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -161,7 +161,7 @@ HorizontalSettings *TimeIntervalEnsembleDerivedForecast::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -171,7 +171,7 @@ DerivedSettings *TimeIntervalEnsembleDerivedForecast::getDerived() const {
   try {
     return static_cast<DerivedSettings *>(&mDerived);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -181,7 +181,7 @@ StatisticalSettings *TimeIntervalEnsembleDerivedForecast::getStatistical() const
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -189,7 +189,7 @@ void TimeIntervalEnsembleDerivedForecast::setParameter(ParameterSettings &parame
   try {
     mParameter = parameter;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -197,7 +197,7 @@ void TimeIntervalEnsembleDerivedForecast::setHorizontal(HorizontalSettings &hori
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -205,7 +205,7 @@ void TimeIntervalEnsembleDerivedForecast::setDerived(DerivedSettings &derived) {
   try {
     mDerived = derived;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -213,7 +213,7 @@ void TimeIntervalEnsembleDerivedForecast::setStatistical(StatisticalSettings &st
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

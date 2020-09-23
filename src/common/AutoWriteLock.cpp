@@ -1,5 +1,5 @@
 #include "AutoWriteLock.h"
-#include "Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -10,14 +10,14 @@ AutoWriteLock::AutoWriteLock(ModificationLock *modificationLock)
   try
   {
     if (modificationLock == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'modificationLock' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'modificationLock' parameter points to nullptr!");
 
     mModificationLock = modificationLock;
     mModificationLock->writeLock();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -30,14 +30,14 @@ AutoWriteLock::AutoWriteLock(ModificationLock *modificationLock,const char *file
   try
   {
     if (modificationLock == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'modificationLock' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'modificationLock' parameter points to nullptr!");
 
     mModificationLock = modificationLock;
     mModificationLock->writeLock(filename,line);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -54,7 +54,7 @@ AutoWriteLock::~AutoWriteLock()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }

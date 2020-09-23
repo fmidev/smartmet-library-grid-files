@@ -1,5 +1,5 @@
 #include "LambertAzimuthalEqualAreaImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/CoordinateConversions.h"
@@ -33,7 +33,7 @@ LambertAzimuthalEqualAreaImpl::LambertAzimuthalEqualAreaImpl()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -69,7 +69,7 @@ LambertAzimuthalEqualAreaImpl::~LambertAzimuthalEqualAreaImpl()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -88,7 +88,7 @@ GridDefinition* LambertAzimuthalEqualAreaImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -114,7 +114,7 @@ void LambertAzimuthalEqualAreaImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -177,7 +177,7 @@ void LambertAzimuthalEqualAreaImpl::init() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -229,7 +229,7 @@ T::Coordinate_svec LambertAzimuthalEqualAreaImpl::getGridOriginalCoordinates() c
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -293,7 +293,7 @@ std::string LambertAzimuthalEqualAreaImpl::getGridGeometryString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -319,7 +319,7 @@ T::Dimensions LambertAzimuthalEqualAreaImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -335,7 +335,7 @@ std::size_t LambertAzimuthalEqualAreaImpl::getGridColumnCount() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -350,7 +350,7 @@ std::size_t LambertAzimuthalEqualAreaImpl::getGridRowCount() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -377,7 +377,7 @@ bool LambertAzimuthalEqualAreaImpl::getGridPointByLatLonCoordinates(double lat,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -395,7 +395,7 @@ bool LambertAzimuthalEqualAreaImpl::getGridMetricCellSize(double& width,double& 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -435,7 +435,7 @@ bool LambertAzimuthalEqualAreaImpl::getGridOriginalCoordinatesByGridPosition(dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -482,7 +482,7 @@ bool LambertAzimuthalEqualAreaImpl::getGridPointByOriginalCoordinates(double x,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -510,7 +510,7 @@ bool LambertAzimuthalEqualAreaImpl::reverseXDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -537,7 +537,7 @@ bool LambertAzimuthalEqualAreaImpl::reverseYDirection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -554,11 +554,11 @@ void LambertAzimuthalEqualAreaImpl::initSpatialReference()
 
     auto dfCenterLat = mStandardParallelInMicrodegrees;
     if (!dfCenterLat)
-      throw SmartMet::Spine::Exception(BCP,"The 'standardParallelInMicrodegrees' value is missing!");
+      throw Fmi::Exception(BCP,"The 'standardParallelInMicrodegrees' value is missing!");
 
     auto dfCenterLong = mCentralLongitudeInMicrodegrees;
     if (!dfCenterLong)
-      throw SmartMet::Spine::Exception(BCP,"The 'centralLongitudeInMicrodegrees' value is missing!");
+      throw Fmi::Exception(BCP,"The 'centralLongitudeInMicrodegrees' value is missing!");
 
 
     // ### Set geographic coordinate system.
@@ -588,7 +588,7 @@ void LambertAzimuthalEqualAreaImpl::initSpatialReference()
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
-      SmartMet::Spine::Exception exception(BCP,"The spatial reference is not valid!");
+      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
@@ -601,15 +601,15 @@ void LambertAzimuthalEqualAreaImpl::initSpatialReference()
 
     mCt_latlon2lambert = OGRCreateCoordinateTransformation(&sr_latlon,mSr_lambertConformal);
     if (mCt_latlon2lambert == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
 
     mCt_lambert2latlon = OGRCreateCoordinateTransformation(mSr_lambertConformal,&sr_latlon);
     if (mCt_lambert2latlon == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -667,7 +667,7 @@ void LambertAzimuthalEqualAreaImpl::print(std::ostream& stream,uint level,uint o
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

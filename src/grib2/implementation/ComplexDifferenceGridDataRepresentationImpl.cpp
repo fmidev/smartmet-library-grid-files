@@ -1,6 +1,6 @@
 #include "ComplexDifferenceGridDataRepresentationImpl.h"
 #include "../Message.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/BitArrayReader.h"
@@ -52,7 +52,7 @@ RepresentationDefinition* ComplexDifferenceGridDataRepresentationImpl::createRep
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -78,7 +78,7 @@ void ComplexDifferenceGridDataRepresentationImpl::read(MemoryReader& memoryReade
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -97,7 +97,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
     //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
     //if (data == nullptr)
-      //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
+      //throw Fmi::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
@@ -474,7 +474,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

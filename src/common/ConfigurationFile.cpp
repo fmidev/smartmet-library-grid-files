@@ -1,7 +1,8 @@
 #include "ConfigurationFile.h"
-#include "Exception.h"
 #include "GeneralFunctions.h"
 #include "ShowFunction.h"
+
+#include <macgyver/Exception.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,7 +29,7 @@ ConfigurationFile::ConfigurationFile()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -47,7 +48,7 @@ ConfigurationFile::ConfigurationFile(const ConfigurationFile& configurationFile)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Copy constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Copy constructor failed!",nullptr);
   }
 }
 
@@ -64,7 +65,7 @@ ConfigurationFile::ConfigurationFile(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Constructor failed!",nullptr);
+    Fmi::Exception exception(BCP,"Constructor failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -82,7 +83,7 @@ ConfigurationFile::~ConfigurationFile()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -115,7 +116,7 @@ void ConfigurationFile::addConfigurationFile(std::string filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Configuration file addition failed!",nullptr);
+    throw Fmi::Exception(BCP,"Configuration file addition failed!",nullptr);
   }
 }
 
@@ -133,7 +134,7 @@ void ConfigurationFile::clear()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Clear operation failed!",nullptr);
+    Fmi::Exception exception(BCP,"Clear operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -156,7 +157,7 @@ void ConfigurationFile::readFile(std::string filename)
     FILE *file = fopen(filename.c_str(),"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open the configuration file!");
+      Fmi::Exception exception(BCP,"Cannot open the configuration file!");
       exception.addParameter("Configuration file",filename);
       throw exception;
     }
@@ -202,7 +203,7 @@ void ConfigurationFile::readFile(std::string filename)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Configuration file reading failed!",nullptr);
+    Fmi::Exception exception(BCP,"Configuration file reading failed!",nullptr);
     if (mFilename != filename)
       exception.addParameter("Main configuration file",mFilename);
     exception.addParameter("Configuration file",filename);
@@ -222,7 +223,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilenam
     FILE *inFile = fopen(inputFilename.c_str(),"re");
     if (inFile == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open the input file!");
+      Fmi::Exception exception(BCP,"Cannot open the input file!");
       exception.addParameter("Input file",inputFilename);
       throw exception;
     }
@@ -231,7 +232,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilenam
     if (outFile == nullptr)
     {
       fclose(inFile);
-      SmartMet::Spine::Exception exception(BCP,"Cannot open the output file!");
+      Fmi::Exception exception(BCP,"Cannot open the output file!");
       exception.addParameter("Output file",outputFilename);
       throw exception;
     }
@@ -251,7 +252,7 @@ void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilenam
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     throw exception;
   }
 }
@@ -273,14 +274,14 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
 
         if (val.length() == 0)
         {
-          SmartMet::Spine::Exception exception(BCP,"The attribute value is empty (not a boolean as requested)!");
+          Fmi::Exception exception(BCP,"The attribute value is empty (not a boolean as requested)!");
           exception.addParameter("AttributeName",attributeName);
           throw exception;
         }
 
         if (val[0] == '"')
         {
-          SmartMet::Spine::Exception exception(BCP,"The attribute value is a string (not a boolean as requested)!");
+          Fmi::Exception exception(BCP,"The attribute value is a string (not a boolean as requested)!");
           exception.addParameter("AttributeName",attributeName);
           exception.addParameter("AttributeValue",val);
           throw exception;
@@ -298,7 +299,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
           return true;
         }
 
-        SmartMet::Spine::Exception exception(BCP,"The attribute value is not a boolean!");
+        Fmi::Exception exception(BCP,"The attribute value is not a boolean!");
         exception.addParameter("AttributeName",attributeName);
         exception.addParameter("AttributeValue",val);
         throw exception;
@@ -315,7 +316,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -338,14 +339,14 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
 
         if (val.length() == 0)
         {
-          SmartMet::Spine::Exception exception(BCP,"The attribute value is empty (not a float as requested)!");
+          Fmi::Exception exception(BCP,"The attribute value is empty (not a float as requested)!");
           exception.addParameter("AttributeName",attributeName);
           throw exception;
         }
 
         if (val[0] == '"')
         {
-          SmartMet::Spine::Exception exception(BCP,"The attribute value is a string (not a float as requested)!");
+          Fmi::Exception exception(BCP,"The attribute value is a string (not a float as requested)!");
           exception.addParameter("AttributeName",attributeName);
           exception.addParameter("AttributeValue",val);
           throw exception;
@@ -366,7 +367,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -388,7 +389,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,char& attrib
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -410,7 +411,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,short& attri
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -432,7 +433,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,int& attribu
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -454,7 +455,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,long& attrib
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -477,14 +478,14 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,long long& a
 
         if (val.length() == 0)
         {
-          SmartMet::Spine::Exception exception(BCP,"The attribute value is empty (not an integer as requested)!");
+          Fmi::Exception exception(BCP,"The attribute value is empty (not an integer as requested)!");
           exception.addParameter("AttributeName",attributeName);
           throw exception;
         }
 
         if (val[0] == '"')
         {
-          SmartMet::Spine::Exception exception(BCP,"The attribute value is a string (not an integer as requested)!");
+          Fmi::Exception exception(BCP,"The attribute value is a string (not an integer as requested)!");
           exception.addParameter("AttributeName",attributeName);
           exception.addParameter("AttributeValue",val);
           throw exception;
@@ -505,7 +506,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,long long& a
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -527,7 +528,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned cha
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -549,7 +550,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned sho
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -571,7 +572,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned int
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -593,7 +594,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned lon
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -615,7 +616,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned lon
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -657,7 +658,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::string&
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -681,7 +682,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
         if (attr->mName.length() == len)
         {
           // Attribute exists, but its value is not an array.
-          SmartMet::Spine::Exception exception(BCP,"The attribute value is not an array!");
+          Fmi::Exception exception(BCP,"The attribute value is not an array!");
           exception.addParameter("AttributeName",attributeName);
           throw exception;
         }
@@ -698,7 +699,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
 
           if (p != std::string::npos)
           {
-            SmartMet::Spine::Exception exception(BCP,"The attribute value contains substructures!");
+            Fmi::Exception exception(BCP,"The attribute value contains substructures!");
             exception.addParameter("AttributeName",attributeName);
             throw exception;
           }
@@ -723,7 +724,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -771,7 +772,7 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -813,7 +814,7 @@ bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<s
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -831,7 +832,7 @@ std::string ConfigurationFile::getFilename()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -864,7 +865,7 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -891,7 +892,7 @@ void ConfigurationFile::setAttributeValue(const char *attributeName,std::string&
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Configuration file",mFilename);
     throw exception;
   }
@@ -920,7 +921,7 @@ void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -955,7 +956,7 @@ std::string ConfigurationFile::parseValue(std::string value)
             char *env = getenv(var.c_str());
             if (env == nullptr)
             {
-              SmartMet::Spine::Exception exception(BCP,"Unknown variable name!");
+              Fmi::Exception exception(BCP,"Unknown variable name!");
               exception.addParameter("VariableName",var);
               throw exception;
             }
@@ -969,7 +970,7 @@ std::string ConfigurationFile::parseValue(std::string value)
         }
         else
         {
-          SmartMet::Spine::Exception exception(BCP,"Expecting the character ')' at the end of the variable name!");
+          Fmi::Exception exception(BCP,"Expecting the character ')' at the end of the variable name!");
           exception.addParameter("Value",value);
           throw exception;
         }
@@ -981,7 +982,7 @@ std::string ConfigurationFile::parseValue(std::string value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1021,7 +1022,7 @@ std::string ConfigurationFile::parseConstValue(std::string value)
             char *env = getenv(var.c_str());
             if (env == nullptr)
             {
-              SmartMet::Spine::Exception exception(BCP,"Unknown variable name!");
+              Fmi::Exception exception(BCP,"Unknown variable name!");
               exception.addParameter("VariableName",var);
               throw exception;
             }
@@ -1035,7 +1036,7 @@ std::string ConfigurationFile::parseConstValue(std::string value)
         }
         else
         {
-          SmartMet::Spine::Exception exception(BCP,"Expecting the character ')' at the end of the variable name!");
+          Fmi::Exception exception(BCP,"Expecting the character ')' at the end of the variable name!");
           exception.addParameter("Value",value);
           throw exception;
         }
@@ -1046,7 +1047,7 @@ std::string ConfigurationFile::parseConstValue(std::string value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1074,7 +1075,7 @@ void ConfigurationFile::removeComments(char *st,unsigned long long *positions,ch
 
       if (ind  &&  st[a] == '\n')
       {
-        SmartMet::Spine::Exception exception(BCP,"The string does not have the end delimiter!");
+        Fmi::Exception exception(BCP,"The string does not have the end delimiter!");
         exception.addParameter("Row",std::to_string(positions[stringStart] >> 32));
         exception.addParameter("Column",std::to_string(positions[stringStart] & 0xFFFFFFFF));
         throw exception;
@@ -1145,7 +1146,7 @@ void ConfigurationFile::removeComments(char *st,unsigned long long *positions,ch
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1174,7 +1175,7 @@ void ConfigurationFile::setPositions(char *st,unsigned long long *positions,int 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1225,7 +1226,7 @@ void ConfigurationFile::getWords(char *st,unsigned long long *positions,std::vec
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1274,7 +1275,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
 
       if (pos == len)
       {
-        SmartMet::Spine::Exception exception(BCP,"Cannot find the end char '}' for the structure!");
+        Fmi::Exception exception(BCP,"Cannot find the end char '}' for the structure!");
         exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
         exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
         throw exception;
@@ -1300,7 +1301,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
 
         if (words[pos] != ","  &&  words[pos] != ")")
         {
-          SmartMet::Spine::Exception exception(BCP,"Expected end char ')' for the list!");
+          Fmi::Exception exception(BCP,"Expected end char ')' for the list!");
           exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
           exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
           throw exception;
@@ -1311,7 +1312,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
 
       if (pos == len)
       {
-        SmartMet::Spine::Exception exception(BCP,"Cannot find the end char ')' for the list!");
+        Fmi::Exception exception(BCP,"Cannot find the end char ')' for the list!");
         exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
         exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
         throw exception;
@@ -1355,7 +1356,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
         index++;
         if (words[pos] != ","  &&  words[pos] != "]")
         {
-          SmartMet::Spine::Exception exception(BCP,"Expected end char ']' for the array!");
+          Fmi::Exception exception(BCP,"Expected end char ']' for the array!");
           exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
           exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
           throw exception;
@@ -1367,7 +1368,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
 
       if (pos == len)
       {
-        SmartMet::Spine::Exception exception(BCP,"Cannot find the end char ']' for the array!");
+        Fmi::Exception exception(BCP,"Cannot find the end char ']' for the array!");
         exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
         exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
         throw exception;
@@ -1394,7 +1395,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1419,7 +1420,7 @@ void ConfigurationFile::removeAttributes(const char *pattern)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1448,7 +1449,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
 
       if (fname <= " ")
       {
-        SmartMet::Spine::Exception exception(BCP,"No include file defined!");
+        Fmi::Exception exception(BCP,"No include file defined!");
         exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
         exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
         throw exception;
@@ -1509,7 +1510,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
       std::string message = parseConstValue(words[pos+1]);
       message = parseValue(message);
 
-      SmartMet::Spine::Exception exception(BCP,message);
+      Fmi::Exception exception(BCP,message);
       exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
       exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
       throw exception;
@@ -1531,7 +1532,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
 
         if (words[pos] != "@endif"  &&  words[pos] != "@else")
         {
-          SmartMet::Spine::Exception exception(BCP,"Expected '@endif' or '@else' for '@ifdef'!");
+          Fmi::Exception exception(BCP,"Expected '@endif' or '@else' for '@ifdef'!");
           exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
           exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
           throw exception;
@@ -1572,7 +1573,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
         }
         if (words[pos] != "@endif"  &&  words[pos] != "@else")
         {
-          SmartMet::Spine::Exception exception(BCP,"Expected '@endif' or '@else' for '@ifndef'!");
+          Fmi::Exception exception(BCP,"Expected '@endif' or '@else' for '@ifndef'!");
           exception.addParameter("Row",std::to_string(wordPositions[startPos] >> 32));
           exception.addParameter("Column",std::to_string(wordPositions[startPos] & 0xFFFFFFFF));
           throw exception;
@@ -1606,7 +1607,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
 
       if (words[p] != "@ifdef"  &&  words[p] != "@ifndef"  &&  words[p] != "@else")
       {
-        SmartMet::Spine::Exception exception(BCP,"Unexpected '@endif' found!");
+        Fmi::Exception exception(BCP,"Unexpected '@endif' found!");
         exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
         exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
         throw exception;
@@ -1621,7 +1622,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
 
       if (words[p] != "@ifdef"  &&  words[p] != "@ifndef")
       {
-        SmartMet::Spine::Exception exception(BCP,"Unexpected '@endif' found!");
+        Fmi::Exception exception(BCP,"Unexpected '@endif' found!");
         exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
         exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
         throw exception;
@@ -1649,14 +1650,14 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
     {
       if ((pos+1) < len)
       {
-        SmartMet::Spine::Exception exception(BCP,"Expected ':'' or '=' character!");
+        Fmi::Exception exception(BCP,"Expected ':'' or '=' character!");
         exception.addParameter("Row",std::to_string(wordPositions[pos+1] >> 32));
         exception.addParameter("Column",std::to_string(wordPositions[pos+1] & 0xFFFFFFFF));
         throw exception;
       }
       else
       {
-        SmartMet::Spine::Exception exception(BCP,"Invalid attribute definition!");
+        Fmi::Exception exception(BCP,"Invalid attribute definition!");
         exception.addParameter("Row",std::to_string(wordPositions[pos] >> 32));
         exception.addParameter("Column",std::to_string(wordPositions[pos] & 0xFFFFFFFF));
         throw exception;
@@ -1666,7 +1667,7 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

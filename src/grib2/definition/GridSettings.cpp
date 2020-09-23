@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "GridSettings.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 GridSettings::GridSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -39,7 +39,7 @@ GridSettings::GridSettings(const GridSettings &other) {
     mLatitudeOfLastGridPoint = other.mLatitudeOfLastGridPoint;
     mLongitudeOfLastGridPoint = other.mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -65,7 +65,7 @@ void GridSettings::read(MemoryReader &memoryReader) {
     mLatitudeOfLastGridPoint = memoryReader.read_Int32_opt();
     mLongitudeOfLastGridPoint = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -86,7 +86,7 @@ void GridSettings::write(DataWriter &dataWriter) {
     dataWriter << mLatitudeOfLastGridPoint;
     dataWriter << mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -118,7 +118,7 @@ void GridSettings::getAttributeList(std::string prefix, T::AttributeList &attrib
     sprintf(name, "%sGridSettings.LongitudeOfLastGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfLastGridPoint));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -142,7 +142,7 @@ void GridSettings::print(std::ostream &stream, uint level, uint optionFlags) con
     stream << space(level) << "- LatitudeOfLastGridPoint = " << toString(mLatitudeOfLastGridPoint) << "\n";
     stream << space(level) << "- LongitudeOfLastGridPoint = " << toString(mLongitudeOfLastGridPoint) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -166,7 +166,7 @@ T::Hash GridSettings::countHash() {
     // boost::hash_combine(seed,mResolution.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -176,7 +176,7 @@ const T::UInt32_opt &GridSettings::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -186,7 +186,7 @@ const T::UInt32_opt &GridSettings::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -196,7 +196,7 @@ const T::UInt32_opt &GridSettings::getBasicAngleOfTheInitialProductionDomain() c
   try {
     return mBasicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -206,7 +206,7 @@ const T::UInt32_opt &GridSettings::getSubdivisionsOfBasicAngle() const {
   try {
     return mSubdivisionsOfBasicAngle;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -216,7 +216,7 @@ const T::Int32_opt &GridSettings::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -226,7 +226,7 @@ const T::Int32_opt &GridSettings::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -236,7 +236,7 @@ ResolutionSettings *GridSettings::getResolution() const {
   try {
     return static_cast<ResolutionSettings *>(&mResolution);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -246,7 +246,7 @@ const T::Int32_opt &GridSettings::getLatitudeOfLastGridPoint() const {
   try {
     return mLatitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -256,7 +256,7 @@ const T::Int32_opt &GridSettings::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -264,7 +264,7 @@ void GridSettings::setNi(T::UInt32_opt ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -272,7 +272,7 @@ void GridSettings::setNj(T::UInt32_opt nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -280,7 +280,7 @@ void GridSettings::setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basic
   try {
     mBasicAngleOfTheInitialProductionDomain = basicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -288,7 +288,7 @@ void GridSettings::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasic
   try {
     mSubdivisionsOfBasicAngle = subdivisionsOfBasicAngle;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -296,7 +296,7 @@ void GridSettings::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridP
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -304,7 +304,7 @@ void GridSettings::setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGri
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -312,7 +312,7 @@ void GridSettings::setResolution(ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -320,7 +320,7 @@ void GridSettings::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoi
   try {
     mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -328,7 +328,7 @@ void GridSettings::setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridP
   try {
     mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

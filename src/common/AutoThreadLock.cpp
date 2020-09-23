@@ -1,5 +1,5 @@
 #include "AutoThreadLock.h"
-#include "Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -12,14 +12,14 @@ AutoThreadLock::AutoThreadLock(ThreadLock *threadLock)
   try
   {
     if (threadLock == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'threadLock' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'threadLock' parameter points to nullptr!");
 
     mThreadLock = threadLock;
     mThreadLock->lock();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -33,7 +33,7 @@ AutoThreadLock::~AutoThreadLock()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }

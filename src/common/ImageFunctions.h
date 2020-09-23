@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Exception.h"
 #include "Typedefs.h"
 #include "../grid/Typedefs.h"
 
 #include <newbase/NFmiSvgPath.h>
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet

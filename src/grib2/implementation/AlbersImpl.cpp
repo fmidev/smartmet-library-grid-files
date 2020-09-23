@@ -1,5 +1,5 @@
 #include "AlbersImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/Dimensions.h"
 
 namespace SmartMet
@@ -50,7 +50,7 @@ GridDefinition* AlbersImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -76,7 +76,7 @@ void AlbersImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -94,7 +94,7 @@ void AlbersImpl::read(MemoryReader& memoryReader)
 
 T::Coordinate_svec AlbersImpl::getGridOriginalCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
+  throw Fmi::Exception(BCP,"The method not implemented!");
 }
 
 
@@ -120,7 +120,7 @@ T::Dimensions AlbersImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -149,7 +149,7 @@ bool AlbersImpl::getGridPointByLatLonCoordinates(double lat,double lon,double& g
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -167,19 +167,19 @@ void AlbersImpl::initSpatialReference()
 
     auto dfStdP1 = mLatin1;
     if (!dfStdP1)
-      throw SmartMet::Spine::Exception(BCP,"The 'latin1' value is missing!");
+      throw Fmi::Exception(BCP,"The 'latin1' value is missing!");
 
     auto dfStdP2 = mLatin2;
     if (!dfStdP2)
-      throw SmartMet::Spine::Exception(BCP,"The 'latin2' value is missing!");
+      throw Fmi::Exception(BCP,"The 'latin2' value is missing!");
 
     auto dfCenterLat = mLaD;
     if (!dfCenterLat)
-      throw SmartMet::Spine::Exception(BCP,"The 'laD' value is missing!");
+      throw Fmi::Exception(BCP,"The 'laD' value is missing!");
 
     auto dfCenterLong = mLoV;
     if (!dfCenterLong)
-      throw SmartMet::Spine::Exception(BCP,"The 'loV' value is missing!");
+      throw Fmi::Exception(BCP,"The 'loV' value is missing!");
 
     double southPoleLon = *mLongitudeOfTheSouthernPoleOfProjection;
     double southPoleLat = *mLatitudeOfTheSouthernPoleOfProjection;
@@ -191,7 +191,7 @@ void AlbersImpl::initSpatialReference()
       southPoleLat = -90 * 1000000;
 
     if ((southPoleLon != 0) || (southPoleLat != (-90 * 1000000)))
-      throw SmartMet::Spine::Exception(BCP,"A projection with a rotated pole is not supported!");
+      throw Fmi::Exception(BCP,"A projection with a rotated pole is not supported!");
 
 
     // ### Set geographic coordinate system.
@@ -223,14 +223,14 @@ void AlbersImpl::initSpatialReference()
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
-      SmartMet::Spine::Exception exception(BCP,"The spatial reference is not valid!");
+      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

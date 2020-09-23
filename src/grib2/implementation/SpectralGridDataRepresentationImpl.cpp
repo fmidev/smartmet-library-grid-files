@@ -1,5 +1,5 @@
 #include "SpectralGridDataRepresentationImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/BitArrayReader.h"
 #include "../Message.h"
@@ -57,7 +57,7 @@ RepresentationDefinition* SpectralGridDataRepresentationImpl::createRepresentati
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -83,7 +83,7 @@ void SpectralGridDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -102,7 +102,7 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
     std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
     //if (data == nullptr)
-      //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
+      //throw Fmi::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     long bits_per_value = *mPacking.getBitsPerValue();
     double reference_value = mPacking.getReferenceValue();
@@ -164,14 +164,14 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
     if (aec_decode_init(&strm) != AEC_OK)
     {
       delete [] dest;
-      throw SmartMet::Spine::Exception(BCP,"Initialization of the decoder failed!");
+      throw Fmi::Exception(BCP,"Initialization of the decoder failed!");
     }
 
     if (aec_decode(&strm, AEC_FLUSH) != AEC_OK)
     {
       aec_decode_end(&strm);
       delete [] dest;
-      throw SmartMet::Spine::Exception(BCP,"Decoding failed!");
+      throw Fmi::Exception(BCP,"Decoding failed!");
     }
 
     aec_decode_end(&strm);
@@ -221,7 +221,7 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

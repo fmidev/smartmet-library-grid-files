@@ -1,5 +1,5 @@
 #include "TransverseMercatorImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {
@@ -49,7 +49,7 @@ GridDefinition* TransverseMercatorImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void TransverseMercatorImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -94,7 +94,7 @@ void TransverseMercatorImpl::read(MemoryReader& memoryReader)
 
 T::Coordinate_svec TransverseMercatorImpl::getGridOriginalCoordinates() const
 {
-  throw SmartMet::Spine::Exception(BCP, "The method not implemented!");
+  throw Fmi::Exception(BCP, "The method not implemented!");
 }
 
 
@@ -120,7 +120,7 @@ T::Dimensions TransverseMercatorImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -149,7 +149,7 @@ bool TransverseMercatorImpl::getGridPointByLatLonCoordinates(double lat,double l
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -167,21 +167,21 @@ void TransverseMercatorImpl::initSpatialReference()
 
     auto dfCenterLat = mLatitudeOfReferencePoint;
     if (!dfCenterLat)
-      throw SmartMet::Spine::Exception(BCP, "The 'latitudeOfReferencePoint' value is missing!");
+      throw Fmi::Exception(BCP, "The 'latitudeOfReferencePoint' value is missing!");
 
     auto dfCenterLong = mLongitudeOfReferencePoint;
     if (!dfCenterLong)
-      throw SmartMet::Spine::Exception(BCP, "The 'longitudeOfReferencePoint' value is missing!");
+      throw Fmi::Exception(BCP, "The 'longitudeOfReferencePoint' value is missing!");
 
     auto dfScale = mScaleFactorAtReferencePoint;
 
     auto dfFalseEasting = mXR;
     if (!dfFalseEasting)
-      throw SmartMet::Spine::Exception(BCP, "The 'xR' value is missing!");
+      throw Fmi::Exception(BCP, "The 'xR' value is missing!");
 
     auto dfFalseNorthing = mYR;
     if (!dfFalseNorthing)
-      throw SmartMet::Spine::Exception(BCP, "The 'yR' value is missing!");
+      throw Fmi::Exception(BCP, "The 'yR' value is missing!");
 
     // ### Set geographic coordinate system.
 
@@ -211,14 +211,14 @@ void TransverseMercatorImpl::initSpatialReference()
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
-      SmartMet::Spine::Exception exception(BCP, "The spatial reference is not valid!");
+      Fmi::Exception exception(BCP, "The spatial reference is not valid!");
       exception.addParameter("ErrorCode", std::to_string(errorCode));
       throw exception;
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

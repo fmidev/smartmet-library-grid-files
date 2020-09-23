@@ -1,4 +1,4 @@
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "SphericalHarmonicsComplexPacking.h"
 
@@ -24,7 +24,7 @@ SphericalHarmonicsComplexPacking::SphericalHarmonicsComplexPacking()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -47,7 +47,7 @@ SphericalHarmonicsComplexPacking::SphericalHarmonicsComplexPacking(const Spheric
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -73,7 +73,7 @@ PackingMethod SphericalHarmonicsComplexPacking::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -89,7 +89,7 @@ DataDefinition* SphericalHarmonicsComplexPacking::createDataDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -113,7 +113,7 @@ void SphericalHarmonicsComplexPacking::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -133,7 +133,7 @@ void SphericalHarmonicsComplexPacking::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -145,11 +145,11 @@ void SphericalHarmonicsComplexPacking::decodeValues(Message *message,T::ParamVal
 {
   try
   {
-    throw SmartMet::Spine::Exception(BCP,"SphericalHarmonicsComplexPacking not implemented!");
+    throw Fmi::Exception(BCP,"SphericalHarmonicsComplexPacking not implemented!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -177,7 +177,7 @@ void SphericalHarmonicsComplexPacking::print(std::ostream& stream,uint level,uin
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

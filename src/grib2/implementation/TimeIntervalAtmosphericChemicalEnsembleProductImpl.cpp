@@ -1,5 +1,5 @@
 #include "TimeIntervalAtmosphericChemicalEnsembleProductImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -49,7 +49,7 @@ ProductDefinition* TimeIntervalAtmosphericChemicalEnsembleProductImpl::createPro
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProductImpl::read(MemoryReader& memo
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -92,7 +92,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProductImpl::read(MemoryReader& memo
 
 T::TimeString TimeIntervalAtmosphericChemicalEnsembleProductImpl::getForecastTime(T::TimeString referenceTime) const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -106,7 +106,7 @@ T::TimeString TimeIntervalAtmosphericChemicalEnsembleProductImpl::getForecastTim
 
 T::ParamLevel TimeIntervalAtmosphericChemicalEnsembleProductImpl::getGribParameterLevel() const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -120,7 +120,7 @@ T::ParamLevel TimeIntervalAtmosphericChemicalEnsembleProductImpl::getGribParamet
 
 T::ParamLevelId TimeIntervalAtmosphericChemicalEnsembleProductImpl::getGribParameterLevelId() const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 

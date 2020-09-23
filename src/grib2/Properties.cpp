@@ -1,5 +1,5 @@
 #include "Properties.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -190,7 +190,7 @@ Property::Property()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -205,7 +205,7 @@ Property::~Property()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Operation failed!",nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.printError();
   }
 }
@@ -221,7 +221,7 @@ void Property::addProperty(const char *name,uint id)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -241,7 +241,7 @@ uint Property::getPropertyId(const char *name)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -263,7 +263,7 @@ std::string Property::getPropertyName(uint id)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed!",nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

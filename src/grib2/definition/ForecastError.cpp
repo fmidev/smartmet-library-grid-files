@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "ForecastError.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 ForecastError::ForecastError() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -31,7 +31,7 @@ ForecastError::ForecastError(const ForecastError &other) : ProductDefinition(oth
   try {
     mNormalProduct = other.mNormalProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -49,7 +49,7 @@ void ForecastError::read(MemoryReader &memoryReader) {
   try {
     mNormalProduct.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -62,7 +62,7 @@ void ForecastError::write(DataWriter &dataWriter) {
   try {
     mNormalProduct.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -78,7 +78,7 @@ void ForecastError::getAttributeList(std::string prefix, T::AttributeList &attri
     sprintf(name, "%sForecastError.", prefix.c_str());
     mNormalProduct.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -94,7 +94,7 @@ void ForecastError::print(std::ostream &stream, uint level, uint optionFlags) co
     stream << space(level) << "ForecastError\n";
     mNormalProduct.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -106,7 +106,7 @@ T::Hash ForecastError::countHash() {
     boost::hash_combine(seed, mNormalProduct.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -120,7 +120,7 @@ ProductDefinition *ForecastError::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new ForecastError(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -130,7 +130,7 @@ NormalProduct *ForecastError::getNormalProduct() const {
   try {
     return static_cast<NormalProduct *>(&mNormalProduct);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -138,7 +138,7 @@ void ForecastError::setNormalProduct(NormalProduct &normalProduct) {
   try {
     mNormalProduct = normalProduct;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

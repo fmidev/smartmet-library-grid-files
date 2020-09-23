@@ -1,6 +1,6 @@
 #include "InterpolationFunctions.h"
-#include "Exception.h"
 #include "GeneralFunctions.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -36,7 +36,7 @@ double linearInterpolation(double wantedPosition, double position1, double posit
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -176,7 +176,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -288,7 +288,7 @@ longlong linearInterpolation(longlong x,longlong y,longlong x1,longlong y1,longl
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -345,7 +345,7 @@ double logarithmicInterpolation(double wantedPosition, double position1, double 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -414,7 +414,7 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,int l
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -522,7 +522,7 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,in
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -662,7 +662,7 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -682,7 +682,7 @@ T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,std::
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -754,14 +754,14 @@ T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,time_
         }
 
       default:
-        throw SmartMet::Spine::Exception(BCP,"Unsupported or unknown intepolation method!");
+        throw Fmi::Exception(BCP,"Unsupported or unknown intepolation method!");
     }
 
     return ParamValueMissing;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -781,7 +781,7 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -794,7 +794,7 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,tim
   try
   {
     if (values1.size() != values2.size())
-      throw SmartMet::Spine::Exception(BCP,"Value vectors are not the same size!");
+      throw Fmi::Exception(BCP,"Value vectors are not the same size!");
 
     if (t1 == newTime)
     {
@@ -894,12 +894,12 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,tim
         return;
 
       default:
-        throw SmartMet::Spine::Exception(BCP,"Unsupported or unknown intepolation method!");
+        throw Fmi::Exception(BCP,"Unsupported or unknown intepolation method!");
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -919,7 +919,7 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -931,7 +931,7 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_
   try
   {
     if (values1.getLength() != values2.getLength())
-      throw SmartMet::Spine::Exception(BCP,"Value lists are not the same size!");
+      throw Fmi::Exception(BCP,"Value lists are not the same size!");
 
     if (t1 == newTime)
     {
@@ -1042,7 +1042,7 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

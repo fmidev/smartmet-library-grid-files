@@ -1,5 +1,5 @@
 #include "TimeIntervalSimulatedSatelliteEnsembleProductImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -49,7 +49,7 @@ ProductDefinition* TimeIntervalSimulatedSatelliteEnsembleProductImpl::createProd
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProductImpl::read(MemoryReader& memor
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -92,7 +92,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProductImpl::read(MemoryReader& memor
 
 T::TimeString TimeIntervalSimulatedSatelliteEnsembleProductImpl::getForecastTime(T::TimeString referenceTime) const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -106,7 +106,7 @@ T::TimeString TimeIntervalSimulatedSatelliteEnsembleProductImpl::getForecastTime
 
 T::ParamLevel TimeIntervalSimulatedSatelliteEnsembleProductImpl::getGribParameterLevel() const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 
@@ -120,7 +120,7 @@ T::ParamLevel TimeIntervalSimulatedSatelliteEnsembleProductImpl::getGribParamete
 
 T::ParamLevelId TimeIntervalSimulatedSatelliteEnsembleProductImpl::getGribParameterLevelId() const
 {
-  throw SmartMet::Spine::Exception(BCP, "Not implemented!");
+  throw Fmi::Exception(BCP, "Not implemented!");
 }
 
 

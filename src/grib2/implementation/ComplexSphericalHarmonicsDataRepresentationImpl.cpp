@@ -1,5 +1,5 @@
 #include "ComplexSphericalHarmonicsDataRepresentationImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -49,7 +49,7 @@ RepresentationDefinition* ComplexSphericalHarmonicsDataRepresentationImpl::creat
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -75,7 +75,7 @@ void ComplexSphericalHarmonicsDataRepresentationImpl::read(MemoryReader& memoryR
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -85,7 +85,7 @@ void ComplexSphericalHarmonicsDataRepresentationImpl::read(MemoryReader& memoryR
 
 void ComplexSphericalHarmonicsDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
-  throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
+  throw Fmi::Exception(BCP,"The method not implemented!");
 }
 
 

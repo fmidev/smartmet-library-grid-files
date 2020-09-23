@@ -1,5 +1,5 @@
 #include "PreprocessedGridDataRepresentationImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {
@@ -48,7 +48,7 @@ RepresentationDefinition* PreprocessedGridDataRepresentationImpl::createRepresen
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -74,7 +74,7 @@ void PreprocessedGridDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -84,7 +84,7 @@ void PreprocessedGridDataRepresentationImpl::read(MemoryReader& memoryReader)
 
 void PreprocessedGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
-  throw SmartMet::Spine::Exception(BCP,"The method not implemented!");
+  throw Fmi::Exception(BCP,"The method not implemented!");
 }
 
 

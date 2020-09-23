@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "PostprocSettings.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 PostprocSettings::PostprocSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -42,7 +42,7 @@ PostprocSettings::PostprocSettings(const PostprocSettings &other) {
     mIndicatorOfUnitOfTimeRange = other.mIndicatorOfUnitOfTimeRange;
     mForecastTime = other.mForecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -71,7 +71,7 @@ void PostprocSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
     mForecastTime = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -95,7 +95,7 @@ void PostprocSettings::write(DataWriter &dataWriter) {
     dataWriter << mIndicatorOfUnitOfTimeRange;
     dataWriter << mForecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -133,7 +133,7 @@ void PostprocSettings::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sPostprocSettings.ForecastTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastTime));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -160,7 +160,7 @@ void PostprocSettings::print(std::ostream &stream, uint level, uint optionFlags)
     stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
     stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -195,7 +195,7 @@ T::Hash PostprocSettings::countHash() {
       boost::hash_combine(seed, *mForecastTime);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -205,7 +205,7 @@ const T::UInt8_opt &PostprocSettings::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -215,7 +215,7 @@ const T::UInt8_opt &PostprocSettings::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -225,7 +225,7 @@ const T::UInt16_opt &PostprocSettings::getInputProcessIdentifier() const {
   try {
     return mInputProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -235,7 +235,7 @@ const T::UInt16_opt &PostprocSettings::getInputOriginatingCentre() const {
   try {
     return mInputOriginatingCentre;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -245,7 +245,7 @@ const T::UInt8_opt &PostprocSettings::getTypeOfPostProcessing() const {
   try {
     return mTypeOfPostProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -255,7 +255,7 @@ const T::UInt8_opt &PostprocSettings::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -265,7 +265,7 @@ const T::UInt8_opt &PostprocSettings::getBackgroundProcess() const {
   try {
     return mBackgroundProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -275,7 +275,7 @@ const T::UInt8_opt &PostprocSettings::getGeneratingProcessIdentifier() const {
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -285,7 +285,7 @@ const T::UInt16_opt &PostprocSettings::getHoursAfterDataCutoff() const {
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -295,7 +295,7 @@ const T::UInt8_opt &PostprocSettings::getMinutesAfterDataCutoff() const {
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -305,7 +305,7 @@ const T::UInt8_opt &PostprocSettings::getIndicatorOfUnitOfTimeRange() const {
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -315,7 +315,7 @@ const T::Int32_opt &PostprocSettings::getForecastTime() const {
   try {
     return mForecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -323,7 +323,7 @@ void PostprocSettings::setParameterCategory(T::UInt8_opt parameterCategory) {
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -331,7 +331,7 @@ void PostprocSettings::setParameterNumber(T::UInt8_opt parameterNumber) {
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -339,7 +339,7 @@ void PostprocSettings::setInputProcessIdentifier(T::UInt16_opt inputProcessIdent
   try {
     mInputProcessIdentifier = inputProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -347,7 +347,7 @@ void PostprocSettings::setInputOriginatingCentre(T::UInt16_opt inputOriginatingC
   try {
     mInputOriginatingCentre = inputOriginatingCentre;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -355,7 +355,7 @@ void PostprocSettings::setTypeOfPostProcessing(T::UInt8_opt typeOfPostProcessing
   try {
     mTypeOfPostProcessing = typeOfPostProcessing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -363,7 +363,7 @@ void PostprocSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGeneratingP
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -371,7 +371,7 @@ void PostprocSettings::setBackgroundProcess(T::UInt8_opt backgroundProcess) {
   try {
     mBackgroundProcess = backgroundProcess;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -379,7 +379,7 @@ void PostprocSettings::setGeneratingProcessIdentifier(T::UInt8_opt generatingPro
   try {
     mGeneratingProcessIdentifier = generatingProcessIdentifier;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -387,7 +387,7 @@ void PostprocSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfterDataCutof
   try {
     mHoursAfterDataCutoff = hoursAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -395,7 +395,7 @@ void PostprocSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataCu
   try {
     mMinutesAfterDataCutoff = minutesAfterDataCutoff;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -403,7 +403,7 @@ void PostprocSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUni
   try {
     mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -411,7 +411,7 @@ void PostprocSettings::setForecastTime(T::Int32_opt forecastTime) {
   try {
     mForecastTime = forecastTime;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

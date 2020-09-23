@@ -1,7 +1,7 @@
 #include "Message.h"
 #include "../common/Dimensions.h"
 #include "../grid/PrintOptions.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/AutoThreadLock.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
@@ -56,7 +56,7 @@ Message::Message()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -98,7 +98,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -137,7 +137,7 @@ Message::Message(const Message& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -154,7 +154,7 @@ Message::~Message()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -259,7 +259,7 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -275,7 +275,7 @@ uint Message::getTimeStepCount()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -290,7 +290,7 @@ bool Message::isRead()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -309,7 +309,7 @@ void Message::read()
       return;
 
     if (mGridFilePtr == nullptr)
-      SmartMet::Spine::Exception exception(BCP,"No pointer to the grib file!");
+      Fmi::Exception exception(BCP,"No pointer to the grib file!");
 
     long long s = mGridFilePtr->getSize();
 
@@ -322,7 +322,7 @@ void Message::read()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Message read failed!",nullptr);
+    Fmi::Exception exception(BCP,"Message read failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -354,13 +354,13 @@ void Message::read(MemoryReader& memoryReader)
     uchar type[5] = {0};
     memoryReader.read_data(type,4);
     if (strcmp((char*)type,"FMIG") != 0)
-      SmartMet::Spine::Exception exception(BCP,"Not a FMIG file!");
+      Fmi::Exception exception(BCP,"Not a FMIG file!");
 
     uchar version = 0;
     memoryReader >> version;
 
     if (version != 0)
-      SmartMet::Spine::Exception exception(BCP,"Invalid FMIG version!");
+      Fmi::Exception exception(BCP,"Invalid FMIG version!");
 
 
     uchar format = 0;
@@ -509,7 +509,7 @@ void Message::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     exception.addParameter("Message start position",uint64_toHex(memoryReader.getStartPtr()-memoryReader.getParentPtr()));
     throw exception;
@@ -535,7 +535,7 @@ T::TimeString Message::getReferenceTime() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -554,7 +554,7 @@ T::TimeString Message::getForecastTime() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -573,7 +573,7 @@ time_t Message::getForecastTimeT() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -591,7 +591,7 @@ void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& a
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -614,7 +614,7 @@ uint Message::getGribVersion() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -636,7 +636,7 @@ uint Message::getGribCentre() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -658,7 +658,7 @@ uint Message::getGribSubCentre() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -680,7 +680,7 @@ uint Message::getGribGeneratingProcessIdentifier() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -702,7 +702,7 @@ uint Message::getGribTableVersion() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -724,7 +724,7 @@ T::Hash Message::getGridHash() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -748,7 +748,7 @@ T::GeometryId Message::getGridGeometryId() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -768,7 +768,7 @@ bool Message::getGridMetricCellSize(double& width,double& height) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -787,7 +787,7 @@ bool Message::getGridMetricSize(double& width,double& height) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -806,7 +806,7 @@ bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -825,7 +825,7 @@ bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -853,7 +853,7 @@ std::string Message::getGridGeometryString() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -877,7 +877,7 @@ T::GridProjection Message::getGridProjection() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -901,7 +901,7 @@ T::GridLayout Message::getGridLayout() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -931,7 +931,7 @@ T::Dimensions Message::getGridDimensions() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -959,7 +959,7 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -987,7 +987,7 @@ bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1015,7 +1015,7 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,do
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1043,7 +1043,7 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,doub
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1071,7 +1071,7 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1099,7 +1099,7 @@ T::Coordinate_svec Message::getGridOriginalCoordinates() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1126,7 +1126,7 @@ T::Coordinate_svec Message::getGridLatLonCoordinates() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1154,7 +1154,7 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1182,7 +1182,7 @@ uint Message::getFileId() const
     }
     catch (...)
     {
-      throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+      throw Fmi::Exception(BCP,"Operation failed!",nullptr);
     }
   }
 }
@@ -1209,7 +1209,7 @@ uint Message::getProducerId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1235,7 +1235,7 @@ uint Message::getGenerationId() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1258,7 +1258,7 @@ T::FilePosition Message::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1282,7 +1282,7 @@ std::string Message::getGridProjectionString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1315,7 +1315,7 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1345,7 +1345,7 @@ bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1369,7 +1369,7 @@ std::size_t Message::getGridOriginalRowCount() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1394,7 +1394,7 @@ std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1419,7 +1419,7 @@ std::size_t Message::getGridOriginalColumnCount() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1443,7 +1443,7 @@ std::size_t Message::getGridOriginalValueCount() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1475,7 +1475,7 @@ int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1517,7 +1517,7 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1564,7 +1564,7 @@ bool Message::getValueByIndex(uint index,T::ParamValue& value) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1613,7 +1613,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1639,7 +1639,7 @@ T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) 
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1680,7 +1680,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1711,7 +1711,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1740,7 +1740,7 @@ T::ParamLevel Message::getGridParameterLevel() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1764,7 +1764,7 @@ T::ParamLevelId Message::getGridParameterLevelId() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1789,7 +1789,7 @@ std::string Message::getGridParameterLevelIdString() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1809,7 +1809,7 @@ void Message::initSpatialReference()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1833,7 +1833,7 @@ T::SpatialRef* Message::getSpatialReference() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1866,7 +1866,7 @@ std::string Message::getWKT() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1890,7 +1890,7 @@ short Message::getForecastType() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1914,7 +1914,7 @@ short Message::getForecastNumber() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1940,7 +1940,7 @@ bool Message::isGridGlobal() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1959,7 +1959,7 @@ bool Message::isRelativeUV() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -1984,7 +1984,7 @@ bool Message::reverseXDirection() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -2009,7 +2009,7 @@ bool Message::reverseYDirection() const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }
@@ -2062,7 +2062,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,exception_operation_failed,nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     throw exception;
   }

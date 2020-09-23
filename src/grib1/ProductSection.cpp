@@ -1,6 +1,6 @@
 #include "ProductSection.h"
 #include "Message.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../identification/GridDef.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -52,7 +52,7 @@ ProductSection::ProductSection()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed failed!",nullptr);
   }
 }
 
@@ -107,7 +107,7 @@ ProductSection::ProductSection(const ProductSection& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed failed!",nullptr);
   }
 }
 
@@ -129,7 +129,7 @@ ProductSection::~ProductSection()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -225,7 +225,7 @@ void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -247,7 +247,7 @@ void ProductSection::setMessagePtr(Message *message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -368,7 +368,7 @@ bool ProductSection::getProperty(uint propertyId,long long& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -489,7 +489,7 @@ bool ProductSection::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -512,7 +512,7 @@ bool ProductSection::setProperty(uint propertyId,double value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -602,7 +602,7 @@ void ProductSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Operation failed failed!",nullptr);
+    throw Fmi::Exception(BCP,"Operation failed failed!",nullptr);
   }
 }
 
@@ -659,7 +659,7 @@ void ProductSection::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -680,7 +680,7 @@ T::FilePosition ProductSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -701,7 +701,7 @@ std::uint32_t ProductSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -719,7 +719,7 @@ std::string ProductSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -737,7 +737,7 @@ std::uint8_t ProductSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -755,7 +755,7 @@ std::uint8_t ProductSection::getTableVersion() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -773,7 +773,7 @@ std::uint8_t ProductSection::getCentre() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -791,7 +791,7 @@ std::uint8_t ProductSection::getGeneratingProcessIdentifier() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -809,7 +809,7 @@ std::uint8_t ProductSection::getGridDefinitionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -827,7 +827,7 @@ std::uint8_t ProductSection::getSectionFlags() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -845,7 +845,7 @@ std::uint8_t ProductSection::getIndicatorOfParameter() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -863,7 +863,7 @@ std::uint8_t ProductSection::getIndicatorOfTypeOfLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -881,7 +881,7 @@ std::uint16_t ProductSection::getLevel() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -899,7 +899,7 @@ std::uint8_t ProductSection::getYearOfCentury() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -917,7 +917,7 @@ std::uint8_t ProductSection::getMonth() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -935,7 +935,7 @@ std::uint8_t ProductSection::getDay() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -953,7 +953,7 @@ std::uint8_t ProductSection::getHour() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -971,7 +971,7 @@ std::uint8_t ProductSection::getMinute() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -989,7 +989,7 @@ std::uint8_t ProductSection::getUnitOfTimeRange() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1007,7 +1007,7 @@ std::uint8_t ProductSection::getP1() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1027,7 +1027,7 @@ std::uint8_t ProductSection::getP2() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1045,7 +1045,7 @@ std::uint8_t ProductSection::getTimeRangeIndicator() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1065,7 +1065,7 @@ std::uint16_t ProductSection::getNumberIncludedInAverage() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1082,7 +1082,7 @@ std::uint8_t ProductSection::getNumberMissingFromAveragesOrAccumulations() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1099,7 +1099,7 @@ std::uint8_t ProductSection::getCenturyOfReferenceTimeOfData() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1117,7 +1117,7 @@ std::uint8_t ProductSection::getSubCentre() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1135,7 +1135,7 @@ std::uint16_t ProductSection::getDecimalScaleFactor() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1165,7 +1165,7 @@ T::TimeString ProductSection::getReferenceTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1186,7 +1186,7 @@ short ProductSection::getForecastType() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1207,7 +1207,7 @@ short ProductSection::getForecastNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1349,7 +1349,7 @@ T::TimeString ProductSection::getForecastTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1487,7 +1487,7 @@ T::TimeString ProductSection::getForecastEndTime() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 #endif
@@ -1506,7 +1506,7 @@ void ProductSection::setTableVersion(std::uint8_t tableVersion)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1522,7 +1522,7 @@ void ProductSection::setCentre(std::uint8_t centre)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1538,7 +1538,7 @@ void ProductSection::setGeneratingProcessIdentifier(std::uint8_t generatingProce
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1554,7 +1554,7 @@ void ProductSection::setGridDefinitionNumber(std::uint8_t gridDefinitionNumber)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1570,7 +1570,7 @@ void ProductSection::setSectionFlags(std::uint8_t sectionFlags)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1586,7 +1586,7 @@ void ProductSection::setIndicatorOfParameter(std::uint8_t indicatorOfParameter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1602,7 +1602,7 @@ void ProductSection::setIndicatorOfTypeOfLevel(std::uint8_t indicatorOfTypeOfLev
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1618,7 +1618,7 @@ void ProductSection::setLevel(std::uint16_t level)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1634,7 +1634,7 @@ void ProductSection::setYearOfCentury(std::uint8_t yearOfCentury)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1648,7 +1648,7 @@ void ProductSection::setMonth(std::uint8_t month)
   {
     if (month < 1 ||  month > 12)
     {
-      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      Fmi::Exception exception(BCP,"The given value is not in the acceptable value range!");
       exception.addParameter("Value",Fmi::to_string(month));
       exception.addParameter("Value Range","1..12");
       throw exception;
@@ -1658,7 +1658,7 @@ void ProductSection::setMonth(std::uint8_t month)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1672,7 +1672,7 @@ void ProductSection::setDay(std::uint8_t day)
   {
     if (day < 1 ||  day > 31)
     {
-      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      Fmi::Exception exception(BCP,"The given value is not in the acceptable value range!");
       exception.addParameter("Value",Fmi::to_string(day));
       exception.addParameter("Value Range","1..31");
       throw exception;
@@ -1682,7 +1682,7 @@ void ProductSection::setDay(std::uint8_t day)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1696,7 +1696,7 @@ void ProductSection::setHour(std::uint8_t hour)
   {
     if (hour > 23)
     {
-      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      Fmi::Exception exception(BCP,"The given value is not in the acceptable value range!");
       exception.addParameter("Value",Fmi::to_string(hour));
       exception.addParameter("Value Range","0..23");
       throw exception;
@@ -1706,7 +1706,7 @@ void ProductSection::setHour(std::uint8_t hour)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1720,7 +1720,7 @@ void ProductSection::setMinute(std::uint8_t minute)
   {
     if (minute > 59)
     {
-      SmartMet::Spine::Exception exception(BCP,"The given value is not in the acceptable value range!");
+      Fmi::Exception exception(BCP,"The given value is not in the acceptable value range!");
       exception.addParameter("Value",Fmi::to_string(minute));
       exception.addParameter("Value Range","0..59");
       throw exception;
@@ -1730,7 +1730,7 @@ void ProductSection::setMinute(std::uint8_t minute)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1746,7 +1746,7 @@ void ProductSection::setUnitOfTimeRange(std::uint8_t unitOfTimeRange)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1762,7 +1762,7 @@ void ProductSection::setP1(std::uint8_t p1)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1778,7 +1778,7 @@ void ProductSection::setP2(std::uint8_t p2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1794,7 +1794,7 @@ void ProductSection::setTimeRangeIndicator(std::uint8_t timeRangeIndicator)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1810,7 +1810,7 @@ void ProductSection::setNumberIncludedInAverage(std::uint16_t numberIncludeInAve
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1826,7 +1826,7 @@ void ProductSection::setNumberMissingFromAveragesOrAccumulations(std::uint8_t nu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1842,7 +1842,7 @@ void ProductSection::setCenturyOfReferenceTimeOfData(std::uint8_t centuryOfRefer
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1858,7 +1858,7 @@ void ProductSection::setSubCentre(std::uint8_t subCentre)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1874,7 +1874,7 @@ void ProductSection::setDecimalScaleFactor(std::uint16_t decimalScaleFactor)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1890,7 +1890,7 @@ void ProductSection::setForecastType(short forecastType)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1906,7 +1906,7 @@ void ProductSection::setForecastNumber(short forecastNuber)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1955,7 +1955,7 @@ void ProductSection::print(std::ostream& stream,uint level,uint optionFlags) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

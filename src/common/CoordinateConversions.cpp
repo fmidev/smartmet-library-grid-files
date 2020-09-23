@@ -1,8 +1,8 @@
 #include "CoordinateConversions.h"
 #include "GeneralFunctions.h"
 #include "GeneralDefinitions.h"
-#include "Exception.h"
 
+#include <macgyver/Exception.h>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -32,7 +32,7 @@ double getValue(double theAngle)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -77,7 +77,7 @@ void latlon_to_rotatedLatlon(double lat,double lon,double southPoleLat,double so
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -125,7 +125,7 @@ void rotatedLatlon_to_latlon(double rotLat,double rotLon,double southPoleLat,dou
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -150,13 +150,13 @@ std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocircl
   {
     // Sanity checks
     if (lon1 == lon2 && lat1 == lat2)
-      throw SmartMet::Spine::Exception(BCP, "Ill-defined isocircle: start and end points are equal");
+      throw Fmi::Exception(BCP, "Ill-defined isocircle: start and end points are equal");
 
     if (std::abs(lon1 - lon2) == 180 && std::abs(lat1 - (90 - lat2)) == 90)
-      throw SmartMet::Spine::Exception(BCP, "Ill-defined isocircle: points at opposing ends of the earth");
+      throw Fmi::Exception(BCP, "Ill-defined isocircle: points at opposing ends of the earth");
 
     if (steps < 1 || steps > 10000)
-      throw SmartMet::Spine::Exception(BCP,"Number of points on isocircle must be 1-10000, not " + boost::lexical_cast<std::string>(steps));
+      throw Fmi::Exception(BCP,"Number of points on isocircle must be 1-10000, not " + boost::lexical_cast<std::string>(steps));
 
     // Calculate bearing and distance to be travelled
 
@@ -191,7 +191,7 @@ std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocircl
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception::Trace(BCP, "Operation failed!");
+    throw Fmi::Exception::Trace(BCP, "Operation failed!");
   }
 }
 
@@ -236,7 +236,7 @@ void latLon_bboxByCenter(double centerX,double centerY,double metricWidth,double
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -269,10 +269,10 @@ void getBoundingBox(
     boost::shared_ptr<OGRSpatialReference> ogr_crs;
 
     if (!crs)
-      throw SmartMet::Spine::Exception(BCP, "CRS not set, unable to create projection");
+      throw Fmi::Exception(BCP, "CRS not set, unable to create projection");
 
     if (!xsize && !ysize)
-      throw SmartMet::Spine::Exception(BCP, "CRS xsize and ysize are both missing");
+      throw Fmi::Exception(BCP, "CRS xsize and ysize are both missing");
 
     // Are subdefinitions complete?
     bool full_rect_bbox = (x1 && y1 && x2 && y2);
@@ -284,31 +284,31 @@ void getBoundingBox(
 
     // Disallow partial definitions
     if (partial_rect_bbox)
-      throw SmartMet::Spine::Exception(BCP, "Partial CRS bounding box given: x1,y1,x2,y2 are needed");
+      throw Fmi::Exception(BCP, "Partial CRS bounding box given: x1,y1,x2,y2 are needed");
 
     if (partial_center_bbox)
-      throw SmartMet::Spine::Exception(BCP, "Partial CRS bounding box given: cx,cy,resolution are needed");
+      throw Fmi::Exception(BCP, "Partial CRS bounding box given: cx,cy,resolution are needed");
 
     // bbox definition missing completely?
     if (!full_rect_bbox && !full_center_bbox)
-      throw SmartMet::Spine::Exception(BCP, "CRS bounding box missing: x1,y2,x2,y2 or cx,cy,resolution are needed");
+      throw Fmi::Exception(BCP, "CRS bounding box missing: x1,y2,x2,y2 or cx,cy,resolution are needed");
 
     // must give both width and height if centered bbox is given
     if (!full_rect_bbox && full_center_bbox && (!xsize || !ysize))
-      throw SmartMet::Spine::Exception(BCP, "CRS xsize and ysize are required when a centered bounding box is used");
+      throw Fmi::Exception(BCP, "CRS xsize and ysize are required when a centered bounding box is used");
 
     // Create the CRS
     ogr_crs = boost::make_shared<OGRSpatialReference>();
     OGRErr err = ogr_crs->SetFromUserInput(crs->c_str());
 
     if (err != OGRERR_NONE)
-      throw SmartMet::Spine::Exception(BCP, "Unknown CRS: '" + *crs + "'");
+      throw Fmi::Exception(BCP, "Unknown CRS: '" + *crs + "'");
 
     if (xsize && *xsize <= 0)
-      throw SmartMet::Spine::Exception(BCP, "Projection xsize must be positive");
+      throw Fmi::Exception(BCP, "Projection xsize must be positive");
 
     if (ysize && *ysize <= 0)
-      throw SmartMet::Spine::Exception(BCP, "Projection ysize must be positive");
+      throw Fmi::Exception(BCP, "Projection ysize must be positive");
 
     // World XY bounding box will be calculated during the process
 
@@ -331,7 +331,7 @@ void getBoundingBox(
         OGRSpatialReference ogr_crs2;
         err = ogr_crs2.SetFromUserInput(bboxcrs->c_str());
         if (err != OGRERR_NONE)
-          throw SmartMet::Spine::Exception(BCP, "Unknown CRS: '" + *bboxcrs + "'");
+          throw Fmi::Exception(BCP, "Unknown CRS: '" + *bboxcrs + "'");
 
         boost::shared_ptr<OGRCoordinateTransformation> transformation(OGRCreateCoordinateTransformation(&ogr_crs2, ogr_crs.get()));
         transformation->Transform(1, &XMIN, &YMIN);
@@ -339,7 +339,7 @@ void getBoundingBox(
       }
 
       if (XMIN == XMAX || YMIN == YMAX)
-        throw SmartMet::Spine::Exception(BCP, "Bounding box size is zero!");
+        throw Fmi::Exception(BCP, "Bounding box size is zero!");
 
       if (!xsize)
       {
@@ -380,7 +380,7 @@ void getBoundingBox(
     {
       // centered bounding box
       if (!xsize || !ysize)
-        throw SmartMet::Spine::Exception(BCP, "xsize and ysize are required when a centered bounding box is used");
+        throw Fmi::Exception(BCP, "xsize and ysize are required when a centered bounding box is used");
 
       double CX = *cx, CY = *cy;
 
@@ -394,7 +394,7 @@ void getBoundingBox(
           err = ogr_crs2.SetFromUserInput(bboxcrs->c_str());
 
         if (err != OGRERR_NONE)
-          throw SmartMet::Spine::Exception(BCP, "Unknown CRS: '" + *bboxcrs + "'");
+          throw Fmi::Exception(BCP, "Unknown CRS: '" + *bboxcrs + "'");
 
         boost::shared_ptr<OGRCoordinateTransformation> transformation(OGRCreateCoordinateTransformation(&ogr_crs2, ogr_crs.get()));
         transformation->Transform(1, &CX, &CY);
@@ -437,7 +437,7 @@ void getBoundingBox(
     err = fmi.SetFromUserInput(fmiwkt);
 
     if (err != OGRERR_NONE)
-      throw SmartMet::Spine::Exception(BCP, "Unable to parse FMI WKT");
+      throw Fmi::Exception(BCP, "Unable to parse FMI WKT");
 
     boost::shared_ptr<OGRCoordinateTransformation> transformation(OGRCreateCoordinateTransformation(ogr_crs.get(), &fmi));
 
@@ -454,7 +454,7 @@ void getBoundingBox(
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 #endif

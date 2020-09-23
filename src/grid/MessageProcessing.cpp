@@ -104,7 +104,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -179,7 +179,7 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -376,7 +376,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -450,7 +450,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -527,7 +527,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -723,7 +723,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -804,7 +804,7 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1001,7 +1001,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1039,7 +1039,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& m
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1120,7 +1120,7 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1323,7 +1323,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1398,7 +1398,7 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1474,7 +1474,7 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1677,7 +1677,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1880,7 +1880,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1955,7 +1955,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2032,7 +2032,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2069,7 +2069,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& m
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2106,7 +2106,7 @@ void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2129,7 +2129,7 @@ void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2187,7 +2187,7 @@ void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& mes
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2217,7 +2217,7 @@ void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2239,7 +2239,7 @@ void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& me
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2262,7 +2262,7 @@ void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& mes
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2284,7 +2284,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2306,7 +2306,7 @@ void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2328,7 +2328,7 @@ void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& m
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2351,7 +2351,7 @@ void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& me
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2373,7 +2373,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Messag
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2395,7 +2395,7 @@ void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Messag
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2418,7 +2418,7 @@ void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2440,7 +2440,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Me
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2492,7 +2492,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Mess
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2522,7 +2522,7 @@ void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2562,7 +2562,7 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2601,7 +2601,7 @@ void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::M
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2641,7 +2641,7 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2669,7 +2669,7 @@ void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2697,7 +2697,7 @@ void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2720,7 +2720,7 @@ void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& me
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2748,7 +2748,7 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Mes
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2776,7 +2776,7 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRI
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

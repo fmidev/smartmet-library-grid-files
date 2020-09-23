@@ -1,5 +1,5 @@
 #include "ComplexGridDataRepresentationImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/BitArrayReader.h"
@@ -52,7 +52,7 @@ RepresentationDefinition* ComplexGridDataRepresentationImpl::createRepresentatio
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -78,7 +78,7 @@ void ComplexGridDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -97,7 +97,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
     //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
     //if (data == nullptr)
-      //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
+      //throw Fmi::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     decodedValues.clear();
     decodedValues.reserve(numOfValues);
@@ -409,7 +409,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

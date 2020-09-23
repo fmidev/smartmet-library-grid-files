@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "RotatedSphericalHarmonic.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -26,7 +26,7 @@ RotatedSphericalHarmonic::RotatedSphericalHarmonic() {
     mRepresentationType = 0;
     mRepresentationMode = 0;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -41,7 +41,7 @@ RotatedSphericalHarmonic::RotatedSphericalHarmonic(const RotatedSphericalHarmoni
     mRepresentationMode = other.mRepresentationMode;
     mRotation = other.mRotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -66,7 +66,7 @@ void RotatedSphericalHarmonic::read(MemoryReader &memoryReader) {
       memoryReader.read_uint8();
     mRotation.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -86,7 +86,7 @@ void RotatedSphericalHarmonic::write(DataWriter &dataWriter) {
       dataWriter.write_uint8(0);
     mRotation.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -112,7 +112,7 @@ void RotatedSphericalHarmonic::getAttributeList(std::string prefix, T::Attribute
     sprintf(name, "%sRotatedSphericalHarmonic.", prefix.c_str());
     mRotation.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -133,7 +133,7 @@ void RotatedSphericalHarmonic::print(std::ostream &stream, uint level, uint opti
     stream << space(level) << "- RepresentationMode = " << toString(mRepresentationMode) << "\n";
     mRotation.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -150,7 +150,7 @@ T::Hash RotatedSphericalHarmonic::countHash() {
     boost::hash_combine(seed, mRotation.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -164,7 +164,7 @@ GridDefinition *RotatedSphericalHarmonic::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new RotatedSphericalHarmonic(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -174,7 +174,7 @@ std::uint16_t RotatedSphericalHarmonic::getJ() const {
   try {
     return mJ;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -184,7 +184,7 @@ std::uint16_t RotatedSphericalHarmonic::getK() const {
   try {
     return mK;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -194,7 +194,7 @@ std::uint16_t RotatedSphericalHarmonic::getM() const {
   try {
     return mM;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -204,7 +204,7 @@ std::uint8_t RotatedSphericalHarmonic::getRepresentationType() const {
   try {
     return mRepresentationType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -214,7 +214,7 @@ std::uint8_t RotatedSphericalHarmonic::getRepresentationMode() const {
   try {
     return mRepresentationMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -224,7 +224,7 @@ RotationSettings *RotatedSphericalHarmonic::getRotation() const {
   try {
     return static_cast<RotationSettings *>(&mRotation);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -232,7 +232,7 @@ void RotatedSphericalHarmonic::setJ(std::uint16_t j) {
   try {
     mJ = j;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -240,7 +240,7 @@ void RotatedSphericalHarmonic::setK(std::uint16_t k) {
   try {
     mK = k;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -248,7 +248,7 @@ void RotatedSphericalHarmonic::setM(std::uint16_t m) {
   try {
     mM = m;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -256,7 +256,7 @@ void RotatedSphericalHarmonic::setRepresentationType(std::uint8_t representation
   try {
     mRepresentationType = representationType;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -264,7 +264,7 @@ void RotatedSphericalHarmonic::setRepresentationMode(std::uint8_t representation
   try {
     mRepresentationMode = representationMode;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -272,7 +272,7 @@ void RotatedSphericalHarmonic::setRotation(RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

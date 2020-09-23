@@ -9,6 +9,7 @@
 #include "../common/Coordinate.h"
 #include "../common/Dimensions.h"
 #include "../common/GraphFunctions.h"
+#include "../common/AutoThreadLock.h"
 #include "../common/ThreadLock.h"
 #include "../common/RequestCounter.h"
 #include "../common/DataWriter.h"

@@ -1,7 +1,7 @@
 #include "SecondOrderPacking.h"
 #include "DataSection.h"
 #include "Message.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/BitArrayReader.h"
 #include "../common/MemoryReader.h"
@@ -28,7 +28,7 @@ SecondOrderPacking::SecondOrderPacking()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -52,7 +52,7 @@ SecondOrderPacking::SecondOrderPacking(const SecondOrderPacking& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -78,7 +78,7 @@ DataDefinition* SecondOrderPacking::createDataDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -94,7 +94,7 @@ PackingMethod SecondOrderPacking::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -123,7 +123,7 @@ void SecondOrderPacking::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -143,7 +143,7 @@ void SecondOrderPacking::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -169,7 +169,7 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
 
     if (data == nullptr)
       return;
-      //throw SmartMet::Spine::Exception(BCP,"The 'data' pointer points to nullptr!");
+      //throw Fmi::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     // The documentation of this packing method is just terrible. The basic idea
     // of this packing method should be close to grib2 complex packing, but still
@@ -261,19 +261,19 @@ void SecondOrderPacking::decodeValues(Message *message,T::ParamValue_vec& decode
       }
       else
       {
-        throw SmartMet::Spine::Exception(BCP,"Matrix of values not supported!");
+        throw Fmi::Exception(BCP,"Matrix of values not supported!");
       }
     }
     else
     {
-      throw SmartMet::Spine::Exception(BCP,"Additional flags not in use!");
+      throw Fmi::Exception(BCP,"Additional flags not in use!");
     }
 
-    throw SmartMet::Spine::Exception(BCP,"Not supported!");
+    throw Fmi::Exception(BCP,"Not supported!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -297,11 +297,11 @@ void SecondOrderPacking::decodeValues_rowByRow(
 {
   try
   {
-    throw SmartMet::Spine::Exception(BCP,"Second order packing (rowByRow) not implemented!");
+    throw Fmi::Exception(BCP,"Second order packing (rowByRow) not implemented!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -325,11 +325,11 @@ void SecondOrderPacking::decodeValues_constantWidth(
 {
   try
   {
-    throw SmartMet::Spine::Exception(BCP,"Second order packing (constantWidth) not implemented!");
+    throw Fmi::Exception(BCP,"Second order packing (constantWidth) not implemented!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -353,11 +353,11 @@ void SecondOrderPacking::decodeValues_differentWidth(
 {
   try
   {
-    throw SmartMet::Spine::Exception(BCP,"Second order packing (differentWidth) not implemented!");
+    throw Fmi::Exception(BCP,"Second order packing (differentWidth) not implemented!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -384,7 +384,7 @@ void SecondOrderPacking::decodeValues_SPD(
   {
     // TODO: Check bitmap bits.
     if (bitmap != nullptr &&  bitmapSizeInBytes > 0)
-      throw SmartMet::Spine::Exception(BCP,"Bitmap not yet supported!");
+      throw Fmi::Exception(BCP,"Bitmap not yet supported!");
 
 
     decodedValues.clear();
@@ -458,7 +458,7 @@ void SecondOrderPacking::decodeValues_SPD(
     }
     catch (...)
     {
-      throw SmartMet::Spine::Exception(BCP,"Reading group value widths failed!",nullptr);
+      throw Fmi::Exception(BCP,"Reading group value widths failed!",nullptr);
     }
 
 
@@ -477,14 +477,14 @@ void SecondOrderPacking::decodeValues_SPD(
     }
     catch (...)
     {
-      throw SmartMet::Spine::Exception(BCP,"Reading group lengths failed!",nullptr);
+      throw Fmi::Exception(BCP,"Reading group lengths failed!",nullptr);
     }
 
 
     if (totalLength > numOfValues)
     {
       //printf("TOTAL LEN = %u  NUM OF VALUES = %u\n",totalLength,numOfValues);
-      throw SmartMet::Spine::Exception(BCP,"Total length is bigger than number of the values!");
+      throw Fmi::Exception(BCP,"Total length is bigger than number of the values!");
     }
 
     try
@@ -503,7 +503,7 @@ void SecondOrderPacking::decodeValues_SPD(
     }
     catch (...)
     {
-      throw SmartMet::Spine::Exception(BCP,"Reading group values failed!",nullptr);
+      throw Fmi::Exception(BCP,"Reading group values failed!",nullptr);
     }
 
     try
@@ -543,7 +543,7 @@ void SecondOrderPacking::decodeValues_SPD(
     }
     catch (...)
     {
-      throw SmartMet::Spine::Exception(BCP,"Reading second order values failed!",nullptr);
+      throw Fmi::Exception(BCP,"Reading second order values failed!",nullptr);
     }
 
 
@@ -631,7 +631,7 @@ void SecondOrderPacking::decodeValues_SPD(
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -697,7 +697,7 @@ void SecondOrderPacking::print(std::ostream& stream,uint level,uint optionFlags)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

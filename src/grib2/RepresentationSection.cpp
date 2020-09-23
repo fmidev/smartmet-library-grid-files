@@ -1,7 +1,7 @@
 #include "RepresentationSection.h"
 #include "Message.h"
 #include "../identification/GridDef.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 
 #include "implementation/GridDataRepresentationImpl.h"                       // "5.0"
@@ -41,7 +41,7 @@ RepresentationSection::RepresentationSection()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -71,7 +71,7 @@ RepresentationSection::RepresentationSection(const RepresentationSection& other)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,"Constructor failed!",nullptr);
+    throw Fmi::Exception(BCP,"Constructor failed!",nullptr);
   }
 }
 
@@ -115,7 +115,7 @@ void RepresentationSection::getAttributeList(std::string prefix,T::AttributeList
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -138,7 +138,7 @@ void RepresentationSection::setMessagePtr(Message *message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -171,7 +171,7 @@ bool RepresentationSection::getProperty(uint propertyId,long long& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -204,7 +204,7 @@ bool RepresentationSection::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -226,7 +226,7 @@ void RepresentationSection::read(MemoryReader& memoryReader)
     memoryReader >> mSectionLength;
     if (missing(mSectionLength))
     {
-      SmartMet::Spine::Exception exception(BCP,"Section length cannot be missing!");
+      Fmi::Exception exception(BCP,"Section length cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-4));
       throw exception;
     }
@@ -236,7 +236,7 @@ void RepresentationSection::read(MemoryReader& memoryReader)
     memoryReader >> mNumberOfValues;
     if (missing(mNumberOfValues))
     {
-      SmartMet::Spine::Exception exception(BCP,"Number of values in section cannot be missing");
+      Fmi::Exception exception(BCP,"Number of values in section cannot be missing");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-4));
       throw exception;
     }
@@ -244,7 +244,7 @@ void RepresentationSection::read(MemoryReader& memoryReader)
     memoryReader >> mDataRepresentationTemplateNumber;
     if (missing(mDataRepresentationTemplateNumber))
     {
-      SmartMet::Spine::Exception exception(BCP,"Data representation template number cannot be missing");
+      Fmi::Exception exception(BCP,"Data representation template number cannot be missing");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-2));
       throw exception;
     }
@@ -258,7 +258,7 @@ void RepresentationSection::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -276,10 +276,10 @@ void RepresentationSection::write(DataWriter& dataWriter)
   try
   {
     if (!mRepresentationDefinition)
-      throw SmartMet::Spine::Exception(BCP,"Missing representation definition");
+      throw Fmi::Exception(BCP,"Missing representation definition");
 
     if (missing(mNumberOfValues))
-      throw SmartMet::Spine::Exception(BCP,"Number of values in section cannot be missing");
+      throw Fmi::Exception(BCP,"Number of values in section cannot be missing");
 
     mFilePosition = dataWriter.getWritePosition();
     mDataRepresentationTemplateNumber = mRepresentationDefinition->getTemplateNumber();
@@ -300,7 +300,7 @@ void RepresentationSection::write(DataWriter& dataWriter)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -321,7 +321,7 @@ T::FilePosition RepresentationSection::getFilePosition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -345,7 +345,7 @@ std::uint32_t RepresentationSection::getSectionLength() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -363,7 +363,7 @@ std::string RepresentationSection::getSectionName() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -381,7 +381,7 @@ std::uint8_t RepresentationSection::getSectionNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -404,7 +404,7 @@ std::uint8_t RepresentationSection::getNumberOfSection() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -423,7 +423,7 @@ std::uint32_t RepresentationSection::getNumberOfValues() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -439,7 +439,7 @@ void RepresentationSection::setNumberOfValues(std::uint32_t numOfValues)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -456,7 +456,7 @@ std::string RepresentationSection::getDataRepresentationString() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -472,7 +472,7 @@ std::uint16_t RepresentationSection::getDataRepresentationTemplateNumber() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -491,7 +491,7 @@ bool RepresentationSection::getValueByIndex(uint index,T::ParamValue& value) con
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -508,7 +508,7 @@ void RepresentationSection::decodeValues(T::ParamValue_vec& decodedValues) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -521,13 +521,13 @@ void RepresentationSection::encodeValues(Message *message,T::ParamValue_vec& val
   try
   {
     if (!mRepresentationDefinition)
-      throw SmartMet::Spine::Exception(BCP,"The 'mRepresentationDefinition' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mRepresentationDefinition' attribute points to nullptr!");
 
     mRepresentationDefinition->encodeValues(mMessage,values);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -543,7 +543,7 @@ RepresentationDefinition_sptr RepresentationSection::getRepresentationDefinition
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -556,14 +556,14 @@ void RepresentationSection::setRepresentationDefinition(RepresentationDefinition
   try
   {
     if (representationDefinition == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'representationDefinition' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'representationDefinition' parameter points to nullptr!");
 
     mDataRepresentationTemplateNumber = representationDefinition->getTemplateNumber();
     mRepresentationDefinition.reset(representationDefinition);
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -578,7 +578,7 @@ void RepresentationSection::setRepresentationDefinition(std::uint16_t templateNu
     RepresentationDefinition *representationDefinition = createRepresentationDefinition(templateNumber);
     if (representationDefinition == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Unsupported template number!");
+      Fmi::Exception exception(BCP,"Unsupported template number!");
       exception.addParameter("Template number",Fmi::to_string(templateNumber));
       throw exception;
     }
@@ -588,7 +588,7 @@ void RepresentationSection::setRepresentationDefinition(std::uint16_t templateNu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -642,13 +642,13 @@ RepresentationDefinition* RepresentationSection::createRepresentationDefinition(
         return new ComplexSphericalHarmonicsDataRepresentationImpl();
     }
 
-    Spine::Exception exception(BCP,"Unknown representation definition template number!'");
+    Fmi::Exception exception(BCP,"Unknown representation definition template number!'");
     exception.addParameter("Template number",Fmi::to_string(templateNumber));
     throw exception;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -680,7 +680,7 @@ void RepresentationSection::print(std::ostream& stream,uint level,uint optionFla
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

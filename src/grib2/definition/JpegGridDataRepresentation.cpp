@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "JpegGridDataRepresentation.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 JpegGridDataRepresentation::JpegGridDataRepresentation() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -34,7 +34,7 @@ JpegGridDataRepresentation::JpegGridDataRepresentation(const JpegGridDataReprese
     mTypeOfCompressionUsed = other.mTypeOfCompressionUsed;
     mTargetCompressionRatio = other.mTargetCompressionRatio;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -55,7 +55,7 @@ void JpegGridDataRepresentation::read(MemoryReader &memoryReader) {
     mTypeOfCompressionUsed = memoryReader.read_UInt8_opt();
     mTargetCompressionRatio = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -71,7 +71,7 @@ void JpegGridDataRepresentation::write(DataWriter &dataWriter) {
     dataWriter << mTypeOfCompressionUsed;
     dataWriter << mTargetCompressionRatio;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -93,7 +93,7 @@ void JpegGridDataRepresentation::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sJpegGridDataRepresentation.TargetCompressionRatio", prefix.c_str());
     attributeList.addAttribute(name, toString(mTargetCompressionRatio));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -112,7 +112,7 @@ void JpegGridDataRepresentation::print(std::ostream &stream, uint level, uint op
     stream << space(level) << "- TypeOfCompressionUsed = " << toString(mTypeOfCompressionUsed) << "\n";
     stream << space(level) << "- TargetCompressionRatio = " << toString(mTargetCompressionRatio) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -129,7 +129,7 @@ T::Hash JpegGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -143,7 +143,7 @@ RepresentationDefinition *JpegGridDataRepresentation::createRepresentationDefini
   try {
     return static_cast<RepresentationDefinition *>(new JpegGridDataRepresentation(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -153,7 +153,7 @@ PackingSettings *JpegGridDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -163,7 +163,7 @@ OriginalValuesSettings *JpegGridDataRepresentation::getOriginalValues() const {
   try {
     return static_cast<OriginalValuesSettings *>(&mOriginalValues);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -173,7 +173,7 @@ const T::UInt8_opt &JpegGridDataRepresentation::getTypeOfCompressionUsed() const
   try {
     return mTypeOfCompressionUsed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -183,7 +183,7 @@ const T::UInt8_opt &JpegGridDataRepresentation::getTargetCompressionRatio() cons
   try {
     return mTargetCompressionRatio;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -191,7 +191,7 @@ void JpegGridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -199,7 +199,7 @@ void JpegGridDataRepresentation::setOriginalValues(OriginalValuesSettings &origi
   try {
     mOriginalValues = originalValues;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -207,7 +207,7 @@ void JpegGridDataRepresentation::setTypeOfCompressionUsed(T::UInt8_opt typeOfCom
   try {
     mTypeOfCompressionUsed = typeOfCompressionUsed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -215,7 +215,7 @@ void JpegGridDataRepresentation::setTargetCompressionRatio(T::UInt8_opt targetCo
   try {
     mTargetCompressionRatio = targetCompressionRatio;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

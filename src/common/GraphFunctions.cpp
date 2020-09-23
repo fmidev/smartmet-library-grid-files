@@ -1,5 +1,4 @@
 #include "GraphFunctions.h"
-#include "Exception.h"
 #include "ImageFunctions.h"
 #include "MemoryReader.h"
 #include "MemoryWriter.h"
@@ -16,6 +15,8 @@
 #include <tron/FmiBuilder.h>
 #include <tron/Tron.h>
 #include <tron/SavitzkyGolay2D.h>
+#include <macgyver/Exception.h>
+#include <macgyver/FastMath.h>
 
 
 
@@ -83,7 +84,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
       if ((y1 - yStart) > 0)
         yStart++;
 
-      int yEnd = floor(y2);
+      int yEnd = Fmi::floor(y2);
 
       for (int y=yStart; y<=yEnd; y++)
       {
@@ -109,7 +110,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
       if ((x1 - xStart) > 0)
         xStart++;
 
-      int xEnd = floor(x2);
+      int xEnd = Fmi::floor(x2);
 
       for (int x=xStart; x<=xEnd; x++)
       {
@@ -132,7 +133,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
     if ((y1 - yStart) > 0)
       yStart++;
 
-    int yEnd = floor(y2);
+    int yEnd = Fmi::floor(y2);
 
     for (int y=yStart; y<yEnd; y++)
     {
@@ -150,7 +151,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -309,7 +310,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -422,7 +423,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
 
           if (c >= 200000)
           {
-            throw SmartMet::Spine::Exception(BCP,"Not enough space for the point list!",nullptr);
+            throw Fmi::Exception(BCP,"Not enough space for the point list!",nullptr);
           }
         }
 
@@ -502,7 +503,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -557,7 +558,7 @@ void getPointsInsideCircle(int gridWidth,int gridHeight,double origoX,double ori
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -611,7 +612,7 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,T::Polygon_vec& polygonPat
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -637,7 +638,7 @@ std::string convertWktMultiPolygonToSvgString(const std::string& wktString)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -656,7 +657,7 @@ void convertWktMultipolygonToSvgPath(const std::string& wktString,NFmiSvgPath& s
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -677,7 +678,7 @@ void convertWktMultipolygonToPolygonPath(const std::string& wktString,T::Polygon
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -727,7 +728,7 @@ bool getLineIntersection(double ax1, double ay1,double ax2, double ay2,double bx
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -749,7 +750,7 @@ bool getLineIntersection(std::pair<T::Coordinate,T::Coordinate> line1,std::pair<
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -839,7 +840,7 @@ void getPointMovement(double x1,double y1,double x2,double y2,double areaExtensi
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -929,7 +930,7 @@ void getPointMovementRev(double x1,double y1,double x2,double y2,double areaExte
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -991,7 +992,7 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec& oldCoordinates,double ar
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1019,7 +1020,7 @@ double getPolygonLen(T::Coordinate_vec& coordinates)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1055,7 +1056,7 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec& oldCoordinates,double ar
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1079,7 +1080,7 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec& oldPath,double areaExtensi
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1332,7 +1333,7 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1397,7 +1398,7 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
     auto len = contourLowValues.size();
     if (contourHighValues.size() != len)
     {
-      throw SmartMet::Spine::Exception(BCP,"There should be the same number of contour high and low values!");
+      throw Fmi::Exception(BCP,"There should be the same number of contour high and low values!");
     }
 
     boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
@@ -1485,7 +1486,7 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1501,7 +1502,7 @@ void convertWkbPoint(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGR
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1530,7 +1531,7 @@ void convertWkbLine(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRC
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1559,7 +1560,7 @@ void convertWkbRing(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRC
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1582,7 +1583,7 @@ void convertWkbPolygon(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,O
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1598,7 +1599,7 @@ void convertWkbMultiPoint(MemoryReader& _memoryReader,MemoryWriter& _memoryWrite
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1630,7 +1631,7 @@ void convertWkbMultiLineString(MemoryReader& _memoryReader,MemoryWriter& _memory
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1646,7 +1647,7 @@ void convertWkbMultiPolygon(MemoryReader& _memoryReader,MemoryWriter& _memoryWri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1667,7 +1668,7 @@ void convertWkbGeometryCollection(MemoryReader& _memoryReader,MemoryWriter& _mem
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1725,7 +1726,7 @@ void convertWkbCoordinates(MemoryReader& _memoryReader,MemoryWriter& _memoryWrit
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1760,7 +1761,7 @@ void convertWkbCoordinates(T::ByteData& _wkb,T::ByteData& _newWkb,OGRCoordinateT
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1782,7 +1783,7 @@ void convertWkbCoordinates(T::ByteData_vec& _wkbVec,T::ByteData_vec& _newWkbVec,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 #endif

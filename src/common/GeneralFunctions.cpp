@@ -25,7 +25,6 @@
 #include <string>
 #include <vector>
 #include "AutoThreadLock.h"
-#include "Exception.h"
 #include "GeneralDefinitions.h"
 
 #define NUM(a) (a-'0')
@@ -49,7 +48,7 @@ std::string uint64_toHex(unsigned long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -66,7 +65,7 @@ int num_compare(uint& v1, uint& v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -82,7 +81,7 @@ int num_compare(char& v1, char& v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -98,7 +97,7 @@ int num_compare(uchar& v1, uchar& v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -114,7 +113,7 @@ int num_compare(short& v1, short& v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -130,7 +129,7 @@ int num_compare(ushort& v1, ushort& v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -146,7 +145,7 @@ int num_compare(int& v1, int& v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -162,7 +161,7 @@ int num_compare(unsigned long long& v1, unsigned long long& v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -178,7 +177,7 @@ int num_compare(long long& v1, long long& v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -194,7 +193,7 @@ int num_compare(float& v1, float& v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -210,7 +209,7 @@ int num_compare(double& v1, double& v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -226,7 +225,7 @@ int time_compare(time_t v1, time_t v2)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 #endif
@@ -265,7 +264,7 @@ double int_power(double x, int y)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -325,7 +324,7 @@ float ieee2ibm(float value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -349,7 +348,7 @@ float ibm2ieee(float ibmFloat)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -372,7 +371,7 @@ double grib_power(long s, long n)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -388,7 +387,7 @@ std::string space(uint size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -402,7 +401,7 @@ unsigned long long getTime()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -417,7 +416,7 @@ time_t getFileModificationTime(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -432,7 +431,7 @@ long long getFileSize(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -451,7 +450,7 @@ std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -474,7 +473,7 @@ uint stringToId(const char *str, uint len)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -489,7 +488,7 @@ uint stringToId(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -504,7 +503,7 @@ int getInt(const char *str, uint startIdx, uint len)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -558,7 +557,7 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -638,7 +637,7 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -648,7 +647,7 @@ time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
   {
     if (localTime.length() != 15)
     {
-      SmartMet::Spine::Exception exception(BCP,"Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+      Fmi::Exception exception(BCP,"Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
       exception.addParameter("timestamp", localTime);
       throw exception;
     }
@@ -671,7 +670,7 @@ time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -681,7 +680,7 @@ time_t utcTimeToTimeT(const std::string& utcTime)
   {
     //printf("utcTimeToTimeT %s\n",utcTime.c_str());
     if (utcTime.length() != 15)
-      throw SmartMet::Spine::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+      throw Fmi::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
 
     const char *str = utcTime.c_str();
 
@@ -701,7 +700,7 @@ time_t utcTimeToTimeT(const std::string& utcTime)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -710,7 +709,7 @@ void splitTimeString(const std::string& timeStr, int &year, int &month, int &day
   try
   {
     if (timeStr.length() != 15)
-      throw SmartMet::Spine::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+      throw Fmi::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
 
     const char *str = timeStr.c_str();
 
@@ -723,7 +722,7 @@ void splitTimeString(const std::string& timeStr, int &year, int &month, int &day
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -732,7 +731,7 @@ void splitTimeString(const std::string& timeStr, short &year, uchar &month, ucha
   try
   {
     if (timeStr.length() != 15)
-      throw SmartMet::Spine::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
+      throw Fmi::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
 
     const char *str = timeStr.c_str();
 
@@ -745,7 +744,7 @@ void splitTimeString(const std::string& timeStr, short &year, uchar &month, ucha
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -770,7 +769,7 @@ std::string localTimeFromTimeT(time_t t, const char *tzone)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -795,7 +794,7 @@ std::string utcTimeFromTimeT(time_t t)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -808,7 +807,7 @@ std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -823,7 +822,7 @@ std::string localTimeToUtc(const std::string& localTime, boost::local_time::time
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -836,7 +835,7 @@ std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -848,7 +847,7 @@ time_t toTimeT(boost::posix_time::ptime tim)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -862,7 +861,7 @@ std::string addSeconds(const std::string& timeStr, int seconds)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -876,7 +875,7 @@ char toInt8(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -890,7 +889,7 @@ short toInt16(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -904,7 +903,7 @@ int toInt32(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -918,7 +917,7 @@ long long toInt64(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -932,7 +931,7 @@ size_t toSize_t(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -946,7 +945,7 @@ uchar toUInt8(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -960,7 +959,7 @@ ushort toUInt16(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -974,7 +973,7 @@ uint toUInt32(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -988,7 +987,7 @@ ulonglong toUInt64(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1048,7 +1047,7 @@ double toDouble(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1063,7 +1062,7 @@ char toInt8(const std::string &str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1075,7 +1074,7 @@ short toInt16(const std::string &str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1087,7 +1086,7 @@ int toInt32(const std::string &str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1099,7 +1098,7 @@ long long toInt64(const std::string &str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1111,7 +1110,7 @@ uchar toUInt8(const std::string &str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1123,7 +1122,7 @@ ushort toUInt16(const std::string &str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1135,7 +1134,7 @@ uint toUInt32(const std::string &str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1147,7 +1146,7 @@ ulonglong toUInt64(const std::string &str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1159,7 +1158,7 @@ double toDouble(const std::string &str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1171,7 +1170,7 @@ size_t toSize_t(const std::string &str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1184,7 +1183,7 @@ std::string toString(std::array<char, 16> value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1196,7 +1195,7 @@ std::string toString(std::int8_t value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1208,7 +1207,7 @@ std::string toString(std::int16_t value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1220,7 +1219,7 @@ std::string toString(std::int32_t value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1232,7 +1231,7 @@ std::string toString(std::int64_t value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1244,7 +1243,7 @@ std::string toString(std::uint8_t value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1256,7 +1255,7 @@ std::string toString(std::uint16_t value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1268,7 +1267,7 @@ std::string toString(std::uint32_t value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1280,7 +1279,7 @@ std::string toString(std::uint64_t value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1294,7 +1293,7 @@ std::string toString(float value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1308,7 +1307,7 @@ std::string toString(double value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1320,7 +1319,7 @@ std::string toString(const std::string& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1334,7 +1333,7 @@ std::string toString(T::UInt8_opt value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1348,7 +1347,7 @@ std::string toString(T::UInt16_opt value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1362,7 +1361,7 @@ std::string toString(T::UInt32_opt value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1376,7 +1375,7 @@ std::string toString(T::UInt64_opt value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1390,7 +1389,7 @@ std::string toString(T::Int8_opt value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1404,7 +1403,7 @@ std::string toString(T::Int16_opt value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1418,7 +1417,7 @@ std::string toString(T::Int32_opt value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1432,7 +1431,7 @@ std::string toString(T::Int64_opt value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1444,7 +1443,7 @@ std::string toString(boost::posix_time::ptime time)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1457,7 +1456,7 @@ std::string toLowerString(const char *sourceString)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1478,7 +1477,7 @@ std::string toLowerString(const std::string& sourceString)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1491,7 +1490,7 @@ std::string toUpperString(const char *sourceString)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1511,7 +1510,7 @@ std::string toUpperString(const std::string& sourceString)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1522,7 +1521,7 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
   try
   {
     if (timeStr.length() <  15)
-      SmartMet::Spine::Exception(BCP, "Invalid time string!");
+      Fmi::Exception(BCP, "Invalid time string!");
 
     const char *s = timeStr.c_str();
 
@@ -1544,7 +1543,7 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1566,7 +1565,7 @@ int compressData(void *_data, uint _dataSize, void *_compressedData, uint &_comp
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1593,7 +1592,7 @@ int decompressData(void *_compressedData,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1632,7 +1631,7 @@ void parseLatLonCoordinates(const std::string& latLonCoordinates, std::vector<T:
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1670,7 +1669,7 @@ void splitString(const char *str, char separator, std::vector<std::string> &part
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1682,7 +1681,7 @@ void splitString(const std::string& str, char separator, std::vector<std::string
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1720,7 +1719,7 @@ void splitString(const char *str, char separator, std::set<std::string> &partLis
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1732,7 +1731,7 @@ void splitString(const std::string& str, char separator, std::set<std::string> &
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1770,7 +1769,7 @@ void splitString(const char *str, char separator, std::vector<uint> &partList)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1782,7 +1781,7 @@ void splitString(const std::string& str, char separator, std::vector<uint> &part
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1820,7 +1819,7 @@ void splitString(const char *str, char separator, std::vector<int> &partList)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1832,7 +1831,7 @@ void splitString(const std::string& str, char separator, std::vector<int> &partL
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1870,7 +1869,7 @@ void splitString(const char *str, char separator, std::vector<double> &partList)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1882,7 +1881,7 @@ void splitString(const std::string& str, char separator, std::vector<double> &pa
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1920,7 +1919,7 @@ void splitString(const char *str, char separator, std::vector<float> &partList)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1932,7 +1931,7 @@ void splitString(const std::string& str, char separator, std::vector<float> &par
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1970,7 +1969,7 @@ void splitString(const char *str, char separator, std::set<float> &partList)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -1982,7 +1981,7 @@ void splitString(const std::string& str, char separator, std::set<float> &partLi
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2020,7 +2019,7 @@ void splitString(const char *str, char separator, std::set<int> &partList)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2032,7 +2031,7 @@ void splitString(const std::string& str, char separator, std::set<int> &partList
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2070,7 +2069,7 @@ void splitString(const char *str, char separator, std::set<double> &partList)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2082,7 +2081,7 @@ void splitString(const std::string& str, char separator, std::set<double> &partL
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2104,7 +2103,7 @@ std::string getAbsoluteFilePath(const std::string& filename)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2123,7 +2122,7 @@ std::string getFileDir(const std::string& filename)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2140,7 +2139,7 @@ bool patternMatch(const char *str, std::vector<std::string> &patterns)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2220,7 +2219,7 @@ void getFileList(const char *dirName,
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2270,7 +2269,7 @@ int timePeriodToSeconds(const char *timePeriod)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2289,7 +2288,7 @@ std::string toString(std::list<std::string> &parts, char separator)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2308,7 +2307,7 @@ std::string toString(std::set<int> &parts, char separator)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2327,7 +2326,7 @@ std::string toString(std::set<float> &parts, char separator)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2351,7 +2350,7 @@ std::string toString(T::AreaCoordinates &coordinates, char separator1, char sepa
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2382,7 +2381,7 @@ void parseCoordinates(const std::string& coordinateStr,
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2442,7 +2441,7 @@ std::string base64_encode(unsigned char *data, size_t dataSize)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -2453,7 +2452,7 @@ std::string fileToBase64(const char *filename)
     long long size = getFileSize(filename);
     if (size <= 0)
     {
-      Spine::Exception exception(BCP, "Invalid file size!");
+      Fmi::Exception exception(BCP, "Invalid file size!");
       exception.addParameter("Filename", filename);
       exception.addParameter("Size", std::to_string(size));
       throw exception;
@@ -2462,7 +2461,7 @@ std::string fileToBase64(const char *filename)
     FILE *file = fopen(filename, "r");
     if (file == nullptr)
     {
-      Spine::Exception exception(BCP, "Cannot open the file!");
+      Fmi::Exception exception(BCP, "Cannot open the file!");
       exception.addParameter("Filename", filename);
       throw exception;
     }
@@ -2473,7 +2472,7 @@ std::string fileToBase64(const char *filename)
     {
       fclose(file);
       delete[] data;
-      Spine::Exception exception(BCP, "File read failed!");
+      Fmi::Exception exception(BCP, "File read failed!");
       exception.addParameter("Filename", filename);
       throw exception;
     }
@@ -2487,7 +2486,7 @@ std::string fileToBase64(const char *filename)
   }
   catch (...)
   {
-    throw Spine::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

@@ -1,8 +1,8 @@
 #include "ImagePaint.h"
 #include "ImageFunctions.h"
-#include "Exception.h"
 #include "MemoryReader.h"
 #include "ShowFunction.h"
+#include <macgyver/Exception.h>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
@@ -17,10 +17,10 @@ ImagePaint::ImagePaint(int _imageWidth,int _imageHeight,uint _backColor,bool _ro
   try
   {
     if (_imageWidth <= 0)
-      throw SmartMet::Spine::Exception(BCP,"Illegal image width!");
+      throw Fmi::Exception(BCP,"Illegal image width!");
 
     if (_imageHeight <= 0)
-      throw SmartMet::Spine::Exception(BCP,"Illegal image height!");
+      throw Fmi::Exception(BCP,"Illegal image height!");
 
     mImageWidth = _imageWidth;
     mImageHeight = _imageHeight;
@@ -35,7 +35,7 @@ ImagePaint::ImagePaint(int _imageWidth,int _imageHeight,uint _backColor,bool _ro
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -51,7 +51,7 @@ ImagePaint::~ImagePaint()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -76,7 +76,7 @@ void ImagePaint::paintPixel(int _x,int _y,uint _color)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -92,7 +92,7 @@ void ImagePaint::paintLine(double _x1,double _y1,double _x2,double _y2,uint _col
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -171,7 +171,7 @@ void ImagePaint::paintLine(int _x1,int _y1,int _x2,int _y2,uint _color)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -288,7 +288,7 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _co
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -375,7 +375,7 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
 
           if (c >= 200000)
           {
-            throw SmartMet::Spine::Exception(BCP,"Not enough space for the point list!",nullptr);
+            throw Fmi::Exception(BCP,"Not enough space for the point list!",nullptr);
           }
         }
 
@@ -437,7 +437,7 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -464,7 +464,7 @@ void ImagePaint::paintWkbPoint(double _mpx,double _mpy,double _dx,double _dy,Mem
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -500,7 +500,7 @@ void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,Memo
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -531,7 +531,7 @@ void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,Memo
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -553,7 +553,7 @@ void ImagePaint::paintWkbPolygon(double _mpx,double _mpy,double _dx,double _dy,M
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -575,7 +575,7 @@ void ImagePaint::paintWkbMultiPoint(double _mpx,double _mpy,double _dx,double _d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -599,7 +599,7 @@ void ImagePaint::paintWkbMultiLineString(double _mpx,double _mpy,double _dx,doub
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -647,7 +647,7 @@ void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -669,7 +669,7 @@ void ImagePaint::paintWkbGeometryCollection(double _mpx,double _mpy,double _dx,d
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -725,7 +725,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryRe
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -746,7 +746,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,uchar *_
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -774,7 +774,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -794,7 +794,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -811,7 +811,7 @@ void ImagePaint::saveJpgImage(const char *_filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -828,7 +828,7 @@ void ImagePaint::savePngImage(const char *_filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

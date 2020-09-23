@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Exception.h"
 #include "Attribute.h"
+#include <macgyver/Exception.h>
 
 #include <set>
 

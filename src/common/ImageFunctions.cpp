@@ -1,8 +1,8 @@
 #include "GeneralFunctions.h"
 #include "ImageFunctions.h"
-#include "Exception.h"
 #include "MemoryReader.h"
 #include "ShowFunction.h"
+#include <macgyver/Exception.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -68,7 +68,7 @@ uint rgb(uint red, uint green, uint blue)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -84,7 +84,7 @@ uint rgb(uchar red, uchar green, uchar blue)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -144,7 +144,7 @@ uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -185,7 +185,7 @@ void jpeg_save(const char *filename, uint *image, int image_height,int image_wid
 
     if ((outfile = fopen(filename, "wbe")) == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot create the JPG file!");
+      Fmi::Exception exception(BCP,"Cannot create the JPG file!");
       exception.addParameter("Filename",filename);
       throw exception;
     }
@@ -217,7 +217,7 @@ void jpeg_save(const char *filename, uint *image, int image_height,int image_wid
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -269,7 +269,7 @@ int jpg_load(const char *_filename,CImage& _image)
   {
     if (getFileSize(_filename) <= 0)
     {
-      SmartMet::Spine::Exception exception(BCP,"File is empty or missing!");
+      Fmi::Exception exception(BCP,"File is empty or missing!");
       exception.addParameter("Filename",_filename);
       throw exception;
     }
@@ -469,7 +469,7 @@ int jpg_load(const char *_filename,CImage& _image)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -688,7 +688,7 @@ int png_load(const char *_filename,CImage& _image)
   {
     if (getFileSize(_filename) <= 0)
     {
-      SmartMet::Spine::Exception exception(BCP,"File is empty or missing!");
+      Fmi::Exception exception(BCP,"File is empty or missing!");
       exception.addParameter("Filename",_filename);
       throw exception;
     }
@@ -759,7 +759,7 @@ int png_load(const char *_filename,CImage& _image)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -929,7 +929,7 @@ void paintPixel(uint *_image,int _width,int _height,bool _rotatedX,bool _rotated
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1008,7 +1008,7 @@ void paintLine(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1059,7 +1059,7 @@ void paintSvgPath(uint *_image,int _width,int _height,bool _rotatedX,bool _rotat
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1176,7 +1176,7 @@ void paintPolygon(uint *_image,int _width,int _height,bool _rotatedX,bool _rotat
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1263,7 +1263,7 @@ void paintPolygonPath(uint *_image,int _width,int _height,bool _rotatedX,bool _r
 
           if (c >= 200000)
           {
-            throw SmartMet::Spine::Exception(BCP,"Not enough space for the point list!",nullptr);
+            throw Fmi::Exception(BCP,"Not enough space for the point list!",nullptr);
           }
         }
 
@@ -1325,7 +1325,7 @@ void paintPolygonPath(uint *_image,int _width,int _height,bool _rotatedX,bool _r
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1352,7 +1352,7 @@ void paintWkbPoint(uint *_image,int _width,int _height,bool _rotatedX,bool _rota
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1388,7 +1388,7 @@ void paintWkbLine(uint *_image,int _width,int _height,bool _rotatedX,bool _rotat
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1419,7 +1419,7 @@ void paintWkbRing(uint *_image,int _width,int _height,bool _rotatedX,bool _rotat
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1441,7 +1441,7 @@ void paintWkbPolygon(uint *_image,int _width,int _height,bool _rotatedX,bool _ro
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1463,7 +1463,7 @@ void paintWkbMultiPoint(uint *_image,int _width,int _height,bool _rotatedX,bool 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1487,7 +1487,7 @@ void paintWkbMultiLineString(uint *_image,int _width,int _height,bool _rotatedX,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1535,7 +1535,7 @@ void paintWkbMultiPolygon(uint *_image,int _width,int _height,bool _rotatedX,boo
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1557,7 +1557,7 @@ void paintWkbGeometryCollection(uint *_image,int _width,int _height,bool _rotate
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1613,7 +1613,7 @@ void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1634,7 +1634,7 @@ void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1662,7 +1662,7 @@ void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1682,7 +1682,7 @@ void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1701,14 +1701,14 @@ void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
 
     if (size == 0)
     {
-      SmartMet::Spine::Exception exception(BCP,"No files defined!");
+      Fmi::Exception exception(BCP,"No files defined!");
       throw exception;
     }
 
     CImage image;
     if (png_load(fileList[0].c_str(),image) != 0)
     {
-      SmartMet::Spine::Exception exception(BCP,"PNG load failed!");
+      Fmi::Exception exception(BCP,"PNG load failed!");
       exception.addParameter("Filename",fileList[0]);
       throw exception;
     }
@@ -1720,14 +1720,14 @@ void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
       CImage img;
       if (png_load(fileList[t].c_str(),img) != 0  ||  img.width != image.width ||  img.height != image.height)
       {
-        SmartMet::Spine::Exception exception(BCP,"PNG load failed!");
+        Fmi::Exception exception(BCP,"PNG load failed!");
         exception.addParameter("Filename",fileList[t]);
         throw exception;
       }
 
       if (img.width != image.width ||  img.height != image.height)
       {
-        SmartMet::Spine::Exception exception(BCP,"Image sizes are not equal!");
+        Fmi::Exception exception(BCP,"Image sizes are not equal!");
         exception.addParameter("Filename",fileList[t]);
         throw exception;
       }
@@ -1744,9 +1744,9 @@ void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
 
     png_save(newFile,image.pixel,image.width,image.height);
   }
-  catch (SmartMet::Spine::Exception& e)
+  catch (Fmi::Exception& e)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

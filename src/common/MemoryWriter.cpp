@@ -10,10 +10,10 @@ MemoryWriter::MemoryWriter(uchar *_data,ulonglong _dataSize,bool _dataRelease)
   try
   {
     if (_data == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The '_data' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The '_data' parameter points to nullptr!");
 
     if (_dataSize == 0)
-      throw SmartMet::Spine::Exception(BCP,"The value of the '_dataSize' parameter is 0!");
+      throw Fmi::Exception(BCP,"The value of the '_dataSize' parameter is 0!");
 
     mData = _data;
     mDataSize = _dataSize;
@@ -23,7 +23,7 @@ MemoryWriter::MemoryWriter(uchar *_data,ulonglong _dataSize,bool _dataRelease)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -41,7 +41,7 @@ MemoryWriter::~MemoryWriter()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -58,7 +58,7 @@ ulonglong MemoryWriter::getWritePosition()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -73,7 +73,7 @@ ulonglong MemoryWriter::getMaxWritePosition()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -85,13 +85,13 @@ void MemoryWriter::setWritePosition(ulonglong _pos)
   try
   {
     if (_pos >= mDataSize)
-      throw SmartMet::Spine::Exception(BCP,"The '_pos' parameter point to out of the data area!");
+      throw Fmi::Exception(BCP,"The '_pos' parameter point to out of the data area!");
 
     mWritePosition = _pos;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -107,7 +107,7 @@ uchar* MemoryWriter::getDataPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -121,7 +121,7 @@ void MemoryWriter::write_data(void *_data,ulonglong _size)
   {
     uchar *d = (uchar*)_data;
     if ((mWritePosition + _size) >= mDataSize)
-      throw SmartMet::Spine::Exception(BCP,"Trying to write data to outsize of the buffer!");
+      throw Fmi::Exception(BCP,"Trying to write data to outsize of the buffer!");
 
     for (ulonglong t=0; t< _size; t++)
       mData[mWritePosition + t] = d[t];
@@ -133,7 +133,7 @@ void MemoryWriter::write_data(void *_data,ulonglong _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

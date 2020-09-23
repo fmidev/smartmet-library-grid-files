@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "ComplexDifferenceGridData.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 ComplexDifferenceGridData::ComplexDifferenceGridData() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -30,7 +30,7 @@ ComplexDifferenceGridData::ComplexDifferenceGridData() {
 ComplexDifferenceGridData::ComplexDifferenceGridData(const ComplexDifferenceGridData &other) : DataDefinition(other) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -47,7 +47,7 @@ ComplexDifferenceGridData::~ComplexDifferenceGridData() {
 void ComplexDifferenceGridData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -59,7 +59,7 @@ void ComplexDifferenceGridData::read(MemoryReader &memoryReader) {
 void ComplexDifferenceGridData::write(DataWriter &dataWriter) {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -72,7 +72,7 @@ void ComplexDifferenceGridData::write(DataWriter &dataWriter) {
 void ComplexDifferenceGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -87,7 +87,7 @@ void ComplexDifferenceGridData::print(std::ostream &stream, uint level, uint opt
   try {
     stream << space(level) << "ComplexDifferenceGridData\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -98,7 +98,7 @@ T::Hash ComplexDifferenceGridData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -112,7 +112,7 @@ DataDefinition *ComplexDifferenceGridData::createDataDefinition() const {
   try {
     return static_cast<DataDefinition *>(new ComplexDifferenceGridData(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

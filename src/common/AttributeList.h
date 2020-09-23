@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Exception.h"
+#include <macgyver/Exception.h>
 #include "Attribute.h"
 
 namespace SmartMet

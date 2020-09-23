@@ -1,6 +1,6 @@
 #include "MemoryReader.h"
-#include "Exception.h"
 #include "GeneralFunctions.h"
+#include <macgyver/Exception.h>
 
 namespace SmartMet
 {
@@ -13,10 +13,10 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size)
   try
   {
     if (_startPtr == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The '_startPtr' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The '_startPtr' parameter points to nullptr!");
 
     if (_size == 0)
-      throw SmartMet::Spine::Exception(BCP,"The value of the '_size' parameter is 0!");
+      throw Fmi::Exception(BCP,"The value of the '_size' parameter is 0!");
 
     parentPtr = _startPtr;
     startPtr = _startPtr;
@@ -27,7 +27,7 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -42,10 +42,10 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size,bool _dataRe
   try
   {
     if (_startPtr == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The '_startPtr' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The '_startPtr' parameter points to nullptr!");
 
     if (_size == 0)
-      throw SmartMet::Spine::Exception(BCP,"The value of the '_size' parameter is 0!");
+      throw Fmi::Exception(BCP,"The value of the '_size' parameter is 0!");
 
     parentPtr = _startPtr;
     startPtr = _startPtr;
@@ -56,7 +56,7 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size,bool _dataRe
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -71,13 +71,13 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr)
   try
   {
     if (_startPtr == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The '_startPtr' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The '_startPtr' parameter points to nullptr!");
 
     if (_endPtr == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The '_endPtr' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The '_endPtr' parameter points to nullptr!");
 
     if (_endPtr < _startPtr)
-      throw SmartMet::Spine::Exception(BCP,"The value of the '_endPtr' parameter is smaller than '_startPtr'!");
+      throw Fmi::Exception(BCP,"The value of the '_endPtr' parameter is smaller than '_startPtr'!");
 
     parentPtr = _startPtr;
     startPtr = _startPtr;
@@ -88,7 +88,7 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -107,7 +107,7 @@ MemoryReader::~MemoryReader()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -124,7 +124,7 @@ ulonglong MemoryReader::getDataSize()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -140,7 +140,7 @@ void MemoryReader::setParentPtr(unsigned char *_parentPtr)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -156,7 +156,7 @@ unsigned char* MemoryReader::getParentPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -172,7 +172,7 @@ unsigned char* MemoryReader::getStartPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -188,7 +188,7 @@ unsigned char* MemoryReader::getEndPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -204,7 +204,7 @@ unsigned char* MemoryReader::getReadPtr()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -217,14 +217,14 @@ void MemoryReader::setReadPtr(unsigned char *_readPtr)
   try
   {
     if (_readPtr == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The '_readPtr' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The '_readPtr' parameter points to nullptr!");
 
     if (_readPtr < startPtr  ||  _readPtr > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"The value of the '_readPtr' parameter is out of the range!");
+      throw Fmi::Exception(BCP,"The value of the '_readPtr' parameter is out of the range!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -240,7 +240,7 @@ ulonglong MemoryReader::getReadPosition()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -256,7 +256,7 @@ ulonglong MemoryReader::getGlobalReadPosition()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -269,13 +269,13 @@ void MemoryReader::setReadPosition(ulonglong _pos)
   try
   {
     if ((startPtr + _pos) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"The value of the '_pos' parameter is out of the range!");
+      throw Fmi::Exception(BCP,"The value of the '_pos' parameter is out of the range!");
 
     readPtr = startPtr + _pos;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -291,7 +291,7 @@ void MemoryReader::setLittleEndian(bool _littleEndian)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -305,7 +305,7 @@ unsigned char MemoryReader::getByte(ulonglong _pos)
   {
     if ((startPtr + _pos) >= endPtr)
     {
-      SmartMet::Spine::Exception exception(BCP,"The value of the '_pos' parameter is out of the range!");
+      Fmi::Exception exception(BCP,"The value of the '_pos' parameter is out of the range!");
       exception.addParameter("Pos",std::to_string(_pos));
       exception.addParameter("Size",std::to_string(getDataSize()));
       throw exception;
@@ -315,7 +315,7 @@ unsigned char MemoryReader::getByte(ulonglong _pos)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -328,13 +328,13 @@ unsigned char MemoryReader::getByte(unsigned char *_posPtr)
   try
   {
     if (_posPtr < startPtr || _posPtr >= endPtr)
-      throw SmartMet::Spine::Exception(BCP,"The value of the '_posPtr' parameter is out of the range!");
+      throw Fmi::Exception(BCP,"The value of the '_posPtr' parameter is out of the range!");
 
     return *_posPtr;
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -347,7 +347,7 @@ bool MemoryReader::peek_string(const char *_str)
   try
   {
     if (_str == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The '_str' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The '_str' parameter points to nullptr!");
 
     ulonglong len = strlen(_str);
     if ((readPtr + len) > endPtr)
@@ -360,7 +360,7 @@ bool MemoryReader::peek_string(const char *_str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -373,7 +373,7 @@ int MemoryReader::search_string(const char *_str)
   try
   {
     if (_str == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The '_str' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The '_str' parameter points to nullptr!");
 
     uchar *p = (uchar*)_str;
     uchar *r = readPtr;
@@ -394,7 +394,7 @@ int MemoryReader::search_string(const char *_str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -407,7 +407,7 @@ std::uint8_t MemoryReader::read_uint8()
   try
   {
     if ((readPtr + 1) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char val = readPtr[0];
 
@@ -417,7 +417,7 @@ std::uint8_t MemoryReader::read_uint8()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -430,7 +430,7 @@ std::uint16_t MemoryReader::read_uint16()
   try
   {
     if ((readPtr + 2) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned short a = readPtr[0];
     unsigned short b = readPtr[1];
@@ -444,7 +444,7 @@ std::uint16_t MemoryReader::read_uint16()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -457,7 +457,7 @@ std::uint32_t MemoryReader::read_uint24()
   try
   {
     if ((readPtr + 3) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     uint a = readPtr[0];
     uint b = readPtr[1];
@@ -472,7 +472,7 @@ std::uint32_t MemoryReader::read_uint24()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -485,7 +485,7 @@ std::uint32_t MemoryReader::read_uint32()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     uint a = readPtr[0];
     uint b = readPtr[1];
@@ -501,7 +501,7 @@ std::uint32_t MemoryReader::read_uint32()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -514,7 +514,7 @@ std::uint64_t MemoryReader::read_uint64()
   try
   {
     if ((readPtr + 8) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     ulonglong a = readPtr[0];
     ulonglong b = readPtr[1];
@@ -534,7 +534,7 @@ std::uint64_t MemoryReader::read_uint64()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -547,7 +547,7 @@ std::int8_t MemoryReader::read_int8()
   try
   {
     if ((readPtr + 1) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char a = readPtr[0];
     unsigned char val = static_cast<char>((1 - ((a & 128) >> 6)) * (a & 127));
@@ -558,7 +558,7 @@ std::int8_t MemoryReader::read_int8()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -571,7 +571,7 @@ std::int16_t MemoryReader::read_int16()
   try
   {
     if ((readPtr + 2) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -585,7 +585,7 @@ std::int16_t MemoryReader::read_int16()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -598,7 +598,7 @@ std::int32_t MemoryReader::read_int24()
   try
   {
     if ((readPtr + 3) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -616,7 +616,7 @@ std::int32_t MemoryReader::read_int24()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -629,7 +629,7 @@ std::int32_t MemoryReader::read_int32()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -645,7 +645,7 @@ std::int32_t MemoryReader::read_int32()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -658,7 +658,7 @@ std::float_t MemoryReader::read_float()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     float val = 0.0;
 
@@ -683,7 +683,7 @@ std::float_t MemoryReader::read_float()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -696,7 +696,7 @@ std::double_t MemoryReader::read_double()
   try
   {
     if ((readPtr + 8) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     double val = 0.0;
 
@@ -729,7 +729,7 @@ std::double_t MemoryReader::read_double()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -741,7 +741,7 @@ std::float_t MemoryReader::read_ibmFloat()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -761,7 +761,7 @@ std::float_t MemoryReader::read_ibmFloat()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -774,7 +774,7 @@ std::array<char,16> MemoryReader::read_uuid()
   try
   {
     if ((readPtr + 16) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     std::array<char, 16> ret;
     for (auto i = 0; i < 16; i++)
@@ -786,7 +786,7 @@ std::array<char,16> MemoryReader::read_uuid()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -799,7 +799,7 @@ T::UInt8_opt MemoryReader::read_UInt8_opt()
   try
   {
     if ((readPtr + 1) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char val = readPtr[0];
 
@@ -812,7 +812,7 @@ T::UInt8_opt MemoryReader::read_UInt8_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -825,7 +825,7 @@ T::UInt16_opt MemoryReader::read_UInt16_opt()
   try
   {
     if ((readPtr + 2) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned short val = read_uint16();
 
@@ -836,7 +836,7 @@ T::UInt16_opt MemoryReader::read_UInt16_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -849,7 +849,7 @@ T::UInt32_opt MemoryReader::read_UInt24_opt()
   try
   {
     if ((readPtr + 3) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     uint val =  read_uint24();
     if (val != 0xFFFFFF)
@@ -859,7 +859,7 @@ T::UInt32_opt MemoryReader::read_UInt24_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -872,7 +872,7 @@ T::UInt32_opt MemoryReader::read_UInt32_opt()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     uint val =  read_uint32();
     if (val != 0xFFFFFFFF)
@@ -882,7 +882,7 @@ T::UInt32_opt MemoryReader::read_UInt32_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -895,7 +895,7 @@ T::UInt64_opt MemoryReader::read_UInt64_opt()
   try
   {
     if ((readPtr + 8) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     ulonglong val = read_uint64();
     if (val != 0xFFFFFFFFFFFFFFFF)
@@ -905,7 +905,7 @@ T::UInt64_opt MemoryReader::read_UInt64_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -918,7 +918,7 @@ T::Int8_opt MemoryReader::read_Int8_opt()
   try
   {
     if ((readPtr + 1) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char a = readPtr[0];
     char val = read_int8();
@@ -930,7 +930,7 @@ T::Int8_opt MemoryReader::read_Int8_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -943,7 +943,7 @@ T::Int16_opt MemoryReader::read_Int16_opt()
   try
   {
     if ((readPtr + 2) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -960,7 +960,7 @@ T::Int16_opt MemoryReader::read_Int16_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -973,7 +973,7 @@ T::Int32_opt MemoryReader::read_Int24_opt()
   try
   {
     if ((readPtr + 3) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -993,7 +993,7 @@ T::Int32_opt MemoryReader::read_Int24_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1006,7 +1006,7 @@ T::Int32_opt MemoryReader::read_Int32_opt()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -1025,7 +1025,7 @@ T::Int32_opt MemoryReader::read_Int32_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1038,7 +1038,7 @@ T::Float_opt MemoryReader::read_Float_opt()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw SmartMet::Spine::Exception(BCP,"Trying to read outside of the given memory area!");
+      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
 
     float val = 0.0;
 
@@ -1066,7 +1066,7 @@ T::Float_opt MemoryReader::read_Float_opt()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1080,7 +1080,7 @@ void MemoryReader::read_data(unsigned char *_data,ulonglong _size)
   {
     if ((readPtr + _size) > endPtr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
       if (startPtr != parentPtr)
         exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
       exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
@@ -1096,7 +1096,7 @@ void MemoryReader::read_data(unsigned char *_data,ulonglong _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1110,7 +1110,7 @@ void MemoryReader::read_null(ulonglong _size)
   {
     if ((readPtr + _size) > endPtr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
       if (startPtr != parentPtr)
         exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
       exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
@@ -1122,7 +1122,7 @@ void MemoryReader::read_null(ulonglong _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1139,7 +1139,7 @@ MemoryReader& MemoryReader::operator>>(std::uint8_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1156,7 +1156,7 @@ MemoryReader& MemoryReader::operator>>(std::uint16_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1173,7 +1173,7 @@ MemoryReader& MemoryReader::operator>>(std::uint32_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1190,7 +1190,7 @@ MemoryReader& MemoryReader::operator>>(std::uint64_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1207,7 +1207,7 @@ MemoryReader& MemoryReader::operator>>(std::int8_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1224,7 +1224,7 @@ MemoryReader& MemoryReader::operator>>(std::int16_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1241,7 +1241,7 @@ MemoryReader& MemoryReader::operator>>(std::int32_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1258,7 +1258,7 @@ MemoryReader& MemoryReader::operator>>(std::float_t& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1275,7 +1275,7 @@ MemoryReader& MemoryReader::operator>>(T::UInt8_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1292,7 +1292,7 @@ MemoryReader& MemoryReader::operator>>(T::UInt16_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1309,7 +1309,7 @@ MemoryReader& MemoryReader::operator>>(T::UInt32_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1326,7 +1326,7 @@ MemoryReader& MemoryReader::operator>>(T::UInt64_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1343,7 +1343,7 @@ MemoryReader& MemoryReader::operator>>(T::Int8_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1360,7 +1360,7 @@ MemoryReader& MemoryReader::operator>>(T::Int16_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1377,7 +1377,7 @@ MemoryReader& MemoryReader::operator>>(T::Int32_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1394,7 +1394,7 @@ MemoryReader& MemoryReader::operator>>(T::Float_opt& _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

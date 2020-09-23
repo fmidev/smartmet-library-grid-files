@@ -1,5 +1,5 @@
 #include "BitArrayReader.h"
-#include "Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -13,7 +13,7 @@ BitArrayReader::BitArrayReader(const unsigned char *data,ulonglong numberOfBits)
   try
   {
     if (data == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'data' parameter points to nullptr!");
 
     mData = data;
     mNumberOfBits = numberOfBits;
@@ -21,7 +21,7 @@ BitArrayReader::BitArrayReader(const unsigned char *data,ulonglong numberOfBits)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -38,7 +38,7 @@ BitArrayReader::~BitArrayReader()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -56,7 +56,7 @@ ulonglong BitArrayReader::getNumberOfBits()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -76,7 +76,7 @@ ulonglong BitArrayReader::getReadPosition()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -94,7 +94,7 @@ void BitArrayReader::setReadPosition(ulonglong _readPosition)
   {
     if (_readPosition >= mNumberOfBits)
     {
-      SmartMet::Spine::Exception exception(BCP,"The '_readPosition' parameter is out the range!");
+      Fmi::Exception exception(BCP,"The '_readPosition' parameter is out the range!");
       exception.addParameter("Requested read position",std::to_string(_readPosition));
       exception.addParameter("Number of bits",std::to_string(mNumberOfBits));
       throw exception;
@@ -104,7 +104,7 @@ void BitArrayReader::setReadPosition(ulonglong _readPosition)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -124,11 +124,11 @@ bool BitArrayReader::readBit()
   try
   {
     if (mData == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     if ((mReadPosition + 1) > mNumberOfBits)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot read a bit outside of the memory area !");
+      Fmi::Exception exception(BCP,"Cannot read a bit outside of the memory area !");
       exception.addParameter("Read position",std::to_string(mReadPosition));
       exception.addParameter("Number of bits",std::to_string(mNumberOfBits));
       throw exception;
@@ -146,7 +146,7 @@ bool BitArrayReader::readBit()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 */
@@ -182,7 +182,7 @@ bool BitArrayReader::readBitNoCheck()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 */
@@ -202,18 +202,18 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int& value)
   try
   {
     if (mData == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     if (numberOfBits > 32)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot read more than 32 bits into 'int'!");
+      Fmi::Exception exception(BCP,"Cannot read more than 32 bits into 'int'!");
       exception.addParameter("Requested bits",std::to_string(numberOfBits));
       throw exception;
     }
 
     if ((mReadPosition + numberOfBits) > mNumberOfBits)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot read bits outside of the memory area!");
+      Fmi::Exception exception(BCP,"Cannot read bits outside of the memory area!");
       exception.addParameter("Read position",std::to_string(mReadPosition));
       exception.addParameter("Number of bits",std::to_string(mNumberOfBits));
       exception.addParameter("Requested bits",std::to_string(numberOfBits));
@@ -231,7 +231,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -252,18 +252,18 @@ void BitArrayReader::readBits(unsigned int numberOfBits,unsigned int& value)
   try
   {
     if (mData == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     if (numberOfBits > 32)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot read more than 32 bits into 'unsigned int'!");
+      Fmi::Exception exception(BCP,"Cannot read more than 32 bits into 'unsigned int'!");
       exception.addParameter("Requested bits",std::to_string(numberOfBits));
       throw exception;
     }
 
     if ((mReadPosition + numberOfBits) > mNumberOfBits)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot read bits outside of the memory area !");
+      Fmi::Exception exception(BCP,"Cannot read bits outside of the memory area !");
       exception.addParameter("Read position",std::to_string(mReadPosition));
       exception.addParameter("Number of bits",std::to_string(mNumberOfBits));
       exception.addParameter("Requested bits",std::to_string(numberOfBits));
@@ -281,7 +281,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,unsigned int& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 */
@@ -301,18 +301,18 @@ void BitArrayReader::readBits(unsigned int numberOfBits,ulonglong& value)
   try
   {
     if (mData == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     if (numberOfBits > 64)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot read more than 64 bits into 'ulonglong'!");
+      Fmi::Exception exception(BCP,"Cannot read more than 64 bits into 'ulonglong'!");
       exception.addParameter("Requested bits",std::to_string(numberOfBits));
       throw exception;
     }
 
     if ((mReadPosition + numberOfBits) > mNumberOfBits)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot read bits outside of the memory area !");
+      Fmi::Exception exception(BCP,"Cannot read bits outside of the memory area !");
       exception.addParameter("Read position",std::to_string(mReadPosition));
       exception.addParameter("Number of bits",std::to_string(mNumberOfBits));
       exception.addParameter("Requested bits",std::to_string(numberOfBits));
@@ -330,7 +330,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,ulonglong& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -351,7 +351,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int *array,unsigned int 
   try
   {
     if (mData == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     for (unsigned int t=0; t<arraySize; t++)
     {
@@ -360,7 +360,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,int *array,unsigned int 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

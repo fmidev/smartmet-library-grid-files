@@ -1,6 +1,6 @@
 #include "RepresentationDefinition.h"
 #include "Properties.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 
 
 namespace SmartMet
@@ -39,7 +39,7 @@ RepresentationDefinition::~RepresentationDefinition()
 
 RepresentationDefinition* RepresentationDefinition::createRepresentationDefinition() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -67,7 +67,7 @@ bool RepresentationDefinition::getProperty(uint propertyId,long long& value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -109,7 +109,7 @@ bool RepresentationDefinition::getProperty_Packing(uint propertyId,long long& va
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -136,7 +136,7 @@ bool RepresentationDefinition::getProperty_OriginalValues(uint propertyId,long l
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -165,7 +165,7 @@ bool RepresentationDefinition::setProperty(uint propertyId,long long value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -204,7 +204,7 @@ bool RepresentationDefinition::setProperty_Packing(uint propertyId,long long val
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -231,7 +231,7 @@ bool RepresentationDefinition::setProperty_OriginalValues(uint propertyId,long l
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -249,7 +249,7 @@ void RepresentationDefinition::getAttributeList(std::string prefix,T::AttributeL
 
 uint RepresentationDefinition::getTemplateNumber() const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -265,7 +265,7 @@ bool RepresentationDefinition::getValueByIndex(Message *message,uint index,T::Pa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -293,7 +293,7 @@ OriginalValuesSettings*  RepresentationDefinition::getOriginalValues() const
 
 void RepresentationDefinition::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -302,7 +302,7 @@ void RepresentationDefinition::decodeValues(Message *message,T::ParamValue_vec& 
 
 void RepresentationDefinition::encodeValues(Message *message,T::ParamValue_vec& values)
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -316,7 +316,7 @@ void RepresentationDefinition::encodeValues(Message *message,T::ParamValue_vec& 
 
 void RepresentationDefinition::read(MemoryReader& memoryReader)
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -330,7 +330,7 @@ void RepresentationDefinition::read(MemoryReader& memoryReader)
 
 void RepresentationDefinition::write(DataWriter& dataWriter)
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
@@ -346,7 +346,7 @@ void RepresentationDefinition::write(DataWriter& dataWriter)
 
 void RepresentationDefinition::print(std::ostream& stream,uint level,uint optionFlags) const
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!");
+  throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 

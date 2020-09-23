@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Typedefs.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/AutoReadLock.h"
 #include "../common/AutoWriteLock.h"
 
@@ -126,7 +126,7 @@ class ValueCache
         std::size_t sz = mValueList[idx]->size();
         if (index >= sz)
         {
-          SmartMet::Spine::Exception exception(BCP,"Index is out of the range!");
+          Fmi::Exception exception(BCP,"Index is out of the range!");
           exception.addParameter("Index",std::to_string(index));
           exception.addParameter("Size",std::to_string(sz));
           throw exception;
@@ -141,7 +141,7 @@ class ValueCache
       }
       catch (...)
       {
-        throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+        throw Fmi::Exception(BCP,"Operation failed!",nullptr);
       }
     }
 

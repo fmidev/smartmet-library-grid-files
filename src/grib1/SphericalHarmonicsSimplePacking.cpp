@@ -1,4 +1,4 @@
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "SphericalHarmonicsSimplePacking.h"
 
@@ -48,7 +48,7 @@ DataDefinition* SphericalHarmonicsSimplePacking::createDataDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -64,7 +64,7 @@ PackingMethod SphericalHarmonicsSimplePacking::getPackingMethod() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -76,11 +76,11 @@ void SphericalHarmonicsSimplePacking::decodeValues(Message *message,T::ParamValu
 {
   try
   {
-    throw SmartMet::Spine::Exception(BCP,"SphericalHarmonicsSimplePacking not implemented!");
+    throw Fmi::Exception(BCP,"SphericalHarmonicsSimplePacking not implemented!");
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -103,7 +103,7 @@ void SphericalHarmonicsSimplePacking::print(std::ostream& stream,uint level,uint
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

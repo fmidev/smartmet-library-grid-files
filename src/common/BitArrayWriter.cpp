@@ -10,7 +10,7 @@ BitArrayWriter::BitArrayWriter(unsigned char *data,ulonglong numberOfBits)
   try
   {
     if (data == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'data' parameter points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'data' parameter points to nullptr!");
 
     mData = data;
     mNumberOfBits = numberOfBits;
@@ -18,7 +18,7 @@ BitArrayWriter::BitArrayWriter(unsigned char *data,ulonglong numberOfBits)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -32,7 +32,7 @@ BitArrayWriter::~BitArrayWriter()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -49,7 +49,7 @@ ulonglong BitArrayWriter::getNumberOfBits()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -65,7 +65,7 @@ ulonglong BitArrayWriter::getWritePosition()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -80,7 +80,7 @@ void BitArrayWriter::setWritePosition(ulonglong writePosition)
   {
     if (writePosition >= mNumberOfBits)
     {
-      SmartMet::Spine::Exception exception(BCP,"The 'writePosition' parameter is out the range!");
+      Fmi::Exception exception(BCP,"The 'writePosition' parameter is out the range!");
       exception.addParameter("Requested write position",std::to_string(writePosition));
       exception.addParameter("Number of bits",std::to_string(mNumberOfBits));
       throw exception;
@@ -90,7 +90,7 @@ void BitArrayWriter::setWritePosition(ulonglong writePosition)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -103,11 +103,11 @@ void BitArrayWriter:: writeBit(bool bitOn)
   try
   {
     if (mData == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     if ((mWritePosition + 1) > mNumberOfBits)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot write a bit outside of the memory area !");
+      Fmi::Exception exception(BCP,"Cannot write a bit outside of the memory area !");
       exception.addParameter("Write position",std::to_string(mWritePosition));
       exception.addParameter("Number of bits",std::to_string(mNumberOfBits));
       throw exception;
@@ -117,7 +117,7 @@ void BitArrayWriter:: writeBit(bool bitOn)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -130,18 +130,18 @@ void BitArrayWriter::writeBits(unsigned int numberOfBits,ulonglong value)
   try
   {
     if (mData == nullptr)
-      throw SmartMet::Spine::Exception(BCP,"The 'mData' attribute points to nullptr!");
+      throw Fmi::Exception(BCP,"The 'mData' attribute points to nullptr!");
 
     if (numberOfBits > 64)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot write more than 64 bits!");
+      Fmi::Exception exception(BCP,"Cannot write more than 64 bits!");
       exception.addParameter("Requested bits",std::to_string(numberOfBits));
       throw exception;
     }
 
     if ((mWritePosition + numberOfBits) > mNumberOfBits)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot write bits outside of the memory area !");
+      Fmi::Exception exception(BCP,"Cannot write bits outside of the memory area !");
       exception.addParameter("Write position",std::to_string(mWritePosition));
       exception.addParameter("Number of bits",std::to_string(mNumberOfBits));
       exception.addParameter("Requested bits",std::to_string(numberOfBits));
@@ -159,7 +159,7 @@ void BitArrayWriter::writeBits(unsigned int numberOfBits,ulonglong value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -185,7 +185,7 @@ void BitArrayWriter::writeBitNoCheck(bool bitOn)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

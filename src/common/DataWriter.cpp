@@ -15,7 +15,7 @@ DataWriter::DataWriter()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -33,7 +33,7 @@ DataWriter::~DataWriter()
 
 ulonglong DataWriter::getWritePosition()
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!",nullptr);
+  throw Fmi::Exception(BCP,"Not implemented!",nullptr);
 }
 
 
@@ -42,7 +42,7 @@ ulonglong DataWriter::getWritePosition()
 
 ulonglong DataWriter::getMaxWritePosition()
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!",nullptr);
+  throw Fmi::Exception(BCP,"Not implemented!",nullptr);
 }
 
 
@@ -57,7 +57,7 @@ void DataWriter::setLittleEndian(bool _littleEndian)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -67,7 +67,7 @@ void DataWriter::setLittleEndian(bool _littleEndian)
 
 void DataWriter::setWritePosition(ulonglong _pos)
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!",nullptr);
+  throw Fmi::Exception(BCP,"Not implemented!",nullptr);
 }
 
 
@@ -76,7 +76,7 @@ void DataWriter::setWritePosition(ulonglong _pos)
 
 void DataWriter::write_data(void *_data,ulonglong _size)
 {
-  throw SmartMet::Spine::Exception(BCP,"Not implemented!",nullptr);
+  throw Fmi::Exception(BCP,"Not implemented!",nullptr);
 }
 
 
@@ -92,7 +92,7 @@ void DataWriter::write_nTimes(uchar _val,uint _size)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -108,7 +108,7 @@ void DataWriter::write_uint8(std::uint8_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -136,7 +136,7 @@ void DataWriter::write_uint16(std::uint16_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -166,7 +166,7 @@ void DataWriter::write_uint24(std::uint32_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -198,7 +198,7 @@ void DataWriter::write_uint32(std::uint32_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -238,7 +238,7 @@ void DataWriter::write_uint64(std::uint64_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -261,7 +261,7 @@ void DataWriter::write_int8(std::int8_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -299,7 +299,7 @@ void DataWriter::write_int16(std::int16_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -339,7 +339,7 @@ void DataWriter::write_int24(std::int32_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -381,7 +381,7 @@ void DataWriter::write_int32(std::int32_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -412,7 +412,7 @@ void DataWriter::write_float(std::float_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -450,7 +450,7 @@ void DataWriter::write_double(std::double_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -467,7 +467,7 @@ void DataWriter::write_ibmFloat(std::float_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -487,7 +487,7 @@ void DataWriter::write_uuid(std::array<char,16> _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -507,7 +507,7 @@ void DataWriter::write_UInt8_opt(T::UInt8_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -527,7 +527,7 @@ void DataWriter::write_UInt16_opt(T::UInt16_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -547,7 +547,7 @@ void DataWriter::write_UInt24_opt(T::UInt32_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -567,7 +567,7 @@ void DataWriter::write_UInt32_opt(T::UInt32_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -587,7 +587,7 @@ void DataWriter::write_UInt64_opt(T::UInt64_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -607,7 +607,7 @@ void DataWriter::write_Int8_opt(T::Int8_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -627,7 +627,7 @@ void DataWriter::write_Int16_opt(T::Int16_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -647,7 +647,7 @@ void DataWriter::write_Int24_opt(T::Int32_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -667,7 +667,7 @@ void DataWriter::write_Int32_opt(T::Int32_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -687,7 +687,7 @@ void DataWriter::write_Float_opt(T::Float_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -704,7 +704,7 @@ DataWriter& DataWriter::operator<<(std::uint8_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -721,7 +721,7 @@ DataWriter& DataWriter::operator<<(std::uint16_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -738,7 +738,7 @@ DataWriter& DataWriter::operator<<(std::uint32_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -755,7 +755,7 @@ DataWriter& DataWriter::operator<<(std::uint64_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -772,7 +772,7 @@ DataWriter& DataWriter::operator<<(std::int8_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -789,7 +789,7 @@ DataWriter& DataWriter::operator<<(std::int16_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -806,7 +806,7 @@ DataWriter& DataWriter::operator<<(std::int32_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -823,7 +823,7 @@ DataWriter& DataWriter::operator<<(std::float_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -840,7 +840,7 @@ DataWriter& DataWriter::operator<<(std::double_t _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -857,7 +857,7 @@ DataWriter& DataWriter::operator<<(T::UInt8_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -874,7 +874,7 @@ DataWriter& DataWriter::operator<<(T::UInt16_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -891,7 +891,7 @@ DataWriter& DataWriter::operator<<(T::UInt32_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -908,7 +908,7 @@ DataWriter& DataWriter::operator<<(T::UInt64_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -925,7 +925,7 @@ DataWriter& DataWriter::operator<<(T::Int8_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -942,7 +942,7 @@ DataWriter& DataWriter::operator<<(T::Int16_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -959,7 +959,7 @@ DataWriter& DataWriter::operator<<(T::Int32_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -976,7 +976,7 @@ DataWriter& DataWriter::operator<<(T::Float_opt _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -993,7 +993,7 @@ DataWriter& DataWriter::operator<<(std::array<char, 16> _value)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

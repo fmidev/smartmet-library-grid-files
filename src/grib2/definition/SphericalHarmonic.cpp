@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "SphericalHarmonic.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 SphericalHarmonic::SphericalHarmonic() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -31,7 +31,7 @@ SphericalHarmonic::SphericalHarmonic(const SphericalHarmonic &other) : GridDefin
   try {
     mSphericalHarmonic = other.mSphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -49,7 +49,7 @@ void SphericalHarmonic::read(MemoryReader &memoryReader) {
   try {
     mSphericalHarmonic.read(memoryReader);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -62,7 +62,7 @@ void SphericalHarmonic::write(DataWriter &dataWriter) {
   try {
     mSphericalHarmonic.write(dataWriter);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -78,7 +78,7 @@ void SphericalHarmonic::getAttributeList(std::string prefix, T::AttributeList &a
     sprintf(name, "%sSphericalHarmonic.", prefix.c_str());
     mSphericalHarmonic.getAttributeList(name, attributeList);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -94,7 +94,7 @@ void SphericalHarmonic::print(std::ostream &stream, uint level, uint optionFlags
     stream << space(level) << "SphericalHarmonic\n";
     mSphericalHarmonic.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -106,7 +106,7 @@ T::Hash SphericalHarmonic::countHash() {
     boost::hash_combine(seed, mSphericalHarmonic.countHash());
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -120,7 +120,7 @@ GridDefinition *SphericalHarmonic::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new SphericalHarmonic(*this));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -130,7 +130,7 @@ SphericalHarmonicSettings *SphericalHarmonic::getSphericalHarmonic() const {
   try {
     return static_cast<SphericalHarmonicSettings *>(&mSphericalHarmonic);
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -138,7 +138,7 @@ void SphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &spherica
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

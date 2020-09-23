@@ -1,5 +1,5 @@
 #include "GaussianImpl.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/Dimensions.h"
 #include "../../grid/PrintOptions.h"
@@ -57,7 +57,7 @@ GridDefinition* GaussianImpl::createGridDefinition() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -83,7 +83,7 @@ void GaussianImpl::read(MemoryReader& memoryReader)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -106,10 +106,10 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinates() const
     T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     if (!mGaussian.getGrid()->getNi())
-      throw SmartMet::Spine::Exception(BCP,"i-coordinated does not exist!");
+      throw Fmi::Exception(BCP,"i-coordinated does not exist!");
 
     if (!mGaussian.getGrid()->getNj())
-      throw SmartMet::Spine::Exception(BCP,"j-coordinated does not exist!");
+      throw Fmi::Exception(BCP,"j-coordinated does not exist!");
 
     uint ni = (*mGaussian.getGrid()->getNi());
     uint nj = (*mGaussian.getGrid()->getNj());
@@ -148,7 +148,7 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinates() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -175,7 +175,7 @@ T::Dimensions GaussianImpl::getGridDimensions() const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -201,7 +201,7 @@ bool GaussianImpl::getGridPointByLatLonCoordinates(double lat,double lon,double&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -286,7 +286,7 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -316,7 +316,7 @@ void GaussianImpl::initSpatialReference()
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
-      SmartMet::Spine::Exception exception(BCP,"The spatial reference is not valid!");
+      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
@@ -341,7 +341,7 @@ void GaussianImpl::initSpatialReference()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -398,7 +398,7 @@ void GaussianImpl::print(std::ostream& stream,uint level,uint optionFlags) const
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

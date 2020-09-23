@@ -1,5 +1,5 @@
 #include "GaussianLatitudeCache.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/CoordinateConversions.h"
 
 #include <string>
@@ -59,7 +59,7 @@ static void gauss_first_guess(long N, double* vals)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -131,7 +131,7 @@ int gaussian_getLatitudes(long N, double *lats)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -156,7 +156,7 @@ GaussianLatitudeCache::GaussianLatitudeCache()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -178,7 +178,7 @@ GaussianLatitudeCache::~GaussianLatitudeCache()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -218,7 +218,7 @@ double* GaussianLatitudeCache::getLatitudes(uint nj,long n)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -275,7 +275,7 @@ int GaussianLatitudeCache::getClosestLatitudes(uint nj,long n,double lat,double&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 

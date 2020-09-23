@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 #include "StretchingSettings.h"
-#include "../../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
@@ -21,7 +21,7 @@ namespace GRIB2 {
 StretchingSettings::StretchingSettings() {
   try {
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -33,7 +33,7 @@ StretchingSettings::StretchingSettings(const StretchingSettings &other) {
     mLongitudeOfThePoleOfStretching = other.mLongitudeOfThePoleOfStretching;
     mStretchingFactorScaled = other.mStretchingFactorScaled;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -53,7 +53,7 @@ void StretchingSettings::read(MemoryReader &memoryReader) {
     mLongitudeOfThePoleOfStretching = memoryReader.read_Int32_opt();
     mStretchingFactorScaled = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -68,7 +68,7 @@ void StretchingSettings::write(DataWriter &dataWriter) {
     dataWriter << mLongitudeOfThePoleOfStretching;
     dataWriter << mStretchingFactorScaled;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -88,7 +88,7 @@ void StretchingSettings::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sStretchingSettings.StretchingFactorScaled", prefix.c_str());
     attributeList.addAttribute(name, toString(mStretchingFactorScaled));
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -106,7 +106,7 @@ void StretchingSettings::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "- LongitudeOfThePoleOfStretching = " << toString(mLongitudeOfThePoleOfStretching) << "\n";
     stream << space(level) << "- StretchingFactorScaled = " << toString(mStretchingFactorScaled) << "\n";
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -123,7 +123,7 @@ T::Hash StretchingSettings::countHash() {
       boost::hash_combine(seed, *mStretchingFactorScaled);
     return seed;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -133,7 +133,7 @@ const T::Int32_opt &StretchingSettings::getLatitudeOfThePoleOfStretching() const
   try {
     return mLatitudeOfThePoleOfStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -143,7 +143,7 @@ const T::Int32_opt &StretchingSettings::getLongitudeOfThePoleOfStretching() cons
   try {
     return mLongitudeOfThePoleOfStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -153,7 +153,7 @@ const T::UInt32_opt &StretchingSettings::getStretchingFactorScaled() const {
   try {
     return mStretchingFactorScaled;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -161,7 +161,7 @@ void StretchingSettings::setLatitudeOfThePoleOfStretching(T::Int32_opt latitudeO
   try {
     mLatitudeOfThePoleOfStretching = latitudeOfThePoleOfStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -169,7 +169,7 @@ void StretchingSettings::setLongitudeOfThePoleOfStretching(T::Int32_opt longitud
   try {
     mLongitudeOfThePoleOfStretching = longitudeOfThePoleOfStretching;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -177,7 +177,7 @@ void StretchingSettings::setStretchingFactorScaled(T::UInt32_opt stretchingFacto
   try {
     mStretchingFactorScaled = stretchingFactorScaled;
   } catch (...) {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 

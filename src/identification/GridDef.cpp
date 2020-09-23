@@ -1,5 +1,5 @@
 #include "GridDef.h"
-#include "../common/Exception.h"
+#include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
 #include "../common/CoordinateConversions.h"
@@ -102,7 +102,7 @@ GridDef::GridDef()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -129,7 +129,7 @@ GridDef::~GridDef()
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Destructor failed",nullptr);
+    Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
   }
 }
@@ -181,7 +181,7 @@ void GridDef::init(const char* configFile)
     {
       if (!mConfigurationFile.findAttribute(configAttribute[t]))
       {
-        SmartMet::Spine::Exception exception(BCP, "Missing configuration attribute!");
+        Fmi::Exception exception(BCP, "Missing configuration attribute!");
         exception.addParameter("File",mConfigFileName);
         exception.addParameter("Attribute",configAttribute[t]);
         throw exception;
@@ -217,7 +217,7 @@ void GridDef::init(const char* configFile)
   }
   catch (...)
   {
-    SmartMet::Spine::Exception exception(BCP,"Initialization failed!",nullptr);
+    Fmi::Exception exception(BCP,"Initialization failed!",nullptr);
     exception.addParameter("Configuration File",configFile);
     throw exception;
   }
@@ -233,24 +233,25 @@ void GridDef::updateCheck()
   try
   {
     if (!mInitialized)
-      throw SmartMet::Spine::Exception(BCP,"The 'GridDef' object is not initialized! Call init() first!");
+      throw Fmi::Exception(BCP,"The 'GridDef' object is not initialized! Call init() first!");
 
-    if ((mLastCheckTime + 30) < time(nullptr))
+    if ((mLastCheckTime + 60) < time(nullptr))
     {
-      AutoThreadLock lock(&mThreadLock);
-
-      mLastCheckTime = time(nullptr);
-
-      updateGrib();
-      updateGrib1();
-      updateGrib2();
-      updateFmi();
-      updateNewbase();
+      AutoWriteLock lock(&mModificationLock);
+      if ((mLastCheckTime + 60) < time(nullptr))
+      {
+        mLastCheckTime = time(nullptr);
+        updateGrib();
+        updateGrib1();
+        updateGrib2();
+        updateFmi();
+        updateNewbase();
+      }
     }
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -275,7 +276,7 @@ time_t GridDef::getModificationTime(string_vec& files)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -324,7 +325,7 @@ void GridDef::updateGrib()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -373,7 +374,7 @@ void GridDef::updateGrib1()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -421,7 +422,7 @@ void GridDef::updateGrib2()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -567,7 +568,7 @@ void GridDef::updateFmi()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -594,7 +595,7 @@ void GridDef::updateNewbase()
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -608,7 +609,7 @@ std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tab
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     for (auto it = mGrib_tableDef_records.begin(); it != mGrib_tableDef_records.end(); ++it)
     {
@@ -619,7 +620,7 @@ std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tab
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -639,7 +640,7 @@ std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tab
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -659,7 +660,7 @@ std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tab
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -673,13 +674,13 @@ uint GridDef::getGrib1ParameterDefCount()
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     return mGrib1_parameterDef_records.size();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -693,7 +694,7 @@ bool GridDef::getGrib1ParameterDefById(T::ParamId gribParamId,Grib1ParameterDef&
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib1ParameterDefById(gribParamId);
     if (def == nullptr)
@@ -704,7 +705,7 @@ bool GridDef::getGrib1ParameterDefById(T::ParamId gribParamId,Grib1ParameterDef&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -718,7 +719,7 @@ bool GridDef::getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     if (index >= C_UINT(mGrib1_parameterDef_records.size()))
       return false;
@@ -728,7 +729,7 @@ bool GridDef::getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -742,7 +743,7 @@ bool GridDef::getGrib1ParameterDefByName(std::string gribParamName,Grib1Paramete
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib1ParameterDefByName(gribParamName);
     if (def == nullptr)
@@ -753,7 +754,7 @@ bool GridDef::getGrib1ParameterDefByName(std::string gribParamName,Grib1Paramete
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -767,7 +768,7 @@ bool GridDef::getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfPara
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib1ParameterDefByTable(tableVersion,indicatorOfParameter);
     if (def == nullptr)
@@ -778,7 +779,7 @@ bool GridDef::getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfPara
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -792,7 +793,7 @@ bool GridDef::getGrib1DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib1& def
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto pdef =  getGrib1DefByFmiId(fmiParamId);
     if (pdef == nullptr)
@@ -803,7 +804,7 @@ bool GridDef::getGrib1DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib1& def
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -825,7 +826,7 @@ Grib1ParamDef_cptr GridDef::getGrib1ParameterDefById(T::ParamId gribParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -847,7 +848,7 @@ Grib1ParamDef_cptr GridDef::getGrib1ParameterDefByName(std::string gribParamName
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -869,7 +870,7 @@ Grib1ParamDef_cptr GridDef::getGrib1ParameterDefByTable(uint tableVersion,uint i
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -883,13 +884,13 @@ uint GridDef::getGrib2ParameterDefCount()
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     return mGrib2_parameterDef_records.size();
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -903,7 +904,7 @@ bool GridDef::getGrib2ParameterDefById(T::ParamId gribParamId,Grib2ParameterDef&
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib2ParameterDefById(gribParamId);
     if (def == nullptr)
@@ -914,7 +915,7 @@ bool GridDef::getGrib2ParameterDefById(T::ParamId gribParamId,Grib2ParameterDef&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -928,7 +929,7 @@ bool GridDef::getGribDefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib& def)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto pdef =  getGribDefByFmiId(fmiParamId);
     if (pdef == nullptr)
@@ -939,7 +940,7 @@ bool GridDef::getGribDefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib& def)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -953,7 +954,7 @@ bool GridDef::getGrib2DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib2& def
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto pdef =  getGrib2DefByFmiId(fmiParamId);
     if (pdef == nullptr)
@@ -964,7 +965,7 @@ bool GridDef::getGrib2DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib2& def
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -978,7 +979,7 @@ bool GridDef::getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     if (index >= C_UINT(mGrib2_parameterDef_records.size()))
       return false;
@@ -988,7 +989,7 @@ bool GridDef::getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1002,7 +1003,7 @@ bool GridDef::getGrib2ParameterDefByName(std::string gribParamName,Grib2Paramete
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib2ParameterDefByName(gribParamName);
     if (def == nullptr)
@@ -1013,7 +1014,7 @@ bool GridDef::getGrib2ParameterDefByName(std::string gribParamName,Grib2Paramete
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1035,7 +1036,7 @@ Grib2ParamDef_cptr GridDef::getGrib2ParameterDefById(T::ParamId gribParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1057,7 +1058,7 @@ Grib2ParamDef_cptr GridDef::getGrib2ParameterDefByName(std::string gribParamName
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1073,7 +1074,7 @@ void GridDef::loadGribTableValues(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -1138,7 +1139,7 @@ void GridDef::loadGribTableValues(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1154,7 +1155,7 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -1215,7 +1216,7 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1229,7 +1230,7 @@ bool GridDef::getGribParamDefById(T::ParamId gribParamId,GribParameterDef&  para
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGribParamDefById(gribParamId);
     if (def == nullptr)
@@ -1240,7 +1241,7 @@ bool GridDef::getGribParamDefById(T::ParamId gribParamId,GribParameterDef&  para
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1254,7 +1255,7 @@ bool GridDef::getGribParamDefByName(std::string gribParamName,GribParameterDef& 
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGribParamDefByName(gribParamName);
     if (def == nullptr)
@@ -1265,7 +1266,7 @@ bool GridDef::getGribParamDefByName(std::string gribParamName,GribParameterDef& 
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1279,7 +1280,7 @@ bool GridDef::getGribParamDef(uint discipline,uint category,uint number,GribPara
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGribParamDef(discipline,category,number);
     if (def == nullptr)
@@ -1290,7 +1291,7 @@ bool GridDef::getGribParamDef(uint discipline,uint category,uint number,GribPara
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1312,7 +1313,7 @@ GribParamDef_cptr GridDef::getGribParamDefById(T::ParamId gribParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1334,7 +1335,7 @@ GribParamDef_cptr GridDef::getGribParamDefByName(std::string gribParamName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1356,7 +1357,7 @@ GribParamDef_cptr GridDef::getGribParamDef(uint discipline,uint category,uint nu
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1370,7 +1371,7 @@ bool GridDef::getFmiLevelDef(uint levelId,LevelDef& levelDef)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getFmiLevelDef(levelId);
     if (def == nullptr)
@@ -1381,7 +1382,7 @@ bool GridDef::getFmiLevelDef(uint levelId,LevelDef& levelDef)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1395,7 +1396,7 @@ bool GridDef::getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecast
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getFmiForecastTypeDef(forecastTypeId);
     if (def == nullptr)
@@ -1406,7 +1407,7 @@ bool GridDef::getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecast
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1420,7 +1421,7 @@ bool GridDef::getGrib1LevelDef(uint levelId,LevelDef& levelDef)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib1LevelDef(levelId);
     if (def == nullptr)
@@ -1431,7 +1432,7 @@ bool GridDef::getGrib1LevelDef(uint levelId,LevelDef& levelDef)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1445,7 +1446,7 @@ bool GridDef::getGrib2LevelDef(uint levelId,LevelDef& levelDef)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib2LevelDef(levelId);
     if (def == nullptr)
@@ -1456,7 +1457,7 @@ bool GridDef::getGrib2LevelDef(uint levelId,LevelDef& levelDef)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1478,7 +1479,7 @@ LevelDef_cptr GridDef::getFmiLevelDef(uint levelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1500,7 +1501,7 @@ ForecastTypeDef_cptr GridDef::getFmiForecastTypeDef(int forecastTypeId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1522,7 +1523,7 @@ LevelDef_cptr GridDef::getGrib1LevelDef(uint levelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1544,7 +1545,7 @@ LevelDef_cptr GridDef::getGrib2LevelDef(uint levelId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1558,7 +1559,7 @@ bool GridDef::getGrib1TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib1TimeRangeDef(timeRangeId);
     if (def == nullptr)
@@ -1569,7 +1570,7 @@ bool GridDef::getGrib1TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1583,7 +1584,7 @@ bool GridDef::getGrib2TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib2TimeRangeDef(timeRangeId);
     if (def == nullptr)
@@ -1594,7 +1595,7 @@ bool GridDef::getGrib2TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1616,7 +1617,7 @@ TimeRangeDef_cptr GridDef::getGrib1TimeRangeDef(uint timeRangeId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1638,7 +1639,7 @@ TimeRangeDef_cptr GridDef::getGrib2TimeRangeDef(uint timeRangeId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1654,7 +1655,7 @@ void GridDef::loadGribUnitDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -1704,7 +1705,7 @@ void GridDef::loadGribUnitDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1720,7 +1721,7 @@ void GridDef::loadGrib1LevelDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -1775,7 +1776,7 @@ void GridDef::loadGrib1LevelDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1791,7 +1792,7 @@ void GridDef::loadGrib2LevelDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -1846,7 +1847,7 @@ void GridDef::loadGrib2LevelDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1862,7 +1863,7 @@ void GridDef::loadGrib1TimeRangeDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -1917,7 +1918,7 @@ void GridDef::loadGrib1TimeRangeDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -1933,7 +1934,7 @@ void GridDef::loadGrib2TimeRangeDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -1988,7 +1989,7 @@ void GridDef::loadGrib2TimeRangeDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2004,7 +2005,7 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2077,7 +2078,7 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2094,7 +2095,7 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2216,7 +2217,7 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2232,7 +2233,7 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2287,7 +2288,7 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2303,7 +2304,7 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2358,7 +2359,7 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2374,7 +2375,7 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2432,7 +2433,7 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2448,7 +2449,7 @@ void GridDef::loadFmiParameterId_grib1(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2524,7 +2525,7 @@ void GridDef::loadFmiParameterId_grib1(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2540,7 +2541,7 @@ void GridDef::loadFmiParameterId_grib2(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2616,7 +2617,7 @@ void GridDef::loadFmiParameterId_grib2(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2632,7 +2633,7 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2690,7 +2691,7 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2706,7 +2707,7 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2779,7 +2780,7 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2795,7 +2796,7 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2856,7 +2857,7 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2872,7 +2873,7 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -2933,7 +2934,7 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2949,7 +2950,7 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -3001,7 +3002,7 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3017,7 +3018,7 @@ void GridDef::loadFmiProducerId_grib(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -3082,7 +3083,7 @@ void GridDef::loadFmiProducerId_grib(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3111,7 +3112,7 @@ bool GridDef::getGridLatLonAreaByGeometryId(T::GeometryId geometryId,T::Coordina
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3144,7 +3145,7 @@ bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3170,7 +3171,7 @@ T::Coordinate_svec GridDef::getGridOriginalCoordinatesByGeometryId(T::GeometryId
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3203,7 +3204,7 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3315,19 +3316,19 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
             urn = std::string("urn:ogc:def:crs:") + urnStr;
 
           if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
-            throw SmartMet::Spine::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
+            throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
         }
         else
         if (crsStr != nullptr)
         {
           OGRErr err = sr.SetFromUserInput(crsStr);
           if (err != OGRERR_NONE)
-            throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
+            throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
         }
 
         OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
         if (transformation == nullptr)
-          throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+          throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
 
         OGRCoordinateTransformation *reverseTransformation = nullptr;
 
@@ -3342,7 +3343,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
             if (transformation != nullptr)
              OCTDestroyCoordinateTransformation(transformation);
 
-            throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+            throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
           }
 
           double lon1 = aa[0];
@@ -3438,7 +3439,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3561,18 +3562,18 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             urn = std::string("urn:ogc:def:crs:") + urnStr;
 
           if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
-            throw SmartMet::Spine::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
+            throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
         }
         else
         if (crsStr != nullptr)
         {
           if (sr.SetFromUserInput(crsStr) != OGRERR_NONE)
-            throw SmartMet::Spine::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
+            throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
         }
 
         OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
         if (transformation == nullptr)
-          throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+          throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
 
         OGRCoordinateTransformation *reverseTransformation = nullptr;
 
@@ -3587,7 +3588,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             if (transformation != nullptr)
              OCTDestroyCoordinateTransformation(transformation);
 
-            throw SmartMet::Spine::Exception(BCP,"Cannot create coordinate transformation!");
+            throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
           }
 
           double lon1 = aa[0];
@@ -3702,7 +3703,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3730,7 +3731,7 @@ GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3753,7 +3754,7 @@ GRIB1::GridDef_ptr GridDef::getGrib1Definition(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3783,7 +3784,7 @@ GRIB2::GridDef_ptr GridDef::getGrib2Definition(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3805,7 +3806,7 @@ GRIB2::GridDef_ptr GridDef::getGrib2DefinitionByGeometryId(int geometryId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3818,7 +3819,7 @@ int GridDef::getGrib1GeometryId(GRIB1::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib1Definition(message);
     if (def == nullptr)
@@ -3828,7 +3829,7 @@ int GridDef::getGrib1GeometryId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3842,7 +3843,7 @@ int GridDef::getGrib2GeometryId(GRIB2::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib2Definition(message);
     if (def == nullptr)
@@ -3852,7 +3853,7 @@ int GridDef::getGrib2GeometryId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3866,7 +3867,7 @@ bool GridDef::getGeometryNameById(T::GeometryId geometryId,std::string& name)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
@@ -3886,7 +3887,7 @@ bool GridDef::getGeometryNameById(T::GeometryId geometryId,std::string& name)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3900,7 +3901,7 @@ bool GridDef::getGridDirectionsByGeometryId(T::GeometryId  geometryId,bool& reve
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
@@ -3922,7 +3923,7 @@ bool GridDef::getGridDirectionsByGeometryId(T::GeometryId  geometryId,bool& reve
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -3936,7 +3937,7 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geo
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     T::Coordinate_svec coordinates(new T::Coordinate_vec());
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
@@ -4004,7 +4005,7 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geo
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4018,7 +4019,7 @@ bool GridDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
@@ -4048,7 +4049,7 @@ bool GridDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4062,7 +4063,7 @@ bool GridDef::getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geomet
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
@@ -4076,7 +4077,7 @@ bool GridDef::getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geomet
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4090,7 +4091,7 @@ bool GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
@@ -4110,7 +4111,7 @@ bool GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4124,7 +4125,7 @@ void GridDef::getGeometryIdList(std::set<T::GeometryId>& geometryIdList)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     for (auto it = mGridDefinitions2.begin(); it != mGridDefinitions2.end(); ++it)
     {
@@ -4142,7 +4143,7 @@ void GridDef::getGeometryIdList(std::set<T::GeometryId>& geometryIdList)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4156,7 +4157,7 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     for (auto it = mGridDefinitions2.begin(); it != mGridDefinitions2.end(); ++it)
     {
@@ -4196,7 +4197,7 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4212,7 +4213,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
     FILE *file = fopen(filename,"re");
     if (file == nullptr)
     {
-      SmartMet::Spine::Exception exception(BCP,"Cannot open file!");
+      Fmi::Exception exception(BCP,"Cannot open file!");
       exception.addParameter("Filename",std::string(filename));
       throw exception;
     }
@@ -4261,7 +4262,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -4718,7 +4719,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5203,7 +5204,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5217,7 +5218,7 @@ short GridDef::getPreferredInterpolationMethodByUnits(std::string originalUnits)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     for (auto it = mGrib_unitDef_records.begin(); it != mGrib_unitDef_records.end(); ++it)
     {
@@ -5229,7 +5230,7 @@ short GridDef::getPreferredInterpolationMethodByUnits(std::string originalUnits)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5243,7 +5244,7 @@ std::string GridDef::getPreferredUnits(std::string originalUnits)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     for (auto it = mGrib_unitDef_records.begin(); it != mGrib_unitDef_records.end(); ++it)
     {
@@ -5255,7 +5256,7 @@ std::string GridDef::getPreferredUnits(std::string originalUnits)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5277,7 +5278,7 @@ GribParamDef_cptr GridDef::getGribParameterDefById(T::ParamId gribParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5299,7 +5300,7 @@ FmiParameterId_grib* GridDef::getGribDefByFmiId(T::ParamId fmiParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5321,7 +5322,7 @@ FmiParameterId_grib1* GridDef::getGrib1DefByFmiId(T::ParamId fmiParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5342,7 +5343,7 @@ FmiParameterId_grib2* GridDef::getGrib2DefByFmiId(T::ParamId fmiParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5410,7 +5411,7 @@ T::ParamId GridDef::getGribParameterId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5453,7 +5454,7 @@ T::ParamId GridDef::getGribParameterId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5479,7 +5480,7 @@ bool GridDef::getGrib1LevelDef(uint fmiLevelId,uint generatingProcessId,uint cen
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5505,7 +5506,7 @@ bool GridDef::getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5531,7 +5532,7 @@ bool GridDef::getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5548,7 +5549,7 @@ T::ParamLevelId GridDef::getGrib1LevelId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5577,7 +5578,7 @@ T::ParamLevelId GridDef::getGrib2LevelId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5606,7 +5607,7 @@ T::ParamLevelId GridDef::getGrib1LevelId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5623,7 +5624,7 @@ T::ParamLevelId GridDef::getGrib2LevelId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5644,7 +5645,7 @@ std::string GridDef::getGribParameterName(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5665,7 +5666,7 @@ std::string GridDef::getGribParameterName(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5686,7 +5687,7 @@ std::string GridDef::getGribParameterUnits(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5707,7 +5708,7 @@ std::string GridDef::getGribParameterUnits(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -5922,7 +5923,7 @@ uint GridDef::countParameterMatchPoints(GRIB2::Message& message,const Grib2Param
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -5936,7 +5937,7 @@ T::ParamId GridDef::getFmiParameterId(GRIB1::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     T::ParamId gribId = getGribParameterId(message);
     //printf("*** GRIB-ID : %s\n",gribId.c_str());
@@ -6010,7 +6011,7 @@ T::ParamId GridDef::getFmiParameterId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6024,7 +6025,7 @@ T::ParamId GridDef::getFmiParameterId(GRIB2::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     T::ParamId gribId = getGribParameterId(message);
     if (!gribId.empty())
@@ -6066,7 +6067,7 @@ T::ParamId GridDef::getFmiParameterId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6168,7 +6169,7 @@ uint GridDef::countParameterMatchPoints(GRIB2::Message& message,const FmiParamet
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP, exception_operation_failed, nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
 
@@ -6182,7 +6183,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto productSection =  message.getProductSection();
     if (productSection == nullptr)
@@ -6209,7 +6210,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6223,7 +6224,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto productSection = message.getProductSection();
     if (productSection == nullptr)
@@ -6254,7 +6255,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6268,7 +6269,7 @@ T::ParamId GridDef::getFmiParameterIdByFmiName(std::string fmiParamName)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiParameterDefByName(fmiParamName);
     if (p != nullptr)
@@ -6278,7 +6279,7 @@ T::ParamId GridDef::getFmiParameterIdByFmiName(std::string fmiParamName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6300,7 +6301,7 @@ FmiParamDef_cptr GridDef::getFmiParameterDefById(T::ParamId fmiParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6323,7 +6324,7 @@ FmiParamId_newbase_cptr GridDef::getFmiParameterIdByNewbaseId(T::ParamId newbase
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6345,7 +6346,7 @@ FmiParamId_grib_cptr GridDef::getFmiParameterIdByGribId(T::ParamId gribParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6367,7 +6368,7 @@ FmiParamId_newbase_cptr GridDef::getNewbaseParameterIdByFmiId(T::ParamId fmiPara
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6393,7 +6394,7 @@ bool GridDef::getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParamet
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6415,7 +6416,7 @@ bool GridDef::getNewbaseParameterDefByName(std::string newbaseParamName,NewbaseP
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6437,7 +6438,7 @@ bool GridDef::getNewbaseParameterMappingByFmiId(T::ParamId fmiParamId,FmiParamet
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6459,7 +6460,7 @@ bool GridDef::getNewbaseParameterDefById(T::ParamId newbaseParamId,NewbaseParame
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6481,7 +6482,7 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByNewbaseId(T::ParamId newbaseParamI
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6502,7 +6503,7 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByGribId(T::ParamId gribParamId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6524,7 +6525,7 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByName(std::string fmiParamName)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6538,7 +6539,7 @@ bool GridDef::getFmiParameterDefById(T::ParamId fmiParamId,FmiParameterDef& para
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getFmiParameterDefById(fmiParamId);
     if (def == nullptr)
@@ -6549,7 +6550,7 @@ bool GridDef::getFmiParameterDefById(T::ParamId fmiParamId,FmiParameterDef& para
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6563,7 +6564,7 @@ bool GridDef::getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId,FmiParamet
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getFmiParameterDefByNewbaseId(newbaseParamId);
     if (def == nullptr)
@@ -6574,7 +6575,7 @@ bool GridDef::getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId,FmiParamet
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6588,7 +6589,7 @@ bool GridDef::getFmiParameterDefByGribId(T::ParamId gribParamId,FmiParameterDef&
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getFmiParameterDefByGribId(gribParamId);
     if (def == nullptr)
@@ -6599,7 +6600,7 @@ bool GridDef::getFmiParameterDefByGribId(T::ParamId gribParamId,FmiParameterDef&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6613,7 +6614,7 @@ bool GridDef::getFmiParameterDefByName(std::string fmiParamName,FmiParameterDef&
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto def = getFmiParameterDefByName(fmiParamName);
     if (def == nullptr)
@@ -6624,7 +6625,7 @@ bool GridDef::getFmiParameterDefByName(std::string fmiParamName,FmiParameterDef&
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6638,7 +6639,7 @@ std::string GridDef::getFmiParameterName(GRIB1::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiParameterDefById(message.getFmiParameterId());
     if (p == nullptr)
@@ -6648,7 +6649,7 @@ std::string GridDef::getFmiParameterName(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6662,7 +6663,7 @@ std::string GridDef::getFmiParameterName(GRIB2::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiParameterDefById(message.getFmiParameterId());
     if (p == nullptr)
@@ -6672,7 +6673,7 @@ std::string GridDef::getFmiParameterName(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6686,7 +6687,7 @@ std::string GridDef::getFmiParameterDescription(GRIB1::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiParameterDefById(message.getFmiParameterId());
     if (p == nullptr)
@@ -6696,7 +6697,7 @@ std::string GridDef::getFmiParameterDescription(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6710,7 +6711,7 @@ std::string GridDef::getFmiParameterDescription(GRIB2::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiParameterDefById(message.getFmiParameterId());
     if (p == nullptr)
@@ -6720,7 +6721,7 @@ std::string GridDef::getFmiParameterDescription(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6734,7 +6735,7 @@ std::string GridDef::getFmiParameterUnits(GRIB1::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiParameterDefById(message.getFmiParameterId());
     if (p == nullptr)
@@ -6744,7 +6745,7 @@ std::string GridDef::getFmiParameterUnits(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6758,7 +6759,7 @@ std::string GridDef::getFmiParameterUnits(GRIB2::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiParameterDefById(message.getFmiParameterId());
     if (p == nullptr)
@@ -6768,7 +6769,7 @@ std::string GridDef::getFmiParameterUnits(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6782,7 +6783,7 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiParameterDefById(message.getFmiParameterId());
     if (p == nullptr)
@@ -6792,7 +6793,7 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6806,7 +6807,7 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB2::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiParameterDefById(message.getFmiParameterId());
     if (p == nullptr)
@@ -6816,7 +6817,7 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6838,7 +6839,7 @@ FmiProducerId_grib_cptr GridDef::getFmiProducerByName(std::string fmiProducerNam
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6860,7 +6861,7 @@ FmiProducerId_grib_cptr GridDef::getFmiProducerByFmiId(uint fmiProducerId)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6874,7 +6875,7 @@ bool GridDef::getFmiProducerByName(std::string fmiProducerName,FmiProducerId_gri
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiProducerByName(fmiProducerName);
     if (p == nullptr)
@@ -6885,7 +6886,7 @@ bool GridDef::getFmiProducerByName(std::string fmiProducerName,FmiProducerId_gri
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6899,7 +6900,7 @@ bool GridDef::getFmiProducerByFmiId(uint fmiProducerId,FmiProducerId_grib& produ
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiProducerByFmiId(fmiProducerId);
     if (p == nullptr)
@@ -6910,7 +6911,7 @@ bool GridDef::getFmiProducerByFmiId(uint fmiProducerId,FmiProducerId_grib& produ
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6932,7 +6933,7 @@ NewbaseParamDef_cptr GridDef::getNewbaseParameterDefById(T::ParamId newbaseParam
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6954,7 +6955,7 @@ NewbaseParamDef_cptr GridDef::getNewbaseParameterDefByName(std::string newbasePa
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6968,7 +6969,7 @@ T::ParamId GridDef::getNewbaseParameterId(GRIB1::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getNewbaseParameterIdByFmiId(message.getFmiParameterId());
     if (p == nullptr)
@@ -6978,7 +6979,7 @@ T::ParamId GridDef::getNewbaseParameterId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -6992,7 +6993,7 @@ T::ParamId GridDef::getNewbaseParameterId(GRIB2::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getNewbaseParameterIdByFmiId(message.getFmiParameterId());
     if (p == nullptr)
@@ -7002,7 +7003,7 @@ T::ParamId GridDef::getNewbaseParameterId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -7015,7 +7016,7 @@ std::string GridDef::getNewbaseParameterName(GRIB1::Message& message)
   FUNCTION_TRACE
   try  {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getNewbaseParameterIdByFmiId(message.getFmiParameterId());
     if (p == nullptr)
@@ -7029,7 +7030,7 @@ std::string GridDef::getNewbaseParameterName(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -7043,7 +7044,7 @@ std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
   try
   {
     updateCheck();
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     auto p = getNewbaseParameterIdByFmiId(message.getFmiParameterId());
     if (p == nullptr)
@@ -7057,7 +7058,7 @@ std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -7101,7 +7102,7 @@ std::string GridDef::getCdmParameterId(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -7158,7 +7159,7 @@ std::string GridDef::getCdmParameterId(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -7217,7 +7218,7 @@ std::string GridDef::getCdmParameterName(GRIB1::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -7285,7 +7286,7 @@ std::string GridDef::getCdmParameterName(GRIB2::Message& message)
   }
   catch (...)
   {
-    throw SmartMet::Spine::Exception(BCP,exception_operation_failed,nullptr);
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
