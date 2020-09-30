@@ -30,6 +30,7 @@ PhysicalGridFile::PhysicalGridFile()
     mIsRead = false;
     mMemoryPtr = nullptr;
     mFileSize = 0;
+    mMessagePositionError = false;
   }
   catch (...)
   {
@@ -52,6 +53,7 @@ PhysicalGridFile::PhysicalGridFile(const PhysicalGridFile& other)
     mIsMemoryMapped = false;
     mIsRead = false;
     mMemoryPtr = nullptr;
+    mMessagePositionError = false;
   }
   catch (...)
   {
@@ -155,6 +157,21 @@ void PhysicalGridFile::mapToMemory()
 
 
 
+bool PhysicalGridFile::hasMessagePositionError() const
+{
+  try
+  {
+    return mMessagePositionError;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
@@ -163,7 +180,20 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
     if (mMessages.find(messageIndex) != mMessages.end())
     {
       Fmi::Exception exception(BCP,"Message index already exists!");
-      exception.addParameter("MessageIndex",Fmi::to_string(messageIndex));
+      exception.addParameter("Message index",Fmi::to_string(messageIndex));
+      throw exception;
+    }
+
+    long long fsize = getSize();
+    if (C_INT64(messageInfo.mFilePosition + messageInfo.mMessageSize) > fsize)
+    {
+      mMessagePositionError = true;
+
+      Fmi::Exception exception(BCP,"Message position + size is bigger than the size of the file!");
+      exception.addParameter("Message index",Fmi::to_string(messageIndex));
+      exception.addParameter("Message file position",std::to_string(messageInfo.mFilePosition));
+      exception.addParameter("Message size",Fmi::to_string(messageInfo.mMessageSize));
+      exception.addParameter("File size",std::to_string(fsize));
       throw exception;
     }
 

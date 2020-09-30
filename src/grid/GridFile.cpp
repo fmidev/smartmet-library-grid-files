@@ -443,6 +443,23 @@ void GridFile::getUsers(std::set<uint>& userList)
 
 
 
+bool GridFile::hasMessagePositionError() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns 'true' if the current grid file is memory mapped. */
 
 bool GridFile::isMemoryMapped() const

@@ -54,6 +54,7 @@ class GridFile
     virtual time_t              getCheckTime() const;
     virtual uint                getSourceId() const;
 
+    virtual bool                hasMessagePositionError() const;
     virtual bool                isPhysical() const;
     virtual bool                isVirtual() const;
     virtual bool                isMemoryMapped() const;

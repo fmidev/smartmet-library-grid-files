@@ -41,6 +41,7 @@ class PhysicalGridFile : public GridFile
     virtual bool          isPhysical() const;
     virtual bool          isVirtual() const;
     virtual bool          isMemoryMapped() const;
+    virtual bool          hasMessagePositionError() const;
     virtual void          mapToMemory();
 
     virtual void          print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -67,6 +68,7 @@ class PhysicalGridFile : public GridFile
     long long             mFileSize;
     ThreadLock            mMemoryMappingLock;
     MappedFile_uptr       mMappedFile;
+    bool                  mMessagePositionError;
 };
 
 
