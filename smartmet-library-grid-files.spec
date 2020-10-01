@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 20.9.23
+Version: 20.10.1
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,9 +11,9 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 20.9.11
+BuildRequires: smartmet-library-newbase-devel >= 20.9.29
 BuildRequires: smartmet-library-spine-devel >= 20.9.23
-BuildRequires: smartmet-library-macgyver >= 20.9.18
+BuildRequires: smartmet-library-macgyver >= 20.9.29
 BuildRequires: smartmet-library-tron >= 20.4.18
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -36,8 +36,8 @@ Requires: gdal-libs
 Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 20.9.11
-Requires: smartmet-library-macgyver >= 20.9.18
+Requires: smartmet-library-newbase >= 20.9.29
+Requires: smartmet-library-macgyver >= 20.9.29
 Requires: smartmet-library-spine >= 20.9.23
 
 %description
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Oct  1 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.10.1-1.fmi
+- Checking message position and size against the file size before message creation
 * Wed Sep 23 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.9.23-1.fmi
 - Use Fmi::Exception instead of Spine::Exception
 * Fri Sep 18 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.9.18-1.fmi
