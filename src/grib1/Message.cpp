@@ -352,7 +352,10 @@ void Message::read()
       return;
 
     if (mGridFilePtr == nullptr)
+    {
       Fmi::Exception exception(BCP,"No pointer to the grib file!");
+      throw exception;
+    }
 
     long long s = mGridFilePtr->getSize();
     uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();

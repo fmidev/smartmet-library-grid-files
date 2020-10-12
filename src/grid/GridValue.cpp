@@ -64,7 +64,7 @@ GridValue::GridValue(double x,double y, T::ParamValue value)
 
 
 
-GridValue::GridValue(double x,double y, std::string valueString)
+GridValue::GridValue(double x,double y, std::string& valueString)
 {
   try
   {
@@ -83,7 +83,45 @@ GridValue::GridValue(double x,double y, std::string valueString)
 
 
 
-GridValue::GridValue(double x,double y, T::ParamValue value, std::string valueString)
+GridValue::GridValue(double x,double y, const char *valueString)
+{
+  try
+  {
+    mX = x;
+    mY = y;
+    mValue = 0;
+    mValueString = valueString;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+GridValue::GridValue(double x,double y, T::ParamValue value, std::string& valueString)
+{
+  try
+  {
+    mX = x;
+    mY = y;
+    mValue = value;
+    mValueString = valueString;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+GridValue::GridValue(double x,double y, T::ParamValue value, const char *valueString)
 {
   try
   {
