@@ -2157,13 +2157,13 @@ void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& mes
     if (level4 < 0)
       nextTimeLevel2 = message4.getGridParameterLevel();
 
-    T::ParamValue prevTimePrevLevel;
-    T::ParamValue prevTimeNextLevel;
-    T::ParamValue prevValue;
+    T::ParamValue prevTimePrevLevel = ParamValueMissing;
+    T::ParamValue prevTimeNextLevel = ParamValueMissing;
+    T::ParamValue prevValue = ParamValueMissing;
 
-    T::ParamValue nextTimePrevLevel;
-    T::ParamValue nextTimeNextLevel;
-    T::ParamValue nextValue;
+    T::ParamValue nextTimePrevLevel = ParamValueMissing;
+    T::ParamValue nextTimeNextLevel = ParamValueMissing;
+    T::ParamValue nextValue = ParamValueMissing;
 
     message1.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,prevTimePrevLevel);
     message2.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,prevTimeNextLevel);

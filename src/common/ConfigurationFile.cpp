@@ -428,7 +428,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,int& attribu
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = val;
+    attributeValue = C_INT(val);
     return result;
   }
   catch (...)
@@ -450,7 +450,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,long& attrib
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = (long)val;
+    attributeValue = C_LONG(val);
     return result;
   }
   catch (...)

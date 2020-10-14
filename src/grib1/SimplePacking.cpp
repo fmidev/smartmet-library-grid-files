@@ -555,7 +555,7 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
       ulonglong valuesInRange = diff / std::pow(2.0, E);
 
       while (C_UINT64(1 << bits) < valuesInRange)
-        (bits)++;
+        bits++;
     }
     else
     {

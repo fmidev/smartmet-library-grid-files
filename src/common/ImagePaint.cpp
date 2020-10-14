@@ -216,10 +216,10 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _co
       double yp = round(it->y());
 
       if (yp < minY)
-        minY = yp;
+        minY = C_INT(yp);
 
       if (yp > maxY)
-        maxY = yp;
+        maxY = C_INT(yp);
     }
 
     if (minY < 0)
@@ -342,10 +342,10 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
           double yp = round(it->y());
 
           if (yp < minY)
-            minY = yp;
+            minY = C_INT(yp);
 
           if (yp > maxY)
-            maxY = yp;
+            maxY = C_INT(yp);
         }
       }
     }

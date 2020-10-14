@@ -80,7 +80,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
 
     if (x1 == x2  && (x1 - round(x1)) == 0)
     {
-      int yStart = round(y1);
+      int yStart = C_INT(y1+0.5);
       if ((y1 - yStart) > 0)
         yStart++;
 
@@ -106,11 +106,11 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
         x2 = tx;
       }
 
-      int xStart = round(x1);
+      int xStart = C_INT(x1+0.5);
       if ((x1 - xStart) > 0)
         xStart++;
 
-      int xEnd = Fmi::floor(x2);
+      int xEnd = C_INT(Fmi::floor(x2));
 
       for (int x=xStart; x<=xEnd; x++)
       {
@@ -129,11 +129,11 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
 
     double dd = dx/dy;
 
-    int yStart = round(y1);
+    int yStart = C_INT(y1+0.5);
     if ((y1 - yStart) > 0)
       yStart++;
 
-    int yEnd = Fmi::floor(y2);
+    int yEnd = C_INT(Fmi::floor(y2));
 
     for (int y=yStart; y<yEnd; y++)
     {
@@ -220,10 +220,10 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
       double yp = round(it->y());
 
       if (yp < minY)
-        minY = yp;
+        minY = C_INT(yp);
 
       if (yp > maxY)
-        maxY = yp;
+        maxY = C_INT(yp);
     }
 
     if (minY < 0)
@@ -390,10 +390,10 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
           double yp = round(it->y());
 
           if (yp < minY)
-            minY = yp;
+            minY = C_INT(yp);
 
           if (yp > maxY)
-            maxY = yp;
+            maxY = C_INT(yp);
         }
       }
     }
@@ -1350,7 +1350,7 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
     if (sz == 0 ||  (coordinates != nullptr  &&  sz != coordinates->size()))
       return;
 
-    long long hash = 0;
+    ulonglong hash = 0;
 
     double minValue = gridData[0];
     double maxValue = gridData[0];
@@ -1411,7 +1411,7 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
       double low = contourLowValues[c];
       double high = contourHighValues[c];
 
-      long long hh = hash + low*1000000 + high*1000000 + interpolationMethod;
+      ulonglong hh = hash + low*1000000 + high*1000000 + interpolationMethod;
       bool found = false;
 
       {

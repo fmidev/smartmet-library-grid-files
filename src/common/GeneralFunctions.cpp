@@ -239,6 +239,8 @@ void time_usleep(int _sec, int _usec)
   nanosleep(&r1, &r2);
 }
 
+
+
 double int_power(double x, int y)
 {
   try
@@ -268,11 +270,13 @@ double int_power(double x, int y)
   }
 }
 
+
+
 void ieee2ibm(void *to, void *from, int len)
 {
-  unsigned fr; /* fraction */
-  int exp;     /* exponent */
-  int sgn;     /* sign */
+  unsigned fr = 0; /* fraction */
+  int exp = 0;     /* exponent */
+  int sgn = 0;     /* sign */
 
   for (; len-- > 0; to = (char *)to + 4, from = (char *)from + 4)
   {
@@ -314,6 +318,8 @@ void ieee2ibm(void *to, void *from, int len)
   }
 }
 
+
+
 float ieee2ibm(float value)
 {
   try
@@ -327,6 +333,8 @@ float ieee2ibm(float value)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 float ibm2ieee(float ibmFloat)
 {
@@ -352,6 +360,8 @@ float ibm2ieee(float ibmFloat)
   }
 }
 
+
+
 double grib_power(long s, long n)
 {
   try
@@ -375,6 +385,8 @@ double grib_power(long s, long n)
   }
 }
 
+
+
 std::string space(uint size)
 {
   try
@@ -391,6 +403,8 @@ std::string space(uint size)
   }
 }
 
+
+
 unsigned long long getTime()
 {
   try
@@ -404,6 +418,8 @@ unsigned long long getTime()
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 time_t getFileModificationTime(const char *filename)
 {
@@ -420,6 +436,8 @@ time_t getFileModificationTime(const char *filename)
   }
 }
 
+
+
 long long getFileSize(const char *filename)
 {
   try
@@ -434,6 +452,8 @@ long long getFileSize(const char *filename)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std::string newStr)
 {
@@ -453,6 +473,8 @@ std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 uint stringToId(const char *str, uint len)
 {
@@ -477,6 +499,8 @@ uint stringToId(const char *str, uint len)
   }
 }
 
+
+
 uint stringToId(const char *str)
 {
   try
@@ -492,6 +516,8 @@ uint stringToId(const char *str)
   }
 }
 
+
+
 int getInt(const char *str, uint startIdx, uint len)
 {
   try
@@ -499,13 +525,15 @@ int getInt(const char *str, uint startIdx, uint len)
     char buf[100];
     strncpy(buf, str + startIdx, len);
     buf[len] = '\0';
-    return toInt64(buf);
+    return toInt32(buf);
   }
   catch (...)
   {
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 time_t mktime_tz(struct tm *tm, const char *tzone)
 {
@@ -560,6 +588,8 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
 {
@@ -641,6 +671,8 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
   }
 }
 
+
+
 time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
 {
   try
@@ -674,6 +706,8 @@ time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
   }
 }
 
+
+
 time_t utcTimeToTimeT(const std::string& utcTime)
 {
   try
@@ -704,6 +738,8 @@ time_t utcTimeToTimeT(const std::string& utcTime)
   }
 }
 
+
+
 void splitTimeString(const std::string& timeStr, int &year, int &month, int &day, int &hour, int &minute, int &second)
 {
   try
@@ -726,6 +762,8 @@ void splitTimeString(const std::string& timeStr, int &year, int &month, int &day
   }
 }
 
+
+
 void splitTimeString(const std::string& timeStr, short &year, uchar &month, uchar &day, uchar &hour, uchar &minute, uchar &second)
 {
   try
@@ -735,18 +773,20 @@ void splitTimeString(const std::string& timeStr, short &year, uchar &month, ucha
 
     const char *str = timeStr.c_str();
 
-    year = getInt(str, 0, 4);
-    month = getInt(str, 4, 2);
-    day = getInt(str, 6, 2);
-    hour = getInt(str, 9, 2);
-    minute = getInt(str, 11, 2);
-    second = getInt(str, 13, 2);
+    year = C_SHORT(getInt(str, 0, 4));
+    month = C_UCHAR(getInt(str, 4, 2));
+    day = C_UCHAR(getInt(str, 6, 2));
+    hour = C_UCHAR(getInt(str, 9, 2));
+    minute = C_UCHAR(getInt(str, 11, 2));
+    second = C_UCHAR(getInt(str, 13, 2));
   }
   catch (...)
   {
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string localTimeFromTimeT(time_t t, const char *tzone)
 {
@@ -773,6 +813,8 @@ std::string localTimeFromTimeT(time_t t, const char *tzone)
   }
 }
 
+
+
 std::string utcTimeFromTimeT(time_t t)
 {
   try
@@ -798,6 +840,8 @@ std::string utcTimeFromTimeT(time_t t)
   }
 }
 
+
+
 std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
 {
   try
@@ -810,6 +854,8 @@ std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string localTimeToUtc(const std::string& localTime, boost::local_time::time_zone_ptr tz)
 {
@@ -826,6 +872,8 @@ std::string localTimeToUtc(const std::string& localTime, boost::local_time::time
   }
 }
 
+
+
 std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
 {
   try
@@ -839,6 +887,8 @@ std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
   }
 }
 
+
+
 time_t toTimeT(boost::posix_time::ptime tim)
 {
   try
@@ -850,6 +900,8 @@ time_t toTimeT(boost::posix_time::ptime tim)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string addSeconds(const std::string& timeStr, int seconds)
 {
@@ -865,6 +917,8 @@ std::string addSeconds(const std::string& timeStr, int seconds)
   }
 }
 
+
+
 char toInt8(const char *str)
 {
   try
@@ -878,6 +932,8 @@ char toInt8(const char *str)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 short toInt16(const char *str)
 {
@@ -893,6 +949,8 @@ short toInt16(const char *str)
   }
 }
 
+
+
 int toInt32(const char *str)
 {
   try
@@ -906,6 +964,8 @@ int toInt32(const char *str)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 long long toInt64(const char *str)
 {
@@ -921,6 +981,8 @@ long long toInt64(const char *str)
   }
 }
 
+
+
 size_t toSize_t(const char *str)
 {
   try
@@ -934,6 +996,8 @@ size_t toSize_t(const char *str)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 uchar toUInt8(const char *str)
 {
@@ -949,6 +1013,8 @@ uchar toUInt8(const char *str)
   }
 }
 
+
+
 ushort toUInt16(const char *str)
 {
   try
@@ -963,6 +1029,8 @@ ushort toUInt16(const char *str)
   }
 }
 
+
+
 uint toUInt32(const char *str)
 {
   try
@@ -976,6 +1044,8 @@ uint toUInt32(const char *str)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 ulonglong toUInt64(const char *str)
 {
@@ -992,6 +1062,7 @@ ulonglong toUInt64(const char *str)
 }
 
 
+
 double toDouble2(const char* str)
 {
   double result = 0;
@@ -1006,7 +1077,7 @@ double toDouble2(const char* str)
   if (*str == ',' || *str == '.')
   {
     str++;
-    float multiplier = 0.1;
+    double multiplier = 0.1;
     while (*str >= '0' && *str <= '9')
     {
       result += (*str - '0') * multiplier;
@@ -1018,8 +1089,8 @@ double toDouble2(const char* str)
   if (*str == 'e' || *str == 'E')
   {
     str++;
-    float powerer = *str == '-'? str++, 0.1 : 10;
-    float power = 0;
+    double powerer = *str == '-'? str++, 0.1 : 10;
+    double power = 0;
     while (*str >= '0' && *str <= '9')
     {
       power *= 10;
@@ -1030,6 +1101,29 @@ double toDouble2(const char* str)
   }
   return result;
 }
+
+
+
+float toFloat(const char *str)
+{
+  try
+  {
+    // Make sure that the environment variable LC_NUMERIC is defined
+    // correctly (export LC_NUMERIC="en_US.UTF-8").
+
+    if (str == nullptr)
+      return 0.0;
+
+    return C_FLOAT(atof(str));
+    //return toDouble2(str);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
 
 
 double toDouble(const char *str)
@@ -1066,6 +1160,8 @@ char toInt8(const std::string &str)
   }
 }
 
+
+
 short toInt16(const std::string &str)
 {
   try
@@ -1077,6 +1173,8 @@ short toInt16(const std::string &str)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 int toInt32(const std::string &str)
 {
@@ -1090,6 +1188,8 @@ int toInt32(const std::string &str)
   }
 }
 
+
+
 long long toInt64(const std::string &str)
 {
   try
@@ -1101,6 +1201,8 @@ long long toInt64(const std::string &str)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 uchar toUInt8(const std::string &str)
 {
@@ -1114,6 +1216,8 @@ uchar toUInt8(const std::string &str)
   }
 }
 
+
+
 ushort toUInt16(const std::string &str)
 {
   try
@@ -1125,6 +1229,8 @@ ushort toUInt16(const std::string &str)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 uint toUInt32(const std::string &str)
 {
@@ -1138,6 +1244,8 @@ uint toUInt32(const std::string &str)
   }
 }
 
+
+
 ulonglong toUInt64(const std::string &str)
 {
   try
@@ -1149,6 +1257,22 @@ ulonglong toUInt64(const std::string &str)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
+
+float toFloat(const std::string &str)
+{
+  try
+  {
+    return toFloat(str.c_str());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
 
 double toDouble(const std::string &str)
 {
@@ -1162,6 +1286,8 @@ double toDouble(const std::string &str)
   }
 }
 
+
+
 size_t toSize_t(const std::string &str)
 {
   try
@@ -1173,6 +1299,8 @@ size_t toSize_t(const std::string &str)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(std::array<char, 16> value)
 {
@@ -1187,6 +1315,8 @@ std::string toString(std::array<char, 16> value)
   }
 }
 
+
+
 std::string toString(std::int8_t value)
 {
   try
@@ -1198,6 +1328,8 @@ std::string toString(std::int8_t value)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(std::int16_t value)
 {
@@ -1211,6 +1343,8 @@ std::string toString(std::int16_t value)
   }
 }
 
+
+
 std::string toString(std::int32_t value)
 {
   try
@@ -1222,6 +1356,8 @@ std::string toString(std::int32_t value)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(std::int64_t value)
 {
@@ -1235,6 +1371,8 @@ std::string toString(std::int64_t value)
   }
 }
 
+
+
 std::string toString(std::uint8_t value)
 {
   try
@@ -1246,6 +1384,8 @@ std::string toString(std::uint8_t value)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(std::uint16_t value)
 {
@@ -1259,6 +1399,8 @@ std::string toString(std::uint16_t value)
   }
 }
 
+
+
 std::string toString(std::uint32_t value)
 {
   try
@@ -1271,6 +1413,8 @@ std::string toString(std::uint32_t value)
   }
 }
 
+
+
 std::string toString(std::uint64_t value)
 {
   try
@@ -1282,6 +1426,8 @@ std::string toString(std::uint64_t value)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(float value)
 {
@@ -1297,6 +1443,8 @@ std::string toString(float value)
   }
 }
 
+
+
 std::string toString(double value)
 {
   try
@@ -1311,6 +1459,8 @@ std::string toString(double value)
   }
 }
 
+
+
 std::string toString(const std::string& value)
 {
   try
@@ -1322,6 +1472,8 @@ std::string toString(const std::string& value)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(T::UInt8_opt value)
 {
@@ -1337,6 +1489,8 @@ std::string toString(T::UInt8_opt value)
   }
 }
 
+
+
 std::string toString(T::UInt16_opt value)
 {
   try
@@ -1350,6 +1504,8 @@ std::string toString(T::UInt16_opt value)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(T::UInt32_opt value)
 {
@@ -1365,6 +1521,8 @@ std::string toString(T::UInt32_opt value)
   }
 }
 
+
+
 std::string toString(T::UInt64_opt value)
 {
   try
@@ -1378,6 +1536,8 @@ std::string toString(T::UInt64_opt value)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(T::Int8_opt value)
 {
@@ -1393,6 +1553,8 @@ std::string toString(T::Int8_opt value)
   }
 }
 
+
+
 std::string toString(T::Int16_opt value)
 {
   try
@@ -1406,6 +1568,8 @@ std::string toString(T::Int16_opt value)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(T::Int32_opt value)
 {
@@ -1421,6 +1585,8 @@ std::string toString(T::Int32_opt value)
   }
 }
 
+
+
 std::string toString(T::Int64_opt value)
 {
   try
@@ -1435,6 +1601,7 @@ std::string toString(T::Int64_opt value)
   }
 }
 
+
 std::string toString(boost::posix_time::ptime time)
 {
   try
@@ -1446,6 +1613,8 @@ std::string toString(boost::posix_time::ptime time)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toLowerString(const char *sourceString)
 {
@@ -1459,6 +1628,7 @@ std::string toLowerString(const char *sourceString)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
 
 
 std::string toLowerString(const std::string& sourceString)
@@ -1481,6 +1651,8 @@ std::string toLowerString(const std::string& sourceString)
   }
 }
 
+
+
 std::string toUpperString(const char *sourceString)
 {
   try
@@ -1493,6 +1665,8 @@ std::string toUpperString(const char *sourceString)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toUpperString(const std::string& sourceString)
 {
@@ -1516,12 +1690,16 @@ std::string toUpperString(const std::string& sourceString)
 
 
 
+
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
 {
   try
   {
     if (timeStr.length() <  15)
-      Fmi::Exception(BCP, "Invalid time string!");
+    {
+      Fmi::Exception exception(BCP, "Invalid time string!");
+      throw exception;
+    }
 
     const char *s = timeStr.c_str();
 
@@ -1547,6 +1725,8 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
   }
 }
 
+
+
 int compressData(void *_data, uint _dataSize, void *_compressedData, uint &_compressedDataSize)
 {
   try
@@ -1568,6 +1748,8 @@ int compressData(void *_data, uint _dataSize, void *_compressedData, uint &_comp
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 int decompressData(void *_compressedData,
                    uint _compressedDataSize,
@@ -1595,6 +1777,8 @@ int decompressData(void *_compressedData,
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void parseLatLonCoordinates(const std::string& latLonCoordinates, std::vector<T::Coordinate> &coordinates)
 {
@@ -1635,6 +1819,8 @@ void parseLatLonCoordinates(const std::string& latLonCoordinates, std::vector<T:
   }
 }
 
+
+
 void splitString(const char *str, char separator, std::vector<std::string> &partList)
 {
   try
@@ -1673,6 +1859,8 @@ void splitString(const char *str, char separator, std::vector<std::string> &part
   }
 }
 
+
+
 void splitString(const std::string& str, char separator, std::vector<std::string> &partList)
 {
   try
@@ -1684,6 +1872,8 @@ void splitString(const std::string& str, char separator, std::vector<std::string
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void splitString(const char *str, char separator, std::set<std::string> &partList)
 {
@@ -1723,6 +1913,8 @@ void splitString(const char *str, char separator, std::set<std::string> &partLis
   }
 }
 
+
+
 void splitString(const std::string& str, char separator, std::set<std::string> &partList)
 {
   try
@@ -1734,6 +1926,8 @@ void splitString(const std::string& str, char separator, std::set<std::string> &
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void splitString(const char *str, char separator, std::vector<uint> &partList)
 {
@@ -1773,6 +1967,8 @@ void splitString(const char *str, char separator, std::vector<uint> &partList)
   }
 }
 
+
+
 void splitString(const std::string& str, char separator, std::vector<uint> &partList)
 {
   try
@@ -1784,6 +1980,8 @@ void splitString(const std::string& str, char separator, std::vector<uint> &part
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void splitString(const char *str, char separator, std::vector<int> &partList)
 {
@@ -1823,6 +2021,8 @@ void splitString(const char *str, char separator, std::vector<int> &partList)
   }
 }
 
+
+
 void splitString(const std::string& str, char separator, std::vector<int> &partList)
 {
   try
@@ -1834,6 +2034,8 @@ void splitString(const std::string& str, char separator, std::vector<int> &partL
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void splitString(const char *str, char separator, std::vector<double> &partList)
 {
@@ -1873,6 +2075,8 @@ void splitString(const char *str, char separator, std::vector<double> &partList)
   }
 }
 
+
+
 void splitString(const std::string& str, char separator, std::vector<double> &partList)
 {
   try
@@ -1884,6 +2088,8 @@ void splitString(const std::string& str, char separator, std::vector<double> &pa
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void splitString(const char *str, char separator, std::vector<float> &partList)
 {
@@ -1923,6 +2129,8 @@ void splitString(const char *str, char separator, std::vector<float> &partList)
   }
 }
 
+
+
 void splitString(const std::string& str, char separator, std::vector<float> &partList)
 {
   try
@@ -1934,6 +2142,8 @@ void splitString(const std::string& str, char separator, std::vector<float> &par
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void splitString(const char *str, char separator, std::set<float> &partList)
 {
@@ -1973,6 +2183,8 @@ void splitString(const char *str, char separator, std::set<float> &partList)
   }
 }
 
+
+
 void splitString(const std::string& str, char separator, std::set<float> &partList)
 {
   try
@@ -1984,6 +2196,8 @@ void splitString(const std::string& str, char separator, std::set<float> &partLi
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void splitString(const char *str, char separator, std::set<int> &partList)
 {
@@ -2023,6 +2237,8 @@ void splitString(const char *str, char separator, std::set<int> &partList)
   }
 }
 
+
+
 void splitString(const std::string& str, char separator, std::set<int> &partList)
 {
   try
@@ -2034,6 +2250,8 @@ void splitString(const std::string& str, char separator, std::set<int> &partList
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void splitString(const char *str, char separator, std::set<double> &partList)
 {
@@ -2073,6 +2291,8 @@ void splitString(const char *str, char separator, std::set<double> &partList)
   }
 }
 
+
+
 void splitString(const std::string& str, char separator, std::set<double> &partList)
 {
   try
@@ -2084,6 +2304,8 @@ void splitString(const std::string& str, char separator, std::set<double> &partL
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string getAbsoluteFilePath(const std::string& filename)
 {
@@ -2107,6 +2329,8 @@ std::string getAbsoluteFilePath(const std::string& filename)
   }
 }
 
+
+
 std::string getFileDir(const std::string& filename)
 {
   try
@@ -2126,6 +2350,8 @@ std::string getFileDir(const std::string& filename)
   }
 }
 
+
+
 bool patternMatch(const char *str, std::vector<std::string> &patterns)
 {
   try
@@ -2142,6 +2368,8 @@ bool patternMatch(const char *str, std::vector<std::string> &patterns)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void getFileList(const char *dirName,
                  std::vector<std::string> &filePatterns,
@@ -2223,6 +2451,8 @@ void getFileList(const char *dirName,
   }
 }
 
+
+
 int timePeriodToSeconds(const char *timePeriod)
 {
   try
@@ -2273,6 +2503,8 @@ int timePeriodToSeconds(const char *timePeriod)
   }
 }
 
+
+
 std::string toString(std::list<std::string> &parts, char separator)
 {
   try
@@ -2291,6 +2523,8 @@ std::string toString(std::list<std::string> &parts, char separator)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(std::set<int> &parts, char separator)
 {
@@ -2311,6 +2545,8 @@ std::string toString(std::set<int> &parts, char separator)
   }
 }
 
+
+
 std::string toString(std::set<float> &parts, char separator)
 {
   try
@@ -2329,6 +2565,8 @@ std::string toString(std::set<float> &parts, char separator)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string toString(T::AreaCoordinates &coordinates, char separator1, char separator2)
 {
@@ -2353,6 +2591,8 @@ std::string toString(T::AreaCoordinates &coordinates, char separator1, char sepa
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void parseCoordinates(const std::string& coordinateStr,
                       char separator1,
@@ -2384,6 +2624,8 @@ void parseCoordinates(const std::string& coordinateStr,
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 void tuneLevels(int &level1, int &level2, int newLevel)
 {
@@ -2419,6 +2661,8 @@ void tuneLevels(int &level1, int &level2, int newLevel)
   }
 }
 
+
+
 std::string base64_encode(unsigned char *data, size_t dataSize)
 {
   try
@@ -2444,6 +2688,8 @@ std::string base64_encode(unsigned char *data, size_t dataSize)
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
 
 std::string fileToBase64(const char *filename)
 {

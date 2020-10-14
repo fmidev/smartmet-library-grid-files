@@ -363,9 +363,9 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,int l
     if (level2 == newLevel)
       return value2;
 
-    int diff1 = newLevel - level1;
-    int diff2 = level2 - newLevel;
-    double levelDiff = C_DOUBLE(level2 - level1);
+    float diff1 = C_FLOAT(newLevel - level1);
+    float diff2 = C_FLOAT(level2 - newLevel);
+    float levelDiff = C_FLOAT(level2 - level1);
 
     switch (levelInterpolationMethod)
     {
@@ -438,9 +438,9 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,in
       return;
     }
 
-    int diff1 = newLevel - level1;
-    int diff2 = level2 - newLevel;
-    double levelDiff = C_DOUBLE(level2 - level1);
+    float diff1 = C_FLOAT(newLevel - level1);
+    float diff2 = C_FLOAT(level2 - newLevel);
+    float levelDiff = C_FLOAT(level2 - level1);
 
     uint len1 = values1.size();
     uint len2 = values2.size();
@@ -546,9 +546,9 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int 
       return;
     }
 
-    int diff1 = newLevel - level1;
-    int diff2 = level2 - newLevel;
-    double levelDiff = C_DOUBLE(level2 - level1);
+    float diff1 = C_FLOAT(newLevel - level1);
+    float diff2 = C_FLOAT(level2 - newLevel);
+    float levelDiff = C_FLOAT(level2 - level1);
 
     uint len1 = values1.getLength();
     uint len2 = values2.getLength();

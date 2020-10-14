@@ -1113,16 +1113,16 @@ void GridDef::loadGribTableValues(const char *filename)
           GribTableValue rec;
 
           if (field[0][0] != '\0')
-            rec.mGribVersion = (std::uint8_t)toInt64(field[0]);
+            rec.mGribVersion = toUInt8(field[0]);
 
           if (field[1][0] != '\0')
-            rec.mTableVersion = (std::uint8_t)toInt64(field[1]);
+            rec.mTableVersion = toUInt8(field[1]);
 
           if (field[2][0] != '\0')
             rec.mTable = field[2];
 
           if (field[3][0] != '\0')
-            rec.mNumber = (std::uint32_t)toInt64(field[3]);
+            rec.mNumber = toUInt32(field[3]);
 
           if (field[4][0] != '\0')
             rec.mName = field[4];
@@ -1195,13 +1195,13 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
           rec.mGribParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mDiscipline = toInt64(field[1]);
+            rec.mDiscipline = toUInt32(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mParameterCategory = toInt64(field[2]);
+            rec.mParameterCategory = toUInt32(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mParameterNumber = toInt64(field[3]);
+            rec.mParameterNumber = toUInt32(field[3]);
 
           rec.mParameterName = field[4];
           rec.mParameterDescription = field[5];
@@ -1760,7 +1760,7 @@ void GridDef::loadGrib1LevelDefinitions(const char *filename)
           LevelDef rec;
 
           if (field[0][0] != '\0')
-            rec.mLevelId = toInt64(field[0]);
+            rec.mLevelId = toUInt32(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -1831,7 +1831,7 @@ void GridDef::loadGrib2LevelDefinitions(const char *filename)
           LevelDef rec;
 
           if (field[0][0] != '\0')
-            rec.mLevelId = toInt64(field[0]);
+            rec.mLevelId = toUInt32(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -1902,7 +1902,7 @@ void GridDef::loadGrib1TimeRangeDefinitions(const char *filename)
           TimeRangeDef rec;
 
           if (field[0][0] != '\0')
-            rec.mTimeRangeId = toInt64(field[0]);
+            rec.mTimeRangeId = toUInt32(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -1973,7 +1973,7 @@ void GridDef::loadGrib2TimeRangeDefinitions(const char *filename)
           TimeRangeDef rec;
 
           if (field[0][0] != '\0')
-            rec.mTimeRangeId = toInt64(field[0]);
+            rec.mTimeRangeId = toUInt32(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -2047,19 +2047,19 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
             rec.mGribParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mTable2Version = (std::uint8_t)toInt64(field[1]);
+            rec.mTable2Version = toUInt32(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mCentre = (std::uint8_t)toInt64(field[2]);
+            rec.mCentre = toUInt32(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mIndicatorOfParameter = (std::uint8_t)toInt64(field[3]);
+            rec.mIndicatorOfParameter = toUInt32(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mIndicatorOfTypeOfLevel = (std::uint8_t)toInt64(field[4]);
+            rec.mIndicatorOfTypeOfLevel = toUInt32(field[4]);
 
           if (field[5][0] != '\0')
-            rec.mParameterLevel = (std::uint16_t)toInt64(field[5]);
+            rec.mParameterLevel = toUInt32(field[5]);
 
           if (field[6][0] != '\0')
             rec.mParameterUnits = field[6];
@@ -2137,67 +2137,67 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
             rec.mGribParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mDiscipline = (std::uint8_t)toInt64(field[1]);
+            rec.mDiscipline = toUInt8(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mCentre = (std::uint16_t)toInt64(field[2]);
+            rec.mCentre = toUInt16(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mParameterCategory = (std::uint8_t)toInt64(field[3]);
+            rec.mParameterCategory = toUInt8(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mParameterNumber = (std::uint8_t)toInt64(field[4]);
+            rec.mParameterNumber = toUInt8(field[4]);
 
           if (field[5][0] != '\0')
-            rec.mProbabilityType = (std::uint8_t)toInt64(field[5]);
+            rec.mProbabilityType = toUInt8(field[5]);
 
           if (field[6][0] != '\0')
-            rec.mProductDefinitionTemplateNumber = (std::uint16_t)toInt64(field[6]);
+            rec.mProductDefinitionTemplateNumber = toUInt16(field[6]);
 
           if (field[7][0] != '\0')
-            rec.mTypeOfFirstFixedSurface = (std::uint8_t)toInt64(field[7]);
+            rec.mTypeOfFirstFixedSurface = toUInt8(field[7]);
 
           if (field[8][0] != '\0')
-            rec.mTypeOfSecondFixedSurface = (std::uint8_t)toInt64(field[8]);
+            rec.mTypeOfSecondFixedSurface = toUInt8(field[8]);
 
           if (field[9][0] != '\0')
-            rec.mTypeOfStatisticalProcessing = (std::uint8_t)toInt64(field[9]);
+            rec.mTypeOfStatisticalProcessing = toUInt8(field[9]);
 
           if (field[10][0] != '\0')
-            rec.mScaledValueOfLowerLimit = (std::uint8_t)toInt64(field[10]);
+            rec.mScaledValueOfLowerLimit = toUInt8(field[10]);
 
           if (field[11][0] != '\0')
-            rec.mScaledValueOfFirstFixedSurface = (std::uint32_t)toInt64(field[11]);
+            rec.mScaledValueOfFirstFixedSurface = toUInt32(field[11]);
 
           if (field[12][0] != '\0')
-            rec.mScaledValueOfSecondFixedSurface =(std::uint32_t)toInt64(field[12]);
+            rec.mScaledValueOfSecondFixedSurface = toUInt32(field[12]);
 
           if (field[13][0] != '\0')
-            rec.mScaleFactorOfLowerLimit = (std::uint8_t)toInt64(field[13]);
+            rec.mScaleFactorOfLowerLimit = toUInt8(field[13]);
 
           if (field[14][0] != '\0')
-            rec.mScaleFactorOfFirstFixedSurface = (std::uint8_t)toInt64(field[14]);
+            rec.mScaleFactorOfFirstFixedSurface = toUInt8(field[14]);
 
           if (field[15][0] != '\0')
-            rec.mScaleFactorOfSecondFixedSurface = (std::int8_t)toInt64(field[15]);
+            rec.mScaleFactorOfSecondFixedSurface = toUInt8(field[15]);
 
           if (field[16][0] != '\0')
-            rec.mIs_tigge = (std::uint8_t)toInt64(field[16]);
+            rec.mIs_tigge = toUInt8(field[16]);
 
           if (field[17][0] != '\0')
-            rec.mTypeOfGeneratingProcess = (std::uint8_t)toInt64(field[17]);
+            rec.mTypeOfGeneratingProcess = toUInt8(field[17]);
 
           if (field[18][0] != '\0')
-            rec.mConstituentType = (std::uint16_t)toInt64(field[18]);
+            rec.mConstituentType = toUInt16(field[18]);
 
           if (field[19][0] != '\0')
-            rec.mLengthOfTimeRange = (std::uint8_t)toInt64(field[19]);
+            rec.mLengthOfTimeRange = toUInt8(field[19]);
 
           if (field[20][0] != '\0')
-            rec.mLocalTablesVersion = (std::uint8_t)toInt64(field[20]);
+            rec.mLocalTablesVersion = toUInt8(field[20]);
 
           if (field[21][0] != '\0')
-            rec.mAerosolType = (std::uint16_t)toInt64(field[21]);
+            rec.mAerosolType = toUInt16(field[21]);
 
           if (field[22][0] != '\0')
             rec.mParameterUnits = field[22];
@@ -2272,7 +2272,7 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
           LevelDef rec;
 
           if (field[0][0] != '\0')
-            rec. mLevelId = toInt64(field[0]);
+            rec. mLevelId = toUInt32(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -2343,7 +2343,7 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
           ForecastTypeDef rec;
 
           if (field[0][0] != '\0')
-            rec. mForecastTypeId = toInt64(field[0]);
+            rec. mForecastTypeId = toInt32(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -2491,31 +2491,31 @@ void GridDef::loadFmiParameterId_grib1(const char *filename)
             rec. mFmiParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mFmiProducerId = toInt64(field[1]);
+            rec.mFmiProducerId = toUInt32(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mGeneratingProcessIdentifier = toInt64(field[2]);
+            rec.mGeneratingProcessIdentifier = toUInt32(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mCentre = toInt64(field[3]);
+            rec.mCentre = toUInt32(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mGribTableVersion = toInt64(field[4]);
+            rec.mGribTableVersion = toUInt32(field[4]);
 
           if (field[5][0] != '\0')
-            rec.mGribParameterNumber = toInt64(field[5]);
+            rec.mGribParameterNumber = toUInt32(field[5]);
 
           if (field[6][0] != '\0')
-            rec.mGribTimerangeIndicator = toInt64(field[6]);
+            rec.mGribTimerangeIndicator = toUInt32(field[6]);
 
           if (field[7][0] != '\0')
-            rec.mFmiParameterLevelId = toInt64(field[7]);
+            rec.mFmiParameterLevelId = toUInt32(field[7]);
 
           if (field[8][0] != '\0')
-            rec.mGribParameterLevelId = toInt64(field[8]);
+            rec.mGribParameterLevelId = toUInt32(field[8]);
 
           if (field[9][0] != '\0')
-            rec.mParameterLevel = toInt64(field[9]);
+            rec.mParameterLevel = toUInt32(field[9]);
 
           mFmi_parametersFromGrib1_records.push_back(rec);
         }
@@ -2583,31 +2583,31 @@ void GridDef::loadFmiParameterId_grib2(const char *filename)
             rec.mFmiParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mFmiProducerId = toInt64(field[1]);
+            rec.mFmiProducerId = toUInt32(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mGeneratingProcessIdentifier = toInt64(field[2]);
+            rec.mGeneratingProcessIdentifier = toUInt32(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mCentre = toInt64(field[3]);
+            rec.mCentre = toUInt32(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mDiscipline = toInt64(field[4]);
+            rec.mDiscipline = toUInt32(field[4]);
 
           if (field[5][0] != '\0')
-            rec.mParameterCategory = toInt64(field[5]);
+            rec.mParameterCategory = toUInt32(field[5]);
 
           if (field[6][0] != '\0')
-            rec.mParameterNumber = toInt64(field[6]);
+            rec.mParameterNumber = toUInt32(field[6]);
 
           if (field[7][0] != '\0')
-            rec.mFmiParameterLevelId = toInt64(field[7]);
+            rec.mFmiParameterLevelId = toUInt32(field[7]);
 
           if (field[8][0] != '\0')
-            rec.mGribParameterLevelId = toInt64(field[8]);
+            rec.mGribParameterLevelId = toUInt32(field[8]);
 
           if (field[9][0] != '\0')
-            rec.mParameterLevel = toInt64(field[9]);
+            rec.mParameterLevel = toUInt32(field[9]);
 
           mFmi_parametersFromGrib2_records.push_back(rec);
         }
@@ -2749,7 +2749,7 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
             rec.mFmiParameterId = field[0];
 
           if (field[1][0] != '\0')
-            rec.mVersion = toInt64(field[1]);
+            rec.mVersion = toUInt32(field[1]);
 
           if (field[2][0] != '\0')
             rec.mParameterName = field[2];
@@ -2835,19 +2835,19 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
           FmiLevelId_grib rec;
 
           if (field[0][0] != '\0')
-            rec.mFmiLevelId = toInt64(field[0]);
+            rec.mFmiLevelId = toUInt32(field[0]);
 
           if (field[1][0] != '\0')
-            rec.mFmiProducerId = toInt64(field[1]);
+            rec.mFmiProducerId = toUInt32(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mGeneratingProcessIdentifier = toInt64(field[2]);
+            rec.mGeneratingProcessIdentifier = toUInt32(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mCentre = toInt64(field[3]);
+            rec.mCentre = toUInt32(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mGribLevelId = toInt64(field[4]);
+            rec.mGribLevelId = toUInt32(field[4]);
 
           mFmi_levelsFromGrib1_records.push_back(rec);
         }
@@ -2912,19 +2912,19 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
           FmiLevelId_grib rec;
 
           if (field[0][0] != '\0')
-            rec.mFmiLevelId = toInt64(field[0]);
+            rec.mFmiLevelId = toUInt32(field[0]);
 
           if (field[1][0] != '\0')
-            rec.mFmiProducerId = toInt64(field[1]);
+            rec.mFmiProducerId = toUInt32(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mGeneratingProcessIdentifier = toInt64(field[2]);
+            rec.mGeneratingProcessIdentifier = toUInt32(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mCentre = toInt64(field[3]);
+            rec.mCentre = toUInt32(field[3]);
 
           if (field[4][0] != '\0')
-            rec.mGribLevelId = toInt64(field[4]);
+            rec.mGribLevelId = toUInt32(field[4]);
 
           mFmi_levelsFromGrib2_records.push_back(rec);
         }
@@ -3057,16 +3057,16 @@ void GridDef::loadFmiProducerId_grib(const char *filename)
           FmiProducerId_grib rec;
 
           if (field[0][0] != '\0')
-            rec.mProducerId = toInt64(field[0]);
+            rec.mProducerId = toUInt32(field[0]);
 
           if (field[1][0] != '\0')
-            rec.mType = toInt64(field[1]);
+            rec.mType = toUInt32(field[1]);
 
           if (field[2][0] != '\0')
-            rec.mCentre = toInt64(field[2]);
+            rec.mCentre = toUInt32(field[2]);
 
           if (field[3][0] != '\0')
-            rec.mIdent = toInt64(field[3]);
+            rec.mIdent = toUInt32(field[3]);
 
           if (field[4][0] != '\0')
             rec.mProducerName = field[4];
@@ -4306,7 +4306,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
     if (c > 1)
     {
-      ushort gridProjection = C_USHORT(toInt64(field[0]));
+      ushort gridProjection = toUInt16(field[0]);
       switch (gridProjection)
       {
         case T::GridProjectionValue::Unknown:
@@ -4317,10 +4317,10 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           if (c < 10)
             return nullptr;
 
-          uint geometryId = toInt64(field[1]);
+          uint geometryId = toInt32(field[1]);
           char *geometryName = field[2];
-          int ni = toInt64(field[3]);
-          int nj = toInt64(field[4]);
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000));
           int latitude = C_INT(round(toDouble(field[6])*1000));
           int iInc = C_INT(round(toDouble(field[7]) * 1000));
@@ -4383,10 +4383,10 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           if (c < 13)
             return nullptr;
 
-          uint geometryId = toInt64(field[1]);
+          uint geometryId = toInt32(field[1]);
           char *geometryName = field[2];
-          int ni = toInt64(field[3]);
-          int nj = toInt64(field[4]);
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000));
           int latitude = C_INT(round(toDouble(field[6])*1000));
           int iInc = C_INT(round(toDouble(field[7]) * 1000));
@@ -4467,10 +4467,10 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           if (c < 12)
             return nullptr;
 
-          uint geometryId = toInt64(field[1]);
+          uint geometryId = toInt32(field[1]);
           char *geometryName = field[2];
-          int ni = toInt64(field[3]);
-          int nj = toInt64(field[4]);
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000));
           int latitude = C_INT(round(toDouble(field[6])*1000));
           int iInc = C_INT(round(toDouble(field[7]) * 1000));
@@ -4530,10 +4530,10 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           if (c < 12)
             return nullptr;
 
-          uint geometryId = toInt64(field[1]);
+          uint geometryId = toInt32(field[1]);
           char *geometryName = field[2];
-          int ni = toInt64(field[3]);
-          int nj = toInt64(field[4]);
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000));
           int latitude = C_INT(round(toDouble(field[6])*1000));
           int iInc = C_INT(round(toDouble(field[7])));
@@ -4589,14 +4589,14 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           if (c < 15)
             return nullptr;
 
-          uint geometryId = toInt64(field[1]);
+          uint geometryId = toInt32(field[1]);
           char *geometryName = field[2];
-          int ni = toInt64(field[3]);
-          int nj = toInt64(field[4]);
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000));
           int latitude = C_INT(round(toDouble(field[6])*1000));
-          int iInc = C_INT(toInt64(field[7]));
-          int jInc = C_INT(toInt64(field[8]));
+          int iInc = toInt32(field[7]);
+          int jInc = toInt32(field[8]);
           char *scanningMode = field[9];
           int orientation = C_INT(round(toDouble(field[10])*1000));
           int latin1 = C_INT(round(toDouble(field[11])*1000));
@@ -4763,7 +4763,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
     if (c > 1)
     {
-      ushort gridProjection = C_USHORT(toInt64(field[0]));
+      ushort gridProjection = toUInt16(field[0]);
       switch (gridProjection)
       {
         case T::GridProjectionValue::Unknown:
@@ -4774,10 +4774,10 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           if (c < 10)
             return nullptr;
 
-          uint geometryId = toInt64(field[1]);
+          uint geometryId = toInt32(field[1]);
           char *geometryName = field[2];
-          int ni = toInt64(field[3]);
-          int nj = toInt64(field[4]);
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000000));
           int latitude = C_INT(round(toDouble(field[6])*1000000));
           int iInc = C_INT(round(toDouble(field[7]) * 1000000));
@@ -4852,10 +4852,10 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           if (c < 13)
             return nullptr;
 
-          uint geometryId = toInt64(field[1]);
+          uint geometryId = toInt32(field[1]);
           char *geometryName = field[2];
-          int ni = toInt64(field[3]);
-          int nj = toInt64(field[4]);
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000000));
           int latitude = C_INT(round(toDouble(field[6])*1000000));
           int iInc = C_INT(round(toDouble(field[7]) * 1000000));
@@ -4953,10 +4953,10 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           if (c < 12)
             return nullptr;
 
-          uint geometryId = toInt64(field[1]);
+          uint geometryId = toInt32(field[1]);
           char *geometryName = field[2];
-          int ni = toInt64(field[3]);
-          int nj = toInt64(field[4]);
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000000));
           int latitude = C_INT(round(toDouble(field[6])*1000000));
           int iInc = C_INT(round(toDouble(field[7]) * 1000));
@@ -5014,14 +5014,14 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           if (c < 15)
             return nullptr;
 
-          uint geometryId = toInt64(field[1]);
+          uint geometryId = toInt32(field[1]);
           char *geometryName = field[2];
-          int ni = toInt64(field[3]);
-          int nj = toInt64(field[4]);
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000000));
           int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = C_INT(toInt64(field[7]));
-          int jInc = C_INT(toInt64(field[8]));
+          int iInc = toInt32(field[7]);
+          int jInc = toInt32(field[8]);
           char *scanningMode = field[9];
           int orientation = C_INT(round(toDouble(field[10])*1000000));
           int latin1 = C_INT(round(toDouble(field[11])*1000000));
@@ -5131,14 +5131,14 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           if (c < 12)
             return nullptr;
 
-          uint geometryId = toInt64(field[1]);
+          uint geometryId = toInt32(field[1]);
           char *geometryName = field[2];
-          int ni = toInt64(field[3]);
-          int nj = toInt64(field[4]);
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000000));
           int latitude = C_INT(round(toDouble(field[6])*1000000));
-          int iInc = C_INT(toInt64(field[7]));
-          int jInc = C_INT(toInt64(field[8]));
+          int iInc = toInt32(field[7]);
+          int jInc = toInt32(field[8]);
           char *scanningMode = field[9];
           int standardParallel = C_INT(round(toDouble(field[10])*1000000));
           int centralLongitude = C_INT(round(toDouble(field[11])*1000000));

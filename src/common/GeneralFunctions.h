@@ -78,6 +78,7 @@ uchar       toUInt8(const char *str);
 ushort      toUInt16(const char *str);
 uint        toUInt32(const char *str);
 ulonglong   toUInt64(const char *str);
+float       toFloat(const char *str);
 double      toDouble(const char *str);
 size_t      toSize_t(const char *str);
 
@@ -89,6 +90,7 @@ uchar       toUInt8(const std::string& str);
 ushort      toUInt16(const std::string& str);
 uint        toUInt32(const std::string& str);
 ulonglong   toUInt64(const std::string& str);
+float       toFloat(const std::string& str);
 double      toDouble(const std::string& str);
 size_t      toSize_t(const std::string& str);
 

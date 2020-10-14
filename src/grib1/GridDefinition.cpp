@@ -1632,8 +1632,8 @@ void GridDefinition::getGridCellAverageSize(double& width,double& height)
     T::Dimensions d = getGridDimensions();
     if (d.getDimensions() == 2)
     {
-      int x = d.nx()/2;
-      int y = d.ny()/2;
+      uint x = d.nx()/2;
+      uint y = d.ny()/2;
 
       double lat1 = 0,lon1 = 0,lat2 = 0,lon2 = 0;;
       if (getGridLatLonCoordinatesByGridPoint(x,y,lat1,lon1)  &&  getGridLatLonCoordinatesByGridPoint(x+1,y+1,lat2,lon2))

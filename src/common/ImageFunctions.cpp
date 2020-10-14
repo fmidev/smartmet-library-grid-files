@@ -800,7 +800,10 @@ void* png_writeOpen(const char *_filename,int image_width,int image_height)
 
   handle->png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr,writepng_error_handler, nullptr);
   if (!handle->png_ptr)
+  {
+    delete handle;
     return nullptr;   // out of memory
+  }
 
   handle->info_ptr = png_create_info_struct(handle->png_ptr);
   if (!handle->info_ptr)

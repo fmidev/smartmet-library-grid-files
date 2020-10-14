@@ -502,7 +502,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
       D = *decimalScaleFactor;
 
     referenceValue = minValue;
-    double R = referenceValue;
+    float R = referenceValue;
 
 
     uint bits = 0;
@@ -513,7 +513,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
       ulonglong valuesInRange = diff / std::pow(2.0, E);
 
       while (C_UINT64(1 << bits) < valuesInRange)
-        (bits)++;
+        bits++;
     }
     else
     {
@@ -530,11 +530,11 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
 
     // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
 
-    const double Efac = std::pow(2.0, E);
-    const double Dfac = std::pow(10, -D);
+    const float Efac = std::pow(2.0, E);
+    const float Dfac = std::pow(10, -D);
 
-    const double RDfac = R * Dfac;
-    const double EDfac = Efac * Dfac;
+    const float RDfac = R * Dfac;
+    const float EDfac = Efac * Dfac;
 
     uint totalBits = (valueCount * bits);
 
@@ -552,8 +552,8 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     {
       if ((*it) != ParamValueMissing)
       {
-        double Y = *it;
-        double X = (Y - RDfac) / EDfac;
+        float Y = *it;
+        float X = (Y - RDfac) / EDfac;
 
         ulonglong v = C_UINT64(round(X));
         bitArrayWriter.writeBits(bits,v);

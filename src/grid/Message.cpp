@@ -1659,7 +1659,7 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
       }
 
       //printf("%f,%f ANGLE %f\n",di,dj,angle);
-      return angle;
+      return C_FLOAT(angle);
     }
 
     if (getGridPointByLatLonCoordinates(lat-0.0001,lon,grid_i1,grid_j1)  &&  getGridPointByLatLonCoordinates(lat,lon,grid_i2,grid_j2))
@@ -1696,7 +1696,7 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
       }
 
       //printf("* ANGLE %f\n",angle);
-      return angle;
+      return C_FLOAT(angle);
     }
 
     return 0;
@@ -2501,10 +2501,10 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
     if (borderStr != nullptr &&  strcasecmp(borderStr,"outer") == 0)
     {
-      x1 = Fmi::floor(x1);
-      y1 = Fmi::floor(y1);
-      x2 = Fmi::ceil(x2);
-      y2 = Fmi::ceil(y2);
+      x1 = C_DOUBLE(Fmi::floor(x1));
+      y1 = C_DOUBLE(Fmi::floor(y1));
+      x2 = C_DOUBLE(Fmi::ceil(x2));
+      y2 = C_DOUBLE(Fmi::ceil(y2));
     }
 
     bool gridRectangle = true;

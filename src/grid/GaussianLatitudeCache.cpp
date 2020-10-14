@@ -29,7 +29,7 @@ static void gauss_first_guess(long N, double* vals)
 {
   try
   {
-    long i = 0, numVals;
+    long i = 0;
     static double gvals[] =  {     2.4048255577E0,   5.5200781103E0,
         8.6537279129E0,   11.7915344391E0,  14.9309177086E0,
         18.0710639679E0,  21.2116366299E0,  24.3524715308E0,
@@ -48,7 +48,7 @@ static void gauss_first_guess(long N, double* vals)
         140.5871603528E0, 143.7287335737E0, 146.8703076258E0,
         150.0118824570E0, 153.1534580192E0, 156.2950342685E0 };
 
-    numVals = NUMBER(gvals);
+    long numVals = NUMBER(gvals);
     for( i = 0; i < N; i++)
     {
       if(i < numVals)
@@ -71,37 +71,32 @@ int gaussian_getLatitudes(long N, double *lats)
 {
   try
   {
-    long jlat, iter, legi;
-    double rad2deg, convval, root, legfonc = 0;
-    double mem1, mem2, conv;
-    double denom = 0.0;
     double precision = 1.0E-14;
     long  nlat = N*2;
     double dnlat = C_DOUBLE(nlat);
-
-    rad2deg = 180.0/M_PI;
-
-    convval   = (1.0 - ((2.0 / M_PI)*(2.0 / M_PI)) * 0.25);
+    double legfonc = 0;
+    double rad2deg = 180.0/M_PI;
+    double convval   = (1.0 - ((2.0 / M_PI)*(2.0 / M_PI)) * 0.25);
 
     gauss_first_guess(N, lats);
-    denom = sqrt( ((dnlat+0.5)*(dnlat+0.5)) + convval );
+    double denom = sqrt( ((dnlat+0.5)*(dnlat+0.5)) + convval );
 
-    for (jlat = 0; jlat < N; jlat++)
+    for (long jlat = 0; jlat < N; jlat++)
     {
       /*   First approximation for root      */
-      root = cos( lats[jlat] / denom );
+      double root = cos( lats[jlat] / denom );
 
       /*   Perform loop of Newton iterations  */
-      iter = 0;
-      conv = 1;
+      long iter = 0;
+      double conv = 1;
 
       while (fabs(conv) >= precision )
       {
-        mem2 = 1.0;
-        mem1 = root;
+        double mem2 = 1.0;
+        double mem1 = root;
 
         /*  Compute Legendre polynomial  */
-        for (legi = 0; legi < nlat; legi++)
+        for (long legi = 0; legi < nlat; legi++)
         {
           legfonc = ( (2.0 * (C_DOUBLE(legi)+1) - 1.0) * root * mem1 - C_DOUBLE(legi) * mem2) / ((C_DOUBLE(legi)+1));
           mem2 = mem1;
