@@ -31,92 +31,97 @@ namespace GRID
 // ====================================================================================
 
 
+typedef std::map<uint,Message*> Message_ptr_map;
+
+
 class GridFile
 {
   public:
-                                GridFile();
-                                GridFile(const GridFile& other);
-                                GridFile(GridFile *gridFile);
-    virtual                     ~GridFile();
+                          GridFile();
+                          GridFile(const GridFile& other);
+                          GridFile(GridFile *gridFile);
+    virtual               ~GridFile();
 
-    virtual GridFile*           createGridFile();
+    virtual void          addDependence(uint fileId);
+    virtual void          addMessage(Message *message);
+    virtual void          addUser(uint fileId);
 
-    virtual uint                getFileId() const;
-    virtual uint                getGroupFlags() const;
-    virtual uint                getProducerId() const;
-    virtual uint                getGenerationId() const;
-    virtual std::string         getFileName() const;
-    virtual time_t              getModificationTime() const;
-    virtual std::string         getDeletionTimeStr() const;
-    virtual time_t              getDeletionTime() const;
-    virtual T::FileType         getFileType() const;
-    virtual std::string         getFileTypeString() const;
-    virtual time_t              getCheckTime() const;
-    virtual uint                getSourceId() const;
+    virtual void          clearCachedValues(uint hitsRequired,uint timePeriod) const;
+    virtual GridFile*     createGridFile();
 
-    virtual bool                hasMessagePositionError() const;
-    virtual bool                isPhysical() const;
-    virtual bool                isVirtual() const;
-    virtual bool                isMemoryMapped() const;
-    virtual void                mapToMemory();
+    virtual void          deleteUsers();
 
-    virtual void                addDependence(uint fileId);
-    virtual bool                hasDependence(uint fileId);
+    virtual time_t        getCheckTime() const;
+    virtual time_t        getDeletionTime() const;
+    virtual std::string   getDeletionTimeStr() const;
+    virtual uint          getFileId() const;
+    virtual std::string   getFileName() const;
+    virtual T::FileType   getFileType() const;
+    virtual std::string   getFileTypeString() const;
+    virtual uint          getGenerationId() const;
+    virtual uint          getGroupFlags() const;
+    virtual char*         getMemoryPtr();
+    virtual Message*      getMessageByIndex(std::size_t index);
+    virtual time_t        getModificationTime() const;
+    virtual std::size_t   getNumberOfMessages();
+    virtual bool          getPointCacheEnabled();
+    virtual uint          getProducerId() const;
+    virtual long long     getSize();
+    virtual uint          getSourceId() const;
+    virtual void          getUsers(std::set<uint>& userList);
 
-    virtual void                addUser(uint fileId);
-    virtual void                deleteUsers();
-    virtual void                getUsers(std::set<uint>& userList);
+    virtual bool          hasDependence(uint fileId);
+    virtual bool          hasMessagePositionError() const;
 
-    virtual void                setFileId(uint fileId);
-    virtual void                setGroupFlags(uint groupFlags);
-    virtual void                setProducerId(uint producerId);
-    virtual void                setGenerationId(uint generationId);
-    virtual void                setFileName(std::string  fileName);
-    virtual void                setCheckTime(time_t checkTime);
-    virtual void                setSourceId(uint sourceId);
-    virtual void                setDeletionTime(time_t deletionTime);
-    virtual void                setDeletionTime(std::string deletionTime);
+    virtual bool          isPhysical() const;
+    virtual bool          isVirtual() const;
+    virtual bool          isMemoryMapped() const;
 
-    virtual Message*            getMessageByIndex(std::size_t index);
-    virtual std::size_t         getNumberOfMessages();
-    virtual char*               getMemoryPtr();
-    virtual long long           getSize();
+    virtual void          mapToMemory();
 
-    virtual Message*            newMessage(T::FileType fileType);
-    virtual Message*            newMessage(uint messageIndex,MessageInfo& messageInfo);
-    virtual void                addMessage(Message *message);
+    virtual Message*      newMessage(T::FileType fileType);
+    virtual Message*      newMessage(uint messageIndex,MessageInfo& messageInfo);
 
-    virtual void                clearCachedValues(uint hitsRequired,uint timePeriod) const;
-    virtual bool                getPointCacheEnabled();
-    virtual void                setPointCacheEnabled(bool enabled);
+    virtual void          print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
-    virtual void                read(std::string filename);
-    virtual void                write(std::string filename);
-    virtual void                write(DataWriter& dataWriter);
+    virtual void          read(std::string filename);
+
+    virtual void          setCheckTime(time_t checkTime);
+    virtual void          setDeletionTime(time_t deletionTime);
+    virtual void          setDeletionTime(std::string deletionTime);
+    virtual void          setFileId(uint fileId);
+    virtual void          setFileName(std::string  fileName);
+    virtual void          setGenerationId(uint generationId);
+    virtual void          setGroupFlags(uint groupFlags);
+    virtual void          setPointCacheEnabled(bool enabled);
+    virtual void          setProducerId(uint producerId);
+    virtual void          setSourceId(uint sourceId);
+
+    virtual void          write(std::string filename);
+    virtual void          write(DataWriter& dataWriter);
 
   protected:
 
-    std::string                 mFileName;
-    uint                        mFileId;
-    time_t                      mFileModificationTime;
-    time_t                      mDeletionTime;      // The file should not be accessed after this time
-    uint                        mGroupFlags;
-    uint                        mProducerId;
-    uint                        mGenerationId;
-    uint                        mSourceId;
-    time_t                      mCheckTime;
-    std::set<uint>              mUserList;
-    bool                        mRequestCounterEnabled;
-    bool                        mPointCacheEnabled;
-    MessageInfo_map             mMessagePositions;
-    std::map<uint,Message*>     mMessages;
+    time_t                mCheckTime;
+    time_t                mDeletionTime;      // The file should not be accessed after this time
+    uint                  mFileId;
+    time_t                mFileModificationTime;
+    std::string           mFileName;
+    uint                  mGenerationId;
+    uint                  mGroupFlags;
+    MessageInfo_map       mMessagePositions;
+    Message_ptr_map       mMessages;
+    bool                  mPointCacheEnabled;
+    uint                  mProducerId;
+    bool                  mRequestCounterEnabled;
+    uint                  mSourceId;
+    std::set<uint>        mUserList;
 
 };
 
 
 typedef std::shared_ptr<GridFile> GridFile_sptr;
-
+typedef std::vector<GridFile_sptr> GridFile_sptr_vec;
 
 
 }  // namespace GRID

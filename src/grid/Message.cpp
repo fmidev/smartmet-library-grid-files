@@ -59,7 +59,6 @@ Message::Message()
     mFmiParameterLevelId = 0;
     mParameterLevel = 0;
     mDefaultInterpolationMethod = T::AreaInterpolationMethod::Nearest;
-    mRequestCounterEnabled = false;
     mLastCacheAccess = time(0);
     mCacheHitCounter = 0;
     mPointCacheEnabled = false;
@@ -104,7 +103,6 @@ Message::Message(const Message& message)
     mNewbaseParameterName = message.mNewbaseParameterName;
     mVirtualFileId = message.mVirtualFileId;
     mDefaultInterpolationMethod = message.mDefaultInterpolationMethod;
-    mRequestCounterEnabled = false;
     mLastCacheAccess = time(0);
     mCacheHitCounter = 0;
     mPointCacheEnabled = message.mPointCacheEnabled;
@@ -3594,8 +3592,6 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
   FUNCTION_TRACE
   try
   {
-    mRequestCounterEnabled = true;
-
     value = ParamValueMissing;
     switch (coordinateType)
     {
@@ -3619,11 +3615,9 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
         throw exception;
       }
     }
-    mRequestCounterEnabled = false;
   }
   catch (...)
   {
-    mRequestCounterEnabled = false;
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
@@ -3646,8 +3640,6 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
   FUNCTION_TRACE
   try
   {
-    mRequestCounterEnabled = true;
-
     switch (coordinateType)
     {
       case T::CoordinateTypeValue::UNKNOWN:
@@ -3670,11 +3662,9 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
         throw exception;
       }
     }
-    mRequestCounterEnabled = false;
   }
   catch (...)
   {
-    mRequestCounterEnabled = false;
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
@@ -3810,8 +3800,6 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
   FUNCTION_TRACE
   try
   {
-    mRequestCounterEnabled = true;
-
     T::Dimensions d = getGridDimensions();
     uint cols = d.nx();
     uint rows = d.ny();
@@ -3968,11 +3956,9 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
       }
       break;
     }
-    mRequestCounterEnabled = false;
   }
   catch (...)
   {
-    mRequestCounterEnabled = false;
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
@@ -4025,8 +4011,6 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
   FUNCTION_TRACE
   try
   {
-    mRequestCounterEnabled = true;
-
     T::Dimensions d = getGridDimensions();
     uint cols = d.nx();
     uint rows = d.ny();
@@ -4126,11 +4110,9 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
       }
       break;
     }
-    mRequestCounterEnabled = false;
   }
   catch (...)
   {
-    mRequestCounterEnabled = false;
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
@@ -4153,8 +4135,6 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
   FUNCTION_TRACE
   try
   {
-    mRequestCounterEnabled = true;
-
     T::Dimensions d = getGridDimensions();
     uint cols = d.nx();
     uint rows = d.ny();
@@ -4261,11 +4241,9 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
       }
       break;
     }
-    mRequestCounterEnabled = false;
   }
   catch (...)
   {
-    mRequestCounterEnabled = false;
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
@@ -5171,102 +5149,6 @@ void Message::clearCachedValues(uint hitsRequired,uint timePeriod) const
       mLastCacheAccess = time(0);
       mCacheHitCounter = 0;
     }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method increases the request counter of the given index. The idea is to
-    find out which parameters, geometries and levels are requested most often. This information
-    can be used for pre-caching data. So far, this is only experimental.
-
-        \param index      The index of the grid location.
-*/
-
-void Message::incRequestCounter(uint index) const
-{
-  //FUNCTION_TRACE
-  try
-  {
-    if (mRequestCounterEnabled && requestCounter.isCountingEnabled())
-    {
-      ulonglong key = getRequestCounterKey();
-      if (key > 0)
-        requestCounter.incCounter(key);
-
-      int geometryId = getGridGeometryId();
-      if (geometryId > 0)
-        requestCounter.incGeometryHitCounter(geometryId,index);
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns a key/hash that is used for grouping similar information together
-    for counting purposes. The idea is to find out which parameters, geometries and levels are requested
-    most often. This information can be used for pre-caching data. So far, this is only experimental.
-
-        \return    The key that is used for grouping similar requests.
-*/
-
-ulonglong Message::getRequestCounterKey() const
-{
-  //FUNCTION_TRACE
-  try
-  {
-    ulonglong geometryId = C_UINT64(getGridGeometryId());
-    ulonglong level = C_UINT64(getGridParameterLevel());
-    ulonglong levelId = C_UINT64(getFmiParameterLevelId());
-    ulonglong paramId = toUInt64(mFmiParameterId);
-    ulonglong key = (geometryId << 48) + (levelId << 40) + (level << 20) + paramId;
-
-    ulonglong producerId = C_UINT64(getProducerId());
-    if (producerId > 0)
-      key = key * producerId;
-
-    return key;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void Message::refreshIndexes(std::vector<uint>& indexes)
-{
-  //FUNCTION_TRACE
-  try
-  {
-    bool oldState = mRequestCounterEnabled;
-    mRequestCounterEnabled = false;
-    auto d = getGridDimensions();
-
-    for (auto it = indexes.rbegin(); it != indexes.rend(); ++it)
-    {
-      uint i = (*it) % d.nx();
-      uint j = (*it) / d.ny();
-
-      getGridValueByGridPoint(i,j);
-    }
-
-    mRequestCounterEnabled = oldState;
   }
   catch (...)
   {

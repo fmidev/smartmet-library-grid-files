@@ -3226,8 +3226,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
     uint idx = grid_j * cols + (grid_i % cols);
 
-    incRequestCounter(idx);
-
     // Trying to find the value from the point cache.
 
     T::ParamValue value = 0;

@@ -9,6 +9,7 @@
 #include "../common/ShowFunction.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <unordered_map>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -19,9 +20,9 @@ namespace SmartMet
 namespace GRIB1
 {
 
-std::map<uint,T::Coordinate_svec> coordinateCache;
-std::map <std::size_t,T::Coordinate> transformCache1;
-std::map <std::size_t,T::Coordinate> transformCache2;
+std::unordered_map<uint,T::Coordinate_svec> coordinateCache;
+std::unordered_map <std::size_t,T::Coordinate> transformCache1;
+std::unordered_map <std::size_t,T::Coordinate> transformCache2;
 
 ModificationLock coordinateCacheModificationLock;
 ModificationLock transformCache1ModificationLock;

@@ -42,7 +42,7 @@ struct MessageInfo
 };
 
 typedef std::map<uint,MessageInfo> MessageInfo_map;
-typedef std::map<uint,T::ParamValue> PointCache;
+typedef std::unordered_map<uint,T::ParamValue> PointCache;
 
 class GridFile;
 
@@ -185,7 +185,6 @@ class Message
     virtual void                initSpatialReference();
     virtual bool                isGridGlobal() const;
     virtual bool                isRelativeUV() const;
-    virtual void                refreshIndexes(std::vector<uint>& indexes);
     virtual bool                reverseXDirection() const;
     virtual bool                reverseYDirection() const;
 
@@ -243,7 +242,6 @@ class Message
     virtual bool                setProperty(const char *propertyName,long long value);
     virtual bool                setProperty(const char *propertyName,double value);
 
-    virtual ulonglong           getRequestCounterKey() const;
     virtual void                setPointCacheEnabled(bool enabled);
 
     virtual void                addCachedValue(uint index,T::ParamValue value) const;
@@ -260,10 +258,7 @@ class Message
     virtual void                write(DataWriter& dataWriter);
 
 
-protected:
-
-    void                        incRequestCounter(uint index) const;
-
+  protected:
 
     /*! \brief  The index of the message in the file. */
     uint                        mMessageIndex;
@@ -331,7 +326,6 @@ protected:
     mutable ThreadLock          mThreadLock;
     mutable ThreadLock          mCacheLock;
 
-    mutable bool                mRequestCounterEnabled;
     bool                        mPointCacheEnabled;
     mutable PointCache          mPointCache;
     mutable uint                mCacheHitCounter;

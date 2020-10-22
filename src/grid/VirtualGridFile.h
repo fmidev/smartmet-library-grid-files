@@ -22,20 +22,20 @@ class VirtualGridFile : public GridFile
                         VirtualGridFile(VirtualGridFile *gridFile);
     virtual             ~VirtualGridFile();
 
+    void                addMessage(Message *message);
     void                addPhysicalGridFile(GRID::GridFile_sptr physicalGridFile);
+
+    Message*            getMessageByIndex(std::size_t index);
+    virtual T::FileType getFileType() const;
+    virtual std::string getFileTypeString() const;
+    std::size_t         getNumberOfMessages();
     std::size_t         getNumberOfPhysicalGridFiles();
     GRID::GridFile_sptr getPhysicalGridFileByIndex(std::size_t index);
 
-    void                addMessage(Message *message);
-    Message*            getMessageByIndex(std::size_t index);
-    std::size_t         getNumberOfMessages();
-
-    virtual T::FileType getFileType() const;
-    virtual std::string getFileTypeString() const;
-
+    virtual bool        isMemoryMapped() const;
     virtual bool        isPhysical() const;
     virtual bool        isVirtual() const;
-    virtual bool        isMemoryMapped() const;
+
     virtual void        mapToMemory();
 
     virtual void        print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -43,8 +43,7 @@ class VirtualGridFile : public GridFile
   protected:
 
     MessagePtr_vec      mMessageList;
-
-    std::vector<GRID::GridFile_sptr> mPhysicalGridFileList;
+    GridFile_sptr_vec   mPhysicalGridFileList;
 };
 
 

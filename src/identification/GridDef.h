@@ -46,8 +46,8 @@ struct CoordinateRec
     T::Coordinate_svec originalCoordinates;
 };
 
-typedef std::map<std::size_t,CoordinateRec> CoordinateCache;
-typedef std::map<std::size_t,CoordinateRec>::iterator CoordinateCacheIterator;
+typedef std::unordered_map<std::size_t,CoordinateRec> CoordinateCache;
+typedef std::unordered_map<std::size_t,CoordinateRec>::iterator CoordinateCacheIterator;
 
 
 

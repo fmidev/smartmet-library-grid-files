@@ -1607,8 +1607,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
     T::ParamValue value = 0;
 
-    incRequestCounter(idx);
-
     if (getValueByIndex(idx,value))
       return value;
 

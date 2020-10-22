@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <map>
+#include <unordered_map>
 #include <iostream>
 
 
@@ -21,9 +22,9 @@ namespace GRIB2
 {
 
 
-std::map<uint,T::Coordinate_svec> coordinateCache;
-std::map <std::size_t,T::Coordinate> transformCache1;
-std::map <std::size_t,T::Coordinate> transformCache2;
+std::unordered_map<uint,T::Coordinate_svec> coordinateCache;
+std::unordered_map <std::size_t,T::Coordinate> transformCache1;
+std::unordered_map <std::size_t,T::Coordinate> transformCache2;
 
 ModificationLock coordinateCacheModificationLock;
 ModificationLock transformCache1ModificationLock;

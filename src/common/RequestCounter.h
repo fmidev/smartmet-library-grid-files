@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 #include <map>
 
 
@@ -15,9 +16,9 @@ namespace SmartMet
 {
 
 
-typedef std::map<uint,uint> HitCounter;
+typedef std::unordered_map<uint,uint> HitCounter;
 typedef std::map<uint,HitCounter> GeometryHitCounter;
-typedef std::map<ulonglong,uint> KeyCounter;
+typedef std::unordered_map<ulonglong,uint> KeyCounter;
 typedef std::multimap<uint,ulonglong> TopList;
 
 
