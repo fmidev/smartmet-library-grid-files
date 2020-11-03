@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Typedefs.h"
-#include "../common/ThreadLock.h"
+#include "../common/ModificationLock.h"
+#include "../common/AutoWriteLock.h"
+#include "../common/AutoReadLock.h"
 
 #include <vector>
 
@@ -31,7 +33,7 @@ class IndexCache
     std::vector<T::IndexVector> mVector;
     std::vector<long long>      mHashVector;
     std::vector<time_t>         mTimeVector;
-    ThreadLock                  mThreadLock;
+    ModificationLock            mModificationLock;
     uint                        mMaxSize;
 
 };

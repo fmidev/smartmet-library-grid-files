@@ -342,6 +342,9 @@ void DataSection::read(MemoryReader& memoryReader)
     auto rPos = memoryReader.getReadPosition();
 
     mSectionLength = memoryReader.read_uint24();
+    if (mSectionLength < 120)
+      mSectionLength = memoryReader.getDataSize() - rPos - 4;
+
     memoryReader >> mFlags;
     memoryReader >> mBinaryScaleFactor;
     mReferenceValue = memoryReader.read_ibmFloat();

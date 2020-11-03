@@ -2515,10 +2515,12 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     }
     else
     {
+      //printf("Bitmap exists\n");
       long long hash = mBitmapSection->getHash();
       int index = 0;
       if (GRID::indexCache.getIndex(hash,idx,index))
       {
+        //printf("Index cache found %lld\n",hash);
         if (index < 0)
           return ParamValueMissing;
 
@@ -2528,9 +2530,14 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
           //printf("--- getValueFromIndexCache %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
           return value;
         }
+        else
+        {
+          return ParamValueMissing;
+        }
       }
       else
       {
+        //printf("Index cache not found %lld\n",hash);
         T::IndexVector indexVector;
         mBitmapSection->getIndexVector((rows*cols),indexVector);
         GRID::indexCache.addIndexVector(hash,indexVector);
@@ -2542,6 +2549,10 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
           addCachedValue(idx,value);
           //printf("--- getValueByIndexVector %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
           return value;
+        }
+        else
+        {
+          return ParamValueMissing;
         }
       }
     }
@@ -2565,7 +2576,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       return ParamValueMissing;
 
     addCachedValue(idx,values[idx]);
-    // printf("--- getValueFromVector %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
+    printf("--- getValueFromVector %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
     return values[idx];
   }
   catch (...)

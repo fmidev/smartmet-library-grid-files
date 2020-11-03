@@ -3265,6 +3265,10 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
           //printf("Value %u,%u : %f\n",grid_i,grid_j,value);
           return value;
         }
+        else
+        {
+          return ParamValueMissing;
+        }
       }
       else
       {
@@ -3279,6 +3283,10 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
           addCachedValue(idx,value);
           //printf("Value %u,%u (%u): %f\n",grid_i,grid_j,idx,value);
           return value;
+        }
+        else
+        {
+          return ParamValueMissing;
         }
       }
     }

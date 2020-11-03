@@ -49,7 +49,7 @@ void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
   try
   {
     //printf("IndexCacheSize = %u\n",mHashVector.size());
-    AutoThreadLock lock(&mThreadLock);
+    AutoWriteLock lock(&mModificationLock);
 
     if (mHashVector.size() == 0)
     {
@@ -101,7 +101,7 @@ bool IndexCache::getIndexVector(long long hash,T::IndexVector& indexVector)
 {
   try
   {
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
 
     int sz = C_INT(mHashVector.size());
     int idx = getClosestIndexByHashNoLock(hash);
@@ -128,7 +128,7 @@ bool IndexCache::getIndex(long long hash,uint pos,int& index)
 {
   try
   {
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
     int sz = C_INT(mHashVector.size());
     int idx = getClosestIndexByHashNoLock(hash);
 
@@ -156,7 +156,7 @@ int IndexCache::getClosestIndexByHash(long long hash)
 {
   try
   {
-    AutoThreadLock lock(&mThreadLock);
+    AutoReadLock lock(&mModificationLock);
     return getClosestIndexByHashNoLock(hash);
   }
   catch (...)

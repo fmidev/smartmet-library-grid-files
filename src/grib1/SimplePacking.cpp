@@ -6,6 +6,7 @@
 #include "../common/GeneralDefinitions.h"
 #include "../common/BitArrayWriter.h"
 #include <macgyver/StringConversion.h>
+#include <macgyver/FastMath.h>
 
 
 namespace SmartMet
@@ -222,7 +223,7 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
 
     double Y = mRDfac + X * mEDfac;
 
-    if (round(Y) == 9999)
+    if (Fmi::floor(Y+0.5) == 9999)
       value = ParamValueMissing;
     else
       value = Y;
@@ -332,7 +333,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
           bitArrayReader.readBits(bitsPerValue,X);
 
           double Y = RDfac + X * EDfac;
-          if (round(Y) == 9999)
+          if (Fmi::floor(Y+0.5) == 9999)
             decodedValues.push_back(ParamValueMissing);
           else
             decodedValues.push_back(Y);
@@ -350,7 +351,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
             bitArrayReader.readBits(bitsPerValue,X);
 
             double Y = RDfac + X * EDfac;
-            if (round(Y) == 9999)
+            if (Fmi::floor(Y+0.5) == 9999)
               decodedValues.push_back(ParamValueMissing);
             else
               decodedValues.push_back(Y);
@@ -371,7 +372,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
             {
               uint X = memoryReader.read_uint8();
               double Y = RDfac + X * EDfac;
-              if (round(Y) == 9999)
+              if (Fmi::floor(Y+0.5) == 9999)
                 decodedValues.push_back(ParamValueMissing);
               else
                 decodedValues.push_back(Y);
@@ -387,7 +388,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
               {
                 uint X = memoryReader.read_uint8();
                 double Y = RDfac + X * EDfac;
-                if (round(Y) == 9999)
+                if (Fmi::floor(Y+0.5) == 9999)
                   decodedValues.push_back(ParamValueMissing);
                 else
                   decodedValues.push_back(Y);
@@ -403,7 +404,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
             {
               uint X = memoryReader.read_uint16();
               double Y = RDfac + X * EDfac;
-              if (round(Y) == 9999)
+              if (Fmi::floor(Y+0.5) == 9999)
                 decodedValues.push_back(ParamValueMissing);
               else
                 decodedValues.push_back(Y);
@@ -419,7 +420,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
               {
                 uint X = memoryReader.read_uint16();
                 double Y = RDfac + X * EDfac;
-                if (round(Y) == 9999)
+                if (Fmi::floor(Y+0.5) == 9999)
                   decodedValues.push_back(ParamValueMissing);
                 else
                   decodedValues.push_back(Y);
@@ -435,7 +436,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
             {
               uint X = memoryReader.read_uint24();
               double Y = RDfac + X * EDfac;
-              if (round(Y) == 9999)
+              if (Fmi::floor(Y+0.5) == 9999)
                 decodedValues.push_back(ParamValueMissing);
               else
                 decodedValues.push_back(Y);
@@ -451,7 +452,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
               {
                 uint X = memoryReader.read_uint24();
                 double Y = RDfac + X * EDfac;
-                if (round(Y) == 9999)
+                if (Fmi::floor(Y+0.5) == 9999)
                   decodedValues.push_back(ParamValueMissing);
                 else
                   decodedValues.push_back(Y);
@@ -467,7 +468,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
             {
               uint X = memoryReader.read_uint32();
               double Y = RDfac + X * EDfac;
-              if (round(Y) == 9999)
+              if (Fmi::floor(Y+0.5) == 9999)
                 decodedValues.push_back(ParamValueMissing);
               else
                 decodedValues.push_back(Y);
@@ -483,7 +484,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
               {
                 uint X = memoryReader.read_uint32();
                 double Y = RDfac + X * EDfac;
-                if (round(Y) == 9999)
+                if (Fmi::floor(Y+0.5) == 9999)
                   decodedValues.push_back(ParamValueMissing);
                 else
                   decodedValues.push_back(Y);
