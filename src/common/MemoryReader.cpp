@@ -407,7 +407,15 @@ std::uint8_t MemoryReader::read_uint8()
   try
   {
     if ((readPtr + 1) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","1");
+      throw exception;
+    }
 
     unsigned char val = readPtr[0];
 
@@ -430,7 +438,15 @@ std::uint16_t MemoryReader::read_uint16()
   try
   {
     if ((readPtr + 2) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","2");
+      throw exception;
+    }
 
     unsigned short a = readPtr[0];
     unsigned short b = readPtr[1];
@@ -457,7 +473,15 @@ std::uint32_t MemoryReader::read_uint24()
   try
   {
     if ((readPtr + 3) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","3");
+      throw exception;
+    }
 
     uint a = readPtr[0];
     uint b = readPtr[1];
@@ -485,7 +509,15 @@ std::uint32_t MemoryReader::read_uint32()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
 
     uint a = readPtr[0];
     uint b = readPtr[1];
@@ -514,7 +546,15 @@ std::uint64_t MemoryReader::read_uint64()
   try
   {
     if ((readPtr + 8) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","8");
+      throw exception;
+    }
 
     ulonglong a = readPtr[0];
     ulonglong b = readPtr[1];
@@ -547,7 +587,15 @@ std::int8_t MemoryReader::read_int8()
   try
   {
     if ((readPtr + 1) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","1");
+      throw exception;
+    }
 
     unsigned char a = readPtr[0];
     unsigned char val = static_cast<char>((1 - ((a & 128) >> 6)) * (a & 127));
@@ -571,7 +619,15 @@ std::int16_t MemoryReader::read_int16()
   try
   {
     if ((readPtr + 2) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","2");
+      throw exception;
+    }
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -598,7 +654,15 @@ std::int32_t MemoryReader::read_int24()
   try
   {
     if ((readPtr + 3) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","3");
+      throw exception;
+    }
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -629,7 +693,15 @@ std::int32_t MemoryReader::read_int32()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -658,7 +730,15 @@ std::float_t MemoryReader::read_float()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
 
     float val = 0.0;
 
@@ -696,7 +776,15 @@ std::double_t MemoryReader::read_double()
   try
   {
     if ((readPtr + 8) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","8");
+      throw exception;
+    }
 
     double val = 0.0;
 
@@ -741,7 +829,15 @@ std::float_t MemoryReader::read_ibmFloat()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -774,7 +870,15 @@ std::array<char,16> MemoryReader::read_uuid()
   try
   {
     if ((readPtr + 16) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","16");
+      throw exception;
+    }
 
     std::array<char, 16> ret;
     for (auto i = 0; i < 16; i++)
@@ -799,7 +903,15 @@ T::UInt8_opt MemoryReader::read_UInt8_opt()
   try
   {
     if ((readPtr + 1) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","1");
+      throw exception;
+    }
 
     unsigned char val = readPtr[0];
 
@@ -825,7 +937,15 @@ T::UInt16_opt MemoryReader::read_UInt16_opt()
   try
   {
     if ((readPtr + 2) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","2");
+      throw exception;
+    }
 
     unsigned short val = read_uint16();
 
@@ -849,7 +969,15 @@ T::UInt32_opt MemoryReader::read_UInt24_opt()
   try
   {
     if ((readPtr + 3) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","3");
+      throw exception;
+    }
 
     uint val =  read_uint24();
     if (val != 0xFFFFFF)
@@ -872,7 +1000,15 @@ T::UInt32_opt MemoryReader::read_UInt32_opt()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
 
     uint val =  read_uint32();
     if (val != 0xFFFFFFFF)
@@ -895,7 +1031,15 @@ T::UInt64_opt MemoryReader::read_UInt64_opt()
   try
   {
     if ((readPtr + 8) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","8");
+      throw exception;
+    }
 
     ulonglong val = read_uint64();
     if (val != 0xFFFFFFFFFFFFFFFF)
@@ -918,7 +1062,15 @@ T::Int8_opt MemoryReader::read_Int8_opt()
   try
   {
     if ((readPtr + 1) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","1");
+      throw exception;
+    }
 
     unsigned char a = readPtr[0];
     char val = read_int8();
@@ -943,7 +1095,15 @@ T::Int16_opt MemoryReader::read_Int16_opt()
   try
   {
     if ((readPtr + 2) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","2");
+      throw exception;
+    }
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -973,7 +1133,15 @@ T::Int32_opt MemoryReader::read_Int24_opt()
   try
   {
     if ((readPtr + 3) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","3");
+      throw exception;
+    }
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -1006,7 +1174,15 @@ T::Int32_opt MemoryReader::read_Int32_opt()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
@@ -1038,7 +1214,15 @@ T::Float_opt MemoryReader::read_Float_opt()
   try
   {
     if ((readPtr + 4) > endPtr)
-      throw Fmi::Exception(BCP,"Trying to read outside of the given memory area!");
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      if (startPtr != parentPtr)
+        exception.addParameter("Global read position",uint64_toHex(getGlobalReadPosition()));
+      exception.addParameter("Local read position",uint64_toHex(getReadPosition()));
+      exception.addParameter("Local data size",std::to_string(getDataSize()));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
 
     float val = 0.0;
 
