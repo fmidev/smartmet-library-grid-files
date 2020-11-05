@@ -275,14 +275,6 @@ void ProductSection::read(MemoryReader& memoryReader)
     memoryReader >> mNumberOfSection;
 
     memoryReader >> mNV;
-/*
-    if (!missing(mNV) && *mNV != 0)
-    {
-      Fmi::Exception exception(BCP,"ProductSection does not support optional coordinates yet");
-      exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-2));
-      throw exception;
-    }
-*/
     memoryReader >> mProductDefinitionTemplateNumber;
     if (missing(mProductDefinitionTemplateNumber))
     {
@@ -353,17 +345,6 @@ void ProductSection::write(DataWriter& dataWriter)
     dataWriter << mProductDefinitionTemplateNumber;
 
     mProductDefinition->write(dataWriter);
-
-/*
-    if (!missing(mNV) && *mNV != 0)
-    {
-      for (std::uint16_t t=0; t<*mNV; t++)
-      {
-        auto coordinate = memoryReader.read_float();
-        mCoordinates.push_back(coordinate);
-      }
-    }
-    */
 
     // Updating the section length.
 

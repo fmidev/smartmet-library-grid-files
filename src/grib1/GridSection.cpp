@@ -380,7 +380,6 @@ void GridSection::read(MemoryReader& memoryReader)
       {
         std::uint16_t len = 0;
         memoryReader >> len;
-        //printf("ROW %u  %u\n",rows,len);
         mNumberOfPoints += len;
         rowPositions.push_back(mNumberOfPoints);
       }

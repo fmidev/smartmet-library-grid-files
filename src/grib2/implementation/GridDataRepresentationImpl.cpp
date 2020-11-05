@@ -155,8 +155,6 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
 
     if (message->getDataPtr() == nullptr || message->getDataSize() == 0)
     {
-      //printf("-- no data\n");
-
       if (!mBitsPerValue)
       {
         value = mReferenceValue;
@@ -212,7 +210,6 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
     }
 
     value = (mRDfac + X * mEDfac);
-    //printf("-- VAL %f\n",value);
     return true;
   }
   catch (...)
@@ -233,14 +230,10 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     T::Data_ptr data = message->getDataPtr();
     std::size_t dataSize = message->getDataSize();
     T::Data_ptr bitmap = message->getBitmapDataPtr();
-    //std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
 
     if (numOfValues == 0)
       return;
-
-    //if (data == nullptr || dataSize == 0)
-      //throw Fmi::Exception(BCP,"The 'data' pointer points to nullptr!");
 
     // Vector to return
     decodedValues.clear();
@@ -526,10 +519,6 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
       // Bitmap required
     }
 
-    //printf("R = %f  E = %d  D = %d  Bits = %u\n",R,E,D,bits);
-
-    // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
-
     const float Efac = std::pow(2.0, E);
     const float Dfac = std::pow(10, -D);
 
@@ -537,8 +526,6 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     const float EDfac = Efac * Dfac;
 
     uint totalBits = (valueCount * bits);
-
-    //printf("--- totalBits = %u  %u  %u  %u\n",totalBits,valueCount,bits,missingCount);
 
     uint dataSize = totalBits / 8;
     if ((totalBits % 8) != 0)
@@ -571,7 +558,6 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     }
     else
     {
-      //printf("**** Create DataSection %u\n",dataSize);
       dataSection->setData(data,dataSize);
     }
 

@@ -148,11 +148,6 @@ void FileWriter::write_data(void *_data,ulonglong _size)
       throw Fmi::Exception(BCP,"No file defined!");
 
     fwrite(_data,_size,1,mFileHandle);
-/*
-    ulonglong fp = ftell(mFileHandle);
-    if (fp > mMaxFilePosition)
-      mMaxFilePosition = fp;
-*/
   }
   catch (...)
   {

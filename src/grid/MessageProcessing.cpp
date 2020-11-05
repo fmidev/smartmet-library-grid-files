@@ -2170,10 +2170,6 @@ void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& mes
     message3.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,nextTimePrevLevel);
     message4.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,nextTimeNextLevel);
 
-    //printf("LEVELS %d %d %d %d\n",prevTimeLevel1,prevTimeLevel2,nextTimeLevel1,nextTimeLevel2);
-
-    //printf("VALUES %f  %f  %f  %f\n",prevTimePrevLevel,prevTimeNextLevel,nextTimePrevLevel,nextTimeNextLevel);
-
     tuneLevels(prevTimeLevel1,prevTimeLevel2,newLevel);
     prevValue = levelInterpolation(prevTimePrevLevel,prevTimeNextLevel,prevTimeLevel1,prevTimeLevel2,newLevel,levelInterpolationMethod);
 
@@ -2182,8 +2178,6 @@ void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& mes
 
     time_t tt = utcTimeToTimeT(newTime);
     value = timeInterpolation(prevValue,nextValue,message1.getForecastTimeT(),message3.getForecastTimeT(),tt,timeInterpolationMethod);
-
-    //printf("VALUE %f  %d\n",value,newLevel);
   }
   catch (...)
   {
@@ -2471,11 +2465,6 @@ void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Mess
     message3.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,nextTimePrevLevel);
     message4.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,nextTimeNextLevel);
 
-    //prevTimePrevLevel.print(std::cout,0,0);
-    //prevTimeNextLevel.print(std::cout,0,0);
-    //nextTimePrevLevel.print(std::cout,0,0);
-    //nextTimeNextLevel.print(std::cout,0,0);
-
     if (prevTimeLevel1 == nextTimeLevel1  &&  prevTimeLevel2 == nextTimeLevel2)
     {
       time_t tt = utcTimeToTimeT(newTime);
@@ -2483,11 +2472,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Mess
       timeInterpolation(prevTimeNextLevel,nextTimeNextLevel,message2.getForecastTimeT(),message4.getForecastTimeT(),tt,timeInterpolationMethod,nextValues);
 
       tuneLevels(prevTimeLevel1,prevTimeLevel2,newLevel);
-
-      //prevValues.print(std::cout,0,0);
-      //nextValues.print(std::cout,0,0);
       levelInterpolation(prevValues,nextValues,prevTimeLevel1,prevTimeLevel2,newLevel,levelInterpolationMethod,valueList);
-      //valueList.print(std::cout,0,0);
     }
   }
   catch (...)

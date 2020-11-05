@@ -83,17 +83,5 @@ void getIsobands(
     size_t smooth_degree,
     T::ByteData_vec& contours);
 
-/*
-void convertWkbCoordinates(
-    T::ByteData& _wkb,
-    T::ByteData& _newWkb,
-    OGRCoordinateTransformation& _transformation);
-
-void convertWkbCoordinates(
-    T::ByteData_vec& _wkbVec,
-    T::ByteData_vec& _newWkbVec,
-    OGRCoordinateTransformation& _transformation);
-*/
-
 }
 

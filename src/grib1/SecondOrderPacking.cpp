@@ -415,22 +415,10 @@ void SecondOrderPacking::decodeValues_SPD(
     bitArrayReader.readBits(8,widthOfSPD);
 
     NL = NL + 65536 * mExtraValues;
-/*
-    printf("NumberOfGroups = %u\n",numberOfGroups);
-    printf("WidthOfWidths = %u\n",widthOfWidths);
-    printf("WidthOfLengths = %u\n",widthOfLengths);
-    printf("NL = %u\n",NL);
-    printf("N1 = %u\n",N1);
-    printf("N2 = %u\n",N2);
-    printf("OrderOfSPD = %u\n",orderOfSPD);
-    printf("WidthOfSPD = %u\n",widthOfSPD);
-    printf("DataBytes = %llu\n",(unsigned long long)dataSize);
-    printf("DataBits = %llu\n",(unsigned long long)dataSize*8);
-*/
+
     for (uint t=0; t<=orderOfSPD; t++)
     {
       bitArrayReader.readBits(widthOfSPD,SPD[t]);
-      //printf("SPD[%u] = %u\n",t,SPD[t]);
     }
 
     double bias = SPD[orderOfSPD];
@@ -438,23 +426,17 @@ void SecondOrderPacking::decodeValues_SPD(
     if (SPD[orderOfSPD] > max)
       bias = -(C_DOUBLE(SPD[orderOfSPD]) - C_DOUBLE(max));
 
-    //printf("BIAS = %f (%u)\n",bias,max);
-
     try
     {
       uint w = 1+((orderOfSPD+1)*widthOfSPD+7)/8;
 
       bitArrayReader.setReadPosition((4+w)*8);
 
-      //printf("WIDTH POS %llu (%u)\n",bitArrayReader.getReadPosition()/8,w);
       for (uint g=0; g<numberOfGroups; g++)
       {
         bitArrayReader.readBits(widthOfWidths,valueSize[g]);
         totalWidth += valueSize[g];
-        //printf("[%u] width %u  (%u)\n",g,valueSize[g],totalWidth);
       }
-      //printf("totalWidth(%u)\n",totalWidth);
-      //printf("** WIDTH POS %llu\n",bitArrayReader.getReadPosition()/8);
     }
     catch (...)
     {
@@ -465,15 +447,11 @@ void SecondOrderPacking::decodeValues_SPD(
     try
     {
       bitArrayReader.setReadPosition((NL-22)*8);
-      //printf("LENGTH POS %llu\n",bitArrayReader.getReadPosition()/8);
       for (uint g=0; g<numberOfGroups; g++)
       {
         bitArrayReader.readBits(widthOfLengths,groupLength[g]);
         totalLength += groupLength[g];
-        //printf("[%u] length %u  (%u)\n",g,groupLength[g],totalLength);
       }
-      //printf("TotalLength %u \n",totalLength);
-      //printf("** LENGTH POS %llu\n",bitArrayReader.getReadPosition()/8);
     }
     catch (...)
     {
@@ -483,7 +461,6 @@ void SecondOrderPacking::decodeValues_SPD(
 
     if (totalLength > numOfValues)
     {
-      //printf("TOTAL LEN = %u  NUM OF VALUES = %u\n",totalLength,numOfValues);
       throw Fmi::Exception(BCP,"Total length is bigger than number of the values!");
     }
 
@@ -493,13 +470,10 @@ void SecondOrderPacking::decodeValues_SPD(
       N1 = mN1 + ((bitArrayReader.getReadPosition()/8)-dd);
 
       bitArrayReader.setReadPosition((N1-22)*8);
-      //printf("GROUPVAL POS %llu\n",bitArrayReader.getReadPosition()/8);
       for (uint g=0; g<numberOfGroups; g++)
       {
         bitArrayReader.readBits(bitsPerValue,groupValue[g]);
-        //printf("[%u] val %u \n",g,groupValue[g]);
       }
-      //printf("** GROUPVAL POS %llu\n",bitArrayReader.getReadPosition()/8);
     }
     catch (...)
     {
@@ -513,10 +487,9 @@ void SecondOrderPacking::decodeValues_SPD(
 
       uint c = orderOfSPD;
       bitArrayReader.setReadPosition((N2-22)*8);
-      //printf("DATAVAL POS %llu\n",bitArrayReader.getReadPosition()/8);
+
       for (uint g=0; g<numberOfGroups; g++)
       {
-        //printf("READ %u %u\n",g,valueSize[g]);
         if (valueSize[g] > 0)
         {
           for (uint t=0; t<groupLength[g]; t++)
@@ -525,7 +498,6 @@ void SecondOrderPacking::decodeValues_SPD(
             bitArrayReader.readBits(valueSize[g],val);
             val += groupValue[g];
             dataValues[c] = val;
-            //printf("[%u] sec val %f \n",c,dataValues[c]);
             c++;
           }
         }
@@ -534,12 +506,10 @@ void SecondOrderPacking::decodeValues_SPD(
           for (uint t=0; t<groupLength[g]; t++)
           {
             dataValues[c] = groupValue[g];
-            //printf("[%u] zero val %f \n",c,dataValues[c]);
             c++;
           }
         }
       }
-      //printf("** DATAVAL POS %llu\n",bitArrayReader.getReadPosition()/8);
     }
     catch (...)
     {
@@ -596,7 +566,6 @@ void SecondOrderPacking::decodeValues_SPD(
     for (uint t=0; t<numOfValues; t++)
     {
       dataValues[t] = (((dataValues[t]*s)+referenceValue)*d);
-      //printf("[%u] eval %f \n",t,dataValues[t]);
     }
 
     if (mExtendedFlags & BoustrophedonicOrdering)
@@ -626,7 +595,6 @@ void SecondOrderPacking::decodeValues_SPD(
     for (uint t=0; t<numOfValues; t++)
     {
       decodedValues.push_back(dataValues[t]);
-      //printf("[%u] eval %f \n",t,dataValues[t]);
     }
   }
   catch (...)

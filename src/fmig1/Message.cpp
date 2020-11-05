@@ -420,8 +420,6 @@ void Message::read(MemoryReader& memoryReader)
         mAttributeList.addAttribute(partList[t],"");
     }
 
-    // mAttributeList.print(std::cout,0,0);
-
     mPixelSize = 2*sizeof(float) + mTimeStepCount * mForecastNumbers * sizeof(ushort);
     mDataSize = mPixelCount * mPixelSize;
 

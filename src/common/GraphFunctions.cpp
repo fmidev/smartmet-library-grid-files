@@ -40,6 +40,18 @@ uint hashCounter = 0;
 ThreadLock pointCacheThreadLock;
 
 
+typedef boost::shared_ptr<geos::geom::Geometry> GeometryPtr;
+
+typedef Tron::Traits<double, double, Tron::InfMissing> MyTraits;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LinearInterpolation>  MyLinearContourer;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LogLinearInterpolation> MyLogLinearContourer;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::NearestNeighbourInterpolation>  MyNearestContourer;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::DiscreteInterpolation> MyDiscreteContourer;
+typedef Tron::Hints<SimpleDataMatrixAdapter, MyTraits> MyHints;
+
+
+
+
 
 
 extern void convertWkbCoordinates(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation);
@@ -88,7 +100,6 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
 
       for (int y=yStart; y<=yEnd; y++)
       {
-        //printf("VLinePoint %d,%d\n",(int)x1,y);
         unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)x1;
         if (cList.find(p) == cList.end())
           cList.insert(p);
@@ -114,7 +125,6 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
 
       for (int x=xStart; x<=xEnd; x++)
       {
-        //printf("HLinePoint %d,%d\n",x,(int)y1);
         unsigned long long p = (((unsigned long long)round(y1)) << 32) + (unsigned long long)x;
         if (cList.find(p) == cList.end())
           cList.insert(p);
@@ -142,7 +152,6 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
 
       if ((xx - C_INT(xx)) == 0)
       {
-        //printf("LinePoint %d,%d\n",(int)xx,y);
         unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)xx;
         if (cList.find(p) == cList.end())
           cList.insert(p);
@@ -272,7 +281,6 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
           if (nodeX[i+1] > maxX)
             nodeX[i+1] = maxX;
 
-          //printf("Line %f,%d - %f,%d\n",nodeX[i],y,nodeX[i+1],y);
           int xStart = C_INT(nodeX[i]);
           int xEnd = C_INT(nodeX[i+1]);
 
@@ -447,7 +455,6 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
           j = i;
         }
       }
-      //printf("Nodes %d %u\n",y,nodes);
       qsort(&nodeX, nodes, sizeof(double),compare_points);
 
       //  Fill the pixels between node pairs.
@@ -465,7 +472,6 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
           if (nodeX[i+1] > maxX)
             nodeX[i+1] = maxX;
 
-          //printf("Line %f,%d - %f,%d\n",nodeX[i],y,nodeX[i+1],y);
           int xStart = C_INT(nodeX[i]);
           int xEnd = C_INT(nodeX[i+1]);
 
@@ -762,7 +768,6 @@ void getPointMovement(double x1,double y1,double x2,double y2,double areaExtensi
 {
   try
   {
-     //printf("Line %f,%f - %f,%f  Ext %f\n",x1,y1,x2,y2,areaExtension);
     double PI = 3.1415927;
 
     double dx = fabs(x2-x1);
@@ -852,7 +857,6 @@ void getPointMovementRev(double x1,double y1,double x2,double y2,double areaExte
 {
   try
   {
-    // printf("LineRev %f,%f - %f,%f\n",x1,y1,x2,y2);
     double PI = 3.1415927;
 
     double dx = fabs(x2-x1);
@@ -960,8 +964,6 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec& oldCoordinates,double ar
         getPointMovement(p1.x(),p1.y(),p2.x(),p2.y(),areaExtensionX,areaExtensionY,mx,my);
 
 
-      //printf("Move %f,%f\n",mx,my);
-
       T::Coordinate n1(p1.x() + mx,p1.y() + my);
       T::Coordinate n2(p2.x() + mx,p2.y() + my);
 
@@ -974,7 +976,6 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec& oldCoordinates,double ar
       T::Coordinate point;
       if ((t+1) < lines)
       {
-        // printf("  Line1(%f,%f,%f,%f) - Line2(%f,%f,%f,%f)\n",tmpLines[t].first.x(),tmpLines[t].first.y(),tmpLines[t].second.x(),tmpLines[t].second.y(),tmpLines[t+1].first.x(),tmpLines[t+1].first.y(),tmpLines[t+1].second.x(),tmpLines[t+1].second.y());
         if (getLineIntersection(tmpLines[t],tmpLines[t+1],point))
           newCoordinates.push_back(point);
       }
@@ -1031,20 +1032,11 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec& oldCoordinates,double ar
 {
   try
   {
-    //for (auto it = oldCoordinates.begin(); it != oldCoordinates.end(); ++it)
-    //  printf(" ++ %f %f\n",it->x(),it->y());
-
-
     std::vector<T::Coordinate> newCoordinates;
 
     double oldLen = getPolygonLen(oldCoordinates);
     newCoordinates = getEnlargedPolygon(oldCoordinates,areaExtensionX,areaExtensionY,false);
     double newLen = getPolygonLen(newCoordinates);
-
-    //for (auto it = newCoordinates.begin(); it != newCoordinates.end(); ++it)
-    //  printf(" -- %f %f\n",it->x(),it->y());
-
-//    printf("LEN = %f  NEW = %f\n",oldLen,newLen);
 
     if (areaExtensionX > 0  &&  newLen < oldLen)
       return getEnlargedPolygon(oldCoordinates,areaExtensionX,areaExtensionY,true);
@@ -1084,156 +1076,6 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec& oldPath,double areaExtensi
   }
 }
 
-
-#if 0
-
-
-class DataMatrixAdapter
-{
-  public:
-    typedef float value_type;
-    typedef double coord_type;
-    typedef NFmiDataMatrix<float>::size_type size_type;
-
-
-    DataMatrixAdapter(std::vector<float>& values,std::vector<T::Coordinate> *coordinates,uint width,uint height)
-    {
-      mValues = &values;
-      mCoordinates = coordinates;
-      mWidth = width;
-      mHeight = height;
-      mReleaseData = false;
-      mMissingValue = NAN;
-    }
-
-    DataMatrixAdapter(const DataMatrixAdapter& other)
-    {
-      mValues = nullptr;
-      mCoordinates = nullptr;
-      mWidth = other.mWidth;
-      mHeight = other.mHeight;
-      mMissingValue = NAN;
-      mReleaseData = true;
-
-      if (other.mValues != nullptr)
-      {
-        mValues = new std::vector<float>();
-        *mValues = *other.mValues;
-      }
-
-      if (other.mCoordinates != nullptr)
-      {
-        mCoordinates = new std::vector<T::Coordinate>();
-        *mCoordinates = *other.mCoordinates;
-      }
-    }
-
-    virtual ~DataMatrixAdapter()
-    {
-      if (mReleaseData)
-      {
-        if (mValues != nullptr)
-          delete mValues;
-
-        if (mCoordinates != nullptr)
-          delete mCoordinates;
-      }
-    }
-
-    const float& operator()(uint i, uint j) const
-    {
-      uint pos = (j % mHeight)*mWidth + (i % mWidth);
-      if (mCoordinates != nullptr  &&  (*mCoordinates)[pos].x() == ParamValueMissing)
-        return mMissingValue;
-
-      if ((*mValues)[pos] == ParamValueMissing)
-        return mMissingValue;
-
-      return (*mValues)[pos];
-    }
-
-    float& operator()(uint i, uint j)
-    {
-      uint pos = (j % mHeight)*mWidth + (i % mWidth);
-      if (mCoordinates != nullptr  &&  (*mCoordinates)[pos].x() == ParamValueMissing)
-        return mMissingValue;
-
-      if ((*mValues)[pos] == ParamValueMissing)
-        return mMissingValue;
-
-      return (*mValues)[pos];
-    }
-
-    double x(uint i, uint j) const
-    {
-      if (mCoordinates == nullptr)
-        return i;
-
-      if (i < mWidth  &&  j < mHeight)
-        return (*mCoordinates)[(j % mHeight)*mWidth + i].x();
-
-      return 360;
-    }
-
-    double y(uint i, uint j) const
-    {
-      if (mCoordinates == nullptr)
-        return j;
-
-      if (i < mWidth  &&  j < mHeight)
-        return (*mCoordinates)[(j % mHeight)*mWidth + i].y();
-
-      return 90;
-    }
-
-    uint width() const
-    {
-      return mWidth;
-    }
-
-    uint height() const
-    {
-      return mHeight;
-    }
-
-    void swap(DataMatrixAdapter& other)
-    {
-      mWidth = other.mWidth;
-      mHeight = other.mHeight;
-
-      if (other.mValues != nullptr  &&  mValues != nullptr)
-      {
-        *mValues = *other.mValues;
-      }
-
-      if (other.mCoordinates != nullptr  &&  mCoordinates != nullptr)
-      {
-        mCoordinates = new std::vector<T::Coordinate>();
-      }
-    }
-
-
-  private:
-    std::vector<float>          *mValues;
-    std::vector<T::Coordinate>  *mCoordinates;
-    uint                        mWidth;
-    uint                        mHeight;
-    bool                        mReleaseData;
-    float                       mMissingValue;
-};
-
-#endif
-
-
-
-typedef boost::shared_ptr<geos::geom::Geometry> GeometryPtr;
-
-typedef Tron::Traits<double, double, Tron::InfMissing> MyTraits;
-typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LinearInterpolation>  MyLinearContourer;
-typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LogLinearInterpolation> MyLogLinearContourer;
-typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::NearestNeighbourInterpolation>  MyNearestContourer;
-typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::DiscreteInterpolation> MyDiscreteContourer;
-typedef Tron::Hints<SimpleDataMatrixAdapter, MyTraits> MyHints;
 
 
 
@@ -1490,303 +1332,6 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
   }
 }
 
-
-
-
-#if 0
-void convertWkbPoint(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void convertWkbLine(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-    std::uint32_t pointCount = _memoryReader.read_uint32();
-    _memoryWriter.write_uint32(pointCount);
-
-    for (std::uint32_t t=0; t<pointCount; t++)
-    {
-      double x = _memoryReader.read_double();
-      double y = _memoryReader.read_double();
-
-      _transformation.Transform(1,&x,&y);
-
-      _memoryWriter.write_double(x);
-      _memoryWriter.write_double(y);
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void convertWkbRing(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-    std::uint32_t pointCount = _memoryReader.read_uint32();
-    _memoryWriter.write_uint32(pointCount);
-
-    for (std::uint32_t t=0; t<pointCount; t++)
-    {
-      double x = _memoryReader.read_double();
-      double y = _memoryReader.read_double();
-
-      _transformation.Transform(1,&x,&y);
-
-      _memoryWriter.write_double(x);
-      _memoryWriter.write_double(y);
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void convertWkbPolygon(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-    std::uint32_t ringCount = _memoryReader.read_uint32();
-    _memoryWriter.write_uint32(ringCount);
-
-    for (std::uint32_t t=0; t<ringCount; t++)
-    {
-      convertWkbRing(_memoryReader,_memoryWriter,_transformation);
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void convertWkbMultiPoint(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void convertWkbMultiLineString(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-    std::uint32_t stringCount = _memoryReader.read_uint32();
-    _memoryWriter.write_uint32(stringCount);
-
-    for (std::uint32_t t=0; t<stringCount; t++)
-    {
-      std::uint8_t byteOrder = _memoryReader.read_uint8();
-      _memoryWriter.write_uint8(byteOrder);
-
-      _memoryReader.setLittleEndian((bool)byteOrder);
-      _memoryWriter.setLittleEndian((bool)byteOrder);
-
-      std::uint32_t wkbType = _memoryReader.read_uint32();
-      _memoryWriter.write_uint32(wkbType);
-
-      convertWkbLine(_memoryReader,_memoryWriter,_transformation);
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void convertWkbMultiPolygon(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void convertWkbGeometryCollection(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-    std::uint32_t geometryCount = _memoryReader.read_uint32();
-    for (std::uint32_t t=0; t<geometryCount; t++)
-    {
-      convertWkbCoordinates(_memoryReader,_memoryWriter,_transformation);
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void convertWkbCoordinates(MemoryReader& _memoryReader,MemoryWriter& _memoryWriter,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-    while (_memoryReader.getReadPosition() < _memoryReader.getDataSize())
-    {
-      std::uint8_t byteOrder = _memoryReader.read_uint8();
-      _memoryWriter.write_uint8(byteOrder);
-
-      _memoryReader.setLittleEndian((bool)byteOrder);
-      _memoryWriter.setLittleEndian((bool)byteOrder);
-
-      std::uint32_t wkbType = _memoryReader.read_uint32();
-      _memoryWriter.write_uint32(wkbType);
-
-      switch (wkbType)
-      {
-        case 1:
-          convertWkbPoint(_memoryReader,_memoryWriter,_transformation);
-          break;
-
-        case 2:
-          convertWkbLine(_memoryReader,_memoryWriter,_transformation);
-          break;
-
-        case 3:
-          convertWkbPolygon(_memoryReader,_memoryWriter,_transformation);
-          break;
-
-        case 4:
-          convertWkbMultiPoint(_memoryReader,_memoryWriter,_transformation);
-          break;
-
-        case 5:
-          convertWkbMultiLineString(_memoryReader,_memoryWriter,_transformation);
-          break;
-
-        case 6:
-          convertWkbMultiPolygon(_memoryReader,_memoryWriter,_transformation);
-          break;
-
-        case 7:
-          convertWkbGeometryCollection(_memoryReader,_memoryWriter,_transformation);
-          break;
-      }
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void convertWkbCoordinates(T::ByteData& _wkb,T::ByteData& _newWkb,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-    size_t sz = _wkb.size();
-    if (sz == 0)
-      return;
-
-    uchar *buf = new uchar[sz];
-    MemoryReader memoryReader(buf,sz,true);
-
-    uchar *bufnew = new uchar[sz];
-    MemoryWriter memoryWriter(buf,sz,true);
-
-    for (size_t t=0; t<sz; t++)
-      buf[t] = _wkb[t];
-
-    convertWkbCoordinates(memoryReader,memoryWriter,_transformation);
-
-    ulonglong nsize = memoryWriter.getWritePosition();
-
-    for (ulonglong t=0; t<nsize; t++)
-      _newWkb.push_back(bufnew[t]);
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void convertWkbCoordinates(T::ByteData_vec& _wkbVec,T::ByteData_vec& _newWkbVec,OGRCoordinateTransformation& _transformation)
-{
-  FUNCTION_TRACE
-  try
-  {
-    for (auto it = _wkbVec.begin(); it != _wkbVec.end(); ++ it)
-    {
-      T::ByteData newWkb;
-      convertWkbCoordinates(*it,newWkb,_transformation);
-      _newWkbVec.push_back(newWkb);
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-#endif
 
 
 }

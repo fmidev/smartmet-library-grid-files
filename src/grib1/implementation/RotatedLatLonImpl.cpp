@@ -829,49 +829,6 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
 {
   try
   {
-#if 0
-    uint ni = mNi;
-    uint nj = mNj;
-
-    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
-    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
-    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement) / 1000;
-    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement) / 1000;
-
-    unsigned char scanMode = mScanningMode.getScanningMode();
-
-    if ((scanMode & 0x80) != 0)
-      iDirectionIncrement = -iDirectionIncrement;
-
-    if ((scanMode & 0x40) == 0)
-      jDirectionIncrement = -jDirectionIncrement;
-
-    if (longitudeOfFirstGridPoint >= 180)
-      longitudeOfFirstGridPoint -= 360;
-
-    double aLat = y;
-    double aLon = x;
-
-    if (aLon < longitudeOfFirstGridPoint)
-      aLon += 360;
-
-    double latDiff = aLat - latitudeOfFirstGridPoint;
-    double lonDiff = aLon - longitudeOfFirstGridPoint;
-
-    double i = lonDiff / iDirectionIncrement;
-    double j = latDiff / jDirectionIncrement;
-
-    //printf("%f %f (%f,%f) => %f,%f => %f %f\n",lat,lon,aLat,aLon,latitudeOfFirstGridPoint,longitudeOfFirstGridPoint,i,j);
-
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j >= C_DOUBLE(nj))
-      return false;
-
-    grid_i = i;
-    grid_j = j;
-
-    return true;
-#endif
-
     if (!mInitialized)
       init();
 

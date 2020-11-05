@@ -12,7 +12,6 @@ double linearInterpolation(double wantedPosition, double position1, double posit
 {
   try
   {
-    //std::cout << "Linear interpolation : " << wantedPosition << " " << position1 << " " << position2 << " " << value1 << " " << value2 << "\n";
     if (position1 != position2  &&  value1 != ParamValueMissing  &&  value2 != ParamValueMissing)
     {
       double positionDiff = position2 - position1;
@@ -22,7 +21,6 @@ double linearInterpolation(double wantedPosition, double position1, double posit
       double distance = wantedPosition - position1;
 
       double value = value1 + distance * valueStep;
-      // std::cout << "RESULT : " << value << "\n";
       return value;
     }
 

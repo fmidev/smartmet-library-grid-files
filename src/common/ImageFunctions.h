@@ -112,14 +112,6 @@ uint rgb(uint red, uint green, uint blue);
 
 uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value);
 
-/*
-void paintPixel(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,int _x,int _y,uint _color);
-void paintLine(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,int _x1,int _y1,int _x2,int _y2,uint _color);
-void paintSvgPath(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,NFmiSvgPath& _svgPath,uint _color);
-void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,uchar *_wkb,uint _size,uint _color);
-void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::ByteData& _wkb,uint _color);
-void paintWkb(uint *_image,int _width,int _height,bool _rotatedX,bool _rotatedY,double _mp,double _dx,double _dy,T::ByteData_vec& _wkbVec,uint _color);
-*/
 
 }
 

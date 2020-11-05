@@ -108,29 +108,9 @@ void LambertConformalImpl::init() const
     double latitudeOfFirstGridPoint = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
     double longitudeOfFirstGridPoint = getLongitude(C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000);
 
-    //double latitudeOfLastGridPoint = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
-    //double longitudeOfLastGridPoint = getLongitude(C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000);
-
     mDxx = C_DOUBLE(*mDx) / 1000;
     mDyy = C_DOUBLE(*mDy) / 1000;
-/*
-    ResolutionSettings *rs = getResolution();
-    if (rs != nullptr)
-    {
-      std::uint8_t flags = rs->getResolutionAndComponentFlags();
-      if ((flags & 0x20) == 0  &&  mLongitudeOfFirstGridPoint)
-      {
-        //std::cout << "i direction increment not given\n";
-        mDxx = (longitudeOfLastGridPoint-longitudeOfFirstGridPoint)/(*mNx);
-      }
 
-      if ((flags & 0x10) == 0  &&  latitudeOfLastGridPoint)
-      {
-        //std::cout << "j direction increment not given\n";
-        mDyy = (latitudeOfLastGridPoint-latitudeOfFirstGridPoint)/(*mNy);
-      }
-    }
-*/
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
       mDxx = -mDxx;

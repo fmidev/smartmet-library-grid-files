@@ -42,13 +42,6 @@ GridPointValueList::GridPointValueList()
     mSize = 0;
     mLength = 0;
     mArray = nullptr;
-/*
-    mArray = new GridPointValuePtr[100];
-    for (uint t=0; t<100; t++)
-    {
-      mArray[t] = nullptr;
-    }
-  */
   }
   catch (...)
   {

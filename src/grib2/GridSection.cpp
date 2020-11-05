@@ -369,9 +369,6 @@ void GridSection::read(MemoryReader& memoryReader)
       mGridDefinition->initSpatialReference();
 
     getGridHash();
-
-    //if (memoryReader.getDataSize() < (mFilePosition + *mSectionLength))
-    //  memoryReader.setReadPosition(mFilePosition + *mSectionLength);
   }
   catch (...)
   {
@@ -395,13 +392,7 @@ void GridSection::write(DataWriter& dataWriter)
   {
     mNumberOfOctetsForNumberOfPoints = 0;
     mInterpretationOfNumberOfPoints = 0;
-    /*
-    if (missing(mNumberOfOctetsForNumberOfPoints))
-      throw Fmi::Exception(BCP,"Number of octets for number of points cannot be MISSING");
 
-    if (missing(mInterpretationOfNumberOfPoints))
-      throw Fmi::Exception(BCP,"Section 3 interpretation of number of points cannot be missing");
-*/
     if (!mGridDefinition)
       throw Fmi::Exception(BCP,"Grid definition missing");
 
@@ -679,7 +670,6 @@ T::Dimensions GridSection::getGridDimensions() const
   FUNCTION_TRACE
   try
   {
-    //const auto source = getSourceOfGridDefinition();
     const auto noctets = getNumberOfOctetsForNumberOfPoints();
     const auto interpretation = getInterpretationOfNumberOfPoints();
 
@@ -687,9 +677,6 @@ T::Dimensions GridSection::getGridDimensions() const
 
     if (!mGridDefinition)
       return {};
-
-    //if (missing(source) || *source != 0)
-    //  return {};
 
     // Cannot handle irregular grids. Note that if interpretation=3, there is a separate list
     // of latitudes and hence it might be possible that the grid is regular, not just using

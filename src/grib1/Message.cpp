@@ -1,5 +1,4 @@
 #include "Message.h"
-//#include "GribFile.h"
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "../common/Dimensions.h"
@@ -270,9 +269,6 @@ void Message::getAttributeList(std::string prefix,T::AttributeList& attributeLis
 
     sprintf(name,"%smessage[%u].foracastTime",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getForecastTime());
-
-    //sprintf(name,"%smessage[%u].referenceTime",prefix.c_str(),mMessageIndex);
-    //attributeList.addAttribute(name,getReferenceTime());
 
     sprintf(name,"%smessage[%u].gridGeometryId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGridGeometryId()));
@@ -2361,7 +2357,6 @@ std::size_t Message::getGridOriginalValueCount() const
     if (mGridSection == nullptr)
       throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
-    //printf("COUNT %llu\n",(unsigned long long)mGridSection->getGridOriginalValueCount());
     return mGridSection->getGridOriginalValueCount();
   }
   catch (...)
@@ -2478,7 +2473,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       return ParamValueMissing;
     }
 
-    int idx = 0; //getGridOriginalValueIndex(grid_i,grid_j);
+    int idx = 0;
 
     auto rows = getGridOriginalRowCount();
     auto cols = getGridOriginalColumnCount();
@@ -2508,26 +2503,22 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         if (mDataSection->getValueByIndex(idx,value))
         {
           addCachedValue(idx,value);
-          //printf("--- getValueByIndex %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
           return value;
         }
       }
     }
     else
     {
-      //printf("Bitmap exists\n");
       long long hash = mBitmapSection->getHash();
       int index = 0;
       if (GRID::indexCache.getIndex(hash,idx,index))
       {
-        //printf("Index cache found %lld\n",hash);
         if (index < 0)
           return ParamValueMissing;
 
         if (mDataSection->getValueByIndex(index,value))
         {
           addCachedValue(idx,value);
-          //printf("--- getValueFromIndexCache %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
           return value;
         }
         else
@@ -2537,7 +2528,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       }
       else
       {
-        //printf("Index cache not found %lld\n",hash);
         T::IndexVector indexVector;
         mBitmapSection->getIndexVector((rows*cols),indexVector);
         GRID::indexCache.addIndexVector(hash,indexVector);
@@ -2547,7 +2537,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         if (mDataSection->getValueByIndex(indexVector[idx],value))
         {
           addCachedValue(idx,value);
-          //printf("--- getValueByIndexVector %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
           return value;
         }
         else
@@ -2564,7 +2553,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       if (GRID::valueCache.getValue(mCacheKey,idx,value))
       {
         addCachedValue(idx,value);
-        //printf("--- getValueFromValueCache %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
         return value;
       }
     }
@@ -2576,7 +2564,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       return ParamValueMissing;
 
     addCachedValue(idx,values[idx]);
-    printf("--- getValueFromVector %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
     return values[idx];
   }
   catch (...)
@@ -2679,7 +2666,6 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     {
       mDataSection->decodeValues(values);
 
-      //printf("FILE (1) %u\n",getFileId());
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
@@ -2777,7 +2763,6 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     try
     {
       mDataSection->decodeValues(values);
-      //printf("FILE (3) %u\n",getFileId());
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
@@ -2814,7 +2799,6 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
             valVector.push_back(val);
           }
         }
-        //printf("FILE (4) %u\n",getFileId());
         if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
           mCacheKey = GRID::valueCache.addValues(valVector);
       }

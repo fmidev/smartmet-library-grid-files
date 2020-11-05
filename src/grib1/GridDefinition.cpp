@@ -516,8 +516,6 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
   FUNCTION_TRACE
   try
   {
-    //printf("*** GET COORDINATES version 1\n");
-
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {

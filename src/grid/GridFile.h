@@ -21,13 +21,7 @@ namespace GRID
     of grib/grid files they are using.
 
     The class maps the current file into the memory and redirects incoming requests to
-    the actual implementation. On the other hand this class is the parent class for
-    the implementation classes (GRIB1::GribFile, GRIB2::GribFile, etc.).
-
-    The child classes (GRIB1::GribFile, GRIB2::GribFile, etc.) can be used also
-    independently, but in this case the user should recognize the file type by
-    itself. When using this class the file type is recognized automatically.
-*/
+    the actual implementation. */
 // ====================================================================================
 
 
@@ -64,6 +58,7 @@ class GridFile
     virtual Message*      getMessageByIndex(std::size_t index);
     virtual time_t        getModificationTime() const;
     virtual std::size_t   getNumberOfMessages();
+
     virtual bool          getPointCacheEnabled();
     virtual uint          getProducerId() const;
     virtual long long     getSize();

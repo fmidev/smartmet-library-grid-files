@@ -95,9 +95,6 @@ void Log::open()
 {
   try
   {
-    //if (!enabled)
-    //  return;     // ### The log is disabled.
-
     if (filename.length() == 0)
       return;     // ### The log file name is empty.
 
@@ -126,9 +123,6 @@ void Log::openForAppend()
 {
   try
   {
-    //if (!enabled)
-    //  return;     // ### The log is disabled.
-
     if (filename.length() == 0)
       return;     // ### The log file name is empty.
 

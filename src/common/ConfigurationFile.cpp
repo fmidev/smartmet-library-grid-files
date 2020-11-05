@@ -111,8 +111,6 @@ void ConfigurationFile::addConfigurationFile(std::string filename)
     {
       mAttributeList.push_back(*it);
     }
-
-//    mIncludedConfigurationFiles.push_back(configFile);
   }
   catch (...)
   {
@@ -130,7 +128,6 @@ void ConfigurationFile::clear()
   try
   {
     mAttributeList.clear();
-    //mIncludedConfigurationFiles.clear();
   }
   catch (...)
   {
@@ -149,7 +146,6 @@ void ConfigurationFile::readFile(std::string filename)
   FUNCTION_TRACE
   try
   {
-    // std::cout << "READ CONFIG : " << filename << "\n";
     if (mFilename.length() == 0)
       mFilename = filename;
 
@@ -176,21 +172,11 @@ void ConfigurationFile::readFile(std::string filename)
       setPositions(st,positions,n);
       removeComments(st,positions,newst,newpositions,n);
 
-      // printf("%s\n",newst);
-      // printf("************\n");
-
       std::vector<std::string> wordList;
       std::vector<unsigned long long> wordPositions;
 
       getWords(newst,newpositions,wordList,wordPositions);
       int len = wordList.size();
-      /*
-      for (int t=0; t<len; t++)
-      {
-        printf("%s\n",wordList[t].c_str());
-      }
-      */
-
       std::string path;
       int pos = 0;
       while (pos < len)
@@ -305,13 +291,6 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,bool& attrib
         throw exception;
       }
     }
-/*
-    for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
-    {
-      if (configFile->getAttributeValue(attributeName,attributeValue))
-        return true;
-    }
-*/
     return false;
   }
   catch (...)
@@ -356,13 +335,6 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,double& attr
         return true;
       }
     }
-/*
-    for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
-    {
-      if (configFile->getAttributeValue(attributeName,attributeValue))
-        return true;
-    }
-*/
     return false;
   }
   catch (...)
@@ -495,13 +467,6 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,long long& a
         return true;
       }
     }
-/*
-    for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
-    {
-      if (configFile->getAttributeValue(attributeName,attributeValue))
-        return true;
-    }
-*/
     return false;
   }
   catch (...)
@@ -647,13 +612,6 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::string&
         return true;
       }
     }
-/*
-    for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
-    {
-      if (configFile->getAttributeValue(attributeName,attributeValue))
-        return true;
-    }
-*/
     return false;
   }
   catch (...)
@@ -713,13 +671,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
 
     if (attributeValueVec.size() > 0  ||  exists)
       return true;
-/*
-    for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
-    {
-      if (configFile->getAttributeValue(attributeName,attributeValueVec))
-        return true;
-    }
-*/
+
     return false;
   }
   catch (...)
@@ -840,6 +792,8 @@ std::string ConfigurationFile::getFilename()
 
 
 
+
+
 bool ConfigurationFile::findAttribute(const char *attributeName)
 {
   FUNCTION_TRACE
@@ -854,13 +808,6 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
           return true;
       }
     }
-/*
-    for (auto configFile = mIncludedConfigurationFiles.begin(); configFile != mIncludedConfigurationFiles.end(); ++configFile)
-    {
-      if (configFile->findAttribute(attributeName))
-        return true;
-    }
-*/
     return false;
   }
   catch (...)
@@ -939,7 +886,6 @@ std::string ConfigurationFile::parseValue(std::string value)
     std::size_t p1 = 0;
     while (p1 != std::string::npos)
     {
-      //std::cout << "PARSE START [" << val << "]\n";
       p1 = val.find("$(");
       if (p1 != std::string::npos)
       {
@@ -965,7 +911,6 @@ std::string ConfigurationFile::parseValue(std::string value)
           }
 
           std::string newVal = val.substr(0,p1) + varValue + val.substr(p2+1);
-          //std::cout << "[" << val << "] <= [" << newVal << "]\n";
           val = newVal;
         }
         else
@@ -975,7 +920,6 @@ std::string ConfigurationFile::parseValue(std::string value)
           throw exception;
         }
       }
-      //std::cout << "PARSE END [" << val << "]\n";
     }
 
     return val;
@@ -1012,7 +956,6 @@ std::string ConfigurationFile::parseConstValue(std::string value)
           if (var == "DIR")
           {
             varValue = getFileDir(mCurrentFilename);
-            //std::cout << "***** " << mCurrentFilename << " : " << varValue << "\n";
           }
           else
           // Searching a value for the variable
@@ -1031,7 +974,6 @@ std::string ConfigurationFile::parseConstValue(std::string value)
           }
 
           std::string newVal = val.substr(0,p1) + varValue + val.substr(p2+1);
-          //std::cout << "[" << val << "] <= [" << newVal << "]\n";
           val = newVal;
         }
         else
@@ -1202,7 +1144,6 @@ void ConfigurationFile::getWords(char *st,unsigned long long *positions,std::vec
         buf[c] = '\0';
         if (c > 0)
         {
-          //printf("%s\n",buf);
           words.push_back(std::string(buf));
           wordPositions.push_back(positions[a-c]);
         }
@@ -1379,16 +1320,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
     else
     {
       std::string attributeValue = parseConstValue(words[pos]);
-      //std::cout << "ATTRIBUTE " << path << " = " << attributeValue << "\n";
-
       setAttributeValue(path.c_str(),attributeValue);
-      /*
-      T::Attribute attr;
-      attr.mName = path;
-      attr.mValue = attributeValue;
-
-      mAttributeList.push_back(attr);
-      */
       return pos + 1;
     }
     return pos;
@@ -1433,7 +1365,6 @@ int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector
   FUNCTION_TRACE
   try
   {
-    //printf("READ ATTR [%d: %d,%d] : %s\n",pos,(wordPositions[pos] >> 32),(int)(wordPositions[pos] & 0xFFFFFFFF),words[pos].c_str());
     if (pos >= len)
       return pos;
 

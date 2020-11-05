@@ -34,7 +34,7 @@ namespace fs = boost::filesystem;
 
 namespace SmartMet
 {
-//ThreadLock timeThreadLock;
+
 Fmi::TimeZones itsTimeZones;
 
 
@@ -488,7 +488,6 @@ uint stringToId(const char *str, uint len)
     while (str[idx] != '\0' && idx < len)
     {
       id = id + C_UINT(str[idx]) * (idx + 123) + str[idx];
-      // printf("%u:%c:%llu\n",idx,str[idx],id);
       idx++;
     }
     return C_UINT(id & 0xFFFFFFFF);
@@ -547,7 +546,6 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
       tzone = (char*)tzo;
 
     auto zone = itsTimeZones.time_zone_from_string(tzone);
-    // boost::local_time::local_date_time t(utc_ptime, tz);
 
     boost::posix_time::time_duration td(tm->tm_hour,tm->tm_min,tm->tm_sec,0);
     boost::gregorian::date d(tm->tm_year + 1900,tm->tm_mon + 1,tm->tm_mday);
@@ -558,30 +556,6 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
 
     time_t tt = (t - boost::posix_time::from_time_t(0)).total_seconds();
     return tt;
-
-
-/*
-    AutoThreadLock lock(&timeThreadLock);
-
-    time_t ret;
-    char *tz;
-    tz = getenv("TZ");
-    if (tz) tz = strdup(tz);
-    setenv("TZ", tzone, 1);
-    tzset();
-    ret = mktime(tm);
-    if (tz)
-    {
-      setenv("TZ", tz, 1);
-      free(tz);
-    }
-    else
-      unsetenv("TZ");
-    tzset();
-
-    printf("TIME %lu %lu (%s)\n",tt,ret,tzone);
-    return ret;
-*/
   }
   catch (...)
   {
@@ -622,48 +596,7 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
     tt->tm_sec = static_cast<int>(td.seconds());
     tt->tm_isdst = timetm.tm_isdst; // -1; // -1 used when dst info is unknown
 
-    /*
-    printf("%04d%02d%02dT%02d%02d%02d  ",
-            tt->tm_year + 1900,
-            tt->tm_mon + 1,
-            tt->tm_mday,
-            tt->tm_hour,
-            tt->tm_min,
-            tt->tm_sec);
-*/
     return tt;
-
-    /*
-    AutoThreadLock lock(&timeThreadLock);
-
-    char *tz;
-    tz = getenv("TZ");
-    if (tz) tz = strdup(tz);
-    setenv("TZ", tzone, 1);
-    tzset();
-
-    localtime_r(&t, tt);
-
-    if (tz)
-    {
-      setenv("TZ", tz, 1);
-      free(tz);
-    }
-    else
-      unsetenv("TZ");
-    tzset();
-
-
-    printf("%04d%02d%02dT%02d%02d%02d\n",
-            tt->tm_year + 1900,
-            tt->tm_mon + 1,
-            tt->tm_mday,
-            tt->tm_hour,
-            tt->tm_min,
-            tt->tm_sec);
-
-    return tt;
-    */
   }
   catch (...)
   {
@@ -712,7 +645,6 @@ time_t utcTimeToTimeT(const std::string& utcTime)
 {
   try
   {
-    //printf("utcTimeToTimeT %s\n",utcTime.c_str());
     if (utcTime.length() != 15)
       throw Fmi::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
 
@@ -1115,7 +1047,6 @@ float toFloat(const char *str)
       return 0.0;
 
     return C_FLOAT(atof(str));
-    //return toDouble2(str);
   }
   catch (...)
   {
@@ -1137,7 +1068,6 @@ double toDouble(const char *str)
       return 0.0;
 
     return atof(str);
-    //return toDouble2(str);
   }
   catch (...)
   {
@@ -1714,10 +1644,6 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
                                       boost::posix_time::hours(hour) +
                                           boost::posix_time::minutes(minute) +
                                           boost::posix_time::seconds(second));
-
-
-
-    //return Fmi::TimeParser::parse_iso(timeStr);
   }
   catch (...)
   {
@@ -1759,9 +1685,7 @@ int decompressData(void *_compressedData,
   try
   {
     uLongf len = (uLongf)_decompressedDataSize;
-    int res = uncompress(
-        (Bytef *)_decompressedData, &len, (Bytef *)_compressedData, (uLong)_compressedDataSize);
-    // printf("UNCOMPRESS %d\n",res);
+    int res = uncompress((Bytef *)_decompressedData, &len, (Bytef *)_compressedData, (uLong)_compressedDataSize);
     _decompressedDataSize = len;
 
     if (res < 0)
@@ -2382,18 +2306,15 @@ void getFileList(const char *dirName,
     char *path = realpath(dirName, nullptr);
     if (path == nullptr)
     {
-      // printf("Cannot find the dir [%s]\n", dirName);
       return;
     }
 
-    if (dirList.find(path) != dirList.end()) return;  // Dir already processed
-
-    // printf("DIR [%s]\n", path);
+    if (dirList.find(path) != dirList.end())
+      return;  // Dir already processed
 
     DIR *dp = opendir(dirName);
     if (dp == nullptr)
     {
-      // printf("Cannot open dir : %s\n",dirName);
       return;
     }
 

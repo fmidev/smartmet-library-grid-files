@@ -543,19 +543,6 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
       return true;
     }
 
-#if 0
-    if (param == "timestring")
-    {
-      value = formatDate(queryTime, mLocale, timestring.c_str());
-      return true;
-    }
-
-    else if (param == ORIGINTIME_PARAM)
-    {
-      retval = timeformatter.format(now);
-    }
-
-#endif
     return false;
   }
   catch (...)

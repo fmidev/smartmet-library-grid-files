@@ -5,8 +5,6 @@
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
 #include "../identification/GridDef.h"
-#include "../grib1/GribFile.h"
-#include "../grib2/GribFile.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -25,7 +23,6 @@ GridFile::GridFile()
   FUNCTION_TRACE
   try
   {
-    //mIsMemoryMapped = false;
     mCheckTime = 0;
     mFileId = 0;
     mGroupFlags = 0;

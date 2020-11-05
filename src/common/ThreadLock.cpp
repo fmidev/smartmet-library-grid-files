@@ -44,9 +44,7 @@ void ThreadLock::lock()
 {
   try
   {
-    //printf("LOCK\n");
     pthread_mutex_lock(&threadLock);
-    //printf("=> LOCKED\n");
   }
   catch (...)
   {
@@ -81,9 +79,7 @@ void ThreadLock::unlock()
 {
   try
   {
-    //printf("UNLOCK\n");
     pthread_mutex_unlock(&threadLock);
-    //printf("=> UNLOCKED\n");
   }
   catch (...)
   {

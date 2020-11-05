@@ -48,7 +48,6 @@ void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
 {
   try
   {
-    //printf("IndexCacheSize = %u\n",mHashVector.size());
     AutoWriteLock lock(&mModificationLock);
 
     if (mHashVector.size() == 0)
@@ -181,7 +180,6 @@ int IndexCache::getClosestIndexByHashNoLock(long long hash)
     while (low <= high)
     {
       int mid = low + (high-low) / 2;
-      //printf(" --  %d < %d < %d\n",low,mid,high);
       long long hh = mHashVector[mid];
 
       if (hash == hh)

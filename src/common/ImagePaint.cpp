@@ -113,8 +113,6 @@ void ImagePaint::paintLine(int _x1,int _y1,int _x2,int _y2,uint _color)
     int x2 = (int)_x2;
     int y2 = (int)_y2;
 
-    //printf("Line %d,%d - %d,%d\n",x1,y1,x2,y2);
-
     int dy = (y2 - y1);
     int dx = (x2 - x1);
     int stepx = 1;
@@ -268,7 +266,6 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _co
           if (nodeX[i+1] > maxX)
             nodeX[i+1] = maxX;
 
-          //printf("Line %f,%d - %f,%d\n",nodeX[i],y,nodeX[i+1],y);
           int xStart = C_INT(nodeX[i]);
           int xEnd = C_INT(nodeX[i+1]);
 
@@ -399,7 +396,6 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
           j = i;
         }
       }
-      //printf("Nodes %d %u\n",y,nodes);
       qsort(&nodeX, nodes, sizeof(double),compare_coordinates);
 
       //  Fill the pixels between node pairs.
@@ -417,7 +413,6 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
           if (nodeX[i+1] > maxX)
             nodeX[i+1] = maxX;
 
-          //printf("Line %f,%d - %f,%d\n",nodeX[i],y,nodeX[i+1],y);
           int xStart = C_INT(nodeX[i]);
           int xEnd = C_INT(nodeX[i+1]);
 
@@ -481,13 +476,11 @@ void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,Memo
     double yp = 0;
 
     std::uint32_t pointCount = _memoryReader.read_uint32();
-    //printf("Point count %u\n",pointCount);
     for (std::uint32_t t=0; t<pointCount; t++)
     {
       double x = (_memoryReader.read_double() + _dx);
       double y = (_memoryReader.read_double() + _dy);
 
-      //printf("%f,%f\n",x,y);
       x = x * _mpx;
       y = y*_mpy;
 
@@ -567,7 +560,6 @@ void ImagePaint::paintWkbMultiPoint(double _mpx,double _mpy,double _dx,double _d
   try
   {
     std::uint32_t pointCount = _memoryReader.read_uint32();
-    //printf("STRINGS %u\n",stringCount);
     for (std::uint32_t t=0; t<pointCount; t++)
     {
       paintWkbPoint(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
@@ -614,7 +606,6 @@ void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double 
   {
 
     std::uint32_t polygonCount = _memoryReader.read_uint32();
-    //printf("PolygonCount %u\n",polygonCount);
     for (std::uint32_t t=0; t<polygonCount; t++)
     {
       std::uint8_t byteOrder = _memoryReader.read_uint8();
@@ -622,7 +613,6 @@ void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double 
       /*std::uint32_t wkbType =*/ _memoryReader.read_uint32();
 
       std::uint32_t ringCount = _memoryReader.read_uint32();
-      //printf("RingCount %d\n",ringCount);
       std::vector<std::vector<T::Coordinate>> polygonPath;
 
       for (std::uint32_t t=0; t<ringCount; t++)
@@ -661,7 +651,6 @@ void ImagePaint::paintWkbGeometryCollection(double _mpx,double _mpy,double _dx,d
   try
   {
     std::uint32_t geometryCount = _memoryReader.read_uint32();
-    //printf("GeometryCount %u\n",geometryCount);
     for (std::uint32_t t=0; t<geometryCount; t++)
     {
       paintWkb(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
@@ -685,11 +674,9 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryRe
     while (_memoryReader.getReadPosition() < _memoryReader.getDataSize())
     {
       std::uint8_t byteOrder = _memoryReader.read_uint8();
-      //printf("Byte order %u\n",byteOrder);
       _memoryReader.setLittleEndian((bool)byteOrder);
 
       std::uint32_t wkbType = _memoryReader.read_uint32();
-      //printf("WKB_TYPE %u\n",wkbType);
 
       switch (wkbType)
       {
@@ -760,7 +747,6 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
   try
   {
     size_t sz = _wkb.size();
-    //printf("** SIZE %lu\n",sz);
     if (sz == 0)
       return;
 

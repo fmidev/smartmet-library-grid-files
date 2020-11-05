@@ -1,5 +1,4 @@
 #include "Message.h"
-//#include "GribFile.h"
 #include "BitmapSection.h"
 #include "DataSection.h"
 #include "GridSection.h"
@@ -86,8 +85,6 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mDataLocked = false;
     mFileType = T::FileTypeValue::Grib2;
     mForecastTimeT = 0;
-
-    //printf("NEW MESSAGE %u %u %llu\n",mMessageIndex,mFilePosition,mMessageSize);
   }
   catch (...)
   {
@@ -975,8 +972,6 @@ void Message::setGridValues(T::ParamValue_vec& values)
 
         mBitmapSection->setBitmapData(bm,bmSize);
         mBitmapSection->setBitMapIndicator(0);
-        //mProductSection->setSectionFlags(mProductSection->getSectionFlags() | 0x40);
-
         t = size;
       }
     }
@@ -1072,8 +1067,6 @@ void Message::read(MemoryReader& memoryReader)
     std::uint8_t last_idx = 0u;
     bool begin = false;
 
-    //std::uint8_t tablesVersion = 0;
-
     while (true)
     {
       if ((memoryReader.getReadPtr()+4) > memoryReader.getEndPtr())
@@ -1104,8 +1097,6 @@ void Message::read(MemoryReader& memoryReader)
       else
       {
         std::uint8_t idx = memoryReader.getByte(memoryReader.getReadPosition() + 4);
-        //printf("-- index %llu  %u\n",memoryReader.getReadPosition(), idx);
-
 
         // A message ends if an earlier section is encountered
         if (idx < last_idx)
@@ -2861,7 +2852,6 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     try
     {
       mRepresentationSection->decodeValues(values);
-      //printf("FILE (5) %u\n",getFileId());
 
       if (mRepresentationSection->getDataRepresentationTemplateNumber() != RepresentationSection::Template::GridDataRepresentation)
         mCacheKey = GRID::valueCache.addValues(values);
@@ -2926,7 +2916,6 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     try
     {
       mRepresentationSection->decodeValues(values);
-      //printf("FILE (6) %u\n",getFileId());
       mCacheKey = GRID::valueCache.addValues(values);
       mOrigCacheKey = mCacheKey;
     }
@@ -3208,7 +3197,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   FUNCTION_TRACE
   try
   {
-    //printf("getGridValueByGridPoint(%u,%u)\n",grid_i,grid_j);
     if (mValueDecodingFailed)
     {
       // We have failed to decode parameter values
@@ -3232,7 +3220,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
     if (getCachedValue(idx,value))
     {
-      //printf("Cached %u,%u  %u  %f\n",grid_i,grid_j,idx,value);
       return value;
     }
 
@@ -3243,7 +3230,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         if (mRepresentationSection->getValueByIndex(idx,value))
         {
           addCachedValue(idx,value);
-          //printf("--- getValueByIndex %u,%u %u : %f\n",grid_i,grid_j,idx,value);
           return value;
         }
       }
@@ -3262,7 +3248,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         if (mRepresentationSection->getValueByIndex(index,value))
         {
           addCachedValue(idx,value);
-          //printf("Value %u,%u : %f\n",grid_i,grid_j,value);
           return value;
         }
         else
@@ -3281,7 +3266,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         if (mRepresentationSection->getValueByIndex(indexVector[idx],value))
         {
           addCachedValue(idx,value);
-          //printf("Value %u,%u (%u): %f\n",grid_i,grid_j,idx,value);
           return value;
         }
         else
@@ -3298,7 +3282,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       if (GRID::valueCache.getValue(mCacheKey,idx,value))
       {
         addCachedValue(idx,value);
-        //printf("--- ValueFromCahe %u,%u (%u) : %f\n",grid_i,grid_j,idx,value);
         return value;
       }
     }
@@ -3369,11 +3352,7 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
     if (mGridSection == nullptr)
       throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
-    bool res = mGridSection->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
-    //printf("LATLON %f,%f => %f,%f  => %u,%u\n",lat,lon,grid_i,grid_j,(uint)grid_i,(uint)grid_j);
-
-    //std::cout << getForecastTime() << " VALUE " << getGridValueByGridPoint((uint)grid_i,(uint)grid_j) << "\n";
-    return res;
+    return mGridSection->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
   }
   catch (...)
   {
@@ -3395,11 +3374,7 @@ bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,doubl
     if (mGridSection == nullptr)
       throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
 
-    bool res = mGridSection->getGridPointByLatLonCoordinatesNoCache(lat,lon,grid_i,grid_j);
-    //printf("LATLON %f,%f => %f,%f  => %u,%u\n",lat,lon,grid_i,grid_j,(uint)grid_i,(uint)grid_j);
-
-    //std::cout << getForecastTime() << " VALUE " << getGridValueByGridPoint((uint)grid_i,(uint)grid_j) << "\n";
-    return res;
+    return mGridSection->getGridPointByLatLonCoordinatesNoCache(lat,lon,grid_i,grid_j);
   }
   catch (...)
   {

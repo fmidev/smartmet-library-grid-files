@@ -134,18 +134,6 @@ void PhysicalGridFile::mapToMemory()
       mFileModificationTime = getFileModificationTime(mFileName.c_str());
       mMemoryPtr = const_cast<char*>(mMappedFile->const_data());
     }
-/*
-    if (mMessagePositions.size() > 0)
-    {
-      // We know the message positions, so we can create the actual message objects.
-
-      for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
-      {
-        createMessage(it->first,it->second);
-      }
-      mMessagePositions.clear();
-    }
-*/
   }
   catch (...)
   {
@@ -312,55 +300,6 @@ char* PhysicalGridFile::getMemoryPtr()
 }
 
 
-
-
-
-
-#if 0
-
-/*! \brief The method memory maps the given file.
-*/
-
-void PhysicalGridFile::read()
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mIsRead)
-      return;  // Already read
-
-    if (!mIsMemoryMapped)
-    {
-      AutoThreadLock lock(&mMemoryMappingLock);
-
-      if (!mIsMemoryMapped)
-      {
-        mFileSize = getFileSize(mFileName.c_str());
-        if (mFileSize < 0)
-          throw Fmi::Exception(BCP,"The file '" + mFileName + "' does not exist!");
-
-        MappedFileParams params(mFileName);
-        params.flags = boost::iostreams::mapped_file::readonly;
-        params.length = mFileSize;
-        mMappedFile.reset(new MappedFile(params));
-        mIsMemoryMapped = true;
-        mFileModificationTime = getFileModificationTime(mFileName.c_str());
-
-        mMemoryPtr = const_cast<char*>(mMappedFile->const_data());
-      }
-    }
-
-    // We do not need to read messages beforehand anymore, because we know their file positions
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Read failed!",nullptr);
-    exception.addParameter("File name ",mFileName);
-    throw exception;
-  }
-}
-
-#endif
 
 
 
@@ -916,9 +855,6 @@ uchar PhysicalGridFile::readMessageType(MemoryReader& memoryReader)
   {
     memoryReader.setReadPosition(0);
 
-    //unsigned long long pos = searchFileStartPosition(memoryReader);
-    //memoryReader.setReadPosition(pos);
-
     unsigned char d[8];
     memoryReader.read_data(d,8);
     memoryReader.setReadPosition(0);
@@ -950,46 +886,6 @@ uchar PhysicalGridFile::readMessageType(MemoryReader& memoryReader)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
-
-
-
-/*
-ulonglong PhysicalGridFile::searchFileStartPosition(MemoryReader& memoryReader)
-{
-  FUNCTION_TRACE
-  try
-  {
-    std::vector<unsigned char*> gribs;
-
-    // A complete indicator section takes 16 bytes, hence we can stop the loop earlier
-    // thus making sure all reads inside the loop succeed.
-
-    while (memoryReader.getReadPtr() < memoryReader.getEndPtr())
-    {
-      // Usually GRIB2 messages do not have any extra garbage between them, several GRIB1 messages do
-      // seem to have it. Most likely it's not worth optimizing this search, we'll just skip one byte
-      // at a time.
-
-      long long pos = memoryReader.getReadPosition();
-
-      if (!memoryReader.peek_string("GRIB"))
-      {
-        memoryReader.read_null(1);
-      }
-      else
-      {
-        return pos;
-      }
-    }
-    return 0;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Message search failed!",nullptr);
-  }
-}
-*/
 
 
 

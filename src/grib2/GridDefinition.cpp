@@ -929,7 +929,6 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
   FUNCTION_TRACE
   try
   {
-    //printf("*** GET COORDINATES version 2\n");
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {
@@ -965,9 +964,6 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
       double lon = it->x();
 
       mCoordinateTranformation_orig2latlon->Transform(1,&lon,&lat);
-
-      //printf("CONV %f,%f => %f,%f\n",it->y(),it->x(),lon,lat);
-
       latLonCoordinates->push_back(T::Coordinate(lon,lat));
     }
 
@@ -1563,7 +1559,6 @@ T::Hash GridDefinition::getGridHash()
     if (mHash == 0)
       mHash = countHash();
 
-    //std::cout << "Hash: " << mHash << "\n";
     return mHash;
   }
   catch (...)
@@ -1662,7 +1657,7 @@ bool GridDefinition::getGridMetricSize(double& width,double& height) const
 T::Hash GridDefinition::countHash()
 {
   FUNCTION_TRACE
-  //std::cout << "Hash not defined\n";
+  // Hash not defined
   return 0;
 }
 

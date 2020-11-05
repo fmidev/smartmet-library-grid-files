@@ -1271,7 +1271,6 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
     auto forecastTimeP = parameter.getForecastTime();
     if (!forecastTimeP)
     {
-      //parameter.print(std::cout,0,0);
       throw Fmi::Exception(BCP, "The 'parameter.forecastTime' value not defined!");
     }
 
@@ -1351,7 +1350,6 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
     auto forecastTimeP = parameter.getForecastTime();
     if (!forecastTimeP)
     {
-      //parameter.print(std::cout,0,0);
       throw Fmi::Exception(BCP, "The 'parameter.forecastTime' value not defined!");
     }
 

@@ -504,8 +504,6 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
   FUNCTION_TRACE
   try
   {
-    //attributeList.print(std::cout,0,0);
-
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *centerStr = attributeList.getAttributeValue("grid.center");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
@@ -691,15 +689,6 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
-
-
-/*
-    for (auto it=contours.begin(); it != contours.end(); ++it)
-    {
-      printf("-- Isobands %lu\n",it->size());
-    }
-*/
-    //attributeList.print(std::cout,0,0);
   }
   catch (...)
   {
@@ -1039,16 +1028,6 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
-
-
-/*
-    for (auto it=contours.begin(); it != contours.end(); ++it)
-    {
-      printf("-- Isolines %lu\n",it->size());
-    }
-*/
-
-    //attributeList.print(std::cout,0,0);
   }
   catch (...)
   {
@@ -1656,7 +1635,6 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
         angle = PI/2 - a + PI;
       }
 
-      //printf("%f,%f ANGLE %f\n",di,dj,angle);
       return C_FLOAT(angle);
     }
 
@@ -1666,13 +1644,7 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
       double dj = grid_j2-grid_j1;
       double angle = 0;
       double a = atan(fabs(dj)/fabs(di));
-/*
-      if (reverseYDirection())
-        dj = -dj;
 
-      if (reverseXDirection())
-        di = -di;
-*/
       if (dj >= 0  &&  di >= 0)
       {
         angle = -(PI/2 - a);
@@ -1693,7 +1665,6 @@ float Message::getGridPointAngleByLatLonCoordinates(double lat,double lon)  cons
         angle = PI/2 - a + PI;
       }
 
-      //printf("* ANGLE %f\n",angle);
       return C_FLOAT(angle);
     }
 
@@ -2439,8 +2410,6 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
     double x2 = 0;
     double y2 = 0;
 
-    //attributeList.print(std::cout,0,0);
-
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *centerStr = attributeList.getAttributeValue("grid.center");
     const char *borderStr = attributeList.getAttributeValue("grid.border");
@@ -2510,8 +2479,6 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
 
     // Picking grid points that are inside the rectangle.
     getGridValueListByRectangle(T::CoordinateTypeValue::GRID_COORDINATES,x1,y1,x2,y2,gridRectangle,valueList);
-
-    // valueList.print(std::cout,0,0);
 
     double minX = 0;
     double minY = 0;
@@ -3770,11 +3737,6 @@ void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint ve
 
     if (getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       getGridValueVectorByGridPoint(grid_i,grid_j,vectorType,valueVector);
-/*
-    printf("getGridValueVectorByLatLonCoordinate %f,%f => %f,%f\n",lat,lon,grid_i,grid_j);
-    for (auto it = valueVector.begin(); it != valueVector.end(); ++it)
-      std::cout << *it << "\n";
-*/
   }
   catch (...)
   {
@@ -3841,7 +3803,6 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
           y2 = y2 + 0.01;
         }
 
-        //printf("%f,%f  ...  %f,%f\n",x1,y1,x2,y2);
         std::vector<T::Coordinate> polygonPoints;
         polygonPoints.push_back(T::Coordinate(x1,y1));
         polygonPoints.push_back(T::Coordinate(x2,y1));
@@ -3930,7 +3891,6 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         getGridOriginalCoordinatesByLatLonCoordinates(y1,x1,xx1,yy1);
         getGridOriginalCoordinatesByLatLonCoordinates(y2,x2,xx2,yy2);
 
-        //printf("%f,%f  ...  %f,%f\n",x1,y1,x2,y2);
         std::vector<T::Coordinate> polygonPoints;
         polygonPoints.push_back(T::Coordinate(xx1,yy1));
         polygonPoints.push_back(T::Coordinate(xx2,yy1));
@@ -4043,7 +4003,6 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
           {
             rec.mX = lon;
             rec.mY = lat;
-              //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
           }
 
           rec.mValue = getGridValueByGridPoint(it->x(),it->y());
@@ -4069,7 +4028,6 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
           double lat = 0,lon = 0;
           getGridLatLonCoordinatesByGridPosition(it->x(),it->y(),lat,lon);
-          //printf("%d,%d => %f,%f\n",it->x(),it->y(),lat,lon);
 
         }
       }
@@ -4101,7 +4059,6 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
           {
             rec.mX = x;
             rec.mY = y;
-              //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
           }
 
           rec.mValue = getGridValueByGridPoint(it->x(),it->y());
@@ -4173,7 +4130,6 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
           {
             rec.mX = lon;
             rec.mY = lat;
-            //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
           }
 
           rec.mValue = getGridValueByGridPoint(it->x(),it->y());
@@ -4232,7 +4188,6 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
           {
             rec.mX = x;
             rec.mY = y;
-              //printf("%d,%d => %f,%f => %f,%f\n",it->x(),it->y(),rec->mX,rec->mY,lon,lat);
           }
 
           rec.mValue = getGridValueByGridPoint(it->x(),it->y());
@@ -4311,11 +4266,6 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
           double lat2 = 0,lon2 = 0;
           getGridLatLonCoordinatesByGridPosition(gx1,gy2,lat1,lon1);
           getGridLatLonCoordinatesByGridPosition(gx2,gy1,lat2,lon2);
-
-          //printf("LATLON AREA %f,%f  %f,%f  %f,%f  %f,%f\n",y1,x1,lat1,lon1,y2,x2,lat2,lon2);
-
-          //printf("GRID AREA %f,%f  %f,%f  %f,%f  %f,%f\n",gx1,gy1,gx1,gy2,gx2,gy2,gx2,gy1);
-
           getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,valueList);
         }
         break;
@@ -4471,7 +4421,6 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     double grid_i = 0;
     double grid_j = 0;
 
-    //long long startTime = getTime();
     switch (areaInterpolationMethod)
     {
       case T::AreaInterpolationMethod::None:
@@ -4579,7 +4528,6 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
           }
         }
         break;
-        // throw Fmi::Exception(BCP,"Unknown 'areaInterpolationMethod' parameter value!");
     }
   }
   catch (...)
@@ -4664,7 +4612,6 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
           values.push_back(value);
         }
         return;
-        // throw Fmi::Exception(BCP,"Unknown 'areaInterpolationMethod' parameter value!");
     }
   }
   catch (...)
@@ -4721,7 +4668,6 @@ T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,dou
 
       default:
         return getGridValueByGridPoint_nearest(grid_i,grid_j);
-        // throw Fmi::Exception(BCP,"Unknown 'areaInterpolationMethod' parameter value!");
     }
   }
   catch (...)
@@ -4749,7 +4695,6 @@ T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,shor
   FUNCTION_TRACE
   try
   {
-    //areaInterpolationMethod = T::AreaInterpolationMethod::Nearest;
     double grid_i = 0;
     double grid_j = 0;
     if (getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))

@@ -1,6 +1,5 @@
 #include "SimplePacking.h"
 #include "Message.h"
-#include "GribFile.h"
 #include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
@@ -254,7 +253,6 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
     std::uint16_t decimalScaleFactor = message->getDecimalScaleFactor();
     std::float_t referenceValue = message->getReferenceValue();
     std::uint8_t bitsPerValue = message->getBitsPerValue();
-    // std::uint8_t flags = message->getFlags();
 
     // Vector to return
     decodedValues.clear();
@@ -299,8 +297,6 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
 
     // Decimal scale factor D, possibly negative
     std::int16_t D = decimalScaleFactor;
-
-    // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
 
     const double Efac = std::pow(2.0, E);
     const double Dfac = std::pow(10, -D);
@@ -568,10 +564,6 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
       // Bitmap required
     }
 
-
-    //printf("R = %f  E = %d  D = %d  Bits = %u\n",R,E,D,bits);
-
-    // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
 
     const double Efac = std::pow(2.0, E);
     const double Dfac = std::pow(10, -D);
