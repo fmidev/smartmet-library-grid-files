@@ -31,6 +31,7 @@ GridFile::GridFile()
     mCheckTime = 0;
     mSourceId = 0;
     mDeletionTime = 0;
+    mPointCacheEnabled = false;
   }
   catch (...)
   {
@@ -59,6 +60,8 @@ GridFile::GridFile(const GridFile& other)
     mSourceId = other.mSourceId;
     mCheckTime = other.mCheckTime;
     mUserList = other.mUserList;
+    mPointCacheEnabled = other.mPointCacheEnabled;
+
   }
   catch (...)
   {
@@ -82,6 +85,7 @@ GridFile::GridFile(GridFile *gridFile)
     mGenerationId = 0;
     mCheckTime = 0;
     mSourceId = 0;
+    mPointCacheEnabled = false;
   }
   catch (...)
   {
@@ -1040,6 +1044,11 @@ void GridFile::setPointCacheEnabled(bool enabled)
   try
   {
     mPointCacheEnabled = enabled;
+
+    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+    {
+      msg->second->setPointCacheEnabled(mPointCacheEnabled);
+    }
   }
   catch (...)
   {

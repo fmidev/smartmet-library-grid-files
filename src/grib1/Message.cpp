@@ -80,7 +80,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
-    mPointCacheEnabled = false;
+    mPointCacheEnabled = mGridFilePtr->getPointCacheEnabled();
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
     mForecastTimeT = 0;

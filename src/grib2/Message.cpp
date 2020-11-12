@@ -80,7 +80,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
-    mPointCacheEnabled = false;
+    mPointCacheEnabled = mGridFilePtr->getPointCacheEnabled();
     mIsRead = false;
     mDataLocked = false;
     mFileType = T::FileTypeValue::Grib2;
@@ -3219,9 +3219,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     T::ParamValue value = 0;
 
     if (getCachedValue(idx,value))
-    {
       return value;
-    }
 
     if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
     {

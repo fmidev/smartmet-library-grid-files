@@ -10,6 +10,8 @@
 #include "../common/Dimensions.h"
 #include "../common/GraphFunctions.h"
 #include "../common/AutoThreadLock.h"
+#include "../common/AutoWriteLock.h"
+#include "../common/AutoReadLock.h"
 #include "../common/ThreadLock.h"
 #include "../common/RequestCounter.h"
 #include "../common/DataWriter.h"
@@ -324,7 +326,7 @@ class Message
     short                       mDefaultInterpolationMethod;
 
     mutable ThreadLock          mThreadLock;
-    mutable ThreadLock          mCacheLock;
+    mutable ModificationLock    mCacheModificationLock;
 
     bool                        mPointCacheEnabled;
     mutable PointCache          mPointCache;
