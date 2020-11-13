@@ -666,7 +666,9 @@ time_t utcTimeToTimeT(const std::string& utcTime)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    Fmi::Exception exception(BCP, "Operation failed!", nullptr);
+    exception.addParameter("utcTime",utcTime);
+    throw exception;
   }
 }
 
