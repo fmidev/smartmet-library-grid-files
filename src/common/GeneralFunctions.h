@@ -165,6 +165,7 @@ void tuneLevels(int& level1,int& level2,int newLevel);
 std::string fileToBase64(const char *filename);
 std::string base64_encode(unsigned char *data,size_t dataSize);
 
+void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& records);
 
 inline int num_compare(uint& v1, uint& v2)
 {

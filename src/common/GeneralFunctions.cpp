@@ -2659,4 +2659,68 @@ std::string fileToBase64(const char *filename)
   }
 }
 
+
+
+
+
+void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& records)
+{
+  try
+  {
+    FILE *file = fopen(filename,"re");
+    if (file == nullptr)
+    {
+      Fmi::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[10000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,10000,file) != nullptr  &&  st[0] != '#')
+      {
+        std::vector<std::string> fields;
+        bool ind = false;
+        char *field[1000];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 1)
+        {
+          for (uint t=0; t<c; t++)
+            fields.push_back(std::string(field[t]));
+
+          records.push_back(fields);
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
 }  // Namespace SmartMet
