@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 20.11.24
-Release: 1%{?dist}.fmi
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -13,7 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 20.10.28
 BuildRequires: smartmet-library-spine-devel >= 20.11.23
-BuildRequires: smartmet-library-macgyver >= 20.10.28
+BuildRequires: smartmet-library-macgyver >= 20.11.24
 BuildRequires: smartmet-library-tron >= 20.4.18
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -37,7 +37,7 @@ Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 20.10.28
-Requires: smartmet-library-macgyver >= 20.10.28
+Requires: smartmet-library-macgyver >= 20.11.24
 Requires: smartmet-library-spine >= 20.11.23
 
 %description
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Nov 24 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.11.24-2.fmi
+- Faster utcTimeFromTimeT
 * Tue Nov 24 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.11.24-1.fmi
 - Improved error messages
 - Performance improvements

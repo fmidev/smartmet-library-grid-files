@@ -753,20 +753,7 @@ std::string utcTimeFromTimeT(time_t t)
 {
   try
   {
-    struct tm tt;
-    gmtime_r(&t, &tt);
-
-    char buf[30];
-    sprintf(buf,
-            "%04d%02d%02dT%02d%02d%02d",
-            tt.tm_year + 1900,
-            tt.tm_mon + 1,
-            tt.tm_mday,
-            tt.tm_hour,
-            tt.tm_min,
-            tt.tm_sec);
-    std::string str = buf;
-    return str;
+    return Fmi::to_iso_string(t);
   }
   catch (...)
   {
