@@ -35,6 +35,13 @@ void getPointsInsidePolygonPath(
     polygonPath,
     std::vector<T::Point>& gridPoints);
 
+
+std::size_t getPolygonPathLength(T::Polygon_vec& polygonPath);
+
+void convertToPointVector(
+    T::Polygon_vec& polygonPath,
+    T::Coordinate_vec& polygonPoints);
+
 void convertSvgPathToPolygonPath(
     NFmiSvgPath& svgPath,
     T::Polygon_vec& polygonPath);

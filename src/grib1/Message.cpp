@@ -2509,39 +2509,42 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     }
     else
     {
-      long long hash = mBitmapSection->getHash();
-      int index = 0;
-      if (GRID::indexCache.getIndex(hash,idx,index))
+      if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
       {
-        if (index < 0)
-          return ParamValueMissing;
-
-        if (mDataSection->getValueByIndex(index,value))
+        long long hash = mBitmapSection->getHash();
+        int index = 0;
+        if (GRID::indexCache.getIndex(hash,idx,index))
         {
-          addCachedValue(idx,value);
-          return value;
+          if (index < 0)
+            return ParamValueMissing;
+
+          if (mDataSection->getValueByIndex(index,value))
+          {
+            addCachedValue(idx,value);
+            return value;
+          }
+          else
+          {
+            return ParamValueMissing;
+          }
         }
         else
         {
-          return ParamValueMissing;
-        }
-      }
-      else
-      {
-        T::IndexVector indexVector;
-        mBitmapSection->getIndexVector((rows*cols),indexVector);
-        GRID::indexCache.addIndexVector(hash,indexVector);
-        if (indexVector[idx] < 0)
-          return ParamValueMissing;
+          T::IndexVector indexVector;
+          mBitmapSection->getIndexVector((rows*cols),indexVector);
+          GRID::indexCache.addIndexVector(hash,indexVector);
+          if (indexVector[idx] < 0)
+            return ParamValueMissing;
 
-        if (mDataSection->getValueByIndex(indexVector[idx],value))
-        {
-          addCachedValue(idx,value);
-          return value;
-        }
-        else
-        {
-          return ParamValueMissing;
+          if (mDataSection->getValueByIndex(indexVector[idx],value))
+          {
+            addCachedValue(idx,value);
+            return value;
+          }
+          else
+          {
+            return ParamValueMissing;
+          }
         }
       }
     }

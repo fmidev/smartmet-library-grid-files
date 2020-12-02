@@ -3234,41 +3234,43 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     }
     else
     {
-
-      long long hash = mBitmapSection->getHash();
-
-      int index = 0;
-      if (GRID::indexCache.getIndex(hash,idx,index))
+      if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
       {
-        if (index < 0)
-          return ParamValueMissing;
+        long long hash = mBitmapSection->getHash();
 
-        if (mRepresentationSection->getValueByIndex(index,value))
+        int index = 0;
+        if (GRID::indexCache.getIndex(hash,idx,index))
         {
-          addCachedValue(idx,value);
-          return value;
+          if (index < 0)
+            return ParamValueMissing;
+
+          if (mRepresentationSection->getValueByIndex(index,value))
+          {
+            addCachedValue(idx,value);
+            return value;
+          }
+          else
+          {
+            return ParamValueMissing;
+          }
         }
         else
         {
-          return ParamValueMissing;
-        }
-      }
-      else
-      {
-        T::IndexVector indexVector;
-        mBitmapSection->getIndexVector(cols*rows,indexVector);
-        GRID::indexCache.addIndexVector(hash,indexVector);
-        if (indexVector[idx] < 0)
-          return ParamValueMissing;
+          T::IndexVector indexVector;
+          mBitmapSection->getIndexVector(cols*rows,indexVector);
+          GRID::indexCache.addIndexVector(hash,indexVector);
+          if (indexVector[idx] < 0)
+            return ParamValueMissing;
 
-        if (mRepresentationSection->getValueByIndex(indexVector[idx],value))
-        {
-          addCachedValue(idx,value);
-          return value;
-        }
-        else
-        {
-          return ParamValueMissing;
+          if (mRepresentationSection->getValueByIndex(indexVector[idx],value))
+          {
+            addCachedValue(idx,value);
+            return value;
+          }
+          else
+          {
+            return ParamValueMissing;
+          }
         }
       }
     }

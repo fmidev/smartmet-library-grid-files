@@ -572,6 +572,48 @@ void getPointsInsideCircle(int gridWidth,int gridHeight,double origoX,double ori
 
 
 
+std::size_t getPolygonPathLength(T::Polygon_vec& polygonPath)
+{
+  try
+  {
+    std::size_t s = 0;
+    for (auto coordinates = polygonPath.begin(); coordinates != polygonPath.end(); ++coordinates)
+    {
+      s = s + coordinates->size();
+    }
+    return s;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void convertToPointVector(T::Polygon_vec& polygonPath,T::Coordinate_vec& polygonPoints)
+{
+  try
+  {
+    for (auto coordinates = polygonPath.begin(); coordinates != polygonPath.end(); ++coordinates)
+    {
+      for (auto cc=coordinates->begin(); cc != coordinates->end(); ++cc)
+        polygonPoints.push_back(*cc);
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
 void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,T::Polygon_vec& polygonPath)
 {
   try
