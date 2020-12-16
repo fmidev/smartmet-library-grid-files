@@ -600,7 +600,7 @@ std::size_t GridDefinition::getGridColumnCount() const
   {
     auto d = getGridDimensions();
     if (d.getDimensions() > 1)
-      return d.ny();
+      return d.nx();
 
     return 0;
   }
