@@ -2710,4 +2710,403 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
 }
 
 
+
+
+std::uint8_t read_uint8(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 1) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","1");
+      throw exception;
+    }
+
+    unsigned char* rPtr = dataPtr + readPos;
+    unsigned char val = rPtr[0];
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::uint16_t read_uint16(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 2) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","2");
+      throw exception;
+    }
+
+    unsigned char* rPtr = dataPtr + readPos;
+    unsigned short a = rPtr[0];
+    unsigned short b = rPtr[1];
+    unsigned short val = static_cast<unsigned short>((a << 8 | b));
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::uint32_t read_uint24(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 3) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","3");
+      throw exception;
+    }
+
+    unsigned char* rPtr = dataPtr + readPos;
+    uint a = rPtr[0];
+    uint b = rPtr[1];
+    uint c = rPtr[2];
+    uint val =  static_cast<unsigned int>((a << 16 | b << 8 | c));
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::uint32_t read_uint32(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 4) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
+
+    unsigned char* rPtr = dataPtr + readPos;
+
+    uint a = rPtr[0];
+    uint b = rPtr[1];
+    uint c = rPtr[2];
+    uint d = rPtr[3];
+    uint val =  static_cast<unsigned int>((a << 24 | b << 16 | c << 8 | d));
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::uint64_t read_uint64(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 8) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","8");
+      throw exception;
+    }
+
+    unsigned char* rPtr = dataPtr + readPos;
+
+    ulonglong a = rPtr[0];
+    ulonglong b = rPtr[1];
+    ulonglong c = rPtr[2];
+    ulonglong d = rPtr[3];
+    ulonglong e = rPtr[4];
+    ulonglong f = rPtr[5];
+    ulonglong g = rPtr[6];
+    ulonglong h = rPtr[7];
+    ulonglong val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::int8_t read_int8(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 1) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","1");
+      throw exception;
+    }
+
+    unsigned char* rPtr = dataPtr + readPos;
+    unsigned char a = rPtr[0];
+    unsigned char val = static_cast<char>((1 - ((a & 128) >> 6)) * (a & 127));
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::int16_t read_int16(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 2) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","2");
+      throw exception;
+    }
+
+    unsigned char* rPtr = dataPtr + readPos;
+
+    unsigned char a = rPtr[0];
+    unsigned char b = rPtr[1];
+    short val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::int32_t read_int24(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 3) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","3");
+      throw exception;
+    }
+
+    unsigned char* rPtr = dataPtr + readPos;
+    unsigned char a = rPtr[0];
+    unsigned char b = rPtr[1];
+    unsigned char c = rPtr[2];
+    int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8));
+
+    val = val / 256;
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::int32_t read_int32(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 4) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
+
+    unsigned char* rPtr = dataPtr + readPos;
+    unsigned char a = rPtr[0];
+    unsigned char b = rPtr[1];
+    unsigned char c = rPtr[2];
+    unsigned char d = rPtr[3];
+    int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::float_t read_float(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 4) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
+
+    float val = 0.0;
+
+    unsigned char* f = reinterpret_cast<unsigned char*>(&val);
+
+    unsigned char* rPtr = dataPtr + readPos;
+
+    f[0] = rPtr[3];
+    f[1] = rPtr[2];
+    f[2] = rPtr[1];
+    f[3] = rPtr[0];
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::double_t read_double(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 8) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","8");
+      throw exception;
+    }
+
+    double val = 0.0;
+
+    unsigned char* f = reinterpret_cast<unsigned char*>(&val);
+
+    unsigned char* rPtr = dataPtr + readPos;
+
+    f[0] = rPtr[7];
+    f[1] = rPtr[6];
+    f[2] = rPtr[5];
+    f[3] = rPtr[4];
+    f[4] = rPtr[3];
+    f[5] = rPtr[2];
+    f[6] = rPtr[1];
+    f[7] = rPtr[0];
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+std::float_t read_ibmFloat(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+{
+  try
+  {
+    if ((readPos + 4) > dataSize)
+    {
+      Fmi::Exception exception(BCP,"Trying to read outside of the given memory area!");
+      exception.addParameter("Read position",uint64_toHex(readPos));
+      exception.addParameter("Data size",std::to_string(dataSize));
+      exception.addParameter("Bytes requested","4");
+      throw exception;
+    }
+
+    unsigned char* rPtr = dataPtr + readPos;
+
+    unsigned char a = rPtr[0];
+    unsigned char b = rPtr[1];
+    unsigned char c = rPtr[2];
+    unsigned char d = rPtr[3];
+
+    int mant = ( b &0xFF) << 16 | (c & 0xFF ) << 8 | ( d & 0xFF);
+    if (mant == 0)
+      return 0.0;
+
+    int sgn = -(((a & 128) >> 6) - 1);
+    int exp = (a & 127) - 64;
+
+    return (float) (sgn * int_power(16.0, exp - 6) * mant);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 }  // Namespace SmartMet

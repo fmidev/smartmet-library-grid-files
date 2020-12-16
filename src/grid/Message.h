@@ -322,6 +322,8 @@ class Message
     uint                        mVirtualFileId;
     GridFile*                   mGridFilePtr;
     uchar                       mFileType;
+    std::size_t                 mRowCount;
+    std::size_t                 mColumnCount;
 
     short                       mDefaultInterpolationMethod;
 

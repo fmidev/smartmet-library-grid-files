@@ -520,6 +520,8 @@ void Message::read(MemoryReader& memoryReader)
     }
 
     mIsRead = true;
+    mRowCount = getGridRowCount();
+    mColumnCount = getGridColumnCount();
   }
   catch (...)
   {
@@ -2475,16 +2477,16 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
     int idx = 0;
 
-    auto rows = getGridOriginalRowCount();
-    auto cols = getGridOriginalColumnCount();
+    //auto rows = getGridOriginalRowCount();
+    //auto cols = getGridOriginalColumnCount();
 
-    if (grid_j >= rows)
+    if (grid_j >= mRowCount)
       return ParamValueMissing;
 
-    if (grid_i >= cols &&  !isGridGlobal())
+    if (grid_i >= mColumnCount &&  !isGridGlobal())
       return ParamValueMissing;
 
-    idx = C_INT((grid_j * cols) + (grid_i % cols));
+    idx = C_INT((grid_j * mColumnCount) + (grid_i % mColumnCount));
 
     if (idx < 0)
       return ParamValueMissing;
@@ -2492,8 +2494,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     T::ParamValue value = 0;
 
     // Trying to find a value from the point cache.
-
-    if (getCachedValue(idx,value))
+    if (mPointCacheEnabled && getCachedValue(idx,value))
       return value;
 
     if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
@@ -2502,7 +2503,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       {
         if (mDataSection->getValueByIndex(idx,value))
         {
-          addCachedValue(idx,value);
+          if (mPointCacheEnabled)
+            addCachedValue(idx,value);
           return value;
         }
       }
@@ -2520,7 +2522,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
           if (mDataSection->getValueByIndex(index,value))
           {
-            addCachedValue(idx,value);
+            if (mPointCacheEnabled)
+              addCachedValue(idx,value);
             return value;
           }
           else
@@ -2531,14 +2534,15 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         else
         {
           T::IndexVector indexVector;
-          mBitmapSection->getIndexVector((rows*cols),indexVector);
+          mBitmapSection->getIndexVector((mRowCount*mColumnCount),indexVector);
           GRID::indexCache.addIndexVector(hash,indexVector);
           if (indexVector[idx] < 0)
             return ParamValueMissing;
 
           if (mDataSection->getValueByIndex(indexVector[idx],value))
           {
-            addCachedValue(idx,value);
+            if (mPointCacheEnabled)
+              addCachedValue(idx,value);
             return value;
           }
           else
@@ -2566,7 +2570,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     if ((std::size_t)idx >= values.size())
       return ParamValueMissing;
 
-    addCachedValue(idx,values[idx]);
+    if (mPointCacheEnabled)
+      addCachedValue(idx,values[idx]);
     return values[idx];
   }
   catch (...)

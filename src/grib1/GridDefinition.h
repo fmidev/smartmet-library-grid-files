@@ -53,6 +53,7 @@ class GridDefinition
     virtual bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
+    virtual bool                getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double lat,double lon,double& x,double& y) const;
     virtual std::size_t         getGridOriginalColumnCount(std::size_t row) const;
     virtual std::size_t         getGridOriginalColumnCount() const;
     virtual std::size_t         getGridOriginalRowCount() const;

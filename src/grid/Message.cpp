@@ -64,6 +64,8 @@ Message::Message()
     mPointCacheEnabled = false;
     mFileType = 0;
     mVirtualFileId = 0;
+    mRowCount = 0;
+    mColumnCount = 0;
   }
   catch (...)
   {
@@ -107,6 +109,8 @@ Message::Message(const Message& message)
     mCacheHitCounter = 0;
     mPointCacheEnabled = message.mPointCacheEnabled;
     mFileType = message.mFileType;
+    mRowCount = message.mRowCount;
+    mColumnCount = message.mColumnCount;
   }
   catch (...)
   {

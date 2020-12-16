@@ -167,6 +167,24 @@ std::string base64_encode(unsigned char *data,size_t dataSize);
 
 void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& records);
 
+
+std::uint8_t  read_uint8(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::uint16_t read_uint16(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::uint32_t read_uint24(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::uint32_t read_uint32(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::uint64_t read_uint64(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::int8_t   read_int8(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::int16_t  read_int16(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::int32_t  read_int24(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::int32_t  read_int32(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::float_t  read_float(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::double_t read_double(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::float_t  read_ibmFloat(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+
+
+
+
+
 inline int num_compare(uint& v1, uint& v2)
 {
   if (v1 == v2)

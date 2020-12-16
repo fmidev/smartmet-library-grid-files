@@ -36,9 +36,19 @@ class PolarStereographicImpl : public PolarStereographic
 
   protected:
 
+    void                init() const;
+
+
     mutable OGRSpatialReference*          mSr_polarSterographic;
     mutable OGRCoordinateTransformation*  mCt_latlon2pst;
     mutable OGRCoordinateTransformation*  mCt_pst2latlon;
+
+    mutable double mDxx;
+    mutable double mDyy;
+    mutable double mStartX;
+    mutable double mStartY;
+    mutable bool   mInitialized;
+
 };
 
 }  // namespace GRIB1

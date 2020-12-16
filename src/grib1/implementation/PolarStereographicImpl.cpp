@@ -22,6 +22,11 @@ PolarStereographicImpl::PolarStereographicImpl()
     mSr_polarSterographic = nullptr;
     mCt_latlon2pst = nullptr;
     mCt_pst2latlon = nullptr;
+    mDxx = 0;
+    mDyy = 0;
+    mStartX = 0;
+    mStartY = 0;
+    mInitialized = false;
   }
   catch (...)
   {
@@ -136,43 +141,28 @@ T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinates() const
 {
   try
   {
+    if (!mInitialized)
+      init();
+
     T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     uint nx = mNx;
     uint ny = mNy;
 
-
-    double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
-    double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
-
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
-
-
-    unsigned char scanningMode = mScanningMode.getScanningMode();
-
-    if ((scanningMode & 0x80) != 0)
-      dx = -dx;
-
-    if ((scanningMode & 0x40) == 0)
-      dy = -dy;
-
-    mCt_latlon2pst->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
-
     coordinateList->reserve(nx*ny);
 
-    double y = latitudeOfFirstGridPoint;
+    double y = mStartY;
     for (uint j=0; j < ny; j++)
     {
-      double x = longitudeOfFirstGridPoint;
+      double x = mStartX;
 
       for (uint i=0; i < nx; i++)
       {
         T::Coordinate coord(x,y);
         coordinateList->push_back(coord);
-        x += dx;
+        x += mDxx;
       }
-      y += dy;
+      y += mDyy;
     }
 
     return coordinateList;
@@ -321,6 +311,40 @@ bool PolarStereographicImpl::getGridMetricCellSize(double& width,double& height)
 
 
 
+void PolarStereographicImpl::init() const
+{
+  try
+  {
+    if (mInitialized)
+      return;
+
+    mDxx = C_DOUBLE(mDxInMetres);
+    mDyy = C_DOUBLE(mDyInMetres);
+
+    unsigned char scanningMode = mScanningMode.getScanningMode();
+
+    if ((scanningMode & 0x80) != 0)
+      mDxx = -mDxx;
+
+    if ((scanningMode & 0x40) == 0)
+      mDyy = -mDyy;
+
+    mStartX = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
+    mStartY = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
+
+    mCt_latlon2pst->Transform(1,&mStartX,&mStartY);
+
+    mInitialized = true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 
 /*! \brief This method calculates the estimated grid position by using the original coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.
@@ -336,35 +360,16 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
 {
   try
   {
-    uint nx = mNx;
-    uint ny = mNy;
+    if (!mInitialized)
+      init();
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
-    double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
+    double xDiff = x - mStartX;
+    double yDiff = y - mStartY;
 
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
+    double i = xDiff / mDxx;
+    double j = yDiff / mDyy;
 
-    unsigned char scanningMode = mScanningMode.getScanningMode();
-
-    if ((scanningMode & 0x80) != 0)
-      dx = -dx;
-
-    if ((scanningMode & 0x40) == 0)
-      dy = -dy;
-
-    double fX = longitudeOfFirstGridPoint;
-    double fY = latitudeOfFirstGridPoint;
-
-    mCt_latlon2pst->Transform(1,&fX,&fY);
-
-    double xDiff = x - fX;
-    double yDiff = y - fY;
-
-    double i = xDiff / dx;
-    double j = yDiff / dy;
-
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(nx) ||  j > C_DOUBLE(ny))
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(mNx) ||  j > C_DOUBLE(mNy))
       return false;
 
     grid_i = i;

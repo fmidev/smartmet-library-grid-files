@@ -1302,7 +1302,7 @@ bool GridDefinition::getGridPointByLatLonCoordinatesNoCache(double lat,double lo
   {
     double x = 0, y = 0;
 
-    getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
+    getGridOriginalCoordinatesByLatLonCoordinatesNoCache(lat,lon,x,y);
     return getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
   }
   catch (...)
@@ -1452,6 +1452,38 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
   }
 }
 
+
+
+
+bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double lat,double lon,double& x,double& y) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mCoordinateTranformation_latlon2orig == nullptr)
+    {
+      OGRSpatialReference sr_latlon;
+      sr_latlon.importFromEPSG(4326);
+
+      if (mOrigSpatialReference == nullptr)
+        mOrigSpatialReference = mSpatialReference.Clone();
+
+      mCoordinateTranformation_latlon2orig = OGRCreateCoordinateTransformation(&sr_latlon,mOrigSpatialReference);
+      if (mCoordinateTranformation_latlon2orig == nullptr)
+        throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
+    }
+
+    x = lon;
+    y = lat;
+
+    mCoordinateTranformation_latlon2orig->Transform(1,&x,&y);
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
