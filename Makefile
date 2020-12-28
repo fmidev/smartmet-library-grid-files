@@ -5,6 +5,9 @@ INCDIR = smartmet/$(SUBNAME)
 
 REQUIRES = geos gdal
 
+# C++11 due to GEOS make_unique problems
+CXX_STD=c++11
+
 include $(shell echo $${PREFIX-/usr})/share/smartmet/devel/makefile.inc
 
 DEFINES = -DUNIX -D_REENTRANT -DUSE_UNSTABLE_GEOS_CPP_API
