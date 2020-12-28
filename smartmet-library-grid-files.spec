@@ -18,6 +18,7 @@ BuildRequires: smartmet-library-tron >= 20.12.28
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal32-devel
+BuildRequires: geos38-devel
 BuildRequires: make
 BuildRequires: libaec-devel
 BuildRequires: libjpeg-devel
