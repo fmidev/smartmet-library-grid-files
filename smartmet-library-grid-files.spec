@@ -17,7 +17,7 @@ BuildRequires: smartmet-library-macgyver >= 20.12.15
 BuildRequires: smartmet-library-tron >= 20.12.28
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
-BuildRequires: gdal-devel
+BuildRequires: gdal32-devel
 BuildRequires: make
 BuildRequires: libaec-devel
 BuildRequires: libjpeg-devel
@@ -32,7 +32,7 @@ Requires: boost169-iostreams
 Requires: boost169-regex
 Requires: boost169-system
 Requires: boost169-thread
-Requires: gdal-libs
+Requires: gdal32-libs
 Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
