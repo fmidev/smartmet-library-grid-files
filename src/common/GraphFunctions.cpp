@@ -12,6 +12,7 @@
 #include <stack>
 
 #include <geos/io/WKBWriter.h>
+#include <geos/version.h>
 #include <tron/FmiBuilder.h>
 #include <tron/Tron.h>
 #include <tron/SavitzkyGolay2D.h>
@@ -21,8 +22,6 @@
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
-
-
 
 namespace SmartMet
 {
@@ -38,7 +37,6 @@ std::vector<T::Point> gridPointsCache[GRID_POINT_CACHE_SIZE];
 std::size_t gridPointCacheHash[GRID_POINT_CACHE_SIZE] = {0};
 uint hashCounter = 0;
 ThreadLock pointCacheThreadLock;
-
 
 typedef boost::shared_ptr<geos::geom::Geometry> GeometryPtr;
 
@@ -1159,10 +1157,17 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
 
     bool worldwrap = false;
 
-    boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
-    itsGeomFactory.reset(new geos::geom::GeometryFactory());
+#if GEOS_VERSION_MAJOR == 3
+#if GEOS_VERSION_MINOR < 7
+    auto itsGeomFactory = boost::make_shared<geos::geom::GeometryFactory>();
     Tron::FmiBuilder builder(itsGeomFactory);
-
+#else
+    geos::geom::GeometryFactory::Ptr itsGeomFactory(geos::geom::GeometryFactory::create());
+    Tron::FmiBuilder builder(*itsGeomFactory);
+#endif
+#else
+#pragma message(Cannot handle current GEOS version correctly)
+#endif
 
     auto len = contourValues.size();
     for (size_t c = 0; c<len; c++)
@@ -1285,10 +1290,17 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
       throw Fmi::Exception(BCP,"There should be the same number of contour high and low values!");
     }
 
-    boost::shared_ptr<geos::geom::GeometryFactory> itsGeomFactory;
-    itsGeomFactory.reset(new geos::geom::GeometryFactory());
+#if GEOS_VERSION_MAJOR == 3
+#if GEOS_VERSION_MINOR < 7
+    auto itsGeomFactory = boost::make_shared<geos::geom::GeometryFactory>();
     Tron::FmiBuilder builder(itsGeomFactory);
-
+#else
+    geos::geom::GeometryFactory::Ptr itsGeomFactory(geos::geom::GeometryFactory::create());
+    Tron::FmiBuilder builder(*itsGeomFactory);
+#endif
+#else
+#pragma message(Cannot handle current GEOS version correctly)
+#endif
 
     for (size_t c = 0; c<len; c++)
     {

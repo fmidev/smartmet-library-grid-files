@@ -4,7 +4,7 @@
 
 #include <vector>
 #include <boost/optional.hpp>
-#include <gdal/ogr_spatialref.h>
+#include <ogr_spatialref.h>
 
 
 /*! \brief  The function converts latlon coordinates to rotated latlon coordinates. */

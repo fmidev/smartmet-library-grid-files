@@ -10,7 +10,7 @@
 #include "definition/LatLonSettings.h"
 #include "definition/RotationSettings.h"
 
-#include <gdal/ogr_spatialref.h>
+#include <ogr_spatialref.h>
 #include <map>
 
 

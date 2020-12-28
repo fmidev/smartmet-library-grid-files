@@ -7,7 +7,7 @@
 #include <macgyver/Exception.h>
 #include <newbase/NFmiSvgPath.h>
 #include <set>
-#include <gdal/ogr_spatialref.h>
+#include <ogr_spatialref.h>
 
 
 namespace SmartMet

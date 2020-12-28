@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 20.12.3
+Version: 20.12.28
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,10 +11,10 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 20.11.30
-BuildRequires: smartmet-library-spine-devel >= 20.11.23
-BuildRequires: smartmet-library-macgyver >= 20.11.24
-BuildRequires: smartmet-library-tron >= 20.4.18
+BuildRequires: smartmet-library-newbase-devel >= 20.12.15
+BuildRequires: smartmet-library-spine-devel >= 20.12.15
+BuildRequires: smartmet-library-macgyver >= 20.12.15
+BuildRequires: smartmet-library-tron >= 20.12.28
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal-devel
@@ -36,9 +36,9 @@ Requires: gdal-libs
 Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 20.11.30
-Requires: smartmet-library-macgyver >= 20.11.24
-Requires: smartmet-library-spine >= 20.11.23
+Requires: smartmet-library-newbase >= 20.12.15
+Requires: smartmet-library-macgyver >= 20.12.15
+Requires: smartmet-library-spine >= 20.12.15
 
 %description
 FMI Grid File handling library
@@ -77,6 +77,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Dec 28 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.12.28-1.fmi
+- Performance improvements
+- Fixed a grid dimension bug
 * Thu Dec  3 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.12.3-1.fmi
 - Added polygon path length calculation
 - Optimized getting grid values by grid point
