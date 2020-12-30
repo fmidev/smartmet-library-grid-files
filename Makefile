@@ -13,7 +13,6 @@ include $(shell echo $${PREFIX-/usr})/share/smartmet/devel/makefile.inc
 DEFINES = -DUNIX -D_REENTRANT -DUSE_UNSTABLE_GEOS_CPP_API
 
 LIBS += $(REQUIRED_LIBS) \
-	-L/usr/local/lib -lopenjpeg \
 	-lsmartmet-newbase \
 	-lsmartmet-spine \
 	-lsmartmet-macgyver \

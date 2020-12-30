@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 20.12.28
+Version: 20.12.30
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -23,7 +23,6 @@ BuildRequires: make
 BuildRequires: libaec-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libjpeg-turbo-devel
-BuildRequires: openjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: libjasper-devel
 Provides: %{SPECNAME}
@@ -34,7 +33,6 @@ Requires: boost169-regex
 Requires: boost169-system
 Requires: boost169-thread
 Requires: gdal32-libs
-Requires: openjpeg
 Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 20.12.15
@@ -78,6 +76,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Dec 30 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.12.30-1.fmi
+- Removed openjpeg dependency
 * Mon Dec 28 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.12.28-1.fmi
 - Performance improvements
 - Fixed a grid dimension bug
