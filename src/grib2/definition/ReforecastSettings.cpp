@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ReforecastSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,22 +21,7 @@ namespace GRIB2 {
 ReforecastSettings::ReforecastSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ReforecastSettings::ReforecastSettings(const ReforecastSettings &other) {
-  try {
-    mYearOfModelVersion = other.mYearOfModelVersion;
-    mMonthOfModelVersion = other.mMonthOfModelVersion;
-    mDayOfModelVersion = other.mDayOfModelVersion;
-    mHourOfModelVersion = other.mHourOfModelVersion;
-    mMinuteOfModelVersion = other.mMinuteOfModelVersion;
-    mSecondOfModelVersion = other.mSecondOfModelVersion;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -59,7 +44,7 @@ void ReforecastSettings::read(MemoryReader &memoryReader) {
     mMinuteOfModelVersion = memoryReader.read_UInt8_opt();
     mSecondOfModelVersion = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -77,7 +62,7 @@ void ReforecastSettings::write(DataWriter &dataWriter) {
     dataWriter << mMinuteOfModelVersion;
     dataWriter << mSecondOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -103,7 +88,7 @@ void ReforecastSettings::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sReforecastSettings.SecondOfModelVersion", prefix.c_str());
     attributeList.addAttribute(name, toString(mSecondOfModelVersion));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -124,7 +109,7 @@ void ReforecastSettings::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "- MinuteOfModelVersion = " << toString(mMinuteOfModelVersion) << "\n";
     stream << space(level) << "- SecondOfModelVersion = " << toString(mSecondOfModelVersion) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -147,7 +132,7 @@ T::Hash ReforecastSettings::countHash() {
       boost::hash_combine(seed, *mSecondOfModelVersion);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -157,7 +142,7 @@ const T::UInt16_opt &ReforecastSettings::getYearOfModelVersion() const {
   try {
     return mYearOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -167,7 +152,7 @@ const T::UInt8_opt &ReforecastSettings::getMonthOfModelVersion() const {
   try {
     return mMonthOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -177,7 +162,7 @@ const T::UInt8_opt &ReforecastSettings::getDayOfModelVersion() const {
   try {
     return mDayOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -187,7 +172,7 @@ const T::UInt8_opt &ReforecastSettings::getHourOfModelVersion() const {
   try {
     return mHourOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -197,7 +182,7 @@ const T::UInt8_opt &ReforecastSettings::getMinuteOfModelVersion() const {
   try {
     return mMinuteOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -207,7 +192,7 @@ const T::UInt8_opt &ReforecastSettings::getSecondOfModelVersion() const {
   try {
     return mSecondOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -215,7 +200,7 @@ void ReforecastSettings::setYearOfModelVersion(T::UInt16_opt yearOfModelVersion)
   try {
     mYearOfModelVersion = yearOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -223,7 +208,7 @@ void ReforecastSettings::setMonthOfModelVersion(T::UInt8_opt monthOfModelVersion
   try {
     mMonthOfModelVersion = monthOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -231,7 +216,7 @@ void ReforecastSettings::setDayOfModelVersion(T::UInt8_opt dayOfModelVersion) {
   try {
     mDayOfModelVersion = dayOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -239,7 +224,7 @@ void ReforecastSettings::setHourOfModelVersion(T::UInt8_opt hourOfModelVersion) 
   try {
     mHourOfModelVersion = hourOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -247,7 +232,7 @@ void ReforecastSettings::setMinuteOfModelVersion(T::UInt8_opt minuteOfModelVersi
   try {
     mMinuteOfModelVersion = minuteOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -255,7 +240,7 @@ void ReforecastSettings::setSecondOfModelVersion(T::UInt8_opt secondOfModelVersi
   try {
     mSecondOfModelVersion = secondOfModelVersion;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

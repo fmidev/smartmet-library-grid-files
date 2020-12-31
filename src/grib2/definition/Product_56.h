@@ -22,7 +22,6 @@ namespace GRIB2 {
 class Product_56 : public ProductDefinition {
 public:
   Product_56();
-  Product_56(const Product_56 &other);
   virtual ~Product_56();
 
   virtual uint getTemplateNumber() const;
@@ -43,18 +42,8 @@ public:
   void setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForecastsInEnsemble);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
   // # TEMPLATE 4.56, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for spatio-temporal changing tile
-  // parameters
-  //
-  // # Note: This template is deprecated. Template 4.59 should be used instead.
+  // parameters # Note: This template is deprecated. Template 4.59 should be used instead.
   //
   // include "grib2/template.4.parameter_tile.def"
 

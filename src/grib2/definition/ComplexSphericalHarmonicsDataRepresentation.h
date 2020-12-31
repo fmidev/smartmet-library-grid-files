@@ -21,7 +21,6 @@ namespace GRIB2 {
 class ComplexSphericalHarmonicsDataRepresentation : public RepresentationDefinition {
 public:
   ComplexSphericalHarmonicsDataRepresentation();
-  ComplexSphericalHarmonicsDataRepresentation(const ComplexSphericalHarmonicsDataRepresentation &other);
   virtual ~ComplexSphericalHarmonicsDataRepresentation();
 
   virtual uint getTemplateNumber() const;
@@ -42,16 +41,7 @@ public:
   void setUnpackedSubsetPrecision(T::UInt8_opt unpackedSubsetPrecision);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
-  //
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 5.51, Spherical harmonics data - complex packing
   //
@@ -74,8 +64,8 @@ protected:
   T::Int32_opt mLaplacianScalingFactor;
 
   //
-  // meta  data.laplacianOperator         scale(laplacianScalingFactor,one,million,truncateLaplacian) ;
-  // meta  laplacianOperatorIsSet    evaluate(laplacianScalingFactor != laplacianScalingFactorUnset && !computeLaplacianOperator);
+  // meta  data.laplacianOperator scale(laplacianScalingFactor,one,million,truncateLaplacian) ;
+  // meta  laplacianOperatorIsSet evaluate(laplacianScalingFactor != laplacianScalingFactorUnset && !computeLaplacianOperator);
   //
   // transient JS= 20 ;
   // transient KS=20 ;

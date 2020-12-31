@@ -19,7 +19,6 @@ namespace GRIB2 {
 class ParameterPartitionSettings {
 public:
   ParameterPartitionSettings();
-  ParameterPartitionSettings(const ParameterPartitionSettings &other);
   virtual ~ParameterPartitionSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -56,14 +55,7 @@ public:
   void setForecastTime(T::Int32_opt forecastTime);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // #  Parameter category
   // codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;

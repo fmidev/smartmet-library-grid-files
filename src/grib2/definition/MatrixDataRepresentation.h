@@ -21,7 +21,6 @@ namespace GRIB2 {
 class MatrixDataRepresentation : public RepresentationDefinition {
 public:
   MatrixDataRepresentation();
-  MatrixDataRepresentation(const MatrixDataRepresentation &other);
   virtual ~MatrixDataRepresentation();
 
   virtual uint getTemplateNumber() const;
@@ -60,24 +59,14 @@ public:
   void setCoefsSecond(float coefsSecond);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  //
-  // # START 2/template.5.1 ----------------------------------------------------------------------
   // # TEMPLATE 5.1, Matrix values at grid point -simple packing
   //
   // include "grib2/template.5.packing.def";
 
   mutable PackingSettings mPacking;
 
-  //
   //
   // unsigned[1] matrixBitmapsPresent ;
 

@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "CategoricalSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,23 +21,7 @@ namespace GRIB2 {
 CategoricalSettings::CategoricalSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-CategoricalSettings::CategoricalSettings(const CategoricalSettings &other) {
-  try {
-    mNumberOfCategories = other.mNumberOfCategories;
-    mCategoryType = other.mCategoryType;
-    mCodeFigure = other.mCodeFigure;
-    mScaleFactorOfLowerLimit = other.mScaleFactorOfLowerLimit;
-    mScaledValueOfLowerLimit = other.mScaledValueOfLowerLimit;
-    mScaleFactorOfUpperLimit = other.mScaleFactorOfUpperLimit;
-    mScaledValueOfUpperLimit = other.mScaledValueOfUpperLimit;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -61,7 +45,7 @@ void CategoricalSettings::read(MemoryReader &memoryReader) {
     mScaleFactorOfUpperLimit = memoryReader.read_UInt8_opt();
     mScaledValueOfUpperLimit = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -80,7 +64,7 @@ void CategoricalSettings::write(DataWriter &dataWriter) {
     dataWriter << mScaleFactorOfUpperLimit;
     dataWriter << mScaledValueOfUpperLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -108,7 +92,7 @@ void CategoricalSettings::getAttributeList(std::string prefix, T::AttributeList 
     sprintf(name, "%sCategoricalSettings.ScaledValueOfUpperLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfUpperLimit));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -130,7 +114,7 @@ void CategoricalSettings::print(std::ostream &stream, uint level, uint optionFla
     stream << space(level) << "- ScaleFactorOfUpperLimit = " << toString(mScaleFactorOfUpperLimit) << "\n";
     stream << space(level) << "- ScaledValueOfUpperLimit = " << toString(mScaledValueOfUpperLimit) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +139,7 @@ T::Hash CategoricalSettings::countHash() {
       boost::hash_combine(seed, *mScaledValueOfUpperLimit);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -165,7 +149,7 @@ const T::UInt8_opt &CategoricalSettings::getNumberOfCategories() const {
   try {
     return mNumberOfCategories;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -175,7 +159,7 @@ const T::UInt8_opt &CategoricalSettings::getCategoryType() const {
   try {
     return mCategoryType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -185,7 +169,7 @@ const T::UInt8_opt &CategoricalSettings::getCodeFigure() const {
   try {
     return mCodeFigure;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -195,7 +179,7 @@ const T::UInt8_opt &CategoricalSettings::getScaleFactorOfLowerLimit() const {
   try {
     return mScaleFactorOfLowerLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -205,7 +189,7 @@ const T::UInt32_opt &CategoricalSettings::getScaledValueOfLowerLimit() const {
   try {
     return mScaledValueOfLowerLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -215,7 +199,7 @@ const T::UInt8_opt &CategoricalSettings::getScaleFactorOfUpperLimit() const {
   try {
     return mScaleFactorOfUpperLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -225,7 +209,7 @@ const T::UInt32_opt &CategoricalSettings::getScaledValueOfUpperLimit() const {
   try {
     return mScaledValueOfUpperLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -233,7 +217,7 @@ void CategoricalSettings::setNumberOfCategories(T::UInt8_opt numberOfCategories)
   try {
     mNumberOfCategories = numberOfCategories;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -241,7 +225,7 @@ void CategoricalSettings::setCategoryType(T::UInt8_opt categoryType) {
   try {
     mCategoryType = categoryType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -249,7 +233,7 @@ void CategoricalSettings::setCodeFigure(T::UInt8_opt codeFigure) {
   try {
     mCodeFigure = codeFigure;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -257,7 +241,7 @@ void CategoricalSettings::setScaleFactorOfLowerLimit(T::UInt8_opt scaleFactorOfL
   try {
     mScaleFactorOfLowerLimit = scaleFactorOfLowerLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -265,7 +249,7 @@ void CategoricalSettings::setScaledValueOfLowerLimit(T::UInt32_opt scaledValueOf
   try {
     mScaledValueOfLowerLimit = scaledValueOfLowerLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -273,7 +257,7 @@ void CategoricalSettings::setScaleFactorOfUpperLimit(T::UInt8_opt scaleFactorOfU
   try {
     mScaleFactorOfUpperLimit = scaleFactorOfUpperLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -281,7 +265,7 @@ void CategoricalSettings::setScaledValueOfUpperLimit(T::UInt32_opt scaledValueOf
   try {
     mScaledValueOfUpperLimit = scaledValueOfUpperLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

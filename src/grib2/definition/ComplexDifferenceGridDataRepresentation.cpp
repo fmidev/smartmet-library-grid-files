@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ComplexDifferenceGridDataRepresentation.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,31 +21,7 @@ namespace GRIB2 {
 ComplexDifferenceGridDataRepresentation::ComplexDifferenceGridDataRepresentation() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ComplexDifferenceGridDataRepresentation::ComplexDifferenceGridDataRepresentation(const ComplexDifferenceGridDataRepresentation &other) : RepresentationDefinition(other) {
-  try {
-    mPacking = other.mPacking;
-    mOriginalValues = other.mOriginalValues;
-    mGroupSplittingMethodUsed = other.mGroupSplittingMethodUsed;
-    mMissingValueManagementUsed = other.mMissingValueManagementUsed;
-    mPrimaryMissingValueSubstitute = other.mPrimaryMissingValueSubstitute;
-    mSecondaryMissingValueSubstitute = other.mSecondaryMissingValueSubstitute;
-    mNumberOfGroupsOfDataValues = other.mNumberOfGroupsOfDataValues;
-    mReferenceForGroupWidths = other.mReferenceForGroupWidths;
-    mNumberOfBitsUsedForTheGroupWidths = other.mNumberOfBitsUsedForTheGroupWidths;
-    mReferenceForGroupLengths = other.mReferenceForGroupLengths;
-    mLengthIncrementForTheGroupLengths = other.mLengthIncrementForTheGroupLengths;
-    mTrueLengthOfLastGroup = other.mTrueLengthOfLastGroup;
-    mNumberOfBitsForScaledGroupLengths = other.mNumberOfBitsForScaledGroupLengths;
-    mOrderOfSpatialDifferencing = other.mOrderOfSpatialDifferencing;
-    mNumberOfOctetsExtraDescriptors = other.mNumberOfOctetsExtraDescriptors;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -77,7 +53,7 @@ void ComplexDifferenceGridDataRepresentation::read(MemoryReader &memoryReader) {
     mOrderOfSpatialDifferencing = memoryReader.read_UInt8_opt();
     mNumberOfOctetsExtraDescriptors = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -104,7 +80,7 @@ void ComplexDifferenceGridDataRepresentation::write(DataWriter &dataWriter) {
     dataWriter << mOrderOfSpatialDifferencing;
     dataWriter << mNumberOfOctetsExtraDescriptors;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -148,7 +124,7 @@ void ComplexDifferenceGridDataRepresentation::getAttributeList(std::string prefi
     sprintf(name, "%sComplexDifferenceGridDataRepresentation.NumberOfOctetsExtraDescriptors", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfOctetsExtraDescriptors));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -178,7 +154,7 @@ void ComplexDifferenceGridDataRepresentation::print(std::ostream &stream, uint l
     stream << space(level) << "- OrderOfSpatialDifferencing = " << toString(mOrderOfSpatialDifferencing) << "\n";
     stream << space(level) << "- NumberOfOctetsExtraDescriptors = " << toString(mNumberOfOctetsExtraDescriptors) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -217,7 +193,7 @@ T::Hash ComplexDifferenceGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -231,7 +207,7 @@ RepresentationDefinition *ComplexDifferenceGridDataRepresentation::createReprese
   try {
     return static_cast<RepresentationDefinition *>(new ComplexDifferenceGridDataRepresentation(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -241,7 +217,7 @@ PackingSettings *ComplexDifferenceGridDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -251,7 +227,7 @@ OriginalValuesSettings *ComplexDifferenceGridDataRepresentation::getOriginalValu
   try {
     return static_cast<OriginalValuesSettings *>(&mOriginalValues);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -261,7 +237,7 @@ const T::UInt8_opt &ComplexDifferenceGridDataRepresentation::getGroupSplittingMe
   try {
     return mGroupSplittingMethodUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -271,7 +247,7 @@ const T::UInt8_opt &ComplexDifferenceGridDataRepresentation::getMissingValueMana
   try {
     return mMissingValueManagementUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -281,7 +257,7 @@ const T::UInt32_opt &ComplexDifferenceGridDataRepresentation::getPrimaryMissingV
   try {
     return mPrimaryMissingValueSubstitute;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -291,7 +267,7 @@ const T::UInt32_opt &ComplexDifferenceGridDataRepresentation::getSecondaryMissin
   try {
     return mSecondaryMissingValueSubstitute;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -301,7 +277,7 @@ const T::UInt32_opt &ComplexDifferenceGridDataRepresentation::getNumberOfGroupsO
   try {
     return mNumberOfGroupsOfDataValues;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -311,7 +287,7 @@ const T::UInt8_opt &ComplexDifferenceGridDataRepresentation::getReferenceForGrou
   try {
     return mReferenceForGroupWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -321,7 +297,7 @@ const T::UInt8_opt &ComplexDifferenceGridDataRepresentation::getNumberOfBitsUsed
   try {
     return mNumberOfBitsUsedForTheGroupWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -331,7 +307,7 @@ const T::UInt32_opt &ComplexDifferenceGridDataRepresentation::getReferenceForGro
   try {
     return mReferenceForGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -341,7 +317,7 @@ const T::UInt8_opt &ComplexDifferenceGridDataRepresentation::getLengthIncrementF
   try {
     return mLengthIncrementForTheGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -351,7 +327,7 @@ const T::UInt32_opt &ComplexDifferenceGridDataRepresentation::getTrueLengthOfLas
   try {
     return mTrueLengthOfLastGroup;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -361,7 +337,7 @@ const T::UInt8_opt &ComplexDifferenceGridDataRepresentation::getNumberOfBitsForS
   try {
     return mNumberOfBitsForScaledGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -371,7 +347,7 @@ const T::UInt8_opt &ComplexDifferenceGridDataRepresentation::getOrderOfSpatialDi
   try {
     return mOrderOfSpatialDifferencing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -381,7 +357,7 @@ const T::UInt8_opt &ComplexDifferenceGridDataRepresentation::getNumberOfOctetsEx
   try {
     return mNumberOfOctetsExtraDescriptors;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -389,7 +365,7 @@ void ComplexDifferenceGridDataRepresentation::setPacking(PackingSettings &packin
   try {
     mPacking = packing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -397,7 +373,7 @@ void ComplexDifferenceGridDataRepresentation::setOriginalValues(OriginalValuesSe
   try {
     mOriginalValues = originalValues;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -405,7 +381,7 @@ void ComplexDifferenceGridDataRepresentation::setGroupSplittingMethodUsed(T::UIn
   try {
     mGroupSplittingMethodUsed = groupSplittingMethodUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -413,7 +389,7 @@ void ComplexDifferenceGridDataRepresentation::setMissingValueManagementUsed(T::U
   try {
     mMissingValueManagementUsed = missingValueManagementUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -421,7 +397,7 @@ void ComplexDifferenceGridDataRepresentation::setPrimaryMissingValueSubstitute(T
   try {
     mPrimaryMissingValueSubstitute = primaryMissingValueSubstitute;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -429,7 +405,7 @@ void ComplexDifferenceGridDataRepresentation::setSecondaryMissingValueSubstitute
   try {
     mSecondaryMissingValueSubstitute = secondaryMissingValueSubstitute;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -437,7 +413,7 @@ void ComplexDifferenceGridDataRepresentation::setNumberOfGroupsOfDataValues(T::U
   try {
     mNumberOfGroupsOfDataValues = numberOfGroupsOfDataValues;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -445,7 +421,7 @@ void ComplexDifferenceGridDataRepresentation::setReferenceForGroupWidths(T::UInt
   try {
     mReferenceForGroupWidths = referenceForGroupWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -453,7 +429,7 @@ void ComplexDifferenceGridDataRepresentation::setNumberOfBitsUsedForTheGroupWidt
   try {
     mNumberOfBitsUsedForTheGroupWidths = numberOfBitsUsedForTheGroupWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -461,7 +437,7 @@ void ComplexDifferenceGridDataRepresentation::setReferenceForGroupLengths(T::UIn
   try {
     mReferenceForGroupLengths = referenceForGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -469,7 +445,7 @@ void ComplexDifferenceGridDataRepresentation::setLengthIncrementForTheGroupLengt
   try {
     mLengthIncrementForTheGroupLengths = lengthIncrementForTheGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -477,7 +453,7 @@ void ComplexDifferenceGridDataRepresentation::setTrueLengthOfLastGroup(T::UInt32
   try {
     mTrueLengthOfLastGroup = trueLengthOfLastGroup;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -485,7 +461,7 @@ void ComplexDifferenceGridDataRepresentation::setNumberOfBitsForScaledGroupLengt
   try {
     mNumberOfBitsForScaledGroupLengths = numberOfBitsForScaledGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -493,7 +469,7 @@ void ComplexDifferenceGridDataRepresentation::setOrderOfSpatialDifferencing(T::U
   try {
     mOrderOfSpatialDifferencing = orderOfSpatialDifferencing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -501,7 +477,7 @@ void ComplexDifferenceGridDataRepresentation::setNumberOfOctetsExtraDescriptors(
   try {
     mNumberOfOctetsExtraDescriptors = numberOfOctetsExtraDescriptors;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

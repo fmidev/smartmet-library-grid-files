@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "SpaceView.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,31 +21,7 @@ namespace GRIB2 {
 SpaceView::SpaceView() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-SpaceView::SpaceView(const SpaceView &other) : GridDefinition(other) {
-  try {
-    mEarthShape = other.mEarthShape;
-    mNx = other.mNx;
-    mNy = other.mNy;
-    mLatitudeOfSubSatellitePoint = other.mLatitudeOfSubSatellitePoint;
-    mLongitudeOfSubSatellitePoint = other.mLongitudeOfSubSatellitePoint;
-    mResolution = other.mResolution;
-    mDx = other.mDx;
-    mDy = other.mDy;
-    mXp = other.mXp;
-    mYp = other.mYp;
-    mScanningMode = other.mScanningMode;
-    mOrientationOfTheGrid = other.mOrientationOfTheGrid;
-    mNr = other.mNr;
-    mXo = other.mXo;
-    mYo = other.mYo;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -77,7 +53,7 @@ void SpaceView::read(MemoryReader &memoryReader) {
     mXo = memoryReader.read_UInt32_opt();
     mYo = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -104,7 +80,7 @@ void SpaceView::write(DataWriter &dataWriter) {
     dataWriter << mXo;
     dataWriter << mYo;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -148,7 +124,7 @@ void SpaceView::getAttributeList(std::string prefix, T::AttributeList &attribute
     sprintf(name, "%sSpaceView.Yo", prefix.c_str());
     attributeList.addAttribute(name, toString(mYo));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -178,7 +154,7 @@ void SpaceView::print(std::ostream &stream, uint level, uint optionFlags) const 
     stream << space(level) << "- Xo = " << toString(mXo) << "\n";
     stream << space(level) << "- Yo = " << toString(mYo) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -216,7 +192,7 @@ T::Hash SpaceView::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -230,7 +206,7 @@ GridDefinition *SpaceView::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new SpaceView(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -240,7 +216,7 @@ EarthShapeSettings *SpaceView::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -250,7 +226,7 @@ const T::UInt32_opt &SpaceView::getNx() const {
   try {
     return mNx;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -260,7 +236,7 @@ const T::UInt32_opt &SpaceView::getNy() const {
   try {
     return mNy;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -270,7 +246,7 @@ const T::Int32_opt &SpaceView::getLatitudeOfSubSatellitePoint() const {
   try {
     return mLatitudeOfSubSatellitePoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -280,7 +256,7 @@ const T::Int32_opt &SpaceView::getLongitudeOfSubSatellitePoint() const {
   try {
     return mLongitudeOfSubSatellitePoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -290,7 +266,7 @@ ResolutionSettings *SpaceView::getResolution() const {
   try {
     return static_cast<ResolutionSettings *>(&mResolution);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -300,7 +276,7 @@ const T::UInt32_opt &SpaceView::getDx() const {
   try {
     return mDx;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -310,7 +286,7 @@ const T::UInt32_opt &SpaceView::getDy() const {
   try {
     return mDy;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -320,7 +296,7 @@ const T::UInt32_opt &SpaceView::getXp() const {
   try {
     return mXp;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -330,7 +306,7 @@ const T::UInt32_opt &SpaceView::getYp() const {
   try {
     return mYp;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -340,7 +316,7 @@ ScanningModeSettings *SpaceView::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -350,7 +326,7 @@ const T::Int32_opt &SpaceView::getOrientationOfTheGrid() const {
   try {
     return mOrientationOfTheGrid;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -360,7 +336,7 @@ const T::UInt32_opt &SpaceView::getNr() const {
   try {
     return mNr;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -370,7 +346,7 @@ const T::UInt32_opt &SpaceView::getXo() const {
   try {
     return mXo;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -380,7 +356,7 @@ const T::UInt32_opt &SpaceView::getYo() const {
   try {
     return mYo;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -388,7 +364,7 @@ void SpaceView::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -396,7 +372,7 @@ void SpaceView::setNx(T::UInt32_opt nx) {
   try {
     mNx = nx;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -404,7 +380,7 @@ void SpaceView::setNy(T::UInt32_opt ny) {
   try {
     mNy = ny;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -412,7 +388,7 @@ void SpaceView::setLatitudeOfSubSatellitePoint(T::Int32_opt latitudeOfSubSatelli
   try {
     mLatitudeOfSubSatellitePoint = latitudeOfSubSatellitePoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -420,7 +396,7 @@ void SpaceView::setLongitudeOfSubSatellitePoint(T::Int32_opt longitudeOfSubSatel
   try {
     mLongitudeOfSubSatellitePoint = longitudeOfSubSatellitePoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -428,7 +404,7 @@ void SpaceView::setResolution(ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -436,7 +412,7 @@ void SpaceView::setDx(T::UInt32_opt dx) {
   try {
     mDx = dx;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -444,7 +420,7 @@ void SpaceView::setDy(T::UInt32_opt dy) {
   try {
     mDy = dy;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -452,7 +428,7 @@ void SpaceView::setXp(T::UInt32_opt xp) {
   try {
     mXp = xp;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -460,7 +436,7 @@ void SpaceView::setYp(T::UInt32_opt yp) {
   try {
     mYp = yp;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -468,7 +444,7 @@ void SpaceView::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -476,7 +452,7 @@ void SpaceView::setOrientationOfTheGrid(T::Int32_opt orientationOfTheGrid) {
   try {
     mOrientationOfTheGrid = orientationOfTheGrid;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -484,7 +460,7 @@ void SpaceView::setNr(T::UInt32_opt nr) {
   try {
     mNr = nr;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -492,7 +468,7 @@ void SpaceView::setXo(T::UInt32_opt xo) {
   try {
     mXo = xo;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -500,7 +476,7 @@ void SpaceView::setYo(T::UInt32_opt yo) {
   try {
     mYo = yo;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

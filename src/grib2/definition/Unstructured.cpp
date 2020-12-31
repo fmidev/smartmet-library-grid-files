@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "Unstructured.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,20 +22,7 @@ Unstructured::Unstructured() {
   try {
     mUuidOfHGrid = {0};
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-Unstructured::Unstructured(const Unstructured &other) : GridDefinition(other) {
-  try {
-    mShapeOfTheEarth = other.mShapeOfTheEarth;
-    mNumberOfGridUsed = other.mNumberOfGridUsed;
-    mNumberOfGridInReference = other.mNumberOfGridInReference;
-    mUuidOfHGrid = other.mUuidOfHGrid;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -56,7 +43,7 @@ void Unstructured::read(MemoryReader &memoryReader) {
     mNumberOfGridInReference = memoryReader.read_UInt8_opt();
     mUuidOfHGrid = memoryReader.read_uuid();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -72,7 +59,7 @@ void Unstructured::write(DataWriter &dataWriter) {
     dataWriter << mNumberOfGridInReference;
     dataWriter << mUuidOfHGrid;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -94,7 +81,7 @@ void Unstructured::getAttributeList(std::string prefix, T::AttributeList &attrib
     sprintf(name, "%sUnstructured.UuidOfHGrid", prefix.c_str());
     attributeList.addAttribute(name, toString(mUuidOfHGrid));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -113,7 +100,7 @@ void Unstructured::print(std::ostream &stream, uint level, uint optionFlags) con
     stream << space(level) << "- NumberOfGridInReference = " << toString(mNumberOfGridInReference) << "\n";
     stream << space(level) << "- UuidOfHGrid = " << toString(mUuidOfHGrid) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -131,7 +118,7 @@ T::Hash Unstructured::countHash() {
     boost::hash_combine(seed, mUuidOfHGrid);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -145,7 +132,7 @@ GridDefinition *Unstructured::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new Unstructured(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +142,7 @@ const T::UInt8_opt &Unstructured::getShapeOfTheEarth() const {
   try {
     return mShapeOfTheEarth;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -165,7 +152,7 @@ const T::UInt24_opt &Unstructured::getNumberOfGridUsed() const {
   try {
     return mNumberOfGridUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -175,7 +162,7 @@ const T::UInt8_opt &Unstructured::getNumberOfGridInReference() const {
   try {
     return mNumberOfGridInReference;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -185,7 +172,7 @@ const std::array<char, 16> &Unstructured::getUuidOfHGrid() const {
   try {
     return mUuidOfHGrid;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -193,7 +180,7 @@ void Unstructured::setShapeOfTheEarth(T::UInt8_opt shapeOfTheEarth) {
   try {
     mShapeOfTheEarth = shapeOfTheEarth;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -201,7 +188,7 @@ void Unstructured::setNumberOfGridUsed(T::UInt24_opt numberOfGridUsed) {
   try {
     mNumberOfGridUsed = numberOfGridUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -209,7 +196,7 @@ void Unstructured::setNumberOfGridInReference(T::UInt8_opt numberOfGridInReferen
   try {
     mNumberOfGridInReference = numberOfGridInReference;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -217,7 +204,7 @@ void Unstructured::setUuidOfHGrid(std::array<char, 16> uuidOfHGrid) {
   try {
     mUuidOfHGrid = uuidOfHGrid;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

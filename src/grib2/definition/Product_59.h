@@ -14,6 +14,7 @@
 #include "../ProductDefinition.h"
 #include "EpsSettings.h"
 #include "HorizontalSettings.h"
+#include "PointInTimeSettings.h"
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,7 +23,6 @@ namespace GRIB2 {
 class Product_59 : public ProductDefinition {
 public:
   Product_59();
-  Product_59(const Product_59 &other);
   virtual ~Product_59();
 
   virtual uint getTemplateNumber() const;
@@ -33,26 +33,26 @@ public:
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
+  PointInTimeSettings *getPointInTime() const;
+  void setPointInTime(PointInTimeSettings &pointInTime);
   HorizontalSettings *getHorizontal() const;
   void setHorizontal(HorizontalSettings &horizontal);
   EpsSettings *getEps() const;
   void setEps(EpsSettings &eps);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
+  //
   // # TEMPLATE 4.59, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for spatio-temporal changing tile
   // parameters
   //
   // # Use this instead of template 4.56
   //
   // include "grib2/template.4.parameter_tile.def"
+
+  // include "grib2/template.4.point_in_time.def"
+
+  mutable PointInTimeSettings mPointInTime;
 
   // include "grib2/template.4.horizontal.def"
 

@@ -19,7 +19,6 @@ namespace GRIB2 {
 class EarthShapeSettings {
 public:
   EarthShapeSettings();
-  EarthShapeSettings(const EarthShapeSettings &other);
   virtual ~EarthShapeSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -44,15 +43,7 @@ public:
   void setScaledValueOfEarthMinorAxis(T::UInt32_opt scaledValueOfEarthMinorAxis);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
+  // # Copyright 2005-2019 ECMWF.
   //
   // codetable[1] shapeOfTheEarth ('3.2.table',masterDir,localDir) : dump;
 
@@ -65,7 +56,7 @@ protected:
   T::UInt8_opt mScaleFactorOfRadiusOfSphericalEarth;
 
   //
-  // #  Scaled value of radius of spherical earth
+  // #  Scaled value of radius of spherical earth (in metres)
   // unsigned[4] scaledValueOfRadiusOfSphericalEarth = missing(): can_be_missing, edition_specific;
 
   T::UInt32_opt mScaledValueOfRadiusOfSphericalEarth;
@@ -144,8 +135,16 @@ protected:
   //        scaleFactorOfEarthMajorAxis, scaledValueOfEarthMajorAxis);
   //   meta earthMinorAxis from_scale_factor_scaled_value(
   //        scaleFactorOfEarthMinorAxis, scaledValueOfEarthMinorAxis);
-  //   meta earthMajorAxisInMetres scale(earthMajorAxis, thousand, one, zero);
-  //   meta earthMinorAxisInMetres scale(earthMinorAxis, thousand, one, zero);
+  //
+  //   # ECC-979
+  //   # The 'scale' accessor works with integers so rounds its first argument
+  //   # which is not what we want because the inputs are doubles with decimal
+  //   # expansions. So use the trick of dividing by 0.001 to multiply by 1000
+  //   #
+  //   # meta earthMajorAxisInMetres scale(earthMajorAxis, thousand, one, zero);
+  //   # meta earthMinorAxisInMetres scale(earthMinorAxis, thousand, one, zero);
+  //   meta earthMajorAxisInMetres divdouble(earthMajorAxis, 0.001);
+  //   meta earthMinorAxisInMetres divdouble(earthMinorAxis, 0.001);
   // }
   // _if (shapeOfTheEarth == 7){
   //   # Major and minor axes specified (in m) by data producer

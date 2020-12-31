@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "PackingSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,20 +22,7 @@ PackingSettings::PackingSettings() {
   try {
     mReferenceValue = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-PackingSettings::PackingSettings(const PackingSettings &other) {
-  try {
-    mReferenceValue = other.mReferenceValue;
-    mBinaryScaleFactor = other.mBinaryScaleFactor;
-    mDecimalScaleFactor = other.mDecimalScaleFactor;
-    mBitsPerValue = other.mBitsPerValue;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -56,7 +43,7 @@ void PackingSettings::read(MemoryReader &memoryReader) {
     mDecimalScaleFactor = memoryReader.read_Int16_opt();
     mBitsPerValue = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -72,7 +59,7 @@ void PackingSettings::write(DataWriter &dataWriter) {
     dataWriter << mDecimalScaleFactor;
     dataWriter << mBitsPerValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -94,7 +81,7 @@ void PackingSettings::getAttributeList(std::string prefix, T::AttributeList &att
     sprintf(name, "%sPackingSettings.BitsPerValue", prefix.c_str());
     attributeList.addAttribute(name, toString(mBitsPerValue));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -113,7 +100,7 @@ void PackingSettings::print(std::ostream &stream, uint level, uint optionFlags) 
     stream << space(level) << "- DecimalScaleFactor = " << toString(mDecimalScaleFactor) << "\n";
     stream << space(level) << "- BitsPerValue = " << toString(mBitsPerValue) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -131,7 +118,7 @@ T::Hash PackingSettings::countHash() {
       boost::hash_combine(seed, *mBitsPerValue);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -141,7 +128,7 @@ float PackingSettings::getReferenceValue() const {
   try {
     return mReferenceValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -151,7 +138,7 @@ const T::Int16_opt &PackingSettings::getBinaryScaleFactor() const {
   try {
     return mBinaryScaleFactor;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -161,7 +148,7 @@ const T::Int16_opt &PackingSettings::getDecimalScaleFactor() const {
   try {
     return mDecimalScaleFactor;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -171,7 +158,7 @@ const T::UInt8_opt &PackingSettings::getBitsPerValue() const {
   try {
     return mBitsPerValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -179,7 +166,7 @@ void PackingSettings::setReferenceValue(float referenceValue) {
   try {
     mReferenceValue = referenceValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -187,7 +174,7 @@ void PackingSettings::setBinaryScaleFactor(T::Int16_opt binaryScaleFactor) {
   try {
     mBinaryScaleFactor = binaryScaleFactor;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -195,7 +182,7 @@ void PackingSettings::setDecimalScaleFactor(T::Int16_opt decimalScaleFactor) {
   try {
     mDecimalScaleFactor = decimalScaleFactor;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -203,7 +190,7 @@ void PackingSettings::setBitsPerValue(T::UInt8_opt bitsPerValue) {
   try {
     mBitsPerValue = bitsPerValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

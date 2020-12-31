@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "PostprocSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,28 +21,7 @@ namespace GRIB2 {
 PostprocSettings::PostprocSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-PostprocSettings::PostprocSettings(const PostprocSettings &other) {
-  try {
-    mParameterCategory = other.mParameterCategory;
-    mParameterNumber = other.mParameterNumber;
-    mInputProcessIdentifier = other.mInputProcessIdentifier;
-    mInputOriginatingCentre = other.mInputOriginatingCentre;
-    mTypeOfPostProcessing = other.mTypeOfPostProcessing;
-    mTypeOfGeneratingProcess = other.mTypeOfGeneratingProcess;
-    mBackgroundProcess = other.mBackgroundProcess;
-    mGeneratingProcessIdentifier = other.mGeneratingProcessIdentifier;
-    mHoursAfterDataCutoff = other.mHoursAfterDataCutoff;
-    mMinutesAfterDataCutoff = other.mMinutesAfterDataCutoff;
-    mIndicatorOfUnitOfTimeRange = other.mIndicatorOfUnitOfTimeRange;
-    mForecastTime = other.mForecastTime;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -71,7 +50,7 @@ void PostprocSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
     mForecastTime = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -95,7 +74,7 @@ void PostprocSettings::write(DataWriter &dataWriter) {
     dataWriter << mIndicatorOfUnitOfTimeRange;
     dataWriter << mForecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -133,7 +112,7 @@ void PostprocSettings::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sPostprocSettings.ForecastTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastTime));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -160,7 +139,7 @@ void PostprocSettings::print(std::ostream &stream, uint level, uint optionFlags)
     stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
     stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -195,7 +174,7 @@ T::Hash PostprocSettings::countHash() {
       boost::hash_combine(seed, *mForecastTime);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -205,7 +184,7 @@ const T::UInt8_opt &PostprocSettings::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -215,7 +194,7 @@ const T::UInt8_opt &PostprocSettings::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -225,7 +204,7 @@ const T::UInt16_opt &PostprocSettings::getInputProcessIdentifier() const {
   try {
     return mInputProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -235,7 +214,7 @@ const T::UInt16_opt &PostprocSettings::getInputOriginatingCentre() const {
   try {
     return mInputOriginatingCentre;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -245,7 +224,7 @@ const T::UInt8_opt &PostprocSettings::getTypeOfPostProcessing() const {
   try {
     return mTypeOfPostProcessing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -255,7 +234,7 @@ const T::UInt8_opt &PostprocSettings::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -265,7 +244,7 @@ const T::UInt8_opt &PostprocSettings::getBackgroundProcess() const {
   try {
     return mBackgroundProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -275,7 +254,7 @@ const T::UInt8_opt &PostprocSettings::getGeneratingProcessIdentifier() const {
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -285,7 +264,7 @@ const T::UInt16_opt &PostprocSettings::getHoursAfterDataCutoff() const {
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -295,7 +274,7 @@ const T::UInt8_opt &PostprocSettings::getMinutesAfterDataCutoff() const {
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -305,7 +284,7 @@ const T::UInt8_opt &PostprocSettings::getIndicatorOfUnitOfTimeRange() const {
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -315,7 +294,7 @@ const T::Int32_opt &PostprocSettings::getForecastTime() const {
   try {
     return mForecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -323,7 +302,7 @@ void PostprocSettings::setParameterCategory(T::UInt8_opt parameterCategory) {
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -331,7 +310,7 @@ void PostprocSettings::setParameterNumber(T::UInt8_opt parameterNumber) {
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -339,7 +318,7 @@ void PostprocSettings::setInputProcessIdentifier(T::UInt16_opt inputProcessIdent
   try {
     mInputProcessIdentifier = inputProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -347,7 +326,7 @@ void PostprocSettings::setInputOriginatingCentre(T::UInt16_opt inputOriginatingC
   try {
     mInputOriginatingCentre = inputOriginatingCentre;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -355,7 +334,7 @@ void PostprocSettings::setTypeOfPostProcessing(T::UInt8_opt typeOfPostProcessing
   try {
     mTypeOfPostProcessing = typeOfPostProcessing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -363,7 +342,7 @@ void PostprocSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGeneratingP
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -371,7 +350,7 @@ void PostprocSettings::setBackgroundProcess(T::UInt8_opt backgroundProcess) {
   try {
     mBackgroundProcess = backgroundProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -379,7 +358,7 @@ void PostprocSettings::setGeneratingProcessIdentifier(T::UInt8_opt generatingPro
   try {
     mGeneratingProcessIdentifier = generatingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -387,7 +366,7 @@ void PostprocSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfterDataCutof
   try {
     mHoursAfterDataCutoff = hoursAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -395,7 +374,7 @@ void PostprocSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataCu
   try {
     mMinutesAfterDataCutoff = minutesAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -403,7 +382,7 @@ void PostprocSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUni
   try {
     mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -411,7 +390,7 @@ void PostprocSettings::setForecastTime(T::Int32_opt forecastTime) {
   try {
     mForecastTime = forecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

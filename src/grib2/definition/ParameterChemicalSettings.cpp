@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ParameterChemicalSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,26 +21,7 @@ namespace GRIB2 {
 ParameterChemicalSettings::ParameterChemicalSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ParameterChemicalSettings::ParameterChemicalSettings(const ParameterChemicalSettings &other) {
-  try {
-    mParameterCategory = other.mParameterCategory;
-    mParameterNumber = other.mParameterNumber;
-    mConstituentType = other.mConstituentType;
-    mTypeOfGeneratingProcess = other.mTypeOfGeneratingProcess;
-    mBackgroundProcess = other.mBackgroundProcess;
-    mGeneratingProcessIdentifier = other.mGeneratingProcessIdentifier;
-    mHoursAfterDataCutoff = other.mHoursAfterDataCutoff;
-    mMinutesAfterDataCutoff = other.mMinutesAfterDataCutoff;
-    mIndicatorOfUnitOfTimeRange = other.mIndicatorOfUnitOfTimeRange;
-    mStartStep = other.mStartStep;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -65,9 +46,9 @@ void ParameterChemicalSettings::read(MemoryReader &memoryReader) {
     mHoursAfterDataCutoff = memoryReader.read_UInt16_opt();
     mMinutesAfterDataCutoff = memoryReader.read_UInt8_opt();
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
-    mStartStep = memoryReader.read_Int32_opt();
+    mForecastTime = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -87,9 +68,9 @@ void ParameterChemicalSettings::write(DataWriter &dataWriter) {
     dataWriter << mHoursAfterDataCutoff;
     dataWriter << mMinutesAfterDataCutoff;
     dataWriter << mIndicatorOfUnitOfTimeRange;
-    dataWriter << mStartStep;
+    dataWriter << mForecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -120,10 +101,10 @@ void ParameterChemicalSettings::getAttributeList(std::string prefix, T::Attribut
     attributeList.addAttribute(name, toString(mMinutesAfterDataCutoff));
     sprintf(name, "%sParameterChemicalSettings.IndicatorOfUnitOfTimeRange", prefix.c_str());
     attributeList.addAttribute(name, toString(mIndicatorOfUnitOfTimeRange));
-    sprintf(name, "%sParameterChemicalSettings.StartStep", prefix.c_str());
-    attributeList.addAttribute(name, toString(mStartStep));
+    sprintf(name, "%sParameterChemicalSettings.ForecastTime", prefix.c_str());
+    attributeList.addAttribute(name, toString(mForecastTime));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -146,9 +127,9 @@ void ParameterChemicalSettings::print(std::ostream &stream, uint level, uint opt
     stream << space(level) << "- HoursAfterDataCutoff = " << toString(mHoursAfterDataCutoff) << "\n";
     stream << space(level) << "- MinutesAfterDataCutoff = " << toString(mMinutesAfterDataCutoff) << "\n";
     stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
-    stream << space(level) << "- StartStep = " << toString(mStartStep) << "\n";
+    stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -175,11 +156,11 @@ T::Hash ParameterChemicalSettings::countHash() {
       boost::hash_combine(seed, *mMinutesAfterDataCutoff);
     if (mIndicatorOfUnitOfTimeRange)
       boost::hash_combine(seed, *mIndicatorOfUnitOfTimeRange);
-    if (mStartStep)
-      boost::hash_combine(seed, *mStartStep);
+    if (mForecastTime)
+      boost::hash_combine(seed, *mForecastTime);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -189,7 +170,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -199,7 +180,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -209,7 +190,7 @@ const T::UInt16_opt &ParameterChemicalSettings::getConstituentType() const {
   try {
     return mConstituentType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -219,7 +200,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getTypeOfGeneratingProcess() cons
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -229,7 +210,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getBackgroundProcess() const {
   try {
     return mBackgroundProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -239,7 +220,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getGeneratingProcessIdentifier() 
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -249,7 +230,7 @@ const T::UInt16_opt &ParameterChemicalSettings::getHoursAfterDataCutoff() const 
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -259,7 +240,7 @@ const T::UInt8_opt &ParameterChemicalSettings::getMinutesAfterDataCutoff() const
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -269,17 +250,17 @@ const T::UInt8_opt &ParameterChemicalSettings::getIndicatorOfUnitOfTimeRange() c
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-/*! \brief The method returns the value of the {@link mStartStep} attribute. */
+/*! \brief The method returns the value of the {@link mForecastTime} attribute. */
 
-const T::Int32_opt &ParameterChemicalSettings::getStartStep() const {
+const T::Int32_opt &ParameterChemicalSettings::getForecastTime() const {
   try {
-    return mStartStep;
+    return mForecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -287,7 +268,7 @@ void ParameterChemicalSettings::setParameterCategory(T::UInt8_opt parameterCateg
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -295,7 +276,7 @@ void ParameterChemicalSettings::setParameterNumber(T::UInt8_opt parameterNumber)
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -303,7 +284,7 @@ void ParameterChemicalSettings::setConstituentType(T::UInt16_opt constituentType
   try {
     mConstituentType = constituentType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -311,7 +292,7 @@ void ParameterChemicalSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGe
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -319,7 +300,7 @@ void ParameterChemicalSettings::setBackgroundProcess(T::UInt8_opt backgroundProc
   try {
     mBackgroundProcess = backgroundProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -327,7 +308,7 @@ void ParameterChemicalSettings::setGeneratingProcessIdentifier(T::UInt8_opt gene
   try {
     mGeneratingProcessIdentifier = generatingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -335,7 +316,7 @@ void ParameterChemicalSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfter
   try {
     mHoursAfterDataCutoff = hoursAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -343,7 +324,7 @@ void ParameterChemicalSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesAf
   try {
     mMinutesAfterDataCutoff = minutesAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -351,15 +332,15 @@ void ParameterChemicalSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indic
   try {
     mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
-void ParameterChemicalSettings::setStartStep(T::Int32_opt startStep) {
+void ParameterChemicalSettings::setForecastTime(T::Int32_opt forecastTime) {
   try {
-    mStartStep = startStep;
+    mForecastTime = forecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

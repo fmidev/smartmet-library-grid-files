@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "TimeIntervalEnsembleClusterDerivedForecast.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,22 +21,7 @@ namespace GRIB2 {
 TimeIntervalEnsembleClusterDerivedForecast::TimeIntervalEnsembleClusterDerivedForecast() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-TimeIntervalEnsembleClusterDerivedForecast::TimeIntervalEnsembleClusterDerivedForecast(const TimeIntervalEnsembleClusterDerivedForecast &other) : ProductDefinition(other) {
-  try {
-    mParameter = other.mParameter;
-    mHorizontal = other.mHorizontal;
-    mDerived = other.mDerived;
-    mRectangularCluster = other.mRectangularCluster;
-    mStatistical = other.mStatistical;
-    mEnsembleForecastNumbers = other.mEnsembleForecastNumbers;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -59,7 +44,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::read(MemoryReader &memoryReader
     mStatistical.read(memoryReader);
     mEnsembleForecastNumbers = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -77,7 +62,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::write(DataWriter &dataWriter) {
     mStatistical.write(dataWriter);
     dataWriter << mEnsembleForecastNumbers;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -103,7 +88,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::getAttributeList(std::string pr
     sprintf(name, "%sTimeIntervalEnsembleClusterDerivedForecast.EnsembleForecastNumbers", prefix.c_str());
     attributeList.addAttribute(name, toString(mEnsembleForecastNumbers));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -124,7 +109,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::print(std::ostream &stream, uin
     mStatistical.print(stream, level + 1, optionFlags);
     stream << space(level) << "- EnsembleForecastNumbers = " << toString(mEnsembleForecastNumbers) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -142,7 +127,7 @@ T::Hash TimeIntervalEnsembleClusterDerivedForecast::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -156,7 +141,7 @@ ProductDefinition *TimeIntervalEnsembleClusterDerivedForecast::createProductDefi
   try {
     return static_cast<ProductDefinition *>(new TimeIntervalEnsembleClusterDerivedForecast(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -166,7 +151,7 @@ ParameterSettings *TimeIntervalEnsembleClusterDerivedForecast::getParameter() co
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -176,7 +161,7 @@ HorizontalSettings *TimeIntervalEnsembleClusterDerivedForecast::getHorizontal() 
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -186,7 +171,7 @@ DerivedSettings *TimeIntervalEnsembleClusterDerivedForecast::getDerived() const 
   try {
     return static_cast<DerivedSettings *>(&mDerived);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -196,7 +181,7 @@ RectangularClusterSettings *TimeIntervalEnsembleClusterDerivedForecast::getRecta
   try {
     return static_cast<RectangularClusterSettings *>(&mRectangularCluster);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -206,7 +191,7 @@ StatisticalSettings *TimeIntervalEnsembleClusterDerivedForecast::getStatistical(
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -216,7 +201,7 @@ const T::UInt8_opt &TimeIntervalEnsembleClusterDerivedForecast::getEnsembleForec
   try {
     return mEnsembleForecastNumbers;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -224,7 +209,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setParameter(ParameterSettings 
   try {
     mParameter = parameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -232,7 +217,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setHorizontal(HorizontalSetting
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -240,7 +225,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setDerived(DerivedSettings &der
   try {
     mDerived = derived;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -248,7 +233,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setRectangularCluster(Rectangul
   try {
     mRectangularCluster = rectangularCluster;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -256,7 +241,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setStatistical(StatisticalSetti
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -264,7 +249,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::setEnsembleForecastNumbers(T::U
   try {
     mEnsembleForecastNumbers = ensembleForecastNumbers;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

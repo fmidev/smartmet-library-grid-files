@@ -24,7 +24,7 @@ TimeRangeDef::TimeRangeDef()
 
 
 
-
+/*
 TimeRangeDef::TimeRangeDef(const TimeRangeDef& timeRangeDef)
 {
   try
@@ -38,7 +38,7 @@ TimeRangeDef::TimeRangeDef(const TimeRangeDef& timeRangeDef)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

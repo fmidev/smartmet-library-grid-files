@@ -21,7 +21,6 @@ namespace GRIB2 {
 class AreaProcessedCrossSectionProduct : public ProductDefinition {
 public:
   AreaProcessedCrossSectionProduct();
-  AreaProcessedCrossSectionProduct(const AreaProcessedCrossSectionProduct &other);
   virtual ~AreaProcessedCrossSectionProduct();
 
   virtual uint getTemplateNumber() const;
@@ -48,14 +47,7 @@ public:
   void setNumberOfDataValues(T::UInt16_opt numberOfDataValues);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 4.1002, Cross-section of analysis and forecast, averaged or otherwise statistically processed over latitude or longitude
   //
@@ -64,15 +56,13 @@ protected:
   mutable ParameterSettings mParameter;
 
   //
-  //
   // #  Horizontal dimension processed
   // codetable[1] horizontalDimensionProcessed ('4.220.table',masterDir,localDir) : dump;
 
   T::UInt8_opt mHorizontalDimensionProcessed;
 
   //
-  // #  Treatment of missing data
-  // # (e.g. below ground)
+  // #  Treatment of missing data (e.g. below ground)
   // codetable[1] treatmentOfMissingData ('4.221.table',masterDir,localDir) : dump;
 
   T::UInt8_opt mTreatmentOfMissingData;
@@ -101,10 +91,6 @@ protected:
   // unsigned[2] numberOfDataValues : read_only,dump;
 
   T::UInt16_opt mNumberOfDataValues;
-
-  //
-  //
-  // # END   2/template.4.1002 ----------------------------------------------------------------------
 };
 
 } // namespace GRIB2

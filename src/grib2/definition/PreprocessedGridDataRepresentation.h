@@ -21,7 +21,6 @@ namespace GRIB2 {
 class PreprocessedGridDataRepresentation : public RepresentationDefinition {
 public:
   PreprocessedGridDataRepresentation();
-  PreprocessedGridDataRepresentation(const PreprocessedGridDataRepresentation &other);
   virtual ~PreprocessedGridDataRepresentation();
 
   virtual uint getTemplateNumber() const;
@@ -40,16 +39,8 @@ public:
   void setPreProcessingParameter(float preProcessingParameter);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  // # START 2/template.5.6 ----------------------------------------------------------------------
   // # Grid point data - Simple packing with preprocessing
   //
   // include "grib2/template.5.packing.def";
@@ -64,9 +55,6 @@ protected:
   // ieeefloat   preProcessingParameter  : read_only;
 
   float mPreProcessingParameter;
-
-  //
-  // # END   2/template.5.6 ----------------------------------------------------------------------
 };
 
 } // namespace GRIB2

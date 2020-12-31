@@ -26,7 +26,7 @@ class ProductDefinition
   public:
 
                                         ProductDefinition();
-                                        ProductDefinition(const ProductDefinition& other);
+                                        //ProductDefinition(const ProductDefinition& other);
     virtual                             ~ProductDefinition();
 
     virtual ProductDefinition*          createProductDefinition() const;

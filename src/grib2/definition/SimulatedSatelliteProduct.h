@@ -22,7 +22,6 @@ namespace GRIB2 {
 class SimulatedSatelliteProduct : public ProductDefinition {
 public:
   SimulatedSatelliteProduct();
-  SimulatedSatelliteProduct(const SimulatedSatelliteProduct &other);
   virtual ~SimulatedSatelliteProduct();
 
   virtual uint getTemplateNumber() const;
@@ -51,20 +50,11 @@ public:
   void setScaledValueOfCentralWaveNumber(T::UInt32_opt scaledValueOfCentralWaveNumber);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  // # For grib2 to grib1 convertion
+  // # For grib2 to grib1 conversion
   // constant dataRepresentationType = 90;
   //
-  //
-  // # START template.4.32 ----------------------------------------------------------------------
   // # TEMPLATE 4.32, Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for simulated (synthetic) satellite data
   //
   // include "grib2/template.4.parameter.def"
@@ -81,8 +71,6 @@ protected:
   // constant levelType="surface";
   // constant level=0;
   //
-  //
-  // #  Number of contributing spectral bands (NB)
   // unsigned[1] NB  : dump;
 
   T::UInt8_opt mNB;
@@ -111,9 +99,6 @@ protected:
   T::UInt32_opt mScaledValueOfCentralWaveNumber;
 
   // }
-  //
-  // # END template.4.32 ----------------------------------------------------------------------
-  //
 };
 
 } // namespace GRIB2

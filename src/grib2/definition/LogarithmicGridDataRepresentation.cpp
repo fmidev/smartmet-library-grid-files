@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "LogarithmicGridDataRepresentation.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,18 +22,7 @@ LogarithmicGridDataRepresentation::LogarithmicGridDataRepresentation() {
   try {
     mPreProcessingParameter = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-LogarithmicGridDataRepresentation::LogarithmicGridDataRepresentation(const LogarithmicGridDataRepresentation &other) : RepresentationDefinition(other) {
-  try {
-    mPacking = other.mPacking;
-    mPreProcessingParameter = other.mPreProcessingParameter;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -52,7 +41,7 @@ void LogarithmicGridDataRepresentation::read(MemoryReader &memoryReader) {
     mPacking.read(memoryReader);
     mPreProcessingParameter = memoryReader.read_float();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -66,7 +55,7 @@ void LogarithmicGridDataRepresentation::write(DataWriter &dataWriter) {
     mPacking.write(dataWriter);
     dataWriter << mPreProcessingParameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -84,7 +73,7 @@ void LogarithmicGridDataRepresentation::getAttributeList(std::string prefix, T::
     sprintf(name, "%sLogarithmicGridDataRepresentation.PreProcessingParameter", prefix.c_str());
     attributeList.addAttribute(name, toString(mPreProcessingParameter));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -101,7 +90,7 @@ void LogarithmicGridDataRepresentation::print(std::ostream &stream, uint level, 
     mPacking.print(stream, level + 1, optionFlags);
     stream << space(level) << "- PreProcessingParameter = " << toString(mPreProcessingParameter) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -114,7 +103,7 @@ T::Hash LogarithmicGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -128,7 +117,7 @@ RepresentationDefinition *LogarithmicGridDataRepresentation::createRepresentatio
   try {
     return static_cast<RepresentationDefinition *>(new LogarithmicGridDataRepresentation(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -138,7 +127,7 @@ PackingSettings *LogarithmicGridDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -148,7 +137,7 @@ float LogarithmicGridDataRepresentation::getPreProcessingParameter() const {
   try {
     return mPreProcessingParameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -156,7 +145,7 @@ void LogarithmicGridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -164,7 +153,7 @@ void LogarithmicGridDataRepresentation::setPreProcessingParameter(float preProce
   try {
     mPreProcessingParameter = preProcessingParameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

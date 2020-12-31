@@ -19,7 +19,6 @@ namespace GRIB2 {
 class HorizontalSettings {
 public:
   HorizontalSettings();
-  HorizontalSettings(const HorizontalSettings &other);
   virtual ~HorizontalSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -42,14 +41,7 @@ public:
   void setScaledValueOfSecondFixedSurface(T::UInt32_opt scaledValueOfSecondFixedSurface);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // #  Type of first fixed surface
   // codetable[1] typeOfFirstFixedSurface ('4.5.table',masterDir,localDir) : dump,no_copy,edition_specific,string_type;
@@ -131,6 +123,8 @@ protected:
   //   'pressureFromGroundLayer' = {typeOfFirstFixedSurface=108;typeOfSecondFixedSurface=108;}
   //   'potentialVorticity' = {typeOfFirstFixedSurface=109; typeOfSecondFixedSurface=255;}
   //   'eta' = {typeOfFirstFixedSurface=111;  typeOfSecondFixedSurface=255;}
+  //   'soil' = {typeOfFirstFixedSurface=151;  typeOfSecondFixedSurface=255;}
+  //   'soilLayer' = {typeOfFirstFixedSurface=151;  typeOfSecondFixedSurface=151;}
   //
   // # In the case of Generalized vertical height coordinates, NV must be 6
   //   'generalVertical' = {genVertHeightCoords=1; typeOfFirstFixedSurface=150; NV=6;}
@@ -141,6 +135,10 @@ protected:
   //   'entireOcean' = {typeOfFirstFixedSurface=1;typeOfSecondFixedSurface=9;}
   //   'snow' = {typeOfFirstFixedSurface=114;typeOfSecondFixedSurface=255;}
   //   'snowLayer' = {typeOfFirstFixedSurface=114; typeOfSecondFixedSurface=114;}
+  //
+  //   'oceanSurface' = {typeOfFirstFixedSurface=160; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255;}
+  //   'oceanLayer' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=160;}
+  //   'mixedLayerDepth' = {typeOfFirstFixedSurface=169; typeOfSecondFixedSurface=255;}
   // }
   //
   // alias levelType=typeOfFirstFixedSurface;
@@ -164,6 +162,7 @@ protected:
   //     scaledValueOfSecondFixedSurface,
   //     pressureUnits)  :dump;
   //     alias level=topLevel;  # (see GRIB-725)
+  //
   // }
   // alias ls.level=level;
   // alias vertical.level=level;
@@ -196,6 +195,12 @@ protected:
   //         unalias mars.levelist;
   //     }
   // }
+  //
+  // # See ECC-854
+  // if(typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) {
+  //     alias mars.levelist = bottomLevel;
+  // }
+  //
   // alias ls.typeOfLevel=typeOfLevel;
 };
 

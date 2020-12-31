@@ -193,6 +193,7 @@ void EquatorialAzimuthalEquidistantImpl::initSpatialReference()
 
     mSpatialReference.SetAE(*dfCenterLat,*dfCenterLong,dfFalseEasting,dfFalseNorthing);
     mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
 
     // ### Validate the spatial reference.

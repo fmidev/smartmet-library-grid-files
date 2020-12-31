@@ -21,7 +21,6 @@ namespace GRIB2 {
 class LogarithmicGridDataRepresentation : public RepresentationDefinition {
 public:
   LogarithmicGridDataRepresentation();
-  LogarithmicGridDataRepresentation(const LogarithmicGridDataRepresentation &other);
   virtual ~LogarithmicGridDataRepresentation();
 
   virtual uint getTemplateNumber() const;
@@ -38,16 +37,8 @@ public:
   void setPreProcessingParameter(float preProcessingParameter);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  // # START 2/template.5.61 ----------------------------------------------------------------------
   // # Grid point data - Simple packing with logarithmic preprocessing
   // constant typeOfPreProcessing=1;
   //
@@ -59,9 +50,6 @@ protected:
   // ieeefloat   preProcessingParameter  : read_only;
 
   float mPreProcessingParameter;
-
-  //
-  // # END   2/template.5.61 ----------------------------------------------------------------------
 };
 
 } // namespace GRIB2

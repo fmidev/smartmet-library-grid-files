@@ -25,7 +25,6 @@ namespace GRIB2 {
 class TimeIntervalEnsembleClusterDerivedForecast : public ProductDefinition {
 public:
   TimeIntervalEnsembleClusterDerivedForecast();
-  TimeIntervalEnsembleClusterDerivedForecast(const TimeIntervalEnsembleClusterDerivedForecast &other);
   virtual ~TimeIntervalEnsembleClusterDerivedForecast();
 
   virtual uint getTemplateNumber() const;
@@ -50,14 +49,7 @@ public:
   void setEnsembleForecastNumbers(T::UInt8_opt ensembleForecastNumbers);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 4.13, Derived forecasts based on a cluster of ensemble members over a rectangular area at a horizontal level or in a horizontal layer in a continuous or
   // non-continuous time interval
@@ -89,7 +81,6 @@ protected:
   T::UInt8_opt mEnsembleForecastNumbers;
 
   // }
-  //
   //
 };
 

@@ -19,7 +19,6 @@ namespace GRIB1 {
 class ResolutionFlagsSettings {
 public:
   ResolutionFlagsSettings();
-  ResolutionFlagsSettings(const ResolutionFlagsSettings &other);
   virtual ~ResolutionFlagsSettings();
 
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
@@ -32,15 +31,6 @@ public:
   void setResolutionAndComponentFlags(std::uint8_t resolutionAndComponentFlags);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
   // #  Resolution and component flags
   // flags[1] resolutionAndComponentFlags 'grib1/7.table' : edition_specific,no_copy ;
 

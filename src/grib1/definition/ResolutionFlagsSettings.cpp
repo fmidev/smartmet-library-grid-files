@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ResolutionFlagsSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -22,17 +22,7 @@ ResolutionFlagsSettings::ResolutionFlagsSettings() {
   try {
     mResolutionAndComponentFlags = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ResolutionFlagsSettings::ResolutionFlagsSettings(const ResolutionFlagsSettings &other) {
-  try {
-    mResolutionAndComponentFlags = other.mResolutionAndComponentFlags;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -50,7 +40,7 @@ void ResolutionFlagsSettings::read(MemoryReader &memoryReader) {
   try {
     mResolutionAndComponentFlags = memoryReader.read_uint8();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -63,7 +53,7 @@ void ResolutionFlagsSettings::write(DataWriter &dataWriter) {
   try {
     dataWriter << mResolutionAndComponentFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -79,7 +69,7 @@ void ResolutionFlagsSettings::getAttributeList(std::string prefix, T::AttributeL
     sprintf(name, "%sResolutionFlagsSettings.ResolutionAndComponentFlags", prefix.c_str());
     attributeList.addAttribute(name, toString(mResolutionAndComponentFlags));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -95,7 +85,7 @@ void ResolutionFlagsSettings::print(std::ostream &stream, uint level, uint optio
     stream << space(level) << "ResolutionFlagsSettings\n";
     stream << space(level) << "- ResolutionAndComponentFlags = " << toString(mResolutionAndComponentFlags) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -107,7 +97,7 @@ T::Hash ResolutionFlagsSettings::countHash() {
     boost::hash_combine(seed, mResolutionAndComponentFlags);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -117,7 +107,7 @@ std::uint8_t ResolutionFlagsSettings::getResolutionAndComponentFlags() const {
   try {
     return mResolutionAndComponentFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -125,7 +115,7 @@ void ResolutionFlagsSettings::setResolutionAndComponentFlags(std::uint8_t resolu
   try {
     mResolutionAndComponentFlags = resolutionAndComponentFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

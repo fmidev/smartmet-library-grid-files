@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "PreprocessedGridDataRepresentation.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,19 +22,7 @@ PreprocessedGridDataRepresentation::PreprocessedGridDataRepresentation() {
   try {
     mPreProcessingParameter = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-PreprocessedGridDataRepresentation::PreprocessedGridDataRepresentation(const PreprocessedGridDataRepresentation &other) : RepresentationDefinition(other) {
-  try {
-    mPacking = other.mPacking;
-    mTypeOfPreProcessing = other.mTypeOfPreProcessing;
-    mPreProcessingParameter = other.mPreProcessingParameter;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -54,7 +42,7 @@ void PreprocessedGridDataRepresentation::read(MemoryReader &memoryReader) {
     mTypeOfPreProcessing = memoryReader.read_UInt8_opt();
     mPreProcessingParameter = memoryReader.read_float();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -69,7 +57,7 @@ void PreprocessedGridDataRepresentation::write(DataWriter &dataWriter) {
     dataWriter << mTypeOfPreProcessing;
     dataWriter << mPreProcessingParameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -89,7 +77,7 @@ void PreprocessedGridDataRepresentation::getAttributeList(std::string prefix, T:
     sprintf(name, "%sPreprocessedGridDataRepresentation.PreProcessingParameter", prefix.c_str());
     attributeList.addAttribute(name, toString(mPreProcessingParameter));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -107,7 +95,7 @@ void PreprocessedGridDataRepresentation::print(std::ostream &stream, uint level,
     stream << space(level) << "- TypeOfPreProcessing = " << toString(mTypeOfPreProcessing) << "\n";
     stream << space(level) << "- PreProcessingParameter = " << toString(mPreProcessingParameter) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -122,7 +110,7 @@ T::Hash PreprocessedGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -136,7 +124,7 @@ RepresentationDefinition *PreprocessedGridDataRepresentation::createRepresentati
   try {
     return static_cast<RepresentationDefinition *>(new PreprocessedGridDataRepresentation(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -146,7 +134,7 @@ PackingSettings *PreprocessedGridDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -156,7 +144,7 @@ const T::UInt8_opt &PreprocessedGridDataRepresentation::getTypeOfPreProcessing()
   try {
     return mTypeOfPreProcessing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -166,7 +154,7 @@ float PreprocessedGridDataRepresentation::getPreProcessingParameter() const {
   try {
     return mPreProcessingParameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -174,7 +162,7 @@ void PreprocessedGridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -182,7 +170,7 @@ void PreprocessedGridDataRepresentation::setTypeOfPreProcessing(T::UInt8_opt typ
   try {
     mTypeOfPreProcessing = typeOfPreProcessing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -190,7 +178,7 @@ void PreprocessedGridDataRepresentation::setPreProcessingParameter(float preProc
   try {
     mPreProcessingParameter = preProcessingParameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

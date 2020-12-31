@@ -19,7 +19,6 @@ namespace GRIB2 {
 class ResolutionSettings {
 public:
   ResolutionSettings();
-  ResolutionSettings(const ResolutionSettings &other);
   virtual ~ResolutionSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -32,14 +31,7 @@ public:
   void setResolutionAndComponentFlags(std::uint8_t resolutionAndComponentFlags);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // #  Resolution and component flags
   // flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : edition_specific,no_copy;
@@ -80,7 +72,6 @@ protected:
   //
   // alias DiGiven=iDirectionIncrementGiven;
   // alias DjGiven=jDirectionIncrementGiven;
-  //
 };
 
 } // namespace GRIB2

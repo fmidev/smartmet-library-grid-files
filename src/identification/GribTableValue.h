@@ -19,7 +19,7 @@ class GribTableValue
 {
   public:
                   GribTableValue();
-                  GribTableValue(const GribTableValue& tableValue);
+                  //GribTableValue(const GribTableValue& tableValue);
     virtual       ~GribTableValue();
 
     virtual void  print(std::ostream& stream,uint level,uint optionFlags) const;

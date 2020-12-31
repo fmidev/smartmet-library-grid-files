@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "PolarStereographic.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -29,26 +29,7 @@ PolarStereographic::PolarStereographic() {
     mDyInMetres = 0;
     mProjectionCentreFlag = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-PolarStereographic::PolarStereographic(const PolarStereographic &other) : GridDefinition(other) {
-  try {
-    mNx = other.mNx;
-    mNy = other.mNy;
-    mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
-    mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
-    mResolutionFlags = other.mResolutionFlags;
-    mOrientationOfTheGrid = other.mOrientationOfTheGrid;
-    mDxInMetres = other.mDxInMetres;
-    mDyInMetres = other.mDyInMetres;
-    mProjectionCentreFlag = other.mProjectionCentreFlag;
-    mScanningMode = other.mScanningMode;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -77,7 +58,7 @@ void PolarStereographic::read(MemoryReader &memoryReader) {
     for (uint t = 0; t < 4; t++)
       memoryReader.read_uint8();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -101,7 +82,7 @@ void PolarStereographic::write(DataWriter &dataWriter) {
     for (uint t = 0; t < 4; t++)
       dataWriter.write_uint8(0);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -135,7 +116,7 @@ void PolarStereographic::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sPolarStereographic.", prefix.c_str());
     mScanningMode.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -160,7 +141,7 @@ void PolarStereographic::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "- ProjectionCentreFlag = " << toString(mProjectionCentreFlag) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -181,7 +162,7 @@ T::Hash PolarStereographic::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -195,7 +176,7 @@ GridDefinition *PolarStereographic::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new PolarStereographic(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -205,7 +186,7 @@ std::uint16_t PolarStereographic::getNx() const {
   try {
     return mNx;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -215,7 +196,7 @@ std::uint16_t PolarStereographic::getNy() const {
   try {
     return mNy;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -225,7 +206,7 @@ std::int24_t PolarStereographic::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -235,7 +216,7 @@ std::int24_t PolarStereographic::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -245,7 +226,7 @@ ResolutionFlagsSettings *PolarStereographic::getResolutionFlags() const {
   try {
     return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -255,7 +236,7 @@ std::int24_t PolarStereographic::getOrientationOfTheGrid() const {
   try {
     return mOrientationOfTheGrid;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -265,7 +246,7 @@ std::uint24_t PolarStereographic::getDxInMetres() const {
   try {
     return mDxInMetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -275,7 +256,7 @@ std::uint24_t PolarStereographic::getDyInMetres() const {
   try {
     return mDyInMetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -285,7 +266,7 @@ std::uint8_t PolarStereographic::getProjectionCentreFlag() const {
   try {
     return mProjectionCentreFlag;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -295,7 +276,7 @@ ScanningModeSettings *PolarStereographic::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -303,7 +284,7 @@ void PolarStereographic::setNx(std::uint16_t nx) {
   try {
     mNx = nx;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -311,7 +292,7 @@ void PolarStereographic::setNy(std::uint16_t ny) {
   try {
     mNy = ny;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -319,7 +300,7 @@ void PolarStereographic::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirs
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -327,7 +308,7 @@ void PolarStereographic::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFi
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -335,7 +316,7 @@ void PolarStereographic::setResolutionFlags(ResolutionFlagsSettings &resolutionF
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -343,7 +324,7 @@ void PolarStereographic::setOrientationOfTheGrid(std::int24_t orientationOfTheGr
   try {
     mOrientationOfTheGrid = orientationOfTheGrid;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -351,7 +332,7 @@ void PolarStereographic::setDxInMetres(std::uint24_t dxInMetres) {
   try {
     mDxInMetres = dxInMetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -359,7 +340,7 @@ void PolarStereographic::setDyInMetres(std::uint24_t dyInMetres) {
   try {
     mDyInMetres = dyInMetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -367,7 +348,7 @@ void PolarStereographic::setProjectionCentreFlag(std::uint8_t projectionCentreFl
   try {
     mProjectionCentreFlag = projectionCentreFlag;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -375,7 +356,7 @@ void PolarStereographic::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

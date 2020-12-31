@@ -19,7 +19,6 @@ namespace GRIB2 {
 class ParameterChemicalSettings {
 public:
   ParameterChemicalSettings();
-  ParameterChemicalSettings(const ParameterChemicalSettings &other);
   virtual ~ParameterChemicalSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -46,18 +45,11 @@ public:
   void setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataCutoff);
   const T::UInt8_opt &getIndicatorOfUnitOfTimeRange() const;
   void setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUnitOfTimeRange);
-  const T::Int32_opt &getStartStep() const;
-  void setStartStep(T::Int32_opt startStep);
+  const T::Int32_opt &getForecastTime() const;
+  void setForecastTime(T::Int32_opt forecastTime);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // #  Parameter category
   // codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir): dump;
@@ -93,14 +85,12 @@ protected:
   // alias backgroundGeneratingProcessIdentifier=backgroundProcess;
   //
   // #  Analysis or forecast generating processes identifier
-  // # (defined by originating centre)
   // unsigned[1] generatingProcessIdentifier : dump;
 
   T::UInt8_opt mGeneratingProcessIdentifier;
 
   //
   // #  Hours of observational data cut-off after reference time
-  // # NOTE 1 NOT FOUND
   // unsigned[2] hoursAfterDataCutoff = missing() : edition_specific,can_be_missing;
 
   T::UInt16_opt mHoursAfterDataCutoff;
@@ -125,12 +115,9 @@ protected:
   // (The above is a phony setting)
   //
   // #  Forecast time in units defined by indicatorOfUnitOfTimeRange
-  // signed[4] startStep : dump;
+  // signed[4] forecastTime  : dump;
 
-  T::Int32_opt mStartStep;
-
-  //
-  // alias forecastTime=startStep;
+  T::Int32_opt mForecastTime;
 };
 
 } // namespace GRIB2

@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "PointInTimeSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,16 +21,7 @@ namespace GRIB2 {
 PointInTimeSettings::PointInTimeSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-PointInTimeSettings::PointInTimeSettings(const PointInTimeSettings &other) {
-  try {
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -47,7 +38,7 @@ PointInTimeSettings::~PointInTimeSettings() {
 void PointInTimeSettings::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -59,7 +50,7 @@ void PointInTimeSettings::read(MemoryReader &memoryReader) {
 void PointInTimeSettings::write(DataWriter &dataWriter) {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -72,7 +63,7 @@ void PointInTimeSettings::write(DataWriter &dataWriter) {
 void PointInTimeSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -87,7 +78,7 @@ void PointInTimeSettings::print(std::ostream &stream, uint level, uint optionFla
   try {
     stream << space(level) << "PointInTimeSettings\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -98,7 +89,7 @@ T::Hash PointInTimeSettings::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

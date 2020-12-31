@@ -24,7 +24,7 @@ ForecastTypeDef::ForecastTypeDef()
 
 
 
-
+/*
 ForecastTypeDef::ForecastTypeDef(const ForecastTypeDef& forecastTypeDef)
 {
   try
@@ -38,7 +38,7 @@ ForecastTypeDef::ForecastTypeDef(const ForecastTypeDef& forecastTypeDef)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

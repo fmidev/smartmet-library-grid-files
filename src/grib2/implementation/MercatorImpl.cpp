@@ -471,9 +471,10 @@ void MercatorImpl::initSpatialReference()
     //mSpatialReference.SetMercator(centerLat,centerLon,1.0,dfFalseEasting,dfFalseNorthing);
     mSpatialReference.SetMercator2SP(latin,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
     mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
 
-//    mSpatialReference.importFromEPSG(3395);
+    //mSpatialReference.importFromEPSG(3395);
 
     // ### Validate the spatial reference.
 
@@ -490,6 +491,7 @@ void MercatorImpl::initSpatialReference()
 
     OGRSpatialReference sr_latlon;
     sr_latlon.importFromEPSG(4326);
+    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     mSr_mercator = mSpatialReference.Clone();
 
     mCt_latlon2mercator = OGRCreateCoordinateTransformation(&sr_latlon,mSr_mercator);

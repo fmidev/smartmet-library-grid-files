@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "VariableResolutionLatLon.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,18 +21,7 @@ namespace GRIB2 {
 VariableResolutionLatLon::VariableResolutionLatLon() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-VariableResolutionLatLon::VariableResolutionLatLon(const VariableResolutionLatLon &other) : GridDefinition(other) {
-  try {
-    mEarthShape = other.mEarthShape;
-    mVariableLatLon = other.mVariableLatLon;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -51,7 +40,7 @@ void VariableResolutionLatLon::read(MemoryReader &memoryReader) {
     mEarthShape.read(memoryReader);
     mVariableLatLon.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -65,7 +54,7 @@ void VariableResolutionLatLon::write(DataWriter &dataWriter) {
     mEarthShape.write(dataWriter);
     mVariableLatLon.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -83,7 +72,7 @@ void VariableResolutionLatLon::getAttributeList(std::string prefix, T::Attribute
     sprintf(name, "%sVariableResolutionLatLon.", prefix.c_str());
     mVariableLatLon.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -100,7 +89,7 @@ void VariableResolutionLatLon::print(std::ostream &stream, uint level, uint opti
     mEarthShape.print(stream, level + 1, optionFlags);
     mVariableLatLon.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -113,7 +102,7 @@ T::Hash VariableResolutionLatLon::countHash() {
     boost::hash_combine(seed, mVariableLatLon.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -127,7 +116,7 @@ GridDefinition *VariableResolutionLatLon::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new VariableResolutionLatLon(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -137,7 +126,7 @@ EarthShapeSettings *VariableResolutionLatLon::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -147,7 +136,7 @@ VariableLatLonSettings *VariableResolutionLatLon::getVariableLatLon() const {
   try {
     return static_cast<VariableLatLonSettings *>(&mVariableLatLon);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +144,7 @@ void VariableResolutionLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -163,7 +152,7 @@ void VariableResolutionLatLon::setVariableLatLon(VariableLatLonSettings &variabl
   try {
     mVariableLatLon = variableLatLon;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

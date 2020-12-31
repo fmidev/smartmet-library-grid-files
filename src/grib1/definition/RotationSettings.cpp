@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "RotationSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -23,19 +23,7 @@ RotationSettings::RotationSettings() {
     mLatitudeOfSouthernPole = 0;
     mLongitudeOfSouthernPole = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-RotationSettings::RotationSettings(const RotationSettings &other) {
-  try {
-    mLatitudeOfSouthernPole = other.mLatitudeOfSouthernPole;
-    mLongitudeOfSouthernPole = other.mLongitudeOfSouthernPole;
-    mGeography_angleOfRotationInDegrees = other.mGeography_angleOfRotationInDegrees;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -55,7 +43,7 @@ void RotationSettings::read(MemoryReader &memoryReader) {
     mLongitudeOfSouthernPole = memoryReader.read_int24();
     mGeography_angleOfRotationInDegrees = memoryReader.read_ibmFloat();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -70,7 +58,7 @@ void RotationSettings::write(DataWriter &dataWriter) {
     dataWriter.write_int24(mLongitudeOfSouthernPole);
     dataWriter << mGeography_angleOfRotationInDegrees;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -90,7 +78,7 @@ void RotationSettings::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sRotationSettings.Geography_angleOfRotationInDegrees", prefix.c_str());
     attributeList.addAttribute(name, toString(mGeography_angleOfRotationInDegrees));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -108,7 +96,7 @@ void RotationSettings::print(std::ostream &stream, uint level, uint optionFlags)
     stream << space(level) << "- LongitudeOfSouthernPole = " << toString(mLongitudeOfSouthernPole) << "\n";
     stream << space(level) << "- Geography_angleOfRotationInDegrees = " << toString(mGeography_angleOfRotationInDegrees) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -122,7 +110,7 @@ T::Hash RotationSettings::countHash() {
     boost::hash_combine(seed, mGeography_angleOfRotationInDegrees);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -132,7 +120,7 @@ std::int24_t RotationSettings::getLatitudeOfSouthernPole() const {
   try {
     return mLatitudeOfSouthernPole;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -142,7 +130,7 @@ std::int24_t RotationSettings::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -152,7 +140,7 @@ ibmfloat RotationSettings::getGeography_angleOfRotationInDegrees() const {
   try {
     return mGeography_angleOfRotationInDegrees;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -160,7 +148,7 @@ void RotationSettings::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthern
   try {
     mLatitudeOfSouthernPole = latitudeOfSouthernPole;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -168,7 +156,7 @@ void RotationSettings::setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthe
   try {
     mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -176,7 +164,7 @@ void RotationSettings::setGeography_angleOfRotationInDegrees(ibmfloat geography_
   try {
     mGeography_angleOfRotationInDegrees = geography_angleOfRotationInDegrees;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

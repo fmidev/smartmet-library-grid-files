@@ -27,7 +27,7 @@ FmiProducerId_grib::FmiProducerId_grib()
 
 
 
-
+/*
 FmiProducerId_grib::FmiProducerId_grib(const FmiProducerId_grib& producer)
 {
   try
@@ -44,7 +44,7 @@ FmiProducerId_grib::FmiProducerId_grib(const FmiProducerId_grib& producer)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

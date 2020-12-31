@@ -781,6 +781,7 @@ void LatLonImpl::initSpatialReference()
     }
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
     // ### Validate the spatial reference.
 

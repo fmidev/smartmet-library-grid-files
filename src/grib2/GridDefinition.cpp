@@ -238,9 +238,11 @@ bool GridDefinition::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& top
 
     OGRSpatialReference sr_latlon;
     sr_latlon.importFromEPSG(4326);
+    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
     OGRSpatialReference sr_wgs84_world_mercator;
     sr_wgs84_world_mercator.importFromEPSG(3395);
+    sr_wgs84_world_mercator.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
     OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr_wgs84_world_mercator);
 
@@ -944,6 +946,7 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
     {
       OGRSpatialReference sr_latlon;
       sr_latlon.importFromEPSG(4326);
+      sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
       if (mOrigSpatialReference == nullptr)
         mOrigSpatialReference = mSpatialReference.Clone();
@@ -1422,6 +1425,7 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
     {
       OGRSpatialReference sr_latlon;
       sr_latlon.importFromEPSG(4326);
+      sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
       if (mOrigSpatialReference == nullptr)
         mOrigSpatialReference = mSpatialReference.Clone();
@@ -1464,6 +1468,7 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double
     {
       OGRSpatialReference sr_latlon;
       sr_latlon.importFromEPSG(4326);
+      sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
       if (mOrigSpatialReference == nullptr)
         mOrigSpatialReference = mSpatialReference.Clone();
@@ -1508,6 +1513,7 @@ bool GridDefinition::getGridLatLonCoordinatesByOriginalCoordinates(double x,doub
     {
       OGRSpatialReference sr_latlon;
       sr_latlon.importFromEPSG(4326);
+      sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
       if (mOrigSpatialReference == nullptr)
         mOrigSpatialReference = mSpatialReference.Clone();

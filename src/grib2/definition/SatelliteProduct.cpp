@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "SatelliteProduct.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,26 +21,7 @@ namespace GRIB2 {
 SatelliteProduct::SatelliteProduct() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-SatelliteProduct::SatelliteProduct(const SatelliteProduct &other) : ProductDefinition(other) {
-  try {
-    mParameterCategory = other.mParameterCategory;
-    mParameterNumber = other.mParameterNumber;
-    mTypeOfGeneratingProcess = other.mTypeOfGeneratingProcess;
-    mObservationGeneratingProcessIdentifier = other.mObservationGeneratingProcessIdentifier;
-    mNB = other.mNB;
-    mSatelliteSeries = other.mSatelliteSeries;
-    mSatelliteNumber = other.mSatelliteNumber;
-    mInstrumentType = other.mInstrumentType;
-    mScaleFactorOfCentralWaveNumber = other.mScaleFactorOfCentralWaveNumber;
-    mScaledValueOfCentralWaveNumber = other.mScaledValueOfCentralWaveNumber;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -67,7 +48,7 @@ void SatelliteProduct::read(MemoryReader &memoryReader) {
     mScaleFactorOfCentralWaveNumber = memoryReader.read_UInt8_opt();
     mScaledValueOfCentralWaveNumber = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -89,7 +70,7 @@ void SatelliteProduct::write(DataWriter &dataWriter) {
     dataWriter << mScaleFactorOfCentralWaveNumber;
     dataWriter << mScaledValueOfCentralWaveNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -123,7 +104,7 @@ void SatelliteProduct::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sSatelliteProduct.ScaledValueOfCentralWaveNumber", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfCentralWaveNumber));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -148,7 +129,7 @@ void SatelliteProduct::print(std::ostream &stream, uint level, uint optionFlags)
     stream << space(level) << "- ScaleFactorOfCentralWaveNumber = " << toString(mScaleFactorOfCentralWaveNumber) << "\n";
     stream << space(level) << "- ScaledValueOfCentralWaveNumber = " << toString(mScaledValueOfCentralWaveNumber) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -179,7 +160,7 @@ T::Hash SatelliteProduct::countHash() {
       boost::hash_combine(seed, *mScaledValueOfCentralWaveNumber);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -193,7 +174,7 @@ ProductDefinition *SatelliteProduct::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new SatelliteProduct(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -203,7 +184,7 @@ const T::UInt8_opt &SatelliteProduct::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -213,7 +194,7 @@ const T::UInt8_opt &SatelliteProduct::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -223,7 +204,7 @@ const T::UInt8_opt &SatelliteProduct::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -233,7 +214,7 @@ const T::UInt8_opt &SatelliteProduct::getObservationGeneratingProcessIdentifier(
   try {
     return mObservationGeneratingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -243,7 +224,7 @@ const T::UInt8_opt &SatelliteProduct::getNB() const {
   try {
     return mNB;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -253,7 +234,7 @@ const T::UInt16_opt &SatelliteProduct::getSatelliteSeries() const {
   try {
     return mSatelliteSeries;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -263,7 +244,7 @@ const T::UInt16_opt &SatelliteProduct::getSatelliteNumber() const {
   try {
     return mSatelliteNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -273,7 +254,7 @@ const T::UInt16_opt &SatelliteProduct::getInstrumentType() const {
   try {
     return mInstrumentType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -283,7 +264,7 @@ const T::UInt8_opt &SatelliteProduct::getScaleFactorOfCentralWaveNumber() const 
   try {
     return mScaleFactorOfCentralWaveNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -293,7 +274,7 @@ const T::UInt32_opt &SatelliteProduct::getScaledValueOfCentralWaveNumber() const
   try {
     return mScaledValueOfCentralWaveNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -301,7 +282,7 @@ void SatelliteProduct::setParameterCategory(T::UInt8_opt parameterCategory) {
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -309,7 +290,7 @@ void SatelliteProduct::setParameterNumber(T::UInt8_opt parameterNumber) {
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -317,7 +298,7 @@ void SatelliteProduct::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGeneratingP
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -325,7 +306,7 @@ void SatelliteProduct::setObservationGeneratingProcessIdentifier(T::UInt8_opt ob
   try {
     mObservationGeneratingProcessIdentifier = observationGeneratingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -333,7 +314,7 @@ void SatelliteProduct::setNB(T::UInt8_opt nB) {
   try {
     mNB = nB;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -341,7 +322,7 @@ void SatelliteProduct::setSatelliteSeries(T::UInt16_opt satelliteSeries) {
   try {
     mSatelliteSeries = satelliteSeries;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -349,7 +330,7 @@ void SatelliteProduct::setSatelliteNumber(T::UInt16_opt satelliteNumber) {
   try {
     mSatelliteNumber = satelliteNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -357,7 +338,7 @@ void SatelliteProduct::setInstrumentType(T::UInt16_opt instrumentType) {
   try {
     mInstrumentType = instrumentType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -365,7 +346,7 @@ void SatelliteProduct::setScaleFactorOfCentralWaveNumber(T::UInt8_opt scaleFacto
   try {
     mScaleFactorOfCentralWaveNumber = scaleFactorOfCentralWaveNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -373,7 +354,7 @@ void SatelliteProduct::setScaledValueOfCentralWaveNumber(T::UInt32_opt scaledVal
   try {
     mScaledValueOfCentralWaveNumber = scaledValueOfCentralWaveNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

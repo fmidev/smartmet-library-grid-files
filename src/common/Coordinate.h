@@ -13,7 +13,7 @@ class Coordinate
   public:
 
     Coordinate() : mX(0), mY(0) {};
-    Coordinate(const Coordinate& coordinate) {mX = coordinate.mX; mY = coordinate.mY;}
+    //Coordinate(const Coordinate& coordinate) {mX = coordinate.mX; mY = coordinate.mY;}
     Coordinate(double x, double y) : mX(x), mY(y) {};
     Coordinate(int x, int y) : mX(static_cast<double>(x)), mY(static_cast<double>(y)) {};
     Coordinate(unsigned int x, unsigned int y) : mX(static_cast<double>(x)), mY(static_cast<double>(y)) {};

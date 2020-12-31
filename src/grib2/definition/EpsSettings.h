@@ -19,7 +19,6 @@ namespace GRIB2 {
 class EpsSettings {
 public:
   EpsSettings();
-  EpsSettings(const EpsSettings &other);
   virtual ~EpsSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -36,14 +35,7 @@ public:
   void setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForecastsInEnsemble);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // #  Type of ensemble forecast
   // codetable[1] typeOfEnsembleForecast ('4.6.table',masterDir,localDir) = 255 : dump;
@@ -65,13 +57,15 @@ protected:
 
   // alias totalNumber=numberOfForecastsInEnsemble;
   //
-  // #  Rules for TIGGE, S2S and UERRA
+  // #  Rules for TIGGE, S2S, UERRA and CRRA
   // if (productionStatusOfProcessedData == 4 ||
   //     productionStatusOfProcessedData == 5 ||
   //     productionStatusOfProcessedData == 6 ||
   //     productionStatusOfProcessedData == 7 ||
   //     productionStatusOfProcessedData == 8 ||
-  //     productionStatusOfProcessedData == 9)
+  //     productionStatusOfProcessedData == 9 ||
+  //     productionStatusOfProcessedData == 10||
+  //     productionStatusOfProcessedData == 11)
   // {
   //     alias mars.number=perturbationNumber;
   // }

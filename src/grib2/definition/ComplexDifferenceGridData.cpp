@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ComplexDifferenceGridData.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,16 +21,7 @@ namespace GRIB2 {
 ComplexDifferenceGridData::ComplexDifferenceGridData() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ComplexDifferenceGridData::ComplexDifferenceGridData(const ComplexDifferenceGridData &other) : DataDefinition(other) {
-  try {
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -47,7 +38,7 @@ ComplexDifferenceGridData::~ComplexDifferenceGridData() {
 void ComplexDifferenceGridData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -59,7 +50,7 @@ void ComplexDifferenceGridData::read(MemoryReader &memoryReader) {
 void ComplexDifferenceGridData::write(DataWriter &dataWriter) {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -72,7 +63,7 @@ void ComplexDifferenceGridData::write(DataWriter &dataWriter) {
 void ComplexDifferenceGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -87,7 +78,7 @@ void ComplexDifferenceGridData::print(std::ostream &stream, uint level, uint opt
   try {
     stream << space(level) << "ComplexDifferenceGridData\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -98,7 +89,7 @@ T::Hash ComplexDifferenceGridData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -112,7 +103,7 @@ DataDefinition *ComplexDifferenceGridData::createDataDefinition() const {
   try {
     return static_cast<DataDefinition *>(new ComplexDifferenceGridData(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

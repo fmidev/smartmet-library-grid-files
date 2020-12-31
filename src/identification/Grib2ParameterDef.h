@@ -18,7 +18,7 @@ class Grib2ParameterDef
   public:
 
                   Grib2ParameterDef();
-                  Grib2ParameterDef(const Grib2ParameterDef& parameter);
+                  //Grib2ParameterDef(const Grib2ParameterDef& parameter);
     virtual       ~Grib2ParameterDef();
 
     void          print(std::ostream& stream,uint level,uint optionFlags) const;

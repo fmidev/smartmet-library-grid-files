@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "StretchedSphericalHarmonic.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,18 +21,7 @@ namespace GRIB2 {
 StretchedSphericalHarmonic::StretchedSphericalHarmonic() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-StretchedSphericalHarmonic::StretchedSphericalHarmonic(const StretchedSphericalHarmonic &other) : GridDefinition(other) {
-  try {
-    mSphericalHarmonic = other.mSphericalHarmonic;
-    mStretching = other.mStretching;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -51,7 +40,7 @@ void StretchedSphericalHarmonic::read(MemoryReader &memoryReader) {
     mSphericalHarmonic.read(memoryReader);
     mStretching.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -65,7 +54,7 @@ void StretchedSphericalHarmonic::write(DataWriter &dataWriter) {
     mSphericalHarmonic.write(dataWriter);
     mStretching.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -83,7 +72,7 @@ void StretchedSphericalHarmonic::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sStretchedSphericalHarmonic.", prefix.c_str());
     mStretching.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -100,7 +89,7 @@ void StretchedSphericalHarmonic::print(std::ostream &stream, uint level, uint op
     mSphericalHarmonic.print(stream, level + 1, optionFlags);
     mStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -113,7 +102,7 @@ T::Hash StretchedSphericalHarmonic::countHash() {
     boost::hash_combine(seed, mStretching.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -127,7 +116,7 @@ GridDefinition *StretchedSphericalHarmonic::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new StretchedSphericalHarmonic(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -137,7 +126,7 @@ SphericalHarmonicSettings *StretchedSphericalHarmonic::getSphericalHarmonic() co
   try {
     return static_cast<SphericalHarmonicSettings *>(&mSphericalHarmonic);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -147,7 +136,7 @@ StretchingSettings *StretchedSphericalHarmonic::getStretching() const {
   try {
     return static_cast<StretchingSettings *>(&mStretching);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +144,7 @@ void StretchedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings 
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -163,7 +152,7 @@ void StretchedSphericalHarmonic::setStretching(StretchingSettings &stretching) {
   try {
     mStretching = stretching;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

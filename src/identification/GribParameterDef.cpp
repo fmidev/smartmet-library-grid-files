@@ -31,7 +31,7 @@ GribParameterDef::GribParameterDef()
 
 
 /*! \brief The copy constructor of the class. */
-
+/*
 GribParameterDef::GribParameterDef(const GribParameterDef& parameterDefinition)
 {
   try
@@ -49,7 +49,7 @@ GribParameterDef::GribParameterDef(const GribParameterDef& parameterDefinition)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

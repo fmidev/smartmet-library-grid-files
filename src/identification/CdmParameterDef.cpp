@@ -24,7 +24,7 @@ CdmParameterDef::CdmParameterDef()
 
 
 
-
+/*
 CdmParameterDef::CdmParameterDef(const CdmParameterDef& parameter)
 {
   try
@@ -39,7 +39,7 @@ CdmParameterDef::CdmParameterDef(const CdmParameterDef& parameter)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

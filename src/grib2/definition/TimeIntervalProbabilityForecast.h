@@ -24,7 +24,6 @@ namespace GRIB2 {
 class TimeIntervalProbabilityForecast : public ProductDefinition {
 public:
   TimeIntervalProbabilityForecast();
-  TimeIntervalProbabilityForecast(const TimeIntervalProbabilityForecast &other);
   virtual ~TimeIntervalProbabilityForecast();
 
   virtual uint getTemplateNumber() const;
@@ -45,14 +44,7 @@ public:
   void setStatistical(StatisticalSettings &statistical);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 4.9, Probability forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
   //

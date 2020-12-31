@@ -22,7 +22,6 @@ namespace GRIB2 {
 class ProcessedCrossSectionProduct : public ProductDefinition {
 public:
   ProcessedCrossSectionProduct();
-  ProcessedCrossSectionProduct(const ProcessedCrossSectionProduct &other);
   virtual ~ProcessedCrossSectionProduct();
 
   virtual uint getTemplateNumber() const;
@@ -39,14 +38,7 @@ public:
   void setStatistical(StatisticalSettings &statistical);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 4.1001, Cross section of averaged or otherwise statistically processed analysis or forecast over a range of time
   //

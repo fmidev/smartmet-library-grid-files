@@ -19,7 +19,6 @@ namespace GRIB2 {
 class SecondOrderSettings {
 public:
   SecondOrderSettings();
-  SecondOrderSettings(const SecondOrderSettings &other);
   virtual ~SecondOrderSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -52,15 +51,7 @@ public:
   void setWidthOfLengths(T::UInt8_opt widthOfLengths);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
+  // # Copyright 2005-2019 ECMWF.
   //
   // codetable[1] groupSplitting ('5.4.table',masterDir,localDir) = 1 ; #default general
 
@@ -113,8 +104,6 @@ protected:
   // unsigned[1] widthOfLengths ;
 
   T::UInt8_opt mWidthOfLengths;
-
-  //
 };
 
 } // namespace GRIB2

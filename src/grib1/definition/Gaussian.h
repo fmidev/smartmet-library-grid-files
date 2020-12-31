@@ -22,7 +22,6 @@ namespace GRIB1 {
 class Gaussian : public GridDefinition {
 public:
   Gaussian();
-  Gaussian(const Gaussian &other);
   virtual ~Gaussian();
 
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
@@ -47,29 +46,13 @@ public:
   void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # GRID DEFINITION Gaussian latitude/longitude grid
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 40;
   //
   // template commonBlock "grib1/grid_definition_gaussian.def";
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
   // unsigned[2] Ni : can_be_missing,dump;
 
   std::uint16_t mNi;
@@ -134,10 +117,17 @@ protected:
   //                             longitudeOfLastGridPoint,
   //                             PLPresent,pl) = 0 : dump;
   //
-  // meta numberOfDataPoints number_of_points_gaussian(Ni,Nj,PLPresent,pl,
-  //   N,
+  // # With legacy mode support
+  // meta numberOfDataPoints number_of_points_gaussian(Ni,Nj,PLPresent,pl,N,
   //   latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-  //   latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees) : dump;
+  //   latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,one) : dump;
+  //
+  // # Use the new algorithm for counting. No support for legacy mode
+  // meta numberOfDataPointsExpected number_of_points_gaussian(Ni,Nj,PLPresent,pl,N,
+  //   latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+  //   latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,zero) : dump;
+  //
+  // meta legacyGaussSubarea evaluate(numberOfDataPoints != numberOfDataPointsExpected);
   //
   // alias numberOfPoints=numberOfDataPoints;
   // # alias numberOfExpectedPoints=numberOfDataPoints;
@@ -152,7 +142,10 @@ protected:
   //    nearest reduced(values,radius,Nj,pl);
   //    box reduced_gaussian(latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
   //           latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
-  // 		  N,pl);
+  //           N,pl);
+  //
+  //    #meta sumPlArray sum(pl);
+  //    #meta dataGlobal evaluate( sumPlArray == (numberOfValues+numberOfMissing) );
   // } else {
   //    iterator   gaussian(numberOfPoints,missingValue,values,longitudeFirstInDegrees,
   //             DiInDegrees  ,Ni,Nj,iScansNegatively ,
@@ -161,7 +154,7 @@ protected:
   //    nearest regular(values,radius,Ni,Nj);
   //  #  box regular_gaussian(latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
   //  #         latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
-  // #		  DiInDegrees,Ni,N,iScansNegatively,jScansPositively);
+  //  #         DiInDegrees,Ni,N,iScansNegatively,jScansPositively);
   // }
   //
   // meta latLonValues latlonvalues(values);
@@ -175,8 +168,6 @@ protected:
   //
   // meta gaussianGridName gaussian_grid_name(N, Ni, isOctahedral);
   // alias gridName=gaussianGridName;
-  //
-  //
 };
 
 } // namespace GRIB1

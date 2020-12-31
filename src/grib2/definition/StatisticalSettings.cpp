@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "StatisticalSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,30 +21,7 @@ namespace GRIB2 {
 StatisticalSettings::StatisticalSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-StatisticalSettings::StatisticalSettings(const StatisticalSettings &other) {
-  try {
-    mYearOfEndOfOverallTimeInterval = other.mYearOfEndOfOverallTimeInterval;
-    mMonthOfEndOfOverallTimeInterval = other.mMonthOfEndOfOverallTimeInterval;
-    mDayOfEndOfOverallTimeInterval = other.mDayOfEndOfOverallTimeInterval;
-    mHourOfEndOfOverallTimeInterval = other.mHourOfEndOfOverallTimeInterval;
-    mMinuteOfEndOfOverallTimeInterval = other.mMinuteOfEndOfOverallTimeInterval;
-    mSecondOfEndOfOverallTimeInterval = other.mSecondOfEndOfOverallTimeInterval;
-    mNumberOfTimeRange = other.mNumberOfTimeRange;
-    mNumberOfMissingInStatisticalProcess = other.mNumberOfMissingInStatisticalProcess;
-    mTypeOfStatisticalProcessing = other.mTypeOfStatisticalProcessing;
-    mTypeOfTimeIncrement = other.mTypeOfTimeIncrement;
-    mIndicatorOfUnitForTimeRange = other.mIndicatorOfUnitForTimeRange;
-    mLengthOfTimeRange = other.mLengthOfTimeRange;
-    mIndicatorOfUnitForTimeIncrement = other.mIndicatorOfUnitForTimeIncrement;
-    mTimeIncrement = other.mTimeIncrement;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -75,7 +52,7 @@ void StatisticalSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitForTimeIncrement = memoryReader.read_UInt8_opt();
     mTimeIncrement = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -101,7 +78,7 @@ void StatisticalSettings::write(DataWriter &dataWriter) {
     dataWriter << mIndicatorOfUnitForTimeIncrement;
     dataWriter << mTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -143,7 +120,7 @@ void StatisticalSettings::getAttributeList(std::string prefix, T::AttributeList 
     sprintf(name, "%sStatisticalSettings.TimeIncrement", prefix.c_str());
     attributeList.addAttribute(name, toString(mTimeIncrement));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -172,7 +149,7 @@ void StatisticalSettings::print(std::ostream &stream, uint level, uint optionFla
     stream << space(level) << "- IndicatorOfUnitForTimeIncrement = " << toString(mIndicatorOfUnitForTimeIncrement) << "\n";
     stream << space(level) << "- TimeIncrement = " << toString(mTimeIncrement) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -211,7 +188,7 @@ T::Hash StatisticalSettings::countHash() {
       boost::hash_combine(seed, *mTimeIncrement);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -221,7 +198,7 @@ const T::UInt16_opt &StatisticalSettings::getYearOfEndOfOverallTimeInterval() co
   try {
     return mYearOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -231,7 +208,7 @@ const T::UInt8_opt &StatisticalSettings::getMonthOfEndOfOverallTimeInterval() co
   try {
     return mMonthOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -241,7 +218,7 @@ const T::UInt8_opt &StatisticalSettings::getDayOfEndOfOverallTimeInterval() cons
   try {
     return mDayOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -251,7 +228,7 @@ const T::UInt8_opt &StatisticalSettings::getHourOfEndOfOverallTimeInterval() con
   try {
     return mHourOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -261,7 +238,7 @@ const T::UInt8_opt &StatisticalSettings::getMinuteOfEndOfOverallTimeInterval() c
   try {
     return mMinuteOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -271,7 +248,7 @@ const T::UInt8_opt &StatisticalSettings::getSecondOfEndOfOverallTimeInterval() c
   try {
     return mSecondOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -281,7 +258,7 @@ const T::UInt8_opt &StatisticalSettings::getNumberOfTimeRange() const {
   try {
     return mNumberOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -291,7 +268,7 @@ const T::UInt32_opt &StatisticalSettings::getNumberOfMissingInStatisticalProcess
   try {
     return mNumberOfMissingInStatisticalProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -301,7 +278,7 @@ const T::UInt8_opt &StatisticalSettings::getTypeOfStatisticalProcessing() const 
   try {
     return mTypeOfStatisticalProcessing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -311,7 +288,7 @@ const T::UInt8_opt &StatisticalSettings::getTypeOfTimeIncrement() const {
   try {
     return mTypeOfTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -321,7 +298,7 @@ const T::UInt8_opt &StatisticalSettings::getIndicatorOfUnitForTimeRange() const 
   try {
     return mIndicatorOfUnitForTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -331,7 +308,7 @@ const T::UInt32_opt &StatisticalSettings::getLengthOfTimeRange() const {
   try {
     return mLengthOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -341,7 +318,7 @@ const T::UInt8_opt &StatisticalSettings::getIndicatorOfUnitForTimeIncrement() co
   try {
     return mIndicatorOfUnitForTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -351,7 +328,7 @@ const T::UInt32_opt &StatisticalSettings::getTimeIncrement() const {
   try {
     return mTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -359,7 +336,7 @@ void StatisticalSettings::setYearOfEndOfOverallTimeInterval(T::UInt16_opt yearOf
   try {
     mYearOfEndOfOverallTimeInterval = yearOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -367,7 +344,7 @@ void StatisticalSettings::setMonthOfEndOfOverallTimeInterval(T::UInt8_opt monthO
   try {
     mMonthOfEndOfOverallTimeInterval = monthOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -375,7 +352,7 @@ void StatisticalSettings::setDayOfEndOfOverallTimeInterval(T::UInt8_opt dayOfEnd
   try {
     mDayOfEndOfOverallTimeInterval = dayOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -383,7 +360,7 @@ void StatisticalSettings::setHourOfEndOfOverallTimeInterval(T::UInt8_opt hourOfE
   try {
     mHourOfEndOfOverallTimeInterval = hourOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -391,7 +368,7 @@ void StatisticalSettings::setMinuteOfEndOfOverallTimeInterval(T::UInt8_opt minut
   try {
     mMinuteOfEndOfOverallTimeInterval = minuteOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -399,7 +376,7 @@ void StatisticalSettings::setSecondOfEndOfOverallTimeInterval(T::UInt8_opt secon
   try {
     mSecondOfEndOfOverallTimeInterval = secondOfEndOfOverallTimeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -407,7 +384,7 @@ void StatisticalSettings::setNumberOfTimeRange(T::UInt8_opt numberOfTimeRange) {
   try {
     mNumberOfTimeRange = numberOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -415,7 +392,7 @@ void StatisticalSettings::setNumberOfMissingInStatisticalProcess(T::UInt32_opt n
   try {
     mNumberOfMissingInStatisticalProcess = numberOfMissingInStatisticalProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -423,7 +400,7 @@ void StatisticalSettings::setTypeOfStatisticalProcessing(T::UInt8_opt typeOfStat
   try {
     mTypeOfStatisticalProcessing = typeOfStatisticalProcessing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -431,7 +408,7 @@ void StatisticalSettings::setTypeOfTimeIncrement(T::UInt8_opt typeOfTimeIncremen
   try {
     mTypeOfTimeIncrement = typeOfTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -439,7 +416,7 @@ void StatisticalSettings::setIndicatorOfUnitForTimeRange(T::UInt8_opt indicatorO
   try {
     mIndicatorOfUnitForTimeRange = indicatorOfUnitForTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -447,7 +424,7 @@ void StatisticalSettings::setLengthOfTimeRange(T::UInt32_opt lengthOfTimeRange) 
   try {
     mLengthOfTimeRange = lengthOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -455,7 +432,7 @@ void StatisticalSettings::setIndicatorOfUnitForTimeIncrement(T::UInt8_opt indica
   try {
     mIndicatorOfUnitForTimeIncrement = indicatorOfUnitForTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -463,7 +440,7 @@ void StatisticalSettings::setTimeIncrement(T::UInt32_opt timeIncrement) {
   try {
     mTimeIncrement = timeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

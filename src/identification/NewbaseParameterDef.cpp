@@ -23,7 +23,7 @@ NewbaseParameterDef::NewbaseParameterDef()
 
 
 
-
+/*
 NewbaseParameterDef::NewbaseParameterDef(const NewbaseParameterDef& parameter)
 {
   try
@@ -36,7 +36,7 @@ NewbaseParameterDef::NewbaseParameterDef(const NewbaseParameterDef& parameter)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

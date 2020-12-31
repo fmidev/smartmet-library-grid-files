@@ -22,7 +22,6 @@ namespace GRIB2 {
 class Hovmoller : public GridDefinition {
 public:
   Hovmoller();
-  Hovmoller(const Hovmoller &other);
   virtual ~Hovmoller();
 
   virtual uint getTemplateNumber() const;
@@ -77,15 +76,7 @@ public:
   void setSecond(T::UInt8_opt second);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 3.1100, Hovmoller diagram grid with points equally spaced on the horizontal
   // include "grib2/template.3.shape_of_the_earth.def";
@@ -97,21 +88,18 @@ protected:
   // unsigned[5] numberOfHorizontalPoints : dump ;
   //
   // #  Basic angle of the initial production domain
-  // # NOTE 1 NOT FOUND
   // unsigned[4] basicAngleOfTheInitialProductionDomain = 0 : dump ;
 
   T::UInt32_opt mBasicAngleOfTheInitialProductionDomain;
 
   //
   // #  Subdivisions of basic angle used to define extreme longitudes and latitudes
-  // # NOTE 1 NOT FOUND
   // unsigned[4] subdivisionsOfBasicAngle = missing() : can_be_missing,dump;
 
   T::UInt32_opt mSubdivisionsOfBasicAngle;
 
   //
   // #  La1 - latitude of first grid point
-  // # NOTE 1 NOT FOUND
   // signed[4] latitudeOfFirstGridPoint : edition_specific,dump;
 
   T::Int32_opt mLatitudeOfFirstGridPoint;
@@ -119,7 +107,6 @@ protected:
   //
   // alias La1  =latitudeOfFirstGridPoint;
   // #  Lo1 - longitude of first grid point
-  // # NOTE 1 NOT FOUND
   // unsigned[4] longitudeOfFirstGridPoint : edition_specific,dump;
 
   T::UInt32_opt mLongitudeOfFirstGridPoint;
@@ -133,7 +120,6 @@ protected:
 
   //
   // #  La2 - latitude of last grid point
-  // # NOTE 1 NOT FOUND
   // signed[4] latitudeOfLastGridPoint : edition_specific,dump;
 
   T::Int32_opt mLatitudeOfLastGridPoint;
@@ -141,7 +127,6 @@ protected:
   //
   // alias La2  = latitudeOfLastGridPoint;
   // #  Lo2 - longitude of last grid point
-  // # NOTE 1 NOT FOUND
   // unsigned[4] longitudeOfLastGridPoint : edition_specific,dump ;
 
   T::UInt32_opt mLongitudeOfLastGridPoint;

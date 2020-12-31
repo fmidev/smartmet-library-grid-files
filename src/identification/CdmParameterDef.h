@@ -13,7 +13,7 @@ class CdmParameterDef
 {
   public:
                     CdmParameterDef();
-                    CdmParameterDef(const CdmParameterDef& parameter);
+                    //CdmParameterDef(const CdmParameterDef& parameter);
     virtual         ~CdmParameterDef();
 
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

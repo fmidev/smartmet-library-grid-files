@@ -1859,7 +1859,7 @@ std::string Message::getWKT() const
       char *out = nullptr;
       sr->exportToWkt(&out);
       wkt = out;
-      OGRFree(out);
+      CPLFree(out);
     }
     return wkt;
   }

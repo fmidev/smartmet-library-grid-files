@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "StretchedSphericalHarmonic.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -26,22 +26,7 @@ StretchedSphericalHarmonic::StretchedSphericalHarmonic() {
     mRepresentationType = 0;
     mRepresentationMode = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-StretchedSphericalHarmonic::StretchedSphericalHarmonic(const StretchedSphericalHarmonic &other) : GridDefinition(other) {
-  try {
-    mJ = other.mJ;
-    mK = other.mK;
-    mM = other.mM;
-    mRepresentationType = other.mRepresentationType;
-    mRepresentationMode = other.mRepresentationMode;
-    mGridStretching = other.mGridStretching;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -66,7 +51,7 @@ void StretchedSphericalHarmonic::read(MemoryReader &memoryReader) {
       memoryReader.read_uint8();
     mGridStretching.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -86,7 +71,7 @@ void StretchedSphericalHarmonic::write(DataWriter &dataWriter) {
       dataWriter.write_uint8(0);
     mGridStretching.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -112,7 +97,7 @@ void StretchedSphericalHarmonic::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sStretchedSphericalHarmonic.", prefix.c_str());
     mGridStretching.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -133,7 +118,7 @@ void StretchedSphericalHarmonic::print(std::ostream &stream, uint level, uint op
     stream << space(level) << "- RepresentationMode = " << toString(mRepresentationMode) << "\n";
     mGridStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -150,7 +135,7 @@ T::Hash StretchedSphericalHarmonic::countHash() {
     boost::hash_combine(seed, mGridStretching.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -164,7 +149,7 @@ GridDefinition *StretchedSphericalHarmonic::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new StretchedSphericalHarmonic(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -174,7 +159,7 @@ std::uint16_t StretchedSphericalHarmonic::getJ() const {
   try {
     return mJ;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -184,7 +169,7 @@ std::uint16_t StretchedSphericalHarmonic::getK() const {
   try {
     return mK;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -194,7 +179,7 @@ std::uint16_t StretchedSphericalHarmonic::getM() const {
   try {
     return mM;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -204,7 +189,7 @@ std::uint8_t StretchedSphericalHarmonic::getRepresentationType() const {
   try {
     return mRepresentationType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -214,7 +199,7 @@ std::uint8_t StretchedSphericalHarmonic::getRepresentationMode() const {
   try {
     return mRepresentationMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -224,7 +209,7 @@ GridStretchingSettings *StretchedSphericalHarmonic::getGridStretching() const {
   try {
     return static_cast<GridStretchingSettings *>(&mGridStretching);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -232,7 +217,7 @@ void StretchedSphericalHarmonic::setJ(std::uint16_t j) {
   try {
     mJ = j;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -240,7 +225,7 @@ void StretchedSphericalHarmonic::setK(std::uint16_t k) {
   try {
     mK = k;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -248,7 +233,7 @@ void StretchedSphericalHarmonic::setM(std::uint16_t m) {
   try {
     mM = m;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -256,7 +241,7 @@ void StretchedSphericalHarmonic::setRepresentationType(std::uint8_t representati
   try {
     mRepresentationType = representationType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -264,7 +249,7 @@ void StretchedSphericalHarmonic::setRepresentationMode(std::uint8_t representati
   try {
     mRepresentationMode = representationMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -272,7 +257,7 @@ void StretchedSphericalHarmonic::setGridStretching(GridStretchingSettings &gridS
   try {
     mGridStretching = gridStretching;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

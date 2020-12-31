@@ -14,7 +14,7 @@ class ConfigurationFile
 {
   public:
                   ConfigurationFile();
-                  ConfigurationFile(const ConfigurationFile& configurationFile);
+                  //ConfigurationFile(const ConfigurationFile& configurationFile);
                   ConfigurationFile(std::string filename);
     virtual       ~ConfigurationFile();
 

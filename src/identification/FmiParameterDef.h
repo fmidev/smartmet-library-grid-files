@@ -12,7 +12,7 @@ class FmiParameterDef
 {
   public:
                   FmiParameterDef();
-                  FmiParameterDef(const FmiParameterDef& parameterDef);
+                  //FmiParameterDef(const FmiParameterDef& parameterDef);
     virtual       ~FmiParameterDef();
 
     void          print(std::ostream& stream,uint level,uint optionFlags) const;

@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "LambertAzimuthalEqualArea.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,27 +22,7 @@ LambertAzimuthalEqualArea::LambertAzimuthalEqualArea() {
   try {
     mResolutionAndComponentFlags = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-LambertAzimuthalEqualArea::LambertAzimuthalEqualArea(const LambertAzimuthalEqualArea &other) : GridDefinition(other) {
-  try {
-    mEarthShape = other.mEarthShape;
-    mNumberOfPointsAlongXAxis = other.mNumberOfPointsAlongXAxis;
-    mNumberOfPointsAlongYAxis = other.mNumberOfPointsAlongYAxis;
-    mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
-    mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
-    mStandardParallelInMicrodegrees = other.mStandardParallelInMicrodegrees;
-    mCentralLongitudeInMicrodegrees = other.mCentralLongitudeInMicrodegrees;
-    mResolutionAndComponentFlags = other.mResolutionAndComponentFlags;
-    mXDirectionGridLengthInMillimetres = other.mXDirectionGridLengthInMillimetres;
-    mYDirectionGridLengthInMillimetres = other.mYDirectionGridLengthInMillimetres;
-    mScanningMode = other.mScanningMode;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -70,7 +50,7 @@ void LambertAzimuthalEqualArea::read(MemoryReader &memoryReader) {
     mYDirectionGridLengthInMillimetres = memoryReader.read_UInt32_opt();
     mScanningMode.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -93,7 +73,7 @@ void LambertAzimuthalEqualArea::write(DataWriter &dataWriter) {
     dataWriter << mYDirectionGridLengthInMillimetres;
     mScanningMode.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -129,7 +109,7 @@ void LambertAzimuthalEqualArea::getAttributeList(std::string prefix, T::Attribut
     sprintf(name, "%sLambertAzimuthalEqualArea.", prefix.c_str());
     mScanningMode.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +135,7 @@ void LambertAzimuthalEqualArea::print(std::ostream &stream, uint level, uint opt
     stream << space(level) << "- YDirectionGridLengthInMillimetres = " << toString(mYDirectionGridLengthInMillimetres) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -185,7 +165,7 @@ T::Hash LambertAzimuthalEqualArea::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -199,7 +179,7 @@ GridDefinition *LambertAzimuthalEqualArea::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new LambertAzimuthalEqualArea(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -209,7 +189,7 @@ EarthShapeSettings *LambertAzimuthalEqualArea::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -219,7 +199,7 @@ const T::UInt32_opt &LambertAzimuthalEqualArea::getNumberOfPointsAlongXAxis() co
   try {
     return mNumberOfPointsAlongXAxis;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -229,7 +209,7 @@ const T::UInt32_opt &LambertAzimuthalEqualArea::getNumberOfPointsAlongYAxis() co
   try {
     return mNumberOfPointsAlongYAxis;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -239,7 +219,7 @@ const T::Int32_opt &LambertAzimuthalEqualArea::getLatitudeOfFirstGridPoint() con
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -249,7 +229,7 @@ const T::Int32_opt &LambertAzimuthalEqualArea::getLongitudeOfFirstGridPoint() co
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -259,7 +239,7 @@ const T::Int32_opt &LambertAzimuthalEqualArea::getStandardParallelInMicrodegrees
   try {
     return mStandardParallelInMicrodegrees;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -269,7 +249,7 @@ const T::Int32_opt &LambertAzimuthalEqualArea::getCentralLongitudeInMicrodegrees
   try {
     return mCentralLongitudeInMicrodegrees;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -279,7 +259,7 @@ std::uint8_t LambertAzimuthalEqualArea::getResolutionAndComponentFlags() const {
   try {
     return mResolutionAndComponentFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -289,7 +269,7 @@ const T::UInt32_opt &LambertAzimuthalEqualArea::getXDirectionGridLengthInMillime
   try {
     return mXDirectionGridLengthInMillimetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -299,7 +279,7 @@ const T::UInt32_opt &LambertAzimuthalEqualArea::getYDirectionGridLengthInMillime
   try {
     return mYDirectionGridLengthInMillimetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -309,7 +289,7 @@ ScanningModeSettings *LambertAzimuthalEqualArea::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -317,7 +297,7 @@ void LambertAzimuthalEqualArea::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -325,7 +305,7 @@ void LambertAzimuthalEqualArea::setNumberOfPointsAlongXAxis(T::UInt32_opt number
   try {
     mNumberOfPointsAlongXAxis = numberOfPointsAlongXAxis;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -333,7 +313,7 @@ void LambertAzimuthalEqualArea::setNumberOfPointsAlongYAxis(T::UInt32_opt number
   try {
     mNumberOfPointsAlongYAxis = numberOfPointsAlongYAxis;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -341,7 +321,7 @@ void LambertAzimuthalEqualArea::setLatitudeOfFirstGridPoint(T::Int32_opt latitud
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -349,7 +329,7 @@ void LambertAzimuthalEqualArea::setLongitudeOfFirstGridPoint(T::Int32_opt longit
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -357,7 +337,7 @@ void LambertAzimuthalEqualArea::setStandardParallelInMicrodegrees(T::Int32_opt s
   try {
     mStandardParallelInMicrodegrees = standardParallelInMicrodegrees;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -365,7 +345,7 @@ void LambertAzimuthalEqualArea::setCentralLongitudeInMicrodegrees(T::Int32_opt c
   try {
     mCentralLongitudeInMicrodegrees = centralLongitudeInMicrodegrees;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -373,7 +353,7 @@ void LambertAzimuthalEqualArea::setResolutionAndComponentFlags(std::uint8_t reso
   try {
     mResolutionAndComponentFlags = resolutionAndComponentFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -381,7 +361,7 @@ void LambertAzimuthalEqualArea::setXDirectionGridLengthInMillimetres(T::UInt32_o
   try {
     mXDirectionGridLengthInMillimetres = xDirectionGridLengthInMillimetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -389,7 +369,7 @@ void LambertAzimuthalEqualArea::setYDirectionGridLengthInMillimetres(T::UInt32_o
   try {
     mYDirectionGridLengthInMillimetres = yDirectionGridLengthInMillimetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -397,7 +377,7 @@ void LambertAzimuthalEqualArea::setScanningMode(ScanningModeSettings &scanningMo
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

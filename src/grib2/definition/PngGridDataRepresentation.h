@@ -22,7 +22,6 @@ namespace GRIB2 {
 class PngGridDataRepresentation : public RepresentationDefinition {
 public:
   PngGridDataRepresentation();
-  PngGridDataRepresentation(const PngGridDataRepresentation &other);
   virtual ~PngGridDataRepresentation();
 
   virtual uint getTemplateNumber() const;
@@ -39,14 +38,7 @@ public:
   void setOriginalValues(OriginalValuesSettings &originalValues);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # Grid point data - PNG  Code Stream Format SAME AS 5.40010 !!!!!!
   //
@@ -57,8 +49,6 @@ protected:
   // include "grib2/template.5.original_values.def";
 
   mutable OriginalValuesSettings mOriginalValues;
-
-  //
 };
 
 } // namespace GRIB2

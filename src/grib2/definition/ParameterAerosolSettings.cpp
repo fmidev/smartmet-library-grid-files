@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ParameterAerosolSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,31 +21,7 @@ namespace GRIB2 {
 ParameterAerosolSettings::ParameterAerosolSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ParameterAerosolSettings::ParameterAerosolSettings(const ParameterAerosolSettings &other) {
-  try {
-    mParameterCategory = other.mParameterCategory;
-    mParameterNumber = other.mParameterNumber;
-    mAerosolType = other.mAerosolType;
-    mTypeOfSizeInterval = other.mTypeOfSizeInterval;
-    mScaleFactorOfFirstSize = other.mScaleFactorOfFirstSize;
-    mScaledValueOfFirstSize = other.mScaledValueOfFirstSize;
-    mScaleFactorOfSecondSize = other.mScaleFactorOfSecondSize;
-    mScaledValueOfSecondSize = other.mScaledValueOfSecondSize;
-    mTypeOfGeneratingProcess = other.mTypeOfGeneratingProcess;
-    mBackgroundProcess = other.mBackgroundProcess;
-    mGeneratingProcessIdentifier = other.mGeneratingProcessIdentifier;
-    mHoursAfterDataCutoff = other.mHoursAfterDataCutoff;
-    mMinutesAfterDataCutoff = other.mMinutesAfterDataCutoff;
-    mIndicatorOfUnitOfTimeRange = other.mIndicatorOfUnitOfTimeRange;
-    mForecastTime = other.mForecastTime;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -77,7 +53,7 @@ void ParameterAerosolSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
     mForecastTime = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -104,7 +80,7 @@ void ParameterAerosolSettings::write(DataWriter &dataWriter) {
     dataWriter << mIndicatorOfUnitOfTimeRange;
     dataWriter << mForecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -148,7 +124,7 @@ void ParameterAerosolSettings::getAttributeList(std::string prefix, T::Attribute
     sprintf(name, "%sParameterAerosolSettings.ForecastTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastTime));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -178,7 +154,7 @@ void ParameterAerosolSettings::print(std::ostream &stream, uint level, uint opti
     stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
     stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -219,7 +195,7 @@ T::Hash ParameterAerosolSettings::countHash() {
       boost::hash_combine(seed, *mForecastTime);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -229,7 +205,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -239,7 +215,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -249,7 +225,7 @@ const T::UInt16_opt &ParameterAerosolSettings::getAerosolType() const {
   try {
     return mAerosolType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -259,7 +235,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getTypeOfSizeInterval() const {
   try {
     return mTypeOfSizeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -269,7 +245,7 @@ const T::Int8_opt &ParameterAerosolSettings::getScaleFactorOfFirstSize() const {
   try {
     return mScaleFactorOfFirstSize;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -279,7 +255,7 @@ const T::Int32_opt &ParameterAerosolSettings::getScaledValueOfFirstSize() const 
   try {
     return mScaledValueOfFirstSize;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -289,7 +265,7 @@ const T::Int8_opt &ParameterAerosolSettings::getScaleFactorOfSecondSize() const 
   try {
     return mScaleFactorOfSecondSize;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -299,7 +275,7 @@ const T::Int32_opt &ParameterAerosolSettings::getScaledValueOfSecondSize() const
   try {
     return mScaledValueOfSecondSize;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -309,7 +285,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getTypeOfGeneratingProcess() const
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -319,7 +295,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getBackgroundProcess() const {
   try {
     return mBackgroundProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -329,7 +305,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getGeneratingProcessIdentifier() c
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -339,7 +315,7 @@ const T::UInt16_opt &ParameterAerosolSettings::getHoursAfterDataCutoff() const {
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -349,7 +325,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getMinutesAfterDataCutoff() const 
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -359,7 +335,7 @@ const T::UInt8_opt &ParameterAerosolSettings::getIndicatorOfUnitOfTimeRange() co
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -369,7 +345,7 @@ const T::Int32_opt &ParameterAerosolSettings::getForecastTime() const {
   try {
     return mForecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -377,7 +353,7 @@ void ParameterAerosolSettings::setParameterCategory(T::UInt8_opt parameterCatego
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -385,7 +361,7 @@ void ParameterAerosolSettings::setParameterNumber(T::UInt8_opt parameterNumber) 
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -393,7 +369,7 @@ void ParameterAerosolSettings::setAerosolType(T::UInt16_opt aerosolType) {
   try {
     mAerosolType = aerosolType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -401,7 +377,7 @@ void ParameterAerosolSettings::setTypeOfSizeInterval(T::UInt8_opt typeOfSizeInte
   try {
     mTypeOfSizeInterval = typeOfSizeInterval;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -409,7 +385,7 @@ void ParameterAerosolSettings::setScaleFactorOfFirstSize(T::Int8_opt scaleFactor
   try {
     mScaleFactorOfFirstSize = scaleFactorOfFirstSize;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -417,7 +393,7 @@ void ParameterAerosolSettings::setScaledValueOfFirstSize(T::Int32_opt scaledValu
   try {
     mScaledValueOfFirstSize = scaledValueOfFirstSize;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -425,7 +401,7 @@ void ParameterAerosolSettings::setScaleFactorOfSecondSize(T::Int8_opt scaleFacto
   try {
     mScaleFactorOfSecondSize = scaleFactorOfSecondSize;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -433,7 +409,7 @@ void ParameterAerosolSettings::setScaledValueOfSecondSize(T::Int32_opt scaledVal
   try {
     mScaledValueOfSecondSize = scaledValueOfSecondSize;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -441,7 +417,7 @@ void ParameterAerosolSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGen
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -449,7 +425,7 @@ void ParameterAerosolSettings::setBackgroundProcess(T::UInt8_opt backgroundProce
   try {
     mBackgroundProcess = backgroundProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -457,7 +433,7 @@ void ParameterAerosolSettings::setGeneratingProcessIdentifier(T::UInt8_opt gener
   try {
     mGeneratingProcessIdentifier = generatingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -465,7 +441,7 @@ void ParameterAerosolSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfterD
   try {
     mHoursAfterDataCutoff = hoursAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -473,7 +449,7 @@ void ParameterAerosolSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesAft
   try {
     mMinutesAfterDataCutoff = minutesAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -481,7 +457,7 @@ void ParameterAerosolSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indica
   try {
     mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -489,7 +465,7 @@ void ParameterAerosolSettings::setForecastTime(T::Int32_opt forecastTime) {
   try {
     mForecastTime = forecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

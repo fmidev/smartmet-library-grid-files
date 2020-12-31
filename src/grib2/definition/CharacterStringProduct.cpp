@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "CharacterStringProduct.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,19 +21,7 @@ namespace GRIB2 {
 CharacterStringProduct::CharacterStringProduct() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-CharacterStringProduct::CharacterStringProduct(const CharacterStringProduct &other) : ProductDefinition(other) {
-  try {
-    mParameterCategory = other.mParameterCategory;
-    mParameterNumber = other.mParameterNumber;
-    mNumberOfCharacters = other.mNumberOfCharacters;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -53,7 +41,7 @@ void CharacterStringProduct::read(MemoryReader &memoryReader) {
     mParameterNumber = memoryReader.read_UInt8_opt();
     mNumberOfCharacters = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -68,7 +56,7 @@ void CharacterStringProduct::write(DataWriter &dataWriter) {
     dataWriter << mParameterNumber;
     dataWriter << mNumberOfCharacters;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -88,7 +76,7 @@ void CharacterStringProduct::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sCharacterStringProduct.NumberOfCharacters", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfCharacters));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -106,7 +94,7 @@ void CharacterStringProduct::print(std::ostream &stream, uint level, uint option
     stream << space(level) << "- ParameterNumber = " << toString(mParameterNumber) << "\n";
     stream << space(level) << "- NumberOfCharacters = " << toString(mNumberOfCharacters) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -123,7 +111,7 @@ T::Hash CharacterStringProduct::countHash() {
       boost::hash_combine(seed, *mNumberOfCharacters);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -137,7 +125,7 @@ ProductDefinition *CharacterStringProduct::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new CharacterStringProduct(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -147,7 +135,7 @@ const T::UInt8_opt &CharacterStringProduct::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -157,7 +145,7 @@ const T::UInt8_opt &CharacterStringProduct::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -167,7 +155,7 @@ const T::UInt32_opt &CharacterStringProduct::getNumberOfCharacters() const {
   try {
     return mNumberOfCharacters;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -175,7 +163,7 @@ void CharacterStringProduct::setParameterCategory(T::UInt8_opt parameterCategory
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -183,7 +171,7 @@ void CharacterStringProduct::setParameterNumber(T::UInt8_opt parameterNumber) {
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -191,7 +179,7 @@ void CharacterStringProduct::setNumberOfCharacters(T::UInt32_opt numberOfCharact
   try {
     mNumberOfCharacters = numberOfCharacters;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

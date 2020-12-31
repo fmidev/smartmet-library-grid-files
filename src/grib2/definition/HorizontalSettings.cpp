@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "HorizontalSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,22 +21,7 @@ namespace GRIB2 {
 HorizontalSettings::HorizontalSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-HorizontalSettings::HorizontalSettings(const HorizontalSettings &other) {
-  try {
-    mTypeOfFirstFixedSurface = other.mTypeOfFirstFixedSurface;
-    mScaleFactorOfFirstFixedSurface = other.mScaleFactorOfFirstFixedSurface;
-    mScaledValueOfFirstFixedSurface = other.mScaledValueOfFirstFixedSurface;
-    mTypeOfSecondFixedSurface = other.mTypeOfSecondFixedSurface;
-    mScaleFactorOfSecondFixedSurface = other.mScaleFactorOfSecondFixedSurface;
-    mScaledValueOfSecondFixedSurface = other.mScaledValueOfSecondFixedSurface;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -59,7 +44,7 @@ void HorizontalSettings::read(MemoryReader &memoryReader) {
     mScaleFactorOfSecondFixedSurface = memoryReader.read_Int8_opt();
     mScaledValueOfSecondFixedSurface = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -77,7 +62,7 @@ void HorizontalSettings::write(DataWriter &dataWriter) {
     dataWriter << mScaleFactorOfSecondFixedSurface;
     dataWriter << mScaledValueOfSecondFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -103,7 +88,7 @@ void HorizontalSettings::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sHorizontalSettings.ScaledValueOfSecondFixedSurface", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfSecondFixedSurface));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -124,7 +109,7 @@ void HorizontalSettings::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "- ScaleFactorOfSecondFixedSurface = " << toString(mScaleFactorOfSecondFixedSurface) << "\n";
     stream << space(level) << "- ScaledValueOfSecondFixedSurface = " << toString(mScaledValueOfSecondFixedSurface) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -147,7 +132,7 @@ T::Hash HorizontalSettings::countHash() {
       boost::hash_combine(seed, *mScaledValueOfSecondFixedSurface);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -157,7 +142,7 @@ const T::UInt8_opt &HorizontalSettings::getTypeOfFirstFixedSurface() const {
   try {
     return mTypeOfFirstFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -167,7 +152,7 @@ const T::Int8_opt &HorizontalSettings::getScaleFactorOfFirstFixedSurface() const
   try {
     return mScaleFactorOfFirstFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -177,7 +162,7 @@ const T::UInt32_opt &HorizontalSettings::getScaledValueOfFirstFixedSurface() con
   try {
     return mScaledValueOfFirstFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -187,7 +172,7 @@ const T::UInt8_opt &HorizontalSettings::getTypeOfSecondFixedSurface() const {
   try {
     return mTypeOfSecondFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -197,7 +182,7 @@ const T::Int8_opt &HorizontalSettings::getScaleFactorOfSecondFixedSurface() cons
   try {
     return mScaleFactorOfSecondFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -207,7 +192,7 @@ const T::UInt32_opt &HorizontalSettings::getScaledValueOfSecondFixedSurface() co
   try {
     return mScaledValueOfSecondFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -215,7 +200,7 @@ void HorizontalSettings::setTypeOfFirstFixedSurface(T::UInt8_opt typeOfFirstFixe
   try {
     mTypeOfFirstFixedSurface = typeOfFirstFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -223,7 +208,7 @@ void HorizontalSettings::setScaleFactorOfFirstFixedSurface(T::Int8_opt scaleFact
   try {
     mScaleFactorOfFirstFixedSurface = scaleFactorOfFirstFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -231,7 +216,7 @@ void HorizontalSettings::setScaledValueOfFirstFixedSurface(T::UInt32_opt scaledV
   try {
     mScaledValueOfFirstFixedSurface = scaledValueOfFirstFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -239,7 +224,7 @@ void HorizontalSettings::setTypeOfSecondFixedSurface(T::UInt8_opt typeOfSecondFi
   try {
     mTypeOfSecondFixedSurface = typeOfSecondFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -247,7 +232,7 @@ void HorizontalSettings::setScaleFactorOfSecondFixedSurface(T::Int8_opt scaleFac
   try {
     mScaleFactorOfSecondFixedSurface = scaleFactorOfSecondFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -255,7 +240,7 @@ void HorizontalSettings::setScaledValueOfSecondFixedSurface(T::UInt32_opt scaled
   try {
     mScaledValueOfSecondFixedSurface = scaledValueOfSecondFixedSurface;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

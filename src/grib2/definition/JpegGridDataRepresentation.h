@@ -22,7 +22,6 @@ namespace GRIB2 {
 class JpegGridDataRepresentation : public RepresentationDefinition {
 public:
   JpegGridDataRepresentation();
-  JpegGridDataRepresentation(const JpegGridDataRepresentation &other);
   virtual ~JpegGridDataRepresentation();
 
   virtual uint getTemplateNumber() const;
@@ -43,17 +42,9 @@ public:
   void setTargetCompressionRatio(T::UInt8_opt targetCompressionRatio);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  // #Data Representation Template 5.40:
-  // #Grid point data - JPEG 2000 Code Stream Format
+  // #Data Representation Template 5.40: Grid point data - JPEG 2000 Code Stream Format
   //
   // include "grib2/template.5.packing.def";
 
@@ -77,9 +68,6 @@ protected:
   // unsigned[1] targetCompressionRatio = 255;
 
   T::UInt8_opt mTargetCompressionRatio;
-
-  //
-  // # END   2/template.5.40-------------------------------
 };
 
 } // namespace GRIB2

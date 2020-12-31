@@ -24,7 +24,7 @@ LevelDef::LevelDef()
 
 
 
-
+/*
 LevelDef::LevelDef(const LevelDef& levelDef)
 {
   try
@@ -38,7 +38,7 @@ LevelDef::LevelDef(const LevelDef& levelDef)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

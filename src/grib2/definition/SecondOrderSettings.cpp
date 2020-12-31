@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "SecondOrderSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,27 +21,7 @@ namespace GRIB2 {
 SecondOrderSettings::SecondOrderSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-SecondOrderSettings::SecondOrderSettings(const SecondOrderSettings &other) {
-  try {
-    mGroupSplitting = other.mGroupSplitting;
-    mMissingValueManagement = other.mMissingValueManagement;
-    mPrimaryMissingValue = other.mPrimaryMissingValue;
-    mSecondaryMissingValue = other.mSecondaryMissingValue;
-    mNumberOfGroups = other.mNumberOfGroups;
-    mReferenceOfWidths = other.mReferenceOfWidths;
-    mWidthOfWidths = other.mWidthOfWidths;
-    mReferenceOfLengths = other.mReferenceOfLengths;
-    mIncrementOfLengths = other.mIncrementOfLengths;
-    mTrueLengthOfLastGroup = other.mTrueLengthOfLastGroup;
-    mWidthOfLengths = other.mWidthOfLengths;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -69,7 +49,7 @@ void SecondOrderSettings::read(MemoryReader &memoryReader) {
     mTrueLengthOfLastGroup = memoryReader.read_UInt32_opt();
     mWidthOfLengths = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -92,7 +72,7 @@ void SecondOrderSettings::write(DataWriter &dataWriter) {
     dataWriter << mTrueLengthOfLastGroup;
     dataWriter << mWidthOfLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -128,7 +108,7 @@ void SecondOrderSettings::getAttributeList(std::string prefix, T::AttributeList 
     sprintf(name, "%sSecondOrderSettings.WidthOfLengths", prefix.c_str());
     attributeList.addAttribute(name, toString(mWidthOfLengths));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -154,7 +134,7 @@ void SecondOrderSettings::print(std::ostream &stream, uint level, uint optionFla
     stream << space(level) << "- TrueLengthOfLastGroup = " << toString(mTrueLengthOfLastGroup) << "\n";
     stream << space(level) << "- WidthOfLengths = " << toString(mWidthOfLengths) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -187,7 +167,7 @@ T::Hash SecondOrderSettings::countHash() {
       boost::hash_combine(seed, *mWidthOfLengths);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -197,7 +177,7 @@ const T::UInt8_opt &SecondOrderSettings::getGroupSplitting() const {
   try {
     return mGroupSplitting;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -207,7 +187,7 @@ const T::UInt8_opt &SecondOrderSettings::getMissingValueManagement() const {
   try {
     return mMissingValueManagement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -217,7 +197,7 @@ const T::UInt32_opt &SecondOrderSettings::getPrimaryMissingValue() const {
   try {
     return mPrimaryMissingValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -227,7 +207,7 @@ const T::UInt32_opt &SecondOrderSettings::getSecondaryMissingValue() const {
   try {
     return mSecondaryMissingValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -237,7 +217,7 @@ const T::UInt32_opt &SecondOrderSettings::getNumberOfGroups() const {
   try {
     return mNumberOfGroups;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -247,7 +227,7 @@ const T::UInt8_opt &SecondOrderSettings::getReferenceOfWidths() const {
   try {
     return mReferenceOfWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -257,7 +237,7 @@ const T::UInt8_opt &SecondOrderSettings::getWidthOfWidths() const {
   try {
     return mWidthOfWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -267,7 +247,7 @@ const T::UInt32_opt &SecondOrderSettings::getReferenceOfLengths() const {
   try {
     return mReferenceOfLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -277,7 +257,7 @@ const T::UInt8_opt &SecondOrderSettings::getIncrementOfLengths() const {
   try {
     return mIncrementOfLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -287,7 +267,7 @@ const T::UInt32_opt &SecondOrderSettings::getTrueLengthOfLastGroup() const {
   try {
     return mTrueLengthOfLastGroup;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -297,7 +277,7 @@ const T::UInt8_opt &SecondOrderSettings::getWidthOfLengths() const {
   try {
     return mWidthOfLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -305,7 +285,7 @@ void SecondOrderSettings::setGroupSplitting(T::UInt8_opt groupSplitting) {
   try {
     mGroupSplitting = groupSplitting;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -313,7 +293,7 @@ void SecondOrderSettings::setMissingValueManagement(T::UInt8_opt missingValueMan
   try {
     mMissingValueManagement = missingValueManagement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -321,7 +301,7 @@ void SecondOrderSettings::setPrimaryMissingValue(T::UInt32_opt primaryMissingVal
   try {
     mPrimaryMissingValue = primaryMissingValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -329,7 +309,7 @@ void SecondOrderSettings::setSecondaryMissingValue(T::UInt32_opt secondaryMissin
   try {
     mSecondaryMissingValue = secondaryMissingValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -337,7 +317,7 @@ void SecondOrderSettings::setNumberOfGroups(T::UInt32_opt numberOfGroups) {
   try {
     mNumberOfGroups = numberOfGroups;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -345,7 +325,7 @@ void SecondOrderSettings::setReferenceOfWidths(T::UInt8_opt referenceOfWidths) {
   try {
     mReferenceOfWidths = referenceOfWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -353,7 +333,7 @@ void SecondOrderSettings::setWidthOfWidths(T::UInt8_opt widthOfWidths) {
   try {
     mWidthOfWidths = widthOfWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -361,7 +341,7 @@ void SecondOrderSettings::setReferenceOfLengths(T::UInt32_opt referenceOfLengths
   try {
     mReferenceOfLengths = referenceOfLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -369,7 +349,7 @@ void SecondOrderSettings::setIncrementOfLengths(T::UInt8_opt incrementOfLengths)
   try {
     mIncrementOfLengths = incrementOfLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -377,7 +357,7 @@ void SecondOrderSettings::setTrueLengthOfLastGroup(T::UInt32_opt trueLengthOfLas
   try {
     mTrueLengthOfLastGroup = trueLengthOfLastGroup;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -385,7 +365,7 @@ void SecondOrderSettings::setWidthOfLengths(T::UInt8_opt widthOfLengths) {
   try {
     mWidthOfLengths = widthOfLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

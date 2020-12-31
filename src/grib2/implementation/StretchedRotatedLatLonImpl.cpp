@@ -291,6 +291,7 @@ void StretchedRotatedLatLonImpl::initSpatialReference()
 
     mSpatialReference.SetProjParm("latitude_of_origin",C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000);
     mSpatialReference.SetProjParm("central_meridian",C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000);
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
 
     // ### Validate the spatial reference.

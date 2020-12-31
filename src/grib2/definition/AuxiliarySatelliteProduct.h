@@ -20,7 +20,6 @@ namespace GRIB2 {
 class AuxiliarySatelliteProduct : public ProductDefinition {
 public:
   AuxiliarySatelliteProduct();
-  AuxiliarySatelliteProduct(const AuxiliarySatelliteProduct &other);
   virtual ~AuxiliarySatelliteProduct();
 
   virtual uint getTemplateNumber() const;
@@ -55,28 +54,16 @@ public:
   void setScaledValueOfCentralWaveNumber(T::UInt32_opt scaledValueOfCentralWaveNumber);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  // # For grib2 to grib1 convertion
+  // # For grib2 to grib1 conversion
   // constant dataRepresentationType = 90;
   //
-  //
-  // # START 2/template.4.311 ----------------------------------------------------------------------
   // # TEMPLATE 4.311, Satellite Product Auxiliary Information
-  // #  Parameter category
   // codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
 
   T::UInt8_opt mParameterCategory;
 
-  //
-  // #  Parameter number
   // codetable[1] parameterNumber ('4.2.[discipline:l].[parameterCategory:l].table',masterDir,localDir)  : dump;
 
   T::UInt8_opt mParameterNumber;
@@ -84,7 +71,6 @@ protected:
   // meta parameterUnits codetable_units(parameterNumber) : dump;
   // meta parameterName  codetable_title(parameterNumber) : dump;
   //
-  // #  Type of generating process
   // codetable[1] typeOfGeneratingProcess ('4.3.table',masterDir,localDir) : dump;
 
   T::UInt8_opt mTypeOfGeneratingProcess;
@@ -96,8 +82,6 @@ protected:
   T::UInt8_opt mObservationGeneratingProcessIdentifier;
 
   //
-  // #  Number of contributing spectral bands
-  // # (NB)
   // unsigned[1] NB  : dump;
 
   T::UInt8_opt mNB;
@@ -131,8 +115,6 @@ protected:
   T::UInt32_opt mScaledValueOfCentralWaveNumber;
 
   // }
-  //
-  // # END   2/template.4.311 ----------------------------------------------------------------------
 };
 
 } // namespace GRIB2

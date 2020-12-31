@@ -20,7 +20,6 @@ namespace GRIB2 {
 class TimeSection : public GridDefinition {
 public:
   TimeSection();
-  TimeSection(const TimeSection &other);
   virtual ~TimeSection();
 
   virtual uint getTemplateNumber() const;
@@ -65,14 +64,7 @@ public:
   void setNC(T::UInt16_opt nC);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 3.1200, Time section grid
   // #  NT - Number of time steps
@@ -177,7 +169,6 @@ protected:
   // # Octets 43-(42+NC*4) : Coefficients to define vertical dimension coordinate values in functional form, or the explicit coordinate values
   // # (IEEE 32-bit floating-point values)
   // # ????          coefficients_to_define_vertical_dimension;
-  //
 };
 
 } // namespace GRIB2
