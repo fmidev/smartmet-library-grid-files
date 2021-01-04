@@ -22,7 +22,6 @@ namespace GRIB2 {
 class LambertAzimuthalEqualArea : public GridDefinition {
 public:
   LambertAzimuthalEqualArea();
-  LambertAzimuthalEqualArea(const LambertAzimuthalEqualArea &other);
   virtual ~LambertAzimuthalEqualArea();
 
   virtual uint getTemplateNumber() const;
@@ -57,17 +56,8 @@ public:
   void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  //
-  // # START 2/template.3.140 ----------------------------------------------------------------------
   // # TEMPLATE 3.140, Lambert azimuthal equal area projection
   // include "grib2/template.3.shape_of_the_earth.def";
 
@@ -80,6 +70,7 @@ protected:
   T::UInt32_opt mNumberOfPointsAlongXAxis;
 
   // alias Nx  = numberOfPointsAlongXAxis;
+  // alias Ni  = Nx;
   //
   // #  Ny - number of points along Y-axis
   // unsigned[4] numberOfPointsAlongYAxis : dump  ;
@@ -87,6 +78,7 @@ protected:
   T::UInt32_opt mNumberOfPointsAlongYAxis;
 
   // alias Ny =  numberOfPointsAlongYAxis;
+  // alias Nj  = Ny;
   //
   // #  La1 - latitude of first grid point
   // signed[4] latitudeOfFirstGridPoint: edition_specific ;
@@ -113,12 +105,14 @@ protected:
   T::Int32_opt mStandardParallelInMicrodegrees;
 
   // alias standardParallel=standardParallelInMicrodegrees;
+  // meta geography.standardParallelInDegrees scale(standardParallelInMicrodegrees,one,grib2divider,truncateDegrees) : dump;
   //
   // signed[4] centralLongitudeInMicrodegrees  : dump;
 
   T::Int32_opt mCentralLongitudeInMicrodegrees;
 
   // alias centralLongitude=centralLongitudeInMicrodegrees;
+  // meta geography.centralLongitudeInDegrees scale(centralLongitudeInMicrodegrees,one,grib2divider,truncateDegrees) : dump;
   //
   // #  Resolution and component flag
   // flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump ;
@@ -132,6 +126,7 @@ protected:
   T::UInt32_opt mXDirectionGridLengthInMillimetres;
 
   // alias Dx  = xDirectionGridLengthInMillimetres ;
+  // meta geography.xDirectionGridLengthInMetres scale(xDirectionGridLengthInMillimetres,one,thousand,truncateDegrees): dump;
   //
   // #  Dy - Y-direction grid length in millimetres
   // unsigned[4] yDirectionGridLengthInMillimetres  : dump ;
@@ -139,6 +134,7 @@ protected:
   T::UInt32_opt mYDirectionGridLengthInMillimetres;
 
   // alias Dy  = yDirectionGridLengthInMillimetres ;
+  // meta geography.yDirectionGridLengthInMetres scale(yDirectionGridLengthInMillimetres,one,thousand,truncateDegrees): dump;
   //
   // include "grib2/template.3.scanning_mode.def";
 
@@ -159,8 +155,8 @@ protected:
   // alias latitudeLongitudeValues=latLonValues;
   // meta latitudes latitudes(values,0);
   // meta longitudes longitudes(values,0);
-  //
-  // # END   2/template.3.140 ----------------------------------------------------------------------
+  // meta distinctLatitudes latitudes(values,1);
+  // meta distinctLongitudes longitudes(values,1);
 };
 
 } // namespace GRIB2

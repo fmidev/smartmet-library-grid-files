@@ -20,10 +20,11 @@ MessageSection::MessageSection()
 
 /*! \brief The copy constructor of the class. */
 
+/*
 MessageSection::MessageSection(const MessageSection& other)
 {
 }
-
+*/
 
 
 

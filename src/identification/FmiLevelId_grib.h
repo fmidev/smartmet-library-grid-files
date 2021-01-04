@@ -12,7 +12,7 @@ class FmiLevelId_grib
 {
   public:
                     FmiLevelId_grib();
-                    FmiLevelId_grib(const FmiLevelId_grib& level);
+                    //FmiLevelId_grib(const FmiLevelId_grib& level);
     virtual         ~FmiLevelId_grib();
 
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "RotatedSphericalHarmonic.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,18 +21,7 @@ namespace GRIB2 {
 RotatedSphericalHarmonic::RotatedSphericalHarmonic() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-RotatedSphericalHarmonic::RotatedSphericalHarmonic(const RotatedSphericalHarmonic &other) : GridDefinition(other) {
-  try {
-    mSphericalHarmonic = other.mSphericalHarmonic;
-    mRotation = other.mRotation;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -51,7 +40,7 @@ void RotatedSphericalHarmonic::read(MemoryReader &memoryReader) {
     mSphericalHarmonic.read(memoryReader);
     mRotation.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -65,7 +54,7 @@ void RotatedSphericalHarmonic::write(DataWriter &dataWriter) {
     mSphericalHarmonic.write(dataWriter);
     mRotation.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -83,7 +72,7 @@ void RotatedSphericalHarmonic::getAttributeList(std::string prefix, T::Attribute
     sprintf(name, "%sRotatedSphericalHarmonic.", prefix.c_str());
     mRotation.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -100,7 +89,7 @@ void RotatedSphericalHarmonic::print(std::ostream &stream, uint level, uint opti
     mSphericalHarmonic.print(stream, level + 1, optionFlags);
     mRotation.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -113,7 +102,7 @@ T::Hash RotatedSphericalHarmonic::countHash() {
     boost::hash_combine(seed, mRotation.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -127,7 +116,7 @@ GridDefinition *RotatedSphericalHarmonic::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new RotatedSphericalHarmonic(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -137,7 +126,7 @@ SphericalHarmonicSettings *RotatedSphericalHarmonic::getSphericalHarmonic() cons
   try {
     return static_cast<SphericalHarmonicSettings *>(&mSphericalHarmonic);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -147,7 +136,7 @@ RotationSettings *RotatedSphericalHarmonic::getRotation() const {
   try {
     return static_cast<RotationSettings *>(&mRotation);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +144,7 @@ void RotatedSphericalHarmonic::setSphericalHarmonic(SphericalHarmonicSettings &s
   try {
     mSphericalHarmonic = sphericalHarmonic;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -163,7 +152,7 @@ void RotatedSphericalHarmonic::setRotation(RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

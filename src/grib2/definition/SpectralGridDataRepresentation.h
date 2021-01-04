@@ -22,7 +22,6 @@ namespace GRIB2 {
 class SpectralGridDataRepresentation : public RepresentationDefinition {
 public:
   SpectralGridDataRepresentation();
-  SpectralGridDataRepresentation(const SpectralGridDataRepresentation &other);
   virtual ~SpectralGridDataRepresentation();
 
   virtual uint getTemplateNumber() const;
@@ -45,14 +44,7 @@ public:
   void setCcsdsRsi(T::UInt16_opt ccsdsRsi);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 5.42, Grid point and spectral data - CCSDS recommended lossless compression
   //

@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "LatLonSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,20 +21,7 @@ namespace GRIB2 {
 LatLonSettings::LatLonSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-LatLonSettings::LatLonSettings(const LatLonSettings &other) {
-  try {
-    mGrid = other.mGrid;
-    mIDirectionIncrement = other.mIDirectionIncrement;
-    mJDirectionIncrement = other.mJDirectionIncrement;
-    mScanningMode = other.mScanningMode;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -55,7 +42,7 @@ void LatLonSettings::read(MemoryReader &memoryReader) {
     mJDirectionIncrement = memoryReader.read_UInt32_opt();
     mScanningMode.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -71,7 +58,7 @@ void LatLonSettings::write(DataWriter &dataWriter) {
     dataWriter << mJDirectionIncrement;
     mScanningMode.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -93,7 +80,7 @@ void LatLonSettings::getAttributeList(std::string prefix, T::AttributeList &attr
     sprintf(name, "%sLatLonSettings.", prefix.c_str());
     mScanningMode.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -112,7 +99,7 @@ void LatLonSettings::print(std::ostream &stream, uint level, uint optionFlags) c
     stream << space(level) << "- JDirectionIncrement = " << toString(mJDirectionIncrement) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -129,7 +116,7 @@ T::Hash LatLonSettings::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -139,7 +126,7 @@ GridSettings *LatLonSettings::getGrid() const {
   try {
     return static_cast<GridSettings *>(&mGrid);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -149,7 +136,7 @@ const T::UInt32_opt &LatLonSettings::getIDirectionIncrement() const {
   try {
     return mIDirectionIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -159,7 +146,7 @@ const T::UInt32_opt &LatLonSettings::getJDirectionIncrement() const {
   try {
     return mJDirectionIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -169,7 +156,7 @@ ScanningModeSettings *LatLonSettings::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -177,7 +164,7 @@ void LatLonSettings::setGrid(GridSettings &grid) {
   try {
     mGrid = grid;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -185,7 +172,7 @@ void LatLonSettings::setIDirectionIncrement(T::UInt32_opt iDirectionIncrement) {
   try {
     mIDirectionIncrement = iDirectionIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -193,7 +180,7 @@ void LatLonSettings::setJDirectionIncrement(T::UInt32_opt jDirectionIncrement) {
   try {
     mJDirectionIncrement = jDirectionIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -201,7 +188,7 @@ void LatLonSettings::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

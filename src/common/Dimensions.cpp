@@ -28,7 +28,7 @@ Dimensions::Dimensions()
 
 
 
-
+/*
 Dimensions::Dimensions(const Dimensions& dimensions)
 {
   try
@@ -43,7 +43,7 @@ Dimensions::Dimensions(const Dimensions& dimensions)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

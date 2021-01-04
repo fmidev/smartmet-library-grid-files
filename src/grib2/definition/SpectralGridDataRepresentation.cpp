@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "SpectralGridDataRepresentation.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,21 +21,7 @@ namespace GRIB2 {
 SpectralGridDataRepresentation::SpectralGridDataRepresentation() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-SpectralGridDataRepresentation::SpectralGridDataRepresentation(const SpectralGridDataRepresentation &other) : RepresentationDefinition(other) {
-  try {
-    mPacking = other.mPacking;
-    mOriginalValues = other.mOriginalValues;
-    mCcsdsFlags = other.mCcsdsFlags;
-    mCcsdsBlockSize = other.mCcsdsBlockSize;
-    mCcsdsRsi = other.mCcsdsRsi;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -57,7 +43,7 @@ void SpectralGridDataRepresentation::read(MemoryReader &memoryReader) {
     mCcsdsBlockSize = memoryReader.read_UInt8_opt();
     mCcsdsRsi = memoryReader.read_UInt16_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -74,7 +60,7 @@ void SpectralGridDataRepresentation::write(DataWriter &dataWriter) {
     dataWriter << mCcsdsBlockSize;
     dataWriter << mCcsdsRsi;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -98,7 +84,7 @@ void SpectralGridDataRepresentation::getAttributeList(std::string prefix, T::Att
     sprintf(name, "%sSpectralGridDataRepresentation.CcsdsRsi", prefix.c_str());
     attributeList.addAttribute(name, toString(mCcsdsRsi));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -118,7 +104,7 @@ void SpectralGridDataRepresentation::print(std::ostream &stream, uint level, uin
     stream << space(level) << "- CcsdsBlockSize = " << toString(mCcsdsBlockSize) << "\n";
     stream << space(level) << "- CcsdsRsi = " << toString(mCcsdsRsi) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -137,7 +123,7 @@ T::Hash SpectralGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -151,7 +137,7 @@ RepresentationDefinition *SpectralGridDataRepresentation::createRepresentationDe
   try {
     return static_cast<RepresentationDefinition *>(new SpectralGridDataRepresentation(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -161,7 +147,7 @@ PackingSettings *SpectralGridDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -171,7 +157,7 @@ OriginalValuesSettings *SpectralGridDataRepresentation::getOriginalValues() cons
   try {
     return static_cast<OriginalValuesSettings *>(&mOriginalValues);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -181,7 +167,7 @@ const T::UInt8_opt &SpectralGridDataRepresentation::getCcsdsFlags() const {
   try {
     return mCcsdsFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -191,7 +177,7 @@ const T::UInt8_opt &SpectralGridDataRepresentation::getCcsdsBlockSize() const {
   try {
     return mCcsdsBlockSize;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -201,7 +187,7 @@ const T::UInt16_opt &SpectralGridDataRepresentation::getCcsdsRsi() const {
   try {
     return mCcsdsRsi;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -209,7 +195,7 @@ void SpectralGridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -217,7 +203,7 @@ void SpectralGridDataRepresentation::setOriginalValues(OriginalValuesSettings &o
   try {
     mOriginalValues = originalValues;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -225,7 +211,7 @@ void SpectralGridDataRepresentation::setCcsdsFlags(T::UInt8_opt ccsdsFlags) {
   try {
     mCcsdsFlags = ccsdsFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -233,7 +219,7 @@ void SpectralGridDataRepresentation::setCcsdsBlockSize(T::UInt8_opt ccsdsBlockSi
   try {
     mCcsdsBlockSize = ccsdsBlockSize;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -241,7 +227,7 @@ void SpectralGridDataRepresentation::setCcsdsRsi(T::UInt16_opt ccsdsRsi) {
   try {
     mCcsdsRsi = ccsdsRsi;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

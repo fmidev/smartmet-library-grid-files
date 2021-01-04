@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "PercentileForecast.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,20 +21,7 @@ namespace GRIB2 {
 PercentileForecast::PercentileForecast() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-PercentileForecast::PercentileForecast(const PercentileForecast &other) : ProductDefinition(other) {
-  try {
-    mParameter = other.mParameter;
-    mPointInTime = other.mPointInTime;
-    mHorizontal = other.mHorizontal;
-    mPercentile = other.mPercentile;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -55,7 +42,7 @@ void PercentileForecast::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mPercentile.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -71,7 +58,7 @@ void PercentileForecast::write(DataWriter &dataWriter) {
     mHorizontal.write(dataWriter);
     mPercentile.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -93,7 +80,7 @@ void PercentileForecast::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sPercentileForecast.", prefix.c_str());
     mPercentile.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -112,7 +99,7 @@ void PercentileForecast::print(std::ostream &stream, uint level, uint optionFlag
     mHorizontal.print(stream, level + 1, optionFlags);
     mPercentile.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -127,7 +114,7 @@ T::Hash PercentileForecast::countHash() {
     boost::hash_combine(seed, mPercentile.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -141,7 +128,7 @@ ProductDefinition *PercentileForecast::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new PercentileForecast(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -151,7 +138,7 @@ ParameterSettings *PercentileForecast::getParameter() const {
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -161,7 +148,7 @@ PointInTimeSettings *PercentileForecast::getPointInTime() const {
   try {
     return static_cast<PointInTimeSettings *>(&mPointInTime);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -171,7 +158,7 @@ HorizontalSettings *PercentileForecast::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -181,7 +168,7 @@ PercentileSettings *PercentileForecast::getPercentile() const {
   try {
     return static_cast<PercentileSettings *>(&mPercentile);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -189,7 +176,7 @@ void PercentileForecast::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -197,7 +184,7 @@ void PercentileForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -205,7 +192,7 @@ void PercentileForecast::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -213,7 +200,7 @@ void PercentileForecast::setPercentile(PercentileSettings &percentile) {
   try {
     mPercentile = percentile;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

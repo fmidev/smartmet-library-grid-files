@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ComplexGridDataRepresentation.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,29 +21,7 @@ namespace GRIB2 {
 ComplexGridDataRepresentation::ComplexGridDataRepresentation() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ComplexGridDataRepresentation::ComplexGridDataRepresentation(const ComplexGridDataRepresentation &other) : RepresentationDefinition(other) {
-  try {
-    mPacking = other.mPacking;
-    mOriginalValues = other.mOriginalValues;
-    mGroupSplittingMethodUsed = other.mGroupSplittingMethodUsed;
-    mMissingValueManagementUsed = other.mMissingValueManagementUsed;
-    mPrimaryMissingValueSubstitute = other.mPrimaryMissingValueSubstitute;
-    mSecondaryMissingValueSubstitute = other.mSecondaryMissingValueSubstitute;
-    mNumberOfGroupsOfDataValues = other.mNumberOfGroupsOfDataValues;
-    mReferenceForGroupWidths = other.mReferenceForGroupWidths;
-    mNumberOfBitsUsedForTheGroupWidths = other.mNumberOfBitsUsedForTheGroupWidths;
-    mReferenceForGroupLengths = other.mReferenceForGroupLengths;
-    mLengthIncrementForTheGroupLengths = other.mLengthIncrementForTheGroupLengths;
-    mTrueLengthOfLastGroup = other.mTrueLengthOfLastGroup;
-    mNumberOfBitsForScaledGroupLengths = other.mNumberOfBitsForScaledGroupLengths;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -73,7 +51,7 @@ void ComplexGridDataRepresentation::read(MemoryReader &memoryReader) {
     mTrueLengthOfLastGroup = memoryReader.read_UInt32_opt();
     mNumberOfBitsForScaledGroupLengths = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -98,7 +76,7 @@ void ComplexGridDataRepresentation::write(DataWriter &dataWriter) {
     dataWriter << mTrueLengthOfLastGroup;
     dataWriter << mNumberOfBitsForScaledGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -138,7 +116,7 @@ void ComplexGridDataRepresentation::getAttributeList(std::string prefix, T::Attr
     sprintf(name, "%sComplexGridDataRepresentation.NumberOfBitsForScaledGroupLengths", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfBitsForScaledGroupLengths));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -166,7 +144,7 @@ void ComplexGridDataRepresentation::print(std::ostream &stream, uint level, uint
     stream << space(level) << "- TrueLengthOfLastGroup = " << toString(mTrueLengthOfLastGroup) << "\n";
     stream << space(level) << "- NumberOfBitsForScaledGroupLengths = " << toString(mNumberOfBitsForScaledGroupLengths) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -201,7 +179,7 @@ T::Hash ComplexGridDataRepresentation::countHash() {
     boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -215,7 +193,7 @@ RepresentationDefinition *ComplexGridDataRepresentation::createRepresentationDef
   try {
     return static_cast<RepresentationDefinition *>(new ComplexGridDataRepresentation(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -225,7 +203,7 @@ PackingSettings *ComplexGridDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -235,7 +213,7 @@ OriginalValuesSettings *ComplexGridDataRepresentation::getOriginalValues() const
   try {
     return static_cast<OriginalValuesSettings *>(&mOriginalValues);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -245,7 +223,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getGroupSplittingMethodUsed()
   try {
     return mGroupSplittingMethodUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -255,7 +233,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getMissingValueManagementUsed
   try {
     return mMissingValueManagementUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -265,7 +243,7 @@ const T::UInt32_opt &ComplexGridDataRepresentation::getPrimaryMissingValueSubsti
   try {
     return mPrimaryMissingValueSubstitute;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -275,7 +253,7 @@ const T::UInt32_opt &ComplexGridDataRepresentation::getSecondaryMissingValueSubs
   try {
     return mSecondaryMissingValueSubstitute;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -285,7 +263,7 @@ const T::UInt32_opt &ComplexGridDataRepresentation::getNumberOfGroupsOfDataValue
   try {
     return mNumberOfGroupsOfDataValues;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -295,7 +273,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getReferenceForGroupWidths() 
   try {
     return mReferenceForGroupWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -305,7 +283,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getNumberOfBitsUsedForTheGrou
   try {
     return mNumberOfBitsUsedForTheGroupWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -315,7 +293,7 @@ const T::UInt32_opt &ComplexGridDataRepresentation::getReferenceForGroupLengths(
   try {
     return mReferenceForGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -325,7 +303,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getLengthIncrementForTheGroup
   try {
     return mLengthIncrementForTheGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -335,7 +313,7 @@ const T::UInt32_opt &ComplexGridDataRepresentation::getTrueLengthOfLastGroup() c
   try {
     return mTrueLengthOfLastGroup;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -345,7 +323,7 @@ const T::UInt8_opt &ComplexGridDataRepresentation::getNumberOfBitsForScaledGroup
   try {
     return mNumberOfBitsForScaledGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -353,7 +331,7 @@ void ComplexGridDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -361,7 +339,7 @@ void ComplexGridDataRepresentation::setOriginalValues(OriginalValuesSettings &or
   try {
     mOriginalValues = originalValues;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -369,7 +347,7 @@ void ComplexGridDataRepresentation::setGroupSplittingMethodUsed(T::UInt8_opt gro
   try {
     mGroupSplittingMethodUsed = groupSplittingMethodUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -377,7 +355,7 @@ void ComplexGridDataRepresentation::setMissingValueManagementUsed(T::UInt8_opt m
   try {
     mMissingValueManagementUsed = missingValueManagementUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -385,7 +363,7 @@ void ComplexGridDataRepresentation::setPrimaryMissingValueSubstitute(T::UInt32_o
   try {
     mPrimaryMissingValueSubstitute = primaryMissingValueSubstitute;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -393,7 +371,7 @@ void ComplexGridDataRepresentation::setSecondaryMissingValueSubstitute(T::UInt32
   try {
     mSecondaryMissingValueSubstitute = secondaryMissingValueSubstitute;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -401,7 +379,7 @@ void ComplexGridDataRepresentation::setNumberOfGroupsOfDataValues(T::UInt32_opt 
   try {
     mNumberOfGroupsOfDataValues = numberOfGroupsOfDataValues;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -409,7 +387,7 @@ void ComplexGridDataRepresentation::setReferenceForGroupWidths(T::UInt8_opt refe
   try {
     mReferenceForGroupWidths = referenceForGroupWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -417,7 +395,7 @@ void ComplexGridDataRepresentation::setNumberOfBitsUsedForTheGroupWidths(T::UInt
   try {
     mNumberOfBitsUsedForTheGroupWidths = numberOfBitsUsedForTheGroupWidths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -425,7 +403,7 @@ void ComplexGridDataRepresentation::setReferenceForGroupLengths(T::UInt32_opt re
   try {
     mReferenceForGroupLengths = referenceForGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -433,7 +411,7 @@ void ComplexGridDataRepresentation::setLengthIncrementForTheGroupLengths(T::UInt
   try {
     mLengthIncrementForTheGroupLengths = lengthIncrementForTheGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -441,7 +419,7 @@ void ComplexGridDataRepresentation::setTrueLengthOfLastGroup(T::UInt32_opt trueL
   try {
     mTrueLengthOfLastGroup = trueLengthOfLastGroup;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -449,7 +427,7 @@ void ComplexGridDataRepresentation::setNumberOfBitsForScaledGroupLengths(T::UInt
   try {
     mNumberOfBitsForScaledGroupLengths = numberOfBitsForScaledGroupLengths;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

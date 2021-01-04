@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "Product_59.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,18 +21,7 @@ namespace GRIB2 {
 Product_59::Product_59() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-Product_59::Product_59(const Product_59 &other) : ProductDefinition(other) {
-  try {
-    mHorizontal = other.mHorizontal;
-    mEps = other.mEps;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -48,10 +37,11 @@ Product_59::~Product_59() {
 
 void Product_59::read(MemoryReader &memoryReader) {
   try {
+    mPointInTime.read(memoryReader);
     mHorizontal.read(memoryReader);
     mEps.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -62,10 +52,11 @@ void Product_59::read(MemoryReader &memoryReader) {
 
 void Product_59::write(DataWriter &dataWriter) {
   try {
+    mPointInTime.write(dataWriter);
     mHorizontal.write(dataWriter);
     mEps.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -79,11 +70,13 @@ void Product_59::getAttributeList(std::string prefix, T::AttributeList &attribut
   try {
     char name[300];
     sprintf(name, "%sProduct_59.", prefix.c_str());
+    mPointInTime.getAttributeList(name, attributeList);
+    sprintf(name, "%sProduct_59.", prefix.c_str());
     mHorizontal.getAttributeList(name, attributeList);
     sprintf(name, "%sProduct_59.", prefix.c_str());
     mEps.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -97,10 +90,11 @@ void Product_59::getAttributeList(std::string prefix, T::AttributeList &attribut
 void Product_59::print(std::ostream &stream, uint level, uint optionFlags) const {
   try {
     stream << space(level) << "Product_59\n";
+    mPointInTime.print(stream, level + 1, optionFlags);
     mHorizontal.print(stream, level + 1, optionFlags);
     mEps.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -109,11 +103,12 @@ void Product_59::print(std::ostream &stream, uint level, uint optionFlags) const
 T::Hash Product_59::countHash() {
   try {
     std::size_t seed = 0;
+    boost::hash_combine(seed, mPointInTime.countHash());
     boost::hash_combine(seed, mHorizontal.countHash());
     boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -127,7 +122,17 @@ ProductDefinition *Product_59::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new Product_59(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method returns the pointer to the {@link mPointInTime} attribute. */
+
+PointInTimeSettings *Product_59::getPointInTime() const {
+  try {
+    return static_cast<PointInTimeSettings *>(&mPointInTime);
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -137,7 +142,7 @@ HorizontalSettings *Product_59::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -147,7 +152,15 @@ EpsSettings *Product_59::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+void Product_59::setPointInTime(PointInTimeSettings &pointInTime) {
+  try {
+    mPointInTime = pointInTime;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +168,7 @@ void Product_59::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -163,7 +176,7 @@ void Product_59::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

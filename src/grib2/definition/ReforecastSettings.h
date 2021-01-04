@@ -19,7 +19,6 @@ namespace GRIB2 {
 class ReforecastSettings {
 public:
   ReforecastSettings();
-  ReforecastSettings(const ReforecastSettings &other);
   virtual ~ReforecastSettings();
 
   virtual void read(MemoryReader &memoryReader);

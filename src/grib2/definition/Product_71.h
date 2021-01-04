@@ -24,7 +24,6 @@ namespace GRIB2 {
 class Product_71 : public ProductDefinition {
 public:
   Product_71();
-  Product_71(const Product_71 &other);
   virtual ~Product_71();
 
   virtual uint getTemplateNumber() const;
@@ -45,14 +44,7 @@ public:
   void setEps(EpsSettings &eps);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # EFAS: Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time
   //

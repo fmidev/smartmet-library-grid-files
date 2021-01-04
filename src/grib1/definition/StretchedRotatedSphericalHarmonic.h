@@ -22,7 +22,6 @@ namespace GRIB1 {
 class StretchedRotatedSphericalHarmonic : public GridDefinition {
 public:
   StretchedRotatedSphericalHarmonic();
-  StretchedRotatedSphericalHarmonic(const StretchedRotatedSphericalHarmonic &other);
   virtual ~StretchedRotatedSphericalHarmonic();
 
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
@@ -49,14 +48,7 @@ public:
   void setGridStretching(GridStretchingSettings &gridStretching);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # GRID DEFINITION Stretched and rotated spherical harmonic coefficients
   //
@@ -64,15 +56,6 @@ protected:
   // constant gridDefinitionTemplateNumber     = 53;
   //
   // template commonBlock "grib1/grid_definition_spherical_harmonics.def";
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
   // # GRID DEFINITION spherical harmonic coefficients (including rotated, stretched, or stretched and rotated)
   //
   // #  J - pentagonal resolution parameter

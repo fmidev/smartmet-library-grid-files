@@ -28,7 +28,7 @@ Grib1ParameterDef::Grib1ParameterDef()
 
 
 
-
+/*
 Grib1ParameterDef::Grib1ParameterDef(const Grib1ParameterDef& parameter)
 {
   try
@@ -48,7 +48,7 @@ Grib1ParameterDef::Grib1ParameterDef(const Grib1ParameterDef& parameter)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

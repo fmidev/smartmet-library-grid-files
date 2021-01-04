@@ -29,7 +29,7 @@ FmiParameterDef::FmiParameterDef()
 
 
 
-
+/*
 FmiParameterDef::FmiParameterDef(const FmiParameterDef& parameterDef)
 {
   try
@@ -49,7 +49,7 @@ FmiParameterDef::FmiParameterDef(const FmiParameterDef& parameterDef)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

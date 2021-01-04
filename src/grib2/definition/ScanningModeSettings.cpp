@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ScanningModeSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,17 +22,7 @@ ScanningModeSettings::ScanningModeSettings() {
   try {
     mScanningMode = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ScanningModeSettings::ScanningModeSettings(const ScanningModeSettings &other) {
-  try {
-    mScanningMode = other.mScanningMode;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -50,7 +40,7 @@ void ScanningModeSettings::read(MemoryReader &memoryReader) {
   try {
     mScanningMode = memoryReader.read_uint8();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -63,7 +53,7 @@ void ScanningModeSettings::write(DataWriter &dataWriter) {
   try {
     dataWriter << mScanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -79,7 +69,7 @@ void ScanningModeSettings::getAttributeList(std::string prefix, T::AttributeList
     sprintf(name, "%sScanningModeSettings.ScanningMode", prefix.c_str());
     attributeList.addAttribute(name, toString(mScanningMode));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -95,7 +85,7 @@ void ScanningModeSettings::print(std::ostream &stream, uint level, uint optionFl
     stream << space(level) << "ScanningModeSettings\n";
     stream << space(level) << "- ScanningMode = " << toString(mScanningMode) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -107,7 +97,7 @@ T::Hash ScanningModeSettings::countHash() {
     boost::hash_combine(seed, mScanningMode);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -117,7 +107,7 @@ std::uint8_t ScanningModeSettings::getScanningMode() const {
   try {
     return mScanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -125,7 +115,7 @@ void ScanningModeSettings::setScanningMode(std::uint8_t scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

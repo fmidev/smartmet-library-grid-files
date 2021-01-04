@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "RectangularClusterSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,30 +21,7 @@ namespace GRIB2 {
 RectangularClusterSettings::RectangularClusterSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-RectangularClusterSettings::RectangularClusterSettings(const RectangularClusterSettings &other) {
-  try {
-    mClusterIdentifier = other.mClusterIdentifier;
-    mNH = other.mNH;
-    mNL = other.mNL;
-    mTotalNumberOfClusters = other.mTotalNumberOfClusters;
-    mClusteringMethod = other.mClusteringMethod;
-    mNorthernLatitudeOfClusterDomain = other.mNorthernLatitudeOfClusterDomain;
-    mSouthernLatitudeOfClusterDomain = other.mSouthernLatitudeOfClusterDomain;
-    mEasternLongitudeOfClusterDomain = other.mEasternLongitudeOfClusterDomain;
-    mWesternLongitudeOfClusterDomain = other.mWesternLongitudeOfClusterDomain;
-    mNumberOfForecastsInTheCluster = other.mNumberOfForecastsInTheCluster;
-    mScaleFactorOfStandardDeviation = other.mScaleFactorOfStandardDeviation;
-    mScaledValueOfStandardDeviation = other.mScaledValueOfStandardDeviation;
-    mScaleFactorOfDistanceFromEnsembleMean = other.mScaleFactorOfDistanceFromEnsembleMean;
-    mScaledValueOfDistanceFromEnsembleMean = other.mScaledValueOfDistanceFromEnsembleMean;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -75,7 +52,7 @@ void RectangularClusterSettings::read(MemoryReader &memoryReader) {
     mScaleFactorOfDistanceFromEnsembleMean = memoryReader.read_UInt8_opt();
     mScaledValueOfDistanceFromEnsembleMean = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -101,7 +78,7 @@ void RectangularClusterSettings::write(DataWriter &dataWriter) {
     dataWriter << mScaleFactorOfDistanceFromEnsembleMean;
     dataWriter << mScaledValueOfDistanceFromEnsembleMean;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -143,7 +120,7 @@ void RectangularClusterSettings::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sRectangularClusterSettings.ScaledValueOfDistanceFromEnsembleMean", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfDistanceFromEnsembleMean));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -172,7 +149,7 @@ void RectangularClusterSettings::print(std::ostream &stream, uint level, uint op
     stream << space(level) << "- ScaleFactorOfDistanceFromEnsembleMean = " << toString(mScaleFactorOfDistanceFromEnsembleMean) << "\n";
     stream << space(level) << "- ScaledValueOfDistanceFromEnsembleMean = " << toString(mScaledValueOfDistanceFromEnsembleMean) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -211,7 +188,7 @@ T::Hash RectangularClusterSettings::countHash() {
       boost::hash_combine(seed, *mScaledValueOfDistanceFromEnsembleMean);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -221,7 +198,7 @@ const T::UInt8_opt &RectangularClusterSettings::getClusterIdentifier() const {
   try {
     return mClusterIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -231,7 +208,7 @@ const T::UInt8_opt &RectangularClusterSettings::getNH() const {
   try {
     return mNH;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -241,7 +218,7 @@ const T::UInt8_opt &RectangularClusterSettings::getNL() const {
   try {
     return mNL;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -251,7 +228,7 @@ const T::UInt8_opt &RectangularClusterSettings::getTotalNumberOfClusters() const
   try {
     return mTotalNumberOfClusters;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -261,7 +238,7 @@ const T::UInt8_opt &RectangularClusterSettings::getClusteringMethod() const {
   try {
     return mClusteringMethod;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -271,7 +248,7 @@ const T::UInt32_opt &RectangularClusterSettings::getNorthernLatitudeOfClusterDom
   try {
     return mNorthernLatitudeOfClusterDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -281,7 +258,7 @@ const T::UInt32_opt &RectangularClusterSettings::getSouthernLatitudeOfClusterDom
   try {
     return mSouthernLatitudeOfClusterDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -291,7 +268,7 @@ const T::UInt32_opt &RectangularClusterSettings::getEasternLongitudeOfClusterDom
   try {
     return mEasternLongitudeOfClusterDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -301,7 +278,7 @@ const T::UInt32_opt &RectangularClusterSettings::getWesternLongitudeOfClusterDom
   try {
     return mWesternLongitudeOfClusterDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -311,7 +288,7 @@ const T::UInt8_opt &RectangularClusterSettings::getNumberOfForecastsInTheCluster
   try {
     return mNumberOfForecastsInTheCluster;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -321,7 +298,7 @@ const T::UInt8_opt &RectangularClusterSettings::getScaleFactorOfStandardDeviatio
   try {
     return mScaleFactorOfStandardDeviation;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -331,7 +308,7 @@ const T::UInt32_opt &RectangularClusterSettings::getScaledValueOfStandardDeviati
   try {
     return mScaledValueOfStandardDeviation;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -341,7 +318,7 @@ const T::UInt8_opt &RectangularClusterSettings::getScaleFactorOfDistanceFromEnse
   try {
     return mScaleFactorOfDistanceFromEnsembleMean;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -351,7 +328,7 @@ const T::UInt32_opt &RectangularClusterSettings::getScaledValueOfDistanceFromEns
   try {
     return mScaledValueOfDistanceFromEnsembleMean;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -359,7 +336,7 @@ void RectangularClusterSettings::setClusterIdentifier(T::UInt8_opt clusterIdenti
   try {
     mClusterIdentifier = clusterIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -367,7 +344,7 @@ void RectangularClusterSettings::setNH(T::UInt8_opt nH) {
   try {
     mNH = nH;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -375,7 +352,7 @@ void RectangularClusterSettings::setNL(T::UInt8_opt nL) {
   try {
     mNL = nL;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -383,7 +360,7 @@ void RectangularClusterSettings::setTotalNumberOfClusters(T::UInt8_opt totalNumb
   try {
     mTotalNumberOfClusters = totalNumberOfClusters;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -391,7 +368,7 @@ void RectangularClusterSettings::setClusteringMethod(T::UInt8_opt clusteringMeth
   try {
     mClusteringMethod = clusteringMethod;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -399,7 +376,7 @@ void RectangularClusterSettings::setNorthernLatitudeOfClusterDomain(T::UInt32_op
   try {
     mNorthernLatitudeOfClusterDomain = northernLatitudeOfClusterDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -407,7 +384,7 @@ void RectangularClusterSettings::setSouthernLatitudeOfClusterDomain(T::UInt32_op
   try {
     mSouthernLatitudeOfClusterDomain = southernLatitudeOfClusterDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -415,7 +392,7 @@ void RectangularClusterSettings::setEasternLongitudeOfClusterDomain(T::UInt32_op
   try {
     mEasternLongitudeOfClusterDomain = easternLongitudeOfClusterDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -423,7 +400,7 @@ void RectangularClusterSettings::setWesternLongitudeOfClusterDomain(T::UInt32_op
   try {
     mWesternLongitudeOfClusterDomain = westernLongitudeOfClusterDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -431,7 +408,7 @@ void RectangularClusterSettings::setNumberOfForecastsInTheCluster(T::UInt8_opt n
   try {
     mNumberOfForecastsInTheCluster = numberOfForecastsInTheCluster;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -439,7 +416,7 @@ void RectangularClusterSettings::setScaleFactorOfStandardDeviation(T::UInt8_opt 
   try {
     mScaleFactorOfStandardDeviation = scaleFactorOfStandardDeviation;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -447,7 +424,7 @@ void RectangularClusterSettings::setScaledValueOfStandardDeviation(T::UInt32_opt
   try {
     mScaledValueOfStandardDeviation = scaledValueOfStandardDeviation;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -455,7 +432,7 @@ void RectangularClusterSettings::setScaleFactorOfDistanceFromEnsembleMean(T::UIn
   try {
     mScaleFactorOfDistanceFromEnsembleMean = scaleFactorOfDistanceFromEnsembleMean;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -463,7 +440,7 @@ void RectangularClusterSettings::setScaledValueOfDistanceFromEnsembleMean(T::UIn
   try {
     mScaledValueOfDistanceFromEnsembleMean = scaledValueOfDistanceFromEnsembleMean;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

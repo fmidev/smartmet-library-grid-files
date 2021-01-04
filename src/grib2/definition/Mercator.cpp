@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "Mercator.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,29 +21,7 @@ namespace GRIB2 {
 Mercator::Mercator() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-Mercator::Mercator(const Mercator &other) : GridDefinition(other) {
-  try {
-    mEarthShape = other.mEarthShape;
-    mNi = other.mNi;
-    mNj = other.mNj;
-    mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
-    mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
-    mResolution = other.mResolution;
-    mLaD = other.mLaD;
-    mLatitudeOfLastGridPoint = other.mLatitudeOfLastGridPoint;
-    mLongitudeOfLastGridPoint = other.mLongitudeOfLastGridPoint;
-    mScanningMode = other.mScanningMode;
-    mOrientationOfTheGrid = other.mOrientationOfTheGrid;
-    mDi = other.mDi;
-    mDj = other.mDj;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -73,7 +51,7 @@ void Mercator::read(MemoryReader &memoryReader) {
     mDi = memoryReader.read_UInt32_opt();
     mDj = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -98,7 +76,7 @@ void Mercator::write(DataWriter &dataWriter) {
     dataWriter << mDi;
     dataWriter << mDj;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -138,7 +116,7 @@ void Mercator::getAttributeList(std::string prefix, T::AttributeList &attributeL
     sprintf(name, "%sMercator.Dj", prefix.c_str());
     attributeList.addAttribute(name, toString(mDj));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -166,7 +144,7 @@ void Mercator::print(std::ostream &stream, uint level, uint optionFlags) const {
     stream << space(level) << "- Di = " << toString(mDi) << "\n";
     stream << space(level) << "- Dj = " << toString(mDj) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -198,7 +176,7 @@ T::Hash Mercator::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -212,7 +190,7 @@ GridDefinition *Mercator::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new Mercator(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -222,7 +200,7 @@ EarthShapeSettings *Mercator::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -232,7 +210,7 @@ const T::UInt32_opt &Mercator::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -242,7 +220,7 @@ const T::UInt32_opt &Mercator::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -252,7 +230,7 @@ const T::Int32_opt &Mercator::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -262,7 +240,7 @@ const T::Int32_opt &Mercator::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -272,7 +250,7 @@ ResolutionSettings *Mercator::getResolution() const {
   try {
     return static_cast<ResolutionSettings *>(&mResolution);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -282,7 +260,7 @@ const T::Int32_opt &Mercator::getLaD() const {
   try {
     return mLaD;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -292,7 +270,7 @@ const T::Int32_opt &Mercator::getLatitudeOfLastGridPoint() const {
   try {
     return mLatitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -302,7 +280,7 @@ const T::Int32_opt &Mercator::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -312,7 +290,7 @@ ScanningModeSettings *Mercator::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -322,7 +300,7 @@ const T::UInt32_opt &Mercator::getOrientationOfTheGrid() const {
   try {
     return mOrientationOfTheGrid;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -332,7 +310,7 @@ const T::UInt32_opt &Mercator::getDi() const {
   try {
     return mDi;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -342,7 +320,7 @@ const T::UInt32_opt &Mercator::getDj() const {
   try {
     return mDj;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -350,7 +328,7 @@ void Mercator::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -358,7 +336,7 @@ void Mercator::setNi(T::UInt32_opt ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -366,7 +344,7 @@ void Mercator::setNj(T::UInt32_opt nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -374,7 +352,7 @@ void Mercator::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoint
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -382,7 +360,7 @@ void Mercator::setLongitudeOfFirstGridPoint(T::Int32_opt longitudeOfFirstGridPoi
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -390,7 +368,7 @@ void Mercator::setResolution(ResolutionSettings &resolution) {
   try {
     mResolution = resolution;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -398,7 +376,7 @@ void Mercator::setLaD(T::Int32_opt laD) {
   try {
     mLaD = laD;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -406,7 +384,7 @@ void Mercator::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint) 
   try {
     mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -414,7 +392,7 @@ void Mercator::setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint
   try {
     mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -422,7 +400,7 @@ void Mercator::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -430,7 +408,7 @@ void Mercator::setOrientationOfTheGrid(T::UInt32_opt orientationOfTheGrid) {
   try {
     mOrientationOfTheGrid = orientationOfTheGrid;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -438,7 +416,7 @@ void Mercator::setDi(T::UInt32_opt di) {
   try {
     mDi = di;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -446,7 +424,7 @@ void Mercator::setDj(T::UInt32_opt dj) {
   try {
     mDj = dj;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

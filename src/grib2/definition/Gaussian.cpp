@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "Gaussian.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,18 +21,7 @@ namespace GRIB2 {
 Gaussian::Gaussian() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-Gaussian::Gaussian(const Gaussian &other) : GridDefinition(other) {
-  try {
-    mEarthShape = other.mEarthShape;
-    mGaussian = other.mGaussian;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -51,7 +40,7 @@ void Gaussian::read(MemoryReader &memoryReader) {
     mEarthShape.read(memoryReader);
     mGaussian.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -65,7 +54,7 @@ void Gaussian::write(DataWriter &dataWriter) {
     mEarthShape.write(dataWriter);
     mGaussian.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -83,7 +72,7 @@ void Gaussian::getAttributeList(std::string prefix, T::AttributeList &attributeL
     sprintf(name, "%sGaussian.", prefix.c_str());
     mGaussian.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -100,7 +89,7 @@ void Gaussian::print(std::ostream &stream, uint level, uint optionFlags) const {
     mEarthShape.print(stream, level + 1, optionFlags);
     mGaussian.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -113,7 +102,7 @@ T::Hash Gaussian::countHash() {
     boost::hash_combine(seed, mGaussian.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -127,7 +116,7 @@ GridDefinition *Gaussian::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new Gaussian(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -137,7 +126,7 @@ EarthShapeSettings *Gaussian::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -147,7 +136,7 @@ GaussianSettings *Gaussian::getGaussian() const {
   try {
     return static_cast<GaussianSettings *>(&mGaussian);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +144,7 @@ void Gaussian::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -163,7 +152,7 @@ void Gaussian::setGaussian(GaussianSettings &gaussian) {
   try {
     mGaussian = gaussian;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

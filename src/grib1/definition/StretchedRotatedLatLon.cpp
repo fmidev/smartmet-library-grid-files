@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "StretchedRotatedLatLon.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -26,25 +26,7 @@ StretchedRotatedLatLon::StretchedRotatedLatLon() {
     mJDirectionIncrement = 0;
     mZero = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-StretchedRotatedLatLon::StretchedRotatedLatLon(const StretchedRotatedLatLon &other) : GridDefinition(other) {
-  try {
-    mNi = other.mNi;
-    mNj = other.mNj;
-    mGridArea = other.mGridArea;
-    mIDirectionIncrement = other.mIDirectionIncrement;
-    mJDirectionIncrement = other.mJDirectionIncrement;
-    mScanningMode = other.mScanningMode;
-    mZero = other.mZero;
-    mRotation = other.mRotation;
-    mGridStretching = other.mGridStretching;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -70,7 +52,7 @@ void StretchedRotatedLatLon::read(MemoryReader &memoryReader) {
     mRotation.read(memoryReader);
     mGridStretching.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -91,7 +73,7 @@ void StretchedRotatedLatLon::write(DataWriter &dataWriter) {
     mRotation.write(dataWriter);
     mGridStretching.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -123,7 +105,7 @@ void StretchedRotatedLatLon::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sStretchedRotatedLatLon.", prefix.c_str());
     mGridStretching.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -147,7 +129,7 @@ void StretchedRotatedLatLon::print(std::ostream &stream, uint level, uint option
     mRotation.print(stream, level + 1, optionFlags);
     mGridStretching.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -167,7 +149,7 @@ T::Hash StretchedRotatedLatLon::countHash() {
     boost::hash_combine(seed, mGridStretching.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -181,7 +163,7 @@ GridDefinition *StretchedRotatedLatLon::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new StretchedRotatedLatLon(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -191,7 +173,7 @@ std::uint16_t StretchedRotatedLatLon::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -201,7 +183,7 @@ std::uint16_t StretchedRotatedLatLon::getNj() const {
   try {
     return mNj;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -211,7 +193,7 @@ GridAreaSettings *StretchedRotatedLatLon::getGridArea() const {
   try {
     return static_cast<GridAreaSettings *>(&mGridArea);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -221,7 +203,7 @@ std::uint16_t StretchedRotatedLatLon::getIDirectionIncrement() const {
   try {
     return mIDirectionIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -231,7 +213,7 @@ std::uint16_t StretchedRotatedLatLon::getJDirectionIncrement() const {
   try {
     return mJDirectionIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -241,7 +223,7 @@ ScanningModeSettings *StretchedRotatedLatLon::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -251,7 +233,7 @@ std::uint32_t StretchedRotatedLatLon::getZero() const {
   try {
     return mZero;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -261,7 +243,7 @@ RotationSettings *StretchedRotatedLatLon::getRotation() const {
   try {
     return static_cast<RotationSettings *>(&mRotation);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -271,7 +253,7 @@ GridStretchingSettings *StretchedRotatedLatLon::getGridStretching() const {
   try {
     return static_cast<GridStretchingSettings *>(&mGridStretching);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -279,7 +261,7 @@ void StretchedRotatedLatLon::setNi(std::uint16_t ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -287,7 +269,7 @@ void StretchedRotatedLatLon::setNj(std::uint16_t nj) {
   try {
     mNj = nj;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -295,7 +277,7 @@ void StretchedRotatedLatLon::setGridArea(GridAreaSettings &gridArea) {
   try {
     mGridArea = gridArea;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -303,7 +285,7 @@ void StretchedRotatedLatLon::setIDirectionIncrement(std::uint16_t iDirectionIncr
   try {
     mIDirectionIncrement = iDirectionIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -311,7 +293,7 @@ void StretchedRotatedLatLon::setJDirectionIncrement(std::uint16_t jDirectionIncr
   try {
     mJDirectionIncrement = jDirectionIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -319,7 +301,7 @@ void StretchedRotatedLatLon::setScanningMode(ScanningModeSettings &scanningMode)
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -327,7 +309,7 @@ void StretchedRotatedLatLon::setZero(std::uint32_t zero) {
   try {
     mZero = zero;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -335,7 +317,7 @@ void StretchedRotatedLatLon::setRotation(RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -343,7 +325,7 @@ void StretchedRotatedLatLon::setGridStretching(GridStretchingSettings &gridStret
   try {
     mGridStretching = gridStretching;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

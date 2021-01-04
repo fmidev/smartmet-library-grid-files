@@ -23,7 +23,6 @@ namespace GRIB2 {
 class Product_68 : public ProductDefinition {
 public:
   Product_68();
-  Product_68(const Product_68 &other);
   virtual ~Product_68();
 
   virtual uint getTemplateNumber() const;
@@ -42,14 +41,8 @@ public:
   void setStatistical(StatisticalSettings &statistical);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
+  //
   // # TEMPLATE 4.68, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for
   // atmospheric chemical constituents based on a distribution function
   //

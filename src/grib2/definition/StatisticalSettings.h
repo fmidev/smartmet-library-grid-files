@@ -19,7 +19,6 @@ namespace GRIB2 {
 class StatisticalSettings {
 public:
   StatisticalSettings();
-  StatisticalSettings(const StatisticalSettings &other);
   virtual ~StatisticalSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -58,14 +57,7 @@ public:
   void setTimeIncrement(T::UInt32_opt timeIncrement);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // #  Year of end of overall time interval
   // unsigned[2] yearOfEndOfOverallTimeInterval =0 : edition_specific;
@@ -151,7 +143,6 @@ protected:
 
   //
   //  #  Time increment between successive fields, in units defined by the previous octet
-  //  # NOTE 3 NOT FOUND
   //  unsigned[4] timeIncrement=0 ;
 
   T::UInt32_opt mTimeIncrement;
@@ -170,11 +161,14 @@ protected:
   //     "accum"   = {typeOfStatisticalProcessing=1;typeOfTimeIncrement=2;}
   //     "max"     = {typeOfStatisticalProcessing=2;}
   //     "min"     = {typeOfStatisticalProcessing=3;}
-  //     "diff"    = {typeOfStatisticalProcessing=4;}
+  //     "diff"    = {typeOfStatisticalProcessing=4;} # end-start
   //     "rms"     = {typeOfStatisticalProcessing=5;}
   //     "sd"      = {typeOfStatisticalProcessing=6;}
   //     "cov"     = {typeOfStatisticalProcessing=7;}
+  //     "sdiff"   = {typeOfStatisticalProcessing=8;} # start-end
   //     "ratio"   = {typeOfStatisticalProcessing=9;}
+  //     "stdanom" = {typeOfStatisticalProcessing=10;}
+  //     "sum"     = {typeOfStatisticalProcessing=11;}
   //   }
   //   meta startStep step_in_units(forecastTime,indicatorOfUnitOfTimeRange,stepUnits,
   //     indicatorOfUnitForTimeRange,lengthOfTimeRange) : no_copy;
@@ -228,7 +222,6 @@ protected:
   //     monthOfEndOfOverallTimeInterval,dayOfEndOfOverallTimeInterval) : no_copy;
   // meta time.validityTime validity_time(date,dataTime,step,stepUnits,hourOfEndOfOverallTimeInterval,
   //     minuteOfEndOfOverallTimeInterval) : no_copy;
-  //
 };
 
 } // namespace GRIB2

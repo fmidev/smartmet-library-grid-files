@@ -20,11 +20,11 @@ ProductDefinition::ProductDefinition()
 
 
 /*! \brief The copy constructor of the class. */
-
+/*
 ProductDefinition::ProductDefinition(const ProductDefinition& other)
 {
 }
-
+*/
 
 
 

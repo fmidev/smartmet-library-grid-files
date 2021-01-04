@@ -20,7 +20,6 @@ namespace GRIB2 {
 class GridSettings {
 public:
   GridSettings();
-  GridSettings(const GridSettings &other);
   virtual ~GridSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -49,14 +48,7 @@ public:
   void setLongitudeOfLastGridPoint(T::Int32_opt longitudeOfLastGridPoint);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // unsigned[4] Ni : can_be_missing,dump;
 
@@ -143,7 +135,6 @@ protected:
 
   // alias Lo2 =  longitudeOfLastGridPoint;
   // #meta longitudeOfLastGridPointInMicrodegrees times(longitudeOfLastGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
-  //
 };
 
 } // namespace GRIB2

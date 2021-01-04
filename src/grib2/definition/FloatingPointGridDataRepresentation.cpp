@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "FloatingPointGridDataRepresentation.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,17 +21,7 @@ namespace GRIB2 {
 FloatingPointGridDataRepresentation::FloatingPointGridDataRepresentation() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-FloatingPointGridDataRepresentation::FloatingPointGridDataRepresentation(const FloatingPointGridDataRepresentation &other) : RepresentationDefinition(other) {
-  try {
-    mPrecision = other.mPrecision;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -49,7 +39,7 @@ void FloatingPointGridDataRepresentation::read(MemoryReader &memoryReader) {
   try {
     mPrecision = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -62,7 +52,7 @@ void FloatingPointGridDataRepresentation::write(DataWriter &dataWriter) {
   try {
     dataWriter << mPrecision;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -78,7 +68,7 @@ void FloatingPointGridDataRepresentation::getAttributeList(std::string prefix, T
     sprintf(name, "%sFloatingPointGridDataRepresentation.Precision", prefix.c_str());
     attributeList.addAttribute(name, toString(mPrecision));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -94,7 +84,7 @@ void FloatingPointGridDataRepresentation::print(std::ostream &stream, uint level
     stream << space(level) << "FloatingPointGridDataRepresentation\n";
     stream << space(level) << "- Precision = " << toString(mPrecision) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -107,7 +97,7 @@ T::Hash FloatingPointGridDataRepresentation::countHash() {
       boost::hash_combine(seed, *mPrecision);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -121,7 +111,7 @@ RepresentationDefinition *FloatingPointGridDataRepresentation::createRepresentat
   try {
     return static_cast<RepresentationDefinition *>(new FloatingPointGridDataRepresentation(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -131,7 +121,7 @@ const T::UInt8_opt &FloatingPointGridDataRepresentation::getPrecision() const {
   try {
     return mPrecision;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -139,7 +129,7 @@ void FloatingPointGridDataRepresentation::setPrecision(T::UInt8_opt precision) {
   try {
     mPrecision = precision;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

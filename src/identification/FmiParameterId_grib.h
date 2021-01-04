@@ -12,7 +12,7 @@ class FmiParameterId_grib
 {
   public:
                     FmiParameterId_grib();
-                    FmiParameterId_grib(const FmiParameterId_grib& parameter);
+                    //FmiParameterId_grib(const FmiParameterId_grib& parameter);
     virtual         ~FmiParameterId_grib();
 
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

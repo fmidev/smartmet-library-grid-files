@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "EnsembleDerivedForecast.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,20 +21,7 @@ namespace GRIB2 {
 EnsembleDerivedForecast::EnsembleDerivedForecast() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-EnsembleDerivedForecast::EnsembleDerivedForecast(const EnsembleDerivedForecast &other) : ProductDefinition(other) {
-  try {
-    mParameter = other.mParameter;
-    mPointInTime = other.mPointInTime;
-    mHorizontal = other.mHorizontal;
-    mDerived = other.mDerived;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -55,7 +42,7 @@ void EnsembleDerivedForecast::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mDerived.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -71,7 +58,7 @@ void EnsembleDerivedForecast::write(DataWriter &dataWriter) {
     mHorizontal.write(dataWriter);
     mDerived.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -93,7 +80,7 @@ void EnsembleDerivedForecast::getAttributeList(std::string prefix, T::AttributeL
     sprintf(name, "%sEnsembleDerivedForecast.", prefix.c_str());
     mDerived.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -112,7 +99,7 @@ void EnsembleDerivedForecast::print(std::ostream &stream, uint level, uint optio
     mHorizontal.print(stream, level + 1, optionFlags);
     mDerived.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -127,7 +114,7 @@ T::Hash EnsembleDerivedForecast::countHash() {
     boost::hash_combine(seed, mDerived.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -141,7 +128,7 @@ ProductDefinition *EnsembleDerivedForecast::createProductDefinition() const {
   try {
     return static_cast<ProductDefinition *>(new EnsembleDerivedForecast(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -151,7 +138,7 @@ ParameterSettings *EnsembleDerivedForecast::getParameter() const {
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -161,7 +148,7 @@ PointInTimeSettings *EnsembleDerivedForecast::getPointInTime() const {
   try {
     return static_cast<PointInTimeSettings *>(&mPointInTime);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -171,7 +158,7 @@ HorizontalSettings *EnsembleDerivedForecast::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -181,7 +168,7 @@ DerivedSettings *EnsembleDerivedForecast::getDerived() const {
   try {
     return static_cast<DerivedSettings *>(&mDerived);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -189,7 +176,7 @@ void EnsembleDerivedForecast::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -197,7 +184,7 @@ void EnsembleDerivedForecast::setPointInTime(PointInTimeSettings &pointInTime) {
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -205,7 +192,7 @@ void EnsembleDerivedForecast::setHorizontal(HorizontalSettings &horizontal) {
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -213,7 +200,7 @@ void EnsembleDerivedForecast::setDerived(DerivedSettings &derived) {
   try {
     mDerived = derived;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

@@ -23,7 +23,7 @@ FmiParameterId_newbase::FmiParameterId_newbase()
 
 
 
-
+/*
 FmiParameterId_newbase::FmiParameterId_newbase(const FmiParameterId_newbase& parameter)
 {
   try
@@ -38,7 +38,7 @@ FmiParameterId_newbase::FmiParameterId_newbase(const FmiParameterId_newbase& par
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

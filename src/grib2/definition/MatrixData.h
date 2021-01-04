@@ -20,7 +20,6 @@ namespace GRIB2 {
 class MatrixData : public DataDefinition {
 public:
   MatrixData();
-  MatrixData(const MatrixData &other);
   virtual ~MatrixData();
 
   virtual uint getTemplateNumber() const;
@@ -32,22 +31,14 @@ public:
   virtual T::Hash countHash();
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  // # START 2/template.7.1 ----------------------------------------------------------------------
   // # TEMPLATE 7.1, Matrix values at grid point -simple packing
   // # Octets 6-nn : Binary data values - binary string, with each
   // # (scaled)
   // # ????          data_values__binary_string_with_each
   //
-  //   meta codedValues data_g2simple_packing(
+  // meta codedValues data_g2simple_packing(
   //         section7Length,
   //         offsetBeforeData,
   //         offsetSection7,
@@ -62,12 +53,12 @@ protected:
   //         optimizeScaleFactor
   //   ): read_only;
   //
-  //   meta values data_apply_bitmap(codedValues,
-  //                                 bitmap,
-  //                                 missingValue,
-  //                                 binaryScaleFactor,
-  //                                 numberOfDataPoints,
-  //                                 numberOfValues) : dump;
+  // meta values data_apply_bitmap(codedValues,
+  //                               bitmap,
+  //                               missingValue,
+  //                               binaryScaleFactor,
+  //                               numberOfDataPoints,
+  //                               numberOfValues) : dump;
   //
   // meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
   // meta unpackedError simple_packing_error(zero,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;

@@ -23,7 +23,6 @@ namespace GRIB2 {
 class StretchedRotatedSphericalHarmonic : public GridDefinition {
 public:
   StretchedRotatedSphericalHarmonic();
-  StretchedRotatedSphericalHarmonic(const StretchedRotatedSphericalHarmonic &other);
   virtual ~StretchedRotatedSphericalHarmonic();
 
   virtual uint getTemplateNumber() const;
@@ -42,14 +41,7 @@ public:
   void setStretching(StretchingSettings &stretching);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 3.53, Stretched and rotated spherical harmonic coefficients
   //

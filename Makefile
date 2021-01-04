@@ -23,6 +23,7 @@ LIBS += $(REQUIRED_LIBS) \
 	-lboost_thread \
 	-lpng \
 	-ljpeg \
+	-ljasper \
 	-laec \
 	-lz
 

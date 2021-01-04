@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "EquatorialAzimuthalEquidistant.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,26 +22,7 @@ EquatorialAzimuthalEquidistant::EquatorialAzimuthalEquidistant() {
   try {
     mResolutionAndComponentFlags = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-EquatorialAzimuthalEquidistant::EquatorialAzimuthalEquidistant(const EquatorialAzimuthalEquidistant &other) : GridDefinition(other) {
-  try {
-    mEarthShape = other.mEarthShape;
-    mNumberOfPointsAlongXAxis = other.mNumberOfPointsAlongXAxis;
-    mNumberOfPointsAlongYAxis = other.mNumberOfPointsAlongYAxis;
-    mLatitudeOfTangencyPoint = other.mLatitudeOfTangencyPoint;
-    mLongitudeOfTangencyPoint = other.mLongitudeOfTangencyPoint;
-    mResolutionAndComponentFlags = other.mResolutionAndComponentFlags;
-    mDx = other.mDx;
-    mDy = other.mDy;
-    mProjectionCenterFlag = other.mProjectionCenterFlag;
-    mScanningMode = other.mScanningMode;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -68,7 +49,7 @@ void EquatorialAzimuthalEquidistant::read(MemoryReader &memoryReader) {
     mProjectionCenterFlag = memoryReader.read_UInt8_opt();
     mScanningMode.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -90,7 +71,7 @@ void EquatorialAzimuthalEquidistant::write(DataWriter &dataWriter) {
     dataWriter << mProjectionCenterFlag;
     mScanningMode.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -124,7 +105,7 @@ void EquatorialAzimuthalEquidistant::getAttributeList(std::string prefix, T::Att
     sprintf(name, "%sEquatorialAzimuthalEquidistant.", prefix.c_str());
     mScanningMode.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -149,7 +130,7 @@ void EquatorialAzimuthalEquidistant::print(std::ostream &stream, uint level, uin
     stream << space(level) << "- ProjectionCenterFlag = " << toString(mProjectionCenterFlag) << "\n";
     mScanningMode.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -177,7 +158,7 @@ T::Hash EquatorialAzimuthalEquidistant::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -191,7 +172,7 @@ GridDefinition *EquatorialAzimuthalEquidistant::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new EquatorialAzimuthalEquidistant(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -201,7 +182,7 @@ EarthShapeSettings *EquatorialAzimuthalEquidistant::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -211,7 +192,7 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getNumberOfPointsAlongXAxis
   try {
     return mNumberOfPointsAlongXAxis;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -221,7 +202,7 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getNumberOfPointsAlongYAxis
   try {
     return mNumberOfPointsAlongYAxis;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -231,7 +212,7 @@ const T::Int32_opt &EquatorialAzimuthalEquidistant::getLatitudeOfTangencyPoint()
   try {
     return mLatitudeOfTangencyPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -241,7 +222,7 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getLongitudeOfTangencyPoint
   try {
     return mLongitudeOfTangencyPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -251,7 +232,7 @@ std::uint8_t EquatorialAzimuthalEquidistant::getResolutionAndComponentFlags() co
   try {
     return mResolutionAndComponentFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -261,7 +242,7 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getDx() const {
   try {
     return mDx;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -271,7 +252,7 @@ const T::UInt32_opt &EquatorialAzimuthalEquidistant::getDy() const {
   try {
     return mDy;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -281,7 +262,7 @@ const T::UInt8_opt &EquatorialAzimuthalEquidistant::getProjectionCenterFlag() co
   try {
     return mProjectionCenterFlag;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -291,7 +272,7 @@ ScanningModeSettings *EquatorialAzimuthalEquidistant::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -299,7 +280,7 @@ void EquatorialAzimuthalEquidistant::setEarthShape(EarthShapeSettings &earthShap
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -307,7 +288,7 @@ void EquatorialAzimuthalEquidistant::setNumberOfPointsAlongXAxis(T::UInt32_opt n
   try {
     mNumberOfPointsAlongXAxis = numberOfPointsAlongXAxis;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -315,7 +296,7 @@ void EquatorialAzimuthalEquidistant::setNumberOfPointsAlongYAxis(T::UInt32_opt n
   try {
     mNumberOfPointsAlongYAxis = numberOfPointsAlongYAxis;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -323,7 +304,7 @@ void EquatorialAzimuthalEquidistant::setLatitudeOfTangencyPoint(T::Int32_opt lat
   try {
     mLatitudeOfTangencyPoint = latitudeOfTangencyPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -331,7 +312,7 @@ void EquatorialAzimuthalEquidistant::setLongitudeOfTangencyPoint(T::UInt32_opt l
   try {
     mLongitudeOfTangencyPoint = longitudeOfTangencyPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -339,7 +320,7 @@ void EquatorialAzimuthalEquidistant::setResolutionAndComponentFlags(std::uint8_t
   try {
     mResolutionAndComponentFlags = resolutionAndComponentFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -347,7 +328,7 @@ void EquatorialAzimuthalEquidistant::setDx(T::UInt32_opt dx) {
   try {
     mDx = dx;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -355,7 +336,7 @@ void EquatorialAzimuthalEquidistant::setDy(T::UInt32_opt dy) {
   try {
     mDy = dy;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -363,7 +344,7 @@ void EquatorialAzimuthalEquidistant::setProjectionCenterFlag(T::UInt8_opt projec
   try {
     mProjectionCenterFlag = projectionCenterFlag;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -371,7 +352,7 @@ void EquatorialAzimuthalEquidistant::setScanningMode(ScanningModeSettings &scann
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

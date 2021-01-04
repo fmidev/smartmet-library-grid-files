@@ -19,7 +19,6 @@ namespace GRIB2 {
 class RotationSettings {
 public:
   RotationSettings();
-  RotationSettings(const RotationSettings &other);
   virtual ~RotationSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -36,14 +35,7 @@ public:
   void setAngleOfRotation(float angleOfRotation);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // #  Latitude of the southern pole of projection
   // signed[4] latitudeOfSouthernPole : no_copy;

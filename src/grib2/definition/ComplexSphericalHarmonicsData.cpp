@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ComplexSphericalHarmonicsData.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,16 +21,7 @@ namespace GRIB2 {
 ComplexSphericalHarmonicsData::ComplexSphericalHarmonicsData() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ComplexSphericalHarmonicsData::ComplexSphericalHarmonicsData(const ComplexSphericalHarmonicsData &other) : DataDefinition(other) {
-  try {
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -47,7 +38,7 @@ ComplexSphericalHarmonicsData::~ComplexSphericalHarmonicsData() {
 void ComplexSphericalHarmonicsData::read(MemoryReader &memoryReader) {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -59,7 +50,7 @@ void ComplexSphericalHarmonicsData::read(MemoryReader &memoryReader) {
 void ComplexSphericalHarmonicsData::write(DataWriter &dataWriter) {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -72,7 +63,7 @@ void ComplexSphericalHarmonicsData::write(DataWriter &dataWriter) {
 void ComplexSphericalHarmonicsData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -87,7 +78,7 @@ void ComplexSphericalHarmonicsData::print(std::ostream &stream, uint level, uint
   try {
     stream << space(level) << "ComplexSphericalHarmonicsData\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -98,7 +89,7 @@ T::Hash ComplexSphericalHarmonicsData::countHash() {
     std::size_t seed = 0;
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -112,7 +103,7 @@ DataDefinition *ComplexSphericalHarmonicsData::createDataDefinition() const {
   try {
     return static_cast<DataDefinition *>(new ComplexSphericalHarmonicsData(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

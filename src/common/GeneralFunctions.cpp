@@ -729,7 +729,7 @@ std::string localTimeFromTimeT(time_t t, const char *tzone)
     struct tm tt;
     localtime_tz(t, &tt, tzone);
 
-    char buf[30];
+    char buf[200];
     sprintf(buf,
             "%04d%02d%02dT%02d%02d%02d",
             tt.tm_year + 1900,

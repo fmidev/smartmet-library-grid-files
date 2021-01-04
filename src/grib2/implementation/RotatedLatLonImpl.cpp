@@ -854,6 +854,8 @@ void RotatedLatLonImpl::initSpatialReference()
     if (err != OGRERR_NONE)
       throw Fmi::Exception(BCP, "Invalid crs '" + std::string(proj) + "'!");
 
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
     // ### Validate the spatial reference.
 /*
     auto errorCode = mSpatialReference.Validate();
@@ -878,6 +880,7 @@ void RotatedLatLonImpl::initSpatialReference()
 
     OGRSpatialReference sr_latlon;
     sr_latlon.importFromEPSG(4326);
+    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
     mSr_rotatedLatlon = mSpatialReference.Clone();
 

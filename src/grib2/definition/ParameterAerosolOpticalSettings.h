@@ -19,7 +19,6 @@ namespace GRIB2 {
 class ParameterAerosolOpticalSettings {
 public:
   ParameterAerosolOpticalSettings();
-  ParameterAerosolOpticalSettings(const ParameterAerosolOpticalSettings &other);
   virtual ~ParameterAerosolOpticalSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -70,22 +69,15 @@ public:
   void setForecastTime(T::Int32_opt forecastTime);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  // #  Parameter category
+  // # Parameter category
   // codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
 
   T::UInt8_opt mParameterCategory;
 
   //
-  // #  Parameter number
+  // # Parameter number
   // codetable[1] parameterNumber ('4.2.[discipline:l].[parameterCategory:l].table',masterDir,localDir) : dump;
 
   T::UInt8_opt mParameterNumber;
@@ -93,7 +85,7 @@ protected:
   // meta parameterUnits codetable_units(parameterNumber) : dump;
   // meta parameterName  codetable_title(parameterNumber) : dump;
   //
-  // # Atmospheric chemical or physical constitutent type
+  // # Aerosol type
   // codetable[2] aerosolType ('4.233.table',masterDir,localDir) : dump;
 
   T::UInt16_opt mAerosolType;
@@ -105,6 +97,7 @@ protected:
 
   // alias typeOfIntervalForFirstAndSecondSize=typeOfSizeInterval;
   //
+  // # Size in metres
   // signed[1] scaleFactorOfFirstSize : dump;
 
   T::Int8_opt mScaleFactorOfFirstSize;
@@ -128,7 +121,7 @@ protected:
 
   // alias typeOfIntervalForFirstAndSecondWavelength=typeOfWavelengthInterval;
   //
-  // # wavelengths in metres
+  // # Wavelengths in metres
   // signed[1] scaleFactorOfFirstWavelength : dump;
 
   T::Int8_opt mScaleFactorOfFirstWavelength;
@@ -146,44 +139,40 @@ protected:
   T::Int32_opt mScaledValueOfSecondWavelength;
 
   //
-  // #  Type of generating process
+  // # Type of generating process
   // codetable[1] typeOfGeneratingProcess ('4.3.table',masterDir,localDir) : dump;
 
   T::UInt8_opt mTypeOfGeneratingProcess;
 
   //
-  // #  Background generating process identifier
-  // # (defined by originating centre)
+  // # Background generating process identifier
   // unsigned[1] backgroundProcess = 255 : edition_specific;
 
   T::UInt8_opt mBackgroundProcess;
 
   // alias backgroundGeneratingProcessIdentifier=backgroundProcess;
   //
-  //
-  // #  Analysis or forecast generating processes identifier
-  // # (defined by originating centre)
+  // # Analysis or forecast generating processes identifier
   // unsigned[1] generatingProcessIdentifier  : dump;
 
   T::UInt8_opt mGeneratingProcessIdentifier;
 
   //
-  // #  Hours of observational data cut-off after reference time
-  // # NOTE 1 NOT FOUND
+  // # Hours of observational data cut-off after reference time
   // unsigned[2] hoursAfterDataCutoff = missing()  : edition_specific,can_be_missing;
 
   T::UInt16_opt mHoursAfterDataCutoff;
 
   // alias hoursAfterReferenceTimeOfDataCutoff=hoursAfterDataCutoff;
   //
-  // #  Minutes of observational data cut-off after reference time
+  // # Minutes of observational data cut-off after reference time
   // unsigned[1]  minutesAfterDataCutoff = missing() : edition_specific,can_be_missing;
 
   T::UInt8_opt mMinutesAfterDataCutoff;
 
   // alias minutesAfterReferenceTimeOfDataCutoff=minutesAfterDataCutoff;
   //
-  // #  Indicator of unit of time range
+  // # Indicator of unit of time range
   // codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir)  : dump;
 
   T::UInt8_opt mIndicatorOfUnitOfTimeRange;
@@ -193,12 +182,10 @@ protected:
   // codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
   // (The above is a phony setting)
   //
-  // #  Forecast time in units defined by octet 18 (GRIB-29: supports negative forecast time)
+  // # Forecast time in units defined by octet 18 (GRIB-29: supports negative forecast time)
   // signed[4] forecastTime  : dump;
 
   T::Int32_opt mForecastTime;
-
-  //
 };
 
 } // namespace GRIB2

@@ -1059,12 +1059,15 @@ void RotatedLatLonImpl::initSpatialReference()
     sprintf(proj,"+proj=ob_tran +o_proj=lonlat +lon_0=%f +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
         lon_0,npole_lon,npole_lat,dfSemiMajor);
 
-    OGRErr err = mSpatialReference.SetFromUserInput(proj);
+    //OGRErr err = mSpatialReference.SetFromUserInput(proj);
+    OGRErr err = mSpatialReference.importFromProj4(proj);
     if (err != OGRERR_NONE)
       throw Fmi::Exception(BCP, "Invalid crs '" + std::string(proj) + "'!");
 
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
     // ### Validate the spatial reference.
-/*
+
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
@@ -1072,7 +1075,7 @@ void RotatedLatLonImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
-*/
+
 
     // ### Test if the grid is global
 
@@ -1087,7 +1090,7 @@ void RotatedLatLonImpl::initSpatialReference()
 
     OGRSpatialReference sr_latlon;
     sr_latlon.importFromEPSG(4326);
-
+    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     mSr_rotatedLatlon = mSpatialReference.Clone();
 
     mCt_latlon2rotatedLatlon = OGRCreateCoordinateTransformation(&sr_latlon,mSr_rotatedLatlon);
@@ -1097,7 +1100,6 @@ void RotatedLatLonImpl::initSpatialReference()
     mCt_rotatedLatlon2latlon = OGRCreateCoordinateTransformation(mSr_rotatedLatlon,&sr_latlon);
     if (mCt_rotatedLatlon2latlon == nullptr)
       throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
   }
   catch (...)
   {

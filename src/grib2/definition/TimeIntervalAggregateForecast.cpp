@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "TimeIntervalAggregateForecast.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,22 +21,7 @@ namespace GRIB2 {
 TimeIntervalAggregateForecast::TimeIntervalAggregateForecast() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-TimeIntervalAggregateForecast::TimeIntervalAggregateForecast(const TimeIntervalAggregateForecast &other) : ProductDefinition(other) {
-  try {
-    mParameter = other.mParameter;
-    mPointInTime = other.mPointInTime;
-    mHorizontal = other.mHorizontal;
-    mStatisticalProcess = other.mStatisticalProcess;
-    mSpatialProcessing = other.mSpatialProcessing;
-    mNumberOfPointsUsed = other.mNumberOfPointsUsed;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -59,7 +44,7 @@ void TimeIntervalAggregateForecast::read(MemoryReader &memoryReader) {
     mSpatialProcessing = memoryReader.read_UInt8_opt();
     mNumberOfPointsUsed = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -77,7 +62,7 @@ void TimeIntervalAggregateForecast::write(DataWriter &dataWriter) {
     dataWriter << mSpatialProcessing;
     dataWriter << mNumberOfPointsUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -103,7 +88,7 @@ void TimeIntervalAggregateForecast::getAttributeList(std::string prefix, T::Attr
     sprintf(name, "%sTimeIntervalAggregateForecast.NumberOfPointsUsed", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfPointsUsed));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -124,7 +109,7 @@ void TimeIntervalAggregateForecast::print(std::ostream &stream, uint level, uint
     stream << space(level) << "- SpatialProcessing = " << toString(mSpatialProcessing) << "\n";
     stream << space(level) << "- NumberOfPointsUsed = " << toString(mNumberOfPointsUsed) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -144,7 +129,7 @@ T::Hash TimeIntervalAggregateForecast::countHash() {
     boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -158,7 +143,7 @@ ProductDefinition *TimeIntervalAggregateForecast::createProductDefinition() cons
   try {
     return static_cast<ProductDefinition *>(new TimeIntervalAggregateForecast(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -168,7 +153,7 @@ ParameterSettings *TimeIntervalAggregateForecast::getParameter() const {
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -178,7 +163,7 @@ PointInTimeSettings *TimeIntervalAggregateForecast::getPointInTime() const {
   try {
     return static_cast<PointInTimeSettings *>(&mPointInTime);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -188,7 +173,7 @@ HorizontalSettings *TimeIntervalAggregateForecast::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -198,7 +183,7 @@ const T::UInt8_opt &TimeIntervalAggregateForecast::getStatisticalProcess() const
   try {
     return mStatisticalProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -208,7 +193,7 @@ const T::UInt8_opt &TimeIntervalAggregateForecast::getSpatialProcessing() const 
   try {
     return mSpatialProcessing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -218,7 +203,7 @@ const T::UInt8_opt &TimeIntervalAggregateForecast::getNumberOfPointsUsed() const
   try {
     return mNumberOfPointsUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -226,7 +211,7 @@ void TimeIntervalAggregateForecast::setParameter(ParameterSettings &parameter) {
   try {
     mParameter = parameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -234,7 +219,7 @@ void TimeIntervalAggregateForecast::setPointInTime(PointInTimeSettings &pointInT
   try {
     mPointInTime = pointInTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -242,7 +227,7 @@ void TimeIntervalAggregateForecast::setHorizontal(HorizontalSettings &horizontal
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -250,7 +235,7 @@ void TimeIntervalAggregateForecast::setStatisticalProcess(T::UInt8_opt statistic
   try {
     mStatisticalProcess = statisticalProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -258,7 +243,7 @@ void TimeIntervalAggregateForecast::setSpatialProcessing(T::UInt8_opt spatialPro
   try {
     mSpatialProcessing = spatialProcessing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -266,7 +251,7 @@ void TimeIntervalAggregateForecast::setNumberOfPointsUsed(T::UInt8_opt numberOfP
   try {
     mNumberOfPointsUsed = numberOfPointsUsed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

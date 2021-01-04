@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "VariableResolutionRotatedLatLon.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,19 +21,7 @@ namespace GRIB2 {
 VariableResolutionRotatedLatLon::VariableResolutionRotatedLatLon() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-VariableResolutionRotatedLatLon::VariableResolutionRotatedLatLon(const VariableResolutionRotatedLatLon &other) : GridDefinition(other) {
-  try {
-    mEarthShape = other.mEarthShape;
-    mVariableLatLon = other.mVariableLatLon;
-    mRotation = other.mRotation;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -53,7 +41,7 @@ void VariableResolutionRotatedLatLon::read(MemoryReader &memoryReader) {
     mVariableLatLon.read(memoryReader);
     mRotation.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -68,7 +56,7 @@ void VariableResolutionRotatedLatLon::write(DataWriter &dataWriter) {
     mVariableLatLon.write(dataWriter);
     mRotation.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -88,7 +76,7 @@ void VariableResolutionRotatedLatLon::getAttributeList(std::string prefix, T::At
     sprintf(name, "%sVariableResolutionRotatedLatLon.", prefix.c_str());
     mRotation.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -106,7 +94,7 @@ void VariableResolutionRotatedLatLon::print(std::ostream &stream, uint level, ui
     mVariableLatLon.print(stream, level + 1, optionFlags);
     mRotation.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -120,7 +108,7 @@ T::Hash VariableResolutionRotatedLatLon::countHash() {
     boost::hash_combine(seed, mRotation.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -134,7 +122,7 @@ GridDefinition *VariableResolutionRotatedLatLon::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new VariableResolutionRotatedLatLon(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -144,7 +132,7 @@ EarthShapeSettings *VariableResolutionRotatedLatLon::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -154,7 +142,7 @@ VariableLatLonSettings *VariableResolutionRotatedLatLon::getVariableLatLon() con
   try {
     return static_cast<VariableLatLonSettings *>(&mVariableLatLon);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -164,7 +152,7 @@ RotationSettings *VariableResolutionRotatedLatLon::getRotation() const {
   try {
     return static_cast<RotationSettings *>(&mRotation);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -172,7 +160,7 @@ void VariableResolutionRotatedLatLon::setEarthShape(EarthShapeSettings &earthSha
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -180,7 +168,7 @@ void VariableResolutionRotatedLatLon::setVariableLatLon(VariableLatLonSettings &
   try {
     mVariableLatLon = variableLatLon;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -188,7 +176,7 @@ void VariableResolutionRotatedLatLon::setRotation(RotationSettings &rotation) {
   try {
     mRotation = rotation;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

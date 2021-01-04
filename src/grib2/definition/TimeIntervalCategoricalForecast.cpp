@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "TimeIntervalCategoricalForecast.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,20 +21,7 @@ namespace GRIB2 {
 TimeIntervalCategoricalForecast::TimeIntervalCategoricalForecast() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-TimeIntervalCategoricalForecast::TimeIntervalCategoricalForecast(const TimeIntervalCategoricalForecast &other) : ProductDefinition(other) {
-  try {
-    mParameter = other.mParameter;
-    mHorizontal = other.mHorizontal;
-    mCategorical = other.mCategorical;
-    mStatistical = other.mStatistical;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -55,7 +42,7 @@ void TimeIntervalCategoricalForecast::read(MemoryReader &memoryReader) {
     mCategorical.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -71,7 +58,7 @@ void TimeIntervalCategoricalForecast::write(DataWriter &dataWriter) {
     mCategorical.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -93,7 +80,7 @@ void TimeIntervalCategoricalForecast::getAttributeList(std::string prefix, T::At
     sprintf(name, "%sTimeIntervalCategoricalForecast.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -112,7 +99,7 @@ void TimeIntervalCategoricalForecast::print(std::ostream &stream, uint level, ui
     mCategorical.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -127,7 +114,7 @@ T::Hash TimeIntervalCategoricalForecast::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -141,7 +128,7 @@ ProductDefinition *TimeIntervalCategoricalForecast::createProductDefinition() co
   try {
     return static_cast<ProductDefinition *>(new TimeIntervalCategoricalForecast(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -151,7 +138,7 @@ ParameterSettings *TimeIntervalCategoricalForecast::getParameter() const {
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -161,7 +148,7 @@ HorizontalSettings *TimeIntervalCategoricalForecast::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -171,7 +158,7 @@ CategoricalSettings *TimeIntervalCategoricalForecast::getCategorical() const {
   try {
     return static_cast<CategoricalSettings *>(&mCategorical);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -181,7 +168,7 @@ StatisticalSettings *TimeIntervalCategoricalForecast::getStatistical() const {
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -189,7 +176,7 @@ void TimeIntervalCategoricalForecast::setParameter(ParameterSettings &parameter)
   try {
     mParameter = parameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -197,7 +184,7 @@ void TimeIntervalCategoricalForecast::setHorizontal(HorizontalSettings &horizont
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -205,7 +192,7 @@ void TimeIntervalCategoricalForecast::setCategorical(CategoricalSettings &catego
   try {
     mCategorical = categorical;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -213,7 +200,7 @@ void TimeIntervalCategoricalForecast::setStatistical(StatisticalSettings &statis
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

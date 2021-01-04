@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "SphericalHarmonicSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,21 +21,7 @@ namespace GRIB2 {
 SphericalHarmonicSettings::SphericalHarmonicSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-SphericalHarmonicSettings::SphericalHarmonicSettings(const SphericalHarmonicSettings &other) {
-  try {
-    mJ = other.mJ;
-    mK = other.mK;
-    mM = other.mM;
-    mSpectralType = other.mSpectralType;
-    mSpectralMode = other.mSpectralMode;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -57,7 +43,7 @@ void SphericalHarmonicSettings::read(MemoryReader &memoryReader) {
     mSpectralType = memoryReader.read_UInt8_opt();
     mSpectralMode = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -74,7 +60,7 @@ void SphericalHarmonicSettings::write(DataWriter &dataWriter) {
     dataWriter << mSpectralType;
     dataWriter << mSpectralMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -98,7 +84,7 @@ void SphericalHarmonicSettings::getAttributeList(std::string prefix, T::Attribut
     sprintf(name, "%sSphericalHarmonicSettings.SpectralMode", prefix.c_str());
     attributeList.addAttribute(name, toString(mSpectralMode));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -118,7 +104,7 @@ void SphericalHarmonicSettings::print(std::ostream &stream, uint level, uint opt
     stream << space(level) << "- SpectralType = " << toString(mSpectralType) << "\n";
     stream << space(level) << "- SpectralMode = " << toString(mSpectralMode) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -139,7 +125,7 @@ T::Hash SphericalHarmonicSettings::countHash() {
       boost::hash_combine(seed, *mSpectralMode);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -149,7 +135,7 @@ const T::UInt32_opt &SphericalHarmonicSettings::getJ() const {
   try {
     return mJ;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -159,7 +145,7 @@ const T::UInt32_opt &SphericalHarmonicSettings::getK() const {
   try {
     return mK;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -169,7 +155,7 @@ const T::UInt32_opt &SphericalHarmonicSettings::getM() const {
   try {
     return mM;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -179,7 +165,7 @@ const T::UInt8_opt &SphericalHarmonicSettings::getSpectralType() const {
   try {
     return mSpectralType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -189,7 +175,7 @@ const T::UInt8_opt &SphericalHarmonicSettings::getSpectralMode() const {
   try {
     return mSpectralMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -197,7 +183,7 @@ void SphericalHarmonicSettings::setJ(T::UInt32_opt j) {
   try {
     mJ = j;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -205,7 +191,7 @@ void SphericalHarmonicSettings::setK(T::UInt32_opt k) {
   try {
     mK = k;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -213,7 +199,7 @@ void SphericalHarmonicSettings::setM(T::UInt32_opt m) {
   try {
     mM = m;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -221,7 +207,7 @@ void SphericalHarmonicSettings::setSpectralType(T::UInt8_opt spectralType) {
   try {
     mSpectralType = spectralType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -229,7 +215,7 @@ void SphericalHarmonicSettings::setSpectralMode(T::UInt8_opt spectralMode) {
   try {
     mSpectralMode = spectralMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

@@ -23,7 +23,6 @@ namespace GRIB2 {
 class LambertConformal : public GridDefinition {
 public:
   LambertConformal();
-  LambertConformal(const LambertConformal &other);
   virtual ~LambertConformal();
 
   virtual uint getTemplateNumber() const;
@@ -68,14 +67,7 @@ public:
   void setLongitudeOfSouthernPole(T::UInt32_opt longitudeOfSouthernPole);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 3.30, Lambert conformal
   // include "grib2/template.3.shape_of_the_earth.def";
@@ -141,8 +133,7 @@ protected:
 
   // meta  geography.LoVInDegrees scale(LoV,one,grib2divider,truncateDegrees) : dump;
   //
-  // #  Dx - X-direction grid length
-  // # NOTE 1 NOT FOUND
+  // #  Dx - X-direction grid length (in units of millimetres)
   // unsigned[4] Dx : edition_specific ;
 
   T::UInt32_opt mDx;
@@ -151,8 +142,7 @@ protected:
   // alias Di =  Dx;
   // meta  geography.DxInMetres scale(Dx,one,thousand) : dump;
   //
-  // #  Dy - Y-direction grid length
-  // # NOTE 1 NOT FOUND
+  // #  Dy - Y-direction grid length (in units of millimetres)
   // unsigned[4] Dy : edition_specific ;
 
   T::UInt32_opt mDy;
@@ -221,7 +211,6 @@ protected:
   // alias latitudeLongitudeValues=latLonValues;
   // meta latitudes latitudes(values,0);
   // meta longitudes longitudes(values,0);
-  //
 };
 
 } // namespace GRIB2

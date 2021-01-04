@@ -21,7 +21,6 @@ namespace GRIB2 {
 class LatLonSettings {
 public:
   LatLonSettings();
-  LatLonSettings(const LatLonSettings &other);
   virtual ~LatLonSettings();
 
   virtual void read(MemoryReader &memoryReader);
@@ -40,14 +39,7 @@ public:
   void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // include "grib2/template.3.grid.def";
 
@@ -120,6 +112,7 @@ protected:
   //       Nj,DjInDegrees,pl);
   //   nearest latlon_reduced(values,radius,Nj,pl,longitudeFirstInDegrees,longitudeLastInDegrees);
   // } else {
+  //   transient iteratorDisableUnrotate = 0 : hidden; # ECC-808
   //   iterator latlon(numberOfPoints,missingValue,values,
   //                   longitudeFirstInDegrees,DiInDegrees  ,
   //                   Ni,Nj,iScansNegatively,
@@ -132,7 +125,6 @@ protected:
   // meta longitudes longitudes(values,0);
   // meta distinctLatitudes latitudes(values,1);
   // meta distinctLongitudes longitudes(values,1);
-  //
 };
 
 } // namespace GRIB2

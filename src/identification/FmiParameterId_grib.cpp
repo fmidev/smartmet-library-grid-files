@@ -23,7 +23,7 @@ FmiParameterId_grib::FmiParameterId_grib()
 
 
 
-
+/*
 FmiParameterId_grib::FmiParameterId_grib(const FmiParameterId_grib& parameter)
 {
   try
@@ -38,7 +38,7 @@ FmiParameterId_grib::FmiParameterId_grib(const FmiParameterId_grib& parameter)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

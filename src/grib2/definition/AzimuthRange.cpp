@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "AzimuthRange.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,25 +21,7 @@ namespace GRIB2 {
 AzimuthRange::AzimuthRange() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-AzimuthRange::AzimuthRange(const AzimuthRange &other) : GridDefinition(other) {
-  try {
-    mNumberOfDataBinsAlongRadials = other.mNumberOfDataBinsAlongRadials;
-    mNumberOfRadials = other.mNumberOfRadials;
-    mLatitudeOfCenterPoint = other.mLatitudeOfCenterPoint;
-    mLongitudeOfCenterPoint = other.mLongitudeOfCenterPoint;
-    mSpacingOfBinsAlongRadials = other.mSpacingOfBinsAlongRadials;
-    mOffsetFromOriginToInnerBound = other.mOffsetFromOriginToInnerBound;
-    mScanningMode = other.mScanningMode;
-    mStartingAzimuth = other.mStartingAzimuth;
-    mAzimuthalWidth = other.mAzimuthalWidth;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -65,7 +47,7 @@ void AzimuthRange::read(MemoryReader &memoryReader) {
     mStartingAzimuth = memoryReader.read_Int16_opt();
     mAzimuthalWidth = memoryReader.read_Int16_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -86,7 +68,7 @@ void AzimuthRange::write(DataWriter &dataWriter) {
     dataWriter << mStartingAzimuth;
     dataWriter << mAzimuthalWidth;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -118,7 +100,7 @@ void AzimuthRange::getAttributeList(std::string prefix, T::AttributeList &attrib
     sprintf(name, "%sAzimuthRange.AzimuthalWidth", prefix.c_str());
     attributeList.addAttribute(name, toString(mAzimuthalWidth));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -142,7 +124,7 @@ void AzimuthRange::print(std::ostream &stream, uint level, uint optionFlags) con
     stream << space(level) << "- StartingAzimuth = " << toString(mStartingAzimuth) << "\n";
     stream << space(level) << "- AzimuthalWidth = " << toString(mAzimuthalWidth) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -170,7 +152,7 @@ T::Hash AzimuthRange::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -184,7 +166,7 @@ GridDefinition *AzimuthRange::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new AzimuthRange(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -194,7 +176,7 @@ const T::UInt32_opt &AzimuthRange::getNumberOfDataBinsAlongRadials() const {
   try {
     return mNumberOfDataBinsAlongRadials;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -204,7 +186,7 @@ const T::UInt32_opt &AzimuthRange::getNumberOfRadials() const {
   try {
     return mNumberOfRadials;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -214,7 +196,7 @@ const T::Int32_opt &AzimuthRange::getLatitudeOfCenterPoint() const {
   try {
     return mLatitudeOfCenterPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -224,7 +206,7 @@ const T::UInt32_opt &AzimuthRange::getLongitudeOfCenterPoint() const {
   try {
     return mLongitudeOfCenterPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -234,7 +216,7 @@ const T::UInt32_opt &AzimuthRange::getSpacingOfBinsAlongRadials() const {
   try {
     return mSpacingOfBinsAlongRadials;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -244,7 +226,7 @@ const T::UInt32_opt &AzimuthRange::getOffsetFromOriginToInnerBound() const {
   try {
     return mOffsetFromOriginToInnerBound;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -254,7 +236,7 @@ ScanningModeSettings *AzimuthRange::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -264,7 +246,7 @@ const T::Int16_opt &AzimuthRange::getStartingAzimuth() const {
   try {
     return mStartingAzimuth;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -274,7 +256,7 @@ const T::Int16_opt &AzimuthRange::getAzimuthalWidth() const {
   try {
     return mAzimuthalWidth;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -282,7 +264,7 @@ void AzimuthRange::setNumberOfDataBinsAlongRadials(T::UInt32_opt numberOfDataBin
   try {
     mNumberOfDataBinsAlongRadials = numberOfDataBinsAlongRadials;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -290,7 +272,7 @@ void AzimuthRange::setNumberOfRadials(T::UInt32_opt numberOfRadials) {
   try {
     mNumberOfRadials = numberOfRadials;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -298,7 +280,7 @@ void AzimuthRange::setLatitudeOfCenterPoint(T::Int32_opt latitudeOfCenterPoint) 
   try {
     mLatitudeOfCenterPoint = latitudeOfCenterPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -306,7 +288,7 @@ void AzimuthRange::setLongitudeOfCenterPoint(T::UInt32_opt longitudeOfCenterPoin
   try {
     mLongitudeOfCenterPoint = longitudeOfCenterPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -314,7 +296,7 @@ void AzimuthRange::setSpacingOfBinsAlongRadials(T::UInt32_opt spacingOfBinsAlong
   try {
     mSpacingOfBinsAlongRadials = spacingOfBinsAlongRadials;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -322,7 +304,7 @@ void AzimuthRange::setOffsetFromOriginToInnerBound(T::UInt32_opt offsetFromOrigi
   try {
     mOffsetFromOriginToInnerBound = offsetFromOriginToInnerBound;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -330,7 +312,7 @@ void AzimuthRange::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -338,7 +320,7 @@ void AzimuthRange::setStartingAzimuth(T::Int16_opt startingAzimuth) {
   try {
     mStartingAzimuth = startingAzimuth;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -346,7 +328,7 @@ void AzimuthRange::setAzimuthalWidth(T::Int16_opt azimuthalWidth) {
   try {
     mAzimuthalWidth = azimuthalWidth;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

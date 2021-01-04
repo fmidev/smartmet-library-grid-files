@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "Hovmoller.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,37 +21,7 @@ namespace GRIB2 {
 Hovmoller::Hovmoller() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-Hovmoller::Hovmoller(const Hovmoller &other) : GridDefinition(other) {
-  try {
-    mEarthShape = other.mEarthShape;
-    mBasicAngleOfTheInitialProductionDomain = other.mBasicAngleOfTheInitialProductionDomain;
-    mSubdivisionsOfBasicAngle = other.mSubdivisionsOfBasicAngle;
-    mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
-    mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
-    mScanningMode = other.mScanningMode;
-    mLatitudeOfLastGridPoint = other.mLatitudeOfLastGridPoint;
-    mLongitudeOfLastGridPoint = other.mLongitudeOfLastGridPoint;
-    mTypeOfHorizontalLine = other.mTypeOfHorizontalLine;
-    mNumberOfTimeSteps = other.mNumberOfTimeSteps;
-    mUnitOfOffsetFromReferenceTime = other.mUnitOfOffsetFromReferenceTime;
-    mOffsetFromReferenceOfFirstTime = other.mOffsetFromReferenceOfFirstTime;
-    mTypeOfTimeIncrement = other.mTypeOfTimeIncrement;
-    mUnitOfTimeIncrement = other.mUnitOfTimeIncrement;
-    mTimeIncrement = other.mTimeIncrement;
-    mYear = other.mYear;
-    mMonth = other.mMonth;
-    mDay = other.mDay;
-    mHour = other.mHour;
-    mMinute = other.mMinute;
-    mSecond = other.mSecond;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -89,7 +59,7 @@ void Hovmoller::read(MemoryReader &memoryReader) {
     mMinute = memoryReader.read_UInt8_opt();
     mSecond = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -122,7 +92,7 @@ void Hovmoller::write(DataWriter &dataWriter) {
     dataWriter << mMinute;
     dataWriter << mSecond;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -178,7 +148,7 @@ void Hovmoller::getAttributeList(std::string prefix, T::AttributeList &attribute
     sprintf(name, "%sHovmoller.Second", prefix.c_str());
     attributeList.addAttribute(name, toString(mSecond));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -214,7 +184,7 @@ void Hovmoller::print(std::ostream &stream, uint level, uint optionFlags) const 
     stream << space(level) << "- Minute = " << toString(mMinute) << "\n";
     stream << space(level) << "- Second = " << toString(mSecond) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -261,7 +231,7 @@ T::Hash Hovmoller::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -275,7 +245,7 @@ GridDefinition *Hovmoller::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new Hovmoller(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -285,7 +255,7 @@ EarthShapeSettings *Hovmoller::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -295,7 +265,7 @@ const T::UInt32_opt &Hovmoller::getBasicAngleOfTheInitialProductionDomain() cons
   try {
     return mBasicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -305,7 +275,7 @@ const T::UInt32_opt &Hovmoller::getSubdivisionsOfBasicAngle() const {
   try {
     return mSubdivisionsOfBasicAngle;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -315,7 +285,7 @@ const T::Int32_opt &Hovmoller::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -325,7 +295,7 @@ const T::UInt32_opt &Hovmoller::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -335,7 +305,7 @@ ScanningModeSettings *Hovmoller::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -345,7 +315,7 @@ const T::Int32_opt &Hovmoller::getLatitudeOfLastGridPoint() const {
   try {
     return mLatitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -355,7 +325,7 @@ const T::UInt32_opt &Hovmoller::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -365,7 +335,7 @@ const T::UInt8_opt &Hovmoller::getTypeOfHorizontalLine() const {
   try {
     return mTypeOfHorizontalLine;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -375,7 +345,7 @@ const T::UInt32_opt &Hovmoller::getNumberOfTimeSteps() const {
   try {
     return mNumberOfTimeSteps;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -385,7 +355,7 @@ const T::UInt8_opt &Hovmoller::getUnitOfOffsetFromReferenceTime() const {
   try {
     return mUnitOfOffsetFromReferenceTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -395,7 +365,7 @@ const T::UInt32_opt &Hovmoller::getOffsetFromReferenceOfFirstTime() const {
   try {
     return mOffsetFromReferenceOfFirstTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -405,7 +375,7 @@ const T::UInt8_opt &Hovmoller::getTypeOfTimeIncrement() const {
   try {
     return mTypeOfTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -415,7 +385,7 @@ const T::UInt8_opt &Hovmoller::getUnitOfTimeIncrement() const {
   try {
     return mUnitOfTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -425,7 +395,7 @@ const T::UInt32_opt &Hovmoller::getTimeIncrement() const {
   try {
     return mTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -435,7 +405,7 @@ const T::UInt16_opt &Hovmoller::getYear() const {
   try {
     return mYear;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -445,7 +415,7 @@ const T::UInt8_opt &Hovmoller::getMonth() const {
   try {
     return mMonth;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -455,7 +425,7 @@ const T::UInt8_opt &Hovmoller::getDay() const {
   try {
     return mDay;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -465,7 +435,7 @@ const T::UInt8_opt &Hovmoller::getHour() const {
   try {
     return mHour;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -475,7 +445,7 @@ const T::UInt8_opt &Hovmoller::getMinute() const {
   try {
     return mMinute;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -485,7 +455,7 @@ const T::UInt8_opt &Hovmoller::getSecond() const {
   try {
     return mSecond;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -493,7 +463,7 @@ void Hovmoller::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -501,7 +471,7 @@ void Hovmoller::setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAng
   try {
     mBasicAngleOfTheInitialProductionDomain = basicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -509,7 +479,7 @@ void Hovmoller::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasicAng
   try {
     mSubdivisionsOfBasicAngle = subdivisionsOfBasicAngle;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -517,7 +487,7 @@ void Hovmoller::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridPoin
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -525,7 +495,7 @@ void Hovmoller::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGridP
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -533,7 +503,7 @@ void Hovmoller::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -541,7 +511,7 @@ void Hovmoller::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoint)
   try {
     mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -549,7 +519,7 @@ void Hovmoller::setLongitudeOfLastGridPoint(T::UInt32_opt longitudeOfLastGridPoi
   try {
     mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -557,7 +527,7 @@ void Hovmoller::setTypeOfHorizontalLine(T::UInt8_opt typeOfHorizontalLine) {
   try {
     mTypeOfHorizontalLine = typeOfHorizontalLine;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -565,7 +535,7 @@ void Hovmoller::setNumberOfTimeSteps(T::UInt32_opt numberOfTimeSteps) {
   try {
     mNumberOfTimeSteps = numberOfTimeSteps;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -573,7 +543,7 @@ void Hovmoller::setUnitOfOffsetFromReferenceTime(T::UInt8_opt unitOfOffsetFromRe
   try {
     mUnitOfOffsetFromReferenceTime = unitOfOffsetFromReferenceTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -581,7 +551,7 @@ void Hovmoller::setOffsetFromReferenceOfFirstTime(T::UInt32_opt offsetFromRefere
   try {
     mOffsetFromReferenceOfFirstTime = offsetFromReferenceOfFirstTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -589,7 +559,7 @@ void Hovmoller::setTypeOfTimeIncrement(T::UInt8_opt typeOfTimeIncrement) {
   try {
     mTypeOfTimeIncrement = typeOfTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -597,7 +567,7 @@ void Hovmoller::setUnitOfTimeIncrement(T::UInt8_opt unitOfTimeIncrement) {
   try {
     mUnitOfTimeIncrement = unitOfTimeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -605,7 +575,7 @@ void Hovmoller::setTimeIncrement(T::UInt32_opt timeIncrement) {
   try {
     mTimeIncrement = timeIncrement;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -613,7 +583,7 @@ void Hovmoller::setYear(T::UInt16_opt year) {
   try {
     mYear = year;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -621,7 +591,7 @@ void Hovmoller::setMonth(T::UInt8_opt month) {
   try {
     mMonth = month;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -629,7 +599,7 @@ void Hovmoller::setDay(T::UInt8_opt day) {
   try {
     mDay = day;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -637,7 +607,7 @@ void Hovmoller::setHour(T::UInt8_opt hour) {
   try {
     mHour = hour;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -645,7 +615,7 @@ void Hovmoller::setMinute(T::UInt8_opt minute) {
   try {
     mMinute = minute;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -653,7 +623,7 @@ void Hovmoller::setSecond(T::UInt8_opt second) {
   try {
     mSecond = second;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

@@ -22,7 +22,6 @@ namespace GRIB2 {
 class EquatorialAzimuthalEquidistant : public GridDefinition {
 public:
   EquatorialAzimuthalEquidistant();
-  EquatorialAzimuthalEquidistant(const EquatorialAzimuthalEquidistant &other);
   virtual ~EquatorialAzimuthalEquidistant();
 
   virtual uint getTemplateNumber() const;
@@ -55,15 +54,7 @@ public:
   void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 3.110, Equatorial azimuthal equidistant projection
   // include "grib2/template.3.shape_of_the_earth.def";

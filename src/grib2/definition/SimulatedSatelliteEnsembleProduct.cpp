@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "SimulatedSatelliteEnsembleProduct.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,18 +21,7 @@ namespace GRIB2 {
 SimulatedSatelliteEnsembleProduct::SimulatedSatelliteEnsembleProduct() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-SimulatedSatelliteEnsembleProduct::SimulatedSatelliteEnsembleProduct(const SimulatedSatelliteEnsembleProduct &other) : ProductDefinition(other) {
-  try {
-    mSimulatedSatelliteProduct = other.mSimulatedSatelliteProduct;
-    mEps = other.mEps;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -51,7 +40,7 @@ void SimulatedSatelliteEnsembleProduct::read(MemoryReader &memoryReader) {
     mSimulatedSatelliteProduct.read(memoryReader);
     mEps.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -65,7 +54,7 @@ void SimulatedSatelliteEnsembleProduct::write(DataWriter &dataWriter) {
     mSimulatedSatelliteProduct.write(dataWriter);
     mEps.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -83,7 +72,7 @@ void SimulatedSatelliteEnsembleProduct::getAttributeList(std::string prefix, T::
     sprintf(name, "%sSimulatedSatelliteEnsembleProduct.", prefix.c_str());
     mEps.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -100,7 +89,7 @@ void SimulatedSatelliteEnsembleProduct::print(std::ostream &stream, uint level, 
     mSimulatedSatelliteProduct.print(stream, level + 1, optionFlags);
     mEps.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -113,7 +102,7 @@ T::Hash SimulatedSatelliteEnsembleProduct::countHash() {
     boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -127,7 +116,7 @@ ProductDefinition *SimulatedSatelliteEnsembleProduct::createProductDefinition() 
   try {
     return static_cast<ProductDefinition *>(new SimulatedSatelliteEnsembleProduct(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -137,7 +126,7 @@ SimulatedSatelliteProduct *SimulatedSatelliteEnsembleProduct::getSimulatedSatell
   try {
     return static_cast<SimulatedSatelliteProduct *>(&mSimulatedSatelliteProduct);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -147,7 +136,7 @@ EpsSettings *SimulatedSatelliteEnsembleProduct::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +144,7 @@ void SimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct(SimulatedSa
   try {
     mSimulatedSatelliteProduct = simulatedSatelliteProduct;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -163,7 +152,7 @@ void SimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

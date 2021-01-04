@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ProbabilitySettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,23 +21,7 @@ namespace GRIB2 {
 ProbabilitySettings::ProbabilitySettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ProbabilitySettings::ProbabilitySettings(const ProbabilitySettings &other) {
-  try {
-    mForecastProbabilityNumber = other.mForecastProbabilityNumber;
-    mTotalNumberOfForecastProbabilities = other.mTotalNumberOfForecastProbabilities;
-    mProbabilityType = other.mProbabilityType;
-    mScaleFactorOfLowerLimit = other.mScaleFactorOfLowerLimit;
-    mScaledValueOfLowerLimit = other.mScaledValueOfLowerLimit;
-    mScaleFactorOfUpperLimit = other.mScaleFactorOfUpperLimit;
-    mScaledValueOfUpperLimit = other.mScaledValueOfUpperLimit;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -61,7 +45,7 @@ void ProbabilitySettings::read(MemoryReader &memoryReader) {
     mScaleFactorOfUpperLimit = memoryReader.read_Int8_opt();
     mScaledValueOfUpperLimit = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -80,7 +64,7 @@ void ProbabilitySettings::write(DataWriter &dataWriter) {
     dataWriter << mScaleFactorOfUpperLimit;
     dataWriter << mScaledValueOfUpperLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -108,7 +92,7 @@ void ProbabilitySettings::getAttributeList(std::string prefix, T::AttributeList 
     sprintf(name, "%sProbabilitySettings.ScaledValueOfUpperLimit", prefix.c_str());
     attributeList.addAttribute(name, toString(mScaledValueOfUpperLimit));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -130,7 +114,7 @@ void ProbabilitySettings::print(std::ostream &stream, uint level, uint optionFla
     stream << space(level) << "- ScaleFactorOfUpperLimit = " << toString(mScaleFactorOfUpperLimit) << "\n";
     stream << space(level) << "- ScaledValueOfUpperLimit = " << toString(mScaledValueOfUpperLimit) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +139,7 @@ T::Hash ProbabilitySettings::countHash() {
       boost::hash_combine(seed, *mScaledValueOfUpperLimit);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -165,7 +149,7 @@ const T::UInt8_opt &ProbabilitySettings::getForecastProbabilityNumber() const {
   try {
     return mForecastProbabilityNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -175,7 +159,7 @@ const T::UInt8_opt &ProbabilitySettings::getTotalNumberOfForecastProbabilities()
   try {
     return mTotalNumberOfForecastProbabilities;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -185,7 +169,7 @@ const T::UInt8_opt &ProbabilitySettings::getProbabilityType() const {
   try {
     return mProbabilityType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -195,7 +179,7 @@ const T::Int8_opt &ProbabilitySettings::getScaleFactorOfLowerLimit() const {
   try {
     return mScaleFactorOfLowerLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -205,7 +189,7 @@ const T::Int32_opt &ProbabilitySettings::getScaledValueOfLowerLimit() const {
   try {
     return mScaledValueOfLowerLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -215,7 +199,7 @@ const T::Int8_opt &ProbabilitySettings::getScaleFactorOfUpperLimit() const {
   try {
     return mScaleFactorOfUpperLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -225,7 +209,7 @@ const T::Int32_opt &ProbabilitySettings::getScaledValueOfUpperLimit() const {
   try {
     return mScaledValueOfUpperLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -233,7 +217,7 @@ void ProbabilitySettings::setForecastProbabilityNumber(T::UInt8_opt forecastProb
   try {
     mForecastProbabilityNumber = forecastProbabilityNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -241,7 +225,7 @@ void ProbabilitySettings::setTotalNumberOfForecastProbabilities(T::UInt8_opt tot
   try {
     mTotalNumberOfForecastProbabilities = totalNumberOfForecastProbabilities;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -249,7 +233,7 @@ void ProbabilitySettings::setProbabilityType(T::UInt8_opt probabilityType) {
   try {
     mProbabilityType = probabilityType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -257,7 +241,7 @@ void ProbabilitySettings::setScaleFactorOfLowerLimit(T::Int8_opt scaleFactorOfLo
   try {
     mScaleFactorOfLowerLimit = scaleFactorOfLowerLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -265,7 +249,7 @@ void ProbabilitySettings::setScaledValueOfLowerLimit(T::Int32_opt scaledValueOfL
   try {
     mScaledValueOfLowerLimit = scaledValueOfLowerLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -273,7 +257,7 @@ void ProbabilitySettings::setScaleFactorOfUpperLimit(T::Int8_opt scaleFactorOfUp
   try {
     mScaleFactorOfUpperLimit = scaleFactorOfUpperLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -281,7 +265,7 @@ void ProbabilitySettings::setScaledValueOfUpperLimit(T::Int32_opt scaledValueOfU
   try {
     mScaledValueOfUpperLimit = scaledValueOfUpperLimit;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

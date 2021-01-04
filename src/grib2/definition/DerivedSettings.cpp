@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "DerivedSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,18 +21,7 @@ namespace GRIB2 {
 DerivedSettings::DerivedSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-DerivedSettings::DerivedSettings(const DerivedSettings &other) {
-  try {
-    mDerivedForecast = other.mDerivedForecast;
-    mNumberOfForecastsInEnsemble = other.mNumberOfForecastsInEnsemble;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -51,7 +40,7 @@ void DerivedSettings::read(MemoryReader &memoryReader) {
     mDerivedForecast = memoryReader.read_UInt8_opt();
     mNumberOfForecastsInEnsemble = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -65,7 +54,7 @@ void DerivedSettings::write(DataWriter &dataWriter) {
     dataWriter << mDerivedForecast;
     dataWriter << mNumberOfForecastsInEnsemble;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -83,7 +72,7 @@ void DerivedSettings::getAttributeList(std::string prefix, T::AttributeList &att
     sprintf(name, "%sDerivedSettings.NumberOfForecastsInEnsemble", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -100,7 +89,7 @@ void DerivedSettings::print(std::ostream &stream, uint level, uint optionFlags) 
     stream << space(level) << "- DerivedForecast = " << toString(mDerivedForecast) << "\n";
     stream << space(level) << "- NumberOfForecastsInEnsemble = " << toString(mNumberOfForecastsInEnsemble) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -115,7 +104,7 @@ T::Hash DerivedSettings::countHash() {
       boost::hash_combine(seed, *mNumberOfForecastsInEnsemble);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -125,7 +114,7 @@ const T::UInt8_opt &DerivedSettings::getDerivedForecast() const {
   try {
     return mDerivedForecast;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -135,7 +124,7 @@ const T::UInt8_opt &DerivedSettings::getNumberOfForecastsInEnsemble() const {
   try {
     return mNumberOfForecastsInEnsemble;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -143,7 +132,7 @@ void DerivedSettings::setDerivedForecast(T::UInt8_opt derivedForecast) {
   try {
     mDerivedForecast = derivedForecast;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -151,7 +140,7 @@ void DerivedSettings::setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForeca
   try {
     mNumberOfForecastsInEnsemble = numberOfForecastsInEnsemble;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

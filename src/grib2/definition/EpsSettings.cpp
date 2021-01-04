@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "EpsSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,19 +21,7 @@ namespace GRIB2 {
 EpsSettings::EpsSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-EpsSettings::EpsSettings(const EpsSettings &other) {
-  try {
-    mTypeOfEnsembleForecast = other.mTypeOfEnsembleForecast;
-    mPerturbationNumber = other.mPerturbationNumber;
-    mNumberOfForecastsInEnsemble = other.mNumberOfForecastsInEnsemble;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -53,7 +41,7 @@ void EpsSettings::read(MemoryReader &memoryReader) {
     mPerturbationNumber = memoryReader.read_UInt8_opt();
     mNumberOfForecastsInEnsemble = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -68,7 +56,7 @@ void EpsSettings::write(DataWriter &dataWriter) {
     dataWriter << mPerturbationNumber;
     dataWriter << mNumberOfForecastsInEnsemble;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -88,7 +76,7 @@ void EpsSettings::getAttributeList(std::string prefix, T::AttributeList &attribu
     sprintf(name, "%sEpsSettings.NumberOfForecastsInEnsemble", prefix.c_str());
     attributeList.addAttribute(name, toString(mNumberOfForecastsInEnsemble));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -106,7 +94,7 @@ void EpsSettings::print(std::ostream &stream, uint level, uint optionFlags) cons
     stream << space(level) << "- PerturbationNumber = " << toString(mPerturbationNumber) << "\n";
     stream << space(level) << "- NumberOfForecastsInEnsemble = " << toString(mNumberOfForecastsInEnsemble) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -123,7 +111,7 @@ T::Hash EpsSettings::countHash() {
       boost::hash_combine(seed, *mNumberOfForecastsInEnsemble);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -133,7 +121,7 @@ const T::UInt8_opt &EpsSettings::getTypeOfEnsembleForecast() const {
   try {
     return mTypeOfEnsembleForecast;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -143,7 +131,7 @@ const T::UInt8_opt &EpsSettings::getPerturbationNumber() const {
   try {
     return mPerturbationNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -153,7 +141,7 @@ const T::UInt8_opt &EpsSettings::getNumberOfForecastsInEnsemble() const {
   try {
     return mNumberOfForecastsInEnsemble;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -161,7 +149,7 @@ void EpsSettings::setTypeOfEnsembleForecast(T::UInt8_opt typeOfEnsembleForecast)
   try {
     mTypeOfEnsembleForecast = typeOfEnsembleForecast;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -169,7 +157,7 @@ void EpsSettings::setPerturbationNumber(T::UInt8_opt perturbationNumber) {
   try {
     mPerturbationNumber = perturbationNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -177,7 +165,7 @@ void EpsSettings::setNumberOfForecastsInEnsemble(T::UInt8_opt numberOfForecastsI
   try {
     mNumberOfForecastsInEnsemble = numberOfForecastsInEnsemble;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "SphericalHarmonic.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -26,21 +26,7 @@ SphericalHarmonic::SphericalHarmonic() {
     mRepresentationType = 0;
     mRepresentationMode = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-SphericalHarmonic::SphericalHarmonic(const SphericalHarmonic &other) : GridDefinition(other) {
-  try {
-    mJ = other.mJ;
-    mK = other.mK;
-    mM = other.mM;
-    mRepresentationType = other.mRepresentationType;
-    mRepresentationMode = other.mRepresentationMode;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -64,7 +50,7 @@ void SphericalHarmonic::read(MemoryReader &memoryReader) {
     for (uint t = 0; t < 18; t++)
       memoryReader.read_uint8();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -83,7 +69,7 @@ void SphericalHarmonic::write(DataWriter &dataWriter) {
     for (uint t = 0; t < 18; t++)
       dataWriter.write_uint8(0);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -107,7 +93,7 @@ void SphericalHarmonic::getAttributeList(std::string prefix, T::AttributeList &a
     sprintf(name, "%sSphericalHarmonic.RepresentationMode", prefix.c_str());
     attributeList.addAttribute(name, toString(mRepresentationMode));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -127,7 +113,7 @@ void SphericalHarmonic::print(std::ostream &stream, uint level, uint optionFlags
     stream << space(level) << "- RepresentationType = " << toString(mRepresentationType) << "\n";
     stream << space(level) << "- RepresentationMode = " << toString(mRepresentationMode) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -143,7 +129,7 @@ T::Hash SphericalHarmonic::countHash() {
     boost::hash_combine(seed, mRepresentationMode);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -157,7 +143,7 @@ GridDefinition *SphericalHarmonic::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new SphericalHarmonic(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -167,7 +153,7 @@ std::uint16_t SphericalHarmonic::getJ() const {
   try {
     return mJ;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -177,7 +163,7 @@ std::uint16_t SphericalHarmonic::getK() const {
   try {
     return mK;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -187,7 +173,7 @@ std::uint16_t SphericalHarmonic::getM() const {
   try {
     return mM;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -197,7 +183,7 @@ std::uint8_t SphericalHarmonic::getRepresentationType() const {
   try {
     return mRepresentationType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -207,7 +193,7 @@ std::uint8_t SphericalHarmonic::getRepresentationMode() const {
   try {
     return mRepresentationMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -215,7 +201,7 @@ void SphericalHarmonic::setJ(std::uint16_t j) {
   try {
     mJ = j;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -223,7 +209,7 @@ void SphericalHarmonic::setK(std::uint16_t k) {
   try {
     mK = k;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -231,7 +217,7 @@ void SphericalHarmonic::setM(std::uint16_t m) {
   try {
     mM = m;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -239,7 +225,7 @@ void SphericalHarmonic::setRepresentationType(std::uint8_t representationType) {
   try {
     mRepresentationType = representationType;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -247,7 +233,7 @@ void SphericalHarmonic::setRepresentationMode(std::uint8_t representationMode) {
   try {
     mRepresentationMode = representationMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

@@ -20,7 +20,7 @@ class GribParameterDef
 {
   public:
                   GribParameterDef();
-                  GribParameterDef(const GribParameterDef& parameterDefinition);
+                  //GribParameterDef(const GribParameterDef& parameterDefinition);
     virtual       ~GribParameterDef();
 
     virtual void  print(std::ostream& stream,uint level,uint optionFlags) const;

@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "TimeIntervalAtmosphericChemicalEnsembleProduct.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,21 +21,7 @@ namespace GRIB2 {
 TimeIntervalAtmosphericChemicalEnsembleProduct::TimeIntervalAtmosphericChemicalEnsembleProduct() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-TimeIntervalAtmosphericChemicalEnsembleProduct::TimeIntervalAtmosphericChemicalEnsembleProduct(const TimeIntervalAtmosphericChemicalEnsembleProduct &other)
-    : ProductDefinition(other) {
-  try {
-    mParameterChemical = other.mParameterChemical;
-    mHorizontal = other.mHorizontal;
-    mEps = other.mEps;
-    mStatistical = other.mStatistical;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -56,7 +42,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::read(MemoryReader &memoryRe
     mEps.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -72,7 +58,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::write(DataWriter &dataWrite
     mEps.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -94,7 +80,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::getAttributeList(std::strin
     sprintf(name, "%sTimeIntervalAtmosphericChemicalEnsembleProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -113,7 +99,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::print(std::ostream &stream,
     mEps.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -128,7 +114,7 @@ T::Hash TimeIntervalAtmosphericChemicalEnsembleProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -142,7 +128,7 @@ ProductDefinition *TimeIntervalAtmosphericChemicalEnsembleProduct::createProduct
   try {
     return static_cast<ProductDefinition *>(new TimeIntervalAtmosphericChemicalEnsembleProduct(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -152,7 +138,7 @@ ParameterChemicalSettings *TimeIntervalAtmosphericChemicalEnsembleProduct::getPa
   try {
     return static_cast<ParameterChemicalSettings *>(&mParameterChemical);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -162,7 +148,7 @@ HorizontalSettings *TimeIntervalAtmosphericChemicalEnsembleProduct::getHorizonta
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -172,7 +158,7 @@ EpsSettings *TimeIntervalAtmosphericChemicalEnsembleProduct::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -182,7 +168,7 @@ StatisticalSettings *TimeIntervalAtmosphericChemicalEnsembleProduct::getStatisti
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -190,7 +176,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setParameterChemical(Parame
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -198,7 +184,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setHorizontal(HorizontalSet
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -206,7 +192,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -214,7 +200,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::setStatistical(StatisticalS
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

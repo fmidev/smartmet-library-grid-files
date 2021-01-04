@@ -18,11 +18,11 @@ RepresentationDefinition::RepresentationDefinition()
 
 
 /*! \brief The copy constructor of the class. */
-
+/*
 RepresentationDefinition::RepresentationDefinition(const RepresentationDefinition& other)
 {
 }
-
+*/
 
 
 

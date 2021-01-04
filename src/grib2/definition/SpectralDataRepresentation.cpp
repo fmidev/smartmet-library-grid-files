@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "SpectralDataRepresentation.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -22,18 +22,7 @@ SpectralDataRepresentation::SpectralDataRepresentation() {
   try {
     mRealPartOf00 = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-SpectralDataRepresentation::SpectralDataRepresentation(const SpectralDataRepresentation &other) : RepresentationDefinition(other) {
-  try {
-    mPacking = other.mPacking;
-    mRealPartOf00 = other.mRealPartOf00;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -52,7 +41,7 @@ void SpectralDataRepresentation::read(MemoryReader &memoryReader) {
     mPacking.read(memoryReader);
     mRealPartOf00 = memoryReader.read_float();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -66,7 +55,7 @@ void SpectralDataRepresentation::write(DataWriter &dataWriter) {
     mPacking.write(dataWriter);
     dataWriter << mRealPartOf00;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -84,7 +73,7 @@ void SpectralDataRepresentation::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sSpectralDataRepresentation.RealPartOf00", prefix.c_str());
     attributeList.addAttribute(name, toString(mRealPartOf00));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -101,7 +90,7 @@ void SpectralDataRepresentation::print(std::ostream &stream, uint level, uint op
     mPacking.print(stream, level + 1, optionFlags);
     stream << space(level) << "- RealPartOf00 = " << toString(mRealPartOf00) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -114,7 +103,7 @@ T::Hash SpectralDataRepresentation::countHash() {
     boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -128,7 +117,7 @@ RepresentationDefinition *SpectralDataRepresentation::createRepresentationDefini
   try {
     return static_cast<RepresentationDefinition *>(new SpectralDataRepresentation(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -138,7 +127,7 @@ PackingSettings *SpectralDataRepresentation::getPacking() const {
   try {
     return static_cast<PackingSettings *>(&mPacking);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -148,7 +137,7 @@ float SpectralDataRepresentation::getRealPartOf00() const {
   try {
     return mRealPartOf00;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -156,7 +145,7 @@ void SpectralDataRepresentation::setPacking(PackingSettings &packing) {
   try {
     mPacking = packing;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -164,7 +153,7 @@ void SpectralDataRepresentation::setRealPartOf00(float realPartOf00) {
   try {
     mRealPartOf00 = realPartOf00;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "Albers.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -33,30 +33,7 @@ Albers::Albers() {
     mLatitudeOfSouthernPole = 0;
     mLongitudeOfSouthernPole = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-Albers::Albers(const Albers &other) : GridDefinition(other) {
-  try {
-    mNx = other.mNx;
-    mNy = other.mNy;
-    mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
-    mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
-    mResolutionFlags = other.mResolutionFlags;
-    mLoV = other.mLoV;
-    mDxInMetres = other.mDxInMetres;
-    mDyInMetres = other.mDyInMetres;
-    mProjectionCentreFlag = other.mProjectionCentreFlag;
-    mScanningMode = other.mScanningMode;
-    mLatin1 = other.mLatin1;
-    mLatin2 = other.mLatin2;
-    mLatitudeOfSouthernPole = other.mLatitudeOfSouthernPole;
-    mLongitudeOfSouthernPole = other.mLongitudeOfSouthernPole;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -89,7 +66,7 @@ void Albers::read(MemoryReader &memoryReader) {
     for (uint t = 0; t < 2; t++)
       memoryReader.read_uint8();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -117,7 +94,7 @@ void Albers::write(DataWriter &dataWriter) {
     for (uint t = 0; t < 2; t++)
       dataWriter.write_uint8(0);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -159,7 +136,7 @@ void Albers::getAttributeList(std::string prefix, T::AttributeList &attributeLis
     sprintf(name, "%sAlbers.LongitudeOfSouthernPole", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfSouthernPole));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -188,7 +165,7 @@ void Albers::print(std::ostream &stream, uint level, uint optionFlags) const {
     stream << space(level) << "- LatitudeOfSouthernPole = " << toString(mLatitudeOfSouthernPole) << "\n";
     stream << space(level) << "- LongitudeOfSouthernPole = " << toString(mLongitudeOfSouthernPole) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -213,7 +190,7 @@ T::Hash Albers::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -227,7 +204,7 @@ GridDefinition *Albers::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new Albers(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -237,7 +214,7 @@ std::uint16_t Albers::getNx() const {
   try {
     return mNx;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -247,7 +224,7 @@ std::uint16_t Albers::getNy() const {
   try {
     return mNy;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -257,7 +234,7 @@ std::int24_t Albers::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -267,7 +244,7 @@ std::int24_t Albers::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -277,7 +254,7 @@ ResolutionFlagsSettings *Albers::getResolutionFlags() const {
   try {
     return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -287,7 +264,7 @@ std::int24_t Albers::getLoV() const {
   try {
     return mLoV;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -297,7 +274,7 @@ std::uint24_t Albers::getDxInMetres() const {
   try {
     return mDxInMetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -307,7 +284,7 @@ std::uint24_t Albers::getDyInMetres() const {
   try {
     return mDyInMetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -317,7 +294,7 @@ std::uint8_t Albers::getProjectionCentreFlag() const {
   try {
     return mProjectionCentreFlag;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -327,7 +304,7 @@ ScanningModeSettings *Albers::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -337,7 +314,7 @@ std::int24_t Albers::getLatin1() const {
   try {
     return mLatin1;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -347,7 +324,7 @@ std::int24_t Albers::getLatin2() const {
   try {
     return mLatin2;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -357,7 +334,7 @@ std::int24_t Albers::getLatitudeOfSouthernPole() const {
   try {
     return mLatitudeOfSouthernPole;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -367,7 +344,7 @@ std::int24_t Albers::getLongitudeOfSouthernPole() const {
   try {
     return mLongitudeOfSouthernPole;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -375,7 +352,7 @@ void Albers::setNx(std::uint16_t nx) {
   try {
     mNx = nx;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -383,7 +360,7 @@ void Albers::setNy(std::uint16_t ny) {
   try {
     mNy = ny;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -391,7 +368,7 @@ void Albers::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint) 
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -399,7 +376,7 @@ void Albers::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -407,7 +384,7 @@ void Albers::setResolutionFlags(ResolutionFlagsSettings &resolutionFlags) {
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -415,7 +392,7 @@ void Albers::setLoV(std::int24_t loV) {
   try {
     mLoV = loV;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -423,7 +400,7 @@ void Albers::setDxInMetres(std::uint24_t dxInMetres) {
   try {
     mDxInMetres = dxInMetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -431,7 +408,7 @@ void Albers::setDyInMetres(std::uint24_t dyInMetres) {
   try {
     mDyInMetres = dyInMetres;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -439,7 +416,7 @@ void Albers::setProjectionCentreFlag(std::uint8_t projectionCentreFlag) {
   try {
     mProjectionCentreFlag = projectionCentreFlag;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -447,7 +424,7 @@ void Albers::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -455,7 +432,7 @@ void Albers::setLatin1(std::int24_t latin1) {
   try {
     mLatin1 = latin1;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -463,7 +440,7 @@ void Albers::setLatin2(std::int24_t latin2) {
   try {
     mLatin2 = latin2;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -471,7 +448,7 @@ void Albers::setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole) {
   try {
     mLatitudeOfSouthernPole = latitudeOfSouthernPole;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -479,7 +456,7 @@ void Albers::setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole) {
   try {
     mLongitudeOfSouthernPole = longitudeOfSouthernPole;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

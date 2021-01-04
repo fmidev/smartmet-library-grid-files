@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "AggregateAtmosphericChemicalProduct.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,19 +21,7 @@ namespace GRIB2 {
 AggregateAtmosphericChemicalProduct::AggregateAtmosphericChemicalProduct() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-AggregateAtmosphericChemicalProduct::AggregateAtmosphericChemicalProduct(const AggregateAtmosphericChemicalProduct &other) : ProductDefinition(other) {
-  try {
-    mParameterChemical = other.mParameterChemical;
-    mHorizontal = other.mHorizontal;
-    mStatistical = other.mStatistical;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -53,7 +41,7 @@ void AggregateAtmosphericChemicalProduct::read(MemoryReader &memoryReader) {
     mHorizontal.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -68,7 +56,7 @@ void AggregateAtmosphericChemicalProduct::write(DataWriter &dataWriter) {
     mHorizontal.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -88,7 +76,7 @@ void AggregateAtmosphericChemicalProduct::getAttributeList(std::string prefix, T
     sprintf(name, "%sAggregateAtmosphericChemicalProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -106,7 +94,7 @@ void AggregateAtmosphericChemicalProduct::print(std::ostream &stream, uint level
     mHorizontal.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -120,7 +108,7 @@ T::Hash AggregateAtmosphericChemicalProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -134,7 +122,7 @@ ProductDefinition *AggregateAtmosphericChemicalProduct::createProductDefinition(
   try {
     return static_cast<ProductDefinition *>(new AggregateAtmosphericChemicalProduct(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -144,7 +132,7 @@ ParameterChemicalSettings *AggregateAtmosphericChemicalProduct::getParameterChem
   try {
     return static_cast<ParameterChemicalSettings *>(&mParameterChemical);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -154,7 +142,7 @@ HorizontalSettings *AggregateAtmosphericChemicalProduct::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -164,7 +152,7 @@ StatisticalSettings *AggregateAtmosphericChemicalProduct::getStatistical() const
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -172,7 +160,7 @@ void AggregateAtmosphericChemicalProduct::setParameterChemical(ParameterChemical
   try {
     mParameterChemical = parameterChemical;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -180,7 +168,7 @@ void AggregateAtmosphericChemicalProduct::setHorizontal(HorizontalSettings &hori
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -188,7 +176,7 @@ void AggregateAtmosphericChemicalProduct::setStatistical(StatisticalSettings &st
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

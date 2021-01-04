@@ -13,7 +13,7 @@ class NewbaseParameterDef
   public:
 
                   NewbaseParameterDef();
-                  NewbaseParameterDef(const NewbaseParameterDef& parameter);
+                  //NewbaseParameterDef(const NewbaseParameterDef& parameter);
     virtual       ~NewbaseParameterDef();
 
     void          print(std::ostream& stream,uint level,uint optionFlags) const;

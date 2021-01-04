@@ -595,6 +595,7 @@ void PolarStereographicImpl::initSpatialReference()
 
     mSpatialReference.SetPS(centerLat,centerLon,dfScale,dfFalseEasting,dfFalseNorthing);
     mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
 
     // ### Validate the spatial reference.
@@ -612,7 +613,7 @@ void PolarStereographicImpl::initSpatialReference()
 
     OGRSpatialReference sr_latlon;
     sr_latlon.importFromEPSG(4326);
-
+    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     mSr_polarSterographic = mSpatialReference.Clone();
 
     mCt_latlon2pst = OGRCreateCoordinateTransformation(&sr_latlon,mSr_polarSterographic);

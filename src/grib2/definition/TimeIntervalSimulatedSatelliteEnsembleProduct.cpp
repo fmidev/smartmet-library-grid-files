@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "TimeIntervalSimulatedSatelliteEnsembleProduct.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,20 +21,7 @@ namespace GRIB2 {
 TimeIntervalSimulatedSatelliteEnsembleProduct::TimeIntervalSimulatedSatelliteEnsembleProduct() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-TimeIntervalSimulatedSatelliteEnsembleProduct::TimeIntervalSimulatedSatelliteEnsembleProduct(const TimeIntervalSimulatedSatelliteEnsembleProduct &other)
-    : ProductDefinition(other) {
-  try {
-    mSimulatedSatelliteProduct = other.mSimulatedSatelliteProduct;
-    mEps = other.mEps;
-    mStatistical = other.mStatistical;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -54,7 +41,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::read(MemoryReader &memoryRea
     mEps.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -69,7 +56,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::write(DataWriter &dataWriter
     mEps.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -89,7 +76,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::getAttributeList(std::string
     sprintf(name, "%sTimeIntervalSimulatedSatelliteEnsembleProduct.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -107,7 +94,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::print(std::ostream &stream, 
     mEps.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -121,7 +108,7 @@ T::Hash TimeIntervalSimulatedSatelliteEnsembleProduct::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -135,7 +122,7 @@ ProductDefinition *TimeIntervalSimulatedSatelliteEnsembleProduct::createProductD
   try {
     return static_cast<ProductDefinition *>(new TimeIntervalSimulatedSatelliteEnsembleProduct(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -145,7 +132,7 @@ SimulatedSatelliteProduct *TimeIntervalSimulatedSatelliteEnsembleProduct::getSim
   try {
     return static_cast<SimulatedSatelliteProduct *>(&mSimulatedSatelliteProduct);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -155,7 +142,7 @@ EpsSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -165,7 +152,7 @@ StatisticalSettings *TimeIntervalSimulatedSatelliteEnsembleProduct::getStatistic
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -173,7 +160,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::setSimulatedSatelliteProduct
   try {
     mSimulatedSatelliteProduct = simulatedSatelliteProduct;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -181,7 +168,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -189,7 +176,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::setStatistical(StatisticalSe
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

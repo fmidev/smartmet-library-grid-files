@@ -20,7 +20,6 @@ namespace GRIB1 {
 class GridAreaSettings {
 public:
   GridAreaSettings();
-  GridAreaSettings(const GridAreaSettings &other);
   virtual ~GridAreaSettings();
 
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
@@ -41,14 +40,7 @@ public:
   void setLongitudeOfLastGridPoint(std::int24_t longitudeOfLastGridPoint);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // #  La1 - latitude of first grid point
   // signed[3] latitudeOfFirstGridPoint :  edition_specific;

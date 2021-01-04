@@ -204,9 +204,11 @@ void latLon_bboxByCenter(double centerX,double centerY,double metricWidth,double
   {
     OGRSpatialReference sr_latlon;
     sr_latlon.importFromEPSG(4326);
+    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
     OGRSpatialReference sr_wgs84_world_mercator;
     sr_wgs84_world_mercator.importFromEPSG(3395);
+    sr_wgs84_world_mercator.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
     OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr_wgs84_world_mercator);
     OGRCoordinateTransformation *reverseTransformation = OGRCreateCoordinateTransformation(&sr_wgs84_world_mercator,&sr_latlon);

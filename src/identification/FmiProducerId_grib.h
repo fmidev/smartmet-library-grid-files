@@ -12,7 +12,7 @@ class FmiProducerId_grib
 {
   public:
                     FmiProducerId_grib();
-                    FmiProducerId_grib(const FmiProducerId_grib& producer);
+                    //FmiProducerId_grib(const FmiProducerId_grib& producer);
     virtual         ~FmiProducerId_grib();
 
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

@@ -270,6 +270,7 @@ void ObliqueLambertConformalImpl::initSpatialReference()
 
     mSpatialReference.SetLCC(stdP1,stdP2,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
     mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
 
     // ### Validate the spatial reference.
@@ -287,6 +288,7 @@ void ObliqueLambertConformalImpl::initSpatialReference()
 
     OGRSpatialReference sr_latlon;
     sr_latlon.importFromEPSG(4326);
+    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     mSr_lambertConformal = mSpatialReference.Clone();
 
     mCt_latlon2lambert = OGRCreateCoordinateTransformation(&sr_latlon,mSr_lambertConformal);

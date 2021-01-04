@@ -720,6 +720,7 @@ void LatLonImpl::initSpatialReference()
     double dfInvFlattening = getFlattening(mEarthShape);
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
 
     // ### Validate the spatial reference.

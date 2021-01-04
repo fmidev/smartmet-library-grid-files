@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "PercentileSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,17 +21,7 @@ namespace GRIB2 {
 PercentileSettings::PercentileSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-PercentileSettings::PercentileSettings(const PercentileSettings &other) {
-  try {
-    mPercentileValue = other.mPercentileValue;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -49,7 +39,7 @@ void PercentileSettings::read(MemoryReader &memoryReader) {
   try {
     mPercentileValue = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -62,7 +52,7 @@ void PercentileSettings::write(DataWriter &dataWriter) {
   try {
     dataWriter << mPercentileValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -78,7 +68,7 @@ void PercentileSettings::getAttributeList(std::string prefix, T::AttributeList &
     sprintf(name, "%sPercentileSettings.PercentileValue", prefix.c_str());
     attributeList.addAttribute(name, toString(mPercentileValue));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -94,7 +84,7 @@ void PercentileSettings::print(std::ostream &stream, uint level, uint optionFlag
     stream << space(level) << "PercentileSettings\n";
     stream << space(level) << "- PercentileValue = " << toString(mPercentileValue) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -107,7 +97,7 @@ T::Hash PercentileSettings::countHash() {
       boost::hash_combine(seed, *mPercentileValue);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -117,7 +107,7 @@ const T::UInt8_opt &PercentileSettings::getPercentileValue() const {
   try {
     return mPercentileValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -125,7 +115,7 @@ void PercentileSettings::setPercentileValue(T::UInt8_opt percentileValue) {
   try {
     mPercentileValue = percentileValue;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

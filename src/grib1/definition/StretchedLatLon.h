@@ -23,7 +23,6 @@ namespace GRIB1 {
 class StretchedLatLon : public GridDefinition {
 public:
   StretchedLatLon();
-  StretchedLatLon(const StretchedLatLon &other);
   virtual ~StretchedLatLon();
 
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
@@ -52,30 +51,13 @@ public:
   void setGridStretching(GridStretchingSettings &gridStretching);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # GRID DEFINITION stretched latitude/longitude grid
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 2;
   //
   // template commonBlock "grib1/grid_definition_latlon.def";
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
-  //
   // unsigned[2] Ni  : can_be_missing,dump;
 
   std::uint16_t mNi;
@@ -143,6 +125,7 @@ protected:
   //       Nj,DjInDegrees,pl);
   //    nearest latlon_reduced(values,radius,Nj,pl,longitudeFirstInDegrees,longitudeLastInDegrees);
   // } else {
+  //    transient iteratorDisableUnrotate = 0 : hidden; # ECC-808
   //    iterator latlon(numberOfPoints,missingValue,values,longitudeFirstInDegrees,
   //                    DiInDegrees ,Ni,Nj,iScansNegatively ,
   //                    latitudeFirstInDegrees,DjInDegrees,jScansPositively,jPointsAreConsecutive);
@@ -157,7 +140,6 @@ protected:
   // meta distinctLatitudes latitudes(values,1);
   // meta distinctLongitudes longitudes(values,1);
   //
-  //
   // ascii[4] zero : read_only;
 
   std::uint32_t mZero;
@@ -167,8 +149,6 @@ protected:
   // include "grib1/grid_stretching.def"
 
   mutable GridStretchingSettings mGridStretching;
-
-  //
 };
 
 } // namespace GRIB1

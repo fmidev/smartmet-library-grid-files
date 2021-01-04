@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "OriginalValuesSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,17 +21,7 @@ namespace GRIB2 {
 OriginalValuesSettings::OriginalValuesSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-OriginalValuesSettings::OriginalValuesSettings(const OriginalValuesSettings &other) {
-  try {
-    mTypeOfOriginalFieldValues = other.mTypeOfOriginalFieldValues;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -49,7 +39,7 @@ void OriginalValuesSettings::read(MemoryReader &memoryReader) {
   try {
     mTypeOfOriginalFieldValues = memoryReader.read_UInt8_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -62,7 +52,7 @@ void OriginalValuesSettings::write(DataWriter &dataWriter) {
   try {
     dataWriter << mTypeOfOriginalFieldValues;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -78,7 +68,7 @@ void OriginalValuesSettings::getAttributeList(std::string prefix, T::AttributeLi
     sprintf(name, "%sOriginalValuesSettings.TypeOfOriginalFieldValues", prefix.c_str());
     attributeList.addAttribute(name, toString(mTypeOfOriginalFieldValues));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -94,7 +84,7 @@ void OriginalValuesSettings::print(std::ostream &stream, uint level, uint option
     stream << space(level) << "OriginalValuesSettings\n";
     stream << space(level) << "- TypeOfOriginalFieldValues = " << toString(mTypeOfOriginalFieldValues) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -107,7 +97,7 @@ T::Hash OriginalValuesSettings::countHash() {
       boost::hash_combine(seed, *mTypeOfOriginalFieldValues);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -117,7 +107,7 @@ const T::UInt8_opt &OriginalValuesSettings::getTypeOfOriginalFieldValues() const
   try {
     return mTypeOfOriginalFieldValues;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -125,7 +115,7 @@ void OriginalValuesSettings::setTypeOfOriginalFieldValues(T::UInt8_opt typeOfOri
   try {
     mTypeOfOriginalFieldValues = typeOfOriginalFieldValues;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

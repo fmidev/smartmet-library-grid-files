@@ -23,7 +23,6 @@ namespace GRIB2 {
 class AggregateForecast : public ProductDefinition {
 public:
   AggregateForecast();
-  AggregateForecast(const AggregateForecast &other);
   virtual ~AggregateForecast();
 
   virtual uint getTemplateNumber() const;
@@ -42,14 +41,7 @@ public:
   void setStatistical(StatisticalSettings &statistical);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 4.8, Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or
   // non-continuous time interval

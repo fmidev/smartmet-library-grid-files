@@ -21,7 +21,6 @@ namespace GRIB2 {
 class ForecastError : public ProductDefinition {
 public:
   ForecastError();
-  ForecastError(const ForecastError &other);
   virtual ~ForecastError();
 
   virtual uint getTemplateNumber() const;
@@ -36,23 +35,10 @@ public:
   void setNormalProduct(NormalProduct &normalProduct);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
-  // # TEMPLATE 4.7, Analysis or forecast error at a horizontal level or in a horizontal layer at a point in time
-  // # Same as 4.0 Should not be used
-  //
+  // # Note: This template is deprecated. Template 4.0 should be used instead.
   // include "grib2/template.4.0.def"
 
   mutable NormalProduct mNormalProduct;
-
-  //
 };
 
 } // namespace GRIB2

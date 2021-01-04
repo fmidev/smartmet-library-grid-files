@@ -28,7 +28,7 @@ FmiLevelId_grib::FmiLevelId_grib()
 
 
 
-
+/*
 FmiLevelId_grib::FmiLevelId_grib(const FmiLevelId_grib& level)
 {
   try
@@ -44,7 +44,7 @@ FmiLevelId_grib::FmiLevelId_grib(const FmiLevelId_grib& level)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

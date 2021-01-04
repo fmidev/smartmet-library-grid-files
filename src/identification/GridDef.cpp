@@ -117,6 +117,7 @@ GridDef::~GridDef()
   FUNCTION_TRACE
   try
   {
+    /*
     for (auto it=mGridDefinitions1.begin(); it!=mGridDefinitions1.end(); ++it)
     {
       delete (it->second);
@@ -126,6 +127,7 @@ GridDef::~GridDef()
     {
       delete (it->second);
     }
+    */
   }
   catch (...)
   {
@@ -3301,6 +3303,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
         OGRSpatialReference sr_latlon;
         sr_latlon.importFromEPSG(4326);
+        sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
         OGRSpatialReference sr;
 
@@ -3320,6 +3323,8 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           if (err != OGRERR_NONE)
             throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
         }
+
+        sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
         OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
         if (transformation == nullptr)
@@ -3539,6 +3544,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
         OGRSpatialReference sr_latlon;
         sr_latlon.importFromEPSG(4326);
+        sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
         OGRSpatialReference sr;
 
@@ -3557,6 +3563,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           if (sr.SetFromUserInput(crsStr) != OGRERR_NONE)
             throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
         }
+        sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
         OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
         if (transformation == nullptr)
@@ -4418,6 +4425,9 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
         case T::GridProjectionValue::Mercator:
         {
+          return nullptr;
+          // ************* IMPLEMENTATION NOT TESTED *************
+
           if (c < 12)
             return nullptr;
 
@@ -4427,8 +4437,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000));
           int latitude = C_INT(round(toDouble(field[6])*1000));
-          int iInc = C_INT(round(toDouble(field[7]) * 1000));
-          int jInc = C_INT(round(toDouble(field[8]) * 1000));
+          int iInc = C_INT(round(toDouble(field[7])));
+          int jInc = C_INT(round(toDouble(field[8])));
           char *scanningMode = field[9];
           int latin = C_INT(round(toDouble(field[10])*1000));
 

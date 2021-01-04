@@ -30,7 +30,7 @@ GribTableValue::GribTableValue()
 
 
 /*! \brief The copy constructor of the class. */
-
+/*
 GribTableValue::GribTableValue(const GribTableValue& tableValue)
 {
   try
@@ -47,7 +47,7 @@ GribTableValue::GribTableValue(const GribTableValue& tableValue)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "TimeIntervalEnsembleReforecast.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,21 +21,7 @@ namespace GRIB2 {
 TimeIntervalEnsembleReforecast::TimeIntervalEnsembleReforecast() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-TimeIntervalEnsembleReforecast::TimeIntervalEnsembleReforecast(const TimeIntervalEnsembleReforecast &other) : ProductDefinition(other) {
-  try {
-    mParameter = other.mParameter;
-    mHorizontal = other.mHorizontal;
-    mEps = other.mEps;
-    mReforecast = other.mReforecast;
-    mStatistical = other.mStatistical;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -57,7 +43,7 @@ void TimeIntervalEnsembleReforecast::read(MemoryReader &memoryReader) {
     mReforecast.read(memoryReader);
     mStatistical.read(memoryReader);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -74,7 +60,7 @@ void TimeIntervalEnsembleReforecast::write(DataWriter &dataWriter) {
     mReforecast.write(dataWriter);
     mStatistical.write(dataWriter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -98,7 +84,7 @@ void TimeIntervalEnsembleReforecast::getAttributeList(std::string prefix, T::Att
     sprintf(name, "%sTimeIntervalEnsembleReforecast.", prefix.c_str());
     mStatistical.getAttributeList(name, attributeList);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -118,7 +104,7 @@ void TimeIntervalEnsembleReforecast::print(std::ostream &stream, uint level, uin
     mReforecast.print(stream, level + 1, optionFlags);
     mStatistical.print(stream, level + 1, optionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -134,7 +120,7 @@ T::Hash TimeIntervalEnsembleReforecast::countHash() {
     boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -148,7 +134,7 @@ ProductDefinition *TimeIntervalEnsembleReforecast::createProductDefinition() con
   try {
     return static_cast<ProductDefinition *>(new TimeIntervalEnsembleReforecast(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -158,7 +144,7 @@ ParameterSettings *TimeIntervalEnsembleReforecast::getParameter() const {
   try {
     return static_cast<ParameterSettings *>(&mParameter);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -168,7 +154,7 @@ HorizontalSettings *TimeIntervalEnsembleReforecast::getHorizontal() const {
   try {
     return static_cast<HorizontalSettings *>(&mHorizontal);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -178,7 +164,7 @@ EpsSettings *TimeIntervalEnsembleReforecast::getEps() const {
   try {
     return static_cast<EpsSettings *>(&mEps);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -188,7 +174,7 @@ ReforecastSettings *TimeIntervalEnsembleReforecast::getReforecast() const {
   try {
     return static_cast<ReforecastSettings *>(&mReforecast);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -198,7 +184,7 @@ StatisticalSettings *TimeIntervalEnsembleReforecast::getStatistical() const {
   try {
     return static_cast<StatisticalSettings *>(&mStatistical);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -206,7 +192,7 @@ void TimeIntervalEnsembleReforecast::setParameter(ParameterSettings &parameter) 
   try {
     mParameter = parameter;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -214,7 +200,7 @@ void TimeIntervalEnsembleReforecast::setHorizontal(HorizontalSettings &horizonta
   try {
     mHorizontal = horizontal;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -222,7 +208,7 @@ void TimeIntervalEnsembleReforecast::setEps(EpsSettings &eps) {
   try {
     mEps = eps;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -230,7 +216,7 @@ void TimeIntervalEnsembleReforecast::setReforecast(ReforecastSettings &reforecas
   try {
     mReforecast = reforecast;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -238,7 +224,7 @@ void TimeIntervalEnsembleReforecast::setStatistical(StatisticalSettings &statist
   try {
     mStatistical = statistical;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

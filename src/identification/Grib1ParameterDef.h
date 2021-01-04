@@ -13,7 +13,7 @@ class Grib1ParameterDef
   public:
 
                   Grib1ParameterDef();
-                  Grib1ParameterDef(const Grib1ParameterDef& parameter);
+                  //Grib1ParameterDef(const Grib1ParameterDef& parameter);
     virtual       ~Grib1ParameterDef();
 
     void          print(std::ostream& stream,uint level,uint optionFlags) const;

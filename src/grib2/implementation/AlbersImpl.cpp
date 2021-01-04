@@ -216,6 +216,7 @@ void AlbersImpl::initSpatialReference()
 
     mSpatialReference.SetACEA(stdP1,stdP2,centerLat,centerLon ,dfFalseEasting,dfFalseNorthing);
     mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
 
     // ### Validate the spatial reference.

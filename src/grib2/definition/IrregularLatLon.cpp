@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "IrregularLatLon.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,19 +21,7 @@ namespace GRIB2 {
 IrregularLatLon::IrregularLatLon() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-IrregularLatLon::IrregularLatLon(const IrregularLatLon &other) : GridDefinition(other) {
-  try {
-    mEarthShape = other.mEarthShape;
-    mLatitude = other.mLatitude;
-    mLongitude = other.mLongitude;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -53,7 +41,7 @@ void IrregularLatLon::read(MemoryReader &memoryReader) {
     mLatitude = memoryReader.read_Int32_opt();
     mLongitude = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -68,7 +56,7 @@ void IrregularLatLon::write(DataWriter &dataWriter) {
     dataWriter << mLatitude;
     dataWriter << mLongitude;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -88,7 +76,7 @@ void IrregularLatLon::getAttributeList(std::string prefix, T::AttributeList &att
     sprintf(name, "%sIrregularLatLon.Longitude", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitude));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -106,7 +94,7 @@ void IrregularLatLon::print(std::ostream &stream, uint level, uint optionFlags) 
     stream << space(level) << "- Latitude = " << toString(mLatitude) << "\n";
     stream << space(level) << "- Longitude = " << toString(mLongitude) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -122,7 +110,7 @@ T::Hash IrregularLatLon::countHash() {
     // boost::hash_combine(seed,mEarthShape.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -136,7 +124,7 @@ GridDefinition *IrregularLatLon::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new IrregularLatLon(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -146,7 +134,7 @@ EarthShapeSettings *IrregularLatLon::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -156,7 +144,7 @@ const T::Int32_opt &IrregularLatLon::getLatitude() const {
   try {
     return mLatitude;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -166,7 +154,7 @@ const T::Int32_opt &IrregularLatLon::getLongitude() const {
   try {
     return mLongitude;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -174,7 +162,7 @@ void IrregularLatLon::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -182,7 +170,7 @@ void IrregularLatLon::setLatitude(T::Int32_opt latitude) {
   try {
     mLatitude = latitude;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -190,7 +178,7 @@ void IrregularLatLon::setLongitude(T::Int32_opt longitude) {
   try {
     mLongitude = longitude;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

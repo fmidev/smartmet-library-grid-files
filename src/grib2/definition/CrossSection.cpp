@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "CrossSection.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,30 +21,7 @@ namespace GRIB2 {
 CrossSection::CrossSection() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-CrossSection::CrossSection(const CrossSection &other) : GridDefinition(other) {
-  try {
-    mEarthShape = other.mEarthShape;
-    mNumberOfHorizontalPoints = other.mNumberOfHorizontalPoints;
-    mBasicAngleOfTheInitialProductionDomain = other.mBasicAngleOfTheInitialProductionDomain;
-    mSubdivisionsOfBasicAngle = other.mSubdivisionsOfBasicAngle;
-    mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
-    mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
-    mScanningMode = other.mScanningMode;
-    mLatitudeOfLastGridPoint = other.mLatitudeOfLastGridPoint;
-    mLongitudeOfLastGridPoint = other.mLongitudeOfLastGridPoint;
-    mTypeOfHorizontalLine = other.mTypeOfHorizontalLine;
-    mNumberOfVerticalPoints = other.mNumberOfVerticalPoints;
-    mMeaningOfVerticalCoordinate = other.mMeaningOfVerticalCoordinate;
-    mVerticalCoordinate = other.mVerticalCoordinate;
-    mNC = other.mNC;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -75,7 +52,7 @@ void CrossSection::read(MemoryReader &memoryReader) {
     mVerticalCoordinate = memoryReader.read_UInt8_opt();
     mNC = memoryReader.read_UInt16_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -101,7 +78,7 @@ void CrossSection::write(DataWriter &dataWriter) {
     dataWriter << mVerticalCoordinate;
     dataWriter << mNC;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -143,7 +120,7 @@ void CrossSection::getAttributeList(std::string prefix, T::AttributeList &attrib
     sprintf(name, "%sCrossSection.NC", prefix.c_str());
     attributeList.addAttribute(name, toString(mNC));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -172,7 +149,7 @@ void CrossSection::print(std::ostream &stream, uint level, uint optionFlags) con
     stream << space(level) << "- VerticalCoordinate = " << toString(mVerticalCoordinate) << "\n";
     stream << space(level) << "- NC = " << toString(mNC) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -205,7 +182,7 @@ T::Hash CrossSection::countHash() {
     boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -219,7 +196,7 @@ GridDefinition *CrossSection::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new CrossSection(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -229,7 +206,7 @@ EarthShapeSettings *CrossSection::getEarthShape() const {
   try {
     return static_cast<EarthShapeSettings *>(&mEarthShape);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -239,7 +216,7 @@ const T::UInt32_opt &CrossSection::getNumberOfHorizontalPoints() const {
   try {
     return mNumberOfHorizontalPoints;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -249,7 +226,7 @@ const T::UInt32_opt &CrossSection::getBasicAngleOfTheInitialProductionDomain() c
   try {
     return mBasicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -259,7 +236,7 @@ const T::UInt32_opt &CrossSection::getSubdivisionsOfBasicAngle() const {
   try {
     return mSubdivisionsOfBasicAngle;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -269,7 +246,7 @@ const T::Int32_opt &CrossSection::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -279,7 +256,7 @@ const T::UInt32_opt &CrossSection::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -289,7 +266,7 @@ ScanningModeSettings *CrossSection::getScanningMode() const {
   try {
     return static_cast<ScanningModeSettings *>(&mScanningMode);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -299,7 +276,7 @@ const T::Int32_opt &CrossSection::getLatitudeOfLastGridPoint() const {
   try {
     return mLatitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -309,7 +286,7 @@ const T::UInt32_opt &CrossSection::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -319,7 +296,7 @@ const T::UInt8_opt &CrossSection::getTypeOfHorizontalLine() const {
   try {
     return mTypeOfHorizontalLine;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -329,7 +306,7 @@ const T::UInt16_opt &CrossSection::getNumberOfVerticalPoints() const {
   try {
     return mNumberOfVerticalPoints;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -339,7 +316,7 @@ const T::UInt8_opt &CrossSection::getMeaningOfVerticalCoordinate() const {
   try {
     return mMeaningOfVerticalCoordinate;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -349,7 +326,7 @@ const T::UInt8_opt &CrossSection::getVerticalCoordinate() const {
   try {
     return mVerticalCoordinate;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -359,7 +336,7 @@ const T::UInt16_opt &CrossSection::getNC() const {
   try {
     return mNC;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -367,7 +344,7 @@ void CrossSection::setEarthShape(EarthShapeSettings &earthShape) {
   try {
     mEarthShape = earthShape;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -375,7 +352,7 @@ void CrossSection::setNumberOfHorizontalPoints(T::UInt32_opt numberOfHorizontalP
   try {
     mNumberOfHorizontalPoints = numberOfHorizontalPoints;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -383,7 +360,7 @@ void CrossSection::setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basic
   try {
     mBasicAngleOfTheInitialProductionDomain = basicAngleOfTheInitialProductionDomain;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -391,7 +368,7 @@ void CrossSection::setSubdivisionsOfBasicAngle(T::UInt32_opt subdivisionsOfBasic
   try {
     mSubdivisionsOfBasicAngle = subdivisionsOfBasicAngle;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -399,7 +376,7 @@ void CrossSection::setLatitudeOfFirstGridPoint(T::Int32_opt latitudeOfFirstGridP
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -407,7 +384,7 @@ void CrossSection::setLongitudeOfFirstGridPoint(T::UInt32_opt longitudeOfFirstGr
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -415,7 +392,7 @@ void CrossSection::setScanningMode(ScanningModeSettings &scanningMode) {
   try {
     mScanningMode = scanningMode;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -423,7 +400,7 @@ void CrossSection::setLatitudeOfLastGridPoint(T::Int32_opt latitudeOfLastGridPoi
   try {
     mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -431,7 +408,7 @@ void CrossSection::setLongitudeOfLastGridPoint(T::UInt32_opt longitudeOfLastGrid
   try {
     mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -439,7 +416,7 @@ void CrossSection::setTypeOfHorizontalLine(T::UInt8_opt typeOfHorizontalLine) {
   try {
     mTypeOfHorizontalLine = typeOfHorizontalLine;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -447,7 +424,7 @@ void CrossSection::setNumberOfVerticalPoints(T::UInt16_opt numberOfVerticalPoint
   try {
     mNumberOfVerticalPoints = numberOfVerticalPoints;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -455,7 +432,7 @@ void CrossSection::setMeaningOfVerticalCoordinate(T::UInt8_opt meaningOfVertical
   try {
     mMeaningOfVerticalCoordinate = meaningOfVerticalCoordinate;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -463,7 +440,7 @@ void CrossSection::setVerticalCoordinate(T::UInt8_opt verticalCoordinate) {
   try {
     mVerticalCoordinate = verticalCoordinate;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -471,7 +448,7 @@ void CrossSection::setNC(T::UInt16_opt nC) {
   try {
     mNC = nC;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

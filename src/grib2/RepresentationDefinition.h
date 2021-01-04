@@ -19,7 +19,7 @@ class RepresentationDefinition
 {
   public:
                   RepresentationDefinition();
-                  RepresentationDefinition(const RepresentationDefinition& other);
+                  //RepresentationDefinition(const RepresentationDefinition& other);
     virtual       ~RepresentationDefinition();
 
     virtual void  decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;

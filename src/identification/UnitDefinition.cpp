@@ -31,7 +31,7 @@ UnitDefinition::UnitDefinition()
 
 
 /*! \brief The copy constructor of the class. */
-
+/*
 UnitDefinition::UnitDefinition(const UnitDefinition& unitDefinition)
 {
   try
@@ -47,7 +47,7 @@ UnitDefinition::UnitDefinition(const UnitDefinition& unitDefinition)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

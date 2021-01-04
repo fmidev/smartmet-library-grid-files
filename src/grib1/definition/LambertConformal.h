@@ -22,7 +22,6 @@ namespace GRIB1 {
 class LambertConformal : public GridDefinition {
 public:
   LambertConformal();
-  LambertConformal(const LambertConformal &other);
   virtual ~LambertConformal();
 
   virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
@@ -63,29 +62,13 @@ public:
   void setLongitudeOfSouthernPole(std::int24_t longitudeOfSouthernPole);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # GRID DEFINITION Lambert conformal, secant or tangent, conic or bi-polar
   // # grib 1 -> 2
   // constant gridDefinitionTemplateNumber     = 30;
   //
   // template commonBlock "grib1/grid_definition_lambert.def";
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
-  //
   // unsigned[2] Nx  : dump;
 
   std::uint16_t mNx;
@@ -141,7 +124,7 @@ protected:
   // alias orientationOfTheGrid = LoV;
   // alias orientationOfTheGridInDegrees = LoVInDegrees;
   //
-  // #  Dx - X-direction grid length
+  // #  Dx - X-direction grid length (in units of metres)
   // unsigned[3] DxInMetres  : dump;
 
   std::uint24_t mDxInMetres;
@@ -151,8 +134,7 @@ protected:
   // alias Dx = DxInMetres;
   // alias Di = DxInMetres;
   //
-  //
-  // #  Dy - Y-direction grid length
+  // #  Dy - Y-direction grid length (in units of metres)
   // unsigned[3] DyInMetres  : dump;
 
   std::uint24_t mDyInMetres;
@@ -243,11 +225,6 @@ protected:
   // nearest lambert_conformal(values,radius,Nx,Ny);
   //
   // pad padding_grid3_1(2);
-
-  //
-  // # END   1/grid_definition.lambert_conformal ----------------------------------------------------------------------
-  //
-  //
 };
 
 } // namespace GRIB1

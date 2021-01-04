@@ -139,8 +139,8 @@ std::string MercatorImpl::getGridGeometryString() const
 
     double x = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
     double y = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
-    double dx = C_DOUBLE(mDiInMetres)/1000;
-    double dy = C_DOUBLE(mDjInMetres)/1000;
+    double dx = C_DOUBLE(mDiInMetres);
+    double dy = C_DOUBLE(mDjInMetres);
     double latin = C_DOUBLE(mLatin)/1000;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
@@ -504,6 +504,10 @@ void MercatorImpl::initSpatialReference()
 {
   try
   {
+    // *********************************************************
+    // ************* IMPLEMENTATION NOT TESTED *****************
+    // *********************************************************
+
     auto dfCenterLat = mGridArea.getLatitudeOfFirstGridPoint();
     auto dfCenterLong = mGridArea.getLongitudeOfFirstGridPoint();
 
@@ -536,7 +540,7 @@ void MercatorImpl::initSpatialReference()
     //mSpatialReference.SetMercator(centerLat,centerLon,1.0,dfFalseEasting,dfFalseNorthing);
     mSpatialReference.SetMercator2SP(latin,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
     mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
     // ### Validate the spatial reference.
 
@@ -553,6 +557,7 @@ void MercatorImpl::initSpatialReference()
 
     OGRSpatialReference sr_latlon;
     sr_latlon.importFromEPSG(4326);
+    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
     mSr_mercator = mSpatialReference.Clone();
 
     mCt_latlon2mercator = OGRCreateCoordinateTransformation(&sr_latlon,mSr_mercator);

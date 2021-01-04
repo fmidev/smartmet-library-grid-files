@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "Triangular.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -23,27 +23,7 @@ Triangular::Triangular() {
     mNumberingOrderOfDiamonds = 0;
     mScanningModeForOneDiamond = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-Triangular::Triangular(const Triangular &other) : GridDefinition(other) {
-  try {
-    mN2 = other.mN2;
-    mN3 = other.mN3;
-    mNi = other.mNi;
-    mNd = other.mNd;
-    mLatitudeOfThePolePoint = other.mLatitudeOfThePolePoint;
-    mLongitudeOfThePolePoint = other.mLongitudeOfThePolePoint;
-    mLongitudeOfFirstDiamondCenterLine = other.mLongitudeOfFirstDiamondCenterLine;
-    mGridPointPosition = other.mGridPointPosition;
-    mNumberingOrderOfDiamonds = other.mNumberingOrderOfDiamonds;
-    mScanningModeForOneDiamond = other.mScanningModeForOneDiamond;
-    mTotalNumberOfGridPoints = other.mTotalNumberOfGridPoints;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -71,7 +51,7 @@ void Triangular::read(MemoryReader &memoryReader) {
     mScanningModeForOneDiamond = memoryReader.read_uint8();
     mTotalNumberOfGridPoints = memoryReader.read_UInt32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -94,7 +74,7 @@ void Triangular::write(DataWriter &dataWriter) {
     dataWriter << mScanningModeForOneDiamond;
     dataWriter << mTotalNumberOfGridPoints;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -130,7 +110,7 @@ void Triangular::getAttributeList(std::string prefix, T::AttributeList &attribut
     sprintf(name, "%sTriangular.TotalNumberOfGridPoints", prefix.c_str());
     attributeList.addAttribute(name, toString(mTotalNumberOfGridPoints));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -156,7 +136,7 @@ void Triangular::print(std::ostream &stream, uint level, uint optionFlags) const
     stream << space(level) << "- ScanningModeForOneDiamond = " << toString(mScanningModeForOneDiamond) << "\n";
     stream << space(level) << "- TotalNumberOfGridPoints = " << toString(mTotalNumberOfGridPoints) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -187,7 +167,7 @@ T::Hash Triangular::countHash() {
       boost::hash_combine(seed, *mTotalNumberOfGridPoints);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -201,7 +181,7 @@ GridDefinition *Triangular::createGridDefinition() const {
   try {
     return static_cast<GridDefinition *>(new Triangular(*this));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -211,7 +191,7 @@ const T::UInt8_opt &Triangular::getN2() const {
   try {
     return mN2;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -221,7 +201,7 @@ const T::UInt8_opt &Triangular::getN3() const {
   try {
     return mN3;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -231,7 +211,7 @@ const T::UInt16_opt &Triangular::getNi() const {
   try {
     return mNi;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -241,7 +221,7 @@ const T::UInt8_opt &Triangular::getNd() const {
   try {
     return mNd;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -251,7 +231,7 @@ const T::Int32_opt &Triangular::getLatitudeOfThePolePoint() const {
   try {
     return mLatitudeOfThePolePoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -261,7 +241,7 @@ const T::UInt32_opt &Triangular::getLongitudeOfThePolePoint() const {
   try {
     return mLongitudeOfThePolePoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -271,7 +251,7 @@ const T::UInt32_opt &Triangular::getLongitudeOfFirstDiamondCenterLine() const {
   try {
     return mLongitudeOfFirstDiamondCenterLine;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -281,7 +261,7 @@ const T::UInt8_opt &Triangular::getGridPointPosition() const {
   try {
     return mGridPointPosition;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -291,7 +271,7 @@ std::uint8_t Triangular::getNumberingOrderOfDiamonds() const {
   try {
     return mNumberingOrderOfDiamonds;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -301,7 +281,7 @@ std::uint8_t Triangular::getScanningModeForOneDiamond() const {
   try {
     return mScanningModeForOneDiamond;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -311,7 +291,7 @@ const T::UInt32_opt &Triangular::getTotalNumberOfGridPoints() const {
   try {
     return mTotalNumberOfGridPoints;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -319,7 +299,7 @@ void Triangular::setN2(T::UInt8_opt n2) {
   try {
     mN2 = n2;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -327,7 +307,7 @@ void Triangular::setN3(T::UInt8_opt n3) {
   try {
     mN3 = n3;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -335,7 +315,7 @@ void Triangular::setNi(T::UInt16_opt ni) {
   try {
     mNi = ni;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -343,7 +323,7 @@ void Triangular::setNd(T::UInt8_opt nd) {
   try {
     mNd = nd;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -351,7 +331,7 @@ void Triangular::setLatitudeOfThePolePoint(T::Int32_opt latitudeOfThePolePoint) 
   try {
     mLatitudeOfThePolePoint = latitudeOfThePolePoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -359,7 +339,7 @@ void Triangular::setLongitudeOfThePolePoint(T::UInt32_opt longitudeOfThePolePoin
   try {
     mLongitudeOfThePolePoint = longitudeOfThePolePoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -367,7 +347,7 @@ void Triangular::setLongitudeOfFirstDiamondCenterLine(T::UInt32_opt longitudeOfF
   try {
     mLongitudeOfFirstDiamondCenterLine = longitudeOfFirstDiamondCenterLine;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -375,7 +355,7 @@ void Triangular::setGridPointPosition(T::UInt8_opt gridPointPosition) {
   try {
     mGridPointPosition = gridPointPosition;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -383,7 +363,7 @@ void Triangular::setNumberingOrderOfDiamonds(std::uint8_t numberingOrderOfDiamon
   try {
     mNumberingOrderOfDiamonds = numberingOrderOfDiamonds;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -391,7 +371,7 @@ void Triangular::setScanningModeForOneDiamond(std::uint8_t scanningModeForOneDia
   try {
     mScanningModeForOneDiamond = scanningModeForOneDiamond;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -399,7 +379,7 @@ void Triangular::setTotalNumberOfGridPoints(T::UInt32_opt totalNumberOfGridPoint
   try {
     mTotalNumberOfGridPoints = totalNumberOfGridPoints;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

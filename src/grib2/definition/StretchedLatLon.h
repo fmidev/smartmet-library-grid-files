@@ -23,7 +23,6 @@ namespace GRIB2 {
 class StretchedLatLon : public GridDefinition {
 public:
   StretchedLatLon();
-  StretchedLatLon(const StretchedLatLon &other);
   virtual ~StretchedLatLon();
 
   virtual uint getTemplateNumber() const;
@@ -42,14 +41,7 @@ public:
   void setStretching(StretchingSettings &stretching);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 3.2, Stretched Latitude/longitude (or equidistant cylindrical, or Plate Carree)
   //

@@ -26,7 +26,7 @@ GridValue::GridValue()
 
 
 
-
+/*
 GridValue::GridValue(const GridValue& gridValue)
 {
   try
@@ -41,7 +41,7 @@ GridValue::GridValue(const GridValue& gridValue)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 

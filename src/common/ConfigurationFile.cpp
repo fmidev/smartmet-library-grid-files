@@ -36,7 +36,7 @@ ConfigurationFile::ConfigurationFile()
 
 
 
-
+/*
 ConfigurationFile::ConfigurationFile(const ConfigurationFile& configurationFile)
 {
   FUNCTION_TRACE
@@ -51,7 +51,7 @@ ConfigurationFile::ConfigurationFile(const ConfigurationFile& configurationFile)
     throw Fmi::Exception(BCP,"Copy constructor failed!",nullptr);
   }
 }
-
+*/
 
 
 

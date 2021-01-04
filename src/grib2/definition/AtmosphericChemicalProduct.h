@@ -23,7 +23,6 @@ namespace GRIB2 {
 class AtmosphericChemicalProduct : public ProductDefinition {
 public:
   AtmosphericChemicalProduct();
-  AtmosphericChemicalProduct(const AtmosphericChemicalProduct &other);
   virtual ~AtmosphericChemicalProduct();
 
   virtual uint getTemplateNumber() const;
@@ -42,26 +41,19 @@ public:
   void setHorizontal(HorizontalSettings &horizontal);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
   // # TEMPLATE 4.40, Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for atmospheric chemical constituents
   //
-  // include "grib2/template.4.parameter_chemical.def";
+  // include "grib2/template.4.parameter_chemical.def"
 
   mutable ParameterChemicalSettings mParameterChemical;
 
-  // include "grib2/template.4.point_in_time.def";
+  // include "grib2/template.4.point_in_time.def"
 
   mutable PointInTimeSettings mPointInTime;
 
-  // include "grib2/template.4.horizontal.def";
+  // include "grib2/template.4.horizontal.def"
 
   mutable HorizontalSettings mHorizontal;
 };

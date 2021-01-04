@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ParameterSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,25 +21,7 @@ namespace GRIB2 {
 ParameterSettings::ParameterSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ParameterSettings::ParameterSettings(const ParameterSettings &other) {
-  try {
-    mParameterCategory = other.mParameterCategory;
-    mParameterNumber = other.mParameterNumber;
-    mTypeOfGeneratingProcess = other.mTypeOfGeneratingProcess;
-    mBackgroundProcess = other.mBackgroundProcess;
-    mGeneratingProcessIdentifier = other.mGeneratingProcessIdentifier;
-    mHoursAfterDataCutoff = other.mHoursAfterDataCutoff;
-    mMinutesAfterDataCutoff = other.mMinutesAfterDataCutoff;
-    mIndicatorOfUnitOfTimeRange = other.mIndicatorOfUnitOfTimeRange;
-    mForecastTime = other.mForecastTime;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -65,7 +47,7 @@ void ParameterSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
     mForecastTime = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -86,7 +68,7 @@ void ParameterSettings::write(DataWriter &dataWriter) {
     dataWriter << mIndicatorOfUnitOfTimeRange;
     dataWriter << mForecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -118,7 +100,7 @@ void ParameterSettings::getAttributeList(std::string prefix, T::AttributeList &a
     sprintf(name, "%sParameterSettings.ForecastTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastTime));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -142,7 +124,7 @@ void ParameterSettings::print(std::ostream &stream, uint level, uint optionFlags
     stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
     stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -171,7 +153,7 @@ T::Hash ParameterSettings::countHash() {
       boost::hash_combine(seed, *mForecastTime);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -181,7 +163,7 @@ const T::UInt8_opt &ParameterSettings::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -191,7 +173,7 @@ const T::UInt8_opt &ParameterSettings::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -201,7 +183,7 @@ const T::UInt8_opt &ParameterSettings::getTypeOfGeneratingProcess() const {
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -211,7 +193,7 @@ const T::UInt8_opt &ParameterSettings::getBackgroundProcess() const {
   try {
     return mBackgroundProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -221,7 +203,7 @@ const T::UInt8_opt &ParameterSettings::getGeneratingProcessIdentifier() const {
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -231,7 +213,7 @@ const T::UInt16_opt &ParameterSettings::getHoursAfterDataCutoff() const {
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -241,7 +223,7 @@ const T::UInt8_opt &ParameterSettings::getMinutesAfterDataCutoff() const {
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -251,7 +233,7 @@ const T::UInt8_opt &ParameterSettings::getIndicatorOfUnitOfTimeRange() const {
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -261,7 +243,7 @@ const T::Int32_opt &ParameterSettings::getForecastTime() const {
   try {
     return mForecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -269,7 +251,7 @@ void ParameterSettings::setParameterCategory(T::UInt8_opt parameterCategory) {
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -277,7 +259,7 @@ void ParameterSettings::setParameterNumber(T::UInt8_opt parameterNumber) {
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -285,7 +267,7 @@ void ParameterSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfGenerating
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -293,7 +275,7 @@ void ParameterSettings::setBackgroundProcess(T::UInt8_opt backgroundProcess) {
   try {
     mBackgroundProcess = backgroundProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -301,7 +283,7 @@ void ParameterSettings::setGeneratingProcessIdentifier(T::UInt8_opt generatingPr
   try {
     mGeneratingProcessIdentifier = generatingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -309,7 +291,7 @@ void ParameterSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfterDataCuto
   try {
     mHoursAfterDataCutoff = hoursAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -317,7 +299,7 @@ void ParameterSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesAfterDataC
   try {
     mMinutesAfterDataCutoff = minutesAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -325,7 +307,7 @@ void ParameterSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indicatorOfUn
   try {
     mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -333,7 +315,7 @@ void ParameterSettings::setForecastTime(T::Int32_opt forecastTime) {
   try {
     mForecastTime = forecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

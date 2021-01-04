@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "ParameterPartitionSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB2 {
@@ -21,29 +21,7 @@ namespace GRIB2 {
 ParameterPartitionSettings::ParameterPartitionSettings() {
   try {
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-ParameterPartitionSettings::ParameterPartitionSettings(const ParameterPartitionSettings &other) {
-  try {
-    mParameterCategory = other.mParameterCategory;
-    mParameterNumber = other.mParameterNumber;
-    mPartitionTable = other.mPartitionTable;
-    mNumberOfPartitions = other.mNumberOfPartitions;
-    mPartitionItems = other.mPartitionItems;
-    mPartitionNumber = other.mPartitionNumber;
-    mTypeOfGeneratingProcess = other.mTypeOfGeneratingProcess;
-    mBackgroundProcess = other.mBackgroundProcess;
-    mGeneratingProcessIdentifier = other.mGeneratingProcessIdentifier;
-    mHoursAfterDataCutoff = other.mHoursAfterDataCutoff;
-    mMinutesAfterDataCutoff = other.mMinutesAfterDataCutoff;
-    mIndicatorOfUnitOfTimeRange = other.mIndicatorOfUnitOfTimeRange;
-    mForecastTime = other.mForecastTime;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -73,7 +51,7 @@ void ParameterPartitionSettings::read(MemoryReader &memoryReader) {
     mIndicatorOfUnitOfTimeRange = memoryReader.read_UInt8_opt();
     mForecastTime = memoryReader.read_Int32_opt();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -98,7 +76,7 @@ void ParameterPartitionSettings::write(DataWriter &dataWriter) {
     dataWriter << mIndicatorOfUnitOfTimeRange;
     dataWriter << mForecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -138,7 +116,7 @@ void ParameterPartitionSettings::getAttributeList(std::string prefix, T::Attribu
     sprintf(name, "%sParameterPartitionSettings.ForecastTime", prefix.c_str());
     attributeList.addAttribute(name, toString(mForecastTime));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -166,7 +144,7 @@ void ParameterPartitionSettings::print(std::ostream &stream, uint level, uint op
     stream << space(level) << "- IndicatorOfUnitOfTimeRange = " << toString(mIndicatorOfUnitOfTimeRange) << "\n";
     stream << space(level) << "- ForecastTime = " << toString(mForecastTime) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -203,7 +181,7 @@ T::Hash ParameterPartitionSettings::countHash() {
       boost::hash_combine(seed, *mForecastTime);
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -213,7 +191,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getParameterCategory() const {
   try {
     return mParameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -223,7 +201,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getParameterNumber() const {
   try {
     return mParameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -233,7 +211,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getPartitionTable() const {
   try {
     return mPartitionTable;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -243,7 +221,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getNumberOfPartitions() const {
   try {
     return mNumberOfPartitions;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -253,7 +231,7 @@ const T::UInt16_opt &ParameterPartitionSettings::getPartitionItems() const {
   try {
     return mPartitionItems;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -263,7 +241,7 @@ const T::UInt16_opt &ParameterPartitionSettings::getPartitionNumber() const {
   try {
     return mPartitionNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -273,7 +251,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getTypeOfGeneratingProcess() con
   try {
     return mTypeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -283,7 +261,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getBackgroundProcess() const {
   try {
     return mBackgroundProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -293,7 +271,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getGeneratingProcessIdentifier()
   try {
     return mGeneratingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -303,7 +281,7 @@ const T::UInt16_opt &ParameterPartitionSettings::getHoursAfterDataCutoff() const
   try {
     return mHoursAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -313,7 +291,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getMinutesAfterDataCutoff() cons
   try {
     return mMinutesAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -323,7 +301,7 @@ const T::UInt8_opt &ParameterPartitionSettings::getIndicatorOfUnitOfTimeRange() 
   try {
     return mIndicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -333,7 +311,7 @@ const T::Int32_opt &ParameterPartitionSettings::getForecastTime() const {
   try {
     return mForecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -341,7 +319,7 @@ void ParameterPartitionSettings::setParameterCategory(T::UInt8_opt parameterCate
   try {
     mParameterCategory = parameterCategory;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -349,7 +327,7 @@ void ParameterPartitionSettings::setParameterNumber(T::UInt8_opt parameterNumber
   try {
     mParameterNumber = parameterNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -357,7 +335,7 @@ void ParameterPartitionSettings::setPartitionTable(T::UInt8_opt partitionTable) 
   try {
     mPartitionTable = partitionTable;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -365,7 +343,7 @@ void ParameterPartitionSettings::setNumberOfPartitions(T::UInt8_opt numberOfPart
   try {
     mNumberOfPartitions = numberOfPartitions;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -373,7 +351,7 @@ void ParameterPartitionSettings::setPartitionItems(T::UInt16_opt partitionItems)
   try {
     mPartitionItems = partitionItems;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -381,7 +359,7 @@ void ParameterPartitionSettings::setPartitionNumber(T::UInt16_opt partitionNumbe
   try {
     mPartitionNumber = partitionNumber;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -389,7 +367,7 @@ void ParameterPartitionSettings::setTypeOfGeneratingProcess(T::UInt8_opt typeOfG
   try {
     mTypeOfGeneratingProcess = typeOfGeneratingProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -397,7 +375,7 @@ void ParameterPartitionSettings::setBackgroundProcess(T::UInt8_opt backgroundPro
   try {
     mBackgroundProcess = backgroundProcess;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -405,7 +383,7 @@ void ParameterPartitionSettings::setGeneratingProcessIdentifier(T::UInt8_opt gen
   try {
     mGeneratingProcessIdentifier = generatingProcessIdentifier;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -413,7 +391,7 @@ void ParameterPartitionSettings::setHoursAfterDataCutoff(T::UInt16_opt hoursAfte
   try {
     mHoursAfterDataCutoff = hoursAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -421,7 +399,7 @@ void ParameterPartitionSettings::setMinutesAfterDataCutoff(T::UInt8_opt minutesA
   try {
     mMinutesAfterDataCutoff = minutesAfterDataCutoff;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -429,7 +407,7 @@ void ParameterPartitionSettings::setIndicatorOfUnitOfTimeRange(T::UInt8_opt indi
   try {
     mIndicatorOfUnitOfTimeRange = indicatorOfUnitOfTimeRange;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -437,7 +415,7 @@ void ParameterPartitionSettings::setForecastTime(T::Int32_opt forecastTime) {
   try {
     mForecastTime = forecastTime;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

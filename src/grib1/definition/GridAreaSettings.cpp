@@ -7,11 +7,11 @@
 // ***********************************************************************
 
 #include "GridAreaSettings.h"
-#include <macgyver/Exception.h>
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
 #include <boost/functional/hash.hpp>
 #include <iostream>
+#include <macgyver/Exception.h>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -25,21 +25,7 @@ GridAreaSettings::GridAreaSettings() {
     mLatitudeOfLastGridPoint = 0;
     mLongitudeOfLastGridPoint = 0;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-/*! \brief The copy constructor of the class. */
-
-GridAreaSettings::GridAreaSettings(const GridAreaSettings &other) {
-  try {
-    mLatitudeOfFirstGridPoint = other.mLatitudeOfFirstGridPoint;
-    mLongitudeOfFirstGridPoint = other.mLongitudeOfFirstGridPoint;
-    mResolutionFlags = other.mResolutionFlags;
-    mLatitudeOfLastGridPoint = other.mLatitudeOfLastGridPoint;
-    mLongitudeOfLastGridPoint = other.mLongitudeOfLastGridPoint;
-  } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -61,7 +47,7 @@ void GridAreaSettings::read(MemoryReader &memoryReader) {
     mLatitudeOfLastGridPoint = memoryReader.read_int24();
     mLongitudeOfLastGridPoint = memoryReader.read_int24();
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -78,7 +64,7 @@ void GridAreaSettings::write(DataWriter &dataWriter) {
     dataWriter.write_int24(mLatitudeOfLastGridPoint);
     dataWriter.write_int24(mLongitudeOfLastGridPoint);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -102,7 +88,7 @@ void GridAreaSettings::getAttributeList(std::string prefix, T::AttributeList &at
     sprintf(name, "%sGridAreaSettings.LongitudeOfLastGridPoint", prefix.c_str());
     attributeList.addAttribute(name, toString(mLongitudeOfLastGridPoint));
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -122,7 +108,7 @@ void GridAreaSettings::print(std::ostream &stream, uint level, uint optionFlags)
     stream << space(level) << "- LatitudeOfLastGridPoint = " << toString(mLatitudeOfLastGridPoint) << "\n";
     stream << space(level) << "- LongitudeOfLastGridPoint = " << toString(mLongitudeOfLastGridPoint) << "\n";
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -138,7 +124,7 @@ T::Hash GridAreaSettings::countHash() {
     // boost::hash_combine(seed,mResolutionFlags.countHash());
     return seed;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -148,7 +134,7 @@ std::int24_t GridAreaSettings::getLatitudeOfFirstGridPoint() const {
   try {
     return mLatitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -158,7 +144,7 @@ std::int24_t GridAreaSettings::getLongitudeOfFirstGridPoint() const {
   try {
     return mLongitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -168,7 +154,7 @@ ResolutionFlagsSettings *GridAreaSettings::getResolutionFlags() const {
   try {
     return static_cast<ResolutionFlagsSettings *>(&mResolutionFlags);
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -178,7 +164,7 @@ std::int24_t GridAreaSettings::getLatitudeOfLastGridPoint() const {
   try {
     return mLatitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -188,7 +174,7 @@ std::int24_t GridAreaSettings::getLongitudeOfLastGridPoint() const {
   try {
     return mLongitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -196,7 +182,7 @@ void GridAreaSettings::setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstG
   try {
     mLatitudeOfFirstGridPoint = latitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -204,7 +190,7 @@ void GridAreaSettings::setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirs
   try {
     mLongitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -212,7 +198,7 @@ void GridAreaSettings::setResolutionFlags(ResolutionFlagsSettings &resolutionFla
   try {
     mResolutionFlags = resolutionFlags;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -220,7 +206,7 @@ void GridAreaSettings::setLatitudeOfLastGridPoint(std::int24_t latitudeOfLastGri
   try {
     mLatitudeOfLastGridPoint = latitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 
@@ -228,7 +214,7 @@ void GridAreaSettings::setLongitudeOfLastGridPoint(std::int24_t longitudeOfLastG
   try {
     mLongitudeOfLastGridPoint = longitudeOfLastGridPoint;
   } catch (...) {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
   }
 }
 

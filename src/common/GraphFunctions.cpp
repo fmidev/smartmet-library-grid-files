@@ -1317,7 +1317,7 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
 
         for (auto it = wkbCache.rbegin(); it != wkbCache.rend()  &&  !found; ++it)
         {
-          if (it->first == hh)
+          if ((ulonglong)it->first == hh)
           {
             contours.push_back(it->second);
             found = true;

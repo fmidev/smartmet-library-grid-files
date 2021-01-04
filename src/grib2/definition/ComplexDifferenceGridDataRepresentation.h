@@ -22,7 +22,6 @@ namespace GRIB2 {
 class ComplexDifferenceGridDataRepresentation : public RepresentationDefinition {
 public:
   ComplexDifferenceGridDataRepresentation();
-  ComplexDifferenceGridDataRepresentation(const ComplexDifferenceGridDataRepresentation &other);
   virtual ~ComplexDifferenceGridDataRepresentation();
 
   virtual uint getTemplateNumber() const;
@@ -65,17 +64,8 @@ public:
   void setNumberOfOctetsExtraDescriptors(T::UInt8_opt numberOfOctetsExtraDescriptors);
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  //
-  // # START 2/template.5.3 ----------------------------------------------------------------------
   // # TEMPLATE 5.3, Grid point data - complex packing and spatial differencing
   //
   // include "grib2/template.5.packing.def";
@@ -86,7 +76,6 @@ protected:
 
   mutable OriginalValuesSettings mOriginalValues;
 
-  //
   //
   // #  Group splitting method used
   // codetable[1] groupSplittingMethodUsed ('5.4.table',masterDir,localDir);
@@ -120,7 +109,6 @@ protected:
   //
   // alias NG =  numberOfGroupsOfDataValues;
   // #  Reference for group widths
-  // # NOTE 12 NOT FOUND
   // unsigned[1] referenceForGroupWidths ;
 
   T::UInt8_opt mReferenceForGroupWidths;
@@ -134,14 +122,12 @@ protected:
 
   //
   // #  Reference for group lengths
-  // # NOTE 13 NOT FOUND
   // unsigned[4] referenceForGroupLengths ;
 
   T::UInt32_opt mReferenceForGroupLengths;
 
   //
   // #  Length increment for the group lengths
-  // # NOTE 14 NOT FOUND
   // unsigned[1] lengthIncrementForTheGroupLengths ;
 
   T::UInt8_opt mLengthIncrementForTheGroupLengths;
@@ -173,10 +159,6 @@ protected:
   // unsigned[1] numberOfOctetsExtraDescriptors ;
 
   T::UInt8_opt mNumberOfOctetsExtraDescriptors;
-
-  //
-  //
-  // # END   2/template.5.3 ----------------------------------------------------------------------
 };
 
 } // namespace GRIB2

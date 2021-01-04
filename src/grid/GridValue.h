@@ -12,7 +12,7 @@ class GridValue
 {
   public:
                   GridValue();
-                  GridValue(const GridValue& gridValue);
+                  //GridValue(const GridValue& gridValue);
                   GridValue(double x,double y, T::ParamValue value);
                   GridValue(double x,double y, const char *valueString);
                   GridValue(double x,double y, std::string& valueString);

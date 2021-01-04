@@ -20,7 +20,6 @@ namespace GRIB2 {
 class SpectralGridData : public DataDefinition {
 public:
   SpectralGridData();
-  SpectralGridData(const SpectralGridData &other);
   virtual ~SpectralGridData();
 
   virtual uint getTemplateNumber() const;
@@ -32,20 +31,10 @@ public:
   virtual T::Hash countHash();
 
 protected:
-  // # Copyright 2005-2017 ECMWF.
-  // #
-  // # This software is licensed under the terms of the Apache Licence Version 2.0
-  // # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-  // #
-  // # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-  // # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-  // #
+  // # Copyright 2005-2019 ECMWF.
   //
-  //
-  // # START 2/template.7.42 ----------------------------------------------------------------------
   // # TEMPLATE 7.42, Grid point data - CCSDS
-  //
-  //     meta codedValues data_ccsds_packing(
+  // meta codedValues data_ccsds_packing(
   //               section7Length,
   //               offsetBeforeData,
   //               offsetSection7,
@@ -69,6 +58,10 @@ protected:
   //                                 binaryScaleFactor,
   //                                 numberOfDataPoints,
   //                                 numberOfValues) : dump;
+  //
+  // # See ECC-711
+  // meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
+  // meta unpackedError simple_packing_error(zero,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
   //
   // alias data.packedValues = codedValues;
   //

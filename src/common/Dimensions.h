@@ -13,7 +13,7 @@ class Dimensions
 {
   public:
                 Dimensions();
-                Dimensions(const Dimensions& dimensions);
+                //Dimensions(const Dimensions& dimensions);
                 Dimensions(uint nx);
                 Dimensions(uint nx,uint ny);
                 Dimensions(uint nx,uint ny,uint nz);
