@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 20.12.30
+Version: 21.1.4
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -12,7 +12,7 @@ Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 20.12.15
-BuildRequires: smartmet-library-spine-devel >= 20.12.15
+BuildRequires: smartmet-library-spine-devel >= 20.12.30
 BuildRequires: smartmet-library-macgyver >= 20.12.15
 BuildRequires: smartmet-library-tron >= 20.12.28
 BuildRequires: boost169-devel
@@ -37,7 +37,7 @@ Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 20.12.15
 Requires: smartmet-library-macgyver >= 20.12.15
-Requires: smartmet-library-spine >= 20.12.15
+Requires: smartmet-library-spine >= 20.12.30
 
 %description
 FMI Grid File handling library
@@ -76,6 +76,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Jan  4 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.4-1.fmi
+- Fixed deprecated copy constructor implementations
 * Wed Dec 30 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.12.30-1.fmi
 - Removed openjpeg dependency
 * Mon Dec 28 2020 Mika Heiskanen <mika.heiskanen@fmi.fi> - 20.12.28-1.fmi
