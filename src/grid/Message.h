@@ -133,6 +133,7 @@ class Message
     virtual float               getGridPointAngleByLatLonCoordinates(double lat,double lon) const;
     virtual float               getGridPointAngle(T::CoordinateType coordinateType,double x,double y) const;
     virtual void                getGridPointAngles(std::vector<float>& angles) const;
+    virtual void                getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const;
     virtual bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;

@@ -1,6 +1,10 @@
 #include "CoordinateConversions.h"
+#include "CoordinateConverter.h"
 #include "GeneralFunctions.h"
 #include "GeneralDefinitions.h"
+#include "AutoThreadLock.h"
+#include "AutoWriteLock.h"
+#include "AutoReadLock.h"
 
 #include <macgyver/Exception.h>
 #include <boost/algorithm/string/predicate.hpp>
@@ -8,10 +12,54 @@
 #include <boost/math/constants/constants.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/functional/hash.hpp>
 #include <ogr_geometry.h>
 #include <ogr_spatialref.h>
 
 #include <newbase/NFmiLocation.h>
+#include <unordered_map>
+
+
+
+
+std::unordered_map<std::size_t,SmartMet::CoordinateConverter> *coordinateConverterCache = nullptr;
+SmartMet::ModificationLock coordinateConverterCache_modificationLock;
+
+
+
+
+bool convert(const OGRSpatialReference *sr_from,const OGRSpatialReference *sr_to,int nCount,double *x,double *y)
+{
+  try
+  {
+    if (coordinateConverterCache == nullptr)
+      coordinateConverterCache = new std::unordered_map<std::size_t,SmartMet::CoordinateConverter>;
+
+    std::size_t hash = (std::size_t)sr_from;
+    boost::hash_combine(hash, (std::size_t)sr_to);
+
+    {
+      SmartMet::AutoReadLock readLock(&coordinateConverterCache_modificationLock);
+      auto rec = coordinateConverterCache->find(hash);
+      if (rec != coordinateConverterCache->end())
+        return rec->second.convert(nCount,x,y);
+    }
+
+    SmartMet::AutoWriteLock writeLock(&coordinateConverterCache_modificationLock);
+    if (coordinateConverterCache->size() > 1000000)
+      coordinateConverterCache->clear();
+
+    SmartMet::CoordinateConverter tr(sr_from,sr_to);
+    coordinateConverterCache->insert(std::pair<std::size_t,SmartMet::CoordinateConverter>(hash,tr));
+    return tr.convert(nCount,x,y);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
 
 
 

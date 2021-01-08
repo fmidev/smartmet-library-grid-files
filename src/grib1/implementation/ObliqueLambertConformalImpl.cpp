@@ -14,9 +14,6 @@ ObliqueLambertConformalImpl::ObliqueLambertConformalImpl()
   try
   {
     mGridProjection = T::GridProjectionValue::ObliqueLambertConformal;
-    mSr_lambertConformal = nullptr;
-    mCt_latlon2lambert = nullptr;
-    mCt_lambert2latlon = nullptr;
   }
   catch (...)
   {
@@ -35,9 +32,6 @@ ObliqueLambertConformalImpl::ObliqueLambertConformalImpl(const ObliqueLambertCon
 {
   try
   {
-    mSr_lambertConformal = nullptr;
-    mCt_latlon2lambert = nullptr;
-    mCt_lambert2latlon = nullptr;
   }
   catch (...)
   {
@@ -55,14 +49,6 @@ ObliqueLambertConformalImpl::~ObliqueLambertConformalImpl()
 {
   try
   {
-    if (mSr_lambertConformal != nullptr)
-      mSpatialReference.DestroySpatialReference(mSr_lambertConformal);
-
-    if (mCt_lambert2latlon == nullptr)
-      OCTDestroyCoordinateTransformation(mCt_lambert2latlon);
-
-    if (mCt_latlon2lambert != nullptr)
-      OCTDestroyCoordinateTransformation(mCt_latlon2lambert);
   }
   catch (...)
   {
@@ -149,7 +135,7 @@ T::Coordinate_svec ObliqueLambertConformalImpl::getGridOriginalCoordinates() con
     if ((scanningMode & 0x40) == 0)
       dy = -dy;
 
-    mCt_latlon2lambert->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
 
     coordinateList->reserve(nx*ny);
 
@@ -282,22 +268,6 @@ void ObliqueLambertConformalImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
-
-
-    // ### Coordinate converters
-
-    OGRSpatialReference sr_latlon;
-    sr_latlon.importFromEPSG(4326);
-    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-    mSr_lambertConformal = mSpatialReference.Clone();
-
-    mCt_latlon2lambert = OGRCreateCoordinateTransformation(&sr_latlon,mSr_lambertConformal);
-    if (mCt_latlon2lambert == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-    mCt_lambert2latlon = OGRCreateCoordinateTransformation(mSr_lambertConformal,&sr_latlon);
-    if (mCt_lambert2latlon == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {

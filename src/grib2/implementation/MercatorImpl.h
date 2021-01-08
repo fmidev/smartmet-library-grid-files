@@ -28,12 +28,6 @@ class MercatorImpl : public Mercator
     void                initSpatialReference();
     void                print(std::ostream& stream,uint level,uint optionFlags) const;
     void                read(MemoryReader& memoryReader);
-
-  protected:
-
-    mutable OGRSpatialReference*          mSr_mercator;
-    mutable OGRCoordinateTransformation*  mCt_latlon2mercator;
-    mutable OGRCoordinateTransformation*  mCt_mercator2latlon;
 };
 
 

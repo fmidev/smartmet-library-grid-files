@@ -23,12 +23,6 @@ class ObliqueLambertConformalImpl : public ObliqueLambertConformal
 
     void                initSpatialReference();
     void                read(MemoryReader& memoryReader);
-
-  protected:
-
-    mutable OGRSpatialReference*          mSr_lambertConformal;
-    mutable OGRCoordinateTransformation*  mCt_latlon2lambert;
-    mutable OGRCoordinateTransformation*  mCt_lambert2latlon;
 };
 
 }  // namespace GRIB1

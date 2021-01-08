@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common/Coordinate.h"
+#include "../common/CoordinateConversions.h"
 #include "../common/Dimensions.h"
 #include "../grid/Typedefs.h"
 #include "../common/DataWriter.h"
@@ -52,6 +53,7 @@ class GridDefinition
     virtual bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double lat,double lon,double& x,double& y) const;
+    virtual void                getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const;
     virtual bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
@@ -119,17 +121,7 @@ class GridDefinition
     /*! \brief The grid projection. */
     T::GridProjection           mGridProjection;
 
-  private:
-
-    /*! \brief The pointer to the original spatial reference (or actually to its clone). */
-    mutable OGRSpatialReference*          mOrigSpatialReference;
-
-    /*! \brief The coordinate transformer used for converting latlon coordinates to the original coordinates. */
-    mutable OGRCoordinateTransformation*  mCoordinateTranformation_latlon2orig;
-
-    /*! \brief The coordinate transformer used for converting original coordinates to the latlon coordinates. */
-    mutable OGRCoordinateTransformation*  mCoordinateTranformation_orig2latlon;
-
+    OGRSpatialReference        mLatlonSpatialReference;
 };
 
 typedef GridDefinition* GridDef_ptr;

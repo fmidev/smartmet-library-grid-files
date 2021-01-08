@@ -24,7 +24,7 @@ class RotatedLatLonImpl : public RotatedLatLon
     std::size_t         getGridColumnCount() const;
     std::size_t         getGridRowCount() const;
     std::string         getGridGeometryString() const;
-    T::Coordinate_svec  getGridLatLonCoordinates() const;
+    //T::Coordinate_svec  getGridLatLonCoordinates() const;
     bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
@@ -32,6 +32,7 @@ class RotatedLatLonImpl : public RotatedLatLon
     bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
+    //void                getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const;
     bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
@@ -53,10 +54,6 @@ class RotatedLatLonImpl : public RotatedLatLon
     mutable double      mSouthPoleLat;
     mutable double      mSouthPoleLon;
     mutable bool        mInitialized;
-
-    mutable OGRSpatialReference*          mSr_rotatedLatlon;
-    mutable OGRCoordinateTransformation*  mCt_latlon2rotatedLatlon;
-    mutable OGRCoordinateTransformation*  mCt_rotatedLatlon2latlon;
 };
 
 }

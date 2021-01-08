@@ -1119,6 +1119,25 @@ bool GridSection::getGridPointByLatLonCoordinates(double lat,double lon,double& 
 
 
 
+void GridSection::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGridDefinition)
+      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
+
+    return mGridDefinition->getGridPointListByLatLonCoordinates(latlon,points);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 bool GridSection::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const
 {
   FUNCTION_TRACE

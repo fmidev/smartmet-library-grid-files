@@ -29,9 +29,6 @@ RotatedLatLonImpl::RotatedLatLonImpl()
     mSouthPoleLat = 0;
     mSouthPoleLon = 0;
     mInitialized = false;
-    mSr_rotatedLatlon = nullptr;
-    mCt_latlon2rotatedLatlon = nullptr;
-    mCt_rotatedLatlon2latlon = nullptr;
   }
   catch (...)
   {
@@ -60,9 +57,6 @@ RotatedLatLonImpl::RotatedLatLonImpl(const RotatedLatLonImpl& other)
     mSouthPoleLat = other.mSouthPoleLat;
     mSouthPoleLon = other.mSouthPoleLon;
     mInitialized = other.mInitialized;
-    mSr_rotatedLatlon = nullptr;
-    mCt_latlon2rotatedLatlon = nullptr;
-    mCt_rotatedLatlon2latlon = nullptr;
   }
   catch (...)
   {
@@ -80,14 +74,6 @@ RotatedLatLonImpl::~RotatedLatLonImpl()
 {
   try
   {
-    if (mSr_rotatedLatlon != nullptr)
-      mSpatialReference.DestroySpatialReference(mSr_rotatedLatlon);
-
-    if (mCt_latlon2rotatedLatlon != nullptr)
-      OCTDestroyCoordinateTransformation(mCt_latlon2rotatedLatlon);
-
-    if (mCt_rotatedLatlon2latlon != nullptr)
-      OCTDestroyCoordinateTransformation(mCt_rotatedLatlon2latlon);
   }
   catch (...)
   {
@@ -260,6 +246,7 @@ T::Coordinate_svec RotatedLatLonImpl::getGridOriginalCoordinates() const
         \return   The grid latlon coordinates.
 */
 
+#if 0
 T::Coordinate_svec RotatedLatLonImpl::getGridLatLonCoordinates() const
 {
   try
@@ -275,6 +262,15 @@ T::Coordinate_svec RotatedLatLonImpl::getGridLatLonCoordinates() const
     if (mNi == 0 || mNj == 0)
       return coordinateList;
 
+    OGRSpatialReference sr_latlon;
+    sr_latlon.importFromEPSG(4326);
+    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+    auto sr = mSpatialReference.Clone();
+    auto tf = OGRCreateCoordinateTransformation(sr,&sr_latlon);
+    if (tf == nullptr)
+      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
+
     coordinateList->reserve(mNi*mNj);
 
     double y = mStartY;
@@ -287,7 +283,7 @@ T::Coordinate_svec RotatedLatLonImpl::getGridLatLonCoordinates() const
         double lat = y;
         double lon = x;
 
-        mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
+        tf->Transform(1,&lon,&lat);
 
         //rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
@@ -297,6 +293,12 @@ T::Coordinate_svec RotatedLatLonImpl::getGridLatLonCoordinates() const
       y += mDy;
     }
 
+    if (sr != nullptr)
+      mSpatialReference.DestroySpatialReference(sr);
+
+    if (tf != nullptr)
+      OCTDestroyCoordinateTransformation(tf);
+
     return coordinateList;
   }
   catch (...)
@@ -304,7 +306,49 @@ T::Coordinate_svec RotatedLatLonImpl::getGridLatLonCoordinates() const
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+#endif
 
+
+
+/*
+void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
+{
+  try
+  {
+    if (!mInitialized)
+      init();
+
+    int sz = latlon.size();
+    points.reserve(sz);
+
+    double x[sz+1];
+    double y[sz+1];
+
+    for (int t=0; t<sz; t++)
+    {
+      auto cc = latlon[t];
+      y[t] = cc.y();
+      x[t] = cc.x();
+    }
+
+    convert(&mLatlonSpatialReference,&mSpatialReference,sz,x,y);
+
+    for (int t=0; t<sz; t++)
+    {
+      double grid_i = 0;
+      double grid_j = 0;
+      if (getGridPointByOriginalCoordinates(x[t],y[t],grid_i,grid_j))
+        points.push_back(T::Coordinate(grid_i,grid_j));
+      else
+        points.push_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+*/
 
 
 
@@ -339,11 +383,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     lat = rotated_lat;
     lon = rotated_lon;
 
-    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
-
-    //rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
-
-    return true;
+    return convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat);
   }
   catch (...)
   {
@@ -386,11 +426,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     double lat = rotated_lat;
     double lon = rotated_lon;
 
-    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
-
-    //rotatedLatlon_to_latlon(rotated_lat,rotated_lon,mSouthPoleLat,mSouthPoleLon,lat,lon);
-
-    return true;
+    return convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat);
   }
   catch (...)
   {
@@ -643,10 +679,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
     y = lat;
     x = lon;
 
-    mCt_latlon2rotatedLatlon->Transform(1,&x,&y);
-
-    //latlon_to_rotatedLatlon(lat,lon,mSouthPoleLat,mSouthPoleLon,y,x);
-    return true;
+    return convert(&mLatlonSpatialReference,&mSpatialReference,1,&x,&y);
   }
   catch (...)
   {
@@ -677,11 +710,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
     double lat = y;
     double lon = x;
 
-    mCt_rotatedLatlon2latlon->Transform(1,&lon,&lat);
-
-    //rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
-
-    return true;
+    return convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat);
   }
   catch (...)
   {
@@ -875,22 +904,6 @@ void RotatedLatLonImpl::initSpatialReference()
 
     if (len >= 360)
       mGlobal = true;
-
-    // ### Coordinate converters
-
-    OGRSpatialReference sr_latlon;
-    sr_latlon.importFromEPSG(4326);
-    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-    mSr_rotatedLatlon = mSpatialReference.Clone();
-
-    mCt_latlon2rotatedLatlon = OGRCreateCoordinateTransformation(&sr_latlon,mSr_rotatedLatlon);
-    if (mCt_latlon2rotatedLatlon == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-    mCt_rotatedLatlon2latlon = OGRCreateCoordinateTransformation(mSr_rotatedLatlon,&sr_latlon);
-    if (mCt_rotatedLatlon2latlon == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {

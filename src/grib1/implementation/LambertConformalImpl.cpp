@@ -15,9 +15,6 @@ LambertConformalImpl::LambertConformalImpl()
   try
   {
     mGridProjection = T::GridProjectionValue::LambertConformal;
-    mSr_lambertConformal = nullptr;
-    mCt_latlon2lambert = nullptr;
-    mCt_lambert2latlon = nullptr;
 
     mDx = 0;
     mDy = 0;
@@ -41,9 +38,6 @@ LambertConformalImpl::LambertConformalImpl(const LambertConformalImpl& other):La
 {
   try
   {
-    mSr_lambertConformal = nullptr;
-    mCt_latlon2lambert = nullptr;
-    mCt_lambert2latlon = nullptr;
     mDx = other.mDx;
     mDy = other.mDy;
     mStartX = other.mStartX;
@@ -66,14 +60,6 @@ LambertConformalImpl::~LambertConformalImpl()
 {
   try
   {
-    if (mSr_lambertConformal != nullptr)
-      mSpatialReference.DestroySpatialReference(mSr_lambertConformal);
-
-    if (mCt_lambert2latlon == nullptr)
-      OCTDestroyCoordinateTransformation(mCt_lambert2latlon);
-
-    if (mCt_latlon2lambert != nullptr)
-      OCTDestroyCoordinateTransformation(mCt_latlon2lambert);
   }
   catch (...)
   {
@@ -93,9 +79,6 @@ void LambertConformalImpl::init() const
     if (mInitialized)
       return;
 
-    if (mCt_latlon2lambert == nullptr)
-      return;
-
     double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
     double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
 
@@ -112,7 +95,7 @@ void LambertConformalImpl::init() const
     mStartX = longitudeOfFirstGridPoint;
     mStartY = latitudeOfFirstGridPoint;
 
-    mCt_latlon2lambert->Transform(1,&mStartX,&mStartY);
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&mStartX,&mStartY);
 
     mInitialized = true;
   }
@@ -182,9 +165,6 @@ T::Coordinate_svec LambertConformalImpl::getGridOriginalCoordinates() const
   try
   {
     T::Coordinate_svec coordinateList(new T::Coordinate_vec());
-
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return coordinateList;
 
     if (!mInitialized)
       init();
@@ -366,9 +346,6 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
 {
   try
   {
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return false;
-
     if (grid_i < 0  ||  grid_j < 0  ||  grid_i >= mNx  ||  grid_j >= mNy)
       return false;
 
@@ -405,9 +382,6 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
 {
   try
   {
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return false;
-
     if (!mNx || !mNy)
       return false;
 
@@ -692,22 +666,6 @@ void LambertConformalImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
-
-    // ### Coordinate converters
-
-    OGRSpatialReference sr_latlon;
-    sr_latlon.importFromEPSG(4326);
-    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-    mSr_lambertConformal = mSpatialReference.Clone();
-
-    mCt_latlon2lambert = OGRCreateCoordinateTransformation(&sr_latlon,mSr_lambertConformal);
-    if (mCt_latlon2lambert == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-    mCt_lambert2latlon = OGRCreateCoordinateTransformation(mSr_lambertConformal,&sr_latlon);
-    if (mCt_lambert2latlon == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {

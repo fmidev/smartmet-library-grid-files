@@ -1517,6 +1517,15 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 
 
 
+void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
+{
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
 /*! \brief This method calculates the estimated grid position by using the latlon coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.
 
@@ -4420,116 +4429,66 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
   FUNCTION_TRACE
   try
   {
-    values.reserve(coordinates.size());
+    T::Coordinate_vec points;
+    getGridPointListByLatLonCoordinates(coordinates,points);
 
-    double grid_i = 0;
-    double grid_j = 0;
+    values.reserve(coordinates.size());
 
     switch (areaInterpolationMethod)
     {
       case T::AreaInterpolationMethod::None:
-        for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
+        for (auto it = points.begin(); it != points.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
-          {
-            T::ParamValue value = getGridValueByGridPoint_noInterpolation(grid_i,grid_j);
-            values.push_back(value);
-          }
-          else
-          {
-            values.push_back(ParamValueMissing);
-          }
+          T::ParamValue value = getGridValueByGridPoint_noInterpolation(it->x(),it->y());
+          values.push_back(value);
         }
         break;
 
       case T::AreaInterpolationMethod::Nearest:
-        for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
+        for (auto it = points.begin(); it != points.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
-          {
-            T::ParamValue value = getGridValueByGridPoint_nearest(grid_i,grid_j);
-            values.push_back(value);
-          }
-          else
-          {
-            values.push_back(ParamValueMissing);
-          }
+          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y());
+          values.push_back(value);
         }
         break;
 
       case T::AreaInterpolationMethod::Linear:
-        for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
+        for (auto it = points.begin(); it != points.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
-          {
-            //T::ParamValue value = getGridValueByGridPoint_nearest(grid_i,grid_j);
-            T::ParamValue value = getGridValueByGridPoint_linearInterpolation(grid_i,grid_j);
-            values.push_back(value);
-          }
-          else
-          {
-            values.push_back(ParamValueMissing);
-          }
+          T::ParamValue value = getGridValueByGridPoint_linearInterpolation(it->x(),it->y());
+          values.push_back(value);
         }
         break;
 
       case T::AreaInterpolationMethod::Min:
-        for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
+        for (auto it = points.begin(); it != points.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
-          {
-            T::ParamValue value = getGridValueByGridPoint_min(grid_i,grid_j);
-            values.push_back(value);
-          }
-          else
-          {
-            values.push_back(ParamValueMissing);
-          }
+          T::ParamValue value = getGridValueByGridPoint_min(it->x(),it->y());
+          values.push_back(value);
         }
         break;
 
       case T::AreaInterpolationMethod::Max:
-        for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
+        for (auto it = points.begin(); it != points.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
-          {
-            T::ParamValue value = getGridValueByGridPoint_max(grid_i,grid_j);
-            values.push_back(value);
-          }
-          else
-          {
-            values.push_back(ParamValueMissing);
-          }
+          T::ParamValue value = getGridValueByGridPoint_max(it->x(),it->y());
+          values.push_back(value);
         }
         break;
 
       case T::AreaInterpolationMethod::External:
-        for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
+        for (auto it = points.begin(); it != points.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
-          {
-            T::ParamValue value = getGridValueByGridPoint_nearest(grid_i,grid_j);
-            values.push_back(value);
-          }
-          else
-          {
-            values.push_back(ParamValueMissing);
-          }
+          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y());
+          values.push_back(value);
         }
         break;
 
       default:
-        for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
+        for (auto it = points.begin(); it != points.end(); ++it)
         {
-          if (getGridPointByLatLonCoordinatesNoCache(it->y(),it->x(),grid_i,grid_j))
-          {
-            T::ParamValue value = getGridValueByGridPoint_nearest(grid_i,grid_j);
-            values.push_back(value);
-          }
-          else
-          {
-            values.push_back(ParamValueMissing);
-          }
+          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y());
+          values.push_back(value);
         }
         break;
     }

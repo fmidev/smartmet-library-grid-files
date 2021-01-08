@@ -90,6 +90,7 @@ class Message : public GRID::Message
     std::size_t         getGridOriginalValueCount() const;
     int                 getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
     void                getGridOriginalValueVector(T::ParamValue_vec& values) const;
+    void                getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const;
     bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
     bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;

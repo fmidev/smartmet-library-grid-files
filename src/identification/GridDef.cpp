@@ -3396,23 +3396,36 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           coordinates->reserve(sz);
           latLonCoordinates->reserve(sz);
 
+          double *lon = new double[sz+1];
+          double *lat = new double[sz+1];
+
+          std::shared_ptr<double> rlat(lat);
+          std::shared_ptr<double> rlon(lon);
+
           double yy = cc[1];
+          int c = 0;
           for (uint y=0; y<height; y++)
           {
             double xx = cc[0];
             for (uint x=0; x<width; x++)
             {
-              double lon = xx;
-              double lat = yy;
+              lon[c] = xx;
+              lat[c] = yy;
 
-              transformation->Transform(1,&lon,&lat);
-              latLonCoordinates->push_back(T::Coordinate(getLongitude(lon),lat));
               coordinates->push_back(T::Coordinate(xx,yy));
 
               xx = xx + dx;
+              c++;
             }
             yy = yy + dy;
           }
+
+          transformation->Transform(c,lon,lat);
+          for (int t=0; t<c; t++)
+          {
+            latLonCoordinates->push_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
+          }
+
           if (transformation != nullptr)
             OCTDestroyCoordinateTransformation(transformation);
 
@@ -3650,21 +3663,32 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
           latLonCoordinates->reserve(sz);
 
+          double *lon = new double[sz+1];
+          double *lat = new double[sz+1];
+
+          std::shared_ptr<double> rlat(lat);
+          std::shared_ptr<double> rlon(lon);
+
+          int c = 0;
           double yy = cc[1];
           for (uint y=0; y<height; y++)
           {
             double xx = cc[0];
             for (uint x=0; x<width; x++)
             {
-              double lon = xx;
-              double lat = yy;
-
-              transformation->Transform(1,&lon,&lat);
-              latLonCoordinates->push_back(T::Coordinate(getLongitude(lon),lat));
+              lon[c] = xx;
+              lat[c] = yy;
 
               xx = xx + dx;
+              c++;
             }
             yy = yy + dy;
+          }
+
+          transformation->Transform(c,lon,lat);
+          for (int t=0; t<c; t++)
+          {
+            latLonCoordinates->push_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
           }
 
           if (transformation != nullptr)
@@ -3916,65 +3940,35 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geo
     AutoReadLock lock(&mModificationLock);
 
     T::Coordinate_svec coordinates(new T::Coordinate_vec());
+    T::Coordinate_vec latlon;
+    for (int lat=-90; lat < 90; lat = lat + 10)
+    {
+      for (int lon=-1800; lon < 1800; lon++)
+      {
+        latlon.push_back(T::Coordinate(C_DOUBLE(lon)/10,C_DOUBLE(lat)));
+      }
+    }
+
+    for (int lon=-180; lon < 180; lon=lon+10)
+    {
+      for (int lat=-900; lat < 900; lat++)
+      {
+        latlon.push_back(T::Coordinate(C_DOUBLE(lon),C_DOUBLE(lat)/10));
+      }
+    }
+
     auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
     {
-      for (int lat=-90; lat < 90; lat = lat + 10)
-      {
-        for (int lon=-1800; lon < 1800; lon++)
-        {
-          double grid_i = 0;
-          double grid_j = 0;
-          if (def2->getGridPointByLatLonCoordinates(C_DOUBLE(lat),C_DOUBLE(lon)/10,grid_i,grid_j))
-          {
-            coordinates->push_back(T::Coordinate(grid_i,grid_j));
-          }
-        }
-      }
-
-      for (int lon=-180; lon < 180; lon=lon+10)
-      {
-        for (int lat=-900; lat < 900; lat++)
-        {
-          double grid_i = 0;
-          double grid_j = 0;
-          if (def2->getGridPointByLatLonCoordinates(C_DOUBLE(lat)/10,C_DOUBLE(lon),grid_i,grid_j))
-          {
-            coordinates->push_back(T::Coordinate(grid_i,grid_j));
-          }
-        }
-      }
+      def2->getGridPointListByLatLonCoordinates(latlon,*coordinates);
       return coordinates;
     }
 
     auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
     if (def1)
     {
-      for (int lat=-90; lat < 90; lat = lat + 10)
-      {
-        for (int lon=-1800; lon < 1800; lon++)
-        {
-          double grid_i = 0;
-          double grid_j = 0;
-          if (def1->getGridPointByLatLonCoordinates(C_DOUBLE(lat),C_DOUBLE(lon)/10,grid_i,grid_j))
-          {
-            coordinates->push_back(T::Coordinate(grid_i,grid_j));
-          }
-        }
-      }
-
-      for (int lon=-180; lon < 180; lon=lon+10)
-      {
-        for (int lat=-900; lat < 900; lat++)
-        {
-          double grid_i = 0;
-          double grid_j = 0;
-          if (def1->getGridPointByLatLonCoordinates(C_DOUBLE(lat)/10,C_DOUBLE(lon),grid_i,grid_j))
-          {
-            coordinates->push_back(T::Coordinate(grid_i,grid_j));
-          }
-        }
-      }
+      def1->getGridPointListByLatLonCoordinates(latlon,*coordinates);
+      return coordinates;
     }
 
     return coordinates;

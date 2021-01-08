@@ -18,9 +18,6 @@ MercatorImpl::MercatorImpl()
   try
   {
     mGridProjection = T::GridProjectionValue::Mercator;
-    mSr_mercator = nullptr;
-    mCt_latlon2mercator = nullptr;
-    mCt_mercator2latlon = nullptr;
   }
   catch (...)
   {
@@ -39,9 +36,6 @@ MercatorImpl::MercatorImpl(const MercatorImpl& other)
 {
   try
   {
-    mSr_mercator = nullptr;
-    mCt_latlon2mercator = nullptr;
-    mCt_mercator2latlon = nullptr;
   }
   catch (...)
   {
@@ -59,14 +53,6 @@ MercatorImpl::~MercatorImpl()
 {
   try
   {
-    if (mSr_mercator != nullptr)
-      mSpatialReference.DestroySpatialReference(mSr_mercator);
-
-    if (mCt_latlon2mercator != nullptr)
-      OCTDestroyCoordinateTransformation(mCt_latlon2mercator);
-
-    if (mCt_mercator2latlon != nullptr)
-      OCTDestroyCoordinateTransformation(mCt_mercator2latlon);
   }
   catch (...)
   {
@@ -196,9 +182,6 @@ T::Coordinate_svec MercatorImpl::getGridOriginalCoordinates() const
   {
     T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
-    if (mCt_latlon2mercator == nullptr)
-      return coordinateList;
-
     uint ni = mNi;
     uint nj = mNj;
 
@@ -215,7 +198,7 @@ T::Coordinate_svec MercatorImpl::getGridOriginalCoordinates() const
     if ((scanningMode & 0x40) == 0)
       dj = -dj;
 
-    mCt_latlon2mercator->Transform(1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
 
     coordinateList->reserve(ni*nj);
 
@@ -301,9 +284,6 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
 {
   try
   {
-    if (mCt_latlon2mercator == nullptr)
-      return false;
-
     uint ni = mNi;
     uint nj = mNj;
 
@@ -325,7 +305,7 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double fX = longitudeOfFirstGridPoint;
     double fY = latitudeOfFirstGridPoint;
 
-    mCt_latlon2mercator->Transform(1,&fX,&fY);
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&fX,&fY);
 
     double xDiff = aX - fX;
     double yDiff = aY - fY;
@@ -551,22 +531,6 @@ void MercatorImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
-
-
-    // ### Coordinate converters
-
-    OGRSpatialReference sr_latlon;
-    sr_latlon.importFromEPSG(4326);
-    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-    mSr_mercator = mSpatialReference.Clone();
-
-    mCt_latlon2mercator = OGRCreateCoordinateTransformation(&sr_latlon,mSr_mercator);
-    if (mCt_latlon2mercator == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-    mCt_mercator2latlon = OGRCreateCoordinateTransformation(mSr_mercator,&sr_latlon);
-    if (mCt_mercator2latlon == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {
@@ -602,15 +566,12 @@ void MercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
           {
             T::Coordinate coord = coordinateList->at(c);
 
-            if (mCt_mercator2latlon)
+            double lon = coord.x();
+            double lat = coord.y();
+            if (convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat))
             {
-              double lon = coord.x();
-              double lat = coord.y();
-              if (mCt_mercator2latlon->Transform(1,&lon,&lat))
-              {
-                sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
-                stream << space(level+2) << str << "\n";
-              }
+              sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
+              stream << space(level+2) << str << "\n";
             }
           }
           c++;

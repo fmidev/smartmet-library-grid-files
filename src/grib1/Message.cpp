@@ -2122,6 +2122,29 @@ std::string Message::getGridProjectionString() const
 
 
 
+void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
+{
+  {
+    FUNCTION_TRACE
+    try
+    {
+      if (mGridSection == nullptr)
+        throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
+
+      return mGridSection->getGridPointListByLatLonCoordinates(latlon,points);
+    }
+    catch (...)
+    {
+      Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+      exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+      throw exception;
+    }
+  }
+}
+
+
+
+
 
 /*! \brief This method calculates the estimated grid position by using the latlon coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.

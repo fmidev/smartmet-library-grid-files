@@ -98,6 +98,7 @@ class GridSection : public GRID::MessageSection
     std::size_t           getGridOriginalColumnCount(std::size_t row) const;
     std::size_t           getGridOriginalValueCount() const;
     int                   getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
+    void                  getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const;
     bool                  getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     bool                  getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
     bool                  getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;

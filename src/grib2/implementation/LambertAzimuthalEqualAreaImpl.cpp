@@ -21,9 +21,6 @@ LambertAzimuthalEqualAreaImpl::LambertAzimuthalEqualAreaImpl()
   try
   {
     mGridProjection = T::GridProjectionValue::LambertAzimuthalEqualArea;
-    mSr_lambertConformal = nullptr;
-    mCt_latlon2lambert = nullptr;
-    mCt_lambert2latlon = nullptr;
     mInitialized = false;
     mDxx = 0;
     mDyy = 0;
@@ -58,14 +55,6 @@ LambertAzimuthalEqualAreaImpl::~LambertAzimuthalEqualAreaImpl()
 {
   try
   {
-    if (mSr_lambertConformal != nullptr)
-      mSpatialReference.DestroySpatialReference(mSr_lambertConformal);
-
-    if (mCt_lambert2latlon == nullptr)
-      OCTDestroyCoordinateTransformation(mCt_lambert2latlon);
-
-    if (mCt_latlon2lambert != nullptr)
-      OCTDestroyCoordinateTransformation(mCt_latlon2lambert);
   }
   catch (...)
   {
@@ -126,9 +115,6 @@ void LambertAzimuthalEqualAreaImpl::init() const
 {
   try
   {
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return;
-
     if (!mNumberOfPointsAlongXAxis || !mNumberOfPointsAlongYAxis)
       return;
 
@@ -151,7 +137,7 @@ void LambertAzimuthalEqualAreaImpl::init() const
     mStartX = longitudeOfFirstGridPoint;
     mStartY = latitudeOfFirstGridPoint;
 
-    mCt_latlon2lambert->Transform(1,&mStartX,&mStartY);
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&mStartX,&mStartY);
 
     mInitialized = true;
   }
@@ -176,9 +162,6 @@ T::Coordinate_svec LambertAzimuthalEqualAreaImpl::getGridOriginalCoordinates() c
   try
   {
     T::Coordinate_svec coordinateList(new T::Coordinate_vec());
-
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return coordinateList;
 
     if (!mNumberOfPointsAlongXAxis || !mNumberOfPointsAlongYAxis)
       return coordinateList;
@@ -396,9 +379,6 @@ bool LambertAzimuthalEqualAreaImpl::getGridOriginalCoordinatesByGridPosition(dou
 {
   try
   {
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return false;
-
     if (!mNumberOfPointsAlongXAxis || !mNumberOfPointsAlongYAxis)
       return false;
 
@@ -437,9 +417,6 @@ bool LambertAzimuthalEqualAreaImpl::getGridPointByOriginalCoordinates(double x,d
 {
   try
   {
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return false;
-
     if (!mNumberOfPointsAlongXAxis || !mNumberOfPointsAlongYAxis)
       return false;
 
@@ -573,21 +550,6 @@ void LambertAzimuthalEqualAreaImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
-
-    // ### Creating converters
-
-    OGRSpatialReference sr_latlon;
-    sr_latlon.importFromEPSG(4326);
-    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-    mSr_lambertConformal = mSpatialReference.Clone();
-
-    mCt_latlon2lambert = OGRCreateCoordinateTransformation(&sr_latlon,mSr_lambertConformal);
-    if (mCt_latlon2lambert == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-    mCt_lambert2latlon = OGRCreateCoordinateTransformation(mSr_lambertConformal,&sr_latlon);
-    if (mCt_lambert2latlon == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {

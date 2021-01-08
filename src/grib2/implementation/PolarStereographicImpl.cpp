@@ -22,9 +22,6 @@ PolarStereographicImpl::PolarStereographicImpl()
   try
   {
     mGridProjection = T::GridProjectionValue::PolarStereographic;
-    mSr_polarSterographic = nullptr;
-    mCt_latlon2pst = nullptr;
-    mCt_pst2latlon = nullptr;
     mDxx = 0;
     mDyy = 0;
     mStartX = 0;
@@ -49,9 +46,6 @@ PolarStereographicImpl::PolarStereographicImpl(const PolarStereographicImpl& oth
   try
   {
     mGridProjection = T::GridProjectionValue::PolarStereographic;
-    mSr_polarSterographic = nullptr;
-    mCt_latlon2pst = nullptr;
-    mCt_pst2latlon = nullptr;
   }
   catch (...)
   {
@@ -69,14 +63,6 @@ PolarStereographicImpl::~PolarStereographicImpl()
 {
   try
   {
-    if (mSr_polarSterographic != nullptr)
-      mSpatialReference.DestroySpatialReference(mSr_polarSterographic);
-
-    if (mCt_latlon2pst != nullptr)
-      OCTDestroyCoordinateTransformation(mCt_latlon2pst);
-
-    if (mCt_pst2latlon != nullptr)
-      OCTDestroyCoordinateTransformation(mCt_pst2latlon);
   }
   catch (...)
   {
@@ -227,9 +213,6 @@ T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinates() const
       init();
 
     if (!mNx || !mNy)
-      return coordinateList;
-
-    if (mCt_latlon2pst == nullptr)
       return coordinateList;
 
     uint nx = (*mNx);
@@ -423,7 +406,7 @@ void PolarStereographicImpl::init() const
     mStartX = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
     mStartY = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
 
-    mCt_latlon2pst->Transform(1,&mStartX,&mStartY);
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&mStartX,&mStartY);
 
     mInitialized = true;
   }
@@ -454,9 +437,6 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
       init();
 
     if (!mNx || !mNy)
-      return false;
-
-    if (mCt_latlon2pst == nullptr)
       return false;
 
     double xDiff = x - mStartX;
@@ -500,9 +480,6 @@ bool PolarStereographicImpl::getGridOriginalCoordinatesByGridPosition(double gri
       init();
 
     if (!mNx || !mNy)
-      return false;
-
-    if (mCt_latlon2pst == nullptr)
       return false;
 
     if (grid_i < 0 ||  grid_i >= C_DOUBLE(*mNx))
@@ -628,23 +605,6 @@ void PolarStereographicImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
-
-
-    // ### Coordinate converters
-
-    OGRSpatialReference sr_latlon;
-    sr_latlon.importFromEPSG(4326);
-    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-    mSr_polarSterographic = mSpatialReference.Clone();
-
-    mCt_latlon2pst = OGRCreateCoordinateTransformation(&sr_latlon,mSr_polarSterographic);
-    if (mCt_latlon2pst == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-    mCt_pst2latlon = OGRCreateCoordinateTransformation(mSr_polarSterographic,&sr_latlon);
-    if (mCt_pst2latlon == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {
@@ -678,9 +638,6 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
       if (!mNx || !mNy)
         return;
 
-      if (mCt_pst2latlon == nullptr)
-        return;
-
       int nx = C_INT(*mNx);
       int ny = C_INT(*mNy);
 
@@ -694,15 +651,12 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
           {
             T::Coordinate coord = coordinateList->at(c);
 
-            if (mCt_pst2latlon)
+            double lon = coord.x();
+            double lat = coord.y();
+            if (convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat))
             {
-              double lon = coord.x();
-              double lat = coord.y();
-              if (mCt_pst2latlon->Transform(1,&lon,&lat))
-              {
-                sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
-                stream << space(level+2) << str << "\n";
-              }
+              sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
+              stream << space(level+2) << str << "\n";
             }
           }
           c++;

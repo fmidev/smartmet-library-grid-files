@@ -34,12 +34,6 @@ class LambertConformalImpl : public LambertConformal
     void                initSpatialReference();
     void                read(MemoryReader& memoryReader);
 
-  protected:
-
-    mutable OGRSpatialReference*          mSr_lambertConformal;
-    mutable OGRCoordinateTransformation*  mCt_latlon2lambert;
-    mutable OGRCoordinateTransformation*  mCt_lambert2latlon;
-
   private:
 
     void                init() const;

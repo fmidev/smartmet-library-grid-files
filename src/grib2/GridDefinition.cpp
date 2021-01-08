@@ -42,11 +42,10 @@ GridDefinition::GridDefinition()
     mGridProjection = T::GridProjectionValue::Unknown;
     mGridLayout = T::GridLayoutValue::Regular;
     mHash = 0;
-    mOrigSpatialReference = nullptr;
-    mCoordinateTranformation_latlon2orig = nullptr;
-    mCoordinateTranformation_orig2latlon = nullptr;
     mGlobal = false;
     mGeometryId = 0;
+    mLatlonSpatialReference.importFromEPSG(4326);
+    mLatlonSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
   }
   catch (...)
   {
@@ -70,13 +69,6 @@ GridDefinition::GridDefinition(const GridDefinition& other)
     mGeometryId = other.mGeometryId;
     mGeometryName = other.mGeometryName;
     mGridProjection = other.mGridProjection;
-    mOrigSpatialReference = nullptr;
-
-    if (other.mOrigSpatialReference != nullptr)
-      mOrigSpatialReference = other.mOrigSpatialReference->Clone();
-
-    mCoordinateTranformation_latlon2orig = nullptr;
-    mCoordinateTranformation_orig2latlon = nullptr;
   }
   catch (...)
   {
@@ -95,14 +87,6 @@ GridDefinition::~GridDefinition()
   FUNCTION_TRACE
   try
   {
-    if (mCoordinateTranformation_latlon2orig != nullptr)
-      OCTDestroyCoordinateTransformation(mCoordinateTranformation_latlon2orig);
-
-    if (mCoordinateTranformation_orig2latlon)
-      OCTDestroyCoordinateTransformation(mCoordinateTranformation_orig2latlon);
-
-    if (mOrigSpatialReference != nullptr)
-      mSpatialReference.DestroySpatialReference(mOrigSpatialReference);
   }
   catch (...)
   {
@@ -942,32 +926,30 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
       }
     }
 
-    if (mCoordinateTranformation_orig2latlon == nullptr)
-    {
-      OGRSpatialReference sr_latlon;
-      sr_latlon.importFromEPSG(4326);
-      sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-      if (mOrigSpatialReference == nullptr)
-        mOrigSpatialReference = mSpatialReference.Clone();
-
-      mCoordinateTranformation_orig2latlon = OGRCreateCoordinateTransformation(mOrigSpatialReference,&sr_latlon);
-      if (mCoordinateTranformation_orig2latlon == nullptr)
-        throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-    }
-
     T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
     T::Coordinate_svec latLonCoordinates(new T::Coordinate_vec());
 
-    latLonCoordinates->reserve(originalCoordinates->size());
+    int sz = originalCoordinates->size();
+    latLonCoordinates->reserve(sz);
 
-    for (auto it = originalCoordinates->begin(); it != originalCoordinates->end(); ++it)
+    double *lat = new double[sz+1];
+    double *lon = new double[sz+1];
+
+    std::shared_ptr<double> rlat(lat);
+    std::shared_ptr<double> rlon(lon);
+
+    for (int t=0; t<sz; t++)
     {
-      double lat = it->y();
-      double lon = it->x();
+      auto cc = (*originalCoordinates)[t];
+      lat[t] = cc.y();
+      lon[t] = cc.x();
 
-      mCoordinateTranformation_orig2latlon->Transform(1,&lon,&lat);
-      latLonCoordinates->push_back(T::Coordinate(lon,lat));
+    }
+    convert(&mSpatialReference,&mLatlonSpatialReference,sz,lon,lat);
+
+    for (int t=0; t<sz; t++)
+    {
+      latLonCoordinates->push_back(T::Coordinate(lon[t],lat[t]));
     }
 
     if (geomId != 0)
@@ -1232,6 +1214,46 @@ bool GridDefinition::isRelativeUV() const
 
 
 
+void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint sz = latlon.size();
+    points.reserve(sz);
+
+    double *x = new double[sz+1];
+    double *y = new double[sz+1];
+
+    std::shared_ptr<double> rx(x);
+    std::shared_ptr<double> ry(y);
+
+    for (uint t=0; t<sz; t++)
+    {
+      auto cc = latlon[t];
+      x[t] = cc.x();
+      y[t] = cc.y();
+    }
+
+    convert(&mLatlonSpatialReference,&mSpatialReference,sz,x,y);
+
+    for (uint t=0; t<sz; t++)
+    {
+      double i = 0,j = 0;
+      if (getGridPointByOriginalCoordinates(x[t],y[t],i,j))
+        points.push_back(T::Coordinate(i,j));
+      else
+        points.push_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 
 /*! \brief This method calculates the estimated grid position by using the latlon coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.
@@ -1421,24 +1443,11 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
       }
     }
 
-    if (mCoordinateTranformation_latlon2orig == nullptr)
-    {
-      OGRSpatialReference sr_latlon;
-      sr_latlon.importFromEPSG(4326);
-      sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-      if (mOrigSpatialReference == nullptr)
-        mOrigSpatialReference = mSpatialReference.Clone();
-
-      mCoordinateTranformation_latlon2orig = OGRCreateCoordinateTransformation(&sr_latlon,mOrigSpatialReference);
-      if (mCoordinateTranformation_latlon2orig == nullptr)
-        throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-    }
-
     x = lon;
     y = lat;
 
-    mCoordinateTranformation_latlon2orig->Transform(1,&x,&y);
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&x,&y);
+
     if (hash != 0)
     {
       AutoWriteLock lock(&transformCache1ModificationLock);
@@ -1464,25 +1473,10 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double
   FUNCTION_TRACE
   try
   {
-    if (mCoordinateTranformation_latlon2orig == nullptr)
-    {
-      OGRSpatialReference sr_latlon;
-      sr_latlon.importFromEPSG(4326);
-      sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-      if (mOrigSpatialReference == nullptr)
-        mOrigSpatialReference = mSpatialReference.Clone();
-
-      mCoordinateTranformation_latlon2orig = OGRCreateCoordinateTransformation(&sr_latlon,mOrigSpatialReference);
-      if (mCoordinateTranformation_latlon2orig == nullptr)
-        throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-    }
-
     x = lon;
     y = lat;
 
-    mCoordinateTranformation_latlon2orig->Transform(1,&x,&y);
-    return true;
+    return convert(&mLatlonSpatialReference,&mSpatialReference,1,&x,&y);
   }
   catch (...)
   {
@@ -1509,26 +1503,10 @@ bool GridDefinition::getGridLatLonCoordinatesByOriginalCoordinates(double x,doub
   FUNCTION_TRACE
   try
   {
-    if (mCoordinateTranformation_orig2latlon == nullptr)
-    {
-      OGRSpatialReference sr_latlon;
-      sr_latlon.importFromEPSG(4326);
-      sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-      if (mOrigSpatialReference == nullptr)
-        mOrigSpatialReference = mSpatialReference.Clone();
-
-      mCoordinateTranformation_orig2latlon = OGRCreateCoordinateTransformation(mOrigSpatialReference,&sr_latlon);
-      if (mCoordinateTranformation_orig2latlon == nullptr)
-        throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-    }
-
     lat = y;
     lon = x;
 
-    mCoordinateTranformation_orig2latlon->Transform(1,&lon,&lat);
-
-    return true;
+    return convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat);
   }
   catch (...)
   {

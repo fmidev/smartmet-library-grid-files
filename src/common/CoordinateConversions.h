@@ -6,6 +6,8 @@
 #include <boost/optional.hpp>
 #include <ogr_spatialref.h>
 
+bool convert(const OGRSpatialReference *sr_from,const OGRSpatialReference *sr_to,int nCount,double *x,double *y);
+
 
 /*! \brief  The function converts latlon coordinates to rotated latlon coordinates. */
 

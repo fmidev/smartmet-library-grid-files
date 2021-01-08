@@ -22,9 +22,6 @@ LambertConformalImpl::LambertConformalImpl()
   try
   {
     mGridProjection = T::GridProjectionValue::LambertConformal;
-    mSr_lambertConformal = nullptr;
-    mCt_latlon2lambert = nullptr;
-    mCt_lambert2latlon = nullptr;
     mDxx = 0;
     mDyy = 0;
     mStartX = 0;
@@ -47,9 +44,6 @@ LambertConformalImpl::LambertConformalImpl(const LambertConformalImpl& other):La
 {
   try
   {
-    mSr_lambertConformal = nullptr;
-    mCt_latlon2lambert = nullptr;
-    mCt_lambert2latlon = nullptr;
     mDxx = other.mDxx;
     mDyy = other.mDyy;
     mStartX = other.mStartX;
@@ -72,14 +66,6 @@ LambertConformalImpl::~LambertConformalImpl()
 {
   try
   {
-    if (mSr_lambertConformal != nullptr)
-      mSpatialReference.DestroySpatialReference(mSr_lambertConformal);
-
-    if (mCt_lambert2latlon == nullptr)
-      OCTDestroyCoordinateTransformation(mCt_lambert2latlon);
-
-    if (mCt_latlon2lambert != nullptr)
-      OCTDestroyCoordinateTransformation(mCt_latlon2lambert);
   }
   catch (...)
   {
@@ -96,9 +82,6 @@ void LambertConformalImpl::init() const
 {
   try
   {
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return;
-
     if (!mNx || !mNy)
       return;
 
@@ -121,7 +104,7 @@ void LambertConformalImpl::init() const
     mStartX = longitudeOfFirstGridPoint;
     mStartY = latitudeOfFirstGridPoint;
 
-    mCt_latlon2lambert->Transform(1,&mStartX,&mStartY);
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&mStartX,&mStartY);
 
     mInitialized = true;
   }
@@ -292,9 +275,6 @@ T::Coordinate_svec LambertConformalImpl::getGridOriginalCoordinates() const
   try
   {
     T::Coordinate_svec coordinateList(new T::Coordinate_vec());
-
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return coordinateList;
 
     if (!mNx || !mNy)
       return coordinateList;
@@ -487,9 +467,6 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
 {
   try
   {
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return false;
-
     if (!mNx || !mNy)
       return false;
 
@@ -528,9 +505,6 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
 {
   try
   {
-    if (mCt_latlon2lambert == nullptr  ||  mCt_lambert2latlon == nullptr)
-      return false;
-
     if (!mNx || !mNy)
       return false;
 
@@ -686,22 +660,6 @@ void LambertConformalImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
-
-
-    // ### Creating converters
-
-    OGRSpatialReference sr_latlon;
-    sr_latlon.importFromEPSG(4326);
-    sr_latlon.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-    mSr_lambertConformal = mSpatialReference.Clone();
-
-    mCt_latlon2lambert = OGRCreateCoordinateTransformation(&sr_latlon,mSr_lambertConformal);
-    if (mCt_latlon2lambert == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
-
-    mCt_lambert2latlon = OGRCreateCoordinateTransformation(mSr_lambertConformal,&sr_latlon);
-    if (mCt_lambert2latlon == nullptr)
-      throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
   }
   catch (...)
   {
@@ -733,9 +691,6 @@ void LambertConformalImpl::print(std::ostream& stream,uint level,uint optionFlag
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
       T::Coordinate_svec coordinateList = getGridOriginalCoordinates();
 
-      if (mCt_lambert2latlon == nullptr)
-        return;
-
       // ### Printing coordinates close to the grid corners.
 
       int nx = C_INT(*mNx);
@@ -751,15 +706,12 @@ void LambertConformalImpl::print(std::ostream& stream,uint level,uint optionFlag
           {
             T::Coordinate coord = coordinateList->at(c);
 
-            if (mCt_lambert2latlon)
+            double lon = coord.x();
+            double lat = coord.y();
+            if (convert(&mLatlonSpatialReference,&mSpatialReference,1,&lon,&lat))
             {
-              double lon = coord.x();
-              double lat = coord.y();
-              if (mCt_lambert2latlon->Transform(1,&lon,&lat))
-              {
-                sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
-                stream << space(level+2) << str << "\n";
-              }
+              sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
+              stream << space(level+2) << str << "\n";
             }
           }
 
