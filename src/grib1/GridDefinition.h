@@ -84,6 +84,8 @@ class GridDefinition
     virtual bool                setProperty(uint propertyId,double value);
 
     T::SpatialRef*              getSpatialReference();
+    virtual std::string         getWKT();
+    virtual std::string         getProj4();
     bool                        isGridGlobal() const;
     bool                        isRelativeUV() const;
 

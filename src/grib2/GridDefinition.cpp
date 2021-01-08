@@ -1518,6 +1518,60 @@ bool GridDefinition::getGridLatLonCoordinatesByOriginalCoordinates(double x,doub
 
 
 
+std::string GridDefinition::getWKT()
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::string wkt;
+    T::SpatialRef *sr = getSpatialReference();
+    if (sr != nullptr)
+    {
+      char *out = nullptr;
+      sr->exportToWkt(&out);
+      wkt = out;
+      CPLFree(out);
+    }
+    return wkt;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    throw exception;
+  }
+}
+
+
+
+
+
+std::string GridDefinition::getProj4()
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::string proj4;
+    T::SpatialRef *sr = getSpatialReference();
+    if (sr != nullptr)
+    {
+      char *out = nullptr;
+      sr->exportToProj4(&out);
+      proj4 = out;
+      CPLFree(out);
+    }
+    return proj4;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the pointer to the spatial reference of the current grid.
 
         \return   The pointer to the spatial reference.

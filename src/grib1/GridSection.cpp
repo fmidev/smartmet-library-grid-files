@@ -1417,6 +1417,44 @@ void GridSection::initSpatialReference()
 
 
 
+std::string GridSection::getWKT()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition != nullptr)
+      return mGridDefinition->getWKT();
+
+    return std::string("");
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::string GridSection::getProj4()
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridDefinition != nullptr)
+      return mGridDefinition->getProj4();
+
+    return std::string("");
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 
 /*! \brief The method returns the pointer to the spatial reference of the current grid.
 

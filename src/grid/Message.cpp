@@ -526,6 +526,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",getWKT());
+      attributeList.setAttribute("grid.proj4",getProj4());
       T::Dimensions  d = getGridDimensions();
 
       if (llboxStr == nullptr)
@@ -629,6 +630,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
       coordinateType = toUInt8(coordinateTypeStr);
 
     attributeList.setAttribute("grid.original.crs",getWKT());
+    attributeList.setAttribute("grid.original.proj4",getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(getGridHeight()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
@@ -865,6 +867,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",getWKT());
+      attributeList.setAttribute("grid.proj4",getProj4());
       T::Dimensions  d = getGridDimensions();
 
       if (llboxStr == nullptr)
@@ -968,6 +971,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
       coordinateType = toUInt8(coordinateTypeStr);
 
     attributeList.setAttribute("grid.original.crs",getWKT());
+    attributeList.setAttribute("grid.original.proj4",getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(getGridHeight()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
@@ -2268,6 +2272,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",getWKT());
+      attributeList.setAttribute("grid.proj4",getProj4());
       T::Dimensions  d = getGridDimensions();
 
       if (llboxStr == nullptr  &&  centerStr == nullptr)
@@ -2351,6 +2356,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     }
 
     attributeList.setAttribute("grid.original.crs",getWKT());
+    attributeList.setAttribute("grid.original.proj4",getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(getGridHeight()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
@@ -2514,6 +2520,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
     }
 
     attributeList.setAttribute("grid.original.crs",getWKT());
+    attributeList.setAttribute("grid.original.proj4",getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(getGridHeight()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
@@ -2681,6 +2688,14 @@ std::string Message::getWKT() const
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
+
+
+
+
+std::string Message::getProj4() const
+{
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+}
 
 
 

@@ -82,6 +82,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
     getIsobands(gridValues,coordinatePtr,d.nx(),d.ny(),contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.proj4",message1.getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
@@ -209,6 +210,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",message1.getWKT());
+      attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
 
       if (llboxStr == nullptr)
@@ -357,6 +359,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.proj4",message1.getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
@@ -556,6 +559,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",message1.getWKT());
+      attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
 
       if (llboxStr == nullptr)
@@ -704,6 +708,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.proj4",message1.getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
@@ -834,6 +839,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",message1.getWKT());
+      attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
 
       if (llboxStr == nullptr)
@@ -982,6 +988,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.proj4",message1.getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.ogiginal.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
@@ -1150,6 +1157,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",message1.getWKT());
+      attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
 
       if (llboxStr == nullptr)
@@ -1303,6 +1311,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.proj4",message1.getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
@@ -1504,6 +1513,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",message1.getWKT());
+      attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
 
       if (llboxStr == nullptr)
@@ -1657,6 +1667,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.proj4",message1.getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
@@ -1707,6 +1718,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
       attributeList.setAttribute("grid.crs",message1.getWKT());
+      attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
 
       if (llboxStr == nullptr)
@@ -1860,6 +1872,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.proj4",message1.getProj4());
     attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
     attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));

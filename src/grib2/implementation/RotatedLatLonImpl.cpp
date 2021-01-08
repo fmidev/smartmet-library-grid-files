@@ -310,7 +310,7 @@ T::Coordinate_svec RotatedLatLonImpl::getGridLatLonCoordinates() const
 
 
 
-/*
+
 void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
 {
   try
@@ -321,8 +321,11 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
     int sz = latlon.size();
     points.reserve(sz);
 
-    double x[sz+1];
-    double y[sz+1];
+    double *x = new double[sz+1];
+    double *y = new double[sz+1];
+
+    std::shared_ptr<double> rx(x);
+    std::shared_ptr<double> ry(y);
 
     for (int t=0; t<sz; t++)
     {
@@ -338,9 +341,15 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
       double grid_i = 0;
       double grid_j = 0;
       if (getGridPointByOriginalCoordinates(x[t],y[t],grid_i,grid_j))
+      {
+        //printf("%f,%f => %f,%f\n",x[t],y[t],grid_i,grid_j);
         points.push_back(T::Coordinate(grid_i,grid_j));
+      }
       else
+      {
+        //printf("INVALID %f,%f => %f,%f\n",x[t],y[t],grid_i,grid_j);
         points.push_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
+      }
     }
   }
   catch (...)
@@ -348,7 +357,7 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-*/
+
 
 
 
@@ -847,6 +856,38 @@ bool RotatedLatLonImpl::reverseYDirection() const
 
 
 
+std::string RotatedLatLonImpl::getWKT()
+{
+  try
+  {
+    // ### Gdal 3.x cannot convert WKT back to SpatialReference, using proj4 instead.
+    return mProj4;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+std::string RotatedLatLonImpl::getProj4()
+{
+  try
+  {
+    return mProj4;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method initializes the spatial reference (mSpatialReference) of the grid. */
 
 void RotatedLatLonImpl::initSpatialReference()
@@ -879,6 +920,8 @@ void RotatedLatLonImpl::initSpatialReference()
     sprintf(proj,"+proj=ob_tran +o_proj=lonlat +lon_0=%f +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
         lon_0,npole_lon,npole_lat,dfSemiMajor);
 
+    mProj4 = proj;
+
     OGRErr err = mSpatialReference.SetFromUserInput(proj);
     if (err != OGRERR_NONE)
       throw Fmi::Exception(BCP, "Invalid crs '" + std::string(proj) + "'!");
@@ -886,7 +929,7 @@ void RotatedLatLonImpl::initSpatialReference()
     mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
     // ### Validate the spatial reference.
-/*
+
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
@@ -894,7 +937,6 @@ void RotatedLatLonImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
-*/
 
     // ### Test if the grid is global
 

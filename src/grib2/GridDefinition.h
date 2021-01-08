@@ -62,6 +62,8 @@ class GridDefinition
     virtual std::size_t         getGridRowCount() const;
     virtual uint                getTemplateNumber() const;
     T::SpatialRef*              getSpatialReference();
+    virtual std::string         getWKT();
+    virtual std::string         getProj4();
     virtual void                initSpatialReference();
     bool                        isGridGlobal() const;
     bool                        isRelativeUV() const;

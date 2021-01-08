@@ -108,6 +108,8 @@ class GridSection : public GRID::MessageSection
     std::size_t           getGridColumnCount() const;
     std::size_t           getGridRowCount() const;
     T::SpatialRef*        getSpatialReference() const;
+    virtual std::string   getWKT();
+    virtual std::string   getProj4();
     void                  initSpatialReference();
     bool                  isGridGlobal() const;
     bool                  isRelativeUV() const;

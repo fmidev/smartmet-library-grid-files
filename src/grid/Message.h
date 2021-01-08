@@ -185,6 +185,7 @@ class Message
     virtual T::TimeString       getReferenceTime() const;
     virtual T::SpatialRef*      getSpatialReference() const;
     virtual std::string         getWKT() const;
+    virtual std::string         getProj4() const;
     virtual void                initSpatialReference();
     virtual bool                isGridGlobal() const;
     virtual bool                isRelativeUV() const;

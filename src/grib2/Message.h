@@ -97,6 +97,7 @@ class Message : public GRID::Message
     T::TimeString       getReferenceTime() const;
     T::SpatialRef*      getSpatialReference() const;
     std::string         getWKT() const;
+    std::string         getProj4() const;
     void                initSpatialReference();
     bool                isGridGlobal() const;
     bool                isRelativeUV() const;

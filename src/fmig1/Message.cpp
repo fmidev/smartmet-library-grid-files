@@ -1875,6 +1875,34 @@ std::string Message::getWKT() const
 
 
 
+std::string Message::getProj4() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::string proj4;
+    T::SpatialRef *sr = getSpatialReference();
+    if (sr != nullptr)
+    {
+      char *out = nullptr;
+      sr->exportToProj4(&out);
+      proj4 = out;
+      CPLFree(out);
+    }
+    return proj4;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the forecast type of the current grid.
 
         \return   The forecast type.

@@ -3180,9 +3180,9 @@ T::Coordinate_svec GridDef::getGridOriginalCoordinatesByGeometryId(T::GeometryId
 
 T::Coordinate_svec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId)
 {
+  FUNCTION_TRACE
   try
   {
-    FUNCTION_TRACE
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
     if (g2 != nullptr)
     {
@@ -3214,7 +3214,9 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
   FUNCTION_TRACE
   try
   {
+    //attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *proj4Str = attributeList.getAttributeValue("grid.proj4");
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
@@ -3317,6 +3319,13 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
             throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
         }
         else
+        if (proj4Str != nullptr)
+        {
+          OGRErr err = sr.SetFromUserInput(proj4Str);
+          if (err != OGRERR_NONE)
+            throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
+        }
+        else
         if (crsStr != nullptr)
         {
           OGRErr err = sr.SetFromUserInput(crsStr);
@@ -3412,6 +3421,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
               lon[c] = xx;
               lat[c] = yy;
 
+
               coordinates->push_back(T::Coordinate(xx,yy));
 
               xx = xx + dx;
@@ -3421,6 +3431,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           }
 
           transformation->Transform(c,lon,lat);
+
           for (int t=0; t<c; t++)
           {
             latLonCoordinates->push_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
@@ -3459,6 +3470,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *proj4Str = attributeList.getAttributeValue("grid.proj4Str");
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
     const char *urnStr = attributeList.getAttributeValue("grid.urn");
     const char *bboxStr = attributeList.getAttributeValue("grid.bbox");
@@ -3569,6 +3581,13 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
           if (sr.importFromURN(urn.c_str()) != OGRERR_NONE)
             throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
+        }
+        else
+        if (proj4Str != nullptr)
+        {
+          OGRErr err = sr.SetFromUserInput(proj4Str);
+          if (err != OGRERR_NONE)
+            throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
         }
         else
         if (crsStr != nullptr)

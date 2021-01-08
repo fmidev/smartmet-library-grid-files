@@ -2951,6 +2951,9 @@ std::string Message::getWKT() const
   FUNCTION_TRACE
   try
   {
+    if (mGridSection != nullptr)
+      return mGridSection->getWKT();
+
     std::string wkt;
     T::SpatialRef *sr = getSpatialReference();
     if (sr != nullptr)
@@ -2961,6 +2964,37 @@ std::string Message::getWKT() const
       CPLFree(out);
     }
     return wkt;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
+std::string Message::getProj4() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mGridSection != nullptr)
+      return mGridSection->getProj4();
+
+    std::string proj4;
+    T::SpatialRef *sr = getSpatialReference();
+    if (sr != nullptr)
+    {
+      char *out = nullptr;
+      sr->exportToProj4(&out);
+      proj4 = out;
+      CPLFree(out);
+    }
+    return proj4;
   }
   catch (...)
   {
