@@ -90,7 +90,7 @@ profile: all
 
 
 $(LIBFILE): $(OBJFILES)
-	$(CC) $(LDFLAGS) -shared -rdynamic -o $(LIBFILE) $(OBJFILES) $(LIBS)
+	$(CXX) $(LDFLAGS) -shared -rdynamic -o $(LIBFILE) $(OBJFILES) $(LIBS)
 
 clean: 
 	rm -f src/*~ src/*/*~ src/*/*/*~
