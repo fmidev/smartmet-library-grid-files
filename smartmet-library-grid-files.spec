@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.1.11
+Version: 21.1.12
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -14,7 +14,7 @@ BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 21.1.5
 BuildRequires: smartmet-library-spine-devel >= 21.1.5
 BuildRequires: smartmet-library-macgyver >= 21.1.5
-BuildRequires: smartmet-library-tron >= 21.1.5
+BuildRequires: smartmet-library-tron >= 21.1.12
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal32-devel
@@ -76,6 +76,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Jan 12 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.12-1.fmi
+- Fixed rotated latlon projection code to work with GDAL 3.2
 * Mon Jan 11 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.11-1.fmi
 - Fixed projection code to work with GDAL 3.2
 * Tue Jan  5 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.5-1.fmi
