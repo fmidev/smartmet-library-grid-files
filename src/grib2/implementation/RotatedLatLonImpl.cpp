@@ -860,8 +860,7 @@ std::string RotatedLatLonImpl::getWKT()
 {
   try
   {
-    // ### Gdal 3.x cannot convert WKT back to SpatialReference, using proj4 instead.
-    return mProj4;
+    return GridDefinition::getWKT();
   }
   catch (...)
   {
@@ -900,24 +899,26 @@ void RotatedLatLonImpl::initSpatialReference()
     // ### Set geographic coordinate system.
 
 
-    //const char *pszGeogName = "UNKNOWN";
-    //const char *pszDatumName = "UNKNOWN";
-    //const char *pszSpheroidName = "UNKNOWN";
+    const char *pszGeogName = "UNKNOWN";
+    const char *pszDatumName = "UNKNOWN";
+    const char *pszSpheroidName = "UNKNOWN";
     double dfSemiMajor = getMajorAxis(mEarthShape);
-    //double dfInvFlattening = getFlattening(mEarthShape);
+    double dfInvFlattening = getFlattening(mEarthShape);
+    double angle = C_DOUBLE(mRotation.getAngleOfRotation());
 
-    //mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+    mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+    mSpatialReference.SetDerivedGeogCRSWithPoleRotationGRIBConvention("RotatedLatlon",mSouthPoleLat,mSouthPoleLon,angle);
+    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
+
+#if 0
     double npole_lat = -mSouthPoleLat;
     double npole_lon = 0;
     double lon_0 = mSouthPoleLon;
 
     char proj[200];
 
-    //sprintf(proj,"+proj=ob_tran +o_proj=lonlat +lon_0=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
-    //    npole_lon,npole_lat,dfSemiMajor);
-
-    sprintf(proj,"+proj=ob_tran +o_proj=lonlat +lon_0=%f +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+    sprintf(proj,"+proj=ob_tran +o_proj=longlat +lon_0=%f +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
         lon_0,npole_lon,npole_lat,dfSemiMajor);
 
     mProj4 = proj;
@@ -925,8 +926,13 @@ void RotatedLatLonImpl::initSpatialReference()
     OGRErr err = mSpatialReference.SetFromUserInput(proj);
     if (err != OGRERR_NONE)
       throw Fmi::Exception(BCP, "Invalid crs '" + std::string(proj) + "'!");
+#endif
 
-    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+    char *out = nullptr;
+    mSpatialReference.exportToProj4(&out);
+    mProj4 = out;
+    CPLFree(out);
 
     // ### Validate the spatial reference.
 
