@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.1.12
+Version: 21.1.14
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,10 +11,10 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.1.5
-BuildRequires: smartmet-library-spine-devel >= 21.1.5
-BuildRequires: smartmet-library-macgyver >= 21.1.5
-BuildRequires: smartmet-library-tron >= 21.1.12
+BuildRequires: smartmet-library-newbase-devel >= 21.1.14
+BuildRequires: smartmet-library-spine-devel >= 21.1.14
+BuildRequires: smartmet-library-macgyver >= 21.1.14
+BuildRequires: smartmet-library-tron >= 21.1.14
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal32-devel
@@ -35,9 +35,9 @@ Requires: boost169-thread
 Requires: gdal32-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.1.5
-Requires: smartmet-library-macgyver >= 21.1.5
-Requires: smartmet-library-spine >= 21.1.5
+Requires: smartmet-library-newbase >= 21.1.14
+Requires: smartmet-library-macgyver >= 21.1.14
+Requires: smartmet-library-spine >= 21.1.14
 
 %description
 FMI Grid File handling library
@@ -76,6 +76,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Jan 14 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.14-1.fmi
+- Repackaged smartmet to resolve debuginfo issues
 * Tue Jan 12 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.12-1.fmi
 - Fixed rotated latlon projection code to work with GDAL 3.2
 * Mon Jan 11 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.11-1.fmi
