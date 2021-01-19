@@ -278,11 +278,11 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
       {
         if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
         {
-          decodedValues.push_back(ParamValueMissing);
+          decodedValues.emplace_back(ParamValueMissing);
         }
         else
         {
-          decodedValues.push_back(referenceValue);
+          decodedValues.emplace_back(referenceValue);
         }
       }
       return;
@@ -330,9 +330,9 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
 
           double Y = RDfac + X * EDfac;
           if (Fmi::floor(Y+0.5) == 9999)
-            decodedValues.push_back(ParamValueMissing);
+            decodedValues.emplace_back(ParamValueMissing);
           else
-            decodedValues.push_back(Y);
+            decodedValues.emplace_back(Y);
         }
       }
       else
@@ -340,7 +340,7 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
         for (std::uint32_t i = 0; i < numOfValues; i++)
         {
           if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
-            decodedValues.push_back(ParamValueMissing);
+            decodedValues.emplace_back(ParamValueMissing);
           else
           {
             uint X = 0;
@@ -348,9 +348,9 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
 
             double Y = RDfac + X * EDfac;
             if (Fmi::floor(Y+0.5) == 9999)
-              decodedValues.push_back(ParamValueMissing);
+              decodedValues.emplace_back(ParamValueMissing);
             else
-              decodedValues.push_back(Y);
+              decodedValues.emplace_back(Y);
           }
         }
       }
@@ -369,9 +369,9 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
               uint X = memoryReader.read_uint8();
               double Y = RDfac + X * EDfac;
               if (Fmi::floor(Y+0.5) == 9999)
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               else
-                decodedValues.push_back(Y);
+                decodedValues.emplace_back(Y);
             }
           }
           else
@@ -379,15 +379,15 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
             for (std::uint32_t i = 0; i < numOfValues; i++)
             {
               if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               else
               {
                 uint X = memoryReader.read_uint8();
                 double Y = RDfac + X * EDfac;
                 if (Fmi::floor(Y+0.5) == 9999)
-                  decodedValues.push_back(ParamValueMissing);
+                  decodedValues.emplace_back(ParamValueMissing);
                 else
-                  decodedValues.push_back(Y);
+                  decodedValues.emplace_back(Y);
               }
             }
           }
@@ -401,9 +401,9 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
               uint X = memoryReader.read_uint16();
               double Y = RDfac + X * EDfac;
               if (Fmi::floor(Y+0.5) == 9999)
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               else
-                decodedValues.push_back(Y);
+                decodedValues.emplace_back(Y);
             }
           }
           else
@@ -411,15 +411,15 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
             for (std::uint32_t i = 0; i < numOfValues; i++)
             {
               if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               else
               {
                 uint X = memoryReader.read_uint16();
                 double Y = RDfac + X * EDfac;
                 if (Fmi::floor(Y+0.5) == 9999)
-                  decodedValues.push_back(ParamValueMissing);
+                  decodedValues.emplace_back(ParamValueMissing);
                 else
-                  decodedValues.push_back(Y);
+                  decodedValues.emplace_back(Y);
               }
             }
           }
@@ -433,9 +433,9 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
               uint X = memoryReader.read_uint24();
               double Y = RDfac + X * EDfac;
               if (Fmi::floor(Y+0.5) == 9999)
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               else
-                decodedValues.push_back(Y);
+                decodedValues.emplace_back(Y);
             }
           }
           else
@@ -443,15 +443,15 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
             for (std::uint32_t i = 0; i < numOfValues; i++)
             {
               if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               else
               {
                 uint X = memoryReader.read_uint24();
                 double Y = RDfac + X * EDfac;
                 if (Fmi::floor(Y+0.5) == 9999)
-                  decodedValues.push_back(ParamValueMissing);
+                  decodedValues.emplace_back(ParamValueMissing);
                 else
-                  decodedValues.push_back(Y);
+                  decodedValues.emplace_back(Y);
               }
             }
           }
@@ -465,9 +465,9 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
               uint X = memoryReader.read_uint32();
               double Y = RDfac + X * EDfac;
               if (Fmi::floor(Y+0.5) == 9999)
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               else
-                decodedValues.push_back(Y);
+                decodedValues.emplace_back(Y);
             }
           }
           else
@@ -475,15 +475,15 @@ void SimplePacking::decodeValues(Message *message,T::ParamValue_vec& decodedValu
             for (std::uint32_t i = 0; i < numOfValues; i++)
             {
               if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               else
               {
                 uint X = memoryReader.read_uint32();
                 double Y = RDfac + X * EDfac;
                 if (Fmi::floor(Y+0.5) == 9999)
-                  decodedValues.push_back(ParamValueMissing);
+                  decodedValues.emplace_back(ParamValueMissing);
                 else
-                  decodedValues.push_back(Y);
+                  decodedValues.emplace_back(Y);
               }
             }
           }

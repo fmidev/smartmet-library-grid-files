@@ -43,7 +43,7 @@ MessageSection::~MessageSection()
     to the current section.
 */
 
-void MessageSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void MessageSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
 }
 

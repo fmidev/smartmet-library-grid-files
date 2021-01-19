@@ -34,7 +34,7 @@ class GridDefinition
     virtual T::Hash             countHash(); // Do not call this, call getGridHash() instead.
     virtual GridDefinition*     createGridDefinition() const;
 
-    virtual void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    virtual void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual T::Dimensions       getGridDimensions() const;
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
@@ -75,7 +75,7 @@ class GridDefinition
     virtual void                initRowPositions(std::vector<std::uint32_t>& rowPositions);
 
     virtual void                setGridGeometryId(T::GeometryId geometryId);
-    virtual void                setGridGeometryName(std::string geometryName);
+    virtual void                setGridGeometryName(const std::string& geometryName);
 
     virtual bool                getProperty(uint propertyId,long long& value);
     virtual bool                getProperty(uint propertyId,double& value);

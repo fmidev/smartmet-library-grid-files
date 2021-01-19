@@ -63,7 +63,7 @@ void ScanningModeSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ScanningModeSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ScanningModeSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sScanningModeSettings.ScanningMode", prefix.c_str());

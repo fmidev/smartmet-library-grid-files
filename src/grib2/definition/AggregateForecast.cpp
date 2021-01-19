@@ -66,7 +66,7 @@ void AggregateForecast::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void AggregateForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void AggregateForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sAggregateForecast.", prefix.c_str());

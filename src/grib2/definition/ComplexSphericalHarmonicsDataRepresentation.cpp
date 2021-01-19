@@ -68,7 +68,7 @@ void ComplexSphericalHarmonicsDataRepresentation::write(DataWriter &dataWriter) 
     \param attributeList  The attributeList storage.
 */
 
-void ComplexSphericalHarmonicsDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ComplexSphericalHarmonicsDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sComplexSphericalHarmonicsDataRepresentation.", prefix.c_str());

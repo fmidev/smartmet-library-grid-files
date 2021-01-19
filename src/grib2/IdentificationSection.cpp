@@ -109,7 +109,7 @@ IdentificationSection::~IdentificationSection()
     to the current section.
 */
 
-void IdentificationSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void IdentificationSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   try
   {

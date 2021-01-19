@@ -66,7 +66,7 @@ void StretchedLatLon::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void StretchedLatLon::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void StretchedLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sStretchedLatLon.", prefix.c_str());

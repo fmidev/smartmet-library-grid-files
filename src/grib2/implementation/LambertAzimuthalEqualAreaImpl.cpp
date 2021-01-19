@@ -182,7 +182,7 @@ T::Coordinate_svec LambertAzimuthalEqualAreaImpl::getGridOriginalCoordinates() c
       for (uint i=0; i < nx; i++)
       {
         T::Coordinate coord(x,y);
-        coordinateList->push_back(coord);
+        coordinateList->emplace_back(coord);
         x += mDxx;
       }
       y += mDyy;

@@ -60,7 +60,7 @@ void VirtualGridFile::addPhysicalGridFile(GRID::GridFile_sptr physicalGridFile)
 {
   try
   {
-    mPhysicalGridFileList.push_back(physicalGridFile);
+    mPhysicalGridFileList.emplace_back(physicalGridFile);
   }
   catch (...)
   {
@@ -180,7 +180,7 @@ void VirtualGridFile::addMessage(Message *message)
 {
   try
   {
-    mMessageList.push_back(message);
+    mMessageList.emplace_back(message);
   }
   catch (...)
   {

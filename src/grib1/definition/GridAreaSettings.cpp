@@ -74,7 +74,7 @@ void GridAreaSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void GridAreaSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void GridAreaSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sGridAreaSettings.LatitudeOfFirstGridPoint", prefix.c_str());

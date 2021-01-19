@@ -68,7 +68,7 @@ void TimeIntervalProbabilityForecast::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void TimeIntervalProbabilityForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void TimeIntervalProbabilityForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTimeIntervalProbabilityForecast.", prefix.c_str());

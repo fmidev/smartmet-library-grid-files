@@ -56,7 +56,7 @@ ConfigurationFile::ConfigurationFile(const ConfigurationFile& configurationFile)
 
 
 
-ConfigurationFile::ConfigurationFile(std::string filename)
+ConfigurationFile::ConfigurationFile(const std::string& filename)
 {
   FUNCTION_TRACE
   try
@@ -97,7 +97,7 @@ ConfigurationFile::~ConfigurationFile()
 // files might contain for example, database connection parameters
 // required in different environments.
 
-void ConfigurationFile::addConfigurationFile(std::string filename)
+void ConfigurationFile::addConfigurationFile(const std::string& filename)
 {
   FUNCTION_TRACE
   try
@@ -109,7 +109,7 @@ void ConfigurationFile::addConfigurationFile(std::string filename)
     ConfigurationFile configFile(filename);
     for (auto it=configFile.mAttributeList.begin(); it!=configFile.mAttributeList.end();++it)
     {
-      mAttributeList.push_back(*it);
+      mAttributeList.emplace_back(*it);
     }
   }
   catch (...)
@@ -141,7 +141,7 @@ void ConfigurationFile::clear()
 
 
 
-void ConfigurationFile::readFile(std::string filename)
+void ConfigurationFile::readFile(const std::string& filename)
 {
   FUNCTION_TRACE
   try
@@ -201,7 +201,7 @@ void ConfigurationFile::readFile(std::string filename)
 
 
 
-void ConfigurationFile::replaceAttributeNamesWithValues(std::string inputFilename,std::string outputFilename)
+void ConfigurationFile::replaceAttributeNamesWithValues(const std::string& inputFilename,const std::string& outputFilename)
 {
   FUNCTION_TRACE
   try
@@ -664,7 +664,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
 
           std::string val;
           if (getAttributeValue(attr->mName.c_str(),val))
-            attributeValueVec.push_back(val);
+            attributeValueVec.emplace_back(val);
         }
       }
     }
@@ -754,7 +754,7 @@ bool ConfigurationFile::getSubAttributes(const char *attributeName,std::vector<s
         {
           std::string itm = attr->mName.substr(len+1);
 
-          attributeNames.push_back(itm);
+          attributeNames.emplace_back(itm);
         }
       }
     }
@@ -835,7 +835,7 @@ void ConfigurationFile::setAttributeValue(const char *attributeName,std::string&
         return;
       }
     }
-    mAttributeList.push_back(T::Attribute(std::string(attributeName),attributeValue));
+    mAttributeList.emplace_back(T::Attribute(std::string(attributeName),attributeValue));
   }
   catch (...)
   {
@@ -876,7 +876,7 @@ void ConfigurationFile::print(std::ostream& stream,uint level,uint optionFlags)
 
 
 
-std::string ConfigurationFile::parseValue(std::string value)
+std::string ConfigurationFile::parseValue(const std::string& value)
 {
   FUNCTION_TRACE
   try
@@ -934,7 +934,7 @@ std::string ConfigurationFile::parseValue(std::string value)
 
 
 
-std::string ConfigurationFile::parseConstValue(std::string value)
+std::string ConfigurationFile::parseConstValue(const std::string& value)
 {
   FUNCTION_TRACE
   try
@@ -1144,8 +1144,8 @@ void ConfigurationFile::getWords(char *st,unsigned long long *positions,std::vec
         buf[c] = '\0';
         if (c > 0)
         {
-          words.push_back(std::string(buf));
-          wordPositions.push_back(positions[a-c]);
+          words.emplace_back(std::string(buf));
+          wordPositions.emplace_back(positions[a-c]);
         }
         c = 0;
       }
@@ -1161,8 +1161,8 @@ void ConfigurationFile::getWords(char *st,unsigned long long *positions,std::vec
     if (c > 0)
     {
       buf[c] = '\0';
-      words.push_back(std::string(buf));
-      wordPositions.push_back(positions[a-c]);
+      words.emplace_back(std::string(buf));
+      wordPositions.emplace_back(positions[a-c]);
     }
   }
   catch (...)
@@ -1176,7 +1176,7 @@ void ConfigurationFile::getWords(char *st,unsigned long long *positions,std::vec
 
 
 
-int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path)
+int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,const std::string& path)
 {
   FUNCTION_TRACE
   try
@@ -1189,7 +1189,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
       T::Attribute attr;
       attr.mName = path;
       attr.mValue = "$(" + words[pos+2] + ")";
-      mAttributeList.push_back(attr);
+      mAttributeList.emplace_back(attr);
 
       return pos + 4;
     }
@@ -1200,7 +1200,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
       attr.mName = path;
       std::string v = "%(" + words[pos+2] + ")";
       attr.mValue = parseConstValue(v);
-      mAttributeList.push_back(attr);
+      mAttributeList.emplace_back(attr);
 
       return pos + 4;
     }
@@ -1230,7 +1230,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
       T::Attribute attr;
       attr.mName = path + "()";
       attr.mValue = "";
-      mAttributeList.push_back(attr);
+      mAttributeList.emplace_back(attr);
 
       int startPos = pos;
       pos++;
@@ -1271,7 +1271,7 @@ int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<uns
       attr.mValue = "";
       if (!findAttribute(attr.mName.c_str()))
       {
-        mAttributeList.push_back(attr);
+        mAttributeList.emplace_back(attr);
       }
       else
       {
@@ -1344,7 +1344,7 @@ void ConfigurationFile::removeAttributes(const char *pattern)
     {
       if (fnmatch(pattern,attr->mName.c_str(),0) != 0)
       {
-        newAttributeList.push_back(*attr);
+        newAttributeList.emplace_back(*attr);
       }
     }
     if (newAttributeList.size() != mAttributeList.size())
@@ -1360,7 +1360,7 @@ void ConfigurationFile::removeAttributes(const char *pattern)
 
 
 
-int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path,int index)
+int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,const std::string& path,int index)
 {
   FUNCTION_TRACE
   try

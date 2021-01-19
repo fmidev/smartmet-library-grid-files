@@ -74,7 +74,7 @@ void EarthShapeSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void EarthShapeSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void EarthShapeSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sEarthShapeSettings.ShapeOfTheEarth", prefix.c_str());

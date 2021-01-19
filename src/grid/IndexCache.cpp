@@ -52,9 +52,9 @@ void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
 
     if (mHashVector.size() == 0)
     {
-      mHashVector.push_back(hash);
-      mVector.push_back(indexVector);
-      mTimeVector.push_back(time(nullptr));
+      mHashVector.emplace_back(hash);
+      mVector.emplace_back(indexVector);
+      mTimeVector.emplace_back(time(nullptr));
       return;
     }
 
@@ -73,9 +73,9 @@ void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
 
     if (idx >= C_INT(mHashVector.size()))
     {
-      mHashVector.push_back(hash);
-      mTimeVector.push_back(time(nullptr));
-      mVector.push_back(indexVector);
+      mHashVector.emplace_back(hash);
+      mTimeVector.emplace_back(time(nullptr));
+      mVector.emplace_back(indexVector);
       return;
     }
 

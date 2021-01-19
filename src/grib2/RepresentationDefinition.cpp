@@ -239,7 +239,7 @@ bool RepresentationDefinition::setProperty_OriginalValues(uint propertyId,long l
 
 
 
-void RepresentationDefinition::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void RepresentationDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
 }
 

@@ -88,7 +88,7 @@ void RectangularClusterSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void RectangularClusterSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void RectangularClusterSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sRectangularClusterSettings.ClusterIdentifier", prefix.c_str());

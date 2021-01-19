@@ -50,7 +50,7 @@ class Message : public GRID::Message
 
     // ### Common methods for all message types
 
-    void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     uint                getFileId() const;
     uint                getProducerId() const;
     uint                getGenerationId() const;
@@ -95,7 +95,7 @@ class Message : public GRID::Message
     bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
     bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     T::GridProjection   getGridProjection() const;
-    void                getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;
+    void                getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const;
     std::string         getGridProjectionString() const;
     T::ParamLevel       getGridParameterLevel() const;
     T::ParamLevelId     getGridParameterLevelId() const;

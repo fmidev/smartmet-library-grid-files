@@ -82,7 +82,7 @@ void RotatedGaussian::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void RotatedGaussian::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void RotatedGaussian::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sRotatedGaussian.Ni", prefix.c_str());

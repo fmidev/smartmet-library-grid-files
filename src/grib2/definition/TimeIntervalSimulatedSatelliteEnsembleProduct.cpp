@@ -66,7 +66,7 @@ void TimeIntervalSimulatedSatelliteEnsembleProduct::write(DataWriter &dataWriter
     \param attributeList  The attributeList storage.
 */
 
-void TimeIntervalSimulatedSatelliteEnsembleProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void TimeIntervalSimulatedSatelliteEnsembleProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTimeIntervalSimulatedSatelliteEnsembleProduct.", prefix.c_str());

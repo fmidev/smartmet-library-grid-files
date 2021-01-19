@@ -63,7 +63,7 @@ void ResolutionFlagsSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ResolutionFlagsSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ResolutionFlagsSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sResolutionFlagsSettings.ResolutionAndComponentFlags", prefix.c_str());

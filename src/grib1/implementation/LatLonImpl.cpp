@@ -192,7 +192,7 @@ T::Coordinate_svec LatLonImpl::getGridOriginalCoordinates() const
       double x = mStartX;
       for (uint i=0; i < mNi; i++)
       {
-        coordinateList->push_back(T::Coordinate(getLongitude(x),y));
+        coordinateList->emplace_back(T::Coordinate(getLongitude(x),y));
         x += mDx;
       }
       y += mDy;

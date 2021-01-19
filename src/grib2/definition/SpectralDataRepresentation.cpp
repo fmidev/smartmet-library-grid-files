@@ -65,7 +65,7 @@ void SpectralDataRepresentation::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void SpectralDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void SpectralDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sSpectralDataRepresentation.", prefix.c_str());

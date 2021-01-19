@@ -66,7 +66,7 @@ void StretchedRotatedSphericalHarmonic::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void StretchedRotatedSphericalHarmonic::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void StretchedRotatedSphericalHarmonic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sStretchedRotatedSphericalHarmonic.", prefix.c_str());

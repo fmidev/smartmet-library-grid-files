@@ -79,7 +79,7 @@ void GridValueList::addGridValue(GridValue& gridValue)
 {
   try
   {
-    mList.push_back(gridValue);
+    mList.emplace_back(gridValue);
   }
   catch (...)
   {

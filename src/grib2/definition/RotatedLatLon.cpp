@@ -66,7 +66,7 @@ void RotatedLatLon::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void RotatedLatLon::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void RotatedLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sRotatedLatLon.", prefix.c_str());

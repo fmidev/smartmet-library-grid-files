@@ -72,7 +72,7 @@ void ReforecastSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ReforecastSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ReforecastSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sReforecastSettings.YearOfModelVersion", prefix.c_str());

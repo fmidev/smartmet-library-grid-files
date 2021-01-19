@@ -25,7 +25,7 @@ class MessageSection
 
     // ### Common methods for all message sections
 
-    virtual void            getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    virtual void            getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual T::FilePosition getFilePosition() const;
     virtual std::uint32_t   getSectionLength() const;
     virtual std::string     getSectionName() const;

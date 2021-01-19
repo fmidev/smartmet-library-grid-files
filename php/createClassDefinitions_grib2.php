@@ -329,7 +329,7 @@ function process_template($file, $name, $class, $outdir)
 
   $body .= "virtual void read(MemoryReader& memoryReader);\n";
   $body .= "virtual void write(DataWriter& dataWriter);\n";
-  $body .= "virtual void getAttributeList(std::string prefix,T::AttributeList& attributeList) const;\n";
+  $body .= "virtual void getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;\n";
   $body .= "virtual void print(std::ostream& stream,uint level,uint optionFlags) const;\n";
   $body .= "virtual T::Hash countHash();\n\n";
 
@@ -643,7 +643,7 @@ function process_template($file, $name, $class, $outdir)
   $cpp .= "    \param attributeList  The attributeList storage.\n";
   $cpp .= "*/\n\n";
 
-  $cpp .= "void ${class}::getAttributeList(std::string prefix,T::AttributeList& attributeList) const { ";
+  $cpp .= "void ${class}::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const { ";
   $cpp .= "try {";
   
   if (!empty($members))

@@ -82,7 +82,7 @@ void AuxiliarySatelliteProduct::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void AuxiliarySatelliteProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void AuxiliarySatelliteProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sAuxiliarySatelliteProduct.ParameterCategory", prefix.c_str());

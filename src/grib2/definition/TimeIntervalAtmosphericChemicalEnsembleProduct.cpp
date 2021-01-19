@@ -68,7 +68,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::write(DataWriter &dataWrite
     \param attributeList  The attributeList storage.
 */
 
-void TimeIntervalAtmosphericChemicalEnsembleProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void TimeIntervalAtmosphericChemicalEnsembleProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTimeIntervalAtmosphericChemicalEnsembleProduct.", prefix.c_str());

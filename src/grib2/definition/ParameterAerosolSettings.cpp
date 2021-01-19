@@ -90,7 +90,7 @@ void ParameterAerosolSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ParameterAerosolSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ParameterAerosolSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sParameterAerosolSettings.ParameterCategory", prefix.c_str());

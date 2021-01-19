@@ -92,7 +92,7 @@ DataSection::~DataSection()
     to the current section.
 */
 
-void DataSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void DataSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   try
   {

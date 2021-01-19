@@ -64,7 +64,7 @@ void PartitionedEnsembleProduct::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PartitionedEnsembleProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void PartitionedEnsembleProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPartitionedEnsembleProduct.", prefix.c_str());

@@ -68,7 +68,7 @@ void ProbabilityForecast::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ProbabilityForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ProbabilityForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sProbabilityForecast.", prefix.c_str());

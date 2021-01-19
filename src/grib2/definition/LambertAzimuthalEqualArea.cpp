@@ -83,7 +83,7 @@ void LambertAzimuthalEqualArea::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void LambertAzimuthalEqualArea::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void LambertAzimuthalEqualArea::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sLambertAzimuthalEqualArea.", prefix.c_str());

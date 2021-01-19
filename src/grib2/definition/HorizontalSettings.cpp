@@ -72,7 +72,7 @@ void HorizontalSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void HorizontalSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void HorizontalSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sHorizontalSettings.TypeOfFirstFixedSurface", prefix.c_str());

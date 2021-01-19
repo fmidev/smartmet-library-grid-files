@@ -65,7 +65,7 @@ void LogarithmicGridDataRepresentation::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void LogarithmicGridDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void LogarithmicGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sLogarithmicGridDataRepresentation.", prefix.c_str());

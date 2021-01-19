@@ -84,7 +84,7 @@ void PostprocSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PostprocSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void PostprocSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPostprocSettings.ParameterCategory", prefix.c_str());

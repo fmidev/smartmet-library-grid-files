@@ -79,7 +79,7 @@ void LatLon::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void LatLon::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void LatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sLatLon.Ni", prefix.c_str());

@@ -494,7 +494,7 @@ bool Message::getProperty(const char *propertyName,long long& value)
     to the current message.
 */
 
-void Message::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void Message::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
   try
@@ -1265,6 +1265,7 @@ void Message::read(MemoryReader& memoryReader)
     mIsRead = true;
     mRowCount = getGridRowCount();
     mColumnCount = getGridColumnCount();
+    setGridGeometryId(mGeometryId);
   }
   catch (...)
   {
@@ -2480,7 +2481,7 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
         \param attributeList  The projection attributes are returned in this parameter.
 */
 
-void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const
+void Message::getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
   try

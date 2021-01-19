@@ -139,7 +139,7 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinates() const
         double cx = x/1000000;
         double cy = y; ;
         T::Coordinate coord(cx,cy);
-        coordinateList->push_back(coord);
+        coordinateList->emplace_back(coord);
         x += iDirectionIncrement;
       }
     }

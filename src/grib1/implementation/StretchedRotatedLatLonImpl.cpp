@@ -133,7 +133,7 @@ T::Coordinate_svec StretchedRotatedLatLonImpl::getGridOriginalCoordinates() cons
         double cx = getLongitude(x/1000);
         double cy = y/1000;
         T::Coordinate coord(cx,cy);
-        coordinateList->push_back(coord);
+        coordinateList->emplace_back(coord);
         x += iDirectionIncrement;
       }
       y += jDirectionIncrement;

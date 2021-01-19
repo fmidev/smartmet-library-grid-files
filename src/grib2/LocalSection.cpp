@@ -93,7 +93,7 @@ LocalSection::~LocalSection()
     to the current section.
 */
 
-void LocalSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void LocalSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   try
   {

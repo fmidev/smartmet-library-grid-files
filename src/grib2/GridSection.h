@@ -62,7 +62,7 @@ class GridSection : public GRID::MessageSection
 
     // ### Common methods for all message sections
 
-    void                  getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    void                  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     T::FilePosition       getFilePosition() const;
     std::uint32_t         getSectionLength() const;
     std::string           getSectionName() const;

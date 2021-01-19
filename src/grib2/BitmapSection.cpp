@@ -98,7 +98,7 @@ BitmapSection::~BitmapSection()
     to the current section.
 */
 
-void BitmapSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void BitmapSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   try
   {
@@ -491,12 +491,12 @@ void BitmapSection::getIndexVector(uint numOfValues,T::IndexVector& indexVector)
     {
       if (bitmapReader.readBit())
       {
-        indexVector.push_back(idx);
+        indexVector.emplace_back(idx);
         idx++;
       }
       else
       {
-        indexVector.push_back(-1);
+        indexVector.emplace_back(-1);
       }
     }
   }

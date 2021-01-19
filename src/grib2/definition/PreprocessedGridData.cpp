@@ -60,7 +60,7 @@ void PreprocessedGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PreprocessedGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void PreprocessedGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

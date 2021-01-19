@@ -66,7 +66,7 @@ void AggregateAerosolProduct::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void AggregateAerosolProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void AggregateAerosolProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sAggregateAerosolProduct.", prefix.c_str());

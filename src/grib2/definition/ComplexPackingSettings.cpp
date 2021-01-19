@@ -60,7 +60,7 @@ void ComplexPackingSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ComplexPackingSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ComplexPackingSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

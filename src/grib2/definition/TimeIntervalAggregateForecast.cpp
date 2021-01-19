@@ -72,7 +72,7 @@ void TimeIntervalAggregateForecast::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void TimeIntervalAggregateForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void TimeIntervalAggregateForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTimeIntervalAggregateForecast.", prefix.c_str());

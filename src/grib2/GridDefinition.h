@@ -32,7 +32,7 @@ class GridDefinition
 
     virtual T::Hash             countHash(); // Do not call this, call getGridHash() instead.
     virtual GridDefinition*     createGridDefinition() const;
-    virtual void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    virtual void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
     virtual std::string         getGridGeometryName();
@@ -76,7 +76,7 @@ class GridDefinition
     virtual ResolutionSettings* getResolution() const;
 
     virtual void                setGridGeometryId(T::GeometryId geometryId);
-    virtual void                setGridGeometryName(std::string geometryName);
+    virtual void                setGridGeometryName(const std::string& geometryName);
 
     virtual bool                getProperty(uint propertyId,long long& value);
     virtual bool                setProperty(uint propertyId,long long value);
@@ -125,6 +125,7 @@ class GridDefinition
 
     OGRSpatialReference        mLatlonSpatialReference;
 };
+
 
 typedef GridDefinition* GridDef_ptr;
 typedef std::vector<GridDefinition*> GridDef_pvec;

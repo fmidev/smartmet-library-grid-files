@@ -466,9 +466,9 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,in
             T::ParamValue val2 = values2[t];
 
             if (val1 < val2)
-              values.push_back(val1);
+              values.emplace_back(val1);
             else
-              values.push_back(val2);
+              values.emplace_back(val2);
           }
           break;
 
@@ -480,9 +480,9 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,in
             T::ParamValue val2 = values2[t];
 
             if (val1 > val2)
-              values.push_back(val1);
+              values.emplace_back(val1);
             else
-              values.push_back(val2);
+              values.emplace_back(val2);
           }
           break;
 
@@ -494,7 +494,7 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,in
             T::ParamValue val2 = values2[t];
 
             T::ParamValue val = logarithmicInterpolation(newLevel, level1, level2, val1, val2);
-            values.push_back(val);
+            values.emplace_back(val);
           }
           break;
 
@@ -512,7 +512,7 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,in
               T::ParamValue valueStep = valueDiff / levelDiff;
               val = val1 + (diff1 * valueStep);
             }
-            values.push_back(val);
+            values.emplace_back(val);
           }
           break;
       }
@@ -832,11 +832,11 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,tim
           {
             T::ParamValue vd = (v2 - v1)/timeDiff;
             T::ParamValue newValue = v1 + diff1 * vd;
-            newValues.push_back(newValue);
+            newValues.emplace_back(newValue);
           }
           else
           {
-            newValues.push_back(ParamValueMissing);
+            newValues.emplace_back(ParamValueMissing);
           }
         }
         return;
@@ -859,13 +859,13 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,tim
           if (v1 != ParamValueMissing  &&  v2 != ParamValueMissing)
           {
             if (v1 <= v2)
-              newValues.push_back(v1);
+              newValues.emplace_back(v1);
             else
-              newValues.push_back(v2);
+              newValues.emplace_back(v2);
           }
           else
           {
-            newValues.push_back(ParamValueMissing);
+            newValues.emplace_back(ParamValueMissing);
           }
         }
         return;
@@ -880,13 +880,13 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,tim
           if (v1 != ParamValueMissing  &&  v2 != ParamValueMissing)
           {
             if (v1 >= v2)
-              newValues.push_back(v1);
+              newValues.emplace_back(v1);
             else
-              newValues.push_back(v2);
+              newValues.emplace_back(v2);
           }
           else
           {
-            newValues.push_back(ParamValueMissing);
+            newValues.emplace_back(ParamValueMissing);
           }
         }
         return;

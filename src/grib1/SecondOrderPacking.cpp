@@ -594,7 +594,7 @@ void SecondOrderPacking::decodeValues_SPD(
 
     for (uint t=0; t<numOfValues; t++)
     {
-      decodedValues.push_back(dataValues[t]);
+      decodedValues.emplace_back(dataValues[t]);
     }
   }
   catch (...)

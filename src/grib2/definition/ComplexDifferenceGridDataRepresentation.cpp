@@ -90,7 +90,7 @@ void ComplexDifferenceGridDataRepresentation::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ComplexDifferenceGridDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ComplexDifferenceGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sComplexDifferenceGridDataRepresentation.", prefix.c_str());

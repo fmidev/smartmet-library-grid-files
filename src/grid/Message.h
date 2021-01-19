@@ -67,7 +67,7 @@ class Message
                                 Message(const Message& message);
     virtual                     ~Message();
 
-    virtual void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    virtual void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual uint                getFileId() const;
     virtual uint                getProducerId() const;
     virtual uint                getGenerationId() const;
@@ -138,7 +138,7 @@ class Message
     virtual bool                getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j) const;
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     virtual T::GridProjection   getGridProjection() const;
-    virtual void                getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;
+    virtual void                getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual std::string         getGridProjectionString() const;
     virtual std::size_t         getGridColumnCount() const;
     virtual std::size_t         getGridRowCount() const;
@@ -197,12 +197,12 @@ class Message
 
     virtual void                setFmiParameterId(T::ParamId fmiParameterId);
     virtual void                setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId);
-    virtual void                setFmiParameterName(std::string fmiParameterName);
-    virtual void                setFmiParameterUnits(std::string fmiParameterUnits);
-    virtual void                setCdmParameterId(std::string cdmParameterId);
-    virtual void                setCdmParameterName(std::string cdmParameterName);
-    virtual void                setNewbaseParameterId(std::string newbaseParameterId);
-    virtual void                setNewbaseParameterName(std::string newbaseParameterName);
+    virtual void                setFmiParameterName(const std::string& fmiParameterName);
+    virtual void                setFmiParameterUnits(const std::string& fmiParameterUnits);
+    virtual void                setCdmParameterId(const std::string& cdmParameterId);
+    virtual void                setCdmParameterName(const std::string& cdmParameterName);
+    virtual void                setNewbaseParameterId(const std::string& newbaseParameterId);
+    virtual void                setNewbaseParameterName(const std::string& newbaseParameterName);
 
     virtual void                setGridGeometryId(T::GeometryId geometryId);
     virtual void                setGridValues(T::ParamValue_vec& values);
@@ -210,8 +210,8 @@ class Message
     // Common Grib settings
 
     virtual void                setGribParameterId(T::ParamId gribParameterId);
-    virtual void                setGribParameterName(std::string gribParameterName);
-    virtual void                setGribParameterUnits(std::string gribParameterUnits);
+    virtual void                setGribParameterName(const std::string& gribParameterName);
+    virtual void                setGribParameterUnits(const std::string& gribParameterUnits);
 
     // Grib 1 specific settings
 

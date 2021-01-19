@@ -88,7 +88,7 @@ void CrossSection::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void CrossSection::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void CrossSection::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sCrossSection.", prefix.c_str());

@@ -142,7 +142,7 @@ ProductSection::~ProductSection()
     to the current section.
 */
 
-void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void ProductSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   try
   {

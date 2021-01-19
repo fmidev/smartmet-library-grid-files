@@ -216,10 +216,10 @@ std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocircl
 
     std::vector<SmartMet::T::Coordinate> coordinates;
     auto cc = startpoint.GetLocation();
-    coordinates.push_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
+    coordinates.emplace_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
 
     std::vector<double> distances;
-    distances.push_back(0);
+    distances.emplace_back(0);
 
     for (std::size_t i = 1; i < steps; i++)
     {
@@ -228,12 +228,12 @@ std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocircl
       double dist = i * distance / steps;
       auto loc = startpoint.GetLocation(bearing, dist, pacific_view);
       auto cc = loc.GetLocation();
-      coordinates.push_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
-      distances.push_back(dist / 1000.0);
+      coordinates.emplace_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
+      distances.emplace_back(dist / 1000.0);
     }
     cc = endpoint.GetLocation();
-    coordinates.push_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
-    distances.push_back(distance / 1000.0);
+    coordinates.emplace_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
+    distances.emplace_back(distance / 1000.0);
 
     return std::make_pair(coordinates, distances);
   }

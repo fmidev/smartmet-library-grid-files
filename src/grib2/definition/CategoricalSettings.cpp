@@ -74,7 +74,7 @@ void CategoricalSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void CategoricalSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void CategoricalSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sCategoricalSettings.NumberOfCategories", prefix.c_str());

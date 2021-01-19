@@ -67,7 +67,7 @@ void PreprocessedGridDataRepresentation::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PreprocessedGridDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void PreprocessedGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPreprocessedGridDataRepresentation.", prefix.c_str());

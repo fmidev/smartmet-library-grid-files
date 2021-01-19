@@ -88,7 +88,7 @@ void MatrixDataRepresentation::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void MatrixDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void MatrixDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sMatrixDataRepresentation.", prefix.c_str());

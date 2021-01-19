@@ -64,7 +64,7 @@ void HovmollerProduct::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void HovmollerProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void HovmollerProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sHovmollerProduct.", prefix.c_str());

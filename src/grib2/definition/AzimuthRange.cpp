@@ -78,7 +78,7 @@ void AzimuthRange::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void AzimuthRange::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void AzimuthRange::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sAzimuthRange.NumberOfDataBinsAlongRadials", prefix.c_str());

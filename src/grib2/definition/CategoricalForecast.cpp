@@ -68,7 +68,7 @@ void CategoricalForecast::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void CategoricalForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void CategoricalForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sCategoricalForecast.", prefix.c_str());

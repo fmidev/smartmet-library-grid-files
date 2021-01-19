@@ -207,7 +207,7 @@ void Message::getSectionPositions(std::set<T::FilePosition>& positions)
     to the current message.
 */
 
-void Message::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void Message::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
   try
@@ -508,6 +508,8 @@ void Message::read(MemoryReader& memoryReader)
         std::cout << getGridGeometryString() << "\n\n";
       }
     }
+
+    setGridGeometryId(mGeometryId);
 
     if (mMessageSize == 0)
       mMessageSize = (memoryReader.getGlobalReadPosition() - mFilePosition);
@@ -1879,7 +1881,7 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
         \param attributeList  The projection attributes are returned in this parameter.
 */
 
-void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const
+void Message::getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
   try
@@ -2722,7 +2724,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
             uint cc = C_UINT(C_DOUBLE(c) / step);
             int idx = C_INT(getGridOriginalValueIndex(cc,r));
             T::ParamValue val = values[idx];
-            valVector.push_back(val);
+            valVector.emplace_back(val);
           }
         }
         values = valVector;
@@ -2827,7 +2829,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
             uint cc = C_UINT(C_DOUBLE(c) / step);
             int idx = C_INT(getGridOriginalValueIndex(cc,r));
             T::ParamValue val = values[idx];
-            valVector.push_back(val);
+            valVector.emplace_back(val);
           }
         }
         if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)

@@ -64,7 +64,7 @@ void VariableResolutionLatLon::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void VariableResolutionLatLon::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void VariableResolutionLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sVariableResolutionLatLon.", prefix.c_str());

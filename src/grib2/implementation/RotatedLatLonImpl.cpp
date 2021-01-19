@@ -220,7 +220,7 @@ T::Coordinate_svec RotatedLatLonImpl::getGridOriginalCoordinates() const
       for (uint i=0; i < mNi; i++)
       {
         T::Coordinate coord(x,y);
-        coordinateList->push_back(T::Coordinate(x,y));
+        coordinateList->emplace_back(T::Coordinate(x,y));
         x += mDx;
       }
       y += mDy;
@@ -287,7 +287,7 @@ T::Coordinate_svec RotatedLatLonImpl::getGridLatLonCoordinates() const
 
         //rotatedLatlon_to_latlon(y,x,mSouthPoleLat,mSouthPoleLon,lat,lon);
 
-        coordinateList->push_back(T::Coordinate(lon,lat));
+        coordinateList->emplace_back(T::Coordinate(lon,lat));
         x += mDx;
       }
       y += mDy;
@@ -343,12 +343,12 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
       if (getGridPointByOriginalCoordinates(x[t],y[t],grid_i,grid_j))
       {
         //printf("%f,%f => %f,%f\n",x[t],y[t],grid_i,grid_j);
-        points.push_back(T::Coordinate(grid_i,grid_j));
+        points.emplace_back(T::Coordinate(grid_i,grid_j));
       }
       else
       {
         //printf("INVALID %f,%f => %f,%f\n",x[t],y[t],grid_i,grid_j);
-        points.push_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
+        points.emplace_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
       }
     }
   }

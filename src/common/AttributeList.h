@@ -19,9 +19,9 @@ class AttributeList
 
     void            addAttribute(Attribute *attribute);
     void            addAttribute(const char *name,std::string value);
-    void            addAttribute(std::string name,std::string value);
-    void            setAttribute(const char *name,std::string value);
-    void            setAttribute(std::string name,std::string value);
+    void            addAttribute(const std::string& name,const std::string& value);
+    void            setAttribute(const char *name,const std::string& value);
+    void            setAttribute(const std::string& name,const std::string& value);
     void            setCaseSensitive(bool caseSensitive);
     void            clear();
     unsigned int    getLength() const;

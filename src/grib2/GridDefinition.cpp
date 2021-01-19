@@ -26,6 +26,11 @@ std::unordered_map<uint,T::Coordinate_svec> coordinateCache;
 std::unordered_map <std::size_t,T::Coordinate> transformCache1;
 std::unordered_map <std::size_t,T::Coordinate> transformCache2;
 
+std::size_t      mPrevHash1[10000] = {0};
+T::Coordinate    mPrevCoordinate1[10000];
+std::size_t      mPrevHash2[10000] = {0};
+T::Coordinate    mPrevCoordinate2[10000];
+
 ModificationLock coordinateCacheModificationLock;
 ModificationLock transformCache1ModificationLock;
 ModificationLock transformCache2ModificationLock;
@@ -109,7 +114,7 @@ GridDefinition* GridDefinition::createGridDefinition() const
 
 
 
-void GridDefinition::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void GridDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
 }
@@ -856,7 +861,7 @@ std::string GridDefinition::getGridGeometryName()
 
 
 
-void GridDefinition::setGridGeometryName(std::string geometryName)
+void GridDefinition::setGridGeometryName(const std::string& geometryName)
 {
   FUNCTION_TRACE
   try
@@ -949,7 +954,7 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
 
     for (int t=0; t<sz; t++)
     {
-      latLonCoordinates->push_back(T::Coordinate(lon[t],lat[t]));
+      latLonCoordinates->emplace_back(T::Coordinate(lon[t],lat[t]));
     }
 
     if (geomId != 0)
@@ -1241,9 +1246,9 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
     {
       double i = 0,j = 0;
       if (getGridPointByOriginalCoordinates(x[t],y[t],i,j))
-        points.push_back(T::Coordinate(i,j));
+        points.emplace_back(T::Coordinate(i,j));
       else
-        points.push_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
+        points.emplace_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
     }
   }
   catch (...)
@@ -1273,20 +1278,32 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
   try
   {
     std::size_t hash = 0;
+    uint idx = 0;
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {
       boost::hash_combine(hash,geomId);
       boost::hash_combine(hash,lat);
       boost::hash_combine(hash,lon);
+      idx = hash % 10000;
 
       {
         AutoReadLock lock(&transformCache2ModificationLock);
+
+        if (mPrevHash2[idx] == hash)
+        {
+          grid_i = mPrevCoordinate2[idx].x();
+          grid_j = mPrevCoordinate2[idx].y();
+          return true;
+        }
+
         auto it = transformCache2.find(hash);
         if (it != transformCache2.end())
         {
           grid_i = it->second.x();
           grid_j = it->second.y();
+          mPrevHash2[idx] = hash;
+          mPrevCoordinate2[idx] = it->second;
           return true;
         }
       }
@@ -1304,7 +1321,10 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
         if (transformCache2.size() >= 1000000)
           transformCache2.clear();
 
-        transformCache2.insert(std::pair<std::size_t,T::Coordinate>(hash,T::Coordinate(grid_i,grid_j)));
+        mPrevHash2[idx] = hash;
+        mPrevCoordinate2[idx] = T::Coordinate(grid_i,grid_j);
+
+        transformCache2.insert(std::pair<std::size_t,T::Coordinate>(hash,mPrevCoordinate2[idx]));
       }
       return true;
     }
@@ -1424,20 +1444,33 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
   try
   {
     std::size_t hash = 0;
+    uint idx = 0;
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {
       boost::hash_combine(hash,geomId);
       boost::hash_combine(hash,lat);
       boost::hash_combine(hash,lon);
+      idx = hash % 10000;
 
       {
         AutoReadLock lock(&transformCache1ModificationLock);
+
+        if (mPrevHash1[idx] == hash)
+        {
+          x = mPrevCoordinate1[idx].x();
+          y = mPrevCoordinate1[idx].y();
+          return true;
+        }
+
         auto it = transformCache1.find(hash);
         if (it != transformCache1.end())
         {
           x = it->second.x();
           y = it->second.y();
+//          fprintf(stderr,"CACHE %f,%f => %f,%f\n",lat,lon,x,y);
+          mPrevHash1[idx] = hash;
+          mPrevCoordinate1[idx] = it->second;
           return true;
         }
       }
@@ -1448,13 +1481,18 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
 
     convert(&mLatlonSpatialReference,&mSpatialReference,1,&x,&y);
 
+    //fprintf(stderr,"TRANSFORM %f,%f => %f,%f\n",lat,lon,x,y);
     if (hash != 0)
     {
       AutoWriteLock lock(&transformCache1ModificationLock);
       if (transformCache1.size() >= 1000000)
         transformCache1.clear();
 
-      transformCache1.insert(std::pair<std::size_t,T::Coordinate>(hash,T::Coordinate(x,y)));
+      mPrevHash1[idx] = hash;
+      mPrevCoordinate1[idx] = T::Coordinate(x,y);
+
+      //fprintf(stderr,"INSERT %f,%f => %f,%f\n",lat,lon,x,y);
+      transformCache1.insert(std::pair<std::size_t,T::Coordinate>(hash,mPrevCoordinate1[idx]));
     }
 
     return true;
@@ -1741,7 +1779,7 @@ double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
   FUNCTION_TRACE
   try
   {
-    double defaultValue =  6371229;
+    double defaultValue = 6367470; //  6371229;
     double value = 0;
 
     auto shape = earthSettings.getShapeOfTheEarth();

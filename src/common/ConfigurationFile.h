@@ -15,13 +15,13 @@ class ConfigurationFile
   public:
                   ConfigurationFile();
                   //ConfigurationFile(const ConfigurationFile& configurationFile);
-                  ConfigurationFile(std::string filename);
+                  ConfigurationFile(const std::string& filename);
     virtual       ~ConfigurationFile();
 
     void          clear();
-    void          readFile(std::string filename);
+    void          readFile(const std::string& filename);
 
-    void          addConfigurationFile(std::string filename);
+    void          addConfigurationFile(const std::string& filename);
 
     bool          getAttributeValue(const char *attributeName,bool& attributeValue);
     bool          getAttributeValue(const char *attributeName,float& attributeValue);
@@ -48,20 +48,20 @@ class ConfigurationFile
 
     bool          findAttribute(const char *attributeName);
     void          removeAttributes(const char *pattern);
-    void          replaceAttributeNamesWithValues(std::string inputFilename,std::string outputFilename);
+    void          replaceAttributeNamesWithValues(const std::string& inputFilename,const std::string& outputFilename);
 
     void          print(std::ostream& stream,uint level,uint optionFlags);
 
   protected:
 
-    std::string   parseValue(std::string value);
-    std::string   parseConstValue(std::string value);
+    std::string   parseValue(const std::string& value);
+    std::string   parseConstValue(const std::string& value);
 
     void          removeComments(char *st,unsigned long long *positions,char *newst,unsigned long long *newpositions,int len);
     void          setPositions(char *st,unsigned long long *positions,int len);
     void          getWords(char *st,unsigned long long *positions,std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions);
-    int           readValue(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path);
-    int           readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,std::string path,int index);
+    int           readValue(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,const std::string& path);
+    int           readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,const std::string& path,int index);
 
   public:
 

@@ -138,11 +138,11 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
         {
           if (bitmapReader.readBit())
           {
-            decodedValues.push_back(reference_value);
+            decodedValues.emplace_back(reference_value);
           }
           else
           {
-            decodedValues.push_back(ParamValueMissing);
+            decodedValues.emplace_back(ParamValueMissing);
           }
         }
         return;
@@ -152,7 +152,7 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
         // All values are set to "reference_value".
         for (std::uint32_t i=0; i<numOfValues; i++)
         {
-          decodedValues.push_back(reference_value);
+          decodedValues.emplace_back(reference_value);
         }
         return;
       }
@@ -222,7 +222,7 @@ void PngGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_
         unsigned int value = 0;
         dataReader.readBits(bits_per_value,value);
         double val = (((value*bscale) + reference_value) * dscale);
-        decodedValues.push_back(val);
+        decodedValues.emplace_back(val);
       }
     }
 

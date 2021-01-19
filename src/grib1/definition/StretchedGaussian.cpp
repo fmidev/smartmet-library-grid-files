@@ -82,7 +82,7 @@ void StretchedGaussian::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void StretchedGaussian::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void StretchedGaussian::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sStretchedGaussian.Ni", prefix.c_str());

@@ -68,7 +68,7 @@ void TimeIntervalEnsembleForecast::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void TimeIntervalEnsembleForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void TimeIntervalEnsembleForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTimeIntervalEnsembleForecast.", prefix.c_str());

@@ -88,7 +88,7 @@ void StatisticalSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void StatisticalSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void StatisticalSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sStatisticalSettings.YearOfEndOfOverallTimeInterval", prefix.c_str());

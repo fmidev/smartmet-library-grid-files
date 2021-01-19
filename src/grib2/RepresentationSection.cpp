@@ -93,7 +93,7 @@ RepresentationSection::~RepresentationSection()
     to the current section.
 */
 
-void RepresentationSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void RepresentationSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   try
   {

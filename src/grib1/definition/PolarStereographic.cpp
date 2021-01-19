@@ -92,7 +92,7 @@ void PolarStereographic::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PolarStereographic::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void PolarStereographic::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPolarStereographic.Nx", prefix.c_str());

@@ -167,7 +167,7 @@ Message::~Message()
     to the current message.
 */
 
-void Message::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void Message::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
   try
@@ -446,7 +446,7 @@ void Message::read(MemoryReader& memoryReader)
         mForecastTimeT = utcTimeToTimeT(mForecastTime);
       }
 
-//      mTimeSteps.push_back(std::string(tm));
+//      mTimeSteps.emplace_back(std::string(tm));
     }
 
     mDataPosition = memoryReader.getGlobalReadPosition();
@@ -584,7 +584,7 @@ time_t Message::getForecastTimeT() const
 
 
 
-void Message::getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const
+void Message::getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
   try
@@ -1672,9 +1672,9 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
       T::ParamValue value = 0;
 
       if (getValueByIndex(t,value))
-        values.push_back(value);
+        values.emplace_back(value);
       else
-        values.push_back(ParamValueMissing);
+        values.emplace_back(ParamValueMissing);
     }
   }
   catch (...)

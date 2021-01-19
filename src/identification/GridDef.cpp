@@ -603,7 +603,7 @@ void GridDef::updateNewbase()
 
 
 
-std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,std::uint32_t number)
+std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,const std::string& table,std::uint32_t number)
 {
   FUNCTION_TRACE
   try
@@ -628,7 +628,7 @@ std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tab
 
 
 
-std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt8_opt number)
+std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,const std::string& table,T::UInt8_opt number)
 {
   FUNCTION_TRACE
   try
@@ -648,7 +648,7 @@ std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tab
 
 
 
-std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,std::string table,T::UInt16_opt number)
+std::string GridDef::getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,const std::string& table,T::UInt16_opt number)
 {
   FUNCTION_TRACE
   try
@@ -737,7 +737,7 @@ bool GridDef::getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef
 
 
 
-bool GridDef::getGrib1ParameterDefByName(std::string gribParamName,Grib1ParameterDef& paramDef)
+bool GridDef::getGrib1ParameterDefByName(const std::string& gribParamName,Grib1ParameterDef& paramDef)
 {
   FUNCTION_TRACE
   try
@@ -834,7 +834,7 @@ Grib1ParamDef_cptr GridDef::getGrib1ParameterDefById(T::ParamId gribParamId)
 
 
 
-Grib1ParamDef_cptr GridDef::getGrib1ParameterDefByName(std::string gribParamName)
+Grib1ParamDef_cptr GridDef::getGrib1ParameterDefByName(const std::string& gribParamName)
 {
   FUNCTION_TRACE
   try
@@ -997,7 +997,7 @@ bool GridDef::getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef
 
 
 
-bool GridDef::getGrib2ParameterDefByName(std::string gribParamName,Grib2ParameterDef& paramDef)
+bool GridDef::getGrib2ParameterDefByName(const std::string& gribParamName,Grib2ParameterDef& paramDef)
 {
   FUNCTION_TRACE
   try
@@ -1044,7 +1044,7 @@ Grib2ParamDef_cptr GridDef::getGrib2ParameterDefById(T::ParamId gribParamId)
 
 
 
-Grib2ParamDef_cptr GridDef::getGrib2ParameterDefByName(std::string gribParamName)
+Grib2ParamDef_cptr GridDef::getGrib2ParameterDefByName(const std::string& gribParamName)
 {
   FUNCTION_TRACE
   try
@@ -1130,7 +1130,7 @@ void GridDef::loadGribTableValues(const char *filename)
           if (field[5][0] != '\0')
             rec.mValue = field[5];
 
-          mGrib_tableDef_records.push_back(rec);
+          mGrib_tableDef_records.emplace_back(rec);
         }
       }
 
@@ -1207,7 +1207,7 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
           rec.mParameterDescription = field[5];
           rec.mParameterUnits = field[6];
 
-          mGrib_parameterDef_records.push_back(rec);
+          mGrib_parameterDef_records.emplace_back(rec);
         }
       }
 
@@ -1249,7 +1249,7 @@ bool GridDef::getGribParamDefById(T::ParamId gribParamId,GribParameterDef&  para
 
 
 
-bool GridDef::getGribParamDefByName(std::string gribParamName,GribParameterDef&  paramDef)
+bool GridDef::getGribParamDefByName(const std::string& gribParamName,GribParameterDef&  paramDef)
 {
   FUNCTION_TRACE
   try
@@ -1321,7 +1321,7 @@ GribParamDef_cptr GridDef::getGribParamDefById(T::ParamId gribParamId)
 
 
 
-GribParamDef_cptr GridDef::getGribParamDefByName(std::string gribParamName)
+GribParamDef_cptr GridDef::getGribParamDefByName(const std::string& gribParamName)
 {
   FUNCTION_TRACE
   try
@@ -1696,7 +1696,7 @@ void GridDef::loadGribUnitDefinitions(const char *filename)
           rec.mPreferredUnits = field[1];
           rec.mPreferredAreaInterpolationMethod = toInt16(field[2]);
 
-          mGrib_unitDef_records.push_back(rec);
+          mGrib_unitDef_records.emplace_back(rec);
         }
       }
 
@@ -1768,7 +1768,7 @@ void GridDef::loadGrib1LevelDefinitions(const char *filename)
           if (field[2][0] != '\0')
             rec.mDescription = field[2];
 
-          mGrib1_levelDef_records.push_back(rec);
+          mGrib1_levelDef_records.emplace_back(rec);
         }
       }
     }
@@ -1839,7 +1839,7 @@ void GridDef::loadGrib2LevelDefinitions(const char *filename)
           if (field[2][0] != '\0')
             rec.mDescription = field[2];
 
-          mGrib2_levelDef_records.push_back(rec);
+          mGrib2_levelDef_records.emplace_back(rec);
         }
       }
     }
@@ -1910,7 +1910,7 @@ void GridDef::loadGrib1TimeRangeDefinitions(const char *filename)
           if (field[2][0] != '\0')
             rec.mDescription = field[2];
 
-          mGrib1_timeRangeDef_records.push_back(rec);
+          mGrib1_timeRangeDef_records.emplace_back(rec);
         }
       }
     }
@@ -1981,7 +1981,7 @@ void GridDef::loadGrib2TimeRangeDefinitions(const char *filename)
           if (field[2][0] != '\0')
             rec.mDescription = field[2];
 
-          mGrib2_timeRangeDef_records.push_back(rec);
+          mGrib2_timeRangeDef_records.emplace_back(rec);
         }
       }
     }
@@ -2070,7 +2070,7 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
           if (field[8][0] != '\0')
             rec.mParameterDescription = field[8];
 
-          mGrib1_parameterDef_records.push_back(rec);
+          mGrib1_parameterDef_records.emplace_back(rec);
         }
       }
     }
@@ -2208,7 +2208,7 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
           if (field[24][0] != '\0')
             rec.mParameterDescription = field[24];
 
-          mGrib2_parameterDef_records.push_back(rec);
+          mGrib2_parameterDef_records.emplace_back(rec);
         }
       }
     }
@@ -2279,7 +2279,7 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
           if (field[2][0] != '\0')
             rec.mDescription = field[2];
 
-          mFmi_levelDef_records.push_back(rec);
+          mFmi_levelDef_records.emplace_back(rec);
         }
       }
     }
@@ -2350,7 +2350,7 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
           if (field[2][0] != '\0')
             rec.mDescription = field[2];
 
-          mFmi_forecastTypeDef_records.push_back(rec);
+          mFmi_forecastTypeDef_records.emplace_back(rec);
         }
       }
     }
@@ -2424,7 +2424,7 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
           if (c > 3 && field[3][0] != '\0')
             rec.mReverseConversionFunction = field[3];
 
-          mFmi_parametersFromGrib_records.push_back(rec);
+          mFmi_parametersFromGrib_records.emplace_back(rec);
         }
       }
     }
@@ -2516,7 +2516,7 @@ void GridDef::loadFmiParameterId_grib1(const char *filename)
           if (field[9][0] != '\0')
             rec.mParameterLevel = toUInt32(field[9]);
 
-          mFmi_parametersFromGrib1_records.push_back(rec);
+          mFmi_parametersFromGrib1_records.emplace_back(rec);
         }
       }
     }
@@ -2608,7 +2608,7 @@ void GridDef::loadFmiParameterId_grib2(const char *filename)
           if (field[9][0] != '\0')
             rec.mParameterLevel = toUInt32(field[9]);
 
-          mFmi_parametersFromGrib2_records.push_back(rec);
+          mFmi_parametersFromGrib2_records.emplace_back(rec);
         }
       }
     }
@@ -2682,7 +2682,7 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
           if (c > 3 && field[3][0] != '\0')
             rec.mReverseConversionFunction = field[3];
 
-          mFmi_parametersFromNewbase_records.push_back(rec);
+          mFmi_parametersFromNewbase_records.emplace_back(rec);
         }
       }
     }
@@ -2771,7 +2771,7 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
           if (c > 8 &&  field[8][0] != '\0')
             rec.mDefaultPrecision = toInt16(field[8]);
 
-          mFmi_parameterDef_records.push_back(rec);
+          mFmi_parameterDef_records.emplace_back(rec);
         }
       }
     }
@@ -2848,7 +2848,7 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
           if (field[4][0] != '\0')
             rec.mGribLevelId = toUInt32(field[4]);
 
-          mFmi_levelsFromGrib1_records.push_back(rec);
+          mFmi_levelsFromGrib1_records.emplace_back(rec);
         }
       }
     }
@@ -2925,7 +2925,7 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
           if (field[4][0] != '\0')
             rec.mGribLevelId = toUInt32(field[4]);
 
-          mFmi_levelsFromGrib2_records.push_back(rec);
+          mFmi_levelsFromGrib2_records.emplace_back(rec);
         }
       }
     }
@@ -2993,7 +2993,7 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
           if (field[1][0] != '\0')
             rec.mParameterName = field[1];
 
-          mNewbase_parameterDef_records.push_back(rec);
+          mNewbase_parameterDef_records.emplace_back(rec);
         }
       }
     }
@@ -3074,7 +3074,7 @@ void GridDef::loadFmiProducerId_grib(const char *filename)
             rec.mProducerDescription = field[5];
 
 
-          mFmi_producersFromGrib_records.push_back(rec);
+          mFmi_producersFromGrib_records.emplace_back(rec);
         }
       }
     }
@@ -3363,10 +3363,10 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           reverseTransformation->Transform(1,&lon1,&lat1);
           reverseTransformation->Transform(1,&lon2,&lat2);
 
-          cc.push_back(lon1);
-          cc.push_back(lat1);
-          cc.push_back(lon2);
-          cc.push_back(lat2);
+          cc.emplace_back(lon1);
+          cc.emplace_back(lat1);
+          cc.emplace_back(lon2);
+          cc.emplace_back(lat2);
         }
 
         width = toUInt32(gridWidthStr);
@@ -3422,7 +3422,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
               lat[c] = yy;
 
 
-              coordinates->push_back(T::Coordinate(xx,yy));
+              coordinates->emplace_back(T::Coordinate(xx,yy));
 
               xx = xx + dx;
               c++;
@@ -3434,7 +3434,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
           for (int t=0; t<c; t++)
           {
-            latLonCoordinates->push_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
+            latLonCoordinates->emplace_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
           }
 
           if (transformation != nullptr)
@@ -3625,10 +3625,10 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           reverseTransformation->Transform(1,&lon1,&lat1);
           reverseTransformation->Transform(1,&lon2,&lat2);
 
-          cc.push_back(lon1);
-          cc.push_back(lat1);
-          cc.push_back(lon2);
-          cc.push_back(lat2);
+          cc.emplace_back(lon1);
+          cc.emplace_back(lat1);
+          cc.emplace_back(lon2);
+          cc.emplace_back(lat2);
         }
 
         double diffx = cc[2] - cc[0];
@@ -3707,7 +3707,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           transformation->Transform(c,lon,lat);
           for (int t=0; t<c; t++)
           {
-            latLonCoordinates->push_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
+            latLonCoordinates->emplace_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
           }
 
           if (transformation != nullptr)
@@ -3964,7 +3964,7 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geo
     {
       for (int lon=-1800; lon < 1800; lon++)
       {
-        latlon.push_back(T::Coordinate(C_DOUBLE(lon)/10,C_DOUBLE(lat)));
+        latlon.emplace_back(T::Coordinate(C_DOUBLE(lon)/10,C_DOUBLE(lat)));
       }
     }
 
@@ -3972,7 +3972,7 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geo
     {
       for (int lat=-900; lat < 900; lat++)
       {
-        latlon.push_back(T::Coordinate(C_DOUBLE(lon),C_DOUBLE(lat)/10));
+        latlon.emplace_back(T::Coordinate(C_DOUBLE(lon),C_DOUBLE(lat)/10));
       }
     }
 
@@ -5173,7 +5173,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
 
 
-short GridDef::getPreferredInterpolationMethodByUnits(std::string originalUnits)
+short GridDef::getPreferredInterpolationMethodByUnits(const std::string& originalUnits)
 {
   FUNCTION_TRACE
   try
@@ -5199,7 +5199,7 @@ short GridDef::getPreferredInterpolationMethodByUnits(std::string originalUnits)
 
 
 
-std::string GridDef::getPreferredUnits(std::string originalUnits)
+std::string GridDef::getPreferredUnits(const std::string& originalUnits)
 {
   FUNCTION_TRACE
   try
@@ -6217,7 +6217,7 @@ T::ParamLevelId GridDef::getFmiLevelId(GRIB2::Message& message)
 
 
 
-T::ParamId GridDef::getFmiParameterIdByFmiName(std::string fmiParamName)
+T::ParamId GridDef::getFmiParameterIdByFmiName(const std::string& fmiParamName)
 {
   FUNCTION_TRACE
   try
@@ -6356,7 +6356,7 @@ bool GridDef::getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParamet
 
 
 
-bool GridDef::getNewbaseParameterDefByName(std::string newbaseParamName,NewbaseParameterDef& paramDef)
+bool GridDef::getNewbaseParameterDefByName(const std::string& newbaseParamName,NewbaseParameterDef& paramDef)
 {
   FUNCTION_TRACE
   try
@@ -6465,7 +6465,7 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByGribId(T::ParamId gribParamId)
 
 
 
-FmiParamDef_cptr GridDef::getFmiParameterDefByName(std::string fmiParamName)
+FmiParamDef_cptr GridDef::getFmiParameterDefByName(const std::string& fmiParamName)
 {
   FUNCTION_TRACE
   try
@@ -6562,7 +6562,7 @@ bool GridDef::getFmiParameterDefByGribId(T::ParamId gribParamId,FmiParameterDef&
 
 
 
-bool GridDef::getFmiParameterDefByName(std::string fmiParamName,FmiParameterDef& paramDef)
+bool GridDef::getFmiParameterDefByName(const std::string& fmiParamName,FmiParameterDef& paramDef)
 {
   FUNCTION_TRACE
   try
@@ -6779,7 +6779,7 @@ short GridDef::getFmiParameterInterpolationMethod(GRIB2::Message& message)
 
 
 
-FmiProducerId_grib_cptr GridDef::getFmiProducerByName(std::string fmiProducerName)
+FmiProducerId_grib_cptr GridDef::getFmiProducerByName(const std::string& fmiProducerName)
 {
   FUNCTION_TRACE
   try
@@ -6823,7 +6823,7 @@ FmiProducerId_grib_cptr GridDef::getFmiProducerByFmiId(uint fmiProducerId)
 
 
 
-bool GridDef::getFmiProducerByName(std::string fmiProducerName,FmiProducerId_grib& producer)
+bool GridDef::getFmiProducerByName(const std::string& fmiProducerName,FmiProducerId_grib& producer)
 {
   FUNCTION_TRACE
   try
@@ -6895,7 +6895,7 @@ NewbaseParamDef_cptr GridDef::getNewbaseParameterDefById(T::ParamId newbaseParam
 
 
 
-NewbaseParamDef_cptr GridDef::getNewbaseParameterDefByName(std::string newbaseParamName)
+NewbaseParamDef_cptr GridDef::getNewbaseParameterDefByName(const std::string& newbaseParamName)
 {
   FUNCTION_TRACE
   try

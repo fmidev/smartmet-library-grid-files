@@ -16,7 +16,7 @@ class Attribute
   public:
                     Attribute();
                     Attribute(const Attribute& attribute);
-                    Attribute(std::string name,std::string value);
+                    Attribute(const std::string& name,const std::string& value);
      virtual        ~Attribute();
 
      std::size_t    getHash();

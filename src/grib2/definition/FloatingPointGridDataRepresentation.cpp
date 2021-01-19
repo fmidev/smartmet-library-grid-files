@@ -62,7 +62,7 @@ void FloatingPointGridDataRepresentation::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void FloatingPointGridDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void FloatingPointGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sFloatingPointGridDataRepresentation.Precision", prefix.c_str());

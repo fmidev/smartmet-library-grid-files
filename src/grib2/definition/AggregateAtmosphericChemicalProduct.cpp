@@ -66,7 +66,7 @@ void AggregateAtmosphericChemicalProduct::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void AggregateAtmosphericChemicalProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void AggregateAtmosphericChemicalProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sAggregateAtmosphericChemicalProduct.", prefix.c_str());

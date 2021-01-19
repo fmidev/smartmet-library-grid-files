@@ -311,7 +311,7 @@ char* PhysicalGridFile::getMemoryPtr()
        \param filename  The grib filename with a possible directory path.
 */
 
-void PhysicalGridFile::read(std::string filename)
+void PhysicalGridFile::read(const std::string& filename)
 {
   FUNCTION_TRACE
   try
@@ -617,7 +617,7 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
 
       uint len = msg.getTimeStepCount();
       for (uint t=0; t<len; t++)
-        gribs.push_back(std::pair<uchar,ulonglong>(T::FileTypeValue::Fmig1,0));
+        gribs.emplace_back(std::pair<uchar,ulonglong>(T::FileTypeValue::Fmig1,0));
 
       return gribs;
     }
@@ -685,7 +685,7 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
       if (valid)
       {
         memoryReader.read_null(totalLength-16);
-        gribs.push_back(std::pair<uchar,ulonglong>(edition,(ulonglong)(startPtr-fileStartPtr)));
+        gribs.emplace_back(std::pair<uchar,ulonglong>(edition,(ulonglong)(startPtr-fileStartPtr)));
       }
       else
       {
@@ -802,7 +802,7 @@ std::size_t PhysicalGridFile::getNumberOfMessages()
 
 
 
-void PhysicalGridFile::write(std::string filename)
+void PhysicalGridFile::write(const std::string& filename)
 {
   FUNCTION_TRACE
   try

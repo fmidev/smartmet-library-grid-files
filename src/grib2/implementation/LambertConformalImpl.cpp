@@ -295,7 +295,7 @@ T::Coordinate_svec LambertConformalImpl::getGridOriginalCoordinates() const
       for (uint i=0; i < nx; i++)
       {
         T::Coordinate coord(x,y);
-        coordinateList->push_back(coord);
+        coordinateList->emplace_back(coord);
         x += mDxx;
       }
       y += mDyy;

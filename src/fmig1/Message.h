@@ -37,7 +37,7 @@ class Message : public GRID::Message
 
     // ### Common methods for all message types
 
-    void                getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     uint                getFileId() const;
     uint                getProducerId() const;
     uint                getGenerationId() const;
@@ -84,7 +84,7 @@ class Message : public GRID::Message
     T::ParamLevel       getGridParameterLevel() const;
     T::ParamLevelId     getGridParameterLevelId() const;
     std::string         getGridParameterLevelIdString() const;
-    void                getGridProjectionAttributes(std::string prefix,T::AttributeList& attributeList) const;
+    void                getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const;
     void                getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
     T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const;
     T::ParamValue       getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;

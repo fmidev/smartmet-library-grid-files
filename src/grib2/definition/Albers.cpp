@@ -93,7 +93,7 @@ void Albers::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void Albers::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void Albers::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sAlbers.", prefix.c_str());

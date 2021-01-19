@@ -62,7 +62,7 @@ void PercentileSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PercentileSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void PercentileSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPercentileSettings.PercentileValue", prefix.c_str());

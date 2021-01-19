@@ -68,7 +68,7 @@ void GaussianSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void GaussianSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void GaussianSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sGaussianSettings.", prefix.c_str());

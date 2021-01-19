@@ -64,7 +64,7 @@ void Product_57::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void Product_57::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void Product_57::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sProduct_57.", prefix.c_str());

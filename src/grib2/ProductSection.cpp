@@ -131,7 +131,7 @@ ProductSection::~ProductSection()
     to the current section.
 */
 
-void ProductSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void ProductSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   try
   {
@@ -301,7 +301,7 @@ void ProductSection::read(MemoryReader& memoryReader)
       for (std::uint16_t t=0; t<*mNV; t++)
       {
         auto coordinate = memoryReader.read_float();
-        mCoordinates.push_back(coordinate);
+        mCoordinates.emplace_back(coordinate);
       }
     }
   }

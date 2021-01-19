@@ -42,7 +42,7 @@ Attribute::Attribute(const Attribute& attribute)
 
 
 
-Attribute::Attribute(std::string name,std::string value)
+Attribute::Attribute(const std::string& name,const std::string& value)
 {
   try
   {

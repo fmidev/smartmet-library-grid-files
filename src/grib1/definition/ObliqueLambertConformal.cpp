@@ -104,7 +104,7 @@ void ObliqueLambertConformal::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ObliqueLambertConformal::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ObliqueLambertConformal::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sObliqueLambertConformal.Nx", prefix.c_str());

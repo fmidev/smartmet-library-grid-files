@@ -68,7 +68,7 @@ void GridStretchingSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void GridStretchingSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void GridStretchingSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sGridStretchingSettings.LatitudeOfStretchingPole", prefix.c_str());

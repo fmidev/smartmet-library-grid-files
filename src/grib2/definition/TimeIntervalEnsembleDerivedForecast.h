@@ -30,7 +30,7 @@ public:
   virtual ProductDefinition *createProductDefinition() const;
   virtual void read(MemoryReader &memoryReader);
   virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(std::string prefix, T::AttributeList &attributeList) const;
+  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 

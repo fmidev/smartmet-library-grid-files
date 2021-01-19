@@ -68,7 +68,7 @@ void TimeIntervalAerosolEnsembleProduct::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void TimeIntervalAerosolEnsembleProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void TimeIntervalAerosolEnsembleProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTimeIntervalAerosolEnsembleProduct.", prefix.c_str());

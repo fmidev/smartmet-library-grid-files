@@ -80,7 +80,7 @@ void ParameterChemicalSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ParameterChemicalSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ParameterChemicalSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sParameterChemicalSettings.ParameterCategory", prefix.c_str());

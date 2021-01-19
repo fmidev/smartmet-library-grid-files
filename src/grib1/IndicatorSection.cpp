@@ -73,7 +73,7 @@ IndicatorSection::~IndicatorSection()
     to the current section.
 */
 
-void IndicatorSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void IndicatorSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   try
   {

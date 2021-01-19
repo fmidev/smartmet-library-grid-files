@@ -60,7 +60,7 @@ void ComplexSphericalHarmonicsData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ComplexSphericalHarmonicsData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ComplexSphericalHarmonicsData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

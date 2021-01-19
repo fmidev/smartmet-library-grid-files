@@ -68,7 +68,7 @@ void EnsembleDerivedForecast::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void EnsembleDerivedForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void EnsembleDerivedForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sEnsembleDerivedForecast.", prefix.c_str());

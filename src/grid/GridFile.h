@@ -79,20 +79,20 @@ class GridFile
 
     virtual void          print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    virtual void          read(std::string filename);
+    virtual void          read(const std::string& filename);
 
     virtual void          setCheckTime(time_t checkTime);
     virtual void          setDeletionTime(time_t deletionTime);
-    virtual void          setDeletionTime(std::string deletionTime);
+    virtual void          setDeletionTime(const std::string& deletionTime);
     virtual void          setFileId(uint fileId);
-    virtual void          setFileName(std::string  fileName);
+    virtual void          setFileName(const std::string& fileName);
     virtual void          setGenerationId(uint generationId);
     virtual void          setGroupFlags(uint groupFlags);
     virtual void          setPointCacheEnabled(bool enabled);
     virtual void          setProducerId(uint producerId);
     virtual void          setSourceId(uint sourceId);
 
-    virtual void          write(std::string filename);
+    virtual void          write(const std::string& filename);
     virtual void          write(DataWriter& dataWriter);
 
   protected:

@@ -64,7 +64,7 @@ void PngGridDataRepresentation::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PngGridDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void PngGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPngGridDataRepresentation.", prefix.c_str());

@@ -68,7 +68,7 @@ void RotationSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void RotationSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void RotationSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sRotationSettings.LatitudeOfSouthernPole", prefix.c_str());

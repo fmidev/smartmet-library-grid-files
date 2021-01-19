@@ -41,7 +41,7 @@ DataDefinition::~DataDefinition()
 
 
 
-void DataDefinition::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void DataDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
 }
 

@@ -69,7 +69,7 @@ void PackingSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PackingSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void PackingSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sPackingSettings.ReferenceValue", prefix.c_str());

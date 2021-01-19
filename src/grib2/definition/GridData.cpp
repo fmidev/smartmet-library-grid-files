@@ -60,7 +60,7 @@ void GridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void GridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void GridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

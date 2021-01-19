@@ -267,7 +267,7 @@ bool DataSection::setProperty(uint propertyId,double value)
     to the current section.
 */
 
-void DataSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void DataSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   try
   {

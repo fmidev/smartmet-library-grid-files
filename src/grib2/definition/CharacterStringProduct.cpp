@@ -66,7 +66,7 @@ void CharacterStringProduct::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void CharacterStringProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void CharacterStringProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sCharacterStringProduct.ParameterCategory", prefix.c_str());

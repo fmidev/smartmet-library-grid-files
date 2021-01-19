@@ -62,7 +62,7 @@ void ForecastError::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ForecastError::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ForecastError::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sForecastError.", prefix.c_str());

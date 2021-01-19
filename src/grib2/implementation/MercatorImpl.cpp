@@ -214,7 +214,7 @@ T::Coordinate_svec MercatorImpl::getGridOriginalCoordinates() const
       for (uint i=0; i < ni; i++)
       {
         T::Coordinate coord(x,y);
-        coordinateList->push_back(coord);
+        coordinateList->emplace_back(coord);
         x += di;
       }
       y += dj;

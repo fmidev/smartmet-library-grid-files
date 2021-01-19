@@ -66,7 +66,7 @@ void IrregularLatLon::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void IrregularLatLon::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void IrregularLatLon::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sIrregularLatLon.", prefix.c_str());

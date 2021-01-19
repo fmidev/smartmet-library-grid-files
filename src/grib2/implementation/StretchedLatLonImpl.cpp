@@ -132,7 +132,7 @@ T::Coordinate_svec StretchedLatLonImpl::getGridOriginalCoordinates() const
         double cx = getLongitude(x/1000000);
         double cy = y/1000000;
         T::Coordinate coord(cx,cy);
-        coordinateList->push_back(coord);
+        coordinateList->emplace_back(coord);
         x += iDirectionIncrement;
       }
       y += jDirectionIncrement;

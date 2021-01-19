@@ -227,7 +227,7 @@ T::Coordinate_svec RotatedLatLonImpl::getGridOriginalCoordinates() const
         double cx = x/1000;
         double cy = y/1000;
         T::Coordinate coord(cx,cy);
-        coordinateList->push_back(coord);
+        coordinateList->emplace_back(coord);
         x += iDirectionIncrement;
       }
       y += jDirectionIncrement;
@@ -311,7 +311,7 @@ T::Coordinate_svec RotatedLatLonImpl::getGridLatLonCoordinates() const
 
 
         T::Coordinate coord(lon,lat);
-        coordinateList->push_back(coord);
+        coordinateList->emplace_back(coord);
         x += iDirectionIncrement;
       }
       y += jDirectionIncrement;
@@ -370,12 +370,12 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
       if (getGridPointByOriginalCoordinates(x[t],y[t],grid_i,grid_j))
       {
         //printf("%f,%f => %f,%f\n",x[t],y[t],grid_i,grid_j);
-        points.push_back(T::Coordinate(grid_i,grid_j));
+        points.emplace_back(T::Coordinate(grid_i,grid_j));
       }
       else
       {
         //printf("INVALID %f,%f => %f,%f\n",x[t],y[t],grid_i,grid_j);
-        points.push_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
+        points.emplace_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
       }
     }
   }

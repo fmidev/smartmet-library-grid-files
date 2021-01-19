@@ -66,7 +66,7 @@ void EpsSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void EpsSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void EpsSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sEpsSettings.TypeOfEnsembleForecast", prefix.c_str());

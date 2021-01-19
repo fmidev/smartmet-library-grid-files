@@ -104,7 +104,7 @@ void SpaceView::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void SpaceView::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void SpaceView::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sSpaceView.Nx", prefix.c_str());

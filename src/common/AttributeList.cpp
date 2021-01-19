@@ -33,7 +33,7 @@ AttributeList::AttributeList(const AttributeList& attributeList)
     for (uint t=0; t<size; t++)
     {
       Attribute *attr = attributeList.getAttributeByIndex(t);
-      mAttributeVector.push_back(attr->duplicate());
+      mAttributeVector.emplace_back(attr->duplicate());
     }
   }
   catch (...)
@@ -82,7 +82,7 @@ AttributeList& AttributeList::operator=(const AttributeList& attributeList)
     for (uint t=0; t<size; t++)
     {
       Attribute *attr = attributeList.getAttributeByIndex(t);
-      mAttributeVector.push_back(attr->duplicate());
+      mAttributeVector.emplace_back(attr->duplicate());
     }
     return *this;
   }
@@ -99,7 +99,7 @@ void  AttributeList::addAttribute(Attribute *attribute)
 {
   try
   {
-    mAttributeVector.push_back(attribute);
+    mAttributeVector.emplace_back(attribute);
   }
   catch (...)
   {
@@ -126,7 +126,7 @@ void AttributeList::addAttribute(const char *name,std::string value)
 
 
 
-void AttributeList::addAttribute(std::string name,std::string value)
+void AttributeList::addAttribute(const std::string& name,const std::string& value)
 {
   try
   {
@@ -142,7 +142,7 @@ void AttributeList::addAttribute(std::string name,std::string value)
 
 
 
-void AttributeList::setAttribute(const char *name,std::string value)
+void AttributeList::setAttribute(const char *name,const std::string& value)
 {
   try
   {
@@ -169,7 +169,7 @@ void AttributeList::setAttribute(const char *name,std::string value)
 
 
 
-void AttributeList::setAttribute(std::string name,std::string value)
+void AttributeList::setAttribute(const std::string& name,const std::string& value)
 {
   try
   {
@@ -316,7 +316,7 @@ size_t AttributeList::getAttributeValues(const char *name,std::vector<std::strin
     {
       Attribute *attr = mAttributeVector.at(t);
       if ((mCaseSensitive  &&  attr->mName == name) || (!mCaseSensitive  &&  strcasecmp(attr->mName.c_str(),name) == 0))
-        values.push_back(attr->mValue);
+        values.emplace_back(attr->mValue);
     }
     return values.size();
   }

@@ -586,7 +586,7 @@ void GridFile::setFileId(uint fileId)
       \param deletionTime   The deletion time of the grid file.
 */
 
-void GridFile::setDeletionTime(std::string deletionTime)
+void GridFile::setDeletionTime(const std::string& deletionTime)
 {
   FUNCTION_TRACE
   try
@@ -703,7 +703,7 @@ void GridFile::setGenerationId(uint generationId)
       \param fileName  The grid file name.
 */
 
-void GridFile::setFileName(std::string fileName)
+void GridFile::setFileName(const std::string& fileName)
 {
   FUNCTION_TRACE
   try
@@ -827,7 +827,7 @@ void GridFile::addMessage(Message *message)
 
 
 
-void GridFile::read(std::string filename)
+void GridFile::read(const std::string& filename)
 {
   FUNCTION_TRACE
   try
@@ -845,7 +845,7 @@ void GridFile::read(std::string filename)
 
 
 
-void GridFile::write(std::string filename)
+void GridFile::write(const std::string& filename)
 {
   FUNCTION_TRACE
   try

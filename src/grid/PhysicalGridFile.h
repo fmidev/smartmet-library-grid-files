@@ -49,10 +49,10 @@ class PhysicalGridFile : public GridFile
 
     virtual void          print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    virtual void          read(std::string filename);
+    virtual void          read(const std::string& filename);
     virtual void          read(MemoryReader& memoryReader);
 
-    virtual void          write(std::string filename);
+    virtual void          write(const std::string& filename);
     virtual void          write(DataWriter& dataWriter);
 
   private:

@@ -119,7 +119,7 @@ GridSection::~GridSection()
     to the current section.
 */
 
-void GridSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void GridSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
   try

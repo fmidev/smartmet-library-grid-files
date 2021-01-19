@@ -190,7 +190,7 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _co
 
     if (polygonPoints[0].x() != polygonPoints[numOfPoints-1].x()  ||  polygonPoints[0].y() != polygonPoints[numOfPoints-1].y())
     {
-      polygonPoints.push_back(polygonPoints[0]);
+      polygonPoints.emplace_back(polygonPoints[0]);
       numOfPoints++;
     }
 
@@ -321,7 +321,7 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
 
         if ((*polygonPoints)[0].x() != (*polygonPoints)[numOfPoints-1].x()  ||  (*polygonPoints)[0].y() != (*polygonPoints)[numOfPoints-1].y())
         {
-          (*polygonPoints).push_back((*polygonPoints)[0]);
+          (*polygonPoints).emplace_back((*polygonPoints)[0]);
           numOfPoints++;
         }
 
@@ -516,7 +516,7 @@ void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,Memo
       double y = (_memoryReader.read_double() + _dy);
       y = y*_mpy;
 
-      polygonPoints.push_back(T::Coordinate(x,y));
+      polygonPoints.emplace_back(T::Coordinate(x,y));
     }
 
     paintPolygon(polygonPoints,_color);
@@ -627,10 +627,10 @@ void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double 
           double y = (_memoryReader.read_double() + _dy);
           y = y*_mpy;
 
-          polygonPoints.push_back(T::Coordinate(x,y));
+          polygonPoints.emplace_back(T::Coordinate(x,y));
         }
 
-        polygonPath.push_back(polygonPoints);
+        polygonPath.emplace_back(polygonPoints);
       }
       paintPolygonPath(polygonPath,_color);
     }

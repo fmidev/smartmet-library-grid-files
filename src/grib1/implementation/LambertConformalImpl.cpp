@@ -179,7 +179,7 @@ T::Coordinate_svec LambertConformalImpl::getGridOriginalCoordinates() const
       for (uint i=0; i < mNx; i++)
       {
         T::Coordinate coord(x,y);
-        coordinateList->push_back(coord);
+        coordinateList->emplace_back(coord);
         x += mDx;
       }
       y += mDy;

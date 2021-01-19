@@ -1066,7 +1066,7 @@ bool ProductDefinition::setProperty_CategoricalSettings(uint propertyId,long lon
 
 
 
-void ProductDefinition::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void ProductDefinition::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
 }
 

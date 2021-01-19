@@ -72,7 +72,7 @@ void EnsembleClusterDerivedForecast::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void EnsembleClusterDerivedForecast::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void EnsembleClusterDerivedForecast::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sEnsembleClusterDerivedForecast.", prefix.c_str());

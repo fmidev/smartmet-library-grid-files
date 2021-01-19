@@ -24,7 +24,7 @@ class RepresentationDefinition
 
     virtual void  decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
     virtual void  encodeValues(Message *message,T::ParamValue_vec& values);
-    virtual void  getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    virtual void  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual uint  getTemplateNumber() const;
     virtual bool  getValueByIndex(Message *message,uint index,T::ParamValue& value) const;
 

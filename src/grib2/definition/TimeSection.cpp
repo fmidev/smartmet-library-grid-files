@@ -92,7 +92,7 @@ void TimeSection::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void TimeSection::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void TimeSection::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTimeSection.NumberOfTimeSteps", prefix.c_str());

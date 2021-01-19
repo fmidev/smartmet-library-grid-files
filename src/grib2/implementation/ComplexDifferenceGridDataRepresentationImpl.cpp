@@ -119,7 +119,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
       // The number of groups is zero, so all values are set to 'ref'.
 
       for (std::size_t i=0; i<numberOfValues; i++)
-         decodedValues.push_back(ref);
+         decodedValues.emplace_back(ref);
 
        return;
     }
@@ -446,7 +446,7 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
       // No bitmap defined.
 
       for (std::size_t n=0; n<numberOfValues; n++)
-        decodedValues.push_back(value[n]);
+        decodedValues.emplace_back(value[n]);
 
       return;
     }
@@ -461,11 +461,11 @@ void ComplexDifferenceGridDataRepresentationImpl::decodeValues(Message *message,
       {
         if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
         {
-          decodedValues.push_back(ParamValueMissing);
+          decodedValues.emplace_back(ParamValueMissing);
         }
         else
         {
-          decodedValues.push_back(value[n]);
+          decodedValues.emplace_back(value[n]);
           n++;
         }
       }

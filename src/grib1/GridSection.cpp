@@ -104,7 +104,7 @@ GridSection::~GridSection()
     to the current section.
 */
 
-void GridSection::getAttributeList(std::string prefix,T::AttributeList& attributeList) const
+void GridSection::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
   FUNCTION_TRACE
   try
@@ -361,7 +361,7 @@ void GridSection::read(MemoryReader& memoryReader)
       {
         std::uint32_t v = 0;
         memoryReader >> v;
-        mVerticalCoordinates.push_back(v);
+        mVerticalCoordinates.emplace_back(v);
       }
     }
 
@@ -369,7 +369,7 @@ void GridSection::read(MemoryReader& memoryReader)
     {
       memoryReader.setReadPosition(rPos + mPvlLocation - 1);
       std::vector<std::uint32_t> rowPositions;
-      rowPositions.push_back(0);
+      rowPositions.emplace_back(0);
 
       auto d = getGridDimensions();
       uint rows = 0;
@@ -381,7 +381,7 @@ void GridSection::read(MemoryReader& memoryReader)
         std::uint16_t len = 0;
         memoryReader >> len;
         mNumberOfPoints += len;
-        rowPositions.push_back(mNumberOfPoints);
+        rowPositions.emplace_back(mNumberOfPoints);
       }
     }
 

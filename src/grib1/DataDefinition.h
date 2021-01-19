@@ -32,7 +32,7 @@ class DataDefinition
     virtual                 ~DataDefinition();
 
     virtual DataDefinition* createDataDefinition() const;
-    virtual void            getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    virtual void            getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual PackingMethod   getPackingMethod() const;
     virtual bool            getValueByIndex(Message *message,uint index,T::ParamValue& value) const;
     virtual void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;

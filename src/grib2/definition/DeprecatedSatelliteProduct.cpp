@@ -80,7 +80,7 @@ void DeprecatedSatelliteProduct::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void DeprecatedSatelliteProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void DeprecatedSatelliteProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sDeprecatedSatelliteProduct.ParameterCategory", prefix.c_str());

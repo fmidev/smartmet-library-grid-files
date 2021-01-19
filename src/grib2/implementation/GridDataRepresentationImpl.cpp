@@ -253,11 +253,11 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
       {
         if (bitmap != nullptr && (bitmap[i / 8] & bitmask[i % 8]) == 0)
         {
-          decodedValues.push_back(ParamValueMissing);
+          decodedValues.emplace_back(ParamValueMissing);
         }
         else
         {
-          decodedValues.push_back(R);
+          decodedValues.emplace_back(R);
         }
       }
       return;
@@ -296,7 +296,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
 
           // Output the caclulated value
           double Y = RDfac + X * EDfac;
-          decodedValues.push_back(Y);
+          decodedValues.emplace_back(Y);
         }
       }
       else
@@ -305,7 +305,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
         {
           if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
           {
-            decodedValues.push_back(ParamValueMissing);
+            decodedValues.emplace_back(ParamValueMissing);
           }
           else
           {
@@ -314,7 +314,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
 
             // Output the caclulated value
             double Y = RDfac + X * EDfac;
-            decodedValues.push_back(Y);
+            decodedValues.emplace_back(Y);
           }
         }
       }
@@ -333,7 +333,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
             {
               ulonglong X = memoryReader.read_uint8();
               double Y = RDfac + X * EDfac;
-              decodedValues.push_back(Y);
+              decodedValues.emplace_back(Y);
             }
           }
           else
@@ -342,13 +342,13 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
             {
               if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
               {
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               }
               else
               {
                 ulonglong X = memoryReader.read_uint8();
                 double Y = RDfac + X * EDfac;
-                decodedValues.push_back(Y);
+                decodedValues.emplace_back(Y);
               }
             }
           }
@@ -361,7 +361,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
             {
               ulonglong X = memoryReader.read_uint16();
               double Y = RDfac + X * EDfac;
-              decodedValues.push_back(Y);
+              decodedValues.emplace_back(Y);
             }
           }
           else
@@ -370,13 +370,13 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
             {
               if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
               {
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               }
               else
               {
                 ulonglong X = memoryReader.read_uint16();
                 double Y = RDfac + X * EDfac;
-                decodedValues.push_back(Y);
+                decodedValues.emplace_back(Y);
               }
             }
           }
@@ -389,7 +389,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
             {
               ulonglong X = memoryReader.read_uint24();
               double Y = RDfac + X * EDfac;
-              decodedValues.push_back(Y);
+              decodedValues.emplace_back(Y);
             }
           }
           else
@@ -398,13 +398,13 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
             {
               if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
               {
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               }
               else
               {
                 ulonglong X = memoryReader.read_uint24();
                 double Y = RDfac + X * EDfac;
-                decodedValues.push_back(Y);
+                decodedValues.emplace_back(Y);
               }
             }
           }
@@ -417,7 +417,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
             {
               ulonglong X = memoryReader.read_uint32();
               double Y = RDfac + X * EDfac;
-              decodedValues.push_back(Y);
+              decodedValues.emplace_back(Y);
             }
           }
           else
@@ -426,13 +426,13 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
             {
               if ((bitmap[i / 8] & bitmask[i % 8]) == 0)
               {
-                decodedValues.push_back(ParamValueMissing);
+                decodedValues.emplace_back(ParamValueMissing);
               }
               else
               {
                 ulonglong X = memoryReader.read_uint32();
                 double Y = RDfac + X * EDfac;
-                decodedValues.push_back(Y);
+                decodedValues.emplace_back(Y);
               }
             }
           }

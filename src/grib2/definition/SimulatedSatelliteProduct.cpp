@@ -76,7 +76,7 @@ void SimulatedSatelliteProduct::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void SimulatedSatelliteProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void SimulatedSatelliteProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sSimulatedSatelliteProduct.", prefix.c_str());

@@ -203,7 +203,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
 
     if (polygonPoints[0].x() != polygonPoints[numOfPoints-1].x()  ||  polygonPoints[0].y() != polygonPoints[numOfPoints-1].y())
     {
-      polygonPoints.push_back(polygonPoints[0]);
+      polygonPoints.emplace_back(polygonPoints[0]);
       numOfPoints++;
     }
 
@@ -305,7 +305,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
       int y = C_INT((*it) >> 32);
       int x = C_INT((*it) & 0xFFFFFFFF);
 
-      gridPoints.push_back(T::Point(x,y));
+      gridPoints.emplace_back(T::Point(x,y));
     }
 
     AutoThreadLock lock(&pointCacheThreadLock);
@@ -378,7 +378,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
 
         if ((*polygonPoints)[0].x() != (*polygonPoints)[numOfPoints-1].x()  ||  (*polygonPoints)[0].y() != (*polygonPoints)[numOfPoints-1].y())
         {
-          (*polygonPoints).push_back((*polygonPoints)[0]);
+          (*polygonPoints).emplace_back((*polygonPoints)[0]);
           numOfPoints++;
         }
 
@@ -496,7 +496,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
       int y = C_INT((*it) >> 32);
       int x = C_INT((*it) & 0xFFFFFFFF);
 
-      gridPoints.push_back(T::Point(x,y));
+      gridPoints.emplace_back(T::Point(x,y));
     }
 
     AutoThreadLock lock(&pointCacheThreadLock);
@@ -555,7 +555,7 @@ void getPointsInsideCircle(int gridWidth,int gridHeight,double origoX,double ori
         if (r2 <= rr)
         {
           // Point is inside the circle.
-          gridPoints.push_back(T::Point(x,y));
+          gridPoints.emplace_back(T::Point(x,y));
         }
       }
     }
@@ -598,7 +598,7 @@ void convertToPointVector(T::Polygon_vec& polygonPath,T::Coordinate_vec& polygon
     for (auto coordinates = polygonPath.begin(); coordinates != polygonPath.end(); ++coordinates)
     {
       for (auto cc=coordinates->begin(); cc != coordinates->end(); ++cc)
-        polygonPoints.push_back(*cc);
+        polygonPoints.emplace_back(*cc);
     }
   }
   catch (...)
@@ -625,10 +625,10 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,T::Polygon_vec& polygonPat
         case NFmiSvgPath::kElementMoveto:
           if (polygonPoints.size() > 0)
           {
-            polygonPath.push_back(polygonPoints);
+            polygonPath.emplace_back(polygonPoints);
             polygonPoints.clear();
           }
-          polygonPoints.push_back(T::Coordinate(it->itsX,it->itsY));
+          polygonPoints.emplace_back(T::Coordinate(it->itsX,it->itsY));
           break;
 
         case NFmiSvgPath::kElementClosePath:
@@ -636,9 +636,9 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,T::Polygon_vec& polygonPat
           {
             int t = C_INT(polygonPoints.size()) -1;
             if (t > 0  &&  (polygonPoints[0].x() != polygonPoints[t].x() || polygonPoints[0].y() != polygonPoints[t].y()))
-              polygonPoints.push_back(polygonPoints[0]);
+              polygonPoints.emplace_back(polygonPoints[0]);
 
-            polygonPath.push_back(polygonPoints);
+            polygonPath.emplace_back(polygonPoints);
             polygonPoints.clear();
           }
 
@@ -646,7 +646,7 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,T::Polygon_vec& polygonPat
           break;
 
         case NFmiSvgPath::kElementLineto:
-          polygonPoints.push_back(T::Coordinate(it->itsX,it->itsY));
+          polygonPoints.emplace_back(T::Coordinate(it->itsX,it->itsY));
           break;
 
         case NFmiSvgPath::kElementNotValid:
@@ -654,7 +654,7 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,T::Polygon_vec& polygonPat
       }
     }
     if (polygonPoints.size() > 0)
-      polygonPath.push_back(polygonPoints);
+      polygonPath.emplace_back(polygonPoints);
   }
   catch (...)
   {
@@ -1007,7 +1007,7 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec& oldCoordinates,double ar
       T::Coordinate n1(p1.x() + mx,p1.y() + my);
       T::Coordinate n2(p2.x() + mx,p2.y() + my);
 
-      tmpLines.push_back(std::pair<T::Coordinate,T::Coordinate>(n1,n2));
+      tmpLines.emplace_back(std::pair<T::Coordinate,T::Coordinate>(n1,n2));
     }
 
     int lines = C_INT(tmpLines.size());
@@ -1017,13 +1017,13 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec& oldCoordinates,double ar
       if ((t+1) < lines)
       {
         if (getLineIntersection(tmpLines[t],tmpLines[t+1],point))
-          newCoordinates.push_back(point);
+          newCoordinates.emplace_back(point);
       }
       else
       {
         if (getLineIntersection(tmpLines[t],tmpLines[0],point))
         {
-          newCoordinates.push_back(point);
+          newCoordinates.emplace_back(point);
           newCoordinates.insert(newCoordinates.begin(),point);
         }
       }
@@ -1106,7 +1106,7 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec& oldPath,double areaExtensi
     for (auto coordinates = oldPath.begin(); coordinates != oldPath.end(); ++coordinates)
     {
       T::Coordinate_vec newCoordinates = getEnlargedPolygon(*coordinates,areaExtensionX,areaExtensionY);
-      newPath.push_back(newCoordinates);
+      newPath.emplace_back(newCoordinates);
     }
     return newPath;
   }
@@ -1214,10 +1214,10 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
           wkbData.reserve(size);
 
           for (size_t t=0; t<size; t++)
-            wkbData.push_back(data[t]);
+            wkbData.emplace_back(data[t]);
         }
       }
-      contours.push_back(wkbData);
+      contours.emplace_back(wkbData);
     }
   }
   catch (...)
@@ -1319,7 +1319,7 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
         {
           if ((ulonglong)it->first == hh)
           {
-            contours.push_back(it->second);
+            contours.emplace_back(it->second);
             found = true;
           }
         }
@@ -1367,16 +1367,16 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
             wkbData.reserve(size);
 
             for (size_t t=0; t<size; t++)
-              wkbData.push_back(data[t]);
+              wkbData.emplace_back(data[t]);
           }
         }
-        contours.push_back(wkbData);
+        contours.emplace_back(wkbData);
 
         AutoThreadLock lock(&wkbCacheThreadLock);
         if (wkbCache.size() >= 5000)
           wkbCache.erase(wkbCache.begin(), wkbCache.begin() + 1000);
 
-        wkbCache.push_back(std::pair<long long,T::ByteData>(hh,wkbData));
+        wkbCache.emplace_back(std::pair<long long,T::ByteData>(hh,wkbData));
       }
     }
   }

@@ -64,7 +64,7 @@ void GridDataRepresentation::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void GridDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void GridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sGridDataRepresentation.", prefix.c_str());

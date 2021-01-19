@@ -31,7 +31,7 @@ class ProductDefinition
 
     virtual ProductDefinition*          createProductDefinition() const;
 
-    virtual void                        getAttributeList(std::string prefix,T::AttributeList& attributeList) const;
+    virtual void                        getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual T::TimeString               getForecastTime(T::TimeString referenceTime) const;
     virtual T::ParamLevel               getGribParameterLevel() const;
     virtual T::ParamLevelId             getGribParameterLevelId() const;

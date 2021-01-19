@@ -64,7 +64,7 @@ void ProcessedCrossSectionProduct::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ProcessedCrossSectionProduct::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ProcessedCrossSectionProduct::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sProcessedCrossSectionProduct.", prefix.c_str());

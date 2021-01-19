@@ -84,7 +84,7 @@ void Triangular::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void Triangular::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void Triangular::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sTriangular.N2", prefix.c_str());

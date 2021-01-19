@@ -82,7 +82,7 @@ void SecondOrderSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void SecondOrderSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void SecondOrderSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sSecondOrderSettings.GroupSplitting", prefix.c_str());

@@ -60,7 +60,7 @@ void FloatingPointGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void FloatingPointGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void FloatingPointGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

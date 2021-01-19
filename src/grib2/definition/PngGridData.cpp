@@ -60,7 +60,7 @@ void PngGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void PngGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void PngGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

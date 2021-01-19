@@ -78,7 +78,7 @@ void ParameterSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ParameterSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ParameterSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sParameterSettings.ParameterCategory", prefix.c_str());

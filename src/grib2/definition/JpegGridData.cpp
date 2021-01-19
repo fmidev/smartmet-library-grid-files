@@ -60,7 +60,7 @@ void JpegGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void JpegGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void JpegGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

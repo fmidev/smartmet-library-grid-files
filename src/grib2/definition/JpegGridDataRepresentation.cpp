@@ -68,7 +68,7 @@ void JpegGridDataRepresentation::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void JpegGridDataRepresentation::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void JpegGridDataRepresentation::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sJpegGridDataRepresentation.", prefix.c_str());

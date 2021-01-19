@@ -86,7 +86,7 @@ void ParameterPartitionSettings::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void ParameterPartitionSettings::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void ParameterPartitionSettings::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
     char name[300];
     sprintf(name, "%sParameterPartitionSettings.ParameterCategory", prefix.c_str());

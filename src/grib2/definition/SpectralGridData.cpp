@@ -60,7 +60,7 @@ void SpectralGridData::write(DataWriter &dataWriter) {
     \param attributeList  The attributeList storage.
 */
 
-void SpectralGridData::getAttributeList(std::string prefix, T::AttributeList &attributeList) const {
+void SpectralGridData::getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const {
   try {
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
