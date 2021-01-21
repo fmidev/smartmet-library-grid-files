@@ -82,20 +82,26 @@ void LambertConformalImpl::init() const
     double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
     double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
 
-    mDx = C_DOUBLE(mDxInMetres);
-    mDy = C_DOUBLE(mDyInMetres);
+    double dx = C_DOUBLE(mDxInMetres);
+    double dy = C_DOUBLE(mDyInMetres);
+
+    mDx = dx;
+    mDy = dy;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
-      mDx = -mDx;
+      mDx = -dx;
 
     if ((scanningMode & 0x40) == 0)
-      mDy = -mDy;
+      mDy = -dy;
 
-    mStartX = longitudeOfFirstGridPoint;
-    mStartY = latitudeOfFirstGridPoint;
+    double startX = longitudeOfFirstGridPoint;
+    double startY = latitudeOfFirstGridPoint;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&mStartX,&mStartY);
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
+
+    mStartX = startX;
+    mStartY = startY;
 
     mInitialized = true;
   }
@@ -165,9 +171,6 @@ T::Coordinate_svec LambertConformalImpl::getGridOriginalCoordinates() const
   try
   {
     T::Coordinate_svec coordinateList(new T::Coordinate_vec());
-
-    if (!mInitialized)
-      init();
 
     coordinateList->reserve(mNx*mNy);
 
@@ -349,9 +352,6 @@ bool LambertConformalImpl::getGridOriginalCoordinatesByGridPosition(double grid_
     if (grid_i < 0  ||  grid_j < 0  ||  grid_i >= mNx  ||  grid_j >= mNy)
       return false;
 
-    if (!mInitialized)
-      init();
-
     y = mStartY + grid_j * mDy;
     x = mStartX + grid_i * mDx;
 
@@ -384,9 +384,6 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
   {
     if (!mNx || !mNy)
       return false;
-
-    if (!mInitialized)
-      init();
 
     double xDiff = (round(x*100) - round(mStartX*100)) / 100;
     double yDiff = (round(y*100) - round(mStartY*100)) / 100;
@@ -666,6 +663,8 @@ void LambertConformalImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
+
+    init();
   }
   catch (...)
   {

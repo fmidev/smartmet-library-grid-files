@@ -130,8 +130,8 @@ void LatLonImpl::init() const
     double mEndY = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint()) / 1000;
     double mEndX = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint()) / 1000);
 
-    mDx = C_DOUBLE(mIDirectionIncrement) / 1000;
-    mDy = C_DOUBLE(mJDirectionIncrement) / 1000;
+    double dx = C_DOUBLE(mIDirectionIncrement) / 1000;
+    double dy = C_DOUBLE(mJDirectionIncrement) / 1000;
 
     auto rs = mGridArea.getResolutionFlags();
     if (rs != nullptr)
@@ -140,18 +140,21 @@ void LatLonImpl::init() const
       if ((flags & 0x80) == 0)
       {
         // direction increments not given
-        mDx = (mEndX-mStartX)/mNi;
-        mDy = (mEndY-mStartY)/mNj;
+        dx = (mEndX-mStartX)/mNi;
+        dy = (mEndY-mStartY)/mNj;
       }
     }
+
+    mDx = dx;
+    mDy = dy;
 
     unsigned char scanMode = mScanningMode.getScanningMode();
 
     if ((scanMode & 0x80) != 0)
-      mDx = -mDx;
+      mDx = -dx;
 
     if ((scanMode & 0x40) == 0)
-      mDy = -mDy;
+      mDy = -dy;
 
     mInitialized = true;
   }
@@ -177,9 +180,6 @@ T::Coordinate_svec LatLonImpl::getGridOriginalCoordinates() const
   try
   {
     T::Coordinate_svec coordinateList(new T::Coordinate_vec());
-
-    if (!mInitialized)
-      init();
 
     if (mNi == 0 ||  mNj == 0)
       return coordinateList;
@@ -435,9 +435,6 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,dou
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     if (grid_i > mNi)
       return false;
 
@@ -472,9 +469,6 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double gri
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     if (grid_i > C_DOUBLE(mNi))
       return false;
 
@@ -587,9 +581,6 @@ bool LatLonImpl::getGridPointByOriginalCoordinates(double x,double y,double& gri
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     double aLat = y;
     double aLon = x;
 
@@ -813,6 +804,8 @@ void LatLonImpl::initSpatialReference()
 
     if (len >= 360)
       mGlobal = true;
+
+    init();
   }
   catch (...)
   {

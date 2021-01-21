@@ -92,8 +92,8 @@ void LatLonImpl::init() const
     double mEndY = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfLastGridPoint()) / 1000000;
     double mEndX = getLongitude(C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfLastGridPoint()) / 1000000);
 
-    mDx = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
-    mDy = C_DOUBLE(*mLatLon.getJDirectionIncrement()) / 1000000;
+    double dx = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
+    double dy = C_DOUBLE(*mLatLon.getJDirectionIncrement()) / 1000000;
 
     ResolutionSettings *rs = mLatLon.getGrid()->getResolution();
     if (rs != nullptr)
@@ -102,23 +102,26 @@ void LatLonImpl::init() const
       if ((flags & 0x20) == 0  && mLatLon.getGrid()->getLongitudeOfLastGridPoint())
       {
         // i direction increment not given
-        mDx = (mEndX-mStartX)/mNi;
+        dx = (mEndX-mStartX)/mNi;
       }
 
       if ((flags & 0x10) == 0 && mLatLon.getGrid()->getLatitudeOfLastGridPoint())
       {
         // j direction increment not given
-        mDy = (mEndY-mStartY)/mNj;
+        dy = (mEndY-mStartY)/mNj;
       }
     }
+
+    mDx = dx;
+    mDy = dy;
 
     unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanningMode & 0x80) != 0)
-      mDx = -mDx;
+      mDx = -dx;
 
     if ((scanningMode & 0x40) == 0)
-      mDy = -mDy;
+      mDy = -dy;
 
     mInitialized = true;
   }
@@ -192,9 +195,6 @@ T::Coordinate_svec LatLonImpl::getGridOriginalCoordinates() const
 
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return coordinateList;
-
-    if (!mInitialized)
-      init();
 
     if (mNi == 0 ||  mNj == 0)
       return coordinateList;
@@ -468,9 +468,6 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,dou
     if (grid_j > nj)
       return false;
 
-    if (!mInitialized)
-      init();
-
     lat = mStartY + grid_j * mDy;
     lon = getLongitude(mStartX + grid_i * mDx);
 
@@ -507,9 +504,6 @@ bool LatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,double gri
 
     if (grid_j > C_DOUBLE(mNj))
       return false;
-
-    if (!mInitialized)
-      init();
 
     lat = mStartY + grid_j * mDy;
     lon = getLongitude(mStartX + grid_i * mDx);
@@ -617,9 +611,6 @@ bool LatLonImpl::getGridPointByOriginalCoordinates(double x,double y,double& gri
   {
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return false;
-
-    if (!mInitialized)
-      init();
 
     double aLat = y;
     double aLon = x;
@@ -751,6 +742,8 @@ void LatLonImpl::initSpatialReference()
       if ((longitudeOfLastGridPoint-longitudeOfFirstGridPoint+2*iDirectionIncrement) >= 360)
         mGlobal = true;
     }
+
+    init();
   }
   catch (...)
   {

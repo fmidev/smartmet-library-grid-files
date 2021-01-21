@@ -101,8 +101,8 @@ void RotatedLatLonImpl::init() const
     double mEndY = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfLastGridPoint()) / 1000000;
     double mEndX = getLongitude(C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfLastGridPoint()) / 1000000);
 
-    mDx = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
-    mDy = C_DOUBLE(*mLatLon.getJDirectionIncrement()) / 1000000;
+    double dx = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
+    double dy = C_DOUBLE(*mLatLon.getJDirectionIncrement()) / 1000000;
 
     ResolutionSettings *rs = mLatLon.getGrid()->getResolution();
     if (rs != nullptr)
@@ -111,16 +111,18 @@ void RotatedLatLonImpl::init() const
       if ((flags & 0x20) == 0  &&  mLatLon.getGrid()->getLongitudeOfLastGridPoint())
       {
         // i direction increment not given
-        mDx = (mEndX-mStartX)/mNi;
+        dx = (mEndX-mStartX)/mNi;
       }
 
       if ((flags & 0x10) == 0  &&  mLatLon.getGrid()->getLatitudeOfLastGridPoint())
       {
         // j direction increment not given
-        mDy = (mEndY-mStartY)/mNj;
+        dy = (mEndY-mStartY)/mNj;
       }
     }
 
+    mDx = dx;
+    mDy = dy;
 
     mSouthPoleLat = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
     mSouthPoleLon = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000;
@@ -128,10 +130,10 @@ void RotatedLatLonImpl::init() const
     unsigned char scanMode = mLatLon.getScanningMode()->getScanningMode();
 
     if ((scanMode & 0x80) != 0)
-      mDx = -mDx;
+      mDx = -dx;
 
     if ((scanMode & 0x40) == 0)
-      mDy = -mDy;
+      mDy = -dy;
 
     mInitialized = true;
   }
@@ -204,9 +206,6 @@ T::Coordinate_svec RotatedLatLonImpl::getGridOriginalCoordinates() const
 
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return coordinateList;
-
-    if (!mInitialized)
-      init();
 
     if (mNi == 0 || mNj == 0)
       return coordinateList;
@@ -315,9 +314,6 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     int sz = latlon.size();
     points.reserve(sz);
 
@@ -377,9 +373,6 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return false;
 
-    if (!mInitialized)
-      init();
-
     if (grid_i > mNi)
       return false;
 
@@ -419,9 +412,6 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
   {
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return false;
-
-    if (!mInitialized)
-      init();
 
     if (grid_i > C_DOUBLE(mNi))
       return false;
@@ -463,9 +453,6 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return false;
 
-    if (!mInitialized)
-      init();
-
     if (grid_i > mNi)
       return false;
 
@@ -502,9 +489,6 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,d
   {
     if (!mLatLon.getGrid()->getNi() || !mLatLon.getGrid()->getNj())
       return false;
-
-    if (!mInitialized)
-      init();
 
     if (grid_i > C_DOUBLE(mNi))
       return false;
@@ -682,9 +666,6 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     y = lat;
     x = lon;
 
@@ -713,9 +694,6 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     double lat = y;
     double lon = x;
 
@@ -745,9 +723,6 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     double aLon = getLongitude(x);
     if (aLon < mStartX)
       aLon += 360;
@@ -893,11 +868,9 @@ void RotatedLatLonImpl::initSpatialReference()
 {
   try
   {
-    if (!mInitialized)
-      init();
+    init();
 
     // ### Set geographic coordinate system.
-
 
     const char *pszGeogName = "UNKNOWN";
     const char *pszDatumName = "UNKNOWN";

@@ -101,8 +101,8 @@ void RotatedLatLonImpl::init() const
     double mEndY = C_DOUBLE(mGridArea.getLatitudeOfLastGridPoint()) / 1000000;
     double mEndX = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint()) / 1000000);
 
-    mDx = C_DOUBLE(mIDirectionIncrement) / 1000;
-    mDy = C_DOUBLE(mJDirectionIncrement) / 1000;
+    double dx = C_DOUBLE(mIDirectionIncrement) / 1000;
+    double dy = C_DOUBLE(mJDirectionIncrement) / 1000;
 
     auto rs = mGridArea.getResolutionFlags();
     if (rs != nullptr)
@@ -111,18 +111,21 @@ void RotatedLatLonImpl::init() const
       if ((flags & 0x80) == 0)
       {
         // direction increments not given
-        mDx = (mEndX-mStartX)/mNi;
-        mDy = (mEndY-mStartY)/mNj;
+        dx = (mEndX-mStartX)/mNi;
+        dy = (mEndY-mStartY)/mNj;
       }
     }
 
     unsigned char scanMode = mScanningMode.getScanningMode();
 
+    mDx = dx;
+    mDy = dy;
+
     if ((scanMode & 0x80) != 0)
-      mDx = -mDx;
+      mDx = -dx;
 
     if ((scanMode & 0x40) == 0)
-      mDy = -mDy;
+      mDy = -dy;
 
     mInitialized = true;
   }
@@ -192,9 +195,6 @@ T::Coordinate_svec RotatedLatLonImpl::getGridOriginalCoordinates() const
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
     uint ni = mNi;
@@ -340,9 +340,6 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     int sz = latlon.size();
     points.reserve(sz);
 
@@ -401,9 +398,6 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     uint ni = mNi;
     uint nj = mNj;
 
@@ -477,9 +471,6 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     uint ni = mNi;
     uint nj = mNj;
 
@@ -551,9 +542,6 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     uint ni = mNi;
     uint nj = mNj;
 
@@ -622,9 +610,6 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,d
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     uint ni = mNi;
     uint nj = mNj;
 
@@ -692,9 +677,6 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     char buf[1000];
 
     double x = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
@@ -799,12 +781,6 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
 {
   try
   {
-    if (!mInitialized)
-      init();
-
-    //double southPoleLat = (C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000);
-    //double southPoleLon = (C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000);
-
     y = lat;
     x = lon;
     return convert(&mLatlonSpatialReference,&mSpatialReference,1,&x,&y);
@@ -832,9 +808,6 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     lat = y;
     lon = x;
 
@@ -864,9 +837,6 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     double aLon = getLongitude(x);
     if (aLon < mStartX)
       aLon += 360;
@@ -1092,8 +1062,7 @@ void RotatedLatLonImpl::initSpatialReference()
 {
   try
   {
-    if (!mInitialized)
-      init();
+    init();
 
     // ### Set geographic coordinate system.
 

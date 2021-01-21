@@ -209,9 +209,6 @@ T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinates() const
   {
     T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
-    if (!mInitialized)
-      init();
-
     if (!mNx || !mNy)
       return coordinateList;
 
@@ -392,21 +389,27 @@ void PolarStereographicImpl::init() const
     if (mInitialized)
       return;
 
-    mDxx = C_DOUBLE(*mDx) / 1000;
-    mDyy = C_DOUBLE(*mDy) / 1000;
+    double dxx = C_DOUBLE(*mDx) / 1000;
+    double dyy = C_DOUBLE(*mDy) / 1000;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
 
+    mDxx = dxx;
+    mDyy = dyy;
+
     if ((scanningMode & 0x80) != 0)
-      mDxx = -mDxx;
+      mDxx = -dxx;
 
     if ((scanningMode & 0x40) == 0)
-      mDyy = -mDyy;
+      mDyy = -dyy;
 
-    mStartX = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
-    mStartY = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
+    double startX = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
+    double startY = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&mStartX,&mStartY);
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
+
+    mStartX = startX;
+    mStartY = startY;
 
     mInitialized = true;
   }
@@ -433,9 +436,6 @@ bool PolarStereographicImpl::getGridPointByOriginalCoordinates(double x,double y
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     if (!mNx || !mNy)
       return false;
 
@@ -476,9 +476,6 @@ bool PolarStereographicImpl::getGridOriginalCoordinatesByGridPosition(double gri
 {
   try
   {
-    if (!mInitialized)
-      init();
-
     if (!mNx || !mNy)
       return false;
 
@@ -605,6 +602,8 @@ void PolarStereographicImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
+
+    init();
   }
   catch (...)
   {
