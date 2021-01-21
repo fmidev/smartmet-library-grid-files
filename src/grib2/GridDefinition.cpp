@@ -74,6 +74,8 @@ GridDefinition::GridDefinition(const GridDefinition& other)
     mGeometryId = other.mGeometryId;
     mGeometryName = other.mGeometryName;
     mGridProjection = other.mGridProjection;
+    mLatlonSpatialReference.importFromEPSG(4326);
+    mLatlonSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
   }
   catch (...)
   {

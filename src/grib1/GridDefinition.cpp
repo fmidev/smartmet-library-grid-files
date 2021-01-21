@@ -77,13 +77,8 @@ GridDefinition::GridDefinition(const GridDefinition& other)
      mGeometryName = other.mGeometryName;
      mGridProjection = other.mGridProjection;
 
-     //mOrigSpatialReference = nullptr;
-
-     //if (other.mOrigSpatialReference != nullptr)
-//       mOrigSpatialReference = other.mOrigSpatialReference->Clone();
-
-     //mCoordinateTranformation_latlon2orig = nullptr;
-     //mCoordinateTranformation_orig2latlon = nullptr;
+     mLatlonSpatialReference.importFromEPSG(4326);
+     mLatlonSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
   }
   catch (...)
   {
