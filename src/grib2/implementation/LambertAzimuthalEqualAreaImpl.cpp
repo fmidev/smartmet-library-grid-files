@@ -132,10 +132,10 @@ void LambertAzimuthalEqualAreaImpl::init() const
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
-      mDxx = -mDxx;
+      mDxx = -dxx;
 
     if ((scanningMode & 0x40) == 0)
-      mDyy = -mDyy;
+      mDyy = -dyy;
 
     double startX = longitudeOfFirstGridPoint;
     double startY = latitudeOfFirstGridPoint;
