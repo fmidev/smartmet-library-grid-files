@@ -99,7 +99,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
       for (int y=yStart; y<=yEnd; y++)
       {
         unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)x1;
-        if (cList.find(p) == cList.end())
+        //if (cList.find(p) == cList.end())
           cList.insert(p);
       }
 
@@ -124,7 +124,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
       for (int x=xStart; x<=xEnd; x++)
       {
         unsigned long long p = (((unsigned long long)round(y1)) << 32) + (unsigned long long)x;
-        if (cList.find(p) == cList.end())
+        //if (cList.find(p) == cList.end())
           cList.insert(p);
       }
 
@@ -151,7 +151,7 @@ void addLine(double x1,double y1,double x2,double y2,std::set<unsigned long long
       if ((xx - C_INT(xx)) == 0)
       {
         unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)xx;
-        if (cList.find(p) == cList.end())
+        //if (cList.find(p) == cList.end())
           cList.insert(p);
       }
     }
@@ -291,7 +291,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
           for (int x=xStart; x<=xEnd; x++)
           {
             unsigned long long p = (C_UINT64(y) << 32) + (unsigned long long)x;
-            if (cList.find(p) == cList.end())
+            //if (cList.find(p) == cList.end())
               cList.insert(p);
           }
         }
@@ -482,7 +482,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
           for (int x=xStart; x<=xEnd; x++)
           {
             unsigned long long p = (C_UINT64(y) << 32) + x;
-            if (cList.find(p) == cList.end())
+            //if (cList.find(p) == cList.end())
               cList.insert(p);
           }
         }

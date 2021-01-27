@@ -9,9 +9,17 @@ namespace SmartMet
 class AutoWriteLock
 {
   public:
-                      AutoWriteLock(ModificationLock *modificationLock);
-                      AutoWriteLock(ModificationLock *modificationLock,const char *filename,uint line);
-    virtual           ~AutoWriteLock();
+    AutoWriteLock(ModificationLock *modificationLock)
+    {
+      mModificationLock = modificationLock;
+      mModificationLock->writeLock();
+    }
+
+
+    ~AutoWriteLock()
+    {
+      mModificationLock->writeUnlock();
+    }
 
   protected:
 

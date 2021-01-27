@@ -9,9 +9,17 @@ namespace SmartMet
 class AutoReadLock
 {
   public:
-                      AutoReadLock(ModificationLock *modificationLock);
-                      AutoReadLock(ModificationLock *modificationLock,const char *filename,uint line);
-    virtual           ~AutoReadLock();
+    AutoReadLock(ModificationLock *modificationLock)
+    {
+      mModificationLock = modificationLock;
+      mModificationLock->readLock();
+    }
+
+
+    ~AutoReadLock()
+    {
+      mModificationLock->readUnlock();
+    }
 
   protected:
 

@@ -4119,14 +4119,14 @@ void GridDef::getGeometryIdList(std::set<T::GeometryId>& geometryIdList)
     for (auto it = mGridDefinitions2.begin(); it != mGridDefinitions2.end(); ++it)
     {
       T::GeometryId geometryId = it->second->getGridGeometryId();
-      if (geometryIdList.find(geometryId) == geometryIdList.end())
+      //if (geometryIdList.find(geometryId) == geometryIdList.end())
         geometryIdList.insert(geometryId);
     }
 
     for (auto it = mGridDefinitions1.begin(); it != mGridDefinitions1.end(); ++it)
     {
       T::GeometryId geometryId = it->second->getGridGeometryId();
-      if (geometryIdList.find(geometryId) == geometryIdList.end())
+      //if (geometryIdList.find(geometryId) == geometryIdList.end())
         geometryIdList.insert(geometryId);
     }
   }
@@ -4156,7 +4156,7 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
       if (it->second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       {
         T::GeometryId geometryId = it->second->getGridGeometryId();
-        if (geometryIdList.find(geometryId) == geometryIdList.end())
+        //if (geometryIdList.find(geometryId) == geometryIdList.end())
           geometryIdList.insert(geometryId);
       }
       else
@@ -4174,7 +4174,7 @@ void GridDef::getGeometryIdListByLatLon(double lat,double lon,std::set<T::Geomet
       if (it->second->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
       {
         T::GeometryId geometryId = it->second->getGridGeometryId();
-        if (geometryIdList.find(geometryId) == geometryIdList.end())
+        //if (geometryIdList.find(geometryId) == geometryIdList.end())
           geometryIdList.insert(geometryId);
       }
       else

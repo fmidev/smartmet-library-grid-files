@@ -6,6 +6,7 @@ namespace SmartMet
 {
 
 
+#if 0
 
 ThreadLock::ThreadLock()
 {
@@ -87,7 +88,7 @@ void ThreadLock::unlock()
   }
 }
 
-
+#endif
 
 }
 

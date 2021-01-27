@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ThreadLock.h"
-#include <string>
+#include <time.h>
 
 // #define TRACE LOCK 1
 
@@ -13,34 +13,114 @@ namespace SmartMet
 class ModificationLock
 {
   public:
-                    ModificationLock();
-    virtual         ~ModificationLock();
 
-    void            readLock();
-    void            readLock(const char *filename,uint line);
-    void            readUnlock();
-    void            writeLock();
-    void            writeLockWhenInsideReadLock();
-    void            writeLock(const char *filename,uint line);
-    void            writeUnlock();
-    void            lock();
-    void            unlock();
-    void            setLockingEnabled(bool lockingEnabled);
+    ModificationLock()
+    {
+      mReadCounter = 0;
+      mLockingEnabled = true;
+      r1.tv_sec = 0;
+      r1.tv_nsec = 100;
+    }
 
-#ifdef TRACE_LOCK
-    std::string     getFilename();
-    uint            getLine();
-#endif
+
+    ~ModificationLock()
+    {
+    }
+
+
+    inline void readLock()
+    {
+      if (!mLockingEnabled)
+        return;
+
+      mThreadLock.lock();
+      mReadCounter++;
+      mThreadLock.unlock();
+    }
+
+
+    inline void readUnlock()
+    {
+      if (!mLockingEnabled)
+        return;
+
+      mThreadLock.lock();
+      mReadCounter--;
+      mThreadLock.unlock();
+    }
+
+
+    inline void writeLock()
+    {
+      if (!mLockingEnabled)
+        return;
+
+      while (true)
+      {
+        mThreadLock.lock();
+        if (mReadCounter == 0)
+          return;
+
+        mThreadLock.unlock();
+        nanosleep(&r1,&r2);
+      }
+    }
+
+
+    inline void writeLockWhenInsideReadLock()
+    {
+      if (!mLockingEnabled)
+        return;
+
+      while (true)
+      {
+        mThreadLock.lock();
+        if (mReadCounter == 1)
+          return;
+
+        mThreadLock.unlock();
+        nanosleep(&r1,&r2);
+      }
+    }
+
+
+    inline void writeUnlock()
+    {
+      if (!mLockingEnabled)
+        return;
+
+      mThreadLock.unlock();
+    }
+
+
+    inline void lock()
+    {
+      if (!mLockingEnabled)
+        return;
+
+      mThreadLock.lock();
+    }
+
+
+    inline void unlock()
+    {
+      if (!mLockingEnabled)
+        return;
+
+      mThreadLock.unlock();
+    }
+
+    inline void setLockingEnabled(bool lockingEnabled)
+    {
+      mLockingEnabled = lockingEnabled;
+    }
 
   protected:
 
+    timespec        r1, r2;
     ThreadLock      mThreadLock;
     int             mReadCounter;
     bool            mLockingEnabled;
-#ifdef TRACE_LOCK
-    std::string     mFilename;
-    uint            mLine;
-#endif
 };
 
 

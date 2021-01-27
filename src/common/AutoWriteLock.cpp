@@ -5,35 +5,13 @@
 namespace SmartMet
 {
 
+#if 0
 AutoWriteLock::AutoWriteLock(ModificationLock *modificationLock)
 {
   try
   {
-    if (modificationLock == nullptr)
-      throw Fmi::Exception(BCP,"The 'modificationLock' parameter points to nullptr!");
-
     mModificationLock = modificationLock;
     mModificationLock->writeLock();
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-AutoWriteLock::AutoWriteLock(ModificationLock *modificationLock,const char *filename,uint line)
-{
-  try
-  {
-    if (modificationLock == nullptr)
-      throw Fmi::Exception(BCP,"The 'modificationLock' parameter points to nullptr!");
-
-    mModificationLock = modificationLock;
-    mModificationLock->writeLock(filename,line);
   }
   catch (...)
   {
@@ -49,8 +27,7 @@ AutoWriteLock::~AutoWriteLock()
 {
   try
   {
-    if (mModificationLock != nullptr)
-      mModificationLock->writeUnlock();
+    mModificationLock->writeUnlock();
   }
   catch (...)
   {
@@ -58,6 +35,6 @@ AutoWriteLock::~AutoWriteLock()
     exception.printError();
   }
 }
-
+#endif
 
 }

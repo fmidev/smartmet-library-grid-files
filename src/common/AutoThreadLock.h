@@ -9,8 +9,17 @@ namespace SmartMet
 class AutoThreadLock
 {
   public:
-                    AutoThreadLock(ThreadLock *threadLock);
-    virtual         ~AutoThreadLock();
+    AutoThreadLock(ThreadLock *threadLock)
+    {
+      mThreadLock = threadLock;
+      mThreadLock->lock();
+    }
+
+
+    ~AutoThreadLock()
+    {
+      mThreadLock->unlock();
+    }
 
   protected:
 

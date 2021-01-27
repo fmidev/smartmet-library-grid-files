@@ -94,8 +94,8 @@ void LambertConformalImpl::init() const
     double dxx = C_DOUBLE(*mDx) / 1000;
     double dyy = C_DOUBLE(*mDy) / 1000;
 
-    double mDxx = dxx;
-    double mDyy = dyy;
+    mDxx = dxx;
+    mDyy = dyy;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)

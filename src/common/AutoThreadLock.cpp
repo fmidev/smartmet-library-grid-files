@@ -5,7 +5,7 @@
 namespace SmartMet
 {
 
-
+#if 0
 
 AutoThreadLock::AutoThreadLock(ThreadLock *threadLock)
 {
@@ -38,5 +38,5 @@ AutoThreadLock::~AutoThreadLock()
   }
 }
 
-
+#endif
 }

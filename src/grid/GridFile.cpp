@@ -397,7 +397,7 @@ void GridFile::addUser(uint fileId)
   FUNCTION_TRACE
   try
   {
-    if (mUserList.find(fileId) == mUserList.end())
+    //if (mUserList.find(fileId) == mUserList.end())
       mUserList.insert(fileId);
   }
   catch (...)

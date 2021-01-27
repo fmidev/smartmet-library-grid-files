@@ -4995,8 +4995,8 @@ void Message::addCachedValue(uint index,T::ParamValue value) const
       return;
 
     AutoWriteLock lock(&mCacheModificationLock);
-    auto it = mPointCache.find(index);
-    if (it == mPointCache.end())
+    //auto it = mPointCache.find(index);
+    //if (it == mPointCache.end())
     {
       mPointCache.insert(std::pair<uint,T::ParamValue>(index,value));
     }

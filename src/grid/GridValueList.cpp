@@ -133,7 +133,6 @@ bool GridValueList::getGridValueByIndex(uint index,GridValue& gridValue) const
     if (index >= mList.size())
       return false;
 
-
     gridValue = mList[index];
     return true;
   }
