@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.1.21
+Version: 21.1.27
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,9 +11,9 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.1.19
+BuildRequires: smartmet-library-newbase-devel >= 21.1.22
 BuildRequires: smartmet-library-spine-devel >= 21.1.14
-BuildRequires: smartmet-library-macgyver >= 21.1.14
+BuildRequires: smartmet-library-macgyver >= 21.1.25
 BuildRequires: smartmet-library-tron >= 21.1.14
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -35,8 +35,8 @@ Requires: boost169-thread
 Requires: gdal32-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.1.19
-Requires: smartmet-library-macgyver >= 21.1.14
+Requires: smartmet-library-newbase >= 21.1.22
+Requires: smartmet-library-macgyver >= 21.1.25
 Requires: smartmet-library-spine >= 21.1.14
 
 %description
@@ -76,6 +76,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Jan 27 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.27-1.fmi
+- Performance improvements
 * Thu Jan 21 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.21-1.fmi
 - Improved thread safety
 * Tue Jan 19 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.19-1.fmi
