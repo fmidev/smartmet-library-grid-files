@@ -31,7 +31,7 @@ class GridPointValue
   public:
                     GridPointValue();
                     GridPointValue(const GridPointValue& gridPointValue);
-                    GridPointValue(uint fileId,uint messageIndex,double x,double y,T::ParamLevel level,T::TimeString valueTime,T::ParamValue value);
+                    GridPointValue(uint fileId,uint messageIndex,double x,double y,T::ParamLevel level,time_t valueTime,T::ParamValue value);
     virtual         ~GridPointValue();
 
     GridPointValue& operator=(const GridPointValue& gridPointValue);
@@ -47,7 +47,7 @@ class GridPointValue
     uint            mMessageIndex;
 
     /*! \brief The time of the value. */
-    T::TimeString   mTime;
+    time_t          mTime;
 
     /*! \brief The grid value. */
     T::ParamValue   mValue;

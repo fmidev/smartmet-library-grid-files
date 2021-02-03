@@ -459,7 +459,7 @@ GridPointValue* GridPointValueList::getGridPointValueByFileMessageAndPoint(uint 
 
 
 
-GridPointValue* GridPointValueList::getGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,T::TimeString time)
+GridPointValue* GridPointValueList::getGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time)
 {
   try
   {
@@ -482,7 +482,7 @@ GridPointValue* GridPointValueList::getGridPointValueByPointAndTime(double x,dou
 
 
 
-GridPointValue* GridPointValueList::getPreviousGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,T::TimeString time)
+GridPointValue* GridPointValueList::getPreviousGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time)
 {
   try
   {
@@ -508,7 +508,7 @@ GridPointValue* GridPointValueList::getPreviousGridPointValueByPointAndTime(doub
 
 
 
-GridPointValue* GridPointValueList::getNextGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,T::TimeString time)
+GridPointValue* GridPointValueList::getNextGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time)
 {
   try
   {
@@ -614,7 +614,7 @@ void GridPointValueList::getGridPointValueListByArea(double minX,double minY,dou
 
 
 
-void GridPointValueList::getGridPointValueListByTime(T::TimeString time,GridPointValueList& gridPointValueList)
+void GridPointValueList::getGridPointValueListByTime(time_t time,GridPointValueList& gridPointValueList)
 {
   try
   {
@@ -636,7 +636,7 @@ void GridPointValueList::getGridPointValueListByTime(T::TimeString time,GridPoin
 
 
 
-void GridPointValueList::getGridPointValueListByTimeRange(T::TimeString startTime,T::TimeString endTime,GridPointValueList& gridPointValueList)
+void GridPointValueList::getGridPointValueListByTimeRange(time_t startTime,time_t endTime,GridPointValueList& gridPointValueList)
 {
   try
   {
@@ -831,7 +831,7 @@ T::ParamValue GridPointValueList::getMaxValue()
 
 
 
-T::ParamValue GridPointValueList::getMaxValueByTime(T::TimeString time)
+T::ParamValue GridPointValueList::getMaxValueByTime(time_t time)
 {
   try
   {
@@ -887,7 +887,7 @@ T::ParamValue GridPointValueList::getMinValue()
 
 
 
-T::ParamValue GridPointValueList::getMinValueByTime(T::TimeString time)
+T::ParamValue GridPointValueList::getMinValueByTime(time_t time)
 {
   try
   {
@@ -943,7 +943,7 @@ T::ParamValue GridPointValueList::getAverageValue()
 
 
 
-T::ParamValue GridPointValueList::getAverageValueByTime(T::TimeString time)
+T::ParamValue GridPointValueList::getAverageValueByTime(time_t time)
 {
   try
   {
@@ -1001,7 +1001,7 @@ uint GridPointValueList::getNumOfValuesInValueRange(T::ParamValue minValue,T::Pa
 
 
 
-T::ParamValue GridPointValueList::getTimeInterpolatedValue(double x,double y,T::ParamLevel level,T::TimeString time)
+T::ParamValue GridPointValueList::getTimeInterpolatedValue(double x,double y,T::ParamLevel level,time_t time)
 {
   try
   {
@@ -1026,12 +1026,8 @@ T::ParamValue GridPointValueList::getTimeInterpolatedValue(double x,double y,T::
       return ParamValueMissing;
     }
 
-    boost::posix_time::ptime tt = toTimeStamp(time);
-    boost::posix_time::ptime ttPrev = toTimeStamp(prevPoint->mTime);
-    boost::posix_time::ptime ttNext = toTimeStamp(nextPoint->mTime);
-
-    time_t diff = toTimeT(tt) - toTimeT(ttPrev);
-    time_t ttDiff = toTimeT(ttNext) - toTimeT(ttPrev);
+    time_t diff = time - prevPoint->mTime;
+    time_t ttDiff = nextPoint->mTime - prevPoint->mTime;
 
     T::ParamValue valueDiff = nextPoint->mValue - prevPoint->mValue;
     T::ParamValue valueStep = valueDiff / ttDiff;
@@ -1051,18 +1047,16 @@ T::ParamValue GridPointValueList::getTimeInterpolatedValue(double x,double y,T::
 
 
 
-void GridPointValueList::getGridPointValueListByTimeSteps(double x,double y,T::ParamLevel level,T::TimeString startTime,uint numberOfSteps,uint stepSizeInSeconds,GridPointValueList& gridPointValueList)
+void GridPointValueList::getGridPointValueListByTimeSteps(double x,double y,T::ParamLevel level,time_t startTime,uint numberOfSteps,uint stepSizeInSeconds,GridPointValueList& gridPointValueList)
 {
   try
   {
-    boost::posix_time::ptime tt = toTimeStamp(startTime);
+    time_t tt = startTime;
     for (uint t=0; t<numberOfSteps; t++)
     {
-      T::TimeString tim = toString(tt);
-
-      T::ParamValue val = getTimeInterpolatedValue(x,y,level,tim);
-      gridPointValueList.addGridPointValue(new T::GridPointValue(0,0,x,y,level,tim,val));
-      tt = tt + boost::posix_time::seconds(stepSizeInSeconds);
+      T::ParamValue val = getTimeInterpolatedValue(x,y,level,tt);
+      gridPointValueList.addGridPointValue(new T::GridPointValue(0,0,x,y,level,tt,val));
+      tt = tt + stepSizeInSeconds;
     }
   }
   catch (...)

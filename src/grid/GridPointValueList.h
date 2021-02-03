@@ -27,16 +27,16 @@ class GridPointValueList
      void                 getGridPointValueArea(double& minX,double& minY,double& maxX,double& maxY);
      GridPointValue*      getGridPointValueByIndex(uint index);
      GridPointValue*      getGridPointValueByIndexNoCheck(uint index);
-     GridPointValue*      getGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,T::TimeString time);
+     GridPointValue*      getGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time);
      GridPointValue*      getGridPointValueByFileMessageAndPoint(uint fileId,uint messageIndex,double x,double y);
-     GridPointValue*      getPreviousGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,T::TimeString time);
-     GridPointValue*      getNextGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,T::TimeString time);
+     GridPointValue*      getPreviousGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time);
+     GridPointValue*      getNextGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time);
      void                 getGridPointValueListByPoint(double x,double y,T::ParamLevel level,GridPointValueList& gridPointValueList);
      void                 getGridPointValueListByArea(double minX,double minY,double maxX,double maxY,T::ParamLevel level,GridPointValueList& gridPointValueList);
-     void                 getGridPointValueListByTime(T::TimeString time,GridPointValueList& gridPointValueList);
-     void                 getGridPointValueListByTimeRange(T::TimeString startTime,T::TimeString endTime,GridPointValueList& gridPointValueList);
+     void                 getGridPointValueListByTime(time_t time,GridPointValueList& gridPointValueList);
+     void                 getGridPointValueListByTimeRange(time_t startTime,time_t endTime,GridPointValueList& gridPointValueList);
      void                 getGridPointValueListByValueRange(T::ParamValue minValue,T::ParamValue maxValue,GridPointValueList& gridPointValueList);
-     void                 getGridPointValueListByTimeSteps(double x,double y,T::ParamLevel level,T::TimeString startTime,uint numberOfSteps,uint stepSizeInSeconds,GridPointValueList& gridPointValueList);
+     void                 getGridPointValueListByTimeSteps(double x,double y,T::ParamLevel level,time_t startTime,uint numberOfSteps,uint stepSizeInSeconds,GridPointValueList& gridPointValueList);
 
      uint                 getLength();
      bool                 getReleaseObjects();
@@ -46,14 +46,14 @@ class GridPointValueList
      void                 sort(GridPointValue::ComparisonMethod comparisonMethod);
 
      T::ParamValue        getMaxValue();
-     T::ParamValue        getMaxValueByTime(T::TimeString time);
+     T::ParamValue        getMaxValueByTime(time_t time);
      T::ParamValue        getMinValue();
-     T::ParamValue        getMinValueByTime(T::TimeString time);
+     T::ParamValue        getMinValueByTime(time_t time);
      T::ParamValue        getAverageValue();
-     T::ParamValue        getAverageValueByTime(T::TimeString time);
+     T::ParamValue        getAverageValueByTime(time_t time);
      uint                 getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamValue maxValue);
 
-     T::ParamValue        getTimeInterpolatedValue(double x,double y,T::ParamLevel level,T::TimeString time);
+     T::ParamValue        getTimeInterpolatedValue(double x,double y,T::ParamLevel level,time_t time);
 
      void                 print(std::ostream& stream,uint level,uint optionFlags);
 

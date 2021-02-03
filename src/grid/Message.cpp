@@ -4706,7 +4706,7 @@ void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,
   FUNCTION_TRACE
   try
   {
-    T::TimeString tm = getForecastTime();
+    time_t tm = getForecastTimeT();
 
     for (uint j=grid_j_start; j<= grid_j_end; j++)
     {
@@ -4741,7 +4741,7 @@ void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,
   FUNCTION_TRACE
   try
   {
-    T::TimeString tm = getForecastTime();
+    time_t tm = getForecastTimeT();
 
     for (uint j=grid_j_start; j<= grid_j_end; j++)
     {

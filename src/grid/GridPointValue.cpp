@@ -62,7 +62,7 @@ GridPointValue::GridPointValue(const GridPointValue& gridPointValue)
         \param level        The level of the parameter.
  */
 
-GridPointValue::GridPointValue(uint fileId,uint messageIndex,double x,double y,T::ParamLevel level,T::TimeString valueTime,T::ParamValue value)
+GridPointValue::GridPointValue(uint fileId,uint messageIndex,double x,double y,T::ParamLevel level,time_t valueTime,T::ParamValue value)
 {
   try
   {
@@ -131,7 +131,7 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         return 0;
 
       case ComparisonMethod::time_x_y_level_value:
-        res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
+        res = time_compare(mTime,gridPointValue->mTime);
         if (res != 0)
           return res;
         res = num_compare(mX,gridPointValue->mX);
@@ -155,7 +155,7 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         res = num_compare(mLevel,gridPointValue->mLevel);
         if (res != 0)
           return res;
-        res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
+        res = time_compare(mTime,gridPointValue->mTime);
         if (res != 0)
           return res;
         return num_compare(mValue,gridPointValue->mValue);
@@ -170,7 +170,7 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         res = num_compare(mLevel,gridPointValue->mLevel);
         if (res != 0)
           return res;
-        res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
+        res = time_compare(mTime,gridPointValue->mTime);
         if (res != 0)
           return res;
         return num_compare(mValue,gridPointValue->mValue);
@@ -179,7 +179,7 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         res = num_compare(mValue,gridPointValue->mValue);
         if (res != 0)
           return res;
-        res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
+        res = time_compare(mTime,gridPointValue->mTime);
         if (res != 0)
           return res;
         res = num_compare(mX,gridPointValue->mX);
@@ -206,7 +206,7 @@ int GridPointValue::compare(ComparisonMethod comparisonMethod,GridPointValue *gr
         return num_compare(mLevel,gridPointValue->mLevel);
 
       default:
-        res = strcmp(mTime.c_str(),gridPointValue->mTime.c_str());
+        res = time_compare(mTime,gridPointValue->mTime);
         if (res != 0)
           return res;
         res = num_compare(mX,gridPointValue->mX);
@@ -264,7 +264,7 @@ void GridPointValue::print(std::ostream& stream,uint level,uint optionFlags) con
     stream << space(level) << "- mX            = " << toString(mX) << "\n";
     stream << space(level) << "- mY            = " << toString(mY) << "\n";
     stream << space(level) << "- mLevel        = " << toString(mLevel) << "\n";
-    stream << space(level) << "- mTime         = " << toString(mTime) << "\n";
+    stream << space(level) << "- mTime         = " << utcTimeFromTimeT(mTime) << "\n";
     stream << space(level) << "- mValue        = " << toString(mValue) << "\n";
   }
   catch (...)
