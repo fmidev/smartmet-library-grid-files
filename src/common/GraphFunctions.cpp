@@ -1155,8 +1155,6 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
 
     hints.reset(new MyHints(data));
 
-    bool worldwrap = false;
-
 #if GEOS_VERSION_MAJOR == 3
 #if GEOS_VERSION_MINOR < 7
     auto itsGeomFactory = boost::make_shared<geos::geom::GeometryFactory>();
@@ -1180,20 +1178,20 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
         switch (interpolationMethod)
         {
           case T::AreaInterpolationMethod::Linear:
-            MyLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
+            MyLinearContourer::line(builder, data, isovalue, *hints);
             break;
 /*
           case T::AreaInterpolationMethod::Nearest:
-            MyNearestContourer::line(builder, data, isovalue, worldwrap, *hints);
-            MyNearestContourer::fill(builder, data, lo, hi, worldwrap, hints);
+            MyNearestContourer::line(builder, data, isovalue, *hints);
+            MyNearestContourer::fill(builder, data, lo, hi, hints);
             break;
 */
           case T::LevelInterpolationMethod::Logarithmic:
-            MyLogLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
+            MyLogLinearContourer::line(builder, data, isovalue, *hints);
             break;
 
           default:
-            MyLinearContourer::line(builder, data, isovalue, worldwrap, *hints);
+            MyLinearContourer::line(builder, data, isovalue, *hints);
             break;
         }
 
@@ -1282,8 +1280,6 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
     hints.reset(new MyHints(data));
 
 
-    bool worldwrap = false;
-
     auto len = contourLowValues.size();
     if (contourHighValues.size() != len)
     {
@@ -1335,18 +1331,18 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
           switch (interpolationMethod)
           {
             case T::AreaInterpolationMethod::Linear:
-              MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
+              MyLinearContourer::fill(builder, data, low,high, *hints);
               break;
             case T::AreaInterpolationMethod::Nearest:
-              MyNearestContourer::fill(builder, data, low,high, worldwrap, *hints);
+              MyNearestContourer::fill(builder, data, low,high, *hints);
               break;
 
             case T::LevelInterpolationMethod::Logarithmic:
-              MyLogLinearContourer::fill(builder, data, low, high, worldwrap, *hints);
+              MyLogLinearContourer::fill(builder, data, low, high, *hints);
               break;
 
             default:
-              MyLinearContourer::fill(builder, data, low,high, worldwrap, *hints);
+              MyLinearContourer::fill(builder, data, low,high, *hints);
               break;
           }
 

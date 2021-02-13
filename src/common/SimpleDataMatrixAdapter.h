@@ -119,6 +119,11 @@ class SimpleDataMatrixAdapter
       return mHeight;
     }
 
+    bool valid(uint i, uint j) const
+    {
+      return true;
+    }
+  
     void swap(SimpleDataMatrixAdapter& other)
     {
       mWidth = other.mWidth;
