@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.2.3
+Version: 21.2.15
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,10 +11,10 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.1.22
-BuildRequires: smartmet-library-spine-devel >= 21.1.29
+BuildRequires: smartmet-library-newbase-devel >= 21.2.10
+BuildRequires: smartmet-library-spine-devel >= 21.2.5
 BuildRequires: smartmet-library-macgyver >= 21.1.25
-BuildRequires: smartmet-library-tron >= 21.1.14
+BuildRequires: smartmet-library-tron >= 21.2.10
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal32-devel
@@ -35,9 +35,9 @@ Requires: boost169-thread
 Requires: gdal32-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.1.22
+Requires: smartmet-library-newbase >= 21.2.10
 Requires: smartmet-library-macgyver >= 21.1.25
-Requires: smartmet-library-spine >= 21.1.29
+Requires: smartmet-library-spine >= 21.2.5
 
 %description
 FMI Grid File handling library
@@ -76,6 +76,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Feb 15 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.2.15-1.fmi
+- Ported to use the new Tron contouring API
 * Wed Feb  3 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.2.3-1.fmi
 - Prefer time_t over std::string for speed
 * Wed Jan 27 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.1.27-1.fmi
