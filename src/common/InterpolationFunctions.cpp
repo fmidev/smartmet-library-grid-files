@@ -48,6 +48,18 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
   {
     // https://en.wikipedia.org/wiki/Bilinear_interpolation
 
+    if (x == x1  &&  y == y1)
+      return val_q11;
+
+    if (x == x2  &&  y == y1)
+      return val_q21;
+
+    if (x == x1  &&  y == y2)
+      return val_q12;
+
+    if (x == x2  &&  y == y2)
+      return val_q22;
+
     uint missingFlags = 0;
     uint missingCount = 0;
     if (val_q11 == ParamValueMissing)
@@ -77,14 +89,12 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
     if (missingCount == 4)
       return ParamValueMissing;
 
+    // Bilinear interpolation
 
     double dist_x1 = x-x1;
     double dist_x2 = x2-x;
     double dist_y1 = y-y1;
     double dist_y2 = y2-y;
-
-
-    // Bilinear interpolation
 
     if (missingCount == 0)
     {
@@ -133,6 +143,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
       // If the given point is on the border then we can do simple
       // linear interpolation.
 
+      //printf("DIST %f,%f,%f,%f  %u\n",dist_x1,dist_y1,dist_x2,dist_y2,missingFlags);
       if (dist_x1 == 0)
       {
         // Linear interpolation x1,y1 - x1,y2
