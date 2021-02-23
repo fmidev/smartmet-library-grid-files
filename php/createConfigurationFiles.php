@@ -18,8 +18,8 @@ function createConfgurationFiles($outputDir)
 
 function createParameterFiles($outputDir)
 {
-  $idArray1 = createParameterFiles_grib1("/usr/share/grib_api/definitions/grib1",$outputDir);
-  $idArray2 = createParameterFiles_grib2("/usr/share/grib_api/definitions/grib2",$outputDir);
+  $idArray1 = createParameterFiles_grib1("/usr/share/eccodes/definitions/grib1",$outputDir);
+  $idArray2 = createParameterFiles_grib2("/usr/share/eccodes/definitions/grib2",$outputDir);
 
   $outputParamFile = $outputDir . "/" . "grib_parameters.csv";
   $content = "";
@@ -94,12 +94,12 @@ function createParameterFiles_grib1($dir,$outputDir)
   unset($idArray["content"]);
 
 
-  $dir = opendir("/usr/share/grib_api/definitions/grib2/localConcepts");
+  $dir = opendir("/usr/share/eccodes/definitions/grib2/localConcepts");
   if ($dir !== false)
   {
     while (false !== ($file=readdir($dir)))
     {
-      $fname = "/usr/share/grib_api/definitions/grib1/localConcepts/" . $file;
+      $fname = "/usr/share/eccodes/definitions/grib1/localConcepts/" . $file;
       if (is_dir($fname)  &&  $file != "."  &&   $file != "..")
       {
 //        $content .= "#\n";
@@ -186,12 +186,12 @@ function createParameterFiles_grib2($dir,$outputDir)
   unset($idArray["content"]);
 
 
-  $dir = opendir("/usr/share/grib_api/definitions/grib2/localConcepts");
+  $dir = opendir("/usr/share/eccodes/definitions/grib2/localConcepts");
   if ($dir !== false)
   {
     while (false !== ($file=readdir($dir)))
     {
-      $fname = "/usr/share/grib_api/definitions/grib2/localConcepts/" . $file;
+      $fname = "/usr/share/eccodes/definitions/grib2/localConcepts/" . $file;
       if (is_dir($fname)  &&  $file != "."  &&   $file != "..")
       {
 //        $content .= "#\n";
@@ -681,7 +681,7 @@ function createTableConfig($outputDir)
   $content .= "# [5]  value\n";
   $content .= "#\n";
 
-  $tableDir1 = "/usr/share/grib_api/definitions/grib1/";
+  $tableDir1 = "/usr/share/eccodes/definitions/grib1/";
   $stringList1 = getTableInformation("0",$tableDir1);
 
   foreach ($stringList1 as $str)
@@ -689,7 +689,7 @@ function createTableConfig($outputDir)
     $content .= "1;" . $str . "\n";
   }
 
-  $tableDir2 = "/usr/share/grib_api/definitions/grib2/tables/";
+  $tableDir2 = "/usr/share/eccodes/definitions/grib2/tables/";
   $stringList2 = getTableInformation("",$tableDir2);
   foreach ($stringList2 as $str)
   {
