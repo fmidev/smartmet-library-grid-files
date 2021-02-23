@@ -724,7 +724,7 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
   try
   {
     double aLon = getLongitude(x);
-    if (aLon < mStartX)
+    if ((int)(100*aLon) < (int)(100*mStartX))
       aLon += 360;
 
     double latDiff = (round(y*100) - round(mStartY*100)) / 100;

@@ -838,7 +838,7 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
   try
   {
     double aLon = getLongitude(x);
-    if (aLon < mStartX)
+    if ((int)(100*aLon) < (int)(100*mStartX))
       aLon += 360;
 
     double latDiff = (round(y*100) - round(mStartY*100)) / 100;
@@ -848,7 +848,10 @@ bool RotatedLatLonImpl::getGridPointByOriginalCoordinates(double x,double y,doub
     grid_j = latDiff / mDy;
 
     if (grid_i < 0 ||  grid_j < 0  ||  grid_i >= C_DOUBLE(mNi) ||  grid_j >= C_DOUBLE(mNj))
+    {
+      //printf("%f,%f  %f  %f,%f   %f,%f\n",x,y,aLon,mStartX,mStartY,latDiff,lonDiff);
       return false;
+    }
 
     return true;
   }
