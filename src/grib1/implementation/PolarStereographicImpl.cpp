@@ -159,6 +159,38 @@ T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinates() const
 
 
 
+/*! \brief The method returns the grid original (projection) coordinates in the given grid position (= double coordinates).
+
+        \param grid_i  The grid i-coordinate.
+        \param grid_j  The grid j-coordinate.
+        \param x       The x-coordinate in the original projection is returned in this parameter.
+        \param y       The y-coordinate in the original projection is returned in this parameter.
+        \return        The method return true if the original coordinates were succesfully returned.
+*/
+
+bool PolarStereographicImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
+{
+  try
+  {
+    if (grid_i < 0 ||  grid_i >= C_DOUBLE(mNx))
+      return false;
+
+    if (grid_j < 0 ||  grid_j >= C_DOUBLE(mNy))
+      return false;
+
+    x = mStartX + grid_i * mDxx;
+    y = mStartY + grid_j * mDyy;
+
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 
 /*! \brief The method returns the grid geometry string. This string can be used for comparing
     geometries in different grid files. For example, is is possible that a GRIB 1 message has

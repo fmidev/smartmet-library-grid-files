@@ -24,6 +24,7 @@ class PolarStereographicImpl : public PolarStereographic
     std::size_t         getGridRowCount() const;
     std::string         getGridGeometryString() const;
     bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
+    bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
 
