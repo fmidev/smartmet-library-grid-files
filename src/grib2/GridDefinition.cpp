@@ -1590,6 +1590,16 @@ std::string GridDefinition::getProj4()
   FUNCTION_TRACE
   try
   {
+    T::Dimensions d = getGridDimensions();
+
+    double lat[4] = {0};
+    double lon[4] = {0};
+
+    getGridLatLonCoordinatesByGridPoint(0,0,lat[0],lon[0]);
+    getGridLatLonCoordinatesByGridPoint(d.nx()-1,0,lat[1],lon[1]);
+    getGridLatLonCoordinatesByGridPoint(0,d.ny()-1,lat[2],lon[2]);
+    getGridLatLonCoordinatesByGridPoint(d.nx()-1,d.ny()-1,lat[3],lon[3]);
+
     std::string proj4;
     T::SpatialRef *sr = getSpatialReference();
     if (sr != nullptr)
@@ -1599,6 +1609,9 @@ std::string GridDefinition::getProj4()
       proj4 = out;
       CPLFree(out);
     }
+    if (lon[0] > 180 || lon[1] > 180 || lon[2] > 180 || lon[3] > 180 || (lon[1] < 0 && lon[0] > lon[1] && lon[3] < 0 && lon[2] > lon[3]))
+      proj4 += " +lon_wrap=180";
+
     return proj4;
   }
   catch (...)
