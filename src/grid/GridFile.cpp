@@ -791,7 +791,9 @@ Message* GridFile::newMessage(uint messageIndex,MessageInfo& messageInfo)
   FUNCTION_TRACE
   try
   {
-    mMessagePositions.insert(std::pair<uint,MessageInfo>(messageIndex,messageInfo));
+    if (mMessagePositions.find(messageIndex) == mMessagePositions.end())
+      mMessagePositions.insert(std::pair<uint,MessageInfo>(messageIndex,messageInfo));
+
     return nullptr;
   }
   catch (...)
