@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.2.25
+Version: 21.3.4
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,9 +11,9 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.2.22
-BuildRequires: smartmet-library-spine-devel >= 21.2.5
-BuildRequires: smartmet-library-macgyver >= 21.1.25
+BuildRequires: smartmet-library-newbase-devel >= 21.3.2
+BuildRequires: smartmet-library-spine-devel >= 21.3.1
+BuildRequires: smartmet-library-macgyver >= 21.2.25
 BuildRequires: smartmet-library-tron >= 21.2.10
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -35,9 +35,9 @@ Requires: boost169-thread
 Requires: gdal32-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.2.22
-Requires: smartmet-library-macgyver >= 21.1.25
-Requires: smartmet-library-spine >= 21.2.5
+Requires: smartmet-library-newbase >= 21.3.2
+Requires: smartmet-library-macgyver >= 21.2.25
+Requires: smartmet-library-spine >= 21.3.1
 
 %description
 FMI Grid File handling library
@@ -76,6 +76,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Mar  4 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.3.4-1.fmi
+- Avoid copying MessageInfo into message search structures if the message is already there
 * Thu Feb 25 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.2.25-1.fmi
 - Added lon_wrap support for data using 0...360 longitudes
 * Wed Feb 24 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.2.24-1.fmi
