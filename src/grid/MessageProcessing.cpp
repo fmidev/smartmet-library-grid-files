@@ -209,6 +209,14 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
+      }
+
       attributeList.setAttribute("grid.crs",message1.getWKT());
       attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
@@ -557,6 +565,14 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
+      }
+
       attributeList.setAttribute("grid.crs",message1.getWKT());
       attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
@@ -837,6 +853,14 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
+      }
+
       attributeList.setAttribute("grid.crs",message1.getWKT());
       attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
@@ -1155,6 +1179,14 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
+      }
+
       attributeList.setAttribute("grid.crs",message1.getWKT());
       attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
@@ -1511,6 +1543,14 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
+      }
+
       attributeList.setAttribute("grid.crs",message1.getWKT());
       attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();
@@ -1716,6 +1756,14 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
+      }
+
       attributeList.setAttribute("grid.crs",message1.getWKT());
       attributeList.setAttribute("grid.proj4",message1.getProj4());
       T::Dimensions  d = message1.getGridDimensions();

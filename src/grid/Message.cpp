@@ -525,6 +525,14 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(getGridHeight()));
+      }
+
       attributeList.setAttribute("grid.crs",getWKT());
       attributeList.setAttribute("grid.proj4",getProj4());
       T::Dimensions  d = getGridDimensions();
@@ -866,6 +874,14 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(getGridHeight()));
+      }
+
       attributeList.setAttribute("grid.crs",getWKT());
       attributeList.setAttribute("grid.proj4",getProj4());
       T::Dimensions  d = getGridDimensions();
@@ -2271,6 +2287,14 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
     {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(getGridHeight()));
+      }
+
       attributeList.setAttribute("grid.crs",getWKT());
       attributeList.setAttribute("grid.proj4",getProj4());
       T::Dimensions  d = getGridDimensions();
