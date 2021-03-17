@@ -39,6 +39,7 @@
 112;1;86;112;WAM_EC;MTL EC-pohjainen aaltomalli;
 113;1;;;WAM_BALMFC;Copernicus (BALMFC) aaltomalli;
 114;1;86;114;OAAS_MBE;MTL MBE-pohjainen OAAS-malli;
+115;1;;;DIW;De-Icing Weather Index;
 116;1;86;116;WALK_NOIC;Jalankulkumalli, ei j??varastoa;
 117;1;86;117;WALK_WIC;Jalankulkumalli, j??varasto mukana;
 118;1;86;118;ECKALLAPS;Kalman filtered prognosis from EC forecasts;

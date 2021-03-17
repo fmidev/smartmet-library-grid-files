@@ -17,6 +17,7 @@
 # PRECFORM-N => PrecipitationForm
 2;1000000057;
 2;129146;
+2;260015
 
 # Precipitation form
 # PRECFORM-N => PrecipitationForm2
@@ -57,7 +58,7 @@
 # Precipitation type, large scale or convective
 # PRECTYPE-N => PrecipitationType
 11;1000000056;
-11;260015;
+#11;260015;
 
 # Precipitation type, large scale or convective
 # PRECTYPE-N => PrecipitationForm
@@ -383,6 +384,7 @@
 88;1000000321;
 88;3121;
 88;147;
+88;260002;
 
 # Sensible heat flux
 # FLSEN-JM2 => SensibleHeatFlux
@@ -390,6 +392,7 @@
 89;322;
 89;3122;
 89;146;
+89;260003;
 
 #  Relative Humidity in percents, height 4
 # RH-H4-PRCNT => UNKNOWN
@@ -583,12 +586,15 @@
 # Q-KGKG => SpecificHumidity
 138;1000000012;
 138;133;
+138;500034;
+138;500035;
 
 # Pressure in Pascals
 # P-PA => Pressure
 139;1000000001;
 139;151;
 139;54;
+139;500002;
 
 # Pressure in Pascals
 # P-PA => PressureAtStationLevel
@@ -599,6 +605,7 @@
 # LC-0TO1 => LandSeaMask
 143;1000000281;
 143;172;
+143;260179;
 
 # Vertical Velocity in hPa/s
 # VV-HPAS => UNKNOWN
@@ -662,6 +669,7 @@
 # Z-M2S2 => GeomHeight
 158;1000000003;
 158;3008;
+158;500005;
 
 # Pseudoadiabatic potential temperature in K
 # TPW-K => PseudoAdiabaticPotentialTemperature
@@ -684,11 +692,13 @@
 162;1000000010;
 162;3017;
 162;168;
+162;500018;
 
 # Relative Humidity in percents
 # RH-PRCNT => Humidity
 163;1000000013;
 163;157;
+163;260242;
 
 # Cloud Symbol
 # CLDSYM-N => CloudSymbol
@@ -699,6 +709,7 @@
 166;1000000021;
 166;10;
 166;207;
+166;500025;
 
 # Wind speed in m/s
 # FF-MS => SoundingWindSpeed1500m
@@ -709,18 +720,21 @@
 169;1000000020;
 169;3031;
 169;20;
+169;260260
 
 # U wind in m/s
 # U-MS => WindUMS
 171;1000000023;
 171;131;
 171;165;
+171;500027;
 
 # V wind in m/s
 # V-MS => WindVMS
 174;1000000024;
 174;132;
 174;166;
+174;500029;
 
 # Vertical Velocity in mm/s
 # VV-MMS => VerticalVelocityMMS
@@ -898,16 +912,19 @@
 214;1000000005;
 214;3015;
 214;50015;
+214;228026
 
 # Maximum Temperature in Kelvins
 # TMAX-K => MaximumTemperature2m
 214;1000000360;
+214;51;
 
 # Minimum Temperature in Kelvins
 # TMIN-K => MinimumTemperature
 215;1000000006;
 215;3016;
 215;50016;
+215;228027;
 
 # Minimum Temperature in Kelvins
 # TMIN-K => MinimumTemperature2m
@@ -936,6 +953,7 @@
 # Height of cloud top
 # CLDTOP-M => CloudTop
 220;1000001174;
+220;260108;
 
 # Large scale snow accumulation in kg/m2
 # SNL-KGM2 => LargeScaleSnow
@@ -1235,6 +1253,7 @@
 # Cloud base height
 # CLDBASE-M => CloudBase
 276;1000000500;
+276;260107;
 
 # Maximum icing index, 1-4
 # MAXICE-N => MaximumIcingIndex
@@ -1445,6 +1464,7 @@
 # SNRI-KGM2 => LargeScaleSnow
 323;1000000279;
 323;500053;
+323;260049;
 
 # Instant rain in kg/m2
 # RRI-KGM2 => PrecipitationLarge
@@ -1462,6 +1482,7 @@
 # Solid precipitation (f.ex. snow+graupel)
 # RRS-KGM2 => PrecipitationSolid
 325;1000001169;
+325;260028:
 
 # Solid precipitation rate (f.ex. snow+graupel)
 # RRRS-KGM2 => PrecipitationRateSolid
@@ -2234,10 +2255,12 @@
 # Vertical Velocity in m/s
 # VV-MS => VerticalVelocityMMS
 523;1000000043;
+523;260238;
 
 # Vertical Velocity in m/s
 # VV-MS => VerticalVelocityMS
 523;1000000143;
+#524;260238;
 
 # Model level number
 # MODLEV-N => UNKNOWN
@@ -2786,6 +2809,8 @@
 # Kinetic energy of turbulence in J kg-1
 # TKEN-JKG => TurbulentKineticEnergy
 653;1000000301;
+653;500158;
+653;260155;
 
 # Cloud water
 # CLDWAT-KGKG => CloudWater
@@ -3069,6 +3094,7 @@
 # Probability of precipitation
 # POP-PRCNT => PoP
 750;1000000259;
+750;260178;
 
 # Precipitation type categorical rain, 0 or 1
 # CRAIN-0OR1 => UNKNOWN
@@ -4295,6 +4321,7 @@
 # Bottom level of icing
 # ICINGBOTTOM-M => UNKNOWN
 #1067;1000000000;
+1067;260150;
 
 # Boundary layer dissipation
 # BLDIS-WM2 => UNKNOWN
@@ -4340,6 +4367,7 @@
 # Top level of icing
 # ICINGTOP-M => UNKNOWN
 #1078;1000000000;
+1078;260149;
 
 # ICAO Standard Atmosphere reference height
 # ICAHT => UNKNOWN
@@ -4819,6 +4847,615 @@
 # Growing degree days
 # GDD-C => NEWBASE-PARAMETER[1387]
 1203;1000001387;
+
+
+#1204;1;CAPES-JKG;J kg-1;Convective available potential energy shear;1;1;1;;
+
+
+#1205;1;PROB-WG-AGG-1;%;Probability of reaching wind gust speed more than given value threshold, aggregated over area and/or time;1;1;1;;
+
+
+#1206;1;PROB-HAIL-AGG-1;%;Probability of hail, aggregated over area and/or time;1;1;1;;
+
+
+#1207;1;PROB-RR-AGG-1;%;Probability of reaching some precipitation threshold value, aggregated over area and/or time;1;1;1;;
+
+
+#1209;1;PROB-RR6-1;%;Probability of reaching some precipitation threshold value in 6h;1;1;1;;
+
+
+#1210;1;PROB-RR6-2;%;Probability of reaching some precipitation threshold value in 6h;1;1;1;;
+
+
+#1211;1;PROB-RR6-3;%;Probability of reaching some precipitation threshold value in 6h;1;1;1;;
+
+
+#1212;1;PROB-RR6-4;%;Probability of reaching some precipitation threshold value in 6h;1;1;1;;
+
+
+#1213;1;PROB-RR6-5;%;Probability of reaching some precipitation threshold value in 6h;1;1;1;;
+
+
+#1214;1;PROB-RR6-6;%;Probability of reaching some precipitation threshold value in 6h;1;1;1;;
+
+
+#1215;1;F0-RADGLO-WM2;W m-2;0th fractal global radiation in EPS;1;1;1;;
+
+
+#1216;1;F10-RADGLO-WM2;W m-2;10th fractal global radiation in EPS;1;1;1;;
+
+
+#1217;1;F25-RADGLO-WM2;W m-2;25th fractal global radiation in EPS;1;1;1;;
+
+
+#1218;1;F50-RADGLO-WM2;W m-2;50th fractal global radiation in EPS;1;1;1;;
+
+
+#1219;1;F75-RADGLO-WM2;W m-2;75th fractal global radiation in EPS;1;1;1;;
+
+
+#1220;1;F90-RADGLO-WM2;W m-2;90th fractal global radiation in EPS;1;1;1;;
+
+
+#1221;1;F100-RADGLO-WM2;W m-2;100th fractal global radiation in EPS;1;1;1;;
+
+
+#1222;1;PANM-PA;Pa;Pressure anomaly (departure);1;1;1;;
+1222;3026;
+
+#1223;1;HUMGRASS-KGKG;kg kg-1;Humidity of ground in a 2 cm thick surface, grassy areas;1;1;1;;
+
+
+#1224;1;SOILWET2-M;m;Surface soil wetness in m at level 2;1;1;1;2;
+
+
+#1225;1;SNACC-H;h;Hours since last snowfall;1;1;1;;
+
+
+#1226;1;SNDACC-N;No Unit;Snow drift accumulation since last snowfall;1;1;1;;
+
+
+#1227;1;SNOWDRIFT-N;No Unit;Snow drift index;1;1;1;;
+
+
+#1228;1;SNOWLOAD-KGM2;kg m-2;Snow load;1;1;1;;
+
+
+#1229;1;SOT-RR-N;JustAnumber;Shift Of Tails for precipitation;2;2;2;;
+
+
+#1230;1;SOT-WG-N;JustAnumber;Shift Of Tails for wind gusts;2;2;2;;
+
+
+#1232;1;EFI-WG--1TO1;-1 to 1;Extreme Forecast Index for wind gusts;2;2;2;;
+
+
+#1233;1;EFI-RR--1TO1;-1 to 1;Extreme Forecast Index for precipitation;2;2;2;;
+
+
+#1235;1;F0-SNOWLOAD-KGM2;kg m-2;0th fractal snowload in EPS;1;1;1;;
+
+
+#1236;1;F10-SNOWLOAD-KGM2;kg m-2;10th fractal snowload in EPS;1;1;1;;
+
+
+#1237;1;F25-SNOWLOAD-KGM2;kg m-2;25th fractal snowload in EPS;1;1;1;;
+
+
+#1238;1;F50-SNOWLOAD-KGM2;kg m-2;50th fractal snowload in EPS;1;1;1;;
+
+
+#1239;1;F75-SNOWLOAD-KGM2;kg m-2;75th fractal snowload in EPS;1;1;1;;
+
+
+#1240;1;F90-SNOWLOAD-KGM2;kg m-2;90th fractal snowload in EPS;1;1;1;;
+
+
+#1241;1;F100-SNOWLOAD-KGM2;kg m-2;100th fractal snowload in EPS;1;1;1;;
+
+
+#1242;1;SNOWLOAD-MEAN-KGM2;kg m-2;Mean value of snowload in EPS;1;1;1;;
+
+
+#1243;1;SNOWLOAD-STDDEV-KGM2;kg m-2;Standard deviation of snowload in EPS;1;1;1;;
+
+
+#1247;1;F10-TMAX-K;K;10th fractal maximum temperature in EPS;1;1;1;1;
+
+
+#1248;1;F25-TMAX-K;K;25th fractal maximum temperature in EPS;1;1;1;1;
+
+
+#1249;1;F75-TMAX-K;K;75th fractal maximum temperature in EPS;1;1;1;1;
+
+
+#1250;1;F90-TMAX-K;K;90th fractal maximum temperature in EPS;1;1;1;1;
+
+
+#1251;1;F10-TMIN-K;K;10th fractal minimum temperature in EPS;1;1;1;1;
+
+
+#1252;1;F25-TMIN-K;K;25th fractal minimum temperature in EPS;1;1;1;1;
+
+
+#1253;1;F75-TMIN-K;K;75th fractal minimum temperature in EPS;1;1;1;1;
+
+
+#1254;1;F90-TMIN-K;K;90th fractal minimum temperature in EPS;1;1;1;1;
+
+
+#1255;1;F0-RR-24-MM;kg m-2;0th fractal precipitation in EPS;1;1;1;;
+
+
+#1256;1;F10-RR-24-MM;kg m-2;10th fractal precipitation in EPS;1;1;1;;
+
+
+#1257;1;F25-RR-24-MM;kg m-2;25th fractal precipitation in EPS;1;1;1;;
+
+
+#1258;1;F50-RR-24-MM;kg m-2;50th fractal precipitation in EPS;1;1;1;;
+
+
+#1259;1;F75-RR-24-MM;kg m-2;75th fractal precipitation in EPS;1;1;1;;
+
+
+#1260;1;F90-RR-24-MM;kg m-2;90th fractal precipitation in EPS;1;1;1;;
+
+
+#1261;1;F100-RR-24-MM;kg m-2;100th fractal precipitation in EPS;1;1;1;;
+
+
+#1262;1;LFC-LAST-M;m;Height of last LFC in meters;1;1;1;2;
+
+
+#1263;1;LFC-LAST-K;K;Temperature of last LFC in meters;1;1;1;1;
+
+
+#1264;1;LFC-LAST-HPA;hPa;Height of last LFC in hPa;1;1;1;;
+
+
+#1265;1;PROB-FOG-1;%;Probability of fog;1;1;1;;
+
+
+#1267;1;F0-RR-24-KGM2;kg m-2;0th fractal 24h total precipitation in EPS;1;1;1;;
+
+
+#1268;1;F10-RR-24-KGM2;kg m-2;10th fractal 24h total precipitation in EPS;1;1;1;;
+
+
+#1269;1;F25-RR-24-KGM2;kg m-2;25th fractal 24h total precipitation in EPS;1;1;1;;
+
+
+#1270;1;F50-RR-24-KGM2;kg m-2;50th fractal 24h total precipitation in EPS;1;1;1;;
+
+
+#1271;1;F75-RR-24-KGM2;kg m-2;75th fractal 24h total precipitation in EPS;1;1;1;;
+
+
+#1272;1;F90-RR-24-KGM2;kg m-2;90th fractal 24h total precipitation in EPS;1;1;1;;
+
+
+#1273;1;F100-RR-24-KGM2;kg m-2;100th fractal 24h total precipitation in EPS;1;1;1;;
+
+
+#1274;1;F0-RR-120-KGM2;kg m-2;0th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1275;1;F10-RR-120-KGM2;kg m-2;10th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1276;1;F25-RR-120-KGM2;kg m-2;25th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1277;1;F50-RR-120-KGM2;kg m-2;50th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1278;1;F75-RR-120-KGM2;kg m-2;75th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1279;1;F90-RR-120-KGM2;kg m-2;90th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1280;1;F100-RR-120-KGM2;kg m-2;100th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1281;1;CSI-N;No Unit;Convective severity index;1;1;1;;
+
+
+#1282;1;PROB-FLASH-AGG-1;%;Probability of flash (lightning), aggregated over area and/or time;1;1;1;;
+
+
+#1283;1;PROB-CSI-1;%;Probability of reaching some CSI threshold value;1;1;1;;
+
+
+#1284;1;PROB-CSI-2;%;Probability of reaching some CSI threshold value;1;1;1;;
+
+
+#1285;1;PROB-CSI-3;%;Probability of reaching some CSI threshold value;1;1;1;;
+
+
+#1286;1;LSM-0TO1;0to1;Land-Sea mask;1;1;1;;
+
+
+#1288;1;F0-IFFG-MS;m s-1;0th fractal wind gust speed in EPS;1;1;1;1;
+
+
+#1289;1;F10-IFFG-MS;m s-1;10th fractal wind gust speed in EPS;1;1;1;1;
+
+
+#1290;1;F25-IFFG-MS;m s-1;25th fractal wind gust speed in EPS;1;1;1;1;
+
+
+#1291;1;F50-IFFG-MS;m s-1;50th fractal wind gust speed in EPS;1;1;1;1;
+
+
+#1292;1;F75-IFFG-MS;m s-1;75th fractal wind gust speed in EPS;1;1;1;1;
+
+
+#1293;1;F90-IFFG-MS;m s-1;90th fractal wind gust speed in EPS;1;1;1;1;
+
+
+#1294;1;F100-IFFG-MS;m s-1;100th fractal wind gust speed in EPS;1;1;1;1;
+
+
+#1295;1;PRECPHASE-0TO1;0to1;Precipitation phase as calculated by "Koistinen algorithm";1;1;1;;
+
+
+#1296;1;F100-NLM-PRCNT;%;100th fractal low and middle cloudiness in EPS;1;1;1;;
+
+
+#1297;1;F90-NLM-PRCNT;%;90th fractal low and middle cloudiness in EPS;1;1;1;;
+
+
+#1298;1;F75-NLM-PRCNT;%;75th fractal low and middle cloudiness in EPS;1;1;1;;
+
+
+#1299;1;F50-NLM-PRCNT;%;50th fractal low and middle cloudiness in EPS;1;1;1;;
+
+
+#1300;1;F25-NLM-PRCNT;%;25th fractal low and middle cloudiness in EPS;1;1;1;;
+
+
+#1301;1;F10-NLM-PRCNT;%;10th fractal low and middle cloudiness in EPS;1;1;1;;
+
+
+#1302;1;F0-NLM-PRCNT;%;0th fractal low and middle cloudiness in EPS;1;1;1;;
+
+
+#1303;1;F10-TSEA-K;K;10th fractal sea temperature in EPS;1;1;1;1;
+
+
+#1304;1;F90-TSEA-K;K;90th fractal sea temperature in EPS;1;1;1;1;
+
+
+#1305;1;F0-TOTCWV-KGM2;kg m-2;0th fractal total column water vapour;1;1;1;;
+
+
+#1306;1;F2.5-TOTCWV-KGM2;kg m-2;2.5th fractal total column water vapour;1;1;1;;
+
+
+#1307;1;F10-TOTCWV-KGM2;kg m-2;10th fractal total column water vapour;1;1;1;;
+
+
+#1308;1;F25-TOTCWV-KGM2;kg m-2;25th fractal total column water vapour;1;1;1;;
+
+
+#1309;1;F50-TOTCWV-KGM2;kg m-2;50th fractal total column water vapour;1;1;1;;
+
+
+#1310;1;F75-TOTCWV-KGM2;kg m-2;75th fractal total column water vapour;1;1;1;;
+
+
+#1311;1;F90-TOTCWV-KGM2;kg m-2;90th fractal total column water vapour;1;1;1;;
+
+
+#1312;1;F97.5-TOTCWV-KGM2;kg m-2;97.5th fractal total column water vapour;1;1;1;;
+
+
+#1313;1;F100-TOTCWV-KGM2;kg m-2;100th fractal total column water vapour;1;1;1;;
+
+
+#1314;1;F90-RRR-KGM2;kg m-2;90th fractal precipitation in EPS;1;1;1;;
+
+
+#1315;1;F2.5-RR-24-MM;kg m-2;2.5th fractal precipitation in EPS;1;1;1;;
+
+
+#1316;1;F97.5-RR-24-MM;kg m-2;97.5th fractal precipitation in EPS;1;1;1;;
+
+
+#1317;1;F100-MRR-KGM2;kg m-2;100th fractal monthly precipitation in EPS;1;1;1;;
+
+
+#1318;1;F97.5-MRR-KGM2;kg m-2;97.5th fractal monthly precipitation in EPS;1;1;1;;
+
+
+#1319;1;F90-MRR-KGM2;kg m-2;90th fractal monthly precipitation in EPS;1;1;1;;
+
+
+#1320;1;F75-MRR-KGM2;kg m-2;75th fractal monthly precipitation in EPS;1;1;1;;
+
+
+#1321;1;F50-MRR-KGM2;kg m-2;50th fractal monthly precipitation in EPS;1;1;1;;
+
+
+#1322;1;F25-MRR-KGM2;kg m-2;25th fractal monthly precipitation in EPS;1;1;1;;
+
+
+#1323;1;F10-MRR-KGM2;kg m-2;10th fractal monthly precipitation in EPS;1;1;1;;
+
+
+#1324;1;F2.5-MRR-KGM2;kg m-2;2.5th fractal monthly precipitation in EPS;1;1;1;;
+
+
+#1325;1;F0-MRR-KGM2;kg m-2;0th fractal monthly precipitation in EPS;1;1;1;;
+
+
+#1326;1;NEARW-N;No Unit;Nearby weather index;1;1;1;;
+
+
+#1327;1;SN-120-MM;mm;Snow fall over the last 120 hours water equivalent;2;2;2;1;
+
+
+#1328;1;F0-SN-24-MM;kg m-2;0th fractal snowfall in EPS;1;1;1;;
+
+
+#1329;1;F10-SN-24-MM;kg m-2;10th fractal snowfall in EPS;1;1;1;;
+
+
+#1330;1;F25-SN-24-MM;kg m-2;25th fractal snowfall in EPS;1;1;1;;
+
+
+#1331;1;F50-SN-24-MM;kg m-2;50th fractal snowfall in EPS;1;1;1;;
+
+
+#1332;1;F75-SN-24-MM;kg m-2;75th fractal snowfall in EPS;1;1;1;;
+
+
+#1333;1;F90-SN-24-MM;kg m-2;90th fractal snowfall in EPS;1;1;1;;
+
+
+#1334;1;F100-SN-24-MM;kg m-2;100th fractal snowfall in EPS;1;1;1;;
+
+
+#1340;1;F0-SN-120-MM;kg m-2;0th fractal snowfall in EPS;1;1;1;;
+
+
+#1341;1;F10-SN-120-MM;kg m-2;10th fractal snowfall in EPS;1;1;1;;
+
+
+#1342;1;F25-SN-120-MM;kg m-2;25th fractal snowfall in EPS;1;1;1;;
+
+
+#1343;1;F50-SN-120-MM;kg m-2;50th fractal snowfall in EPS;1;1;1;;
+
+
+#1344;1;F75-SN-120-MM;kg m-2;75th fractal snowfall in EPS;1;1;1;;
+
+
+#1345;1;F90-SN-120-MM;kg m-2;90th fractal snowfall in EPS;1;1;1;;
+
+
+#1346;1;F100-SN-120-MM;kg m-2;100th fractal snowfall in EPS;1;1;1;;
+
+
+#1347;1;TCLW-KGM2;kg m-2;Total column liquid water;1;1;1;;
+
+
+#1348;1;TCIW-KGM2;kg m-2;Total column cloud ice water;1;1;1;;
+
+
+#1349;1;HCCT-M;m;Height of convective cloud top;1;1;1;2;
+
+
+#1350;1;F0-RR-120-MM;kg m2 s-2;0th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1351;1;F10-RR-120-MM;kg m2 s-2;10th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1352;1;F25-RR-120-MM;kg m2 s-2;25th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1353;1;F50-RR-120-MM;kg m2 s-2;50th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1354;1;F75-RR-120-MM;kg m2 s-2;75th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1355;1;F90-RR-120-MM;kg m2 s-2;90th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1356;1;F100-RR-120-MM;kg m2 s-2;100th fractal 120h total precipitation in EPS;1;1;1;;
+
+
+#1357;1;SD-TM2;m3 m-3;Water equivalent of snow cover in m;1;1;1;;
+
+
+#1358;1;PROB-FROST-1;0_1;Probability of frost;1;1;1;;
+
+
+#1359;1;PROB-FROST-2;0_1;Probability of severe frost;1;1;1;;
+
+
+#1360;1;PROB-POT-1;%;Probability of reaching POT of 1;1;1;1;;
+
+
+#1361;1;PROB-POT-2;%;Probability of reaching POT of 30;1;1;1;;
+
+
+#1362;1;PROB-POT-3;%;Probability of reaching POT of 60;1;1;1;;
+
+
+#1363;1;RRS-24-MM;mm;Solid Precipitation over last 24 hours water equivalent;1;1;1;1;
+
+
+#1364;1;F0-RRS-24-MM;kg m-2;0th fractal RRS in EPS;1;1;1;;
+
+
+#1365;1;F10-RRS-24-MM;kg m-2;10th fractal RRS in EPS;1;1;1;;
+
+
+#1366;1;F25-RRS-24-MM;kg m-2;25th fractal RRS in EPS;1;1;1;;
+
+
+#1367;1;F50-RRS-24-MM;kg m-2;50th fractal 24h RRS in EPS;1;1;1;;
+
+
+#1368;1;F75-RRS-24-MM;kg m-2;75th fractal 24h RRS in EPS;1;1;1;;
+
+
+#1369;1;F90-RRS-24-MM;kg m-2;90th fractal 24h RRS in EPS;1;1;1;;
+
+
+#1370;1;F100-RRS-24-MM;kg m-2;100th fractal 24h RRS in EPS;1;1;1;;
+
+
+#1371;1;IEWSS-NM2S;N m-2 s;Eastward surface stress due to turbulent processes, instantaneous;1;1;1;;
+
+
+#1372;1;INSSS-NM2S;N m-2 s;Northward surface stress due to turbulent processes, instantaneous;1;1;1;;
+
+
+#1373;1;BLDIS-JM2;J m-2;Boundary layer dissipation, accumulated;1;1;1;;
+
+
+#1374;1;CEIL-M;m;Cloud ceiling height in meters. The height above the Earths surface of the base of the lowest layer of cloud with a covering of more than 50% of the model grid box. Cloud ceiling is a measurement used in the aviation industry to indicate airport landing conditions.;1;1;1;2;
+
+
+#1375;1;CVH-N;0to1;High vegetation cover;1;1;1;;
+
+
+#1376;1;CVL-N;0to1;Low vegetation cover;1;1;1;;
+
+
+#1377;1;LAI_HV-M2M2;m2 m-2;Leaf area index high vegitation;1;1;1;;
+
+
+#1378;1;LAI_LV-M2M2;m2 m-2;Leaf area index low vegitation;1;1;1;;
+
+
+#1379;1;CEIL-2-M;m;Cloud ceiling height in meters, second possible implementation of parameter;1;1;1;2;
+
+
+#1380;1;WATLEV-N2000-CM;cm;N2000 Water level in centimeters;1;1;1;1;
+
+
+#1381;1;FORESTAGE-Y;y;Forest age in years;1;1;1;;
+
+
+#1382;1;FORESTLOCATION-N;No Unit;Forest location 1-8;1;1;1;;
+
+
+#1383;1;FORESTDIAMETER-CM;cm;Forest (tree) average diameter in cm;1;1;1;1;
+
+
+#1385;1;FORESTLENGTH-DM;dm;Forest (tree) average length in dm;1;1;1;;
+
+
+#1386;1;FORESTCANOPY-PRCNT;%;Forest canopy opacity in percents;1;1;1;;
+
+
+#1387;1;FORESTTYPE-N;No Unit;Main forest type of growth area (1-3);1;1;1;;
+
+
+#1388;1;EVARATE-KGM2S;kg m-2 s-1;Evaporation rate in mm/s;1;1;1;;
+
+
+#1389;1;T-BIASC-K;K;Bias-corrected temperature in Kelvins;1;1;1;1;
+
+
+#1390;1;RH-BIASC-0TO1;0to1;Bias-corrected relative humidity, 0 to 1;1;1;1;;
+
+
+#1391;1;FF-BIASC-MS;m s-1;Bias-corrected wind speed in m/s;1;1;1;1;
+
+
+#1392;1;PROB-DIW0;%;Probability of aviation icing category 0;1;1;1;;
+
+
+#1393;1;PROB-DIW1;%;Probability of aviation icing category 1;1;1;1;;
+
+
+#1394;1;PROB-DIW2;%;Probability of aviation icing category 2;1;1;1;;
+
+
+#1395;1;PROB-DIW3;%;Probability of aviation icing category 3;1;1;1;;
+
+
+#1396;1;PROB-DIW4;%;Probability of aviation icing category 4;1;1;1;;
+
+
+#1397;1;TP-C;C;Potential temperature in C;1;1;1;1;
+
+
+#1398;1;TKEND-JKG;J kg-1;Dissipation of kinetic energy of turbulence in J kg-1;1;1;1;;
+
+
+#1399;1;F100-WATLEV-N2000-CM;cm;100th fractal N2000 sea level height in EPS;1;1;1;1;
+
+
+#1401;1;F95-WATLEV-N2000-CM;cm;95th fractal N2000 sea level height in EPS;1;1;1;1;
+
+
+#1402;1;F90-WATLEV-N2000-CM;cm;90th fractal N2000 sea level height in EPS;1;1;1;1;
+
+
+#1403;1;F75-WATLEV-N2000-CM;cm;75th fractal N2000 sea level height in EPS;1;1;1;1;
+
+
+#1404;1;F50-WATLEV-N2000-CM;cm;50th fractal N2000 sea level height in EPS;1;1;1;1;
+
+
+#1405;1;F25-WATLEV-N2000-CM;cm;25th fractal N2000 sea level height in EPS;1;1;1;1;
+
+
+#1406;1;F10-WATLEV-N2000-CM;cm;10th fractal N2000 sea level height in EPS;1;1;1;1;
+
+
+#1407;1;F5-WATLEV-N2000-CM;cm;5th fractal N2000 sea level height in EPS;1;1;1;1;
+
+
+#1408;1;F0-WATLEV-N2000-CM;cm;0th fractal N2000 sea level height in EPS;1;1;1;1;
+
+
+#1409;1;WATLEV-STDDEV-N2000;cm;Standard deviation of N2000 sea level height;1;1;1;1;
+
+
+#1410;1;WATLEV-MEAN-N2000;cm;Mean N2000 sea level height;1;1;1;1;
+
+
+#1411;1;PROB-WATLEV-N2000-LOW-1;%;Probability of N2000 water level being lower than given threshold;1;1;1;;
+
+
+#1412;1;PROB-WATLEV-N2000-HIGH-1;%;Probability of N2000 water level being higher than given threshold;1;1;1;;
+
+
+#1413;1;PROB-WATLEV-N2000-HIGH-2;%;Probability of N2000 water level being higher than given threshold;1;1;1;;
+
+
+#1414;1;PROB-WATLEV-N2000-HIGH-3;%;Probability of N2000 water level being higher than given threshold;1;1;1;;
+
+
+#1415;1;TMAX3H-K;K;Maximum temperature from the preceeding 3 hours in Kelvin;1;1;1;1;
+
+
+#1416;1;TMAX6H-K;K;Maximum temperature from the preceeding 6 hours in Kelvin;1;1;1;1;
+
+
+#1417;1;TMIN3H-K;K;Minimum temperature from the preceeding 3 hours in Kelvin;1;1;1;1;
+
+
+#1418;1;TMIN6H-K;K;Minimum temperature from the preceeding 6 hours in Kelvin;1;1;1;1;
+
+
+#1419;1;BIAS-T-K;K;Bias value for T-K;1;1;1;1;
+
+
+#1420;1;MAE-T-K;K;Mean absolute error for T-K;1;1;1;1;
+
+
+
 
 #30682;1;T-MEAN-C;C;AverageTemperature (682)
 30682;1000000682;

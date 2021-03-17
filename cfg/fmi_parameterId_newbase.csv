@@ -4439,6 +4439,10 @@
 1016;951;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of Precipitation #6 in 3h
+# PROB-RR3-6 => ProbabilityOfPrecipitation3h01mm
+1017;948;MUL{$,100.000000};DIV{$,100.000000};
+
+# Probability of Precipitation #6 in 3h
 # PROB-RR3-6 => ProbabilityOfPrecipitation3h3mm
 1017;952;MUL{$,100.000000};DIV{$,100.000000};
 
