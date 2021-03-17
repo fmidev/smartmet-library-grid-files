@@ -56,6 +56,7 @@ class Message : public GRID::Message
     uint                getGribTableVersion() const;
     void                getSectionPositions(std::set<T::FilePosition>& positions);
 
+    void                getGridCellAverageSize(double& width,double& height) const;
     T::Dimensions       getGridDimensions() const;
     T::GeometryId       getGridGeometryId() const;
     std::string         getGridGeometryString() const;

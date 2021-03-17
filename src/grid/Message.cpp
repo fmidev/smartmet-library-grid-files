@@ -653,6 +653,15 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
       attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
 
@@ -1002,6 +1011,15 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
       attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
 
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
 
@@ -1333,6 +1351,15 @@ bool Message::isRelativeUV() const
 */
 
 T::GeometryId Message::getGridGeometryId() const
+{
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+
+void Message::getGridCellAverageSize(double& width,double& height) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2387,12 +2414,22 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
     attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
+    attributeList.setAttribute("grid.original.projectionType",Fmi::to_string(getGridProjection()));
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
 
     double wm = 0;
     double hm = 0;
     if (getGridMetricCellSize(wm,hm))
     {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      getGridCellAverageSize(wm,hm);
       attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
@@ -2589,6 +2626,15 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
     {
       attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
   }
   catch (...)

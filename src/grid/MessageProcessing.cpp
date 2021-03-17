@@ -102,6 +102,15 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
       attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
   }
   catch (...)
   {
@@ -381,6 +390,15 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
       attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
@@ -740,6 +758,15 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
       attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
   }
   catch (...)
   {
@@ -1025,6 +1052,15 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
       attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
@@ -1357,6 +1393,15 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
       attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
@@ -1724,6 +1769,15 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
       attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
   }
   catch (...)
   {
@@ -1934,6 +1988,15 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     double hm = 0;
     if (message1.getGridMetricCellSize(wm,hm))
     {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
       attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
       attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
     }

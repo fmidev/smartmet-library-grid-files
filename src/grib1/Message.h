@@ -69,6 +69,7 @@ class Message : public GRID::Message
 
     T::GeometryId       getGridGeometryId() const;
     std::string         getGridGeometryString() const;
+    void                getGridCellAverageSize(double& width,double& height) const;
     T::Dimensions       getGridDimensions() const;
     T::Hash             getGridHash() const;
     bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);

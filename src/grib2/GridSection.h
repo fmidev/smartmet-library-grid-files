@@ -76,6 +76,7 @@ class GridSection : public GRID::MessageSection
     std::uint8_t          getNumberOfOctetsForNumberOfPoints() const;
     std::uint8_t          getInterpretationOfNumberOfPoints() const;
 
+    void                  getGridCellAverageSize(double& width,double& height) const;
     T::Dimensions         getGridDimensions() const;
     T::UInt16_opt         getGridDefinitionTemplateNumber() const;
     T::GeometryId         getGridGeometryId() const;

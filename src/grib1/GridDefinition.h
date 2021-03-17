@@ -47,7 +47,7 @@ class GridDefinition
     virtual bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
     T::GridLayout               getGridLayout();
     virtual bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
-    virtual void                getGridCellAverageSize(double& width,double& height);
+    virtual void                getGridCellAverageSize(double& width,double& height) const;
     virtual bool                getGridMetricCellSize(double& width,double& height) const;
     virtual bool                getGridMetricSize(double& width,double& height) const;
     virtual T::Coordinate_svec  getGridOriginalCoordinates() const;

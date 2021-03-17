@@ -1728,7 +1728,7 @@ T::Hash GridDefinition::countHash()
 
 
 
-void GridDefinition::getGridCellAverageSize(double& width,double& height)
+void GridDefinition::getGridCellAverageSize(double& width,double& height) const
 {
   FUNCTION_TRACE
   try

@@ -376,7 +376,7 @@ bool LatLonImpl::getGridMetricCellSize(double& width,double& height) const
   {
     width = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
     height = C_DOUBLE(*mLatLon.getJDirectionIncrement()) / 1000000;
-    return true;
+    return false;
   }
   catch (...)
   {

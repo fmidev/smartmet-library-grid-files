@@ -2080,6 +2080,28 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
+void Message::getGridCellAverageSize(double& width,double& height) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    width = 0;
+    height = 0;
+    if (mGridSection != nullptr)
+      mGridSection->getGridCellAverageSize(width,height);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 bool Message::getGridMetricCellSize(double& width,double& height) const
 {
   FUNCTION_TRACE

@@ -756,7 +756,7 @@ bool RotatedLatLonImpl::getGridMetricCellSize(double& width,double& height) cons
   {
     width = C_DOUBLE(mIDirectionIncrement) / 1000;
     height = C_DOUBLE(mJDirectionIncrement) / 1000;
-    return true;
+    return false;
   }
   catch (...)
   {

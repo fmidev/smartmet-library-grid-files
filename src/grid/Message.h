@@ -102,6 +102,7 @@ class Message
     virtual T::ParamLevelId     getGrib1ParameterLevelId() const;
     virtual T::ParamLevelId     getGrib2ParameterLevelId() const;
 
+    virtual void                getGridCellAverageSize(double& width,double& height) const;
     virtual T::Dimensions       getGridDimensions() const;
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;

@@ -725,6 +725,27 @@ T::GeometryId GridSection::getGridGeometryId() const
 
 
 
+void GridSection::getGridCellAverageSize(double& width,double& height) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    width = 0;
+    height = 0;
+
+    if (mGridDefinition != nullptr)
+      mGridDefinition->getGridCellAverageSize(width,height);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 bool GridSection::getGridMetricCellSize(double& width,double& height) const
 {
   FUNCTION_TRACE

@@ -3282,6 +3282,15 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
         attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
         attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
       }
+      else
+      {
+        attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+        attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+        def->getGridCellAverageSize(wm,hm);
+        attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+        attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+      }
     }
 
 
@@ -3483,6 +3492,9 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
     const char *gridCellWidthStr = attributeList.getAttributeValue("grid.original.cell.width");
     const char *gridCellHeightStr = attributeList.getAttributeValue("grid.original.cell.height");
+    const char *gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
+    const char *gridCellHeightDegrStr = attributeList.getAttributeValue("grid.original.cell.height.degrees");
+    const char *gridOriginalProjectionStr = attributeList.getAttributeValue("grid.original.projectionType");
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
@@ -3547,6 +3559,15 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         attributeList.setAttribute("grid.cell.width",Fmi::to_string(wm));
         attributeList.setAttribute("grid.cell.height",Fmi::to_string(hm));
       }
+      else
+      {
+        attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+        attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+        def->getGridCellAverageSize(wm,hm);
+        attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+        attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+      }
     }
 
     if ((urnStr != nullptr || crsStr != nullptr)  &&  (bboxStr != nullptr ||  llboxStr != nullptr) && ((gridWidthStr != nullptr  &&  gridHeightStr != nullptr) ||  (gridCellWidthStr != nullptr  &&  gridCellHeightStr != nullptr)))
@@ -3603,6 +3624,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
         OGRCoordinateTransformation *reverseTransformation = nullptr;
 
+        bool targetIsLatlon = false;
+
         if (bboxStr != nullptr)
           cc = aa;
         else
@@ -3629,6 +3652,9 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           cc.emplace_back(lat1);
           cc.emplace_back(lon2);
           cc.emplace_back(lat2);
+
+          if (lon1 == aa[0]  &&  lat1 == aa[1]  && lon2 == aa[2]  &&  lat2 == aa[3])
+            targetIsLatlon = true;
         }
 
         double diffx = cc[2] - cc[0];
@@ -3650,14 +3676,73 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         {
           if (gridCellWidthStr != nullptr  &&  gridCellHeightStr != nullptr)
           {
-            dx = toDouble(gridCellWidthStr);
-            dy = toDouble(gridCellHeightStr);
+            // Trying to define width and height for the new grid.
 
-            width = C_UINT(fabs(diffx) / dx + 1);
-            height = C_UINT(fabs(diffy) / dy + 1);
+            // Size of the original grid cell (this might be metric or in degrees)
+            double dxx = toDouble(gridCellWidthStr);
+            double dyy = toDouble(gridCellHeightStr);
+
+            int origProjectionType = 0;
+            if (gridOriginalProjectionStr != NULL)
+              origProjectionType = atoi(gridOriginalProjectionStr);
+
+            if (targetIsLatlon)
+            {
+              // The target projection is latlon
+
+              if (origProjectionType == T::GridProjectionValue::LatLon)
+              {
+                // The source projection is also latlon.
+
+                if (gridCellWidthDegrStr != nullptr  &&  gridCellHeightDegrStr != nullptr)
+                {
+                  dxx = toDouble(gridCellWidthDegrStr);
+                  dyy = toDouble(gridCellHeightDegrStr);
+                }
+
+                width = C_UINT(fabs(diffx) / dxx + 1);
+                height = C_UINT(fabs(diffy) / dyy + 1);
+              }
+              else
+              {
+                // The source is metric
+
+                // Counting metric width and height of the target projection
+
+                double w1 = latlon_distance(cc[1], cc[0], cc[1],cc[2]);
+                double w2 = latlon_distance(cc[3], cc[0], cc[3],cc[2]);
+                double w = (w1+w2)/2;
+
+                double h1 = latlon_distance(cc[1], cc[0], cc[3],cc[0]);
+                double h2 = latlon_distance(cc[1], cc[2], cc[3],cc[2]);
+                double h = (h1+h2)/2;
+
+                // Width and height (in pixels) for the new grid
+
+                width =  C_UINT(w/dxx);
+                height = C_UINT(h/dyy);
+              }
+            }
+            else
+            {
+              // The target projection is metric
+
+              width = C_UINT(fabs(diffx) / dxx + 1);
+              height = C_UINT(fabs(diffy) / dyy + 1);
+            }
+
+            dx = diffx / C_DOUBLE(width-1);
+            dy = diffy / C_DOUBLE(height-1);
           }
         }
 
+        if (width == 0 || height == 0)
+        {
+          Fmi::Exception exception(BCP,"Invalid grid size!");
+          exception.addParameter("width",std::to_string(width));
+          exception.addParameter("height",std::to_string(height));
+          throw exception;
+        }
 
         attributeList.setAttribute("grid.cell.width",Fmi::to_string(dx));
         attributeList.setAttribute("grid.cell.height",Fmi::to_string(dy));

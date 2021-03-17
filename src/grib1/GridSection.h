@@ -73,6 +73,7 @@ class GridSection : public GRID::MessageSection
 
     // ### Section specific methods
 
+    void                  getGridCellAverageSize(double& width,double& height) const;
     T::Dimensions         getGridDimensions() const;
     T::GeometryId         getGridGeometryId() const;
     std::string           getGridGeometryString() const;
