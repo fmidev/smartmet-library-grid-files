@@ -3809,7 +3809,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       }
     }
 
-    if (latLonCoordinates->size() > 0)
+    if (latLonCoordinates && latLonCoordinates->size() > 0)
     {
       int last = latLonCoordinates->size() - 1;
       char tmp[100];
