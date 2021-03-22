@@ -3478,6 +3478,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
   FUNCTION_TRACE
   try
   {
+    //attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *proj4Str = attributeList.getAttributeValue("grid.proj4Str");
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
@@ -3679,8 +3680,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             // Trying to define width and height for the new grid.
 
             // Size of the original grid cell (this might be metric or in degrees)
-            double dxx = toDouble(gridCellWidthStr);
-            double dyy = toDouble(gridCellHeightStr);
+            double dxx = toDouble(gridCellWidthStr)*1000;
+            double dyy = toDouble(gridCellHeightStr)*1000;
 
             int origProjectionType = 0;
             if (gridOriginalProjectionStr != NULL)
@@ -3736,7 +3737,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           }
         }
 
-        if (width == 0 || height == 0)
+        if (width == 0 || height == 0 || width > 5000 || height > 5000)
         {
           Fmi::Exception exception(BCP,"Invalid grid size!");
           exception.addParameter("width",std::to_string(width));
@@ -3744,8 +3745,16 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           throw exception;
         }
 
-        attributeList.setAttribute("grid.cell.width",Fmi::to_string(dx));
-        attributeList.setAttribute("grid.cell.height",Fmi::to_string(dy));
+        if (targetIsLatlon)
+        {
+          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx)));
+          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy)));
+        }
+        else
+        {
+          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx/1000)));
+          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
+        }
 
 
         std::size_t hash = attributeList.getHash();
@@ -3816,6 +3825,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       sprintf(tmp,"%f,%f,%f,%f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
       attributeList.setAttribute("grid.llbox",tmp);
     }
+    //attributeList.print(std::cout,0,0);
   }
   catch (...)
   {
