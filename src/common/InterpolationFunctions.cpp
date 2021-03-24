@@ -1055,4 +1055,170 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_
   }
 }
 
+
+
+
+double lapseratefix(double lapseRate,double trueHeight,double modelHeight,bool waterFlag)
+{
+  try
+  {
+    // Limit inversion in Norwegian fjords
+    double sea_lapse_rate_limit = -3.0;
+
+    if (waterFlag)
+    {
+      if (lapseRate > sea_lapse_rate_limit)
+        lapseRate = sea_lapse_rate_limit;
+    }
+
+    double diff = trueHeight - modelHeight;
+
+    if (lapseRate > 0)
+    {
+      if (diff < -300)
+        diff = -300;
+      else
+      if (diff > 150)
+        diff = 150;
+    }
+    else
+    {
+      if (diff < -1500)
+        diff = -1500;
+      else
+      if (diff > 2000)
+        diff = 2000;
+    }
+
+    // lapse rate unit is km, hence we divide by 1000 to get change per meters
+    return lapseRate / 1000 * diff;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+double landscapeInterpolation(
+    double height,
+    int coverType,
+    double x,
+    double y,
+    double val_bl,
+    double val_br,
+    double val_tr,
+    double val_tl,
+    double height_bl,
+    double height_br,
+    double height_tr,
+    double height_tl,
+    double lapserate_bl,
+    double lapserate_br,
+    double lapserate_tr,
+    double lapserate_tl,
+    double land_bl,
+    double land_br,
+    double land_tr,
+    double land_tl)
+{
+  try
+  {
+/*
+    printf("landscapeInterpolation(%f,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",
+        height,coverType,x,y,
+        val_bl,val_br,val_tr,val_tl,
+        height_bl,height_br,height_tr,height_tl,
+        lapserate_bl,lapserate_br,lapserate_tr,lapserate_tl,
+        land_bl,land_br,land_tr,land_tl);
+*/
+    bool waterFlag = false;
+    if (coverType == 240)
+      waterFlag = true;
+
+    if (height == ParamValueMissing || coverType <= 0)
+      return  linearInterpolation(x,y,0,0,1,1,val_bl,val_br,val_tr,val_tl);
+
+
+    if (val_bl == ParamValueMissing || val_br == ParamValueMissing || val_tl == ParamValueMissing || val_tr == ParamValueMissing)
+      return  linearInterpolation(x,y,0,0,1,1,val_bl,val_br,val_tr,val_tl);
+
+
+    // Do height corrections if possible
+
+    if (height_bl != ParamValueMissing && height_br != ParamValueMissing && height_tl != ParamValueMissing && height_tr != ParamValueMissing)
+    {
+      double default_lapserate = -6.5;   // degrees per kilometer
+
+      if (lapserate_bl == ParamValueMissing)
+        lapserate_bl = default_lapserate;
+
+      if (lapserate_br == ParamValueMissing)
+        lapserate_br = default_lapserate;
+
+      if (lapserate_tl == ParamValueMissing)
+        lapserate_tl = default_lapserate;
+
+      if (lapserate_tr == ParamValueMissing)
+        lapserate_tr = default_lapserate;
+
+      // Convert the values to the desired height
+
+      val_bl = val_bl + lapseratefix(lapserate_bl, height, height_bl, waterFlag);
+      val_br = val_br + lapseratefix(lapserate_br, height, height_br, waterFlag);
+      val_tl = val_tl + lapseratefix(lapserate_tl, height, height_tl, waterFlag);
+      val_tr = val_tr + lapseratefix(lapserate_tr, height, height_tr, waterFlag);
+    }
+
+
+    double wbl = (1 - x) * (1 - y);
+    double wbr = x * (1 - y);
+    double wtl = (1 - x) * y;
+    double wtr = x * y;
+
+
+    // Modify the coefficients based on the land sea mask
+
+    if (land_bl != ParamValueMissing && land_br != ParamValueMissing && land_tl != ParamValueMissing && land_tr != ParamValueMissing)
+    {
+      // Minimum weight for any value selected by Mikko Rauhala
+      double wlimit = 0.3;
+
+      //  Handle land areas
+      if (!waterFlag)
+      {
+        // Scale percentage from 0...1 to wlimit...1
+        wbl = wbl * (land_bl + wlimit) / (1 + wlimit);
+        wbr = wbr * (land_br + wlimit) / (1 + wlimit);
+        wtl = wtl * (land_tl + wlimit) / (1 + wlimit);
+        wtr = wtr * (land_tr + wlimit) / (1 + wlimit);
+      }
+      else
+      {
+        // Scale percentage from 0...1 to 1...wlimit
+        wbl = wbl * (1 - land_bl + wlimit) / (1 + wlimit);
+        wbr = wbr * (1 - land_br + wlimit) / (1 + wlimit);
+        wtl = wtl * (1 - land_tl + wlimit) / (1 + wlimit);
+        wtr = wtr * (1 - land_tr + wlimit) / (1 + wlimit);
+      }
+    }
+
+    //Perform combined interpolation
+
+    double value = (wbl * val_bl + wbr * val_br + wtl * val_tl + wtr * val_tr) / (wbl + wbr + wtl + wtr);
+
+    return value;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
 }

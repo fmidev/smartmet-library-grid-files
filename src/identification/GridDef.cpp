@@ -3737,7 +3737,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           }
         }
 
-        if (width == 0 || height == 0 || width > 5000 || height > 5000)
+        if (width == 0 || height == 0 || width > 10000 || height > 10000)
         {
           Fmi::Exception exception(BCP,"Invalid grid size!");
           exception.addParameter("width",std::to_string(width));

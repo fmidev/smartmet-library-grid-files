@@ -1069,6 +1069,7 @@ void Message::read(MemoryReader& memoryReader)
 
     while (true)
     {
+      auto prevPos = memoryReader.getReadPosition();
       if ((memoryReader.getReadPtr()+4) > memoryReader.getEndPtr())
       {
         // std::cout << CODE_LOCATION << ": Memory area end reached!\n";
@@ -1091,8 +1092,7 @@ void Message::read(MemoryReader& memoryReader)
       else
       if (memoryReader.peek_string("7777"))
       {
-        break;  // NOTE: Leave the ptr pointing at the end section so that the external parser can
-                // quit
+        break;
       }
       else
       {
@@ -1237,6 +1237,13 @@ void Message::read(MemoryReader& memoryReader)
           throw exception;
         }
       }
+
+      if (prevPos == memoryReader.getReadPosition())
+      {
+        // No data read in this cycle. Ending the loop
+        break;
+      }
+
     }
 
     // All messages must define sections 4-7

@@ -25,5 +25,28 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
 void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::GridValueList& valueList);
 void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::GridValueList& valueList);
 
+
+double landscapeInterpolation(
+    double height,
+    int coverType,
+    double x,
+    double y,
+    double val_bl,
+    double val_br,
+    double val_tr,
+    double val_tl,
+    double height_bl,
+    double height_br,
+    double height_tr,
+    double height_tl,
+    double lapserate_bl,
+    double lapserate_br,
+    double lapserate_tr,
+    double lapserate_tl,
+    double land_bl,
+    double land_br,
+    double land_tr,
+    double land_tl);
+
 }
 

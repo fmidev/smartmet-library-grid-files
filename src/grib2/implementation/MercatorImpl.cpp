@@ -320,11 +320,11 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double i = xDiff / di;
     double j = yDiff / dj;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
-      return false;
-
     grid_i = i;
     grid_j = j;
+
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
+      return false;
 
     return true;
   }
@@ -418,6 +418,7 @@ void MercatorImpl::initSpatialReference()
 {
   try
   {
+    print(std::cout,0,0);
     // ### Check that we have all necessary values needed by this method.
 
     auto dfCenterLat = mLatitudeOfFirstGridPoint;
@@ -457,7 +458,7 @@ void MercatorImpl::initSpatialReference()
     //mSpatialReference.importFromEPSG(3395);
 
     // ### Validate the spatial reference.
-
+/*
     auto errorCode = mSpatialReference.Validate();
     if (errorCode != OGRERR_NONE)
     {
@@ -465,6 +466,7 @@ void MercatorImpl::initSpatialReference()
       exception.addParameter("ErrorCode",std::to_string(errorCode));
       throw exception;
     }
+*/
   }
   catch (...)
   {

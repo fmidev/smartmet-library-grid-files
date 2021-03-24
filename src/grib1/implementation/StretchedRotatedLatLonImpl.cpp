@@ -224,11 +224,11 @@ bool StretchedRotatedLatLonImpl::getGridPointByLatLonCoordinates(double lat,doub
     double i = lonDiff / iDirectionIncrement;
     double j = latDiff / jDirectionIncrement;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
-      return false;
-
     grid_i = i;
     grid_j = j;
+
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
+      return false;
 
     return true;
   }

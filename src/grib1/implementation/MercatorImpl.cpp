@@ -313,11 +313,11 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double i = xDiff / di;
     double j = yDiff / dj;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
-      return false;
-
     grid_i = i;
     grid_j = j;
+
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
+      return false;
 
     return true;
   }

@@ -2554,6 +2554,28 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
       y2 = C_DOUBLE(Fmi::ceil(y2));
     }
 
+    T::Dimensions d = getGridDimensions();
+    double w = d.nx();
+    double h = d.ny();
+
+    if (x1 < 0)
+      x1 = 0;
+
+    if (y1 < 0)
+      y1 = 0;
+
+    if (x2 < 0)
+      x2 = 0;
+
+    if (y2 < 0)
+      y2 = 0;
+
+    if (x2 >= w)
+      x2 = w-1;
+
+    if (y2 >= h)
+      y2 = h-1;
+
     bool gridRectangle = true;
     T::GridValueList valueList;
 

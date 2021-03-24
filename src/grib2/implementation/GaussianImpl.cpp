@@ -276,11 +276,11 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double latDiff = aLat-latLow;
     double j = t + latDiff / (latHigh-latLow);
 
-    if (j < 0  ||  j > C_DOUBLE(nj))
-      return false;
-
     grid_i = i;
     grid_j = j;
+
+    if (j < 0  ||  j > C_DOUBLE(nj))
+      return false;
 
     return true;
   }

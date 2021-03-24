@@ -144,6 +144,7 @@ class AreaInterpolationMethod
     static const short Nearest        = 2;
     static const short Min            = 3;
     static const short Max            = 4;
+    static const short Landscape      = 9;
     static const short Forbidden      = 10;    // Requested point needs to match a grid point (or to be very close to it)
     static const short List           = 500;   // Returns grid corner values
     static const short ListWithAngles = 501;   // Returns grid corner values and angles

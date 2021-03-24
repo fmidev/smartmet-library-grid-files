@@ -426,11 +426,11 @@ bool LambertAzimuthalEqualAreaImpl::getGridPointByOriginalCoordinates(double x,d
     double i = xDiff / mDxx;
     double j = yDiff / mDyy;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNumberOfPointsAlongXAxis) ||  j > C_DOUBLE(*mNumberOfPointsAlongYAxis))
-      return false;
-
     grid_i = i;
     grid_j = j;
+
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNumberOfPointsAlongXAxis) ||  j > C_DOUBLE(*mNumberOfPointsAlongYAxis))
+      return false;
 
     return true;
   }
