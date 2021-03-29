@@ -3478,7 +3478,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
   FUNCTION_TRACE
   try
   {
-    //attributeList.print(std::cout,0,0);
+    attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *proj4Str = attributeList.getAttributeValue("grid.proj4Str");
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
@@ -3680,8 +3680,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             // Trying to define width and height for the new grid.
 
             // Size of the original grid cell (this might be metric or in degrees)
-            double dxx = toDouble(gridCellWidthStr)*1000;
-            double dyy = toDouble(gridCellHeightStr)*1000;
+            double dxx = toDouble(gridCellWidthStr);
+            double dyy = toDouble(gridCellHeightStr);
 
             int origProjectionType = 0;
             if (gridOriginalProjectionStr != NULL)
@@ -3717,6 +3717,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
                 double h1 = latlon_distance(cc[1], cc[0], cc[3],cc[0]);
                 double h2 = latlon_distance(cc[1], cc[2], cc[3],cc[2]);
                 double h = (h1+h2)/2;
+
+                printf("WIDTH %f,%f %f   %f,%f %f  %f,%f\n",w1,w2,w,h1,h2,h,dxx,dyy);
 
                 // Width and height (in pixels) for the new grid
 
