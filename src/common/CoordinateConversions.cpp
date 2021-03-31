@@ -196,6 +196,39 @@ double latlon_distance(double lat1, double lon1, double lat2, double lon2)
 
 
 
+double latlon_width(double lat, double longitudes)
+{
+  try
+  {
+    // Metric width of 1 degree
+    double w = latlon_distance(lat,0,lat,1);
+    return longitudes * w;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+double latlon_height(double lon, double latitudes)
+{
+  try
+  {
+    // Metric width of 1 degree
+    double h = latlon_distance(0,lon,1,lon);
+    return latitudes * h;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocirclePoints(double lon1, double lat1, double lon2, double lat2, std::size_t steps)
 {
   try

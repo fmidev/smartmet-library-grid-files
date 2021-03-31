@@ -3478,7 +3478,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
   FUNCTION_TRACE
   try
   {
-    attributeList.print(std::cout,0,0);
+    // attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *proj4Str = attributeList.getAttributeValue("grid.proj4Str");
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
@@ -3694,7 +3694,6 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
               if (origProjectionType == T::GridProjectionValue::LatLon)
               {
                 // The source projection is also latlon.
-
                 if (gridCellWidthDegrStr != nullptr  &&  gridCellHeightDegrStr != nullptr)
                 {
                   dxx = toDouble(gridCellWidthDegrStr);
@@ -3710,15 +3709,14 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
                 // Counting metric width and height of the target projection
 
-                double w1 = latlon_distance(cc[1], cc[0], cc[1],cc[2]);
-                double w2 = latlon_distance(cc[3], cc[0], cc[3],cc[2]);
-                double w = (w1+w2)/2;
+                double longitudes = (cc[2]-cc[0]);
+                double latitudes = (cc[3]-cc[1]);
 
-                double h1 = latlon_distance(cc[1], cc[0], cc[3],cc[0]);
-                double h2 = latlon_distance(cc[1], cc[2], cc[3],cc[2]);
-                double h = (h1+h2)/2;
+                double centerLongitude = cc[0] + longitudes/2;
+                double centerLatitude = cc[1] + latitudes/2;
 
-                printf("WIDTH %f,%f %f   %f,%f %f  %f,%f\n",w1,w2,w,h1,h2,h,dxx,dyy);
+                double w = latlon_width(centerLatitude,longitudes);
+                double h = latlon_height(centerLongitude,latitudes);
 
                 // Width and height (in pixels) for the new grid
 
