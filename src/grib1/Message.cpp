@@ -2559,6 +2559,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         }
       }
     }
+/*
     else
     {
       if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
@@ -2606,18 +2607,19 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         }
       }
     }
-
+*/
     if (mCacheKey > 0)
     {
       // Trying to get a memory cached value.
 
       if (GRID::valueCache.getValue(mCacheKey,idx,value))
       {
+#ifdef POINT_CACHE
         addCachedValue(idx,value);
+#endif
         return value;
       }
     }
-
 
     T::ParamValue_vec values;
     getGridValueVector(values);
@@ -2730,7 +2732,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     {
       mDataSection->decodeValues(values);
 
-      if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
+      if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
       if (d.getDimensions() == 2  &&  n != (d.nx() * d.ny()))
@@ -2761,7 +2763,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
         values = valVector;
 
         //  printf("FILE (2) %u\n",getFileId());
-        if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
+        if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
           mCacheKey = GRID::valueCache.addValues(values);
       }
       else
@@ -2827,7 +2829,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     try
     {
       mDataSection->decodeValues(values);
-      if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
+      if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
       if (getGridLayout() == T::GridLayoutValue::Regular)
@@ -2863,7 +2865,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
             valVector.emplace_back(val);
           }
         }
-        if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING)
+        if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
           mCacheKey = GRID::valueCache.addValues(valVector);
       }
     }

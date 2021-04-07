@@ -2885,7 +2885,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     {
       mRepresentationSection->decodeValues(values);
 
-      if (mRepresentationSection->getDataRepresentationTemplateNumber() != RepresentationSection::Template::GridDataRepresentation)
+      if (mRepresentationSection->getDataRepresentationTemplateNumber() != RepresentationSection::Template::GridDataRepresentation || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mCacheKey = GRID::valueCache.addValues(values);
     }
     catch (...)
@@ -3303,6 +3303,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         }
       }
     }
+/*
     else
     {
       if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
@@ -3351,7 +3352,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         }
       }
     }
-
+*/
     if (mCacheKey > 0)
     {
       // Trying to get a memory cache value.
