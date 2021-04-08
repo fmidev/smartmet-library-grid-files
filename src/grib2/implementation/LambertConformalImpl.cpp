@@ -514,11 +514,11 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
     double i = xDiff / mDxx;
     double j = yDiff / mDyy;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNx) ||  j > C_DOUBLE(*mNy))
-      return false;
-
     grid_i = i;
     grid_j = j;
+
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNx) ||  j > C_DOUBLE(*mNy))
+      return false;
 
     return true;
   }
