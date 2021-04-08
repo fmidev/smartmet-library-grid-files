@@ -48,20 +48,27 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
   {
     // https://en.wikipedia.org/wiki/Bilinear_interpolation
 
-    if (x == x1  &&  y == y1)
+    double dist = 0.001;
+    double dist_x1 = x-x1;
+    double dist_x2 = x2-x;
+    double dist_y1 = y-y1;
+    double dist_y2 = y2-y;
+
+    if (dist_x1 < dist && dist_y1 < dist)
       return val_q11;
 
-    if (x == x2  &&  y == y1)
+    if (dist_x2 < dist && dist_y1 < dist)
       return val_q21;
 
-    if (x == x1  &&  y == y2)
+    if (dist_x1 < dist && dist_y2 < dist)
       return val_q12;
 
-    if (x == x2  &&  y == y2)
+    if (dist_x2 < dist && dist_y2 < dist)
       return val_q22;
 
     uint missingFlags = 0;
     uint missingCount = 0;
+
     if (val_q11 == ParamValueMissing)
     {
       missingFlags = 1;
@@ -90,11 +97,6 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
       return ParamValueMissing;
 
     // Bilinear interpolation
-
-    double dist_x1 = x-x1;
-    double dist_x2 = x2-x;
-    double dist_y1 = y-y1;
-    double dist_y2 = y2-y;
 
     if (missingCount == 0)
     {
@@ -143,8 +145,8 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
       // If the given point is on the border then we can do simple
       // linear interpolation.
 
-      //printf("DIST %f,%f,%f,%f  %u\n",dist_x1,dist_y1,dist_x2,dist_y2,missingFlags);
-      if (dist_x1 == 0)
+      printf("DIST %.20f,%.20f,%.20f,%.20f  %u\n",dist_x1,dist_y1,dist_x2,dist_y2,missingFlags);
+      if (dist_x1 < dist)
       {
         // Linear interpolation x1,y1 - x1,y2
         if (missingFlags == 10)
@@ -153,7 +155,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
         return ParamValueMissing;
       }
 
-      if (dist_x2 == 0)
+      if (dist_x2 < dist)
       {
         // Linear interpolation x2,y1 - x2,y2
         if (missingFlags == 5)
@@ -162,7 +164,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
         return ParamValueMissing;
       }
 
-      if (dist_y1 == 0)
+      if (dist_y1 < dist)
       {
         // Linear interpolation x1,y1 - x2,y1
         if (missingFlags == 12)
@@ -171,7 +173,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
         return ParamValueMissing;
       }
 
-      if (dist_y2 == 0)
+      if (dist_y2 < dist)
       {
         // Linear interpolation x1,y2 - x2,y2
         if (missingFlags == 3)
