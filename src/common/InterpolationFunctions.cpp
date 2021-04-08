@@ -145,7 +145,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
       // If the given point is on the border then we can do simple
       // linear interpolation.
 
-      printf("DIST %.20f,%.20f,%.20f,%.20f  %u\n",dist_x1,dist_y1,dist_x2,dist_y2,missingFlags);
+      //printf("DIST %.20f,%.20f,%.20f,%.20f  %u\n",dist_x1,dist_y1,dist_x2,dist_y2,missingFlags);
       if (dist_x1 < dist)
       {
         // Linear interpolation x1,y1 - x1,y2
