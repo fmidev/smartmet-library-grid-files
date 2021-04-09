@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.3.31
+Version: 21.4.9
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,10 +11,10 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.3.2
-BuildRequires: smartmet-library-spine-devel >= 21.3.1
+BuildRequires: smartmet-library-newbase-devel >= 21.3.20
+BuildRequires: smartmet-library-spine-devel >= 21.3.27
 BuildRequires: smartmet-library-macgyver >= 21.2.25
-BuildRequires: smartmet-library-tron >= 21.2.10
+BuildRequires: smartmet-library-tron >= 21.4.9
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal32-devel
@@ -35,9 +35,9 @@ Requires: boost169-thread
 Requires: gdal32-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.3.2
+Requires: smartmet-library-newbase >= 21.3.20
 Requires: smartmet-library-macgyver >= 21.2.25
-Requires: smartmet-library-spine >= 21.3.1
+Requires: smartmet-library-spine >= 21.3.27
 
 %description
 FMI Grid File handling library
@@ -76,6 +76,11 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Apr  9 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.4.9-1.fmi
+- Faster contouring with the latest Tron library
+- Allow grid point calculations outside the grid
+- Fixed linear interpolation in the border areas
+- Fixed grid handling when a GRIB bitmask is set
 * Wed Mar 31 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.3.31-1.fmi
 - Enable cropping over grid borders when the grid is global 
 * Mon Mar 29 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.3.29-2.fmi
