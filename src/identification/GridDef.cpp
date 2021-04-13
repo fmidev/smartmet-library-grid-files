@@ -4979,7 +4979,11 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           latLon.setScanningMode(scanningMode2);
           def2->setLatLon(latLon);
 
+          if (longitudeOfSouthernPole < 0)
+            longitudeOfSouthernPole = longitudeOfSouthernPole + 360000000;
+
           rotation2.setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
+
           rotation2.setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
           rotation2.setAngleOfRotation(angle);
           def2->setRotation(rotation2);
@@ -5047,6 +5051,10 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setNx(T::UInt32_opt(ni));
           def2->setNy(T::UInt32_opt(nj));
           def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+
+          if (longitude < 0)
+            longitude = longitude + 360000000;
+
           def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
 
           def2->setLaD(laD);
@@ -5112,6 +5120,10 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setNx(T::UInt32_opt(ni));
           def2->setNy(T::UInt32_opt(nj));
           def2->setLatitudeOfFirstGridPoint(T::Int32_opt(latitude));
+
+          if (longitude < 0)
+            longitude = longitude + 360000000;
+
           def2->setLongitudeOfFirstGridPoint(T::UInt32_opt(longitude));
 
           def2->setLaD(laD);
@@ -5122,6 +5134,10 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setLatin1(T::Int32_opt(latin1));
           def2->setLatin2(T::Int32_opt(latin2));
           def2->setLatitudeOfSouthernPole(T::Int32_opt(latitudeOfSouthernPole));
+
+          if (longitudeOfSouthernPole < 0)
+            longitudeOfSouthernPole = longitudeOfSouthernPole + 360000000;
+
           def2->setLongitudeOfSouthernPole(T::UInt32_opt(longitudeOfSouthernPole));
 
           GRIB2::ResolutionSettings resolution;
