@@ -12,9 +12,9 @@ Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 21.3.20
-BuildRequires: smartmet-library-spine-devel >= 21.3.27
+BuildRequires: smartmet-library-spine-devel >= 21.4.15
 BuildRequires: smartmet-library-macgyver >= 21.2.25
-BuildRequires: smartmet-library-tron >= 21.4.9
+BuildRequires: smartmet-library-tron-devel >= 21.4.15
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal32-devel
@@ -37,7 +37,8 @@ Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 21.3.20
 Requires: smartmet-library-macgyver >= 21.2.25
-Requires: smartmet-library-spine >= 21.3.27
+Requires: smartmet-library-spine >= 21.4.15
+Requires: smartmet-library-tron >= 21.4.15
 
 %description
 FMI Grid File handling library
