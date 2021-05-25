@@ -51,6 +51,8 @@ GridDefinition::GridDefinition()
     mGeometryId = 0;
     mLatlonSpatialReference.importFromEPSG(4326);
     mLatlonSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+    mEarth_semiMajor = 0;
+    mEarth_semiMinor = 0;
   }
   catch (...)
   {
@@ -74,6 +76,8 @@ GridDefinition::GridDefinition(const GridDefinition& other)
     mGeometryId = other.mGeometryId;
     mGeometryName = other.mGeometryName;
     mGridProjection = other.mGridProjection;
+    mEarth_semiMajor = other.mEarth_semiMajor;
+    mEarth_semiMinor = other.mEarth_semiMinor;
     mLatlonSpatialReference.importFromEPSG(4326);
     mLatlonSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
   }
@@ -1789,11 +1793,77 @@ T::Hash GridDefinition::countHash()
 
 
 
+double GridDefinition::getEarthSemiMajor()
+{
+  try
+  {
+    return mEarth_semiMajor;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+double GridDefinition::getEarthSemiMinor()
+{
+  try
+  {
+    return mEarth_semiMinor;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDefinition::setEarthSemiMajor(double value)
+{
+  try
+  {
+    mEarth_semiMajor = value;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridDefinition::setEarthSemiMinor(double value)
+{
+  try
+  {
+    mEarth_semiMinor = value;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
 {
   FUNCTION_TRACE
   try
   {
+    if (mEarth_semiMajor != 0) // The original value has be overridden
+      return mEarth_semiMajor;
+
     double defaultValue = 6367470; //  6371229;
     double value = 0;
 
@@ -1868,6 +1938,9 @@ double GridDefinition::getMinorAxis(EarthShapeSettings& earthSettings)
   FUNCTION_TRACE
   try
   {
+    if (mEarth_semiMinor != 0) // The original value has be overridden
+      return mEarth_semiMinor;
+
     double defaultValue = 0;
     double value = 0;
     auto shape = earthSettings.getShapeOfTheEarth();
@@ -1948,6 +2021,9 @@ double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
   FUNCTION_TRACE
   try
   {
+    if (mEarth_semiMajor != 0  &&  mEarth_semiMinor != 0) // The original value has be overridden
+      return (mEarth_semiMajor-mEarth_semiMinor)/mEarth_semiMajor;
+
     double defaultValue = 0;
     double value = 0;
 
@@ -1985,22 +2061,22 @@ double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
         break;
 
       case 2: // Earth assumed oblate spheroid with size as determined by IAU in 1965 (major axis = 6,378,160.0 m, minor axis = 6,356,775.0 m, f = 1/297.0)
-        value = 1000000 * 1/297.0;
+        value = 1/297.0;
         break;
 
       case 3: // Earth assumed oblate spheroid with major and minor axes specified by data producer
         if (minor_v > 0 &&  major_v > 0)
-          value = (1.0 / (1.0 - (minor_sf * minor_v) / (major_sf * major_v)));
+          value = ((major_sf * major_v) - (minor_sf * minor_v)) / (major_sf * major_v);
         else
           value = 0;
         break;
 
       case 4: // Earth assumed oblate spheroid as defined in IAG-GRS80 model (major axis = 6,378,137.0 m, minor axis = 6,356,752.314 m, f = 1/298.257222101)
-        value = 6356752.314;
+        value = 1/298.257222101;
         break;
 
       case 5: // Earth assumed represented by WGS84 (as used by ICAO since 1998)
-        value = (1000000 * 1/298.257222101);
+        value = 1/298.257222101;
         break;
 
       case 6: // Earth assumed spherical with radius of 6,371,229.0 m

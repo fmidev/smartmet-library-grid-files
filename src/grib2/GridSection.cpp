@@ -366,7 +366,21 @@ void GridSection::read(MemoryReader& memoryReader)
     }
 
     if (mGridDefinition != nullptr)
+    {
+      if (getGridGeometryId() == 0)
+      {
+        auto gs = getGridGeometryString();
+        auto *def = Identification::gridDef.getGrib2DefinitionByGeometryString(gs);
+        if (def != nullptr)
+        {
+          mGridDefinition->setGridGeometryId(def->getGridGeometryId());
+          mGridDefinition->setEarthSemiMajor(def->getEarthSemiMajor());
+          mGridDefinition->setEarthSemiMinor(def->getEarthSemiMinor());
+        }
+      }
+
       mGridDefinition->initSpatialReference();
+    }
 
     getGridHash();
   }

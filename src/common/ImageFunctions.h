@@ -5,6 +5,7 @@
 
 #include <newbase/NFmiSvgPath.h>
 #include <macgyver/Exception.h>
+#include <ogr_geometry.h>
 
 
 namespace SmartMet
@@ -111,6 +112,10 @@ uint rgb(uint red, uint green, uint blue);
 // HSV component should have value that is in the range 0..255.
 
 uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value);
+
+
+void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,const OGRGeometry *geom,bool autoscale);
+void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,std::vector<std::shared_ptr<OGRGeometry>> geomVec,bool autoscale);
 
 
 }

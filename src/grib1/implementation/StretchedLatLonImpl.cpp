@@ -263,7 +263,9 @@ void StretchedLatLonImpl::initSpatialReference()
     if (rflags != nullptr)
     {
       dfSemiMajor = getMajorAxis(rflags->getResolutionAndComponentFlags());
-      dfInvFlattening = getFlattening(rflags->getResolutionAndComponentFlags());
+      double dfFlattening = getFlattening(rflags->getResolutionAndComponentFlags());
+      if (dfFlattening != 0)
+        dfInvFlattening = 1/dfFlattening;
     }
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);

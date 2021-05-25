@@ -193,7 +193,9 @@ class GridDef
     GRIB2::GridDefinition*  createGrib2GridDefinition(const char *str);
 
     GRIB1::GridDef_ptr      getGrib1DefinitionByGeometryId(int geometryId);
+    GRIB1::GridDef_ptr      getGrib1DefinitionByGeometryString(std::string& geometryStr);
     GRIB2::GridDef_ptr      getGrib2DefinitionByGeometryId(int geometryId);
+    GRIB2::GridDef_ptr      getGrib2DefinitionByGeometryString(std::string& geometryStr);
 
   protected:
 

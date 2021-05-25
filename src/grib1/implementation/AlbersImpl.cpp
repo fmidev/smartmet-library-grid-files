@@ -195,11 +195,11 @@ void AlbersImpl::initSpatialReference()
     const char *pszGeogName = "UNKNOWN";
     const char *pszDatumName = "UNKNOWN";
     const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor =  6367470;
-    double dfInvFlattening = 0.0;
-
-    dfSemiMajor = getMajorAxis(mResolutionFlags.getResolutionAndComponentFlags());
-    dfInvFlattening = getFlattening(mResolutionFlags.getResolutionAndComponentFlags());
+    double dfSemiMajor = getMajorAxis(mResolutionFlags.getResolutionAndComponentFlags());
+    double dfFlattening = getFlattening(mResolutionFlags.getResolutionAndComponentFlags());
+    double dfInvFlattening = 0;
+    if (dfFlattening != 0)
+      dfInvFlattening = 1/dfFlattening;
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 

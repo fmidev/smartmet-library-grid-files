@@ -12,7 +12,7 @@ namespace SmartMet
 
 
 
-ImagePaint::ImagePaint(int _imageWidth,int _imageHeight,uint _backColor,bool _rotatedX,bool _rotatedY)
+ImagePaint::ImagePaint(int _imageWidth,int _imageHeight,uint _backColor,uint _drawColor,uint _fillColor,bool _rotatedX,bool _rotatedY)
 {
   try
   {
@@ -27,6 +27,13 @@ ImagePaint::ImagePaint(int _imageWidth,int _imageHeight,uint _backColor,bool _ro
     mRotatedX = _rotatedX;
     mRotatedY = _rotatedY;
     mBackColor = _backColor;
+    mDrawColor = _drawColor;
+    mFillColor = _fillColor;
+    mMinX = 0;
+    mMinY = 0;
+    mMaxX = 0;
+    mMaxY = 0;
+    mCountingActive = false;
 
     int sz = _imageWidth * _imageHeight;
     mImage = new uint[sz];
@@ -59,10 +66,43 @@ ImagePaint::~ImagePaint()
 
 
 
+void ImagePaint::setDrawColor(uint _color)
+{
+  try
+  {
+    mDrawColor = _color;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void ImagePaint::setFillColor(uint _color)
+{
+  try
+  {
+    mFillColor = _color;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 void ImagePaint::paintPixel(int _x,int _y,uint _color)
 {
   try
   {
+    if (mCountingActive || _color == 0xFFFFFFFF)
+      return;
+
     if (_x >= 0  &&  _x < mImageWidth  &&  _y >=0  &&  _y < mImageHeight)
     {
       if (mRotatedY)
@@ -88,6 +128,10 @@ void ImagePaint::paintLine(double _x1,double _y1,double _x2,double _y2,uint _col
 {
   try
   {
+    if (mCountingActive)
+      return;
+
+    //printf("PaintLine %f,%f  =>  %f,%f\n",_x1,_y1,_x2,_y2);
     paintLine(C_INT(round(_x1)),C_INT(round(_y1)),C_INT(round(_x2)),C_INT(round(_y2)),_color);
   }
   catch (...)
@@ -105,8 +149,20 @@ void ImagePaint::paintLine(int _x1,int _y1,int _x2,int _y2,uint _color)
   FUNCTION_TRACE
   try
   {
+    if (mCountingActive)
+      return;
+
+    //printf("PaintLine %d,%d  =>  %d,%d\n",_x1,_y1,_x2,_y2);
+
     if (_x1 == -2147483648 || _y1 == -2147483648 || _x2 == -2147483648 || _y2 == -2147483648)
       return;
+
+
+    if (_x1 == _x2  &&  _y1 == _y2)
+    {
+      paintPixel(_x1,_y1,_color);
+      return;
+    }
 
     int x1 = (int)_x1;
     int y1 = (int)_y1;
@@ -132,9 +188,6 @@ void ImagePaint::paintLine(int _x1,int _y1,int _x2,int _y2,uint _color)
 
     dy <<= 1;
     dx <<= 1;
-
-
-    paintPixel(x1,y1,_color);
 
     if (dx > dy)
     {
@@ -177,10 +230,13 @@ void ImagePaint::paintLine(int _x1,int _y1,int _x2,int _y2,uint _color)
 
 
 
-void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _color)
+void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _drawColor,uint _fillColor)
 {
   try
   {
+    if (mCountingActive)
+      return;
+
     std::set<unsigned long long> cList;
     uint numOfPoints = polygonPoints.size();
     if (numOfPoints == 0)
@@ -199,7 +255,7 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _co
 
     for (uint t=1; t<numOfPoints; t++)
     {
-      paintLine(polygonPoints[t-1].x(),polygonPoints[t-1].y(),polygonPoints[t].x(),polygonPoints[t].y(),_color);
+      paintLine(polygonPoints[t-1].x(),polygonPoints[t-1].y(),polygonPoints[t].x(),polygonPoints[t].y(),_drawColor);
     }
 
     // Painting points that are inside the polygon line.
@@ -277,7 +333,7 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _co
 
           for (int x=xStart; x<=xEnd; x++)
           {
-            paintPixel(x,y,_color);
+            paintPixel(x,y,_fillColor);
           }
         }
       }
@@ -294,10 +350,13 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _co
 
 
 
-void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polygonPath,uint _color)
+void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polygonPath,uint _drawColor,uint _fillColor)
 {
   try
   {
+    if (mCountingActive)
+      return;
+
     if (polygonPath.size() == 0)
       return;
 
@@ -329,7 +388,7 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
 
         for (uint t=1; t<numOfPoints; t++)
         {
-          paintLine((*polygonPoints)[t-1].x(),(*polygonPoints)[t-1].y(),(*polygonPoints)[t].x(),(*polygonPoints)[t].y(),_color);
+          paintLine((*polygonPoints)[t-1].x(),(*polygonPoints)[t-1].y(),(*polygonPoints)[t].x(),(*polygonPoints)[t].y(),_drawColor);
         }
 
         // Adding points that are inside the polygon line.
@@ -424,7 +483,7 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
 
           for (int x=xStart; x<=xEnd; x++)
           {
-            paintPixel(x,y,_color);
+            paintPixel(x,y,_fillColor);
           }
         }
       }
@@ -440,7 +499,7 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
 
 
 
-void ImagePaint::paintWkbPoint(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void ImagePaint::paintWkbPoint(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
   try
@@ -455,7 +514,24 @@ void ImagePaint::paintWkbPoint(double _mpx,double _mpy,double _dx,double _dy,Mem
     x = x * _mpx;
     y = y*_mpy;
 
-    paintPixel(C_INT(round(x)),C_INT(round(y)),_color);
+    if (mCountingActive)
+    {
+      if (x < mMinX)
+        mMinX = x;
+
+      if (x > mMaxX)
+        mMaxX = x;
+
+      if (y < mMinY)
+        mMinY = y;
+
+      if (y > mMaxY)
+        mMaxY = y;
+    }
+    else
+    {
+      paintPixel(C_INT(round(x)),C_INT(round(y)),mDrawColor);
+    }
   }
   catch (...)
   {
@@ -467,7 +543,7 @@ void ImagePaint::paintWkbPoint(double _mpx,double _mpy,double _dx,double _dy,Mem
 
 
 
-void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
   try
@@ -484,8 +560,25 @@ void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,Memo
       x = x * _mpx;
       y = y*_mpy;
 
-      if (t > 0)
-        paintLine(C_INT(round(xp)),C_INT(round(yp)),C_INT(round(x)),C_INT(round(y)),_color);
+      if (mCountingActive)
+      {
+        if (x < mMinX)
+          mMinX = x;
+
+        if (x > mMaxX)
+          mMaxX = x;
+
+        if (y < mMinY)
+          mMinY = y;
+
+        if (y > mMaxY)
+          mMaxY = y;
+      }
+      else
+      {
+        if (t > 0)
+          paintLine(C_INT(round(xp)),C_INT(round(yp)),C_INT(round(x)),C_INT(round(y)),mDrawColor);
+      }
 
       xp = x;
       yp = y;
@@ -499,9 +592,7 @@ void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,Memo
 
 
 
-
-
-void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
   try
@@ -516,11 +607,28 @@ void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,Memo
       double y = (_memoryReader.read_double() + _dy);
       y = y*_mpy;
 
-      polygonPoints.emplace_back(T::Coordinate(x,y));
+      if (mCountingActive)
+      {
+        if (x < mMinX)
+          mMinX = x;
+
+        if (x > mMaxX)
+          mMaxX = x;
+
+        if (y < mMinY)
+          mMinY = y;
+
+        if (y > mMaxY)
+          mMaxY = y;
+      }
+      else
+      {
+        polygonPoints.emplace_back(T::Coordinate(x,y));
+      }
     }
 
-    paintPolygon(polygonPoints,_color);
-
+    if (!mCountingActive)
+      paintPolygon(polygonPoints,mDrawColor,mFillColor);
   }
   catch (...)
   {
@@ -532,7 +640,7 @@ void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,Memo
 
 
 
-void ImagePaint::paintWkbPolygon(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void ImagePaint::paintWkbPolygon(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
   try
@@ -541,7 +649,7 @@ void ImagePaint::paintWkbPolygon(double _mpx,double _mpy,double _dx,double _dy,M
 
     for (std::uint32_t t=0; t<ringCount; t++)
     {
-      paintWkbRing(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+      paintWkbRing(_mpx,_mpy,_dx,_dy,_memoryReader);
     }
   }
   catch (...)
@@ -554,7 +662,7 @@ void ImagePaint::paintWkbPolygon(double _mpx,double _mpy,double _dx,double _dy,M
 
 
 
-void ImagePaint::paintWkbMultiPoint(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void ImagePaint::paintWkbMultiPoint(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
   try
@@ -562,7 +670,7 @@ void ImagePaint::paintWkbMultiPoint(double _mpx,double _mpy,double _dx,double _d
     std::uint32_t pointCount = _memoryReader.read_uint32();
     for (std::uint32_t t=0; t<pointCount; t++)
     {
-      paintWkbPoint(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+      paintWkbPoint(_mpx,_mpy,_dx,_dy,_memoryReader);
     }
   }
   catch (...)
@@ -575,7 +683,7 @@ void ImagePaint::paintWkbMultiPoint(double _mpx,double _mpy,double _dx,double _d
 
 
 
-void ImagePaint::paintWkbMultiLineString(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void ImagePaint::paintWkbMultiLineString(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
   try
@@ -586,7 +694,7 @@ void ImagePaint::paintWkbMultiLineString(double _mpx,double _mpy,double _dx,doub
       std::uint8_t byteOrder = _memoryReader.read_uint8();
       _memoryReader.setLittleEndian((bool)byteOrder);
       /*std::uint32_t wkbType =*/ _memoryReader.read_uint32();
-      paintWkbLine(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+      paintWkbLine(_mpx,_mpy,_dx,_dy,_memoryReader);
     }
   }
   catch (...)
@@ -599,7 +707,7 @@ void ImagePaint::paintWkbMultiLineString(double _mpx,double _mpy,double _dx,doub
 
 
 
-void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
   try
@@ -627,12 +735,31 @@ void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double 
           double y = (_memoryReader.read_double() + _dy);
           y = y*_mpy;
 
-          polygonPoints.emplace_back(T::Coordinate(x,y));
+          if (mCountingActive)
+          {
+            if (x < mMinX)
+              mMinX = x;
+
+            if (x > mMaxX)
+              mMaxX = x;
+
+            if (y < mMinY)
+              mMinY = y;
+
+            if (y > mMaxY)
+              mMaxY = y;
+          }
+          else
+          {
+            polygonPoints.emplace_back(T::Coordinate(x,y));
+          }
         }
 
-        polygonPath.emplace_back(polygonPoints);
+        if (!mCountingActive)
+          polygonPath.emplace_back(polygonPoints);
       }
-      paintPolygonPath(polygonPath,_color);
+      if (!mCountingActive)
+        paintPolygonPath(polygonPath,mDrawColor,mFillColor);
     }
   }
   catch (...)
@@ -645,7 +772,7 @@ void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double 
 
 
 
-void ImagePaint::paintWkbGeometryCollection(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void ImagePaint::paintWkbGeometryCollection(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
   try
@@ -653,7 +780,7 @@ void ImagePaint::paintWkbGeometryCollection(double _mpx,double _mpy,double _dx,d
     std::uint32_t geometryCount = _memoryReader.read_uint32();
     for (std::uint32_t t=0; t<geometryCount; t++)
     {
-      paintWkb(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+      paintWkb(_mpx,_mpy,_dx,_dy,_memoryReader);
     }
   }
   catch (...)
@@ -666,7 +793,7 @@ void ImagePaint::paintWkbGeometryCollection(double _mpx,double _mpy,double _dx,d
 
 
 
-void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader,uint _color)
+void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryReader& _memoryReader)
 {
   FUNCTION_TRACE
   try
@@ -681,31 +808,31 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryRe
       switch (wkbType)
       {
         case 1:
-          paintWkbPoint(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+          paintWkbPoint(_mpx,_mpy,_dx,_dy,_memoryReader);
           break;
 
         case 2:
-          paintWkbLine(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+          paintWkbLine(_mpx,_mpy,_dx,_dy,_memoryReader);
           break;
 
         case 3:
-          paintWkbPolygon(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+          paintWkbPolygon(_mpx,_mpy,_dx,_dy,_memoryReader);
           break;
 
         case 4:
-          paintWkbMultiPoint(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+          paintWkbMultiPoint(_mpx,_mpy,_dx,_dy,_memoryReader);
           break;
 
         case 5:
-          paintWkbMultiLineString(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+          paintWkbMultiLineString(_mpx,_mpy,_dx,_dy,_memoryReader);
           break;
 
         case 6:
-          paintWkbMultiPolygon(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+          paintWkbMultiPolygon(_mpx,_mpy,_dx,_dy,_memoryReader);
           break;
 
         case 7:
-          paintWkbGeometryCollection(_mpx,_mpy,_dx,_dy,_memoryReader,_color);
+          paintWkbGeometryCollection(_mpx,_mpy,_dx,_dy,_memoryReader);
           break;
       }
     }
@@ -720,7 +847,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryRe
 
 
 
-void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,uchar *_wkb,uint _size,uint _color)
+void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,uchar *_wkb,uint _size)
 {
   FUNCTION_TRACE
   try
@@ -729,7 +856,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,uchar *_
       return;
 
     MemoryReader memoryReader(_wkb,_size);
-    paintWkb(_mpx,_mpy,_dx,_dy,memoryReader,_color);
+    paintWkb(_mpx,_mpy,_dx,_dy,memoryReader);
   }
   catch (...)
   {
@@ -741,7 +868,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,uchar *_
 
 
 
-void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteData& _wkb,uint _color)
+void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteData& _wkb)
 {
   FUNCTION_TRACE
   try
@@ -756,7 +883,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
     for (size_t t=0; t<sz; t++)
       buf[t] = _wkb[t];
 
-    paintWkb(_mpx,_mpy,_dx,_dy,memoryReader,_color);
+    paintWkb(_mpx,_mpy,_dx,_dy,memoryReader);
   }
   catch (...)
   {
@@ -768,14 +895,14 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
 
 
 
-void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteData_vec& _wkbVec,uint _color)
+void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteData_vec& _wkbVec)
 {
   FUNCTION_TRACE
   try
   {
     for (auto it = _wkbVec.begin(); it != _wkbVec.end(); ++it)
     {
-      paintWkb(_mpx,_mpy,_dx,_dy,*it,_color);
+      paintWkb(_mpx,_mpy,_dx,_dy,*it);
     }
   }
   catch (...)
@@ -785,6 +912,31 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
 }
 
 
+
+
+
+void ImagePaint::countPaintWkbArea(uchar *_wkb,uint _size,double& _minX,double& _minY,double& _maxX,double& _maxY)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mMinX = 2000000000;
+    mMinY = 2000000000;
+    mMaxX = -2000000000;
+    mMaxY = -2000000000;
+    mCountingActive = true;
+    paintWkb(1,1,0,0,_wkb,_size);
+    mCountingActive = false;
+    _minX = mMinX;
+    _minY = mMinY;
+    _maxX = mMaxX;
+    _maxY = mMaxY;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 

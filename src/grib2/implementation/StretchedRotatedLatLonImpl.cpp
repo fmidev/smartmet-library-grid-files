@@ -285,7 +285,10 @@ void StretchedRotatedLatLonImpl::initSpatialReference()
     const char *pszDatumName = "UNKNOWN";
     const char *pszSpheroidName = "UNKNOWN";
     double dfSemiMajor = getMajorAxis(mEarthShape);
-    double dfInvFlattening = getFlattening(mEarthShape);
+    double dfFlattening = getFlattening(mEarthShape);
+    double dfInvFlattening = 0;
+    if (dfFlattening != 0)
+      dfInvFlattening = 1/dfFlattening;
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 

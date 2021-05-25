@@ -223,6 +223,7 @@ std::string LambertConformalImpl::getGridGeometryString() const
     double sy = C_DOUBLE(mLatitudeOfSouthernPole) / 1000;
     double dx = C_DOUBLE(mDxInMetres);
     double dy = C_DOUBLE(mDyInMetres);
+    double laD = latin1;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
 
@@ -250,7 +251,7 @@ std::string LambertConformalImpl::getGridGeometryString() const
 
 
     sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
-      T::GridProjectionValue::LambertConformal,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy,60.0);
+      T::GridProjectionValue::LambertConformal,mNx,mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy,laD);
 
     return std::string(buf);
   }
@@ -632,11 +633,11 @@ void LambertConformalImpl::initSpatialReference()
     const char *pszGeogName = "UNKNOWN";
     const char *pszDatumName = "UNKNOWN";
     const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor =  6367470;
+    double dfSemiMajor = getMajorAxis(mResolutionFlags.getResolutionAndComponentFlags());
+    double dfFlattening = getFlattening(mResolutionFlags.getResolutionAndComponentFlags());
     double dfInvFlattening = 0.0;
-
-    dfSemiMajor = getMajorAxis(mResolutionFlags.getResolutionAndComponentFlags());
-    dfInvFlattening = getFlattening(mResolutionFlags.getResolutionAndComponentFlags());
+    if (dfFlattening != 0)
+      dfInvFlattening = 1/dfFlattening;
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 

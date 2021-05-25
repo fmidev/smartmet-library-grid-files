@@ -335,9 +335,10 @@ std::string LambertConformalImpl::getGridGeometryString() const
     double dx = C_DOUBLE(*mDx) / 1000;
     double dy = C_DOUBLE(*mDy) / 1000;
     double loV = C_DOUBLE(*mLoV) / 1000000;
-    int laD = C_INT(*mLaD);
     double latin1 = C_DOUBLE(*mLatin1) / 1000000;
     double latin2 = C_DOUBLE(*mLatin2) / 1000000;
+    //double laD = C_DOUBLE(*mLaD)/1000000;
+    double laD = latin1;
     double sx = C_DOUBLE(*mLongitudeOfSouthernPole) / 1000000;
     double sy = C_DOUBLE(*mLatitudeOfSouthernPole) / 1000000;
 
@@ -366,8 +367,8 @@ std::string LambertConformalImpl::getGridGeometryString() const
     }
 
 
-    sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%d.%06d;description",
-      T::GridProjectionValue::LambertConformal,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy,laD/1000000,laD%1000000);
+    sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+      T::GridProjectionValue::LambertConformal,*mNx,*mNy,x,y,fabs(dx),fabs(dy),sm,loV,latin1,latin2,sx,sy,laD);
 
     return std::string(buf);
   }
@@ -629,7 +630,10 @@ void LambertConformalImpl::initSpatialReference()
     const char *pszDatumName = "UNKNOWN";
     const char *pszSpheroidName = "UNKNOWN";
     double dfSemiMajor = getMajorAxis(mEarthShape);
-    double dfInvFlattening = getFlattening(mEarthShape);
+    double dfFlattening = getFlattening(mEarthShape);
+    double dfInvFlattening = 0;
+    if (dfFlattening != 0)
+      dfInvFlattening = 1/dfFlattening;
 
     mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 

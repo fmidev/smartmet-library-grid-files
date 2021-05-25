@@ -1617,6 +1617,7 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
     if (timeStr.length() <  15)
     {
       Fmi::Exception exception(BCP, "Invalid time string!");
+      exception.addParameter("timeStr",timeStr);
       throw exception;
     }
 
@@ -1636,7 +1637,9 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    Fmi::Exception exception(BCP, "Operation failed!", nullptr);
+    exception.addParameter("timeStr",timeStr);
+    throw exception;
   }
 }
 

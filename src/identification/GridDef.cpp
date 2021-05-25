@@ -3883,6 +3883,48 @@ GRIB1::GridDef_ptr GridDef::getGrib1Definition(GRIB1::Message& message)
 
 
 
+GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryString(std::string& geometryStr)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto it = mGridDefinitions1.find(geometryStr);
+    if (it != mGridDefinitions1.end())
+      return it->second;
+
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+GRIB2::GridDef_ptr GridDef::getGrib2DefinitionByGeometryString(std::string& geometryStr)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto it = mGridDefinitions2.find(geometryStr);
+    if (it != mGridDefinitions2.end())
+      return it->second;
+
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 GRIB2::GridDef_ptr GridDef::getGrib2Definition(GRIB2::Message& message)
 {
   FUNCTION_TRACE
@@ -4355,7 +4397,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
     strcpy(st,str);
 
     bool ind = false;
-    char *field[100];
+    const char *empty = "";
+    char *field[100] = {(char*)empty};
     uint c = 1;
     field[0] = st;
     char *p = st;
@@ -4399,6 +4442,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           int iInc = C_INT(round(toDouble(field[7]) * 1000));
           int jInc = C_INT(round(toDouble(field[8]) * 1000));
           char *scanningMode = field[9];
+          double earthSemiMajor = toDouble(field[10]);
+          double earthSemiMinor = toDouble(field[11]);
           int lastLongitude = longitude + ni*iInc - iInc;
           int lastLatitude = latitude + nj*jInc - jInc;
 
@@ -4443,6 +4488,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           def1->setGridGeometryId(geometryId);
           def1->setGridGeometryName(geometryName);
+          def1->setEarthSemiMajor(earthSemiMajor);
+          def1->setEarthSemiMinor(earthSemiMinor);
           def1->initSpatialReference();
 
           return def1;
@@ -4468,6 +4515,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           int lastLongitude = longitude + ni*iInc - iInc;
           int lastLatitude = latitude + nj*jInc - jInc;
           int angle = round(toDouble(field[12]));
+          double earthSemiMajor = toDouble(field[13]);
+          double earthSemiMinor = toDouble(field[14]);
           //std::uint8_t resolutionAndComponentFlags = 48;
 
           if (lastLongitude > 360000)
@@ -4513,6 +4562,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           def1->setGridGeometryId(geometryId);
           def1->setGridGeometryName(geometryName);
+          def1->setEarthSemiMajor(earthSemiMajor);
+          def1->setEarthSemiMinor(earthSemiMinor);
           def1->initSpatialReference();
 
           return def1;
@@ -4585,6 +4636,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           def1->setGridGeometryId(geometryId);
           def1->setGridGeometryName(geometryName);
+          //def1->setEarthSemiMajor(earthSemiMajor);
+          //def1->setEarthSemiMinor(earthSemiMinor);
           def1->initSpatialReference();
 
           return def1;
@@ -4610,6 +4663,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           char *scanningMode = field[9];
           int orientation = C_INT(round(toDouble(field[10])*1000));
           //int laD = C_INT(round(toDouble(field[11]) * 1000000));
+          double earthSemiMajor = toDouble(field[12]);
+          double earthSemiMinor = toDouble(field[13]);
 
           GRIB1::PolarStereographicImpl *def1 = new GRIB1::PolarStereographicImpl();
           GRIB1::ScanningModeSettings scanningMode1;
@@ -4645,6 +4700,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           def1->setGridGeometryId(geometryId);
           def1->setGridGeometryName(geometryName);
+          def1->setEarthSemiMajor(earthSemiMajor);
+          def1->setEarthSemiMinor(earthSemiMinor);
           def1->initSpatialReference();
 
           return def1;
@@ -4670,6 +4727,9 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           int latin2 = C_INT(round(toDouble(field[12])*1000));
           int longitudeOfSouthernPole = C_INT(round(toDouble(field[13])*1000));
           int latitudeOfSouthernPole = C_INT(round(toDouble(field[14])*1000));
+          //double laD = toDouble(field[15]);
+          double earthSemiMajor = toDouble(field[16]);
+          double earthSemiMinor = toDouble(field[17]);
 
           GRIB1::LambertConformalImpl *def1 = new GRIB1::LambertConformalImpl();
           GRIB1::ScanningModeSettings scanningMode1;
@@ -4704,6 +4764,8 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
 
           def1->setGridGeometryId(geometryId);
           def1->setGridGeometryName(geometryName);
+          def1->setEarthSemiMajor(earthSemiMajor);
+          def1->setEarthSemiMinor(earthSemiMinor);
           def1->initSpatialReference();
 
           return def1;
@@ -4804,7 +4866,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
     strcpy(st,str);
 
     bool ind = false;
-    char *field[100];
+    const char *empty = "";
+    char *field[100] = {(char*)empty};
     uint c = 1;
     field[0] = st;
     char *p = st;
@@ -4848,6 +4911,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           int iInc = C_INT(round(toDouble(field[7]) * 1000000));
           int jInc = C_INT(round(toDouble(field[8]) * 1000000));
           char *scanningMode = field[9];
+          double earthSemiMajor = toDouble(field[10]);
+          double earthSemiMinor = toDouble(field[11]);
           int lastLongitude = longitude + ni*iInc - iInc;
           int lastLatitude = latitude + nj*jInc - jInc;
 
@@ -4904,6 +4969,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           def2->setGridGeometryId(geometryId);
           def2->setGridGeometryName(geometryName);
+          def2->setEarthSemiMajor(earthSemiMajor);
+          def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
 
           return def2;
@@ -4929,6 +4996,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           int lastLongitude = longitude + ni*iInc - iInc;
           int lastLatitude = latitude + nj*jInc - jInc;
           int angle = round(toDouble(field[12]));
+          double earthSemiMajor = toDouble(field[13]);
+          double earthSemiMinor = toDouble(field[14]);
           //std::uint8_t resolutionAndComponentFlags = 48;
 
           if (lastLongitude > 360000000)
@@ -4990,6 +5059,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           def2->setGridGeometryId(geometryId);
           def2->setGridGeometryName(geometryName);
+          def2->setEarthSemiMajor(earthSemiMajor);
+          def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
 
           return def2;
@@ -5030,6 +5101,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           char *scanningMode = field[9];
           int orientation = C_INT(round(toDouble(field[10])*1000000));
           int laD = C_INT(round(toDouble(field[11]) * 1000000));
+          double earthSemiMajor = toDouble(field[12]);
+          double earthSemiMinor = toDouble(field[13]);
 
           GRIB2::PolarStereographicImpl *def2 = new GRIB2::PolarStereographicImpl();
           GRIB2::ScanningModeSettings scanningMode2;
@@ -5071,6 +5144,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           def2->setGridGeometryId(geometryId);
           def2->setGridGeometryName(geometryName);
+          def2->setEarthSemiMajor(earthSemiMajor);
+          def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
 
           return def2;
@@ -5099,6 +5174,9 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           int laD = 60000000;
           if (c >= 15)
             laD = C_INT(round(toDouble(field[15])*1000000));
+
+          double earthSemiMajor = toDouble(field[16]);
+          double earthSemiMinor = toDouble(field[17]);
 
           GRIB2::LambertConformalImpl *def2 = new GRIB2::LambertConformalImpl();
           GRIB2::ScanningModeSettings scanningMode2;
@@ -5146,6 +5224,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           def2->setGridGeometryId(geometryId);
           def2->setGridGeometryName(geometryName);
+          def2->setEarthSemiMajor(earthSemiMajor);
+          def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
 
           return def2;
@@ -5216,6 +5296,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           char *scanningMode = field[9];
           int standardParallel = C_INT(round(toDouble(field[10])*1000000));
           int centralLongitude = C_INT(round(toDouble(field[11])*1000000));
+          double earthSemiMajor = toDouble(field[12]);
+          double earthSemiMinor = toDouble(field[13]);
 
           GRIB2::LambertAzimuthalEqualAreaImpl *def2 = new GRIB2::LambertAzimuthalEqualAreaImpl();
           GRIB2::ScanningModeSettings scanningMode2;
@@ -5247,6 +5329,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setResolutionAndComponentFlags(0x30);
           def2->setGridGeometryId(geometryId);
           def2->setGridGeometryName(geometryName);
+          def2->setEarthSemiMajor(earthSemiMajor);
+          def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
 
           return def2;

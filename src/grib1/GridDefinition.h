@@ -93,10 +93,18 @@ class GridDefinition
     virtual void                write(DataWriter& dataWriter);
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
 
+    // These methos are used for overiding the earth shape parameters in the grid file
+
+    virtual double              getEarthSemiMajor();
+    virtual double              getEarthSemiMinor();
+    virtual void                setEarthSemiMajor(double value);
+    virtual void                setEarthSemiMinor(double value);
+
     virtual GridAreaSettings*        getGridArea() const;
     virtual ScanningModeSettings*    getScanningMode() const;
     virtual ResolutionFlagsSettings* getResolutionFlags() const;
     virtual RotationSettings*        getRotation() const;
+
 
    protected:
 
@@ -142,6 +150,9 @@ class GridDefinition
      T::GridProjection          mGridProjection;
 
      OGRSpatialReference        mLatlonSpatialReference;
+
+     double                      mEarth_semiMajor;
+     double                      mEarth_semiMinor;
 };
 
 typedef GridDefinition* GridDef_ptr;

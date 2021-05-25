@@ -47,6 +47,8 @@ GridDefinition::GridDefinition()
     mGlobal = false;
     mGeometryId = 0;
     mGridProjection = T::GridProjectionValue::Unknown;
+    mEarth_semiMajor = 0;
+    mEarth_semiMinor = 0;
 
     mLatlonSpatialReference.importFromEPSG(4326);
     mLatlonSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
@@ -76,6 +78,8 @@ GridDefinition::GridDefinition(const GridDefinition& other)
      mGeometryId = other.mGeometryId;
      mGeometryName = other.mGeometryName;
      mGridProjection = other.mGridProjection;
+     mEarth_semiMajor = other.mEarth_semiMajor;
+     mEarth_semiMinor = other.mEarth_semiMinor;
 
      mLatlonSpatialReference.importFromEPSG(4326);
      mLatlonSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
@@ -2129,11 +2133,77 @@ bool GridDefinition::getGridPointByOriginalCoordinates(double x,double y,double&
 
 
 
+double GridDefinition::getEarthSemiMajor()
+{
+  try
+  {
+    return mEarth_semiMajor;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+double GridDefinition::getEarthSemiMinor()
+{
+  try
+  {
+    return mEarth_semiMinor;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDefinition::setEarthSemiMajor(double value)
+{
+  try
+  {
+    mEarth_semiMajor = value;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridDefinition::setEarthSemiMinor(double value)
+{
+  try
+  {
+    mEarth_semiMinor = value;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 double GridDefinition::getMajorAxis(uchar resolutionAndComponentFlags)
 {
   FUNCTION_TRACE
   try
   {
+    if (mEarth_semiMajor != 0) // The original value has be overridden
+      return mEarth_semiMajor;
+
     if ((resolutionAndComponentFlags & 0x40) == 0)
       return  6367470;
 
@@ -2154,6 +2224,9 @@ double GridDefinition::getMinorAxis(uchar resolutionAndComponentFlags)
   FUNCTION_TRACE
   try
   {
+    if (mEarth_semiMinor != 0) // The original value has be overridden
+      return mEarth_semiMinor;
+
     if ((resolutionAndComponentFlags & 0x40) == 0)
       return  6367470;
 
@@ -2174,6 +2247,9 @@ double GridDefinition::getFlattening(uchar resolutionAndComponentFlags)
   FUNCTION_TRACE
   try
   {
+    if (mEarth_semiMajor != 0  &&  mEarth_semiMinor != 0) // The original value has be overridden
+      return (mEarth_semiMajor-mEarth_semiMinor)/mEarth_semiMajor;
+
     if ((resolutionAndComponentFlags & 0x40) == 0)
       return  0;
 

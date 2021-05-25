@@ -1,8 +1,10 @@
 #include "GeneralFunctions.h"
 #include "ImageFunctions.h"
+#include "ImagePaint.h"
 #include "MemoryReader.h"
 #include "ShowFunction.h"
 #include <macgyver/Exception.h>
+#include <gis/OGR.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -965,6 +967,140 @@ void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
 }
 
 
+
+void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,const OGRGeometry *geom,bool autoscale)
+{
+  try
+  {
+    unsigned char* out = new unsigned char[geom->WkbSize()+10];
+    geom->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
+
+    //std::string st = Fmi::OGR::exportToWkt(*geom);
+    ImagePaint imagePaint(width, height,backgroundColor,drawColor,fillColor,false,true);
+
+    double dx = 0;
+    double dy = 0;
+
+    double ww = width;
+    double hh = height;
+
+    double ss = 1;
+
+    if (autoscale)
+    {
+      double minX = 0, minY = 0, maxX = 0, maxY = 0;
+      imagePaint.countPaintWkbArea(out,geom->WkbSize(),minX,minY,maxX,maxY);
+
+      dx = -minX;
+      dy = -minY;
+
+      ww = maxX - minX;
+      hh = maxY - minY;
+
+      double sx = (width-20)/ww;
+      double sy = (height-20)/hh;
+
+      ss = sx;
+      if (sy < sx)
+        ss = sy;
+    }
+
+    imagePaint.paintWkb(ss, ss, dx+10/ss, dy+10/ss,out,geom->WkbSize());
+
+    CPLFree(out);
+    imagePaint.saveJpgImage(_filename);
+  }
+  catch (Fmi::Exception& e)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgroundColor,uint drawColor,uint fillColor,std::vector<std::shared_ptr<OGRGeometry>> geomVec,bool autoscale)
+{
+  try
+  {
+    double ww = width;
+    double hh = height;
+    double dx = 0;
+    double dy = 0;
+    double ss = 1;
+
+    ImagePaint imagePaint(width, height,backgroundColor,drawColor,fillColor,false,true);
+
+    double tminX = 0, tminY = 0, tmaxX = 0, tmaxY = 0;
+    if (autoscale)
+    {
+      tminX = 1000000000;
+      tminY = 1000000000;
+      tmaxX = -1000000000;
+      tmaxY = -1000000000;
+
+      for (auto g = geomVec.begin();g != geomVec.end(); ++g)
+      {
+        auto gg = g->get();
+        unsigned char* out = new unsigned char[gg->WkbSize()+10];
+        gg->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
+
+      //std::string st = Fmi::OGR::exportToWkt(*g);
+
+        double minX = 0, minY = 0, maxX = 0, maxY = 0;
+        imagePaint.countPaintWkbArea(out,gg->WkbSize(),minX,minY,maxX,maxY);
+        CPLFree(out);
+
+        printf("PAINT %f %f %f %f\n",minX,minY,maxX,maxY);
+
+        if (minX < tminX)
+          tminX = minX;
+
+        if (minY < tminY)
+          tminY = minY;
+
+        if (maxX > tmaxX)
+          tmaxX = maxX;
+
+        if (maxY > tmaxY)
+          tmaxY = maxY;
+      }
+    }
+
+    printf("*** PAINT %f %f %f %f\n",tminX,tminY,tmaxX,tmaxY);
+
+    if (autoscale)
+    {
+      dx = -tminX;
+      dy = -tminY;
+
+      ww = tmaxX - tminX;
+      hh = tmaxY - tminY;
+    }
+
+    double sx = (width-20)/ww;
+    double sy = (height-20)/hh;
+
+    ss = sx;
+    if (sy < sx)
+      ss = sy;
+
+    for (auto g = geomVec.begin();g != geomVec.end(); ++g)
+    {
+      auto gg = g->get();
+      unsigned char* out = new unsigned char[gg->WkbSize()+10];
+      gg->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
+      imagePaint.paintWkb(ss, ss, dx+10/ss, dy+10/ss,out,gg->WkbSize());
+      CPLFree(out);
+    }
+
+    imagePaint.saveJpgImage(_filename);
+  }
+  catch (Fmi::Exception& e)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 }
