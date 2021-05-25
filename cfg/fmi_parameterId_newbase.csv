@@ -1415,8 +1415,8 @@
 271;139;;;
 
 # Cloud top brightness temperature (IR)
-# CTBT-K => UNKNOWN
-# 272;0;;;
+# CTBT-K => CloudTopBrightnessTemperature
+272;364;SUM{$,-273.15};SUM{$,273.15};
 
 # Water vapour brightness temperature
 # WVBT-K => UNKNOWN
@@ -2197,10 +2197,6 @@
 # Total Precipitation rate in kg m-2
 # RRR-KGM2 => PrecipitationRate
 441;49;;;
-
-# Total Precipitation rate in kg m-2
-# RRR-KGM2 => Precipitation1h
-441;353;MUL{$,0.010000};DIV{$,0.010000};
 
 # Total Precipitation rate in kg m-2
 # RRR-KGM2 => Precipitation1h
@@ -4566,7 +4562,11 @@
 # WATLEV-STDDEV-CM => SeaLevelDeviation
 1047;1316;;;
 
-# Cloud type in synop font code
+# Cloud type
+# CLDTYPE-N => NEWBASE-PARAMETER[9999]
+1048;9999;;;
+
+# Cloud type
 # CLDTYPE-N => bedrock_altitude
 1048;10328;;;
 
@@ -5989,3 +5989,43 @@
 # Mean absolute error for T-K
 # MAE-T-K => UNKNOWN
 # 1420;0;;;
+
+# Land cover from ESA Globcover2009 project
+# LC-N => UNKNOWN
+# 1421;0;;;
+
+# Cloud type in NWCSAF products
+# NWCSAF_CLDTYPE-N => NEWBASE-PARAMETER[1458]
+1422;1458;;;
+
+# Cloud type quality controlg flag in NWCSAF products
+# NWCSAF_CLDTYPE_QC-N => NEWBASE-PARAMETER[1459]
+1423;1459;;;
+
+# Cloud mask in NWCSAF products
+# NWCSAF_CLDMASK-0OR1 => NEWBASE-PARAMETER[1456]
+1424;1456;;;
+
+# Cloud mask quality control flag in NWCSAF products
+# NWCSAF_CLDMASK_QC-N => NEWBASE-PARAMETER[1457]
+1425;1457;;;
+
+# Cloud top pressure
+# CLDTOP-PA => NEWBASE-PARAMETER[1460]
+1426;1460;MUL{$,0.010000};DIV{$,0.010000};
+
+# NWCSAF effective cloudiness
+# NWCSAF_EFFCLD-0TO1 => NEWBASE-PARAMETER[1462]
+1427;1462;MUL{$,100.000000};DIV{$,100.000000};
+
+# cloud top (CTTH) quality control flag in NWCSAF products
+# NWCSAF_CTTH_QC-N => NEWBASE-PARAMETER[1461]
+1428;1461;;;
+
+# Global radiation clear-sky accumulation
+# RADGLOCA-JM2 => UNKNOWN
+# 1429;0;;;
+
+# Global radiation clear-sky
+# RADGLOC-WM2 => UNKNOWN
+# 1430;0;;;

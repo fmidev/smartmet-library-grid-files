@@ -955,7 +955,7 @@
 1045;1;F0-WATLEV-CM;cm;0th fractal sea level height in EPS;1;1;1;1;
 1046;1;WATLEV-MEAN-CM;cm;Mean sea level height;1;1;1;1;
 1047;1;WATLEV-STDDEV-CM;cm;Standard deviation of sea level height;1;1;1;1;
-1048;1;CLDTYPE-N;0_1;Cloud type in synop font code;2;2;2;;
+1048;1;CLDTYPE-N;0_1;Cloud type;2;2;2;;
 1049;1;LHE-WM2;W m-2;Latent heat flux through evaporation;1;1;1;;
 1050;1;PROB-WATLEV-LOW-1;%;Probability of water level being lower than given threshold;1;1;1;;
 1051;1;PROB-WATLEV-HIGH-1;%;Probability of water level being higher than given threshold;1;1;1;;
@@ -1300,3 +1300,13 @@
 1418;1;TMIN6H-K;K;Minimum temperature from the preceeding 6 hours in Kelvin;1;1;1;1;
 1419;1;BIAS-T-K;K;Bias value for T-K;1;1;1;1;
 1420;1;MAE-T-K;K;Mean absolute error for T-K;1;1;1;1;
+1421;1;LC-N;Code;Land cover from ESA Globcover2009 project;2;2;2;;
+1422;1;NWCSAF_CLDTYPE-N;JustAnumber;Cloud type in NWCSAF products;2;2;2;;
+1423;1;NWCSAF_CLDTYPE_QC-N;JustAnumber;Cloud type quality controlg flag in NWCSAF products;2;2;2;;
+1424;1;NWCSAF_CLDMASK-0OR1;0_1;Cloud mask in NWCSAF products;2;2;2;;
+1425;1;NWCSAF_CLDMASK_QC-N;JustAnumber;Cloud mask quality control flag in NWCSAF products;2;2;2;;
+1426;1;CLDTOP-PA;Pa;Cloud top pressure;1;1;1;;
+1427;1;NWCSAF_EFFCLD-0TO1;0_1;NWCSAF effective cloudiness;1;1;1;;
+1428;1;NWCSAF_CTTH_QC-N;JustAnumber;cloud top (CTTH) quality control flag in NWCSAF products;1;1;1;;
+1429;1;RADGLOCA-JM2;J m-2;Global radiation clear-sky accumulation;1;1;1;;
+1430;1;RADGLOC-WM2;W m-2;Global radiation clear-sky;1;1;1;;
