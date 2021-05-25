@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.4.13
+Version: 21.5.25
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,9 +11,9 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.3.20
-BuildRequires: smartmet-library-spine-devel >= 21.4.15
-BuildRequires: smartmet-library-macgyver >= 21.2.25
+BuildRequires: smartmet-library-newbase-devel >= 21.5.6
+BuildRequires: smartmet-library-spine-devel >= 21.5.21
+BuildRequires: smartmet-library-macgyver >= 21.5.21
 BuildRequires: smartmet-library-tron-devel >= 21.4.15
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -35,9 +35,9 @@ Requires: boost169-thread
 Requires: gdal32-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.3.20
-Requires: smartmet-library-macgyver >= 21.2.25
-Requires: smartmet-library-spine >= 21.4.15
+Requires: smartmet-library-newbase >= 21.5.6
+Requires: smartmet-library-macgyver >= 21.5.21
+Requires: smartmet-library-spine >= 21.5.21
 Requires: smartmet-library-tron >= 21.4.15
 
 %description
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue May 25 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.5.25-1.fmi
+- Enable overriding incorrect earth radius settings in GRIB files
 * Tue Apr 13 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.4.13-1.fmi
 - Converting negative longitude values when unsigned longitudes are required
 * Fri Apr  9 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.4.9-1.fmi
