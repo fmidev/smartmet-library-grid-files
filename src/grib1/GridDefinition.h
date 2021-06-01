@@ -38,7 +38,6 @@ class GridDefinition
     virtual T::Dimensions       getGridDimensions() const;
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
-    virtual std::string         getGridGeometryName();
     T::Hash                     getGridHash();
     virtual bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual T::Coordinate_svec  getGridLatLonCoordinates() const;
@@ -75,7 +74,6 @@ class GridDefinition
     virtual void                initRowPositions(std::vector<std::uint32_t>& rowPositions);
 
     virtual void                setGridGeometryId(T::GeometryId geometryId);
-    virtual void                setGridGeometryName(const std::string& geometryName);
 
     virtual bool                getProperty(uint propertyId,long long& value);
     virtual bool                getProperty(uint propertyId,double& value);
@@ -126,16 +124,13 @@ class GridDefinition
 
     /*! \brief The spatial reference. */
      T::SpatialRef              mSpatialReference;
+     OGRSpatialReference        mLatlonSpatialReference;
 
-
-     /*! \brief The grid layout. */
-     T::GridLayout              mGridLayout;
+     double                     mEarth_semiMajor;
+     double                     mEarth_semiMinor;
 
      /*! \brief The hash of the grid. */
      T::Hash                    mHash;
-
-     /*! \brief The indication flag for the global grid. */
-     bool                       mGlobal;
 
      /*! \brief The start indexes of the grid rows when the grid is irregular. */
      std::vector<std::uint32_t> mRowPositions;
@@ -143,16 +138,14 @@ class GridDefinition
      /*! \brief The geometry identifier. */
      T::GeometryId              mGeometryId;
 
-     /*! \brief The geometry name. */
-     std::string                mGeometryName;
-
      /*! \brief The grid projection. */
      T::GridProjection          mGridProjection;
 
-     OGRSpatialReference        mLatlonSpatialReference;
+     /*! \brief The grid layout. */
+     T::GridLayout              mGridLayout;
 
-     double                      mEarth_semiMajor;
-     double                      mEarth_semiMinor;
+     /*! \brief The indication flag for the global grid. */
+     bool                       mGlobal;
 };
 
 typedef GridDefinition* GridDef_ptr;

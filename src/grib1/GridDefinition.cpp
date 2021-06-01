@@ -76,7 +76,6 @@ GridDefinition::GridDefinition(const GridDefinition& other)
      mGlobal = other.mGlobal;
      mRowPositions = other.mRowPositions;
      mGeometryId = other.mGeometryId;
-     mGeometryName = other.mGeometryName;
      mGridProjection = other.mGridProjection;
      mEarth_semiMajor = other.mEarth_semiMajor;
      mEarth_semiMinor = other.mEarth_semiMinor;
@@ -196,40 +195,6 @@ void GridDefinition::setGridGeometryId(T::GeometryId geometryId)
   try
   {
     mGeometryId = geometryId;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-std::string  GridDefinition::getGridGeometryName()
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mGeometryName;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void GridDefinition::setGridGeometryName(const std::string& geometryName)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mGeometryName = geometryName;
   }
   catch (...)
   {

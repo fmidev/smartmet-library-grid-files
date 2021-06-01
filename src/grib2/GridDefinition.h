@@ -35,7 +35,6 @@ class GridDefinition
     virtual void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
-    virtual std::string         getGridGeometryName();
     virtual void                getGridCellAverageSize(double& width,double& height) const;
     virtual T::Dimensions       getGridDimensions() const;
     T::Hash                     getGridHash();
@@ -76,7 +75,6 @@ class GridDefinition
     virtual ResolutionSettings* getResolution() const;
 
     virtual void                setGridGeometryId(T::GeometryId geometryId);
-    virtual void                setGridGeometryName(const std::string& geometryName);
 
     virtual bool                getProperty(uint propertyId,long long& value);
     virtual bool                setProperty(uint propertyId,long long value);
@@ -111,29 +109,25 @@ class GridDefinition
 
     /*! \brief The spatial reference. */
     T::SpatialRef               mSpatialReference;
-
-    /*! \brief The grid layout. */
-    T::GridLayout               mGridLayout;
-
-    /*! \brief The hash of the grid. */
-    T::Hash                     mHash;
-
-    /*! \brief The indication flag for the global grid. */
-    bool                        mGlobal;
-
-    /*! \brief The geometry identifier. */
-    T::GeometryId               mGeometryId;
-
-    /*! \brief The geometry identifier. */
-    std::string                 mGeometryName;
-
-    /*! \brief The grid projection. */
-    T::GridProjection           mGridProjection;
-
     OGRSpatialReference         mLatlonSpatialReference;
 
     double                      mEarth_semiMajor;
     double                      mEarth_semiMinor;
+
+    /*! \brief The hash of the grid. */
+    T::Hash                     mHash;
+
+    /*! \brief The geometry identifier. */
+    T::GeometryId               mGeometryId;
+
+    /*! \brief The grid projection. */
+    T::GridProjection           mGridProjection;
+
+    /*! \brief The grid layout. */
+    T::GridLayout               mGridLayout;
+
+    /*! \brief The indication flag for the global grid. */
+    bool                        mGlobal;
 };
 
 

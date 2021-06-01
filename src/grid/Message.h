@@ -16,6 +16,7 @@
 #include "../common/RequestCounter.h"
 #include "../common/DataWriter.h"
 #include "../common/MemoryReader.h"
+#include "../common/StringFactory.h"
 
 #include <vector>
 #include <string>
@@ -34,8 +35,8 @@ struct MessageInfo
   uint               mMessageSize;
   uint               mProducerId;
   uint               mGenerationId;
-  T::ParamId         mFmiParameterId;
-  std::string        mFmiParameterName;
+  T::FmiParamId      mFmiParameterId;
+  uint               mFmiParameterName;
   T::ParamLevelId    mFmiParameterLevelId;
   T::ParamLevel      mParameterLevel;
   T::ForecastType    mForecastType;
@@ -79,15 +80,13 @@ class Message
     virtual short               getForecastType() const;
     virtual short               getForecastNumber() const;
 
-    virtual std::string         getFmiProducerName() const;
-    virtual T::ParamId          getFmiParameterId() const;
+    virtual const char*         getFmiProducerName() const;
+    virtual T::FmiParamId       getFmiParameterId() const;
     virtual T::ParamLevelId     getFmiParameterLevelId() const;
-    virtual std::string         getFmiParameterName() const;
-    virtual std::string         getFmiParameterUnits() const;
-    virtual std::string         getCdmParameterId() const;
-    virtual std::string         getCdmParameterName() const;
-    virtual std::string         getNewbaseParameterId() const;
-    virtual std::string         getNewbaseParameterName() const;
+    virtual const char*         getFmiParameterName() const;
+    virtual const char*         getFmiParameterUnits() const;
+    virtual T::NewbaseParamId   getNewbaseParameterId() const;
+    virtual const char*         getNewbaseParameterName() const;
 
     virtual uint                getGribVersion() const;
     virtual uint                getGribCentre() const;
@@ -96,9 +95,9 @@ class Message
     virtual uint                getGribTableVersion() const;
     virtual void                getSectionPositions(std::set<T::FilePosition>& positions);
 
-    virtual T::ParamId          getGribParameterId() const;
-    virtual std::string         getGribParameterName() const;
-    virtual std::string         getGribParameterUnits() const;
+    virtual T::GribParamId      getGribParameterId() const;
+    virtual const char*         getGribParameterName() const;
+    virtual const char*         getGribParameterUnits() const;
     virtual T::ParamLevelId     getGrib1ParameterLevelId() const;
     virtual T::ParamLevelId     getGrib2ParameterLevelId() const;
 
@@ -196,23 +195,21 @@ class Message
     virtual void                setMessageIndex(uint index);
     virtual void                setGridFilePtr(GridFile *gridFilePtr);
 
-    virtual void                setFmiParameterId(T::ParamId fmiParameterId);
+    virtual void                setFmiParameterId(T::FmiParamId fmiParameterId);
     virtual void                setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId);
-    virtual void                setFmiParameterName(const std::string& fmiParameterName);
-    virtual void                setFmiParameterUnits(const std::string& fmiParameterUnits);
-    virtual void                setCdmParameterId(const std::string& cdmParameterId);
-    virtual void                setCdmParameterName(const std::string& cdmParameterName);
-    virtual void                setNewbaseParameterId(const std::string& newbaseParameterId);
-    virtual void                setNewbaseParameterName(const std::string& newbaseParameterName);
+    virtual void                setFmiParameterName(const char* fmiParameterName);
+    virtual void                setFmiParameterUnits(const char* fmiParameterUnits);
+    virtual void                setNewbaseParameterId(T::NewbaseParamId newbaseParameterId);
+    virtual void                setNewbaseParameterName(const char* newbaseParameterName);
 
     virtual void                setGridGeometryId(T::GeometryId geometryId);
     virtual void                setGridValues(T::ParamValue_vec& values);
 
     // Common Grib settings
 
-    virtual void                setGribParameterId(T::ParamId gribParameterId);
-    virtual void                setGribParameterName(const std::string& gribParameterName);
-    virtual void                setGribParameterUnits(const std::string& gribParameterUnits);
+    virtual void                setGribParameterId(T::GribParamId gribParameterId);
+    virtual void                setGribParameterName(const char* gribParameterName);
+    virtual void                setGribParameterUnits(const char* gribParameterUnits);
 
     // Grib 1 specific settings
 
@@ -271,8 +268,41 @@ class Message
     /*! \brief  The size of the message in bytes. */
     uint                        mMessageSize;
 
+    /*! \brief  The fmi parameter identifier.*/
+    T::FmiParamId               mFmiParameterId;
+
+    /*! \brief  The newbase parameter id string. */
+    T::NewbaseParamId           mNewbaseParameterId;
+
     /*! \brief The grib parameter identifier. */
-    T::ParamId                  mGribParameterId;
+    T::GribParamId              mGribParameterId;
+
+    /*! \brief  The geometry identifier. */
+    T::GeometryId               mGeometryId;
+
+
+    /*! \brief  The fmi parameter name. */
+    uint                        mFmiParameterName;
+
+    /*! \brief  The newbase parameter name. */
+    uint                        mNewbaseParameterName;
+
+    /*! \brief  The grib parameter name. */
+    uint                        mGribParameterName;
+
+    /*! \brief  The fmi parameter units. */
+    uint                        mFmiParameterUnits;
+
+    /*! \brief  The grib parameter units. */
+    uint                        mGribParameterUnits;
+
+    /*! \brief  The fmi producer name. */
+    uint                        mFmiProducerName;
+
+
+
+    /*! \brief  The file type. */
+    uchar                       mFileType;
 
     /*! \brief  The grib1 parameter level identifier. */
     T::ParamLevelId             mGrib1ParameterLevelId;
@@ -280,63 +310,28 @@ class Message
     /*! \brief  The grib2 parameter level identifier. */
     T::ParamLevelId             mGrib2ParameterLevelId;
 
-    /*! \brief  The grib parameter name. */
-    std::string                 mGribParameterName;
-
-    /*! \brief  The grib parameter units. */
-    std::string                 mGribParameterUnits;
-
-    /*! \brief  The fmi producer name. */
-    std::string                 mFmiProducerName;
-
-    /*! \brief  The fmi parameter identifier.*/
-    T::ParamId                  mFmiParameterId;
-
     /*! \brief  The fmi parameter level identifier. */
     T::ParamLevelId             mFmiParameterLevelId;
 
     /*! \brief  The parameter level. */
     T::ParamLevel               mParameterLevel;
 
-    /*! \brief  The geometry identifier. */
-    T::GeometryId               mGeometryId;
-
-    /*! \brief  The fmi parameter name. */
-    std::string                 mFmiParameterName;
-
-    /*! \brief  The fmi parameter units. */
-    std::string                 mFmiParameterUnits;
-
-    /*! \brief  The cdm parameter id string. */
-    std::string                 mCdmParameterId;
-
-    /*! \brief  The cdm parameter name. */
-    std::string                 mCdmParameterName;
-
-    /*! \brief  The newbase parameter id string. */
-    std::string                 mNewbaseParameterId;
-
-    /*! \brief  The newbase parameter name. */
-    std::string                 mNewbaseParameterName;
 
     /*! \brief  The virtual file id. If the value is bigger that zero, then the virtual message should be used
      * instead of this message
      * */
     uint                        mVirtualFileId;
+    uint                        mRowCount;
+    uint                        mColumnCount;
+    mutable uint                mCacheHitCounter;
+
+    mutable time_t              mLastCacheAccess;
     GridFile*                   mGridFilePtr;
-    uchar                       mFileType;
-    std::size_t                 mRowCount;
-    std::size_t                 mColumnCount;
-
-    short                       mDefaultInterpolationMethod;
-
     mutable ThreadLock          mThreadLock;
     mutable ModificationLock    mCacheModificationLock;
-
-    bool                        mPointCacheEnabled;
     mutable PointCache          mPointCache;
-    mutable uint                mCacheHitCounter;
-    mutable time_t              mLastCacheAccess;
+    short                       mDefaultInterpolationMethod;
+    bool                        mPointCacheEnabled;
 };
 
 

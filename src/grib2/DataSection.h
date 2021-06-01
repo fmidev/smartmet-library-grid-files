@@ -77,6 +77,12 @@ class DataSection : public GRID::MessageSection
     /*! \brief The pointer to the message object. */
     Message*        mMessage;
 
+    /*! \brief The pointer to the grid data */
+    T::Data_ptr     mDataPtr;
+
+    /*! \brief The size of the grid data. */
+    std::size_t     mDataSize;
+
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;
 
@@ -85,12 +91,6 @@ class DataSection : public GRID::MessageSection
 
     /*! \brief The section number. */
     T::UInt8_opt    mNumberOfSection;
-
-    /*! \brief The pointer to the grid data */
-    T::Data_ptr     mDataPtr;
-
-    /*! \brief The size of the grid data. */
-    std::size_t     mDataSize;
 
     bool            mReleaseData;
 };

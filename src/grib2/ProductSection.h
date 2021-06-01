@@ -97,14 +97,17 @@ class ProductSection : public GRID::MessageSection
     /*! \brief The pointer to the message object. */
     Message*              mMessage;
 
+    /*! \brief The pointer to the product definition object. */
+    ProductDefinition_sptr  mProductDefinition;
+
+    /*! \brief The optional list of the coordinates values. */
+    std::vector<float>    mCoordinates;
+
     /*! \brief The section start position in the file. */
     T::FilePosition       mFilePosition;
 
     /*! \brief The length of the section. */
     T::UInt32_opt         mSectionLength;
-
-    /*! \brief The section number. */
-    T::UInt8_opt          mNumberOfSection;
 
     /*! \brief The number of coordinates values after the template data. */
     T::UInt16_opt         mNV;
@@ -112,11 +115,8 @@ class ProductSection : public GRID::MessageSection
     /*! \brief The product definition template number. */
     T::UInt16_opt         mProductDefinitionTemplateNumber;
 
-    /*! \brief The pointer to the product definition object. */
-    ProductDefinition_sptr  mProductDefinition;
-
-    /*! \brief The optional list of the coordinates values. */
-    std::vector<float>    mCoordinates;
+    /*! \brief The section number. */
+    T::UInt8_opt          mNumberOfSection;
 
   public:
 

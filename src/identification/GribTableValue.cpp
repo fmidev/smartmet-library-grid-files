@@ -29,29 +29,6 @@ GribTableValue::GribTableValue()
 
 
 
-/*! \brief The copy constructor of the class. */
-/*
-GribTableValue::GribTableValue(const GribTableValue& tableValue)
-{
-  try
-  {
-    mGribVersion = tableValue.mGribVersion;
-    mTableVersion = tableValue.mTableVersion;
-    mTable = tableValue.mTable;
-    mNumber = tableValue.mNumber;
-    mName = tableValue.mName;
-    mValue = tableValue.mValue;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
-
-
-
-
 /*! \brief The destructor of the class. */
 
 GribTableValue::~GribTableValue()

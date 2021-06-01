@@ -74,7 +74,6 @@ GridDefinition::GridDefinition(const GridDefinition& other)
     mHash = other.mHash;
     mGlobal = other.mGlobal;
     mGeometryId = other.mGeometryId;
-    mGeometryName = other.mGeometryName;
     mGridProjection = other.mGridProjection;
     mEarth_semiMajor = other.mEarth_semiMajor;
     mEarth_semiMinor = other.mEarth_semiMinor;
@@ -839,40 +838,6 @@ bool GridDefinition::setProperty_LatLon(uint propertyId,long long value)
     }
 
     return false;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-std::string GridDefinition::getGridGeometryName()
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mGeometryName;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void GridDefinition::setGridGeometryName(const std::string& geometryName)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mGeometryName = geometryName;
   }
   catch (...)
   {

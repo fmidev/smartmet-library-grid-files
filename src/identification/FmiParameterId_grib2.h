@@ -12,12 +12,11 @@ class FmiParameterId_grib2
 {
   public:
                     FmiParameterId_grib2();
-                    //FmiParameterId_grib2(const FmiParameterId_grib2& parameter);
     virtual         ~FmiParameterId_grib2();
 
     void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    T::ParamId      mFmiParameterId;
+    T::FmiParamId   mFmiParameterId;
     uint            mFmiProducerId;
     uint            mGeneratingProcessIdentifier;
     uint            mCentre;

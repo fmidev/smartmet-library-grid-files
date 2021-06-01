@@ -24,25 +24,6 @@ TimeRangeDef::TimeRangeDef()
 
 
 
-/*
-TimeRangeDef::TimeRangeDef(const TimeRangeDef& timeRangeDef)
-{
-  try
-  {
-    mTimeRangeId = timeRangeDef.mTimeRangeId;
-    mName = timeRangeDef.mName;
-    mDescription = timeRangeDef.mDescription;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
-
-
-
-
 TimeRangeDef::~TimeRangeDef()
 {
   try

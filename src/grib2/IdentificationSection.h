@@ -117,11 +117,17 @@ class IdentificationSection : public GRID::MessageSection
     /*! \brief The pointer to the message object. */
     Message*        mMessage;
 
+    /*! \brief  Optional extra data. */
+    T::Data_ptr     mDataPtr;
+
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;
 
     /*! \brief The length of the section. */
     T::UInt32_opt   mSectionLength;
+
+    /*! \brief  The size of the optional extra data. */
+    uint            mDataSize;
 
     /*! \brief The section number. */
     T::UInt8_opt    mNumberOfSection;
@@ -140,6 +146,7 @@ class IdentificationSection : public GRID::MessageSection
 
     /*! \brief The significance of Reference Time (see Code Table 1.2). */
     T::UInt8_opt    mSignificanceOfReferenceTime;
+
 
     /*! \brief The year of the reference time. */
     T::UInt16_opt   mYear;
@@ -165,11 +172,6 @@ class IdentificationSection : public GRID::MessageSection
     /*! \brief The type of processed data in this GRIB message (see Code Table 1.4). */
     T::UInt8_opt    mTypeOfProcessedData;
 
-    /*! \brief  Optional extra data. */
-    T::Data_ptr     mDataPtr;
-
-    /*! \brief  The size of the optional extra data. */
-    uint            mDataSize;
 
     bool            mReleaseData;
 };

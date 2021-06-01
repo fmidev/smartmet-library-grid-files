@@ -13,6 +13,7 @@ NewbaseParameterDef::NewbaseParameterDef()
 {
   try
   {
+    mNewbaseParameterId = 0;
   }
   catch (...)
   {
@@ -20,23 +21,6 @@ NewbaseParameterDef::NewbaseParameterDef()
   }
 }
 
-
-
-
-/*
-NewbaseParameterDef::NewbaseParameterDef(const NewbaseParameterDef& parameter)
-{
-  try
-  {
-    mNewbaseParameterId = parameter.mNewbaseParameterId;
-    mParameterName = parameter.mParameterName;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
 
 

@@ -14,6 +14,7 @@ FmiParameterDef::FmiParameterDef()
 {
   try
   {
+    mFmiParameterId = 0;
     mVersion = 0;
     mAreaInterpolationMethod = T::AreaInterpolationMethod::Undefined;
     mTimeInterpolationMethod = T::TimeInterpolationMethod::Undefined;
@@ -25,31 +26,6 @@ FmiParameterDef::FmiParameterDef()
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
-
-
-
-/*
-FmiParameterDef::FmiParameterDef(const FmiParameterDef& parameterDef)
-{
-  try
-  {
-    mFmiParameterId = parameterDef.mFmiParameterId;
-    mVersion = parameterDef.mVersion;
-    mParameterName = parameterDef.mParameterName;
-    mParameterUnits = parameterDef.mParameterUnits;
-    mParameterDescription = parameterDef.mParameterDescription;
-    mAreaInterpolationMethod = parameterDef.mAreaInterpolationMethod;
-    mTimeInterpolationMethod = parameterDef.mTimeInterpolationMethod;
-    mLevelInterpolationMethod = parameterDef.mLevelInterpolationMethod;
-    mDefaultPrecision = parameterDef.mDefaultPrecision;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
 
 

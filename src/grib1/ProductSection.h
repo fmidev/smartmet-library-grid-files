@@ -151,6 +151,9 @@ class ProductSection : public GRID::MessageSection
     /*! \brief The pointer to the message object. */
     Message*          mMessage;
 
+    /*! \brief  Optional extra data. */
+    T::Data_ptr       mDataPtr;
+
     /*! \brief The section start position in the file. */
     T::FilePosition   mFilePosition;
 
@@ -169,6 +172,7 @@ class ProductSection : public GRID::MessageSection
     /*! \brief The grid definition. */
     std::uint8_t      mGridDefinitionNumber;
 
+
     /*! \brief The flags (see Code table 1) */
     std::uint8_t      mSectionFlags;
 
@@ -177,9 +181,6 @@ class ProductSection : public GRID::MessageSection
 
     /*! \brief The indicator of type of level (see Code table 3) */
     std::uint8_t      mIndicatorOfTypeOfLevel;
-
-    /*! \brief The level value. */
-    std::uint16_t     mLevel;
 
     /*! \brief The year of the reference time. */
     std::uint8_t      mYearOfCentury;
@@ -196,6 +197,14 @@ class ProductSection : public GRID::MessageSection
     /*! \brief The minute of the reference time. */
     std::uint8_t      mMinute;
 
+
+    /*! \brief The level value. */
+    std::uint16_t     mLevel;
+
+    /*! \brief The number included in average, when octet 21 (Code table 5) indicates an average or
+         accumulation; otherwise set to zero. */
+    std::uint16_t     mNumberIncludedInAverage;
+
     /*! \brief The unit of the time range (see Code table 4) */
     std::uint8_t      mUnitOfTimeRange;
 
@@ -209,9 +218,6 @@ class ProductSection : public GRID::MessageSection
     /*! \brief The time range indicator (see Code table 5). */
     std::uint8_t      mTimeRangeIndicator;
 
-    /*! \brief The number included in average, when octet 21 (Code table 5) indicates an average or
-         accumulation; otherwise set to zero. */
-    std::uint16_t     mNumberIncludedInAverage;
 
     /*! \brief The number missing from averages or accumulations. */
     std::uint8_t      mNumberMissingFromAveragesOrAccumulations;
@@ -222,19 +228,17 @@ class ProductSection : public GRID::MessageSection
     /*! \brief The sub-center identification (see Code Table 0). */
     std::uint8_t      mSubCentre;
 
-    /*! \brief The units decimal scale factor. */
-    std::int16_t      mDecimalScaleFactor;
+    bool              mReleaseData;
 
     short             mForecastType;
     short             mForecastNumber;
 
-    /*! \brief  Optional extra data. */
-    T::Data_ptr       mDataPtr;
-
     /*! \brief  The size of the optional extra data. */
     uint              mDataSize;
 
-    bool              mReleaseData;
+    /*! \brief The units decimal scale factor. */
+    std::int16_t      mDecimalScaleFactor;
+
 
 };
 

@@ -12,7 +12,6 @@ class TimeRangeDef
 {
   public:
                     TimeRangeDef();
-                    //TimeRangeDef(const TimeRangeDef& timeRangeDef);
     virtual         ~TimeRangeDef();
 
     void            print(std::ostream& stream,uint timeRange,uint optionFlags) const;

@@ -30,28 +30,6 @@ UnitDefinition::UnitDefinition()
 
 
 
-/*! \brief The copy constructor of the class. */
-/*
-UnitDefinition::UnitDefinition(const UnitDefinition& unitDefinition)
-{
-  try
-  {
-    mOriginalUnits = unitDefinition.mOriginalUnits;
-    mPreferredUnits = unitDefinition.mPreferredUnits;
-    mPreferredAreaInterpolationMethod = unitDefinition.mPreferredAreaInterpolationMethod;
-    mPreferredTimeInterpolationMethod = unitDefinition.mPreferredTimeInterpolationMethod;
-    mPreferredLevelInterpolationMethod = unitDefinition.mPreferredLevelInterpolationMethod;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
-
-
-
-
 /*! \brief The destructor of the class. */
 
 UnitDefinition::~UnitDefinition()

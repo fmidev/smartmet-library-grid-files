@@ -171,9 +171,6 @@ class Message : public GRID::Message
     /*! \brief The message start position in the file. */
     T::FilePosition     mFilePosition;
 
-    /*! \brief Indicates if the message is already read. */
-    bool                mIsRead;
-
     /*! \brief  A shared pointer to the IndicatorSection object. */
     IndicatorSect_sptr  mIndicatorSection;
 
@@ -195,13 +192,16 @@ class Message : public GRID::Message
     /*! \brief  A cache key that was used for caching the original grid data. */
     mutable uint        mOrigCacheKey;
 
+    T::TimeString       mForecastTime;
+    time_t              mForecastTimeT;
+
+    /*! \brief Indicates if the message is already read. */
+    bool                mIsRead;
+
     /*! \brief  A flag that indicates that the data decoding is impossible. */
     mutable bool        mValueDecodingFailed;
 
     mutable bool        mDataLocked;
-
-    T::TimeString       mForecastTime;
-    time_t              mForecastTimeT;
 
   public:
 

@@ -12,13 +12,12 @@ class FmiParameterId_grib
 {
   public:
                     FmiParameterId_grib();
-                    //FmiParameterId_grib(const FmiParameterId_grib& parameter);
     virtual         ~FmiParameterId_grib();
 
     void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    T::ParamId      mFmiParameterId;
-    T::ParamId      mGribParameterId;
+    T::FmiParamId   mFmiParameterId;
+    T::GribParamId  mGribParameterId;
     std::string     mConversionFunction;
     std::string     mReverseConversionFunction;
 };

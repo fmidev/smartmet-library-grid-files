@@ -13,32 +13,14 @@ FmiParameterId_newbase::FmiParameterId_newbase()
 {
   try
   {
+    mFmiParameterId = 0;
+    mNewbaseParameterId = 0;
   }
   catch (...)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
-
-
-
-/*
-FmiParameterId_newbase::FmiParameterId_newbase(const FmiParameterId_newbase& parameter)
-{
-  try
-  {
-    mFmiParameterId = parameter.mFmiParameterId;
-    mNewbaseParameterId = parameter.mNewbaseParameterId;
-    mConversionFunction = parameter.mConversionFunction;
-    mReverseConversionFunction = parameter.mReverseConversionFunction;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
 
 

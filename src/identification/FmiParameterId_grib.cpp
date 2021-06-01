@@ -13,32 +13,13 @@ FmiParameterId_grib::FmiParameterId_grib()
 {
   try
   {
+    mFmiParameterId = 0;
   }
   catch (...)
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
-
-
-
-/*
-FmiParameterId_grib::FmiParameterId_grib(const FmiParameterId_grib& parameter)
-{
-  try
-  {
-    mFmiParameterId = parameter.mFmiParameterId;
-    mGribParameterId = parameter.mGribParameterId;
-    mConversionFunction = parameter.mConversionFunction;
-    mReverseConversionFunction = parameter.mReverseConversionFunction;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
 
 

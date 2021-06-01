@@ -28,7 +28,6 @@ class UnitDefinition
 {
   public:
                   UnitDefinition();
-                  //UnitDefinition(const UnitDefinition& unitDefinition);
     virtual       ~UnitDefinition();
 
     virtual void  print(std::ostream& stream,uint level,uint optionFlags) const;

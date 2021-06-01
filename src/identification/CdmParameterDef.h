@@ -1,3 +1,4 @@
+#if 0
 #pragma once
 
 #include "../grid/Typedefs.h"
@@ -32,3 +33,4 @@ typedef const CdmParameterDef* CdmParameterDef_cptr;
 }
 }
 
+#endif

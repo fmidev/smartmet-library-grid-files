@@ -13,6 +13,7 @@ Grib2ParameterDef::Grib2ParameterDef()
 {
   try
   {
+    mGribParameterId = 0;
     mDiscipline = 0;
     mParameterCategory = 0;
     mParameterNumber = 0;
@@ -25,47 +26,6 @@ Grib2ParameterDef::Grib2ParameterDef()
   }
 }
 
-
-
-
-/*
-Grib2ParameterDef::Grib2ParameterDef(const Grib2ParameterDef& parameter)
-{
-  try
-  {
-    mGribParameterId = parameter.mGribParameterId;
-    mParameterName = parameter.mParameterName;
-    mParameterDescription = parameter.mParameterDescription;
-    mParameterUnits = parameter.mParameterUnits;
-    mDiscipline = parameter.mDiscipline;
-    mCentre = parameter.mCentre;
-    mParameterCategory = parameter.mParameterCategory;
-    mParameterNumber = parameter.mParameterNumber;
-    mTypeOfGeneratingProcess = parameter.mTypeOfGeneratingProcess;
-    mConstituentType = parameter.mConstituentType;
-    mLengthOfTimeRange = parameter.mLengthOfTimeRange;
-    mLocalTablesVersion = parameter.mLocalTablesVersion;
-    mAerosolType = parameter.mAerosolType;
-    mProbabilityType = parameter.mProbabilityType;
-    mProductDefinitionTemplateNumber = parameter.mProductDefinitionTemplateNumber;
-    mTypeOfFirstFixedSurface = parameter.mTypeOfFirstFixedSurface;
-    mTypeOfSecondFixedSurface = parameter.mTypeOfSecondFixedSurface;
-    mTypeOfStatisticalProcessing = parameter.mTypeOfStatisticalProcessing;
-    mScaledValueOfLowerLimit = parameter.mScaledValueOfLowerLimit;
-    mScaledValueOfFirstFixedSurface = parameter.mScaledValueOfFirstFixedSurface;
-    mScaledValueOfSecondFixedSurface = parameter.mScaledValueOfSecondFixedSurface;
-    mScaleFactorOfLowerLimit = parameter.mScaleFactorOfLowerLimit;
-    mScaleFactorOfFirstFixedSurface = parameter.mScaleFactorOfFirstFixedSurface;
-    mScaleFactorOfSecondFixedSurface = parameter.mScaleFactorOfSecondFixedSurface;
-    mIs_tigge = parameter.mIs_tigge;
-    mIs_replicate = parameter.mIs_replicate;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
 
 

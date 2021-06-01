@@ -139,8 +139,16 @@ class GridSection : public GRID::MessageSection
     /*! \brief The section start position in the file. */
     T::FilePosition       mFilePosition;
 
+    /*! \brief The pointer to the GridDefinition object. */
+    GridDefinition_sptr   mGridDefinition;
+
+    std::vector<std::uint32_t>  mVerticalCoordinates;
+
     /*! \brief The length of the section. */
     std::uint32_t         mSectionLength;
+
+    /*! \brief The number of the grid point (calculated when the grid is irregular). */
+    std::uint32_t         mNumberOfPoints;
 
     /*! \brief The number of optional vertical coordinate values. */
     std::uint8_t          mNumberOfVerticalCoordinateValues;
@@ -151,13 +159,6 @@ class GridSection : public GRID::MessageSection
     /*! \brief The data representation type (see Code table 6). */
     std::uint8_t          mDataRepresentationType;
 
-    /*! \brief The pointer to the GridDefinition object. */
-    GridDefinition_sptr   mGridDefinition;
-
-    /*! \brief The number of the grid point (calculated when the grid is irregular). */
-    std::uint32_t         mNumberOfPoints;
-
-    std::vector<std::uint32_t>  mVerticalCoordinates;
 };
 
 
