@@ -141,11 +141,23 @@ class GridSection : public GRID::MessageSection
     /*! \brief The pointer to the message object. */
     Message*              mMessage;
 
+    /*! \brief The pointer to the GridDefinition object. */
+    GridDefinition_sptr   mGridDefinition;  // abstract interface to the grid definition
+
+    /*! \brief  The optional list of numbers defining number of points. */
+    std::vector<unsigned int> mDataPoints;
+
     /*! \brief The section start position in the file. */
     T::FilePosition       mFilePosition;
 
     /*! \brief The length of the section. */
     T::UInt32_opt         mSectionLength;
+
+    /*! \brief The number of grid points. */
+    T::UInt32_opt         mNumberOfGridPoints;
+
+    /*! \brief The grid definition template number (see Code Table 3.1). */
+    T::UInt16_opt         mGridDefinitionTemplateNumber;
 
     /*! \brief The section number. */
     T::UInt8_opt          mNumberOfSection;
@@ -153,23 +165,11 @@ class GridSection : public GRID::MessageSection
     /*! \brief The source of the grid definition (see Code Table 3.0). */
     T::UInt8_opt          mSourceOfGridDefinition;
 
-    /*! \brief The number of grid points. */
-    T::UInt32_opt         mNumberOfGridPoints;
-
     /*! \brief The Number of octets for optional list of numbers defining number of points. */
     T::UInt8_opt          mNumberOfOctetsForNumberOfPoints;
 
     /*! \brief The Interpretation of list of numbers defining number of points (see Code Table 3.11) */
     T::UInt8_opt          mInterpretationOfNumberOfPoints;
-
-    /*! \brief The grid definition template number (see Code Table 3.1). */
-    T::UInt16_opt         mGridDefinitionTemplateNumber;
-
-    /*! \brief The pointer to the GridDefinition object. */
-    GridDefinition_sptr   mGridDefinition;  // abstract interface to the grid definition
-
-    /*! \brief  The optional list of numbers defining number of points. */
-    std::vector<unsigned int> mDataPoints;
 
   public:
 

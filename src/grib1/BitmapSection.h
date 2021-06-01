@@ -92,6 +92,8 @@ class BitmapSection : public GRID::MessageSection
     /*! \brief The number of unused bits at end of the section. */
     std::uint8_t    mNumberOfUnusedBits;
 
+    bool            mReleaseData;
+
     /*! \brief The table reference. If the value is zero, a bitmap follows. If the octets contain a number,
         it refers to a predetermined bitmap provided. */
     std::uint16_t   mTableReference;
@@ -103,8 +105,6 @@ class BitmapSection : public GRID::MessageSection
     std::size_t     mBitmapDataSizeInBytes;
 
     long long       mHash;
-
-    bool            mReleaseData;
 };
 
 

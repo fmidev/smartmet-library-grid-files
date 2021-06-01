@@ -57,6 +57,9 @@ Message::Message()
     mGrib1ParameterLevelId = 0;
     mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
+    mFmiParameterId = 0;
+    mNewbaseParameterId = 0;
+    mGribParameterId = 0;
     mParameterLevel = 0;
     mDefaultInterpolationMethod = T::AreaInterpolationMethod::Nearest;
     mLastCacheAccess = time(0);
@@ -66,6 +69,12 @@ Message::Message()
     mVirtualFileId = 0;
     mRowCount = 0;
     mColumnCount = 0;
+    mFmiParameterName = 0;
+    mNewbaseParameterName = 0;
+    mGribParameterName = 0;
+    mFmiParameterUnits = 0;
+    mGribParameterUnits = 0;
+    mFmiProducerName = 0;
   }
   catch (...)
   {
@@ -99,8 +108,6 @@ Message::Message(const Message& message)
     mFmiParameterLevelId = message.mFmiParameterLevelId;
     mFmiParameterName = message.mFmiParameterName;
     mFmiParameterUnits = message.mFmiParameterUnits;
-    mCdmParameterId = message.mCdmParameterId;
-    mCdmParameterName = message.mCdmParameterName;
     mNewbaseParameterId = message.mNewbaseParameterId;
     mNewbaseParameterName = message.mNewbaseParameterName;
     mVirtualFileId = message.mVirtualFileId;
@@ -1858,7 +1865,7 @@ void Message::getGridProjectionAttributes(const std::string& prefix,T::Attribute
     definition.
 */
 
-T::ParamId Message::getGribParameterId() const
+T::GribParamId Message::getGribParameterId() const
 {
   FUNCTION_TRACE
   try
@@ -1880,12 +1887,12 @@ T::ParamId Message::getGribParameterId() const
          \return   The grip parameter name.
 */
 
-std::string Message::getGribParameterName() const
+const char* Message::getGribParameterName() const
 {
   FUNCTION_TRACE
   try
   {
-    return mGribParameterName;
+    return stringFactory[mGribParameterName];
   }
   catch (...)
   {
@@ -1902,12 +1909,12 @@ std::string Message::getGribParameterName() const
          \return   The grib parameter units.
 */
 
-std::string Message::getGribParameterUnits() const
+const char* Message::getGribParameterUnits() const
 {
   FUNCTION_TRACE
   try
   {
-    return mGribParameterUnits;
+    return stringFactory[mGribParameterUnits];
   }
   catch (...)
   {
@@ -1970,12 +1977,12 @@ T::ParamLevelId Message::getGrib2ParameterLevelId() const
          \return   The FMI producer name.
 */
 
-std::string Message::getFmiProducerName() const
+const char* Message::getFmiProducerName() const
 {
   FUNCTION_TRACE
   try
   {
-    return mFmiProducerName;
+    return stringFactory[mFmiProducerName];
   }
   catch (...)
   {
@@ -1992,7 +1999,7 @@ std::string Message::getFmiProducerName() const
          \return   The FMI parameter id.
 */
 
-T::ParamId Message::getFmiParameterId() const
+T::FmiParamId Message::getFmiParameterId() const
 {
   FUNCTION_TRACE
   try
@@ -2036,12 +2043,12 @@ T::ParamLevelId Message::getFmiParameterLevelId() const
          \return   The FMI parameter name.
 */
 
-std::string Message::getFmiParameterName() const
+const char* Message::getFmiParameterName() const
 {
   FUNCTION_TRACE
   try
   {
-    return mFmiParameterName;
+    return stringFactory[mFmiParameterName];
   }
   catch (...)
   {
@@ -2058,56 +2065,12 @@ std::string Message::getFmiParameterName() const
          \return   The FMI parameter units.
 */
 
-std::string Message::getFmiParameterUnits() const
+const char* Message::getFmiParameterUnits() const
 {
   FUNCTION_TRACE
   try
   {
-    return mFmiParameterUnits;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the CDM parameter id.
-
-         \return   The CDM parameter id.
-*/
-
-std::string Message::getCdmParameterId() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mCdmParameterId;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the CDM parameter name.
-
-         \return   The CDM parameter name.
-*/
-
-std::string Message::getCdmParameterName() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mCdmParameterName;
+    return stringFactory[mFmiParameterUnits];
   }
   catch (...)
   {
@@ -2124,7 +2087,7 @@ std::string Message::getCdmParameterName() const
          \return   The newbase parameter id.
 */
 
-std::string Message::getNewbaseParameterId() const
+T::NewbaseParamId Message::getNewbaseParameterId() const
 {
   FUNCTION_TRACE
   try
@@ -2146,12 +2109,12 @@ std::string Message::getNewbaseParameterId() const
          \return   The newbase parameter name.
 */
 
-std::string Message::getNewbaseParameterName() const
+const char* Message::getNewbaseParameterName() const
 {
   FUNCTION_TRACE
   try
   {
-    return mNewbaseParameterName;
+    return stringFactory[mNewbaseParameterName];
   }
   catch (...)
   {
@@ -3389,7 +3352,7 @@ bool Message::setProperty(const char *propertyName,double value)
         \param fmiParameterId   The new value for the member attribute.
 */
 
-void Message::setFmiParameterId(T::ParamId fmiParameterId)
+void Message::setFmiParameterId(T::FmiParamId fmiParameterId)
 {
   FUNCTION_TRACE
   try
@@ -3433,12 +3396,12 @@ void Message::setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId)
         \param fmiParameterName   The new value for the member attribute.
 */
 
-void Message::setFmiParameterName(const std::string& fmiParameterName)
+void Message::setFmiParameterName(const char *fmiParameterName)
 {
   FUNCTION_TRACE
   try
   {
-    mFmiParameterName = fmiParameterName;
+    mFmiParameterName = stringFactory.create(fmiParameterName);
   }
   catch (...)
   {
@@ -3455,12 +3418,12 @@ void Message::setFmiParameterName(const std::string& fmiParameterName)
         \param fmiParameterUnits   The new value for the member attribute.
 */
 
-void Message::setFmiParameterUnits(const std::string& fmiParameterUnits)
+void Message::setFmiParameterUnits(const char *fmiParameterUnits)
 {
   FUNCTION_TRACE
   try
   {
-    mFmiParameterUnits = fmiParameterUnits;
+    mFmiParameterUnits = stringFactory.create(fmiParameterUnits);
   }
   catch (...)
   {
@@ -3477,7 +3440,7 @@ void Message::setFmiParameterUnits(const std::string& fmiParameterUnits)
         \param gribParameterId   The new value for the member attribute.
 */
 
-void Message::setGribParameterId(T::ParamId gribParameterId)
+void Message::setGribParameterId(T::GribParamId gribParameterId)
 {
   FUNCTION_TRACE
   try
@@ -3499,12 +3462,12 @@ void Message::setGribParameterId(T::ParamId gribParameterId)
         \param gribParameterName   The new value for the member attribute.
 */
 
-void Message::setGribParameterName(const std::string& gribParameterName)
+void Message::setGribParameterName(const char *gribParameterName)
 {
   FUNCTION_TRACE
   try
   {
-    mGribParameterName = gribParameterName;
+    mGribParameterName = stringFactory.create(gribParameterName);
   }
   catch (...)
   {
@@ -3521,12 +3484,12 @@ void Message::setGribParameterName(const std::string& gribParameterName)
         \param gribParameterUnits   The new value for the member attribute.
 */
 
-void Message::setGribParameterUnits(const std::string& gribParameterUnits)
+void Message::setGribParameterUnits(const char *gribParameterUnits)
 {
   FUNCTION_TRACE
   try
   {
-    mGribParameterUnits = gribParameterUnits;
+    mGribParameterUnits = stringFactory.create(gribParameterUnits);
   }
   catch (...)
   {
@@ -3582,56 +3545,12 @@ void Message::setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId)
 
 
 
-/*! \brief The method sets the value of the 'mCdmParameterId' member attribute.
-
-        \param cdmParameterId   The new value for the member attribute.
-*/
-
-void Message::setCdmParameterId(const std::string& cdmParameterId)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mCdmParameterId = cdmParameterId;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method sets the value of the 'mCdmParameterName' member attribute.
-
-        \param cdmParameterName   The new value for the member attribute.
-*/
-
-void Message::setCdmParameterName(const std::string& cdmParameterName)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mCdmParameterName = cdmParameterName;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
 /*! \brief The method sets the value of the 'mNewbaseParameterId' member attribute.
 
         \param newbaseParameterId   The new value for the member attribute.
 */
 
-void Message::setNewbaseParameterId(const std::string& newbaseParameterId)
+void Message::setNewbaseParameterId(T::NewbaseParamId newbaseParameterId)
 {
   FUNCTION_TRACE
   try
@@ -3653,12 +3572,12 @@ void Message::setNewbaseParameterId(const std::string& newbaseParameterId)
         \param newbaseParameterName   The new value for the member attribute.
 */
 
-void Message::setNewbaseParameterName(const std::string& newbaseParameterName)
+void Message::setNewbaseParameterName(const char *newbaseParameterName)
 {
   FUNCTION_TRACE
   try
   {
-    mNewbaseParameterName = newbaseParameterName;
+    mNewbaseParameterName = stringFactory.create(newbaseParameterName);
   }
   catch (...)
   {

@@ -12,12 +12,11 @@ class FmiParameterDef
 {
   public:
                   FmiParameterDef();
-                  //FmiParameterDef(const FmiParameterDef& parameterDef);
     virtual       ~FmiParameterDef();
 
     void          print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    T::ParamId    mFmiParameterId;
+    T::FmiParamId mFmiParameterId;
     uint          mVersion;
     std::string   mParameterName;
     std::string   mParameterUnits;

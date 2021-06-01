@@ -24,25 +24,6 @@ ForecastTypeDef::ForecastTypeDef()
 
 
 
-/*
-ForecastTypeDef::ForecastTypeDef(const ForecastTypeDef& forecastTypeDef)
-{
-  try
-  {
-    mForecastTypeId = forecastTypeDef.mForecastTypeId;
-    mName = forecastTypeDef.mName;
-    mDescription = forecastTypeDef.mDescription;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
-
-
-
-
 ForecastTypeDef::~ForecastTypeDef()
 {
   try

@@ -48,6 +48,7 @@ struct CoordinateRec
 
 typedef std::unordered_map<std::size_t,CoordinateRec> CoordinateCache;
 typedef std::unordered_map<std::size_t,CoordinateRec>::iterator CoordinateCacheIterator;
+typedef std::unordered_map<uint,std::string> GeometryNames;
 
 
 
@@ -90,7 +91,7 @@ class GridDef
     std::string         getGribTableValue(std::uint8_t gribVersion,std::uint8_t tableVersion,const std::string& table,T::UInt16_opt number);
     std::string         getPreferredUnits(const std::string& originalUnits);
 
-    bool                getGribParamDefById(T::ParamId gribParamId,GribParameterDef&  paramDef);
+    bool                getGribParamDefById(T::GribParamId gribParamId,GribParameterDef&  paramDef);
     bool                getGribParamDefByName(const std::string& gribParamName,GribParameterDef&  paramDef);
     bool                getGribParamDef(uint discipline,uint category,uint number,GribParameterDef&  paramDef);
     bool                getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::Coordinate_svec& coordinates);
@@ -99,7 +100,7 @@ class GridDef
     int                 getGrib1GeometryId(GRIB1::Message& message);
     bool                getGrib1LevelDef(uint levelId,LevelDef& levelDef);
     uint                getGrib1ParameterDefCount();
-    bool                getGrib1ParameterDefById(T::ParamId gribParamId,Grib1ParameterDef& paramDef);
+    bool                getGrib1ParameterDefById(T::GribParamId gribParamId,Grib1ParameterDef& paramDef);
     bool                getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef);
     bool                getGrib1ParameterDefByName(const std::string& gribParamName,Grib1ParameterDef& paramDef);
     bool                getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfParameter,Grib1ParameterDef& paramDef);
@@ -108,7 +109,7 @@ class GridDef
     int                 getGrib2GeometryId(GRIB2::Message& message);
     bool                getGrib2LevelDef(uint levelId,LevelDef& levelDef);
     uint                getGrib2ParameterDefCount();
-    bool                getGrib2ParameterDefById(T::ParamId gribParamId,Grib2ParameterDef& paramDef);
+    bool                getGrib2ParameterDefById(T::GribParamId gribParamId,Grib2ParameterDef& paramDef);
     bool                getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef);
     bool                getGrib2ParameterDefByName(const std::string& gribParamName,Grib2ParameterDef& paramDef);
     bool                getGrib2TimeRangeDef(uint timeRangeId,TimeRangeDef& timeRangeDef);
@@ -129,8 +130,8 @@ class GridDef
     T::Coordinate_svec  getGridLatLonCoordinateLinePointsByGeometryId(T::GeometryId  geometryId);
     bool                getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geometryId,double lat,double lon,double& grid_i,double& grid_j);
 
-    T::ParamId          getGribParameterId(GRIB1::Message& message);
-    T::ParamId          getGribParameterId(GRIB2::Message& message);
+    T::GribParamId      getGribParameterId(GRIB1::Message& message);
+    T::GribParamId      getGribParameterId(GRIB2::Message& message);
     T::ParamLevelId     getGrib1LevelId(GRIB1::Message& message);
     T::ParamLevelId     getGrib1LevelId(GRIB2::Message& message);
     T::ParamLevelId     getGrib2LevelId(GRIB1::Message& message);
@@ -140,16 +141,16 @@ class GridDef
     std::string         getGribParameterUnits(GRIB1::Message& message);
     std::string         getGribParameterUnits(GRIB2::Message& message);
 
-    T::ParamId          getFmiParameterIdByFmiName(const std::string& fmiParamName);
-    bool                getFmiParameterDefById(T::ParamId fmiParamId,FmiParameterDef& paramDef);
-    bool                getFmiParameterDefByGribId(T::ParamId gribParamId,FmiParameterDef& paramDef);
-    bool                getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId,FmiParameterDef& paramDef);
+    T::FmiParamId       getFmiParameterIdByFmiName(const std::string& fmiParamName);
+    bool                getFmiParameterDefById(T::FmiParamId fmiParamId,FmiParameterDef& paramDef);
+    bool                getFmiParameterDefByGribId(T::GribParamId gribParamId,FmiParameterDef& paramDef);
+    bool                getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId,FmiParameterDef& paramDef);
     bool                getFmiParameterDefByName(const std::string& fmiParamName,FmiParameterDef& paramDef);
     bool                getFmiProducerByName(const std::string& fmiProducerName,FmiProducerId_grib& producer);
     bool                getFmiProducerByFmiId(uint fmiProducerId,FmiProducerId_grib& producer);
 
-    T::ParamId          getFmiParameterId(GRIB1::Message& message);
-    T::ParamId          getFmiParameterId(GRIB2::Message& message);
+    T::FmiParamId       getFmiParameterId(GRIB1::Message& message);
+    T::FmiParamId       getFmiParameterId(GRIB2::Message& message);
     bool                getFmiLevelDef(uint levelId,LevelDef& levelDef);
     T::ParamLevelId     getFmiLevelId(GRIB1::Message& message);
     T::ParamLevelId     getFmiLevelId(GRIB2::Message& message);
@@ -161,18 +162,13 @@ class GridDef
     std::string         getFmiParameterUnits(GRIB1::Message& message);
     std::string         getFmiParameterUnits(GRIB2::Message& message);
 
-    bool                getNewbaseParameterDefById(T::ParamId newbaseParamId,NewbaseParameterDef& paramDef);
+    bool                getNewbaseParameterDefById(T::NewbaseParamId newbaseParamId,NewbaseParameterDef& paramDef);
     bool                getNewbaseParameterDefByName(const std::string& newbaseParamName,NewbaseParameterDef& paramDef);
-    bool                getNewbaseParameterDefByFmiId(T::ParamId fmiParamId,NewbaseParameterDef& paramDef);
-    bool                getNewbaseParameterMappingByFmiId(T::ParamId fmiParamId,FmiParameterId_newbase& paramMapping);
+    bool                getNewbaseParameterDefByFmiId(T::FmiParamId fmiParamId,NewbaseParameterDef& paramDef);
+    bool                getNewbaseParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_newbase& paramMapping);
 
-    T::ParamId          getCdmParameterId(GRIB1::Message& message);
-    T::ParamId          getCdmParameterId(GRIB2::Message& message);
-    std::string         getCdmParameterName(GRIB1::Message& message);
-    std::string         getCdmParameterName(GRIB2::Message& message);
-
-    T::ParamId          getNewbaseParameterId(GRIB1::Message& message);
-    T::ParamId          getNewbaseParameterId(GRIB2::Message& message);
+    T::NewbaseParamId   getNewbaseParameterId(GRIB1::Message& message);
+    T::NewbaseParamId   getNewbaseParameterId(GRIB2::Message& message);
     std::string         getNewbaseParameterName(GRIB1::Message& message);
     std::string         getNewbaseParameterName(GRIB2::Message& message);
 
@@ -180,9 +176,9 @@ class GridDef
     short               getFmiParameterInterpolationMethod(GRIB1::Message& message);
     short               getFmiParameterInterpolationMethod(GRIB2::Message& message);
 
-    bool                getGribDefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib& def);
-    bool                getGrib1DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib1& def);
-    bool                getGrib2DefByFmiId(T::ParamId fmiParamId,FmiParameterId_grib2& def);
+    bool                getGribDefByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib& def);
+    bool                getGrib1DefByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib1& def);
+    bool                getGrib2DefByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib2& def);
 
     bool                getGrib1LevelDef(uint fmiLevelId,uint generatingProcessId,uint centre,FmiLevelId_grib& def);
     bool                getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def);
@@ -205,13 +201,13 @@ class GridDef
     void                    updateFmi();
     void                    updateNewbase();
 
-    GribParamDef_cptr       getGribParamDefById(T::ParamId gribParamId);
+    GribParamDef_cptr       getGribParamDefById(T::GribParamId gribParamId);
     GribParamDef_cptr       getGribParamDefByName(const std::string& gribParamName);
     GribParamDef_cptr       getGribParamDef(uint discipline,uint category,uint number);
 
     GRIB1::GridDef_ptr      getGrib1Definition(GRIB1::Message& message);
     LevelDef_cptr           getGrib1LevelDef(uint levelId);
-    Grib1ParamDef_cptr      getGrib1ParameterDefById(T::ParamId gribParamId);
+    Grib1ParamDef_cptr      getGrib1ParameterDefById(T::GribParamId gribParamId);
     Grib1ParamDef_cptr      getGrib1ParameterDefByIndex(uint index);
     Grib1ParamDef_cptr      getGrib1ParameterDefByName(const std::string& gribParamName);
     Grib1ParamDef_cptr      getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfParameter);
@@ -219,12 +215,12 @@ class GridDef
 
     GRIB2::GridDef_ptr      getGrib2Definition(GRIB2::Message& message);
     LevelDef_cptr           getGrib2LevelDef(uint levelId);
-    Grib2ParamDef_cptr      getGrib2ParameterDefById(T::ParamId gribParamId);
+    Grib2ParamDef_cptr      getGrib2ParameterDefById(T::GribParamId gribParamId);
     Grib2ParamDef_cptr      getGrib2ParameterDefByName(const std::string& gribParamName);
     TimeRangeDef_cptr       getGrib2TimeRangeDef(uint timeRangeId);
-    FmiParameterId_grib*    getGribDefByFmiId(T::ParamId fmiParamId);
-    FmiParameterId_grib1*   getGrib1DefByFmiId(T::ParamId fmiParamId);
-    FmiParameterId_grib2*   getGrib2DefByFmiId(T::ParamId fmiParamId);
+    FmiParameterId_grib*    getGribDefByFmiId(T::FmiParamId fmiParamId);
+    FmiParameterId_grib1*   getGrib1DefByFmiId(T::FmiParamId fmiParamId);
+    FmiParameterId_grib2*   getGrib2DefByFmiId(T::FmiParamId fmiParamId);
 
     void                    loadGeometryDefinitions(const char *filename);
     void                    loadGribParameterDefinitions(const char *filename);
@@ -258,20 +254,20 @@ class GridDef
     uint                    countParameterMatchPoints(GRIB2::Message& message,const Grib2ParameterDef& p);
     uint                    countParameterMatchPoints(GRIB2::Message& message,const FmiParameterId_grib2& p);
 
-    GribParamDef_cptr       getGribParameterDefById(T::ParamId gribParamId);
-    FmiParamDef_cptr        getFmiParameterDefById(T::ParamId fmiParamId);
+    GribParamDef_cptr       getGribParameterDefById(T::GribParamId gribParamId);
+    FmiParamDef_cptr        getFmiParameterDefById(T::FmiParamId fmiParamId);
     LevelDef_cptr           getFmiLevelDef(uint levelId);
     ForecastTypeDef_cptr    getFmiForecastTypeDef(int forecastType);
-    FmiParamDef_cptr        getFmiParameterDefByGribId(T::ParamId gribParamId);
-    FmiParamDef_cptr        getFmiParameterDefByNewbaseId(T::ParamId newbaseParamId);
+    FmiParamDef_cptr        getFmiParameterDefByGribId(T::GribParamId gribParamId);
+    FmiParamDef_cptr        getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId);
     FmiParamDef_cptr        getFmiParameterDefByName(const std::string& fmiParamName);
     FmiProducerId_grib_cptr getFmiProducerByName(const std::string& fmiProducerName);
     FmiProducerId_grib_cptr getFmiProducerByFmiId(uint fmiProducerId);
-    NewbaseParamDef_cptr    getNewbaseParameterDefById(T::ParamId newbaseParamId);
+    NewbaseParamDef_cptr    getNewbaseParameterDefById(T::NewbaseParamId newbaseParamId);
     NewbaseParamDef_cptr    getNewbaseParameterDefByName(const std::string& newbaseParamName);
-    FmiParamId_newbase_cptr getFmiParameterIdByNewbaseId(T::ParamId newbaseParamId);
-    FmiParamId_grib_cptr    getFmiParameterIdByGribId(T::ParamId gribParamId);
-    FmiParamId_newbase_cptr getNewbaseParameterIdByFmiId(T::ParamId fmiParamId);
+    FmiParamId_newbase_cptr getFmiParameterIdByNewbaseId(T::NewbaseParamId newbaseParamId);
+    FmiParamId_grib_cptr    getFmiParameterIdByGribId(T::GribParamId gribParamId);
+    FmiParamId_newbase_cptr getNewbaseParameterIdByFmiId(T::FmiParamId fmiParamId);
 
 
 
@@ -369,6 +365,8 @@ class GridDef
 
     CoordinateCache         mCoordinateCache;
     ModificationLock        mCoordinateCacheModificationLock;
+
+    GeometryNames           mGeometryNames;
 };
 
 extern GridDef gridDef;

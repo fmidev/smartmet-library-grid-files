@@ -13,6 +13,7 @@ FmiParameterId_grib1::FmiParameterId_grib1()
 {
   try
   {
+    mFmiParameterId = 0;
     mFmiProducerId = 0;
     mGeneratingProcessIdentifier = 0;
     mCentre = 0;
@@ -26,31 +27,6 @@ FmiParameterId_grib1::FmiParameterId_grib1()
   }
 }
 
-
-
-
-/*
-FmiParameterId_grib1::FmiParameterId_grib1(const FmiParameterId_grib1& parameter)
-{
-  try
-  {
-    mFmiParameterId = parameter.mFmiParameterId;
-    mFmiProducerId = parameter.mFmiProducerId;
-    mGeneratingProcessIdentifier = parameter.mGeneratingProcessIdentifier;
-    mCentre = parameter.mCentre;
-    mGribTableVersion = parameter.mGribTableVersion;
-    mGribParameterNumber = parameter.mGribParameterNumber;
-    mGribTimerangeIndicator = parameter.mGribTimerangeIndicator;
-    mFmiParameterLevelId = parameter.mFmiParameterLevelId;
-    mGribParameterLevelId = parameter.mGribParameterLevelId;
-    mParameterLevel = parameter.mParameterLevel;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
 
 

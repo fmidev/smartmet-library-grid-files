@@ -13,6 +13,7 @@ Grib1ParameterDef::Grib1ParameterDef()
 {
   try
   {
+    mGribParameterId = 0;
     mTable2Version = 0;
     mCentre = 0;
     mIndicatorOfParameter = 0;
@@ -25,30 +26,6 @@ Grib1ParameterDef::Grib1ParameterDef()
   }
 }
 
-
-
-
-/*
-Grib1ParameterDef::Grib1ParameterDef(const Grib1ParameterDef& parameter)
-{
-  try
-  {
-    mGribParameterId = parameter.mGribParameterId;
-    mTable2Version = parameter.mTable2Version;
-    mCentre = parameter.mCentre;
-    mIndicatorOfParameter = parameter.mIndicatorOfParameter;
-    mIndicatorOfTypeOfLevel = parameter.mIndicatorOfTypeOfLevel;
-    mParameterLevel = parameter.mParameterLevel;
-    mParameterUnits = parameter.mParameterUnits;
-    mParameterName = parameter.mParameterName;
-    mParameterDescription = parameter.mParameterDescription;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
 
 

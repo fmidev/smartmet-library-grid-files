@@ -11,16 +11,15 @@ namespace Identification
 class FmiParameterId_newbase
 {
   public:
-                    FmiParameterId_newbase();
-                    //FmiParameterId_newbase(const FmiParameterId_newbase& parameter);
-    virtual         ~FmiParameterId_newbase();
+                      FmiParameterId_newbase();
+    virtual           ~FmiParameterId_newbase();
 
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    T::ParamId      mFmiParameterId;
-    T::ParamId      mNewbaseParameterId;
-    std::string     mConversionFunction;
-    std::string     mReverseConversionFunction;
+    T::FmiParamId     mFmiParameterId;
+    T::NewbaseParamId mNewbaseParameterId;
+    std::string       mConversionFunction;
+    std::string       mReverseConversionFunction;
 };
 
 

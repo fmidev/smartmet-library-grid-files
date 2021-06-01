@@ -27,28 +27,6 @@ FmiProducerId_grib::FmiProducerId_grib()
 
 
 
-/*
-FmiProducerId_grib::FmiProducerId_grib(const FmiProducerId_grib& producer)
-{
-  try
-  {
-    mProducerId = producer.mProducerId;
-    mType = producer.mType;
-    mCentre = producer.mCentre;
-    mIdent = producer.mIdent;
-    mProducerName = producer.mProducerName;
-    mProducerDescription = producer.mProducerDescription;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
-
-
-
-
 FmiProducerId_grib::~FmiProducerId_grib()
 {
   try

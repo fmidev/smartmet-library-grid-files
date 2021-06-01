@@ -12,7 +12,6 @@ class ForecastTypeDef
 {
   public:
                     ForecastTypeDef();
-                    //ForecastTypeDef(const ForecastTypeDef& forecastTypeDef);
     virtual         ~ForecastTypeDef();
 
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

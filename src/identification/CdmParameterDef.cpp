@@ -1,3 +1,4 @@
+#if 0
 #include "CdmParameterDef.h"
 #include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
@@ -80,3 +81,4 @@ void CdmParameterDef::print(std::ostream& stream,uint level,uint optionFlags) co
 }
 
 
+#endif

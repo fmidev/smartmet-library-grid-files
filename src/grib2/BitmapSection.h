@@ -79,8 +79,16 @@ class BitmapSection : public GRID::MessageSection
     /*! \brief The pointer to the message object. */
     Message*        mMessage;
 
+    /*! \brief The pointer to the bitmap. */
+    T::Data_ptr     mBitmapDataPtr;
+
+    long long       mHash;
+
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;
+
+    /*! \brief  The bitmap size in bytes. */
+    std::size_t     mBitmapDataSizeInBytes;
 
     /*! \brief The length of the section. */
     T::UInt32_opt   mSectionLength;
@@ -90,14 +98,6 @@ class BitmapSection : public GRID::MessageSection
 
     /*! \brief The Bitmap indicator (see Code Table 6.0) */
     T::UInt8_opt    mBitmapIndicator;
-
-    /*! \brief The pointer to the bitmap. */
-    T::Data_ptr     mBitmapDataPtr;
-
-    /*! \brief  The bitmap size in bytes. */
-    std::size_t     mBitmapDataSizeInBytes;
-
-    long long       mHash;
 
     bool            mReleaseData;
 };

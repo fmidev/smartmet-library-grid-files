@@ -16,6 +16,7 @@ GribParameterDef::GribParameterDef()
 {
   try
   {
+    mGribParameterId = 0;
     mDiscipline = 0;
     mParameterCategory = 0;
     mParameterNumber = 0;
@@ -26,30 +27,6 @@ GribParameterDef::GribParameterDef()
   }
 }
 
-
-
-
-
-/*! \brief The copy constructor of the class. */
-/*
-GribParameterDef::GribParameterDef(const GribParameterDef& parameterDefinition)
-{
-  try
-  {
-    mGribParameterId = parameterDefinition.mGribParameterId;
-    mDiscipline = parameterDefinition.mDiscipline;
-    mParameterCategory = parameterDefinition.mParameterCategory;
-    mParameterNumber = parameterDefinition.mParameterNumber;
-    mParameterName = parameterDefinition.mParameterName;
-    mParameterDescription = parameterDefinition.mParameterDescription;
-    mParameterUnits = parameterDefinition.mParameterUnits;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
 
 

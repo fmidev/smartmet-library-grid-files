@@ -12,7 +12,6 @@ class LevelDef
 {
   public:
                     LevelDef();
-                    //LevelDef(const LevelDef& levelDef);
     virtual         ~LevelDef();
 
     void            print(std::ostream& stream,uint level,uint optionFlags) const;

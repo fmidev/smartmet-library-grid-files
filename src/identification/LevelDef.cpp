@@ -24,25 +24,6 @@ LevelDef::LevelDef()
 
 
 
-/*
-LevelDef::LevelDef(const LevelDef& levelDef)
-{
-  try
-  {
-    mLevelId = levelDef.mLevelId;
-    mName = levelDef.mName;
-    mDescription = levelDef.mDescription;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
-
-
-
-
 LevelDef::~LevelDef()
 {
   try

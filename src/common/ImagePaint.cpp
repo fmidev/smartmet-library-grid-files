@@ -100,7 +100,7 @@ void ImagePaint::paintPixel(int _x,int _y,uint _color)
 {
   try
   {
-    if (mCountingActive || _color == 0xFFFFFFFF)
+    if (mCountingActive)
       return;
 
     if (_x >= 0  &&  _x < mImageWidth  &&  _y >=0  &&  _y < mImageHeight)

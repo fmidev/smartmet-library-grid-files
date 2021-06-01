@@ -19,19 +19,18 @@ namespace Identification
 class GribParameterDef
 {
   public:
-                  GribParameterDef();
-                  //GribParameterDef(const GribParameterDef& parameterDefinition);
-    virtual       ~GribParameterDef();
+                    GribParameterDef();
+    virtual         ~GribParameterDef();
 
-    virtual void  print(std::ostream& stream,uint level,uint optionFlags) const;
+    virtual void    print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    T::ParamId    mGribParameterId;
-    uint          mDiscipline;
-    uint          mParameterCategory;
-    uint          mParameterNumber;
-    std::string   mParameterName;
-    std::string   mParameterDescription;
-    std::string   mParameterUnits;
+    T::GribParamId  mGribParameterId;
+    uint            mDiscipline;
+    uint            mParameterCategory;
+    uint            mParameterNumber;
+    std::string     mParameterName;
+    std::string     mParameterDescription;
+    std::string     mParameterUnits;
 };
 
 typedef std::vector<GribParameterDef> GribParamDef_vec;

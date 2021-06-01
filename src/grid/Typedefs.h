@@ -25,6 +25,9 @@ namespace T
 typedef std::size_t Hash;
 typedef std::uint64_t FilePosition;
 typedef std::string ParamId;
+typedef std::uint32_t NewbaseParamId;
+typedef std::uint32_t FmiParamId;
+typedef std::uint32_t GribParamId;
 typedef std::int32_t ParamLevel;
 typedef std::uint8_t ParamLevelId;
 typedef float ParamValue;
@@ -86,8 +89,6 @@ class ParamKeyTypeValue
     static const ParamKeyType GRIB_ID      = 3;
     static const ParamKeyType NEWBASE_ID   = 4;
     static const ParamKeyType NEWBASE_NAME = 5;
-    static const ParamKeyType CDM_ID       = 6;
-    static const ParamKeyType CDM_NAME     = 7;
     static const ParamKeyType BUILD_IN     = 100;
 };
 

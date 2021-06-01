@@ -83,6 +83,9 @@ class IndicatorSection : public GRID::MessageSection
     /*! \brief The section start position in the file. */
     T::FilePosition   mFilePosition;
 
+    /*! \brief The total length of the GRIB message in octets (including Section 0). */
+    std::uint64_t     mTotalLength;
+
     /*! \brief The GRIB file identifier ('GRIB'). */
     uchar             mIdentifier[4];
 
@@ -95,8 +98,6 @@ class IndicatorSection : public GRID::MessageSection
     /*! \brief The GRIB edition number. */
     T::UInt8_opt      mEditionNumber;
 
-    /*! \brief The total length of the GRIB message in octets (including Section 0). */
-    std::uint64_t     mTotalLength;
 };
 
 typedef std::shared_ptr<IndicatorSection> IndicatorSect_sptr;

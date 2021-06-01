@@ -61,7 +61,7 @@ class LocalSection : public GRID::MessageSection
     void            setMessagePtr(Message *message);
     void            setData(T::Data_ptr data,std::size_t size);
 
-    bool              getProperty(uint propertyId,long long& value);
+    bool            getProperty(uint propertyId,long long& value);
     bool            setProperty(uint propertyId,long long value);
 
     void            read(MemoryReader& memoryReader);
@@ -73,20 +73,20 @@ class LocalSection : public GRID::MessageSection
     /*! \brief The pointer to the message object. */
     Message*        mMessage;
 
+    /*! \brief The pointer to the local data. */
+    T::Data_ptr     mDataPtr;
+
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;
+
+    /*! \brief The length of the local data. */
+    std::size_t     mDataSize;
 
     /*! \brief The length of the section. */
     T::UInt32_opt   mSectionLength;
 
     /*! \brief The section number. */
     T::UInt8_opt    mNumberOfSection;
-
-    /*! \brief The pointer to the local data. */
-    T::Data_ptr     mDataPtr;
-
-    /*! \brief The length of the local data. */
-    std::size_t     mDataSize;
 
     bool            mReleaseData;
 };

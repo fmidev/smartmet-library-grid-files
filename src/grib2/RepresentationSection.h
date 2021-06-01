@@ -93,14 +93,14 @@ class RepresentationSection : public GRID::MessageSection
     /*! \brief The pointer to the message object. */
     Message*        mMessage;
 
+    /*! \brief The pointer to the RepresentationDefinition object. */
+    RepresentationDefinition_sptr mRepresentationDefinition;
+
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;
 
     /*! \brief The length of the section. */
     T::UInt32_opt   mSectionLength;
-
-    /*! \brief The section number. */
-    T::UInt8_opt    mNumberOfSection;
 
     /*! \brief The Number of data points. */
     T::UInt32_opt   mNumberOfValues;
@@ -108,8 +108,8 @@ class RepresentationSection : public GRID::MessageSection
     /*! \brief Data Representation Template Number (see Code Table 5.0). */
     T::UInt16_opt   mDataRepresentationTemplateNumber;
 
-    /*! \brief The pointer to the RepresentationDefinition object. */
-    RepresentationDefinition_sptr mRepresentationDefinition;
+    /*! \brief The section number. */
+    T::UInt8_opt    mNumberOfSection;
 
   public:
     class Template
