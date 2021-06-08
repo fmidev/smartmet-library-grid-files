@@ -12,13 +12,15 @@ class AutoReadLock
     AutoReadLock(ModificationLock *modificationLock)
     {
       mModificationLock = modificationLock;
-      mModificationLock->readLock();
+      if (mModificationLock)
+        mModificationLock->readLock();
     }
 
 
     ~AutoReadLock()
     {
-      mModificationLock->readUnlock();
+      if (mModificationLock)
+        mModificationLock->readUnlock();
     }
 
   protected:

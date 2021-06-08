@@ -108,7 +108,7 @@ Message::Message(const Message& other)
     mFilePosition = other.mFilePosition;
     mMessageSize = other.mMessageSize;
     mFileType = other.mFileType;
-    mForecastTime = other.mForecastTime;
+    //mForecastTime = other.mForecastTime;
     mForecastTimeT = other.mForecastTimeT;
 
     if (other.mIndicatorSection)
@@ -508,8 +508,8 @@ void Message::read(MemoryReader& memoryReader)
 
     if (mProductSection)
     {
-      mForecastTime = mProductSection->getForecastTime();
-      mForecastTimeT = utcTimeToTimeT(mForecastTime);
+      std::string fTime = mProductSection->getForecastTime();
+      mForecastTimeT = utcTimeToTimeT(fTime);
     }
 
     mIsRead = true;
@@ -1137,7 +1137,7 @@ T::TimeString Message::getForecastTime() const
   FUNCTION_TRACE
   try
   {
-    return mForecastTime;
+    return utcTimeFromTimeT(mForecastTimeT);
   }
   catch (...)
   {

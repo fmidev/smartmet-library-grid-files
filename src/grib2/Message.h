@@ -216,7 +216,6 @@ class Message : public GRID::Message
     /*! \brief  A cache key that was used for caching the original grid data. */
     mutable uint        mOrigCacheKey;
 
-    T::TimeString       mForecastTime;
     time_t              mForecastTimeT;
 
     /*! \brief Indicates if the message is already read. */

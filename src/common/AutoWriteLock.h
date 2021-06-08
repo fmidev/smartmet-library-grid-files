@@ -12,13 +12,15 @@ class AutoWriteLock
     AutoWriteLock(ModificationLock *modificationLock)
     {
       mModificationLock = modificationLock;
-      mModificationLock->writeLock();
+      if (mModificationLock)
+        mModificationLock->writeLock();
     }
 
 
     ~AutoWriteLock()
     {
-      mModificationLock->writeUnlock();
+      if (mModificationLock)
+        mModificationLock->writeUnlock();
     }
 
   protected:
