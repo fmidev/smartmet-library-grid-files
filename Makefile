@@ -66,6 +66,7 @@ vpath %.o obj
 SRCS     = $(patsubst src/%,%,$(wildcard src/*.cpp src/*/*.cpp src/*/definition/*.cpp src/*/implementation/*.cpp))
 OBJS     = $(SRCS:%.cpp=%.o)
 OBJFILES = $(OBJS:%.o=obj/%.o)
+DEPFILES = $(OBJFILES:%.o=%.d)
 
 INCLUDES := -Isrc $(INCLUDES)
 
@@ -159,10 +160,7 @@ rpm: clean $(SPEC).spec
 
 .SUFFIXES: $(SUFFIXES) .cpp
 
+obj/%.o : %.cpp
+	$(CXX) $(CFLAGS) $(INCLUDES) -c -MD -MF $(patsubst obj/%.o, obj/%.d, $@) -MT $@ -o $@ $<
 
-obj/%.o: %.cpp
-	$(CXX) $(CFLAGS) $(INCLUDES) -c -o $@ $<
-
-ifneq ($(wildcard obj/*.d),)
--include $(wildcard obj/*.d)
-endif
+-include $(DEPFILES)
