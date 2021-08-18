@@ -44,6 +44,7 @@ class MemoryReader
     MemoryReader&       operator>>(std::int16_t& _value);
     MemoryReader&       operator>>(std::int32_t& _value);
     MemoryReader&       operator>>(std::float_t& _value);
+    MemoryReader&       operator>>(std::double_t& _value);
 
     MemoryReader&       operator>>(T::UInt8_opt& _value);
     MemoryReader&       operator>>(T::UInt16_opt& _value);

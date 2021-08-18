@@ -485,7 +485,8 @@ void Message::read(MemoryReader& memoryReader)
 
     mDefaultInterpolationMethod = Identification::gridDef.getFmiParameterInterpolationMethod(*this);
 
-    if (getGridGeometryId() == 0)
+    int gi = getGridGeometryId();
+    if (gi == 0)
     {
       int geometryId = Identification::gridDef.getGrib1GeometryId(*this);
       if (geometryId != 0)
@@ -499,8 +500,14 @@ void Message::read(MemoryReader& memoryReader)
         std::cout << getGridGeometryString() << "\n\n";
       }
     }
+    else
+    {
+      if (mGeometryId == 0)
+        setGridGeometryId(gi);
+    }
 
-    setGridGeometryId(mGeometryId);
+    if (mGeometryId != 0)
+      setGridGeometryId(mGeometryId);
 
     if (mMessageSize == 0)
       mMessageSize = (memoryReader.getGlobalReadPosition() - mFilePosition);

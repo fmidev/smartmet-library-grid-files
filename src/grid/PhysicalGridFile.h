@@ -60,6 +60,7 @@ class PhysicalGridFile : public GridFile
     //void                  read();
     GRID::Message*        createMessage(uint messageIndex,GRID::MessageInfo& messageInfo);
     void                  readFmig1Message(MemoryReader& memoryReader, uint messageIndex);
+    void                  readNetCDFMessage(MemoryReader& memoryReader, uint messageIndex);
     void                  readGrib1Message(MemoryReader& memoryReader, uint messageIndex);
     void                  readGrib2Message(MemoryReader& memoryReader, uint messageIndex);
     uchar                 readMessageType(MemoryReader& memoryReader);

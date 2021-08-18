@@ -1450,6 +1450,23 @@ MemoryReader& MemoryReader::operator>>(std::float_t& _value)
 
 
 
+MemoryReader& MemoryReader::operator>>(std::double_t& _value)
+{
+  try
+  {
+    _value = read_double();
+    return *this;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 MemoryReader& MemoryReader::operator>>(T::UInt8_opt& _value)
 {
   try

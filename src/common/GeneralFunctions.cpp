@@ -674,6 +674,30 @@ time_t utcTimeToTimeT(const std::string& utcTime)
 
 
 
+time_t utcTimeToTimeT(int year,int month,int day,int hour,int minute,int second)
+{
+  try
+  {
+    struct tm tt;
+    tt.tm_year = year - 1900;
+    tt.tm_mon = month - 1;
+    tt.tm_mday = day;
+    tt.tm_hour = hour;
+    tt.tm_min = minute;
+    tt.tm_sec = second;
+    tt.tm_isdst = -1;
+
+    return mktime_tz(&tt, "");
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP, "Operation failed!", nullptr);
+    throw exception;
+  }
+}
+
+
+
 void splitTimeString(const std::string& timeStr, int &year, int &month, int &day, int &hour, int &minute, int &second)
 {
   try
@@ -3109,6 +3133,199 @@ std::float_t read_ibmFloat(unsigned char *dataPtr,ulonglong dataSize,ulonglong r
   }
 }
 
+
+
+
+double mod(double x,double y)
+{
+  return (x - y * floor(x / y));
+}
+
+
+
+bool isGregorianLeapYear(int year)
+{
+    return ((year % 4) == 0) && (!(((year % 100) == 0) && ((year % 400) != 0)));
+}
+
+
+
+
+double gregorian_to_jd(int year, int month, int day)
+{
+  try
+  {
+    return (1721425.5 - 1) +
+           (365 * (year - 1)) +
+           floor((year - 1) / 4) +
+           (-floor((year - 1) / 100)) +
+           floor((year - 1) / 400) +
+           floor((((367 * month) - 362) / 12) +
+           ((month <= 2) ? 0 : (isGregorianLeapYear(year) ? -1 : -2)) +
+           day);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+// Calculate Gregorian calendar date from Julian day number
+
+void jdnToGregorian(double jd,int& year, int& month, int& day)
+{
+  try
+  {
+    double wjd = floor(jd - 0.5) + 0.5;
+    double depoch = wjd - 1721425.5;
+    double quadricent = floor(depoch / 146097);
+    double dqc = mod(depoch, 146097);
+    double cent = floor(dqc / 36524);
+    double dcent = mod(dqc, 36524);
+    double quad = floor(dcent / 1461);
+    double dquad = mod(dcent, 1461);
+    double yindex = floor(dquad / 365);
+
+    year = (quadricent * 400) + (cent * 100) + (quad * 4) + yindex;
+    if (!((cent == 4) || (yindex == 4)))
+      year++;
+
+    double yearday = wjd - gregorian_to_jd(year, 1, 1);
+    double leapadj = 0;
+    if (wjd >= gregorian_to_jd(year, 3, 1))
+    {
+      if (isGregorianLeapYear(year))
+        leapadj = 1;
+      else
+        leapadj = 2;
+    }
+
+    month = floor((((yearday + leapadj) * 12) + 373) / 367);
+    day = (wjd - gregorian_to_jd(year, month, 1)) + 1;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+double gregorianToJdn(int year, int month, int day)
+{
+  try
+  {
+    return (1461 * (year + 4800 + (month - 14)/12))/4 +(367 * (month - 2 - 12 * ((month - 14)/12)))/12 - (3 * ((year + 4900 + (month - 14)/12)/100))/4 + day - 32075;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+double julianToJdn(int year, int month, int day)
+{
+  try
+  {
+    return (367 * year - (7 * (year + 5001 + (month - 9)/7))/4 + (275 * month)/9 + day + 1729777);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void jdnToJulian(double J,int& year, int& month, int& day)
+{
+  try
+  {
+    int y = 4716;
+    int v = 3;
+    int j = 1401;
+    int u = 5;
+    int m = 2;
+    int s = 153;
+    int n = 12;
+    int w = 2;
+    int r = 4;
+    //int B = 274277;
+    int p = 1461;
+    //int C = -38;
+    int f =  J + j;
+    int e = r * f + v;
+    int g = mod(e, p) / r;
+    int h = u * g + w;
+    day = (mod(h, s)) / u + 1;
+    month = mod(h / s + m, n) + 1;
+    year = (e / p) - y + (n + m - month) / n;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+time_t getGregorianTimeT(int refYear, int refMonth, int refDay,int refHour, int refMinute, int refSecond,time_t plusSeconds)
+{
+  try
+  {
+    if (refYear > 1582 || (refYear == 1582  &&  refMonth > 10) || (refYear == 1582  &&  refMonth == 10  && refDay >= 15))
+    {
+      // The rererence time is Gregorian
+
+      time_t tt = utcTimeToTimeT(refYear,refMonth,refDay,refHour,refMinute,refSecond);
+      return (tt + plusSeconds);
+    }
+
+
+    // The rererence time is Julian
+
+    double jdn = julianToJdn(refYear,refMonth,refDay);
+
+    time_t refSec = refHour*3600 + refMinute*60 + refSecond;
+    time_t dayLen = 24*3600;
+    time_t plusDays = plusSeconds / dayLen;
+    time_t plusSec = plusSeconds % dayLen;
+    time_t additionalSec = refSec + plusSec;
+
+    if (additionalSec >= dayLen)
+    {
+      plusDays++;
+      additionalSec = additionalSec - dayLen;
+    }
+
+    double newJdn = jdn + (double)plusDays;
+
+    int year = 0;
+    int month = 0;
+    int day = 0;
+    jdnToGregorian(newJdn,year,month,day);
+    int hour = additionalSec / 3600;
+    time_t t = additionalSec % 3600;
+    int minute = t / 60;
+    int second = t % 60;
+
+    time_t tt = utcTimeToTimeT(year,month,day,hour,minute,second);
+    return tt;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 

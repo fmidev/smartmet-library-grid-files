@@ -7,6 +7,7 @@
 #include "../grib1/Message.h"
 #include "../grib2/Message.h"
 #include "../fmig1/Message.h"
+#include "../netcdf/Message.h"
 #include <macgyver/StringConversion.h>
 
 
@@ -214,6 +215,13 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
+
+      case T::FileTypeValue::NetCDF:
+      {
+        NetCDF::Message *msg = new NetCDF::Message(this,messageIndex,messageInfo);
+        mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
+        return msg;
+      }
     }
     return nullptr;
   }
@@ -413,6 +421,10 @@ void PhysicalGridFile::read(MemoryReader& memoryReader)
         case T::FileTypeValue::Fmig1:
           readFmig1Message(memoryReader,i);
           break;
+
+        case T::FileTypeValue::NetCDF:
+          readNetCDFMessage(memoryReader,i);
+          break;
       }
     }
   }
@@ -458,7 +470,7 @@ void PhysicalGridFile::readGrib1Message(MemoryReader& memoryReader, uint message
 
 
 
-/*! \brief This method is used in order to read a single message from the grib file. The new
+/*! \brief This method is used in order to read a single message from the FMIG file. The new
     message object will be greated and added to the message list. Notice that this method
     is a private and it is called internally during the file reading.
 
@@ -472,6 +484,35 @@ void PhysicalGridFile::readFmig1Message(MemoryReader& memoryReader, uint message
   try
   {
     FMIG1::Message *message = new FMIG1::Message();
+    message->setGridFilePtr(this);
+    message->setMessageIndex(messageIndex);
+    message->setPointCacheEnabled(mPointCacheEnabled);
+    mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
+    message->read(memoryReader);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Message addition failed!",nullptr);
+  }
+}
+
+
+
+
+/*! \brief This method is used in order to read a single message from the NetCDF file. The new
+    message object will be greated and added to the message list. Notice that this method
+    is a private and it is called internally during the file reading.
+
+        \param memoryReader  This object controls the access to the memory mapped file.
+        \param messageIndex  Index of the message
+*/
+
+void PhysicalGridFile::readNetCDFMessage(MemoryReader& memoryReader, uint messageIndex)
+{
+  FUNCTION_TRACE
+  try
+  {
+    NetCDF::Message *message = new NetCDF::Message();
     message->setGridFilePtr(this);
     message->setMessageIndex(messageIndex);
     message->setPointCacheEnabled(mPointCacheEnabled);
@@ -622,6 +663,17 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
       return gribs;
     }
 
+    if (memoryReader.peek_string("CDF"))
+    {
+      NetCDF::Message msg;
+      msg.read(memoryReader);
+
+      uint len = msg.getFileMessageCount();
+      for (uint t=0; t<len; t++)
+        gribs.emplace_back(std::pair<uchar,ulonglong>(T::FileTypeValue::NetCDF,0));
+
+      return gribs;
+    }
 
 
     while (memoryReader.getReadPtr() < memoryReader.getEndPtr())
