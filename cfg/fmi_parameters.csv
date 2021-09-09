@@ -1310,3 +1310,4 @@
 1428;1;NWCSAF_CTTH_QC-N;JustAnumber;cloud top (CTTH) quality control flag in NWCSAF products;1;1;1;;
 1429;1;RADGLOCA-JM2;J m-2;Global radiation clear-sky accumulation;1;1;1;;
 1430;1;RADGLOC-WM2;W m-2;Global radiation clear-sky;1;1;1;;
+1431;1;RAIL-N;No Unit;Rail traffic condition;2;2;2;;
