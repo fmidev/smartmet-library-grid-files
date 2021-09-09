@@ -1,12 +1,44 @@
 #pragma once
 
+
 #include "../grid/Message.h"
+#include "../grib2/Message.h"
 
 
 namespace SmartMet
 {
 namespace NetCDF
 {
+
+struct MessageInfo
+{
+  std::uint64_t      mFilePosition;
+  uint               mMessageSize;
+  T::FileType        mMessageType;
+  uint               mColumns;
+  uint               mRows;
+  uint               mRowMultiplier;
+  uint               mColumnMultiplier;
+  uint               mLevels;
+  uchar              mDataType;
+  double             mBaseValue;
+  double             mScaleFactor;
+  std::string        mParameterName;
+  std::string        mParameterStandardName;
+  T::ParamLevelId    mParameterLevelId;
+  T::ParamLevel      mParameterLevel;
+  std::string        mParameterUnits;
+  T::ForecastType    mForecastType;
+  T::ForecastNumber  mForecastNumber;
+  time_t             mForecastTimeT;
+  T::ParamValue      mMissingValue;
+  T::GridProjection  mProjectionId;
+  int                mGeometryId;
+};
+
+typedef std::vector<MessageInfo> MessageInfoVec;
+
+class NetCdfFile;
 
 
 class Message : public GRID::Message
@@ -15,11 +47,12 @@ class Message : public GRID::Message
 
                         Message();
                         Message(const Message& message);
-                        Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& messageInfo);
+                        Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,uint messageIndex,NetCDF::MessageInfo& messageInfo);
     virtual             ~Message();
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     uint                getFileId() const;
+    T::FileType         getMessageType() const;
     uint                getProducerId() const;
     uint                getGenerationId() const;
     T::FilePosition     getFilePosition() const;
@@ -28,7 +61,7 @@ class Message : public GRID::Message
     short               getForecastType() const;
     short               getForecastNumber() const;
 
-    uint                getFileMessageCount();
+    //uint                getFileMessageCount();
 
     void                getGridCellAverageSize(double& width,double& height) const;
     T::Dimensions       getGridDimensions() const;
@@ -96,28 +129,29 @@ class Message : public GRID::Message
 
   protected:
 
-    uint                mFileMessageCount;
-    uchar               mFileVersion;
-    uint                mFileRecordCount;
-    uint                mTimeStepCount;
-    uint                mLevelCount;
-    uint                mWidth;
-    uint                mHeight;
-
-    bool                mIsRead;
-
-    std::string         mReferenceTime;
+    std::uint64_t       mFilePosition;
+    uint                mColumns;
+    uint                mRows;
+    uint                mRowMultiplier;
+    uint                mColumnMultiplier;
+    double              mBaseValue;
+    double              mScaleFactor;
+    std::string         mParameterName;
+    std::string         mParameterUnits;
+    std::string         mVariableName;
+    T::ForecastType     mForecastType;
+    T::ForecastNumber   mForecastNumber;
     std::string         mForecastTime;
     time_t              mForecastTimeT;
-    short               mForecastType;
-    short               mForecastNumber;
-    T::AttributeList    mAttributeList;
-    uint                mDataPosition;
-    uint                mDataSize;
+    T::ParamValue       mMissingValue;
+    T::GridProjection   mProjectionId;
+    GRID::GridFile*     mGridFile;
     uchar*              mDataStartPtr;
     uchar*              mDataEndPtr;
-
-    //GRIB1::GridDef_ptr  mGeometryDef;
+    NetCdfFile*         mNetCdfFile;
+    GRIB2::GridDef_ptr  mGeometryDef;
+    uchar               mDataType;
+    bool                mIsRead;
 };
 
 
@@ -128,4 +162,5 @@ typedef std::vector<MessagePtr> MessagePtr_vec;
 
 }  // namespace NetCDF
 }  // namespace SmartMet
+
 

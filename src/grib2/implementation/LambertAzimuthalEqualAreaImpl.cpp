@@ -218,13 +218,13 @@ std::string LambertAzimuthalEqualAreaImpl::getGridGeometryString() const
     char buf[1000];
 
     double y = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
-    double x = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
+    double x = getLongitude(C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000);
     uint nx = (*mNumberOfPointsAlongXAxis);
     uint ny = (*mNumberOfPointsAlongYAxis);
     double dx = C_DOUBLE(*mXDirectionGridLengthInMillimetres) / 1000;
     double dy = C_DOUBLE(*mYDirectionGridLengthInMillimetres) / 1000;
     double sp = C_DOUBLE(*mStandardParallelInMicrodegrees) / 1000000;
-    double cl = C_DOUBLE(*mCentralLongitudeInMicrodegrees) / 1000000;
+    double cl = getLongitude(C_DOUBLE(*mCentralLongitudeInMicrodegrees) / 1000000);
 
 
     unsigned char scanningMode = mScanningMode.getScanningMode();

@@ -10,10 +10,13 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 
 #include <macgyver/Exception.h>
+#include <arpa/inet.h>
 
 
 namespace SmartMet
 {
+
+typedef std::vector<float> FloatVec;
 
 std::string uint64_toHex(unsigned long long value);
 double int_power(double x, int y);
@@ -130,6 +133,7 @@ int compressData(void *_data,uint _dataSize,void *_compressedData,uint& _compres
 int decompressData(void *_compressedData,uint _compressedDataSize,void *_decompressedData,uint& _decompressedDataSize);
 
 void parseLatLonCoordinates(const std::string& latLonCoordinates,std::vector<T::Coordinate>& coordinates);
+void parseUnits(const char *unitString,double& value,std::string& units);
 
 std::string stringReplaceAll(const std::string& st,const std::string& oldStr,std::string newStr);
 
@@ -189,6 +193,12 @@ double  gregorianToJdn(int year, int month, int day);
 double  julianToJdn(int year, int month, int day);
 void    jdnToJulian(double J,int& year, int& month, int& day);
 time_t  getGregorianTimeT(int refYear, int refMonth, int refDay,int refHour, int refMinute, int refSecond,time_t plusSeconds);
+void    parseNetCdfTime(std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize);
+
+
+int getClosestIndexPos(FloatVec& values,float value);
+int getClosestIndexNeg(FloatVec& values,float value);
+int getClosestIndex(FloatVec& values,float value);
 
 
 
@@ -332,6 +342,31 @@ inline int time_compare(time_t v1, time_t v2)
     return -1;
 
   return 1;
+}
+
+
+
+inline long long htonll(long long value)
+{
+  static const int num = 42;
+
+  if (*reinterpret_cast<const char*>(&num) == num)
+    return ((long long)htonl((value & 0xFFFFFFFF) << 32) | htonl(value >> 32));
+
+  return value;
+}
+
+
+
+
+inline long long ntohll(long long value)
+{
+  static const int num = 42;
+
+  if (*reinterpret_cast<const char*>(&num) == num)
+    return ((long long)ntohl((value & 0xFFFFFFFF) << 32) | ntohl(value >> 32));
+
+  return value;
 }
 
 }

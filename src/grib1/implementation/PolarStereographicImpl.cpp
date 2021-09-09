@@ -207,7 +207,7 @@ std::string PolarStereographicImpl::getGridGeometryString() const
     char buf[1000];
 
     double y = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
-    double x = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
+    double x = getLongitude(C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000);
     double dx = C_DOUBLE(mDxInMetres);
     double dy = C_DOUBLE(mDyInMetres);
     double orientation = C_DOUBLE(mOrientationOfTheGrid)/1000;
@@ -650,7 +650,7 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
   try
   {
     PolarStereographic::print(stream,level,optionFlags);
-    stream << space(level+1) << "PolarStereographicImpl\n";
+    stream << space(level+1) << "PolarStereographicImpl (Grib1)\n";
 
     if (optionFlags & GRID::PrintFlag::coordinates)
     {

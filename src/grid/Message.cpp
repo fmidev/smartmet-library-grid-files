@@ -70,6 +70,7 @@ Message::Message()
     mRowCount = 0;
     mColumnCount = 0;
     mFmiParameterName = 0;
+    mNetCdfParameterName = 0;
     mNewbaseParameterName = 0;
     mGribParameterName = 0;
     mFmiParameterUnits = 0;
@@ -109,6 +110,7 @@ Message::Message(const Message& message)
     mFmiParameterName = message.mFmiParameterName;
     mFmiParameterUnits = message.mFmiParameterUnits;
     mNewbaseParameterId = message.mNewbaseParameterId;
+    mNetCdfParameterName = message.mNetCdfParameterName;
     mNewbaseParameterName = message.mNewbaseParameterName;
     mVirtualFileId = message.mVirtualFileId;
     mDefaultInterpolationMethod = message.mDefaultInterpolationMethod;
@@ -1426,6 +1428,14 @@ std::string Message::getGridGeometryString() const
 
 
 
+T::FileType Message::getMessageType() const
+{
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
 
 /*! \brief The method set the grid geometry identifer.
 
@@ -2115,6 +2125,28 @@ const char* Message::getNewbaseParameterName() const
   try
   {
     return stringFactory[mNewbaseParameterName];
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the netcdf parameter name.
+
+         \return   The netcdf parameter name.
+*/
+
+const char* Message::getNetCdfParameterName() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return stringFactory[mNetCdfParameterName];
   }
   catch (...)
   {
@@ -3578,6 +3610,28 @@ void Message::setNewbaseParameterName(const char *newbaseParameterName)
   try
   {
     mNewbaseParameterName = stringFactory.create(newbaseParameterName);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method sets the value of the 'mNetCdfParameterName' member attribute.
+
+        \param netCdfParameterName   The new value for the member attribute.
+*/
+
+void Message::setNetCdfParameterName(const char *netCdfParameterName)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mNetCdfParameterName = stringFactory.create(netCdfParameterName);
   }
   catch (...)
   {

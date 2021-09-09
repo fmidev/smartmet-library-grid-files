@@ -8,6 +8,7 @@
 #include "../grib2/Message.h"
 #include "../fmig1/Message.h"
 #include "../netcdf/Message.h"
+#include "../netcdf/NetCdfFile.h"
 #include <macgyver/StringConversion.h>
 
 
@@ -32,6 +33,7 @@ PhysicalGridFile::PhysicalGridFile()
     mMemoryPtr = nullptr;
     mFileSize = 0;
     mMessagePositionError = false;
+    mNetCdfFile = nullptr;
   }
   catch (...)
   {
@@ -55,6 +57,7 @@ PhysicalGridFile::PhysicalGridFile(const PhysicalGridFile& other)
     mIsRead = false;
     mMemoryPtr = nullptr;
     mMessagePositionError = false;
+    mNetCdfFile = nullptr;
   }
   catch (...)
   {
@@ -75,6 +78,9 @@ PhysicalGridFile::~PhysicalGridFile()
   {
     if (mMappedFile  &&  mIsMemoryMapped)
       mMappedFile->close();
+
+    if (mNetCdfFile)
+      delete mNetCdfFile;
   }
   catch (...)
   {
@@ -189,8 +195,40 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
     auto startAddr = mMemoryPtr + messageInfo.mFilePosition;
     auto endAddr = startAddr + messageInfo.mMessageSize;
 
-    MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
 
+    if (messageInfo.mMessageType == T::FileTypeValue::NetCdf3 || messageInfo.mMessageType == T::FileTypeValue::NetCdf4)
+    {
+      auto startAddr = mMemoryPtr;
+      auto endAddr = startAddr + fsize;
+
+      MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
+
+      if (mMessages.size() == 0)
+      {
+        memoryReader.setReadPosition(0);
+        mNetCdfFile = new NetCDF::NetCdfFile();
+        NetCDF::MessageInfoVec messageInfoList;
+        mNetCdfFile->read(memoryReader,messageInfoList);
+
+        uint idx = 0;
+        for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
+        {
+          //std::string tm = utcTimeFromTimeT(it->mForecastTimeT);
+          //printf(" %u %s %d %s %lu\n",idx,tm.c_str(),it->mParameterLevel,it->mParameterName.c_str(),it->mFilePosition);
+
+          NetCDF::Message *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
+          mMessages.insert(std::pair<uint,Message*>(idx,message));
+          idx++;
+        }
+      }
+      auto msg = mMessages.find(messageIndex);
+      if (msg != mMessages.end())
+        return msg->second;
+
+      return nullptr;
+    }
+
+    MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
     uchar fileType = readMessageType(memoryReader);
 
     switch (fileType)
@@ -212,13 +250,6 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
       case T::FileTypeValue::Fmig1:
       {
         FMIG1::Message *msg = new FMIG1::Message(this,messageIndex,messageInfo);
-        mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
-        return msg;
-      }
-
-      case T::FileTypeValue::NetCDF:
-      {
-        NetCDF::Message *msg = new NetCDF::Message(this,messageIndex,messageInfo);
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
@@ -422,9 +453,30 @@ void PhysicalGridFile::read(MemoryReader& memoryReader)
           readFmig1Message(memoryReader,i);
           break;
 
-        case T::FileTypeValue::NetCDF:
-          readNetCDFMessage(memoryReader,i);
-          break;
+        case T::FileTypeValue::NetCdf3:
+        case T::FileTypeValue::NetCdf4:
+        {
+          if (mMessages.size() == 0)
+          {
+            memoryReader.setReadPosition(0);
+            mNetCdfFile = new NetCDF::NetCdfFile();
+            NetCDF::MessageInfoVec messageInfoList;
+            mNetCdfFile->read(memoryReader,messageInfoList);
+
+            uint idx = 0;
+            for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
+            {
+              //std::string tm = utcTimeFromTimeT(it->mForecastTimeT);
+              //printf(" %u %s %d %s %lu\n",idx,tm.c_str(),it->mParameterLevel,it->mParameterName.c_str(),it->mFilePosition);
+
+              NetCDF::Message *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
+              mMessages.insert(std::pair<uint,Message*>(idx,message));
+              idx++;
+            }
+          }
+        }
+          //readNetCDFMessage(memoryReader,i);
+        break;
       }
     }
   }
@@ -512,12 +564,19 @@ void PhysicalGridFile::readNetCDFMessage(MemoryReader& memoryReader, uint messag
   FUNCTION_TRACE
   try
   {
+
+    NetCDF::NetCdfFile *netCdf = new NetCDF::NetCdfFile();
+    NetCDF::MessageInfoVec messageInfoList;
+    netCdf->read(memoryReader,messageInfoList);
+    /*
+
     NetCDF::Message *message = new NetCDF::Message();
     message->setGridFilePtr(this);
     message->setMessageIndex(messageIndex);
     message->setPointCacheEnabled(mPointCacheEnabled);
     mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
     message->read(memoryReader);
+    */
   }
   catch (...)
   {
@@ -665,13 +724,7 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
 
     if (memoryReader.peek_string("CDF"))
     {
-      NetCDF::Message msg;
-      msg.read(memoryReader);
-
-      uint len = msg.getFileMessageCount();
-      for (uint t=0; t<len; t++)
-        gribs.emplace_back(std::pair<uchar,ulonglong>(T::FileTypeValue::NetCDF,0));
-
+      gribs.emplace_back(std::pair<uchar,ulonglong>(T::FileTypeValue::NetCdf4,0));
       return gribs;
     }
 
@@ -920,15 +973,22 @@ uchar PhysicalGridFile::readMessageType(MemoryReader& memoryReader)
 
       if (d[7] == 2)
         return T::FileTypeValue::Grib2;
-
     }
+
     if (d[0] == 'F'  &&  d[1] == 'M'  &&  d[2] == 'I'  &&  d[3] == 'G')
     {
       // This is a grib file.
 
       if (d[4] == 1)
         return T::FileTypeValue::Fmig1;
+    }
 
+    if (d[0] == 'C'  &&  d[1] == 'D'  &&  d[2] == 'F')
+    {
+      // This is a NetCDF file.
+
+      if (d[3] == 1 || d[3] == 2)
+        return T::FileTypeValue::NetCdf4;
     }
 
     return T::FileTypeValue::Unknown;

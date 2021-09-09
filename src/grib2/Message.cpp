@@ -615,6 +615,15 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
 
 
 
+T::FileType Message::getMessageType() const
+{
+  return T::FileTypeValue::Grib2;
+}
+
+
+
+
+
 void Message::getSectionPositions(std::set<T::FilePosition>& positions)
 {
   FUNCTION_TRACE
@@ -1548,6 +1557,8 @@ void Message::initParameterInfo()
 
     mNewbaseParameterId = Identification::gridDef.getNewbaseParameterId(*this);
     mNewbaseParameterName = stringFactory.create(Identification::gridDef.getNewbaseParameterName(*this));
+
+    mNetCdfParameterName = stringFactory.create(Identification::gridDef.getNetCdfParameterName(*this));
 
     mDefaultInterpolationMethod = Identification::gridDef.getFmiParameterInterpolationMethod(*this);
 
@@ -4050,6 +4061,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- fmiParameterUnits        = " << getFmiParameterUnits() << "\n";
     stream << space(level) << "- newbaseParameterId       = " << mNewbaseParameterId << "\n";
     stream << space(level) << "- newbaseParameterName     = " << getNewbaseParameterName() << "\n";
+    stream << space(level) << "- netCdfParameterName      = " << getNetCdfParameterName() << "\n";
     stream << space(level) << "- referenceTime            = " << getReferenceTime() << "\n";
     stream << space(level) << "- forecastTime             = " << getForecastTime() << "\n";
     stream << space(level) << "- gridGeometryId           = " << getGridGeometryId() << "\n";

@@ -123,7 +123,7 @@ std::string MercatorImpl::getGridGeometryString() const
   {
     char buf[1000];
 
-    double x = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
+    double x = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000);
     double y = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
     double dx = C_DOUBLE(mDiInMetres);
     double dy = C_DOUBLE(mDjInMetres);

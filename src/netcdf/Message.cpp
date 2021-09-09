@@ -1,10 +1,14 @@
 #include "Message.h"
+#include "NetCdfFile.h"
 #include "../common/ShowFunction.h"
+#include "../grid/PrintOptions.h"
 #include "../grid/GridFile.h"
 #include "../common/GeneralFunctions.h"
+#include "../identification/GridDef.h"
 #include <macgyver/StringConversion.h>
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
+#include <arpa/inet.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -22,9 +26,29 @@ Message::Message()
   FUNCTION_TRACE
   try
   {
-    mFileMessageCount = 0;
-    mFileVersion = 0;
-    mFileRecordCount = 0;
+    mGridFile = nullptr;
+    mDataStartPtr = nullptr;
+    mDataEndPtr = nullptr;
+    mMessageIndex = 0;
+    mFilePosition = 0;
+    mFileType = T::FileTypeValue::NetCdf4;
+    mColumns = 0;
+    mRows = 0;
+    mRowMultiplier = 0;
+    mColumnMultiplier = 0;
+    mDataType = 0;
+    mBaseValue = 0.0;
+    mScaleFactor = 1.0;
+    mParameterLevel = 0;
+    mForecastType = 0;
+    mForecastNumber = 0;
+    mForecastTimeT = 0;
+    mProjectionId = 0;
+    mIsRead = false;
+    mNetCdfFile = nullptr;
+    mMissingValue = ParamValueMissing;
+    mGeometryId = 0;
+    mGeometryDef = nullptr;
   }
   catch (...)
   {
@@ -44,6 +68,33 @@ Message::Message(const Message& message)
   FUNCTION_TRACE
   try
   {
+    mGridFile = message.mGridFile;
+    mDataStartPtr = message.mDataStartPtr;
+    mDataEndPtr = message.mDataEndPtr;
+    mMessageIndex = message.mMessageIndex;
+    mFilePosition = message.mFilePosition;
+    mMessageSize = message.mMessageSize;
+    mColumns = message.mColumns;
+    mRows = message.mRows;
+    mRowMultiplier = message.mRowMultiplier;
+    mColumnMultiplier = message.mColumnMultiplier;
+    mDataType = message.mDataType;
+    mBaseValue = message.mBaseValue;
+    mScaleFactor = message.mScaleFactor;
+    mParameterName = message.mParameterName;
+    mVariableName = message.mVariableName;
+    mParameterLevel = message.mParameterLevel;
+    mParameterUnits = message.mParameterUnits;
+    mForecastType = message.mForecastType;
+    mForecastNumber = message.mForecastNumber;
+    mForecastTimeT = message.mForecastTimeT;
+    mForecastTime = message.mForecastTime;
+    mMissingValue = message.mMissingValue;
+    mProjectionId = message.mProjectionId;
+    mGeometryId = message.mGeometryId;
+    mIsRead = message.mIsRead;
+    mNetCdfFile = message.mNetCdfFile;
+    mGeometryDef = nullptr;
   }
   catch (...)
   {
@@ -55,45 +106,86 @@ Message::Message(const Message& message)
 
 
 
-Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,uint messageIndex,NetCDF::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
   {
-    FUNCTION_TRACE
-    try
+    mGridFile = gridFile;
+    mNetCdfFile = netCdfFile;
+    mMessageIndex = messageIndex;
+    mFilePosition = messageInfo.mFilePosition;
+    mMessageSize = messageInfo.mMessageSize;
+    mFileType = messageInfo.mMessageType;
+    mColumns = messageInfo.mColumns;
+    mRows = messageInfo.mRows;
+    mRowMultiplier = messageInfo.mRowMultiplier;
+    mColumnMultiplier = messageInfo.mColumnMultiplier;
+    mDataType = messageInfo.mDataType;
+    mBaseValue = messageInfo.mBaseValue;
+    mScaleFactor = messageInfo.mScaleFactor;
+    mParameterName = messageInfo.mParameterName;
+    std::string paramName = mParameterName;
+    mVariableName = messageInfo.mParameterName;
+
+    if (!messageInfo.mParameterStandardName.empty())
     {
-      mGridFilePtr = gridFile;
-      mMessageIndex = messageIndex;
-      mFileMessageCount = 0;
-      mFileVersion = 0;
-      mFileRecordCount = 0;
-      mTimeStepCount = 0;
-      mLevelCount = 0;
-      mWidth = 0;
-      mHeight = 0;
-      mMessageSize = messageInfo.mMessageSize;
-      mFmiParameterId = messageInfo.mFmiParameterId;
-      mFmiParameterName = messageInfo.mFmiParameterName;
-      mFmiParameterLevelId = messageInfo.mFmiParameterLevelId;
-      mParameterLevel = messageInfo.mParameterLevel;
-      mForecastType = messageInfo.mForecastType;
-      mForecastNumber = messageInfo.mForecastNumber;
-      mGeometryId = messageInfo.mGeometryId;
-      mGrib1ParameterLevelId = 0;
-      mGrib2ParameterLevelId = 0;
-      mIsRead = false;
-      mFileType = T::FileTypeValue::NetCDF;
-      mDataPosition = 0;
-      mDataSize = 0;
-      mDataStartPtr = nullptr;
-      mDataEndPtr = nullptr;
-      mForecastTimeT = 0;
+      paramName = messageInfo.mParameterStandardName;
+      setNetCdfParameterName(messageInfo.mParameterStandardName.c_str());
     }
-    catch (...)
+    else
     {
-      throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+      setNetCdfParameterName(messageInfo.mParameterName.c_str());
     }
+
+    mParameterLevel = messageInfo.mParameterLevel;
+    mParameterUnits = messageInfo.mParameterUnits;
+    mForecastType = messageInfo.mForecastType;
+    mForecastNumber = messageInfo.mForecastNumber;
+    mForecastTimeT = messageInfo.mForecastTimeT;
+    mForecastTime = utcTimeFromTimeT(mForecastTimeT);
+    mMissingValue = messageInfo.mMissingValue;
+    mProjectionId = messageInfo.mProjectionId;
+
+    mGeometryId = messageInfo.mGeometryId;
+    mGeometryDef = nullptr;
+    if (mGeometryId != 0)
+      mGeometryDef = Identification::gridDef.getGrib2DefinitionByGeometryId(mGeometryId);
+
+    mDataStartPtr = (uchar*)gridFile->getMemoryPtr() + mFilePosition;
+    mDataEndPtr = mDataStartPtr + mMessageSize + 1;
+
+
+    Identification::FmiParameterDef fmiDef;
+    std::string longname = paramName + ":" + mParameterUnits;
+    std::string name = paramName;
+    if (Identification::gridDef.getFmiParameterDefByNetCdfName(longname,fmiDef) || Identification::gridDef.getFmiParameterDefByNetCdfName(name,fmiDef))
+    {
+      mFmiParameterId = fmiDef.mFmiParameterId;
+      mFmiParameterName = stringFactory.create(fmiDef.mParameterName);
+      mFmiParameterUnits = stringFactory.create(fmiDef.mParameterUnits);
+        //mFmiParameterLevelId = Identification::gridDef.getFmiLevelId(*this);
+
+      Identification::NewbaseParameterDef nbDef;
+      if (Identification::gridDef.getNewbaseParameterDefByFmiId(mFmiParameterId,nbDef))
+      {
+        mNewbaseParameterId = nbDef.mNewbaseParameterId;
+        mNewbaseParameterName = stringFactory.create(nbDef.mParameterName);
+      }
+
+      Identification::FmiParameterId_grib gribPm;
+      if (Identification::gridDef.getGribParameterMappingByFmiId(mFmiParameterId,gribPm))
+      {
+        Identification::GribParameterDef gribDef;
+        if (Identification::gridDef.getGribParameterDefById(gribPm.mGribParameterId,gribDef))
+        {
+          mGribParameterId  = gribDef.mGribParameterId;
+          mGribParameterName = stringFactory.create(gribDef.mParameterName);
+          mGribParameterUnits  = stringFactory.create(gribDef.mParameterUnits);
+        }
+      }
+    }
+    mIsRead = true;
   }
   catch (...)
   {
@@ -120,7 +212,31 @@ Message::~Message()
 
 void Message::getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    char name[300];
+    if (mNetCdfFile)
+    {
+      sprintf(name, "%sNetCDF.", prefix.c_str());
+      mNetCdfFile->getAttributeList("netcdf",name,attributeList);
+
+      sprintf(name, "%sVariable.", prefix.c_str());
+      mNetCdfFile->getAttributeList(mVariableName.c_str(),name,attributeList);
+    }
+
+    if (mGeometryDef)
+    {
+      sprintf(name, "%sProjection.", prefix.c_str());
+      return mGeometryDef->getAttributeList(name,attributeList);
+    }
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -135,7 +251,17 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
 
 uint Message::getFileId() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return mGridFile->getFileId();
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -150,7 +276,17 @@ uint Message::getFileId() const
 
 uint Message::getProducerId() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return mGridFile->getProducerId();
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -165,7 +301,17 @@ uint Message::getProducerId() const
 
 uint Message::getGenerationId() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return mGridFile->getGenerationId();
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -180,8 +326,38 @@ uint Message::getGenerationId() const
 
 T::FilePosition Message::getFilePosition() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return mFilePosition;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
+
+
+
+
+
+T::FileType Message::getMessageType() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mFileType;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
 
 
 
@@ -195,7 +371,19 @@ T::FilePosition Message::getFilePosition() const
 
 T::TimeString Message::getReferenceTime() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  {
+    FUNCTION_TRACE
+    try
+    {
+      return std::string("1970101T000000");
+    }
+    catch (...)
+    {
+      Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+      exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+      throw exception;
+    }
+  }
 }
 
 
@@ -210,7 +398,17 @@ T::TimeString Message::getReferenceTime() const
 
 T::TimeString Message::getForecastTime() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return mForecastTime;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -225,16 +423,17 @@ T::TimeString Message::getForecastTime() const
 
 time_t Message::getForecastTimeT() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
-}
-
-
-
-
-
-uint Message::getFileMessageCount()
-{
-  return mFileMessageCount;
+  FUNCTION_TRACE
+  try
+  {
+    return mForecastTimeT;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -247,7 +446,20 @@ uint Message::getFileMessageCount()
 
 T::Hash Message::getGridHash() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridHash();
+
+    return 0;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -261,7 +473,16 @@ T::Hash Message::getGridHash() const
 
 T::GridProjection Message::getGridProjection() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    return mProjectionId;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -275,7 +496,20 @@ T::GridProjection Message::getGridProjection() const
 
 T::GridLayout Message::getGridLayout() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridLayout();
+
+    return 0;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -289,7 +523,17 @@ T::GridLayout Message::getGridLayout() const
 
 std::string Message::getGridProjectionString() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return T::get_gridProjectionString(mProjectionId);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -306,7 +550,21 @@ std::string Message::getGridProjectionString() const
 
 T::Coordinate_svec Message::getGridOriginalCoordinates() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridOriginalCoordinates();
+
+    T::Coordinate_svec empty;
+    return empty;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -322,7 +580,21 @@ T::Coordinate_svec Message::getGridOriginalCoordinates() const
 
 T::Coordinate_svec Message::getGridLatLonCoordinates() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridLatLonCoordinates();
+
+    T::Coordinate_svec empty;
+    return empty;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -340,7 +612,21 @@ T::Coordinate_svec Message::getGridLatLonCoordinates() const
 
 T::Dimensions Message::getGridDimensions() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridDimensions();
+
+    T::Dimensions empty(0,0);
+    return empty;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -349,7 +635,20 @@ T::Dimensions Message::getGridDimensions() const
 
 std::size_t Message::getGridRowCount() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridRowCount();
+
+    return 0;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -364,7 +663,20 @@ std::size_t Message::getGridRowCount() const
 
 std::size_t Message::getGridColumnCount() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridColumnCount();
+
+    return 0;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -377,7 +689,20 @@ std::size_t Message::getGridColumnCount() const
 
 std::size_t Message::getGridOriginalRowCount() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridRowCount();
+
+    return 0;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -392,7 +717,20 @@ std::size_t Message::getGridOriginalRowCount() const
 
 std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridColumnCount();
+
+    return 0;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -407,7 +745,20 @@ std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
 
 std::size_t Message::getGridOriginalColumnCount() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridColumnCount();
+
+    return 0;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -421,7 +772,17 @@ std::size_t Message::getGridOriginalColumnCount() const
 
 std::size_t Message::getGridOriginalValueCount() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return mColumns*mRows;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -443,7 +804,17 @@ std::size_t Message::getGridOriginalValueCount() const
 
 int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return grid_j*mColumnMultiplier+grid_i*mRowMultiplier;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -459,7 +830,20 @@ int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
 
 bool Message::isGridGlobal() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->isGridGlobal();
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -468,7 +852,20 @@ bool Message::isGridGlobal() const
 
 bool Message::isRelativeUV() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->isRelativeUV();
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -482,7 +879,19 @@ bool Message::isRelativeUV() const
 
 T::GeometryId Message::getGridGeometryId() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    if (mGeometryDef)
+      return mGeometryDef->getGridGeometryId();
+
+    return mGeometryId;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -491,7 +900,18 @@ T::GeometryId Message::getGridGeometryId() const
 
 void Message::getGridCellAverageSize(double& width,double& height) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      mGeometryDef->getGridCellAverageSize(width,height);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -500,7 +920,20 @@ void Message::getGridCellAverageSize(double& width,double& height) const
 
 bool Message::getGridMetricCellSize(double& width,double& height) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridMetricCellSize(width,height);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -509,7 +942,20 @@ bool Message::getGridMetricCellSize(double& width,double& height) const
 
 bool Message::getGridMetricSize(double& width,double& height) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridMetricSize(width,height);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -518,7 +964,20 @@ bool Message::getGridMetricSize(double& width,double& height) const
 
 bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridMetricArea(topLeft,topRight,bottomLeft,bottomRight);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -527,7 +986,20 @@ bool Message::getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
 
 bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight)
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridLatLonArea(topLeft,topRight,bottomLeft,bottomRight);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -543,7 +1015,20 @@ bool Message::getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T
 
 std::string Message::getGridGeometryString() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (mGeometryDef)
+      return getGridGeometryString();
+
+    return "";
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -563,7 +1048,17 @@ std::string Message::getGridGeometryString() const
 
 void Message::setGridGeometryId(T::GeometryId geometryId)
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    mGeometryId = geometryId;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -597,7 +1092,20 @@ void Message::setGridValues(T::ParamValue_vec& values)
 
 bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridLatLonCoordinatesByGridPoint(grid_i,grid_j,lat,lon);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -615,7 +1123,20 @@ bool Message::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double
 
 bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,lat,lon);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -633,7 +1154,20 @@ bool Message::getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j
 
 bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -651,7 +1185,20 @@ bool Message::getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,do
 
 bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridOriginalCoordinatesByGridPoint(grid_i,grid_j,x,y);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -669,7 +1216,20 @@ bool Message::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,doub
 
 bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridOriginalCoordinatesByGridPosition(grid_i,grid_j,x,y);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -687,7 +1247,20 @@ bool Message::getGridOriginalCoordinatesByGridPosition(double grid_i,double grid
 
 bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridOriginalCoordinatesByLatLonCoordinates(lat,lon,x,y);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -696,7 +1269,20 @@ bool Message::getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lo
 
 void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return;
+
+    mGeometryDef->getGridPointListByLatLonCoordinates(latlon,points);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -715,7 +1301,17 @@ void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::C
 
 bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j)  const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return getGridPointByLatLonCoordinatesNoCache(lat,lon,grid_i,grid_j);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -724,11 +1320,21 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
 
 bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,double& grid_i,double& grid_j)  const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridPointByLatLonCoordinatesNoCache(lat,lon,grid_i,grid_j);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
-
-
-
 
 
 
@@ -748,7 +1354,20 @@ bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,doubl
 
 bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->getGridPointByOriginalCoordinates(x,y,grid_i,grid_j);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -764,7 +1383,7 @@ bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i
 
 void Message::getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  //throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -782,7 +1401,17 @@ void Message::getGridProjectionAttributes(const std::string& prefix,T::Attribute
 
 T::ParamLevel Message::getGridParameterLevel() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return mParameterLevel;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -797,7 +1426,17 @@ T::ParamLevel Message::getGridParameterLevel() const
 
 T::ParamLevelId Message::getGridParameterLevelId() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return mFmiParameterLevelId;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -811,7 +1450,8 @@ T::ParamLevelId Message::getGridParameterLevelId() const
 
 std::string Message::getGridParameterLevelIdString() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  return std::string("");
+  //throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -827,7 +1467,17 @@ std::string Message::getGridParameterLevelIdString() const
 
 T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    return getGridValueByOriginalGridPoint(grid_i,grid_j);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -843,7 +1493,101 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
 T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    //printf("  ** getGridValueByOriginalGridPoint %u,%u\n",grid_i,grid_j);
+
+    if (grid_i >= mColumns)
+      grid_i = grid_i % mColumns;
+
+    if (grid_i >= mColumns || grid_j >= mRows)
+      return ParamValueMissing;
+
+    int typeSize[] = {0,1,1,2,4,4,8};
+
+    ulonglong idx = (grid_j*mColumnMultiplier+grid_i*mRowMultiplier)*typeSize[mDataType];
+    if (idx >= (mMessageSize + typeSize[mDataType]))
+      return ParamValueMissing;
+
+    switch (mDataType)
+    {
+      case 1:  // byte
+      {
+        uchar *v = (uchar*)(mDataStartPtr + idx);
+        if ((T::ParamValue)(*v) == mMissingValue)
+          return ParamValueMissing;
+
+        return mScaleFactor*(T::ParamValue)(*v) + mBaseValue;
+      }
+      break;
+
+      case 2:  // char
+      {
+        char *v = (char*)(mDataStartPtr + idx);
+        if ((T::ParamValue)(*v) == mMissingValue)
+          return ParamValueMissing;
+
+        return mScaleFactor*(T::ParamValue)(*v) + mBaseValue;
+      }
+      break;
+
+      case 3:  // short
+      {
+        short *v = (short*)(mDataStartPtr + idx);
+        short val = ntohs(*v);
+        if ((T::ParamValue)val == mMissingValue)
+          return ParamValueMissing;
+
+        return mScaleFactor*(T::ParamValue)val + mBaseValue;
+      }
+      break;
+
+      case 4:  // int
+      {
+        int *v = (int*)(mDataStartPtr + idx);
+        int val = ntohl(*v);
+        if ((T::ParamValue)val == mMissingValue)
+          return ParamValueMissing;
+
+        return mScaleFactor*(T::ParamValue)val + mBaseValue;
+      }
+      break;
+
+      case 5:  // float
+      {
+        int *v = (int*)(mDataStartPtr + idx);
+        int vv = ntohl(*v);
+        float *val = (float*)&vv;
+        if ((T::ParamValue)(*val) == mMissingValue)
+          return ParamValueMissing;
+
+        return mScaleFactor*(T::ParamValue)(*val) + mBaseValue;
+      }
+      break;
+
+      case 6:  // double
+      {
+        long long *v = (long long*)(mDataStartPtr + idx);
+        long long vv = ntohll(*v);
+        double *val = (double*)&vv;
+        if ((T::ParamValue)(*val) == mMissingValue)
+          return ParamValueMissing;
+
+        return mScaleFactor*(T::ParamValue)(*val) + mBaseValue;
+      }
+      break;
+    }
+    return ParamValueMissing;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    exception.addParameter("Grid_i",Fmi::to_string(grid_i));
+    exception.addParameter("Grid_j",Fmi::to_string(grid_j));
+    throw exception;
+  }
 }
 
 
@@ -859,7 +1603,33 @@ T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) 
 
 void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    minValue = 1000000000;
+    maxValue = -1000000000;
+
+    for (uint y=0; y<mRows; y++)
+    {
+      for (uint x=0; x<mColumns; x++)
+      {
+        T::ParamValue val = getGridValueByOriginalGridPoint(x,y);
+        if (val != ParamValueMissing)
+        {
+          if (val < minValue)
+            minValue = val;
+
+          if (val > maxValue)
+            maxValue = val;
+        }
+      }
+    }
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -875,7 +1645,16 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
 
 void Message::getGridValueVector(T::ParamValue_vec& values) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    getGridOriginalValueVector(values);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -896,7 +1675,23 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
 void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    for (uint y=0; y<mRows; y++)
+    {
+      for (uint x=0; x<mColumns; x++)
+      {
+        T::ParamValue val = getGridValueByOriginalGridPoint(x,y);
+        values.push_back(val);
+      }
+    }
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -907,7 +1702,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
 void Message::initSpatialReference()
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  // throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -921,7 +1716,19 @@ void Message::initSpatialReference()
 
 T::SpatialRef* Message::getSpatialReference() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    if (!mGeometryDef)
+      return nullptr;
+
+    return mGeometryDef->getSpatialReference();
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -935,7 +1742,19 @@ T::SpatialRef* Message::getSpatialReference() const
 
 std::string Message::getWKT() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    if (!mGeometryDef)
+      return nullptr;
+
+    return mGeometryDef->getWKT();
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -944,7 +1763,19 @@ std::string Message::getWKT() const
 
 std::string Message::getProj4() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    if (!mGeometryDef)
+      return nullptr;
+
+    return mGeometryDef->getProj4();
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -959,7 +1790,19 @@ std::string Message::getProj4() const
 
 bool Message::reverseXDirection() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->reverseXDirection();
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -974,7 +1817,19 @@ bool Message::reverseXDirection() const
 
 bool Message::reverseYDirection() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    if (!mGeometryDef)
+      return false;
+
+    return mGeometryDef->reverseYDirection();
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -988,7 +1843,16 @@ bool Message::reverseYDirection() const
 
 short Message::getForecastType() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    return mForecastType;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -1002,7 +1866,16 @@ short Message::getForecastType() const
 
 short Message::getForecastNumber() const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  try
+  {
+    return mForecastNumber;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 
@@ -1011,7 +1884,7 @@ short Message::getForecastNumber() const
 
 void Message::lockData()
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  //throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1020,7 +1893,7 @@ void Message::lockData()
 
 void Message::unlockData()
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  //throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
 
@@ -1050,6 +1923,7 @@ void Message::read()
   FUNCTION_TRACE
   try
   {
+    /*
     if (mIsRead)
       return;
 
@@ -1067,6 +1941,7 @@ void Message::read()
     MemoryReader memoryReader(mDataStartPtr,mDataEndPtr);
     memoryReader.setReadPosition(0);
     read(memoryReader);
+    */
   }
   catch (...)
   {
@@ -1075,209 +1950,6 @@ void Message::read()
     throw exception;
   }
 }
-
-
-
-
-
-std::string utcTimeFromTimeTx(time_t t)
-{
-  try
-  {
-    struct tm tt;
-    gmtime_r(&t, &tt);
-
-    char buf[200];
-    sprintf(buf,
-            "%04d%02d%02dT%02d%02d%02d",
-            tt.tm_year + 1900,
-            tt.tm_mon + 1,
-            tt.tm_mday,
-            tt.tm_hour,
-            tt.tm_min,
-            tt.tm_sec);
-    std::string str = buf;
-    return str;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
-  }
-}
-
-
-//731 217 pv
-// -62135596800
-// 719162
-
-
-
-time_t utcTimeToTimeTx(const std::string& utcTime)
-{
-  try
-  {
-    if (utcTime.length() != 15)
-      throw Fmi::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
-
-    const char *str = utcTime.c_str();
-
-    struct tm tt;
-    tt.tm_year = getInt(str, 0, 4) - 1900; /* Year - 1900 */
-    tt.tm_mon = getInt(str, 4, 2) - 1;     /* Month (0-11) */
-    tt.tm_mday = getInt(str, 6, 2);        /* Day of the month (1-31) */
-    tt.tm_hour = getInt(str, 9, 2);
-    ; /* Hours (0-23) */
-    tt.tm_min = getInt(str, 11, 2);
-    ; /* Minutes (0-59) */
-    tt.tm_sec = getInt(str, 13, 2);
-    ;                 /* Seconds (0-60) */
-    tt.tm_isdst = -1; /* Daylight saving time */
-
-    return timegm(&tt);
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP, "Operation failed!", nullptr);
-    exception.addParameter("utcTime",utcTime);
-    throw exception;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-void readAttribute(MemoryReader& memoryReader,std::string& attrName,std::vector<std::string>& attrValues)
-{
-  FUNCTION_TRACE
-  try
-  {
-    uint nameLen = 0;
-    memoryReader >> nameLen;
-    if (nameLen > 0)
-      nameLen = ((nameLen-1)/4 + 1) * 4;
-
-    char name[nameLen+1];
-    for (uint n = 0; n<nameLen; n++)
-      name[n] = memoryReader.read_int8();
-
-    name[nameLen] = '\0';
-    attrName = name;
-
-
-    uint attrType = 0;
-    memoryReader >> attrType;
-
-    uint attrCount = 0;
-    memoryReader >> attrCount;
-
-
-    switch (attrType)
-    {
-      case 1:  // byte
-      {
-        uchar val = 0;
-        uint rCount = attrCount;
-        if (rCount > 0)
-          rCount = ((rCount-1)/4 + 1) * 4;
-
-        for (uint a=0; a<rCount; a++)
-        {
-          memoryReader >> val;
-          if (a < rCount)
-            attrValues.push_back(std::to_string((uint)val));
-        }
-      }
-      break;
-
-      case 2:  // char
-      {
-        std::int8_t val = 0;
-        uint rCount = attrCount;
-        if (rCount > 0)
-          rCount = ((rCount-1)/4 + 1) * 4;
-
-        char str[rCount+1];
-        for (uint a=0; a<rCount; a++)
-        {
-          memoryReader >> val;
-          if (a < attrCount)
-            str[a] = val;
-        }
-        str[attrCount] = '\0';
-        attrValues.push_back(std::string(str));
-      }
-      break;
-
-      case 3:  // short
-      {
-        short val = 0;
-        uint rCount = attrCount;
-        if (rCount > 0)
-          rCount = ((rCount-1)/2 + 1) * 2;
-
-        for (uint a=0; a<rCount; a++)
-        {
-          memoryReader >> val;
-          if (a < attrCount)
-            attrValues.push_back(std::to_string(val));
-        }
-      }
-      break;
-
-      case 4:  // int
-      {
-        int val = 0;
-        for (uint a=0; a<attrCount; a++)
-        {
-          memoryReader >> val;
-          attrValues.push_back(std::to_string(val));
-        }
-      }
-      break;
-
-      case 5:  // float
-      {
-        float val = 0;
-        for (uint a=0; a<attrCount; a++)
-        {
-          memoryReader >> val;
-          attrValues.push_back(std::to_string(val));
-        }
-      }
-      break;
-
-      case 6:  // double
-      {
-        double val = 0;
-        for (uint a=0; a<attrCount; a++)
-        {
-          memoryReader >> val;
-          attrValues.push_back(std::to_string(val));
-        }
-      }
-      break;
-    }
-    //printf("  [%s][%0X][%u][%s]\n",name,attrType,attrCount,attrValue);
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    //exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    //exception.addParameter("Message start position",uint64_toHex(memoryReader.getStartPtr()-memoryReader.getParentPtr()));
-    throw exception;
-  }
-}
-
-
 
 
 
@@ -1293,393 +1965,6 @@ void Message::read(MemoryReader& memoryReader)
   FUNCTION_TRACE
   try
   {
-    int typeSize[] = {0,1,1,2,4,4,8};
-    AutoThreadLock lock(&mThreadLock);
-
-    if (mIsRead)
-      return;
-
-    std::map<std::string,std::vector<std::string>> propertyList;
-    char tmp[1000];
-
-
-    time_t startTime = utcTimeToTimeTx(std::string("00010101T000000"));
-    time_t expectedTime = utcTimeToTimeTx(std::string("20030101T000000"));
-    time_t tt = 63220420819;// 1041552000;
-    auto st = utcTimeFromTimeTx(tt);
-    auto st2 = utcTimeFromTimeTx(1073001600);
-
-    printf("START %ld %ld %ld %s %s\n",startTime,expectedTime,expectedTime-startTime,st.c_str(),st2.c_str());
-
-
-    time_t gt = getGregorianTimeT(1,1,1,0,0,0,17549208LL*3600LL);
-    std::string ts = utcTimeFromTimeT(gt);
-    printf("NEW TIME %s\n",ts.c_str());
-
-
-    memoryReader.setReadPosition(0);
-
-    mMessageSize = memoryReader.getDataSize();
-
-    uchar type[5] = {0};
-    memoryReader.read_data(type,3);
-    if (strcmp((char*)type,"CDF") != 0)
-    {
-      Fmi::Exception exception(BCP,"Not a NetCDF file!");
-      throw exception;
-    }
-
-    memoryReader >> mFileVersion;
-
-    if (mFileVersion == 0 || mFileVersion > 2)
-    {
-      Fmi::Exception exception(BCP,"Invalid NetCDF version number!");
-      exception.addParameter("Version",std::to_string(mFileVersion));
-      throw exception;
-    }
-
-    // numrecs
-    memoryReader >> mFileRecordCount;
-
-    uint elemType = 0;
-    uint elemCount = 0;
-
-    // dim_list
-    memoryReader >> elemType;
-    memoryReader >> elemCount;
-
-    if (elemCount > 0  &&  elemType != 0x0A)
-    {
-      Fmi::Exception exception(BCP,"Expected dimension indicator (0x0A)!");
-      exception.addParameter("Indicator",std::to_string(elemType));
-      throw exception;
-    }
-
-    //std::vector<std::pair<std::string,uint>> mDimensions;
-
-
-    std::vector<std::string> dimNames;
-    std::vector<std::string> dimLengths;
-
-    printf("dimensions:\n");
-    for (uint t=0; t<elemCount; t++)
-    {
-      uint nameLen = 0;
-      memoryReader >> nameLen;
-      if (nameLen > 0)
-        nameLen = ((nameLen-1)/4 + 1) * 4;
-
-      char name[nameLen+1];
-      for (uint n = 0; n<nameLen; n++)
-        name[n] = memoryReader.read_int8();
-
-      name[nameLen] = '\0';
-
-      // dim_length
-      uint dimLen = 0;
-      memoryReader >> dimLen;
-
-      if (dimLen == 0)
-        dimLen = mFileRecordCount;
-
-      printf("  [%s][%u]\n",name,dimLen);
-      dimNames.push_back(std::string(name));
-      dimLengths.push_back(std::to_string(dimLen));
-
-      std::vector<std::string> dimL;
-      dimL.push_back(std::to_string(dimLen));
-      sprintf(tmp,"%s.dimension.length",name);
-      propertyList.insert(std::pair<std::string,std::vector<std::string>>(std::string(tmp),dimL));
-
-      //mDimensions.push_back(std::pair<std::string,uint>(std::string((char*)name),dimLen));
-    }
-
-    propertyList.insert(std::pair<std::string,std::vector<std::string>>(std::string("dimension.name"),dimNames));
-
-
-    propertyList.insert(std::pair<std::string,std::vector<std::string>>(std::string("dimension.length"),dimLengths));
-
-    // attr_list
-    memoryReader >> elemType;
-    memoryReader >> elemCount;
-
-    if (elemCount > 0  &&  elemType != 0x0C)
-    {
-      Fmi::Exception exception(BCP,"Expected attribute indicator (0x0C)!");
-      exception.addParameter("Indicator",std::to_string(elemType));
-      throw exception;
-    }
-
-    printf("attributes:\n");
-    for (uint t=0; t<elemCount; t++)
-    {
-      std::string attrName;
-      std::vector<std::string> attrValues;
-      readAttribute(memoryReader,attrName,attrValues);
-
-      printf("  [%s]",attrName.c_str());
-      for (auto it = attrValues.begin(); it != attrValues.end(); ++it)
-      {
-        printf("[%s]",it->c_str());
-      }
-      printf("\n");
-    }
-
-
-    // var_list
-
-    std::vector<std::string> variables;
-
-    memoryReader >> elemType;
-    memoryReader >> elemCount;
-
-    if (elemCount > 0  &&  elemType != 0x0B)
-    {
-      Fmi::Exception exception(BCP,"Expected variable indicator (0x0B)!");
-      exception.addParameter("Indicator",std::to_string(elemType));
-      throw exception;
-    }
-
-    printf("variables:\n");
-    for (uint t=0; t<elemCount; t++)
-    {
-      // dim[t]
-
-      // name
-      uint nameLen = 0;
-      memoryReader >> nameLen;
-      if (nameLen > 0)
-        nameLen = ((nameLen-1)/4 + 1) * 4;
-
-      char varName[nameLen+1];
-      for (uint n = 0; n<nameLen; n++)
-        varName[n] = memoryReader.read_int8();
-
-      varName[nameLen] = '\0';
-
-      variables.push_back(std::string(varName));
-
-      uint dimCount = 0;
-      memoryReader >> dimCount;
-
-      printf(" VAR(%u) [%s][%u]\n",t,varName,dimCount);
-
-      sprintf(tmp,"%s.dimension.index",varName);
-      std::vector<std::string> dimList;
-
-      //uint dimItems = 1;
-      for (uint d=0; d<dimCount; d++)
-      {
-        uint dim = 0;
-        memoryReader >> dim;
-        dimList.push_back(std::to_string(dim));
-
-        printf("  dimension [%u][%u]\n",d,dim);
-/*
-        if (dim < mDimensions.size())
-          dimItems = dimItems * mDimensions[dim].second;
-*/
-      }
-      propertyList.insert(std::pair<std::string,std::vector<std::string>>(std::string(tmp),dimList));
-
-
-      // attr_list
-
-      uint eType = 0;
-      uint eCount = 0;
-
-      memoryReader >> eType;
-      memoryReader >> eCount;
-
-      if (eCount > 0  &&  eType != 0x0C)
-      {
-        Fmi::Exception exception(BCP,"Expected attribute indicator (0x0C)!");
-        exception.addParameter("Indicator",std::to_string(elemType));
-        throw exception;
-      }
-
-      printf("** attributes:\n");
-      for (uint t=0; t<eCount; t++)
-      {
-        std::string attrName;
-        std::vector<std::string> attrValues;
-        readAttribute(memoryReader,attrName,attrValues);
-
-
-        sprintf(tmp,"%s.%s",varName,attrName.c_str());
-        propertyList.insert(std::pair<std::string,std::vector<std::string>>(std::string(tmp),attrValues));
-
-
-        printf("  [%s]",attrName.c_str());
-        for (auto it = attrValues.begin(); it != attrValues.end(); ++it)
-        {
-          printf("[%s]",it->c_str());
-        }
-        printf("\n");
-      }
-
-
-      uint ncType = 0;
-      memoryReader >> ncType;
-
-      uint vSize = 0;
-      memoryReader >> vSize;
-
-      ulonglong offset = 0;
-
-      if (mFileVersion == 1)
-        offset = memoryReader.read_uint32();
-      else
-        offset = memoryReader.read_uint64();
-
-      uint items = vSize/typeSize[ncType];
-
-      printf("type   : %u\n",ncType);
-      printf("size   : %u\n",vSize);
-      printf("offset : %llu\n",offset);
-      printf("items  : %u\n",items);
-
-      std::vector<std::string> details;
-      details.push_back(std::to_string(ncType));
-      details.push_back(std::to_string(items));
-      details.push_back(std::to_string(offset));
-      details.push_back(std::to_string(vSize));
-
-      sprintf(tmp,"%s.details",varName);
-      propertyList.insert(std::pair<std::string,std::vector<std::string>>(std::string(tmp),details));
-
-
-      auto readPos = memoryReader.getReadPosition();
-      memoryReader.setReadPosition(offset);
-
-      switch (ncType)
-      {
-        case 1:  // byte
-        {
-          uchar val = 0;
-          for (uint i = 0; i < items; i++)
-          {
-            memoryReader >> val;
-            if (i < items)
-            {
-              if (i != 0)
-                printf(",%d",val);
-              else
-                printf("%d",val);
-            }
-          }
-        }
-        break;
-
-        case 2:  // char
-        {
-          std::int8_t val = 0;
-          for (uint i = 0; i < items; i++)
-          {
-            memoryReader >> val;
-            if (i < items)
-            {
-              if (i != 0)
-                printf(",%d",val);
-              else
-                printf("%d",val);
-            }
-          }
-        }
-        break;
-
-        case 3:  // short
-        {
-          short val = 0;
-          for (uint i = 0; i < items; i++)
-          {
-            memoryReader >> val;
-            if (i < items)
-            {
-              if (i != 0)
-                printf(",%d",val);
-              else
-                printf("%d",val);
-            }
-          }
-        }
-        break;
-
-        case 4:  // int
-        {
-          int val = 0;
-          for (uint i = 0; i < items; i++)
-          {
-            memoryReader >> val;
-            if (i < items)
-            {
-              if (i != 0)
-                printf(",%d",val);
-              else
-                printf("%d",val);
-            }
-          }
-        }
-        break;
-
-        case 5:  // float
-        {
-          float val = 0;
-          for (uint i = 0; i < items; i++)
-          {
-            memoryReader >> val;
-            if (i < items)
-            {
-              if (i != 0)
-                printf(",%f",val);
-              else
-                printf("%f",val);
-            }
-          }
-        }
-        break;
-
-        case 6:  // double
-        {
-          double val = 0;
-          for (uint i = 0; i < items; i++)
-          {
-            memoryReader >> val;
-            if (i < items)
-            {
-              if (i != 0)
-                printf(",%f",val);
-              else
-                printf("%f",val);
-            }
-          }
-        }
-        break;
-      }
-      printf("\n");
-
-      memoryReader.setReadPosition(readPos);
-    }
-
-    propertyList.insert(std::pair<std::string,std::vector<std::string>>(std::string("variables"),variables));
-
-
-    printf("READPOS %llu\n",memoryReader.getReadPosition());
-
-    mIsRead = true;
-
-
-    printf("PROPERTIES\n");
-    for (auto pr = propertyList.begin();pr != propertyList.end(); ++pr)
-    {
-      printf("  [%s]",pr->first.c_str());
-      for (auto it = pr->second.begin(); it != pr->second.end(); ++it)
-      {
-        printf("[%s]",it->c_str());
-      }
-      printf("\n");
-    }
-
   }
   catch (...)
   {
@@ -1717,7 +2002,95 @@ void Message::write(DataWriter& dataWriter)
 
 void Message::print(std::ostream& stream,uint level,uint optionFlags) const
 {
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+  FUNCTION_TRACE
+  try
+  {
+    stream << "\n" << space(level) << "########## MESSAGE [" << mMessageIndex << "] ##########\n\n";
+    stream << space(level) << "- filePosition           = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
+    stream << space(level) << "- fileType               = " << toString(mFileType) << "\n";
+    stream << space(level) << "- messageSize            = " << toString(mMessageSize) << " (" << uint64_toHex(mMessageSize) << ")\n";
+    stream << space(level) << "- columns                = " << toString(mColumns) << "\n";
+    stream << space(level) << "- rows                   = " << toString(mRows) << "\n";
+    stream << space(level) << "- dataType               = " << toString(mDataType) << "\n";
+    stream << space(level) << "- scaleFactor            = " << std::to_string(mScaleFactor) << "\n";
+    stream << space(level) << "- gribParameterId        = " << toString(mGribParameterId) << "\n";
+    stream << space(level) << "- gribParameterName      = " << getGribParameterName() << "\n";
+    stream << space(level) << "- gribParameterUnits     = " << getGribParameterUnits() << "\n";
+    stream << space(level) << "- parameterLevel         = " << toString(getGridParameterLevel()) << "\n";
+    stream << space(level) << "- fmiParameterLevelId    = " << toString(mFmiParameterLevelId) << "\n";
+    stream << space(level) << "- grib1ParameterLevelId  = " << toString(mGrib1ParameterLevelId) << "\n";
+    stream << space(level) << "- grib2ParameterLevelId  = " << toString(mGrib2ParameterLevelId) << "\n";
+    stream << space(level) << "- fmiProducerName        = " << getFmiProducerName() << "\n";
+    stream << space(level) << "- fmiParameterId         = " << toString(mFmiParameterId) << "\n";
+    stream << space(level) << "- fmiParameterName       = " << getFmiParameterName() << "\n";
+    stream << space(level) << "- fmiParameterUnits      = " << getFmiParameterUnits() << "\n";
+    stream << space(level) << "- newbaseParameterId     = " << mNewbaseParameterId << "\n";
+    stream << space(level) << "- newbaseParameterName   = " << getNewbaseParameterName() << "\n";
+    stream << space(level) << "- netCdfParameterName    = " << getNetCdfParameterName() << "\n";
+    stream << space(level) << "- parameterLevel         = " << toString(mParameterLevel) << "\n";
+    stream << space(level) << "- parameterUnits         = " << mParameterUnits << "\n";
+    stream << space(level) << "- forecastType           = " << toString(mForecastType) << "\n";
+    stream << space(level) << "- forecastNumber         = " << toString(mForecastNumber) << "\n";
+    stream << space(level) << "- forecastTime           = " << getForecastTime() << "\n";
+    stream << space(level) << "- forecastTimeT          = " << toString(mForecastTimeT) << "\n";
+    stream << space(level) << "- missingValue           = " << toString(mMissingValue) << "\n";
+    //stream << space(level) << "- referenceTime          = " << getReferenceTime() << "\n";
+    stream << space(level) << "- gridGeometryId         = " << getGridGeometryId() << "\n";
+    stream << space(level) << "- gridHash               = " << getGridHash() << "\n";
+    stream << space(level) << "- gridProjection         = " << T::get_gridProjectionString(getGridProjection()) << "\n";
+    //stream << space(level) << "- gridLayout             = " << T::get_gridLayoutString(getGridLayout()) << "\n";
+    stream << space(level) << "- WKT                    = " << getWKT() << "\n";
+
+
+    mGeometryDef->print(stream,level,optionFlags);
+
+    if (optionFlags &  GRID::PrintFlag::data)
+    {
+      T::ParamValue_vec values;
+      getGridValueVector(values);
+
+      stream << space(level+1) << "- data (from the grid corners):\n";
+
+      char st[1000];
+      uint ny = getGridOriginalRowCount();
+      uint nx = getGridOriginalColumnCount();
+      uint c = 0;
+      std::size_t sz = values.size();
+
+      for (uint y=0; y < ny; y++)
+      {
+        for (uint x=0; x < nx; x++)
+        {
+          if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
+          {
+            if (c < sz)
+            {
+              auto val = getGridValueByOriginalGridPoint(x,y);
+              double xx = 0;
+              double yy = 0;
+              getGridOriginalCoordinatesByGridPoint(x,y,xx,yy);
+              double xxx = 0;
+              double yyy = 0;
+              getGridLatLonCoordinatesByGridPoint(x,y,xxx,yyy);
+              //auto val = values[c];
+              if (val != ParamValueMissing)
+                sprintf(st,"[%u,%u] [%f,%f] [%f,%f] %f",y+1,x+1,xx,yy,xxx,yyy,val);
+              else
+                sprintf(st,"[%u,%u] [%f,%f] NA",y+1,x+1,xx,yy);
+              stream << space(level+3) << st << "\n";
+            }
+          }
+          c++;
+        }
+      }
+    }
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
 }
 
 

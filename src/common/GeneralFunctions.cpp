@@ -1761,6 +1761,102 @@ void parseLatLonCoordinates(const std::string& latLonCoordinates, std::vector<T:
 
 
 
+void parseUnits(const char *unitString,double& value,std::string& units)
+{
+  try
+  {
+    const char *p = unitString;
+    char val[100];
+    char *v = val;
+    char unit[100];
+    char *u = unit;
+
+    while (*p != '\0')
+    {
+      if (isdigit(*p))
+      {
+        *v = *p;
+        v++;
+      }
+
+      if (isalpha(*p))
+      {
+        *u = *p;
+        u++;
+      }
+      p++;
+    }
+
+    *u = '\0';
+    *v = '\0';
+
+    value = atof(val);
+    units = unit;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    throw exception;
+  }
+}
+
+
+
+void parseNetCdfTime(std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second,time_t& unitSize)
+{
+  try
+  {
+    std::vector<std::string> partList;
+    splitString(timeStr,' ',partList);
+
+    if (partList.size() == 3 || partList.size() == 4)
+    {
+      if (strncasecmp(partList[0].c_str(),"day",3) == 0)
+        unitSize = 3600*24;
+      else
+      if (strncasecmp(partList[0].c_str(),"hour",4) == 0)
+        unitSize = 3600;
+      else
+      if (strncasecmp(partList[0].c_str(),"minute",6) == 0)
+        unitSize = 60;
+      if (strncasecmp(partList[0].c_str(),"second",6) == 0)
+        unitSize = 1;
+
+
+      std::vector<int> d;
+
+      splitString(partList[2],'-',d);
+      if (d.size() == 3)
+      {
+        year = d[0];
+        month = d[1];
+        day = d[2];
+      }
+
+      if (partList.size() == 4)
+      {
+        std::vector<float> t;
+        splitString(partList[3],':',t);
+
+        if (t.size() == 3)
+        {
+          hour = t[0];
+          minute = t[1];
+          second = (int)t[2];
+        }
+      }
+    }
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    throw exception;
+  }
+}
+
+
+
+
 void splitString(const char *str, char separator, std::vector<std::string> &partList)
 {
   try
@@ -3327,6 +3423,132 @@ time_t getGregorianTimeT(int refYear, int refMonth, int refDay,int refHour, int 
   }
 }
 
+
+
+
+
+int getClosestIndexPos(FloatVec& values,float value)
+{
+  try
+  {
+    int low = 0;
+    int len = values.size();
+    int high = len-1;
+    int mid = 0;
+
+    while (low <= high)
+    {
+      mid = (low + high) / 2;
+
+      int res = num_compare(values[mid],value);
+
+      if (res == 0)
+        return mid;
+
+      if (res < 0)
+        low = mid + 1;
+      else
+        high = mid - 1;
+    }
+
+    if (mid >= 0  &&  mid < len)
+    {
+      if (num_compare(values[mid],value) < 0)
+      {
+        while (mid < len  &&  num_compare(values[mid],value) < 0)
+          mid++;
+
+        return mid-1;
+      }
+      else
+      {
+        while (mid > 0  &&  num_compare(values[mid],value) > 0)
+          mid--;
+
+        return mid;
+      }
+    }
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+int getClosestIndexNeg(FloatVec& values,float value)
+{
+  //FUNCTION_TRACE
+  try
+  {
+    int low = 0;
+    int len = values.size();
+    int high = len-1;
+    int mid = 0;
+
+    while (low <= high)
+    {
+      mid = (low + high) / 2;
+
+      int res = num_compare(value,values[mid]);
+
+      if (res == 0)
+        return mid;
+
+      if (res < 0)
+        low = mid + 1;
+      else
+        high = mid - 1;
+    }
+
+    if (mid >= 0  &&  mid < len)
+    {
+      if (num_compare(value,values[mid]) < 0)
+      {
+        while (mid < len  &&  num_compare(value,values[mid]) < 0)
+          mid++;
+
+        return mid-1;
+      }
+      else
+      {
+        while (mid > 0  &&  num_compare(value,values[mid]) > 0)
+          mid--;
+
+        return mid;
+      }
+    }
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+int getClosestIndex(FloatVec& values,float value)
+{
+  try
+  {
+    if (values.size() == 0)
+      return 0;
+
+    if (values[0] >= values[values.size()-1])
+      return getClosestIndexPos(values,value);
+
+    return getClosestIndexNeg(values,value);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 }  // Namespace SmartMet

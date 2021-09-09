@@ -32,6 +32,7 @@ namespace GRID
 struct MessageInfo
 {
   ulonglong          mFilePosition;
+  uint               mMessageType;
   uint               mMessageSize;
   uint               mProducerId;
   uint               mGenerationId;
@@ -70,6 +71,7 @@ class Message
 
     virtual void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual uint                getFileId() const;
+    virtual T::FileType         getMessageType() const;
     virtual uint                getProducerId() const;
     virtual uint                getGenerationId() const;
     virtual uint                getMessageIndex() const;
@@ -87,6 +89,7 @@ class Message
     virtual const char*         getFmiParameterUnits() const;
     virtual T::NewbaseParamId   getNewbaseParameterId() const;
     virtual const char*         getNewbaseParameterName() const;
+    virtual const char*         getNetCdfParameterName() const;
 
     virtual uint                getGribVersion() const;
     virtual uint                getGribCentre() const;
@@ -199,6 +202,7 @@ class Message
     virtual void                setFmiParameterLevelId(T::ParamLevelId fmiParameterLevelId);
     virtual void                setFmiParameterName(const char* fmiParameterName);
     virtual void                setFmiParameterUnits(const char* fmiParameterUnits);
+    virtual void                setNetCdfParameterName(const char* netCdfParameterName);
     virtual void                setNewbaseParameterId(T::NewbaseParamId newbaseParameterId);
     virtual void                setNewbaseParameterName(const char* newbaseParameterName);
 
@@ -283,6 +287,9 @@ class Message
 
     /*! \brief  The fmi parameter name. */
     uint                        mFmiParameterName;
+
+    /*! \brief  The netcdf parameter name. */
+    uint                        mNetCdfParameterName;
 
     /*! \brief  The newbase parameter name. */
     uint                        mNewbaseParameterName;

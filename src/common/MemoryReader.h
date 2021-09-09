@@ -26,6 +26,7 @@ class MemoryReader
     void                setParentPtr(unsigned char *_parentPtr);
     unsigned char*      getParentPtr();
     void                setLittleEndian(bool _littleEndian);
+    void                setNetworkByteOrder(bool _networkByteOrder);
 
     unsigned char       getByte(ulonglong _pos);
     unsigned char       getByte(unsigned char *_posPtr);
@@ -89,6 +90,7 @@ class MemoryReader
     unsigned char*      parentPtr;
     bool                dataRelease;
     bool                littleEndian;
+    bool                networkByteOrder;
 };
 
 

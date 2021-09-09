@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GridFile.h"
+#include "../netcdf/NetCdfFile.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
@@ -75,6 +76,7 @@ class PhysicalGridFile : public GridFile
     ThreadLock            mMemoryMappingLock;
     char*                 mMemoryPtr;
     bool                  mMessagePositionError;
+    NetCDF::NetCdfFile*   mNetCdfFile;
 };
 
 

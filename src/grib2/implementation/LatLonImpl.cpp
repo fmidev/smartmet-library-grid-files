@@ -269,7 +269,7 @@ std::string LatLonImpl::getGridGeometryString() const
     uint ni = (*mLatLon.getGrid()->getNi());
     uint nj = (*mLatLon.getGrid()->getNj());
     double y = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
-    double x = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
+    double x = getLongitude(C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000);
     double dx = C_DOUBLE(*mLatLon.getIDirectionIncrement()) / 1000000;
     double dy = C_DOUBLE(*mLatLon.getJDirectionIncrement()) / 1000000;
 
