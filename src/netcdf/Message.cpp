@@ -138,6 +138,7 @@ Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,uint messageInd
       setNetCdfParameterName(messageInfo.mParameterName.c_str());
     }
 
+    mFmiParameterLevelId = messageInfo.mParameterLevelId;
     mParameterLevel = messageInfo.mParameterLevel;
     mParameterUnits = messageInfo.mParameterUnits;
     mForecastType = messageInfo.mForecastType;

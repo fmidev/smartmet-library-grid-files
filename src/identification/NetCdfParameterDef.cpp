@@ -50,8 +50,9 @@ void NetCdfParameterDef::print(std::ostream& stream,uint level,uint optionFlags)
   try
   {
     stream << space(level) << "ParameterDefinition_newbase\n";
-    stream << space(level) << "- mParameterName          = " << mParameterName << "\n";
-    stream << space(level) << "- mParameterUnits         = " << mParameterUnits << "\n";
+    stream << space(level) << "- mParameterName   = " << mParameterName << "\n";
+    stream << space(level) << "- mFmiLevelId      = " << mFmiLevelId  << "\n";
+    stream << space(level) << "- mParameterUnits  = " << mParameterUnits << "\n";
   }
   catch (...)
   {

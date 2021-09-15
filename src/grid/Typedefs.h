@@ -89,6 +89,7 @@ class ParamKeyTypeValue
     static const ParamKeyType GRIB_ID      = 3;
     static const ParamKeyType NEWBASE_ID   = 4;
     static const ParamKeyType NEWBASE_NAME = 5;
+    static const ParamKeyType NETCDF_NAME  = 6;
     static const ParamKeyType BUILD_IN     = 100;
 };
 

@@ -1120,7 +1120,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
           {
             // This is a grid variable
 
-            int paramLevelId = 0;
+            int paramLevelId = 1;
             uint iii = 0;
             for (auto itm = dd->second.begin(); itm != dd->second.end(); ++itm)
             {
@@ -1347,6 +1347,13 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
             // ##### Level information #############################################
 
+            Identification::NetCdfParameterDef ncParamDef;
+            if (Identification::gridDef.getNetCdfParameterDefByName(parameterStandardName,ncParamDef))
+            {
+              if (!ncParamDef.mFmiLevelId.empty())
+                paramLevelId = atoi(ncParamDef.mFmiLevelId.c_str());
+            }
+
             std::vector<double> levelList;
             if (levelCount > 0)
             {
@@ -1477,8 +1484,10 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             double startx = mXCoordinates[0];
             double starty = mYCoordinates[0];
 
-            double dx = mXCoordinates[1] - mXCoordinates[0];
-            double dy = mYCoordinates[1] - mYCoordinates[0];
+            uint xsz = mXCoordinates.size() - 1;
+            uint ysz = mYCoordinates.size() - 1;
+            double dx = (mXCoordinates[xsz] - mXCoordinates[0]) / (double)xsz;
+            double dy = (mYCoordinates[ysz] - mYCoordinates[0]) / (double)ysz;
 
             char projectionString[300];
             projectionString[0] = '\0';
@@ -1526,10 +1535,9 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               sprintf(tmp,"%s.false_northing",gridMapping.c_str());
               getProperty(tmp,0,false_northing);
 
-              //double centerLat = 60.000;
-
               OGRSpatialReference sp;
               sp.SetPS(latitude_of_projection_origin,longitude_of_projection_origin,scale_factor_at_projection_origin,false_easting,false_northing);
+
               sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
               sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
@@ -1559,6 +1567,9 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               // ***** PROJECTION: Lambert Azimuthal Equal Area *************************************
 
               projectionId = T::GridProjectionValue::LambertAzimuthalEqualArea;
+
+              dx = mXCoordinates[1] - mXCoordinates[0];
+              dy = mYCoordinates[1] - mYCoordinates[0];
 
               double longitude_of_projection_origin = 0.0;
               sprintf(tmp,"%s.longitude_of_projection_origin",gridMapping.c_str());

@@ -51,6 +51,8 @@ struct CoordinateRec
 typedef std::unordered_map<std::size_t,CoordinateRec> CoordinateCache;
 typedef std::unordered_map<std::size_t,CoordinateRec>::iterator CoordinateCacheIterator;
 typedef std::unordered_map<uint,std::string> GeometryNames;
+typedef std::unordered_map<uint,uint> IdMap;
+typedef std::unordered_map<std::string,uint> StringIdMap;
 
 
 class GridDef
@@ -300,7 +302,7 @@ class GridDef
 
     string_vec              mFmi_parameterDef_files;
     time_t                  mFmi_parameterDef_modificationTime;
-    FmiParamDef_vec         mFmi_parameterDef_records;
+    FmiParamDef_umap        mFmi_parameterDef_records;
 
     string_vec              mFmi_levelDef_files;
     time_t                  mFmi_levelDef_modificationTime;
@@ -312,7 +314,7 @@ class GridDef
 
     string_vec              mFmi_parametersFromGrib_files;
     time_t                  mFmi_parametersFromGrib_modificationTime;
-    FmiParamId_grib_vec     mFmi_parametersFromGrib_records;
+    FmiParamId_grib_umap    mFmi_parametersFromGrib_records;
 
     string_vec              mFmi_parametersFromGrib1_files;
     time_t                  mFmi_parametersFromGrib1_modificationTime;
@@ -324,11 +326,11 @@ class GridDef
 
     string_vec              mFmi_parametersFromNetCdf_files;
     time_t                  mFmi_parametersFromNetCdf_modificationTime;
-    FmiParamId_netCdf_vec   mFmi_parametersFromNetCdf_records;
+    FmiParamId_netCdf_umap  mFmi_parametersFromNetCdf_records;
 
     string_vec              mFmi_parametersFromNewbase_files;
     time_t                  mFmi_parametersFromNewbase_modificationTime;
-    FmiParamId_newbase_vec  mFmi_parametersFromNewbase_records;
+    FmiParamId_newbase_umap mFmi_parametersFromNewbase_records;
 
     string_vec              mFmi_levelsFromGrib1_files;
     time_t                  mFmi_levelsFromGrib1_modificationTime;
@@ -349,11 +351,17 @@ class GridDef
 
     string_vec              mNewbase_parameterDef_files;
     time_t                  mNewbase_parameterDef_modificationTime;
-    NewbaseParamDef_vec     mNewbase_parameterDef_records;
+    NewbaseParamDef_umap    mNewbase_parameterDef_records;
+    IdMap                   mFmiIdToNewbaseId;
+    IdMap                   mNewbaseIdToFmiId;
+    IdMap                   mGribIdToFmiId;
+    StringIdMap             mNewbaseNameToId;
+    StringIdMap             mFmiNameToId;
+    StringIdMap             mNetCdfNameToFmiId;
 
     string_vec              mNetCdf_parameterDef_files;
     time_t                  mNetCdf_parameterDef_modificationTime;
-    NetCdfParamDef_vec      mNetCdf_parameterDef_records;
+    NetCdfParamDef_umap     mNetCdf_parameterDef_records;
 
     CoordinateCache         mCoordinateCache;
     ModificationLock        mCoordinateCacheModificationLock;
