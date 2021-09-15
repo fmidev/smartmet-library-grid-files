@@ -1,6 +1,7 @@
 #include "MemoryReader.h"
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
+#include <arpa/inet.h>
 
 namespace SmartMet
 {
@@ -24,6 +25,7 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size)
     readPtr = _startPtr;
     dataRelease = false;
     littleEndian = false;
+    networkByteOrder = false;
   }
   catch (...)
   {
@@ -53,6 +55,7 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size,bool _dataRe
     readPtr = _startPtr;
     dataRelease = _dataRelease;
     littleEndian = false;
+    networkByteOrder = false;
   }
   catch (...)
   {
@@ -85,6 +88,7 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr)
     readPtr = _startPtr;
     dataRelease = false;
     littleEndian = false;
+    networkByteOrder = false;
   }
   catch (...)
   {
@@ -299,6 +303,22 @@ void MemoryReader::setLittleEndian(bool _littleEndian)
 
 
 
+void MemoryReader::setNetworkByteOrder(bool _networkByteOrder)
+{
+  try
+  {
+    networkByteOrder = _networkByteOrder;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 unsigned char MemoryReader::getByte(ulonglong _pos)
 {
   try
@@ -448,6 +468,14 @@ std::uint16_t MemoryReader::read_uint16()
       throw exception;
     }
 
+    if (networkByteOrder)
+    {
+      ushort *v = (ushort*)readPtr;
+      ushort val = ntohs(*v);
+      readPtr += 2;
+      return val;
+    }
+
     unsigned short a = readPtr[0];
     unsigned short b = readPtr[1];
     unsigned short val = static_cast<unsigned short>((a << 8 | b));
@@ -455,7 +483,6 @@ std::uint16_t MemoryReader::read_uint16()
       val = static_cast<unsigned short>((b << 8 | a));
 
     readPtr += 2;
-
     return val;
   }
   catch (...)
@@ -519,6 +546,14 @@ std::uint32_t MemoryReader::read_uint32()
       throw exception;
     }
 
+    if (networkByteOrder)
+    {
+      uint *v = (uint*)readPtr;
+      uint val = ntohl(*v);
+      readPtr += 4;
+      return val;
+    }
+
     uint a = readPtr[0];
     uint b = readPtr[1];
     uint c = readPtr[2];
@@ -528,7 +563,6 @@ std::uint32_t MemoryReader::read_uint32()
       val =  static_cast<unsigned int>((d << 24 | c << 16 | b << 8 | a));
 
     readPtr += 4;
-
     return val;
   }
   catch (...)
@@ -629,6 +663,14 @@ std::int16_t MemoryReader::read_int16()
       throw exception;
     }
 
+    if (networkByteOrder)
+    {
+      short *v = (short*)readPtr;
+      short val = ntohs(*v);
+      readPtr += 2;
+      return val;
+    }
+
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
     short val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
@@ -636,7 +678,6 @@ std::int16_t MemoryReader::read_int16()
       val = static_cast<short>((1 - ((b & 128) >> 6)) * ((b & 127) << 8 | a));
 
     readPtr += 2;
-
     return val;
   }
   catch (...)
@@ -703,16 +744,23 @@ std::int32_t MemoryReader::read_int32()
       throw exception;
     }
 
+    if (networkByteOrder)
+    {
+      int *v = (int*)readPtr;
+      int val = htonl(*v);
+      readPtr += 4;
+      return val;
+    }
+
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
     unsigned char c = readPtr[2];
     unsigned char d = readPtr[3];
     int val =  static_cast<int>((1 - ((a & 128) >> 6)) * ((a & 127) << 24 | b << 16 | c << 8 | d));
     if (littleEndian)
-      val =  static_cast<int>((1 - ((d & 128) >> 6)) * ((d & 127) << 24 | c << 16 | b << 8 | a));
+       val =  static_cast<int>((1 - ((d & 128) >> 6)) * ((d & 127) << 24 | c << 16 | b << 8 | a));
 
     readPtr += 4;
-
     return val;
   }
   catch (...)
@@ -1438,6 +1486,23 @@ MemoryReader& MemoryReader::operator>>(std::float_t& _value)
   try
   {
     _value = read_float();
+    return *this;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+MemoryReader& MemoryReader::operator>>(std::double_t& _value)
+{
+  try
+  {
+    _value = read_double();
     return *this;
   }
   catch (...)

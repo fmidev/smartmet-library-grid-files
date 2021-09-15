@@ -316,6 +316,14 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
 
 
 
+T::FileType Message::getMessageType() const
+{
+  return T::FileTypeValue::Grib1;
+}
+
+
+
+
 bool Message::isRead()
 {
   try
@@ -483,9 +491,12 @@ void Message::read(MemoryReader& memoryReader)
     mNewbaseParameterId = Identification::gridDef.getNewbaseParameterId(*this);
     mNewbaseParameterName = stringFactory.create(Identification::gridDef.getNewbaseParameterName(*this));
 
+    mNetCdfParameterName = stringFactory.create(Identification::gridDef.getNetCdfParameterName(*this));
+
     mDefaultInterpolationMethod = Identification::gridDef.getFmiParameterInterpolationMethod(*this);
 
-    if (getGridGeometryId() == 0)
+    int gi = getGridGeometryId();
+    if (gi == 0)
     {
       int geometryId = Identification::gridDef.getGrib1GeometryId(*this);
       if (geometryId != 0)
@@ -499,8 +510,14 @@ void Message::read(MemoryReader& memoryReader)
         std::cout << getGridGeometryString() << "\n\n";
       }
     }
+    else
+    {
+      if (mGeometryId == 0)
+        setGridGeometryId(gi);
+    }
 
-    setGridGeometryId(mGeometryId);
+    if (mGeometryId != 0)
+      setGridGeometryId(mGeometryId);
 
     if (mMessageSize == 0)
       mMessageSize = (memoryReader.getGlobalReadPosition() - mFilePosition);
@@ -3510,6 +3527,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- fmiParameterUnits       = " << getFmiParameterUnits() << "\n";
     stream << space(level) << "- newbaseParameterId      = " << mNewbaseParameterId << "\n";
     stream << space(level) << "- newbaseParameterName    = " << getNewbaseParameterName() << "\n";
+    stream << space(level) << "- netCdfParameterName     = " << getNetCdfParameterName() << "\n";
     stream << space(level) << "- referenceTime           = " << getReferenceTime() << "\n";
     stream << space(level) << "- forecastTime            = " << getForecastTime() << "\n";
     stream << space(level) << "- gridGeometryId          = " << getGridGeometryId() << "\n";

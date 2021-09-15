@@ -52,6 +52,7 @@ class Message : public GRID::Message
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     uint                getFileId() const;
+    T::FileType         getMessageType() const;
     uint                getProducerId() const;
     uint                getGenerationId() const;
     T::FilePosition     getFilePosition() const;

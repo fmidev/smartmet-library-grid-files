@@ -43,8 +43,9 @@ vpath %.cpp src \
 			src/grib2 \
 			src/grib2/definition \
 			src/grib2/implementation \
-			src/identification
-
+			src/identification \
+			src/netcdf
+			
 vpath %.h 	src \
 			src/common \
 			src/fmig1 \
@@ -55,7 +56,8 @@ vpath %.h 	src \
 			src/grib2 \
 			src/grib2/definition \
 			src/grib2/implementation \
-			src/identification
+			src/identification \
+			src/netcdf
 
 vpath %.o obj
 
@@ -114,6 +116,7 @@ install:
 	@mkdir -p $(includedir)/$(INCDIR)/grib2/definition
 	@mkdir -p $(includedir)/$(INCDIR)/grib2/implementation
 	@mkdir -p $(includedir)/$(INCDIR)/identification
+	@mkdir -p $(includedir)/$(INCDIR)/netcdf
 	@cp src/common/*.h $(includedir)/$(INCDIR)/common
 	@cp src/fmig1/*.h $(includedir)/$(INCDIR)/fmig1
 	@cp src/grid/*.h $(includedir)/$(INCDIR)/grid
@@ -124,6 +127,7 @@ install:
 	@cp src/grib2/definition/*.h $(includedir)/$(INCDIR)/grib2/definition
 	@cp src/grib2/implementation/*.h $(includedir)/$(INCDIR)/grib2/implementation
 	@cp src/identification/*.h $(includedir)/$(INCDIR)/identification	
+	@cp src/netcdf/*.h $(includedir)/$(INCDIR)/netcdf	
 	@mkdir -p $(libdir)
 	$(INSTALL_PROG) $(LIBFILE) $(libdir)/$(LIBFILE)
 
@@ -141,7 +145,8 @@ objdir:
 	          obj/grib2 \
 	          obj/grib2/definition \
 	          obj/grib2/implementation \
-	          obj/identification
+	          obj/identification \
+	          obj/netcdf
 
 create_def:
 	cd src/grib1/definition; $(MAKE) definitions;

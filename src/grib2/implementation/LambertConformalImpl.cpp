@@ -331,7 +331,7 @@ std::string LambertConformalImpl::getGridGeometryString() const
     char buf[1000];
 
     double y = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
-    double x = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
+    double x = getLongitude(C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000);
     double dx = C_DOUBLE(*mDx) / 1000;
     double dy = C_DOUBLE(*mDy) / 1000;
     double loV = C_DOUBLE(*mLoV) / 1000000;
@@ -339,7 +339,7 @@ std::string LambertConformalImpl::getGridGeometryString() const
     double latin2 = C_DOUBLE(*mLatin2) / 1000000;
     //double laD = C_DOUBLE(*mLaD)/1000000;
     double laD = latin1;
-    double sx = C_DOUBLE(*mLongitudeOfSouthernPole) / 1000000;
+    double sx = getLongitude(C_DOUBLE(*mLongitudeOfSouthernPole) / 1000000);
     double sy = C_DOUBLE(*mLatitudeOfSouthernPole) / 1000000;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../grid/Typedefs.h"
+#include <unordered_map>
 
 namespace SmartMet
 {
@@ -24,6 +25,7 @@ class FmiParameterId_newbase
 
 
 typedef std::vector<FmiParameterId_newbase> FmiParamId_newbase_vec;
+typedef std::unordered_map<uint,FmiParameterId_newbase> FmiParamId_newbase_umap;
 typedef const FmiParameterId_newbase* FmiParamId_newbase_cptr;
 
 

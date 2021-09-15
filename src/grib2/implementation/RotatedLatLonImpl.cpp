@@ -531,12 +531,12 @@ std::string RotatedLatLonImpl::getGridGeometryString() const
     uint ni = (*mLatLon.getGrid()->getNi());
     uint nj = (*mLatLon.getGrid()->getNj());
     double y = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint()) / 1000000;
-    double x = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000;
+    double x = getLongitude(C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint()) / 1000000);
     double dx = C_DOUBLE(*mLatLon.getIDirectionIncrement());
     double dy = C_DOUBLE(*mLatLon.getJDirectionIncrement());
 
     double sy = C_DOUBLE(*mRotation.getLatitudeOfSouthernPole())/1000000;
-    double sx = C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000;
+    double sx = getLongitude(C_DOUBLE(*mRotation.getLongitudeOfSouthernPole())/1000000);
 
     double angle = C_DOUBLE(mRotation.getAngleOfRotation());
 

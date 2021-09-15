@@ -87,8 +87,10 @@
 261;3;86;205;MEPS_PREOPMTA;Postprocessed fields for MEPS preop;
 265;3;86;211;CMEPS_PREOPMTA;Postprocessed fields for CMEPS preop;
 270;1;86;207;MNWCMTA;MEPS Nowcasting post processed fields;
+271;1;86;208;MNWCMTADEV;MEPS Nowcasting post processed fields development version;
 280;1;86;201;SMARTMETMTA;Postprocessed fields for SmartMet;
 281;1;86;202;SMARTMETNWC;SmartMet producer with nowcasting applied;
+282;1;86;203;SMARTMETNWCDEV;SmartMet producer with nowcasting applied development version;
 301;1;;;SILAM_AQ;FMI Silam airquality model;
 500;1;88;1;OSISAF;OSI SAF satellite products;
 501;2;86;110;IASIL2;IASI L2 satellite soundings;

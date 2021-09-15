@@ -218,6 +218,7 @@ T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinates() const
     coordinateList->reserve(nx*ny);
 
     double y = mStartY;
+    //printf("START %f,%f  %f,%f\n",mStartX,mStartY,mDxx,mDyy);
     for (uint j=0; j < ny; j++)
     {
       double x = mStartX;
@@ -261,7 +262,7 @@ std::string PolarStereographicImpl::getGridGeometryString() const
     char buf[1000];
 
     double y = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
-    double x = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
+    double x = getLongitude(C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000);
     double laD = C_DOUBLE(*mLaD) / 1000000;
     double dx = C_DOUBLE(*mDx) / 1000;
     double dy = C_DOUBLE(*mDy) / 1000;
@@ -403,8 +404,8 @@ void PolarStereographicImpl::init() const
     if ((scanningMode & 0x40) == 0)
       mDyy = -dyy;
 
-    double startX = C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000;
-    double startY = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000;
+    double startX = getLongitude(C_DOUBLE(*mLongitudeOfFirstGridPoint) / 1000000.0);
+    double startY = C_DOUBLE(*mLatitudeOfFirstGridPoint) / 1000000.0;
 
     convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
 
@@ -587,7 +588,7 @@ void PolarStereographicImpl::initSpatialReference()
     // ### Set the projection and the linear units for the projection.
 
     double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
-    double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
+    double centerLon = getLongitude(C_DOUBLE(*dfCenterLong) / 1000000);
     double dfScale = 1.0;
     double dfFalseEasting = 0.0;
     double dfFalseNorthing = 0.0;
@@ -630,7 +631,7 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
   try
   {
     PolarStereographic::print(stream,level,optionFlags);
-    stream << space(level+1) << "PolarStereographicImpl\n";
+    stream << space(level+1) << "PolarStereographicImpl (Grib2)\n";
 
     if (optionFlags & GRID::PrintFlag::coordinates)
     {

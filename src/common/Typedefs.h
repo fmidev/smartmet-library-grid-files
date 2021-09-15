@@ -15,6 +15,7 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
 typedef unsigned long ulong;
+typedef long long longlong;
 typedef unsigned long long ulonglong;
 typedef std::float_t ibmfloat;
 
@@ -60,5 +61,5 @@ namespace std
 #define C_UINT(x) static_cast<uint>(x)
 #define C_ULONG(x) static_cast<ulong>(x)
 #define C_UINT64(x) static_cast<unsigned long long>(x)
-#define C_DOUBLE(x) static_cast<double>(x)
+#define C_DOUBLE(_x) static_cast<double>(_x)
 #define C_FLOAT(x) static_cast<float>(x)

@@ -93,11 +93,13 @@ GridDef::GridDef()
     mFmi_parametersFromGrib_modificationTime = 0;
     mFmi_parametersFromGrib1_modificationTime = 0;
     mFmi_parametersFromGrib2_modificationTime = 0;
+    mFmi_parametersFromNetCdf_modificationTime = 0;
     mFmi_parametersFromNewbase_modificationTime = 0;
     mFmi_levelsFromGrib1_modificationTime = 0;
     mFmi_levelsFromGrib2_modificationTime = 0;
     mFmi_producersFromGrib_modificationTime = 0;
     mFmi_geometryDef_modificationTime = 0;
+    mNetCdf_parameterDef_modificationTime = 0;
     mNewbase_parameterDef_modificationTime = 0;
   }
   catch (...)
@@ -162,10 +164,12 @@ void GridDef::init(const char* configFile)
       "smartmet.library.grid-files.fmi.parametersFromGrib[]",
       "smartmet.library.grid-files.fmi.parametersFromGrib1[]",
       "smartmet.library.grid-files.fmi.parametersFromGrib2[]",
+//      "smartmet.library.grid-files.fmi.parametersFromNetCdf[]",
       "smartmet.library.grid-files.fmi.parametersFromNewbase[]",
       "smartmet.library.grid-files.fmi.levelsFromGrib1[]",
       "smartmet.library.grid-files.fmi.levelsFromGrib2[]",
       "smartmet.library.grid-files.fmi.producersFromGrib[]",
+      "smartmet.library.grid-files.netcdf.parameterDef[]",
       "smartmet.library.grid-files.newbase.parameterDef[]",
        nullptr
     };
@@ -205,10 +209,12 @@ void GridDef::init(const char* configFile)
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib",mFmi_parametersFromGrib_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib1",mFmi_parametersFromGrib1_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib2",mFmi_parametersFromGrib2_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromNetCdf",mFmi_parametersFromNetCdf_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromNewbase",mFmi_parametersFromNewbase_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelsFromGrib1",mFmi_levelsFromGrib1_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelsFromGrib2",mFmi_levelsFromGrib2_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.producersFromGrib",mFmi_producersFromGrib_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.netcdf.parameterDef",mNetCdf_parameterDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.newbase.parameterDef",mNewbase_parameterDef_files);
 
     mInitialized = true;
@@ -244,8 +250,9 @@ void GridDef::updateCheck()
         updateGrib();
         updateGrib1();
         updateGrib2();
-        updateFmi();
         updateNewbase();
+        updateNetCdf();
+        updateFmi();
       }
     }
   }
@@ -439,6 +446,7 @@ void GridDef::updateFmi()
     if (tt != mFmi_parameterDef_modificationTime)
     {
       mFmi_parameterDef_records.clear();
+      mFmiNameToId.clear();
       for (auto it = mFmi_parameterDef_files.begin(); it != mFmi_parameterDef_files.end(); ++it)
       {
         loadFmiParameterDefinitions(it->c_str());
@@ -473,6 +481,7 @@ void GridDef::updateFmi()
     if (tt != mFmi_parametersFromGrib_modificationTime)
     {
       mFmi_parametersFromGrib_records.clear();
+      mGribIdToFmiId.clear();
       for (auto it = mFmi_parametersFromGrib_files.begin(); it != mFmi_parametersFromGrib_files.end(); ++it)
       {
         loadFmiParameterId_grib(it->c_str());
@@ -506,11 +515,25 @@ void GridDef::updateFmi()
     if (tt != mFmi_parametersFromNewbase_modificationTime)
     {
       mFmi_parametersFromNewbase_records.clear();
+      mNewbaseIdToFmiId.clear();
+      mFmiIdToNewbaseId.clear();
       for (auto it = mFmi_parametersFromNewbase_files.begin(); it != mFmi_parametersFromNewbase_files.end(); ++it)
       {
         loadFmiParameterId_newbase(it->c_str());
       }
       mFmi_parametersFromNewbase_modificationTime = tt;
+    }
+
+    tt = getModificationTime(mFmi_parametersFromNetCdf_files);
+    if (tt != mFmi_parametersFromNetCdf_modificationTime)
+    {
+      mFmi_parametersFromNetCdf_records.clear();
+      mNetCdfNameToFmiId.clear();
+      for (auto it = mFmi_parametersFromNetCdf_files.begin(); it != mFmi_parametersFromNetCdf_files.end(); ++it)
+      {
+        loadFmiParameterId_netCdf(it->c_str());
+      }
+      mFmi_parametersFromNetCdf_modificationTime = tt;
     }
 
     tt = getModificationTime(mFmi_levelsFromGrib1_files);
@@ -585,11 +608,39 @@ void GridDef::updateNewbase()
     if (tt != mNewbase_parameterDef_modificationTime)
     {
       mNewbase_parameterDef_records.clear();
+      mNewbaseNameToId.clear();
       for (auto it = mNewbase_parameterDef_files.begin(); it != mNewbase_parameterDef_files.end(); ++it)
       {
         loadNewbaseParameterDefinitions(it->c_str());
       }
       mNewbase_parameterDef_modificationTime = tt;
+    }
+
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::updateNetCdf()
+{
+  FUNCTION_TRACE
+  try
+  {
+    time_t tt = getModificationTime(mNetCdf_parameterDef_files);
+    if (tt != mNetCdf_parameterDef_modificationTime)
+    {
+      mNetCdf_parameterDef_records.clear();
+      for (auto it = mNetCdf_parameterDef_files.begin(); it != mNetCdf_parameterDef_files.end(); ++it)
+      {
+        loadNetCdfParameterDefinitions(it->c_str());
+      }
+      mNetCdf_parameterDef_modificationTime = tt;
     }
 
   }
@@ -787,7 +838,7 @@ bool GridDef::getGrib1ParameterDefByTable(uint tableVersion,uint indicatorOfPara
 
 
 
-bool GridDef::getGrib1DefByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib1& def)
+bool GridDef::getGrib1ParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib1& def)
 {
   FUNCTION_TRACE
   try
@@ -795,7 +846,7 @@ bool GridDef::getGrib1DefByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib1& 
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto pdef =  getGrib1DefByFmiId(fmiParamId);
+    auto pdef =  getGrib1ParameterMappingByFmiId(fmiParamId);
     if (pdef == nullptr)
       return false;
 
@@ -923,7 +974,7 @@ bool GridDef::getGrib2ParameterDefById(T::GribParamId gribParamId,Grib2Parameter
 
 
 
-bool GridDef::getGribDefByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib& def)
+bool GridDef::getGribParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib& def)
 {
   FUNCTION_TRACE
   try
@@ -931,7 +982,7 @@ bool GridDef::getGribDefByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib& de
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto pdef =  getGribDefByFmiId(fmiParamId);
+    auto pdef =  getGribParameterMappingByFmiId(fmiParamId);
     if (pdef == nullptr)
       return false;
 
@@ -948,7 +999,7 @@ bool GridDef::getGribDefByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib& de
 
 
 
-bool GridDef::getGrib2DefByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib2& def)
+bool GridDef::getGrib2ParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib2& def)
 {
   FUNCTION_TRACE
   try
@@ -956,7 +1007,7 @@ bool GridDef::getGrib2DefByFmiId(T::FmiParamId fmiParamId,FmiParameterId_grib2& 
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto pdef =  getGrib2DefByFmiId(fmiParamId);
+    auto pdef =  getGrib2ParameterMappingByFmiId(fmiParamId);
     if (pdef == nullptr)
       return false;
 
@@ -1224,7 +1275,7 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
 
 
 
-bool GridDef::getGribParamDefById(T::GribParamId gribParamId,GribParameterDef&  paramDef)
+bool GridDef::getGribParameterDefById(T::GribParamId gribParamId,GribParameterDef&  paramDef)
 {
   FUNCTION_TRACE
   try
@@ -1232,7 +1283,7 @@ bool GridDef::getGribParamDefById(T::GribParamId gribParamId,GribParameterDef&  
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGribParamDefById(gribParamId);
+    auto def = getGribParameterDefById(gribParamId);
     if (def == nullptr)
       return false;
 
@@ -1249,7 +1300,7 @@ bool GridDef::getGribParamDefById(T::GribParamId gribParamId,GribParameterDef&  
 
 
 
-bool GridDef::getGribParamDefByName(const std::string& gribParamName,GribParameterDef&  paramDef)
+bool GridDef::getGribParameterDefByName(const std::string& gribParamName,GribParameterDef&  paramDef)
 {
   FUNCTION_TRACE
   try
@@ -1257,7 +1308,7 @@ bool GridDef::getGribParamDefByName(const std::string& gribParamName,GribParamet
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGribParamDefByName(gribParamName);
+    auto def = getGribParameterDefByName(gribParamName);
     if (def == nullptr)
       return false;
 
@@ -1274,7 +1325,7 @@ bool GridDef::getGribParamDefByName(const std::string& gribParamName,GribParamet
 
 
 
-bool GridDef::getGribParamDef(uint discipline,uint category,uint number,GribParameterDef&  paramDef)
+bool GridDef::getGribParameterDef(uint discipline,uint category,uint number,GribParameterDef&  paramDef)
 {
   FUNCTION_TRACE
   try
@@ -1282,7 +1333,7 @@ bool GridDef::getGribParamDef(uint discipline,uint category,uint number,GribPara
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto def = getGribParamDef(discipline,category,number);
+    auto def = getGribParameterDef(discipline,category,number);
     if (def == nullptr)
       return false;
 
@@ -1299,7 +1350,7 @@ bool GridDef::getGribParamDef(uint discipline,uint category,uint number,GribPara
 
 
 
-GribParamDef_cptr GridDef::getGribParamDefById(T::GribParamId gribParamId)
+GribParamDef_cptr GridDef::getGribParameterDefById(T::GribParamId gribParamId)
 {
   FUNCTION_TRACE
   try
@@ -1321,7 +1372,7 @@ GribParamDef_cptr GridDef::getGribParamDefById(T::GribParamId gribParamId)
 
 
 
-GribParamDef_cptr GridDef::getGribParamDefByName(const std::string& gribParamName)
+GribParamDef_cptr GridDef::getGribParameterDefByName(const std::string& gribParamName)
 {
   FUNCTION_TRACE
   try
@@ -1343,7 +1394,7 @@ GribParamDef_cptr GridDef::getGribParamDefByName(const std::string& gribParamNam
 
 
 
-GribParamDef_cptr GridDef::getGribParamDef(uint discipline,uint category,uint number)
+GribParamDef_cptr GridDef::getGribParameterDef(uint discipline,uint category,uint number)
 {
   FUNCTION_TRACE
   try
@@ -2424,7 +2475,8 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
           if (c > 3 && field[3][0] != '\0')
             rec.mReverseConversionFunction = field[3];
 
-          mFmi_parametersFromGrib_records.emplace_back(rec);
+          mFmi_parametersFromGrib_records.insert(std::pair<uint,FmiParameterId_grib>(rec.mFmiParameterId,rec));
+          mGribIdToFmiId.insert(std::pair<uint,uint>(rec.mGribParameterId,rec.mFmiParameterId));
         }
       }
     }
@@ -2671,10 +2723,32 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
           FmiParameterId_newbase rec;
 
           if (field[0][0] != '\0')
-            rec.mFmiParameterId = toUInt32(field[0]);
+          {
+            if (isdigit(field[0][0]))
+            {
+              rec.mFmiParameterId = toUInt32(field[0]);
+            }
+            else
+            {
+              auto def = getFmiParameterDefByName(field[0]);
+              if (def)
+                rec.mFmiParameterId = def->mFmiParameterId;
+            }
+          }
 
           if (field[1][0] != '\0')
-            rec.mNewbaseParameterId = toUInt32(field[1]);
+          {
+            if (isdigit(field[1][0]))
+            {
+              rec.mNewbaseParameterId = toUInt32(field[1]);
+            }
+            else
+            {
+              auto def = getNewbaseParameterDefByName(field[1]);
+              if (def)
+                rec.mNewbaseParameterId = def->mNewbaseParameterId;
+            }
+          }
 
           if (field[2][0] != '\0')
             rec.mConversionFunction = field[2];
@@ -2682,7 +2756,98 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
           if (c > 3 && field[3][0] != '\0')
             rec.mReverseConversionFunction = field[3];
 
-          mFmi_parametersFromNewbase_records.emplace_back(rec);
+          mFmi_parametersFromNewbase_records.insert(std::pair<uint,FmiParameterId_newbase>(rec.mFmiParameterId,rec));
+          mNewbaseIdToFmiId.insert(std::pair<uint,uint>(rec.mNewbaseParameterId,rec.mFmiParameterId));
+          mFmiIdToNewbaseId.insert(std::pair<uint,uint>(rec.mFmiParameterId,rec.mNewbaseParameterId));
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::loadFmiParameterId_netCdf(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *file = fopen(filename,"re");
+    if (file == nullptr)
+    {
+      Fmi::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 2)
+        {
+          FmiParameterId_netCdf rec;
+
+          if (field[0][0] != '\0')
+          {
+            if (isdigit(field[0][0]))
+            {
+              rec.mFmiParameterId = toUInt32(field[0]);
+            }
+            else
+            {
+              auto def = getFmiParameterDefByName(field[0]);
+              if (def)
+                rec.mFmiParameterId = def->mFmiParameterId;
+            }
+          }
+
+          if (field[1][0] != '\0')
+            rec.mNetCdfParameterName = field[1];
+
+          if (field[2][0] != '\0')
+            rec.mConversionFunction = field[2];
+
+          if (c > 3 && field[3][0] != '\0')
+            rec.mReverseConversionFunction = field[3];
+
+          //rec.print(std::cout,0,0);
+
+          mFmi_parametersFromNetCdf_records.insert(std::pair<uint,FmiParameterId_netCdf>(rec.mFmiParameterId,rec));
+          std::string key = toUpperString(rec.mNetCdfParameterName);
+          mNetCdfNameToFmiId.insert(std::pair<std::string,uint>(key,rec.mFmiParameterId));
         }
       }
     }
@@ -2771,7 +2936,9 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
           if (c > 8 &&  field[8][0] != '\0')
             rec.mDefaultPrecision = toInt16(field[8]);
 
-          mFmi_parameterDef_records.emplace_back(rec);
+          mFmi_parameterDef_records.insert(std::pair<uint,FmiParameterDef>(rec.mFmiParameterId,rec));
+          std::string key = toUpperString(rec.mParameterName);
+          mFmiNameToId.insert(std::pair<std::string,uint>(key,rec.mFmiParameterId));
         }
       }
     }
@@ -2993,7 +3160,80 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
           if (field[1][0] != '\0')
             rec.mParameterName = field[1];
 
-          mNewbase_parameterDef_records.emplace_back(rec);
+          mNewbase_parameterDef_records.insert(std::pair<uint,NewbaseParameterDef>(rec.mNewbaseParameterId,rec));
+          std::string key = toUpperString(rec.mParameterName);
+          mNewbaseNameToId.insert(std::pair<std::string,uint>(key,rec.mNewbaseParameterId));
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::loadNetCdfParameterDefinitions(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *file = fopen(filename,"re");
+    if (file == nullptr)
+    {
+      Fmi::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 1)
+        {
+          NetCdfParameterDef rec;
+
+          if (field[0][0] != '\0')
+            rec.mParameterName = field[0];
+
+          if (field[1][0] != '\0')
+            rec.mFmiLevelId = field[1];
+
+          if (field[2][0] != '\0')
+            rec.mParameterUnits = field[2];
+
+          mNetCdf_parameterDef_records.insert(std::pair<std::string,NetCdfParameterDef>(toUpperString(rec.mParameterName),rec));
         }
       }
     }
@@ -3883,6 +4123,27 @@ GRIB1::GridDef_ptr GridDef::getGrib1Definition(GRIB1::Message& message)
 
 
 
+GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryString(const char *geometryStr)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto it = mGridDefinitions1.find(geometryStr);
+    if (it != mGridDefinitions1.end())
+      return it->second;
+
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryString(std::string& geometryStr)
 {
   FUNCTION_TRACE
@@ -3890,6 +4151,27 @@ GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryString(std::string& geom
   {
     auto it = mGridDefinitions1.find(geometryStr);
     if (it != mGridDefinitions1.end())
+      return it->second;
+
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+GRIB2::GridDef_ptr GridDef::getGrib2DefinitionByGeometryString(const char *geometryStr)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto it = mGridDefinitions2.find(geometryStr);
+    if (it != mGridDefinitions2.end())
       return it->second;
 
     return nullptr;
@@ -5138,7 +5420,6 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setEarthSemiMajor(earthSemiMajor);
           def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
-
           return def2;
         }
         break;
@@ -5324,6 +5605,9 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
 
+          //std::string s = def2->getGridGeometryString();
+          //printf("GEOM [%s]\n",s.c_str());
+
           return def2;
         }
         break;
@@ -5411,38 +5695,22 @@ std::string GridDef::getPreferredUnits(const std::string& originalUnits)
 
 
 
-GribParamDef_cptr GridDef::getGribParameterDefById(T::GribParamId gribParamId)
+FmiParamId_grib_cptr GridDef::getGribParameterMappingByFmiId(T::FmiParamId fmiParamId)
 {
   FUNCTION_TRACE
   try
   {
-    for (auto it = mGrib_parameterDef_records.begin(); it != mGrib_parameterDef_records.end(); ++it)
-    {
-      if (it->mGribParameterId == gribParamId)
-        return &(*it);
-    }
-    return nullptr;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
+    auto it = mFmi_parametersFromGrib_records.find(fmiParamId);
+    if (it != mFmi_parametersFromGrib_records.end())
+      return &(it->second);
 
-
-
-
-
-FmiParameterId_grib* GridDef::getGribDefByFmiId(T::FmiParamId fmiParamId)
-{
-  FUNCTION_TRACE
-  try
-  {
+    /*
     for (auto it = mFmi_parametersFromGrib_records.begin(); it != mFmi_parametersFromGrib_records.end(); ++it)
     {
       if (it->mFmiParameterId == fmiParamId)
         return &(*it);
     }
+    */
     return nullptr;
   }
   catch (...)
@@ -5455,7 +5723,7 @@ FmiParameterId_grib* GridDef::getGribDefByFmiId(T::FmiParamId fmiParamId)
 
 
 
-FmiParameterId_grib1* GridDef::getGrib1DefByFmiId(T::FmiParamId fmiParamId)
+FmiParamId_grib1_cptr GridDef::getGrib1ParameterMappingByFmiId(T::FmiParamId fmiParamId)
 {
   FUNCTION_TRACE
   try
@@ -5476,7 +5744,7 @@ FmiParameterId_grib1* GridDef::getGrib1DefByFmiId(T::FmiParamId fmiParamId)
 
 
 
-FmiParameterId_grib2* GridDef::getGrib2DefByFmiId(T::FmiParamId fmiParamId)
+FmiParamId_grib2_cptr GridDef::getGrib2ParameterMappingByFmiId(T::FmiParamId fmiParamId)
 {
   FUNCTION_TRACE
   try
@@ -6089,7 +6357,7 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB1::Message& message)
     T::GribParamId gribId = getGribParameterId(message);
     if (gribId != 0)
     {
-      auto r =  getFmiParameterIdByGribId(gribId);
+      auto r =  getFmiParameterMappingByGribId(gribId);
       if (r != nullptr)
       {
         return r->mFmiParameterId;
@@ -6172,7 +6440,7 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB2::Message& message)
     T::GribParamId gribId = getGribParameterId(message);
     if (gribId != 0)
     {
-      auto r =  getFmiParameterIdByGribId(gribId);
+      auto r =  getFmiParameterMappingByGribId(gribId);
       if (r != nullptr)
         return r->mFmiParameterId;
     }
@@ -6432,11 +6700,16 @@ FmiParamDef_cptr GridDef::getFmiParameterDefById(T::FmiParamId fmiParamId)
   FUNCTION_TRACE
   try
   {
+    auto it = mFmi_parameterDef_records.find(fmiParamId);
+    if (it != mFmi_parameterDef_records.end())
+      return &(it->second);
+    /*
     for (auto it = mFmi_parameterDef_records.begin(); it != mFmi_parameterDef_records.end(); ++it)
     {
       if (it->mFmiParameterId == fmiParamId)
         return &(*it);
     }
+    */
     return nullptr;
   }
   catch (...)
@@ -6450,16 +6723,22 @@ FmiParamDef_cptr GridDef::getFmiParameterDefById(T::FmiParamId fmiParamId)
 
 
 
-FmiParamId_newbase_cptr GridDef::getFmiParameterIdByNewbaseId(T::NewbaseParamId newbaseParamId)
+FmiParamId_newbase_cptr GridDef::getFmiParameterMappingByNewbaseId(T::NewbaseParamId newbaseParamId)
 {
   FUNCTION_TRACE
   try
   {
+    auto it = mNewbaseIdToFmiId.find(newbaseParamId);
+    if (it != mNewbaseIdToFmiId.end())
+      return getNewbaseParameterMappingByFmiId(it->second);
+
+    /*
     for (auto it = mFmi_parametersFromNewbase_records.begin(); it != mFmi_parametersFromNewbase_records.end(); ++it)
     {
       if (it->mNewbaseParameterId == newbaseParamId)
         return &(*it);
     }
+    */
     return nullptr;
   }
   catch (...)
@@ -6472,16 +6751,51 @@ FmiParamId_newbase_cptr GridDef::getFmiParameterIdByNewbaseId(T::NewbaseParamId 
 
 
 
-FmiParamId_grib_cptr GridDef::getFmiParameterIdByGribId(T::GribParamId gribParamId)
+FmiParamId_netCdf_cptr GridDef::getFmiParameterMappingByNetCdfName(std::string& netCdfParamName)
 {
   FUNCTION_TRACE
   try
   {
+    std::string key = toUpperString(netCdfParamName);
+    auto it = mNetCdfNameToFmiId.find(key);
+    if (it != mNetCdfNameToFmiId.end())
+      return getNetCdfParameterMappingByFmiId(it->second);
+
+    /*
+    for (auto it = mFmi_parametersFromNetCdf_records.begin(); it != mFmi_parametersFromNetCdf_records.end(); ++it)
+    {
+      if (it->mNetCdfParameterName == netCdfParamName)
+        return &(*it);
+    }
+    */
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+FmiParamId_grib_cptr GridDef::getFmiParameterMappingByGribId(T::GribParamId gribParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto it = mGribIdToFmiId.find(gribParamId);
+    if (it != mGribIdToFmiId.end())
+      return getGribParameterMappingByFmiId(it->second);
+
+    /*
     for (auto it = mFmi_parametersFromGrib_records.begin(); it != mFmi_parametersFromGrib_records.end(); ++it)
     {
       if (it->mGribParameterId == gribParamId)
         return &(*it);
     }
+    */
     return nullptr;
   }
   catch (...)
@@ -6494,16 +6808,50 @@ FmiParamId_grib_cptr GridDef::getFmiParameterIdByGribId(T::GribParamId gribParam
 
 
 
-FmiParamId_newbase_cptr GridDef::getNewbaseParameterIdByFmiId(T::FmiParamId fmiParamId)
+FmiParamId_newbase_cptr GridDef::getNewbaseParameterMappingByFmiId(T::FmiParamId fmiParamId)
 {
   FUNCTION_TRACE
   try
   {
+    auto it = mFmi_parametersFromNewbase_records.find(fmiParamId);
+    if (it != mFmi_parametersFromNewbase_records.end())
+      return &(it->second);
+
+    /*
     for (auto it = mFmi_parametersFromNewbase_records.begin(); it != mFmi_parametersFromNewbase_records.end(); ++it)
     {
       if (it->mFmiParameterId == fmiParamId)
         return &(*it);
     }
+    */
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+FmiParamId_netCdf_cptr GridDef::getNetCdfParameterMappingByFmiId(T::FmiParamId fmiParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto it = mFmi_parametersFromNetCdf_records.find(fmiParamId);
+    if (it != mFmi_parametersFromNetCdf_records.end())
+      return &(it->second);
+
+    /*
+    for (auto it = mFmi_parametersFromNetCdf_records.begin(); it != mFmi_parametersFromNetCdf_records.end(); ++it)
+    {
+      if (it->mFmiParameterId == fmiParamId)
+        return &(*it);
+    }
+    */
     return nullptr;
   }
   catch (...)
@@ -6521,11 +6869,37 @@ bool GridDef::getNewbaseParameterDefByFmiId(T::FmiParamId fmiParamId,NewbasePara
   FUNCTION_TRACE
   try
   {
-    auto p = getNewbaseParameterIdByFmiId(fmiParamId);
+    auto p = getNewbaseParameterMappingByFmiId(fmiParamId);
     if (p == nullptr)
       return false;
 
     auto n = getNewbaseParameterDefById(p->mNewbaseParameterId);
+    if (n == nullptr)
+      return false;
+
+    paramDef = *n;
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+bool GridDef::getNetCdfParameterDefByFmiId(T::FmiParamId fmiParamId,NetCdfParameterDef& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto p = getNetCdfParameterMappingByFmiId(fmiParamId);
+    if (p == nullptr)
+      return false;
+
+    auto n = getNetCdfParameterDefByName(p->mNetCdfParameterName);
     if (n == nullptr)
       return false;
 
@@ -6564,11 +6938,55 @@ bool GridDef::getNewbaseParameterDefByName(const std::string& newbaseParamName,N
 
 
 
+bool GridDef::getNetCdfParameterDefByName(const std::string& netCdfParamName,NetCdfParameterDef& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto p = GridDef::getNetCdfParameterDefByName(netCdfParamName);
+    if (p == nullptr)
+      return false;
+
+    paramDef = *p;
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 bool GridDef::getNewbaseParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_newbase& paramMapping)
 {
   try
   {
-    FmiParamId_newbase_cptr p = getNewbaseParameterIdByFmiId(fmiParamId);
+    FmiParamId_newbase_cptr p = getNewbaseParameterMappingByFmiId(fmiParamId);
+    if (p != nullptr)
+    {
+      paramMapping = *p;
+      return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+bool GridDef::getNetCdfParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParameterId_netCdf& paramMapping)
+{
+  try
+  {
+    FmiParamId_netCdf_cptr p = getNetCdfParameterMappingByFmiId(fmiParamId);
     if (p != nullptr)
     {
       paramMapping = *p;
@@ -6614,7 +7032,28 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbas
   FUNCTION_TRACE
   try
   {
-    auto p = getFmiParameterIdByNewbaseId(newbaseParamId);
+    auto f = mNewbaseIdToFmiId.find(newbaseParamId);
+    if (f != mNewbaseIdToFmiId.end())
+      return getFmiParameterDefById(f->second);
+
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+FmiParamDef_cptr GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfParamName)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto p = getFmiParameterMappingByNetCdfName(netCdfParamName);
     if (p)
       return getFmiParameterDefById(p->mFmiParameterId);
 
@@ -6635,7 +7074,7 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByGribId(T::GribParamId gribParamId)
   FUNCTION_TRACE
   try
   {
-    auto p = getFmiParameterIdByGribId(gribParamId);
+    auto p = getFmiParameterMappingByGribId(gribParamId);
     if (p)
       return getFmiParameterDefById(p->mFmiParameterId);
 
@@ -6656,11 +7095,18 @@ FmiParamDef_cptr GridDef::getFmiParameterDefByName(const std::string& fmiParamNa
   FUNCTION_TRACE
   try
   {
+    std::string key = toUpperString(fmiParamName);
+    auto it = mFmiNameToId.find(key);
+    if (it != mFmiNameToId.end())
+      return getFmiParameterDefById(it->second);
+
+    /*
     for (auto it = mFmi_parameterDef_records.begin(); it != mFmi_parameterDef_records.end(); ++it)
     {
       if (strcasecmp(it->mParameterName.c_str(),fmiParamName.c_str()) == 0)
         return &(*it);
     }
+    */
     return nullptr;
   }
   catch (...)
@@ -6707,6 +7153,31 @@ bool GridDef::getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId,Fmi
     AutoReadLock lock(&mModificationLock);
 
     auto def = getFmiParameterDefByNewbaseId(newbaseParamId);
+    if (def == nullptr)
+      return false;
+
+    paramDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+bool GridDef::getFmiParameterDefByNetCdfName(std::string& netCdfParamName,FmiParameterDef& paramDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    auto def = getFmiParameterDefByNetCdfName(netCdfParamName);
     if (def == nullptr)
       return false;
 
@@ -7064,11 +7535,16 @@ NewbaseParamDef_cptr GridDef::getNewbaseParameterDefById(T::NewbaseParamId newba
   FUNCTION_TRACE
   try
   {
+    auto it = mNewbase_parameterDef_records.find(newbaseParamId);
+    if (it != mNewbase_parameterDef_records.end())
+      return &(it->second);
+    /*
     for (auto it = mNewbase_parameterDef_records.begin(); it != mNewbase_parameterDef_records.end(); ++it)
     {
       if (it->mNewbaseParameterId == newbaseParamId)
         return &(*it);
     }
+    */
     return nullptr;
   }
   catch (...)
@@ -7086,11 +7562,47 @@ NewbaseParamDef_cptr GridDef::getNewbaseParameterDefByName(const std::string& ne
   FUNCTION_TRACE
   try
   {
+    std::string key = toUpperString(newbaseParamName);
+    auto f = mNewbaseNameToId.find(key);
+    if (f != mNewbaseNameToId.end())
+      return getNewbaseParameterDefById(f->second);
+
+    /*
     for (auto it = mNewbase_parameterDef_records.begin(); it != mNewbase_parameterDef_records.end(); ++it)
     {
       if (strcasecmp(it->mParameterName.c_str(),newbaseParamName.c_str()) == 0)
         return &(*it);
     }
+    */
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+NetCdfParamDef_cptr GridDef::getNetCdfParameterDefByName(const std::string& netCdfParamName)
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::string key = toUpperString(netCdfParamName);
+    auto it = mNetCdf_parameterDef_records.find(key);
+    if (it != mNetCdf_parameterDef_records.end())
+      return &(it->second);
+
+    /*
+    for (auto it = mNetCdf_parameterDef_records.begin(); it != mNetCdf_parameterDef_records.end(); ++it)
+    {
+      if (strcasecmp(it->mParameterName.c_str(),netCdfParamName.c_str()) == 0)
+        return &(*it);
+    }
+    */
     return nullptr;
   }
   catch (...)
@@ -7111,11 +7623,11 @@ T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB1::Message& message)
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto p = getNewbaseParameterIdByFmiId(message.getFmiParameterId());
-    if (p == nullptr)
-      return 0;
+    auto f = mFmiIdToNewbaseId.find(message.getFmiParameterId());
+    if (f != mFmiIdToNewbaseId.end())
+      return f->second;
 
-    return p->mNewbaseParameterId;
+    return 0;
   }
   catch (...)
   {
@@ -7135,11 +7647,11 @@ T::NewbaseParamId GridDef::getNewbaseParameterId(GRIB2::Message& message)
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto p = getNewbaseParameterIdByFmiId(message.getFmiParameterId());
-    if (p == nullptr)
-      return 0;
+    auto f = mFmiIdToNewbaseId.find(message.getFmiParameterId());
+    if (f != mFmiIdToNewbaseId.end())
+      return f->second;
 
-    return p->mNewbaseParameterId;
+    return 0;
   }
   catch (...)
   {
@@ -7158,11 +7670,11 @@ std::string GridDef::getNewbaseParameterName(GRIB1::Message& message)
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto p = getNewbaseParameterIdByFmiId(message.getFmiParameterId());
-    if (p == nullptr)
+    T::NewbaseParamId id = getNewbaseParameterId(message);
+    if (id == 0)
       return std::string("");
 
-    auto n = getNewbaseParameterDefById(p->mNewbaseParameterId);
+    auto n = getNewbaseParameterDefById(id);
     if (n == nullptr)
       return std::string("");
 
@@ -7186,11 +7698,11 @@ std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto p = getNewbaseParameterIdByFmiId(message.getFmiParameterId());
-    if (p == nullptr)
+    T::NewbaseParamId id = getNewbaseParameterId(message);
+    if (id == 0)
       return std::string("");
 
-    auto n = getNewbaseParameterDefById(p->mNewbaseParameterId);
+    auto n = getNewbaseParameterDefById(id);
     if (n == nullptr)
       return std::string("");
 
@@ -7201,6 +7713,55 @@ std::string GridDef::getNewbaseParameterName(GRIB2::Message& message)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
+
+
+
+
+std::string GridDef::getNetCdfParameterName(GRIB1::Message& message)
+{
+  FUNCTION_TRACE
+  try  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    auto p = getNetCdfParameterMappingByFmiId(message.getFmiParameterId());
+    if (p == nullptr)
+      return std::string("");
+
+    return p->mNetCdfParameterName;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+std::string GridDef::getNetCdfParameterName(GRIB2::Message& message)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    auto p = getNetCdfParameterMappingByFmiId(message.getFmiParameterId());
+    if (p == nullptr)
+      return std::string("");
+
+    return p->mNetCdfParameterName;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
 
 
 

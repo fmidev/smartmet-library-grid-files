@@ -26,6 +26,7 @@ class MemoryReader
     void                setParentPtr(unsigned char *_parentPtr);
     unsigned char*      getParentPtr();
     void                setLittleEndian(bool _littleEndian);
+    void                setNetworkByteOrder(bool _networkByteOrder);
 
     unsigned char       getByte(ulonglong _pos);
     unsigned char       getByte(unsigned char *_posPtr);
@@ -44,6 +45,7 @@ class MemoryReader
     MemoryReader&       operator>>(std::int16_t& _value);
     MemoryReader&       operator>>(std::int32_t& _value);
     MemoryReader&       operator>>(std::float_t& _value);
+    MemoryReader&       operator>>(std::double_t& _value);
 
     MemoryReader&       operator>>(T::UInt8_opt& _value);
     MemoryReader&       operator>>(T::UInt16_opt& _value);
@@ -88,6 +90,7 @@ class MemoryReader
     unsigned char*      parentPtr;
     bool                dataRelease;
     bool                littleEndian;
+    bool                networkByteOrder;
 };
 
 

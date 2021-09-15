@@ -26,6 +26,12 @@ std::string get_fileTypeString(FileType fileType)
       case FileTypeValue::Grib:
         return "GRIB";
 
+      case FileTypeValue::NetCdf3:
+        return "NetCDF-3";
+
+      case FileTypeValue::NetCdf4:
+        return "NetCDF-4";
+
       case FileTypeValue::Virtual:
         return "Virtual";
     }
