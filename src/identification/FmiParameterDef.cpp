@@ -15,7 +15,6 @@ FmiParameterDef::FmiParameterDef()
   try
   {
     mFmiParameterId = 0;
-    mVersion = 0;
     mAreaInterpolationMethod = T::AreaInterpolationMethod::Undefined;
     mTimeInterpolationMethod = T::TimeInterpolationMethod::Undefined;
     mLevelInterpolationMethod = T::LevelInterpolationMethod::Undefined;
@@ -52,7 +51,6 @@ void FmiParameterDef::print(std::ostream& stream,uint level,uint optionFlags) co
   {
     stream << space(level) << "FmiParameterDef\n";
     stream << space(level) << "- mFmiParameterId           = " << mFmiParameterId << "\n";
-    stream << space(level) << "- mVersion                  = " << mVersion << "\n";
     stream << space(level) << "- mParameterName            = " << mParameterName << "\n";
     stream << space(level) << "- mParameterUnits           = " << mParameterUnits << "\n";
     stream << space(level) << "- mParameterDescription     = " << mParameterDescription << "\n";

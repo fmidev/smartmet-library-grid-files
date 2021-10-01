@@ -116,6 +116,110 @@ void PostprocSettings::getAttributeList(const std::string &prefix, T::AttributeL
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool PostprocSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "ParameterCategory") == 0) {
+      attributeValue = toString(mParameterCategory);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ParameterNumber") == 0) {
+      attributeValue = toString(mParameterNumber);
+      return true;
+    }
+    if (strcasecmp(attributeName, "InputProcessIdentifier") == 0) {
+      attributeValue = toString(mInputProcessIdentifier);
+      return true;
+    }
+    if (strcasecmp(attributeName, "InputOriginatingCentre") == 0) {
+      attributeValue = toString(mInputOriginatingCentre);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TypeOfPostProcessing") == 0) {
+      attributeValue = toString(mTypeOfPostProcessing);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TypeOfGeneratingProcess") == 0) {
+      attributeValue = toString(mTypeOfGeneratingProcess);
+      return true;
+    }
+    if (strcasecmp(attributeName, "BackgroundProcess") == 0) {
+      attributeValue = toString(mBackgroundProcess);
+      return true;
+    }
+    if (strcasecmp(attributeName, "GeneratingProcessIdentifier") == 0) {
+      attributeValue = toString(mGeneratingProcessIdentifier);
+      return true;
+    }
+    if (strcasecmp(attributeName, "HoursAfterDataCutoff") == 0) {
+      attributeValue = toString(mHoursAfterDataCutoff);
+      return true;
+    }
+    if (strcasecmp(attributeName, "MinutesAfterDataCutoff") == 0) {
+      attributeValue = toString(mMinutesAfterDataCutoff);
+      return true;
+    }
+    if (strcasecmp(attributeName, "IndicatorOfUnitOfTimeRange") == 0) {
+      attributeValue = toString(mIndicatorOfUnitOfTimeRange);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ForecastTime") == 0) {
+      attributeValue = toString(mForecastTime);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool PostprocSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "ParameterCategory") == 0 && strcasecmp(attributeValue, toString(mParameterCategory).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ParameterNumber") == 0 && strcasecmp(attributeValue, toString(mParameterNumber).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "InputProcessIdentifier") == 0 && strcasecmp(attributeValue, toString(mInputProcessIdentifier).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "InputOriginatingCentre") == 0 && strcasecmp(attributeValue, toString(mInputOriginatingCentre).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TypeOfPostProcessing") == 0 && strcasecmp(attributeValue, toString(mTypeOfPostProcessing).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TypeOfGeneratingProcess") == 0 && strcasecmp(attributeValue, toString(mTypeOfGeneratingProcess).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "BackgroundProcess") == 0 && strcasecmp(attributeValue, toString(mBackgroundProcess).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "GeneratingProcessIdentifier") == 0 && strcasecmp(attributeValue, toString(mGeneratingProcessIdentifier).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "HoursAfterDataCutoff") == 0 && strcasecmp(attributeValue, toString(mHoursAfterDataCutoff).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "MinutesAfterDataCutoff") == 0 && strcasecmp(attributeValue, toString(mMinutesAfterDataCutoff).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "IndicatorOfUnitOfTimeRange") == 0 && strcasecmp(attributeValue, toString(mIndicatorOfUnitOfTimeRange).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ForecastTime") == 0 && strcasecmp(attributeValue, toString(mForecastTime).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

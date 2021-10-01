@@ -44,7 +44,6 @@ class GridDefinition
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
-    T::GridLayout               getGridLayout();
     virtual bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual void                getGridCellAverageSize(double& width,double& height) const;
     virtual bool                getGridMetricCellSize(double& width,double& height) const;
@@ -54,9 +53,6 @@ class GridDefinition
     virtual bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double lat,double lon,double& x,double& y) const;
-    virtual std::size_t         getGridOriginalColumnCount(std::size_t row) const;
-    virtual std::size_t         getGridOriginalColumnCount() const;
-    virtual std::size_t         getGridOriginalRowCount() const;
     virtual std::uint32_t       getGridOriginalValueCount() const;
     virtual int                 getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
     virtual bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
@@ -71,8 +67,6 @@ class GridDefinition
     virtual bool                reverseXDirection() const;
     virtual bool                reverseYDirection() const;
     virtual void                initSpatialReference();
-    virtual void                initRowPositions(std::vector<std::uint32_t>& rowPositions);
-
     virtual void                setGridGeometryId(T::GeometryId geometryId);
 
     virtual bool                getProperty(uint propertyId,long long& value);
@@ -132,17 +126,11 @@ class GridDefinition
      /*! \brief The hash of the grid. */
      T::Hash                    mHash;
 
-     /*! \brief The start indexes of the grid rows when the grid is irregular. */
-     std::vector<std::uint32_t> mRowPositions;
-
      /*! \brief The geometry identifier. */
      T::GeometryId              mGeometryId;
 
      /*! \brief The grid projection. */
      T::GridProjection          mGridProjection;
-
-     /*! \brief The grid layout. */
-     T::GridLayout              mGridLayout;
 
      /*! \brief The indication flag for the global grid. */
      bool                       mGlobal;

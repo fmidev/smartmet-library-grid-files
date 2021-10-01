@@ -80,6 +80,50 @@ void PartitionedProduct::getAttributeList(const std::string &prefix, T::Attribut
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool PartitionedProduct::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mParameterPartition.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mPointInTime.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mHorizontal.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool PartitionedProduct::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mParameterPartition.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mPointInTime.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mHorizontal.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -103,9 +147,6 @@ void PartitionedProduct::print(std::ostream &stream, uint level, uint optionFlag
 T::Hash PartitionedProduct::countHash() {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mParameterPartition.countHash());
-    boost::hash_combine(seed, mPointInTime.countHash());
-    boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -96,6 +96,80 @@ void EarthShapeSettings::getAttributeList(const std::string &prefix, T::Attribut
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool EarthShapeSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "ShapeOfTheEarth") == 0) {
+      attributeValue = toString(mShapeOfTheEarth);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfRadiusOfSphericalEarth") == 0) {
+      attributeValue = toString(mScaleFactorOfRadiusOfSphericalEarth);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfRadiusOfSphericalEarth") == 0) {
+      attributeValue = toString(mScaledValueOfRadiusOfSphericalEarth);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfEarthMajorAxis") == 0) {
+      attributeValue = toString(mScaleFactorOfEarthMajorAxis);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfEarthMajorAxis") == 0) {
+      attributeValue = toString(mScaledValueOfEarthMajorAxis);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfEarthMinorAxis") == 0) {
+      attributeValue = toString(mScaleFactorOfEarthMinorAxis);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfEarthMinorAxis") == 0) {
+      attributeValue = toString(mScaledValueOfEarthMinorAxis);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool EarthShapeSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "ShapeOfTheEarth") == 0 && strcasecmp(attributeValue, toString(mShapeOfTheEarth).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfRadiusOfSphericalEarth") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfRadiusOfSphericalEarth).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfRadiusOfSphericalEarth") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfRadiusOfSphericalEarth).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfEarthMajorAxis") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfEarthMajorAxis).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfEarthMajorAxis") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfEarthMajorAxis).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfEarthMinorAxis") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfEarthMinorAxis).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfEarthMinorAxis") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfEarthMinorAxis).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

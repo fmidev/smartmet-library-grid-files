@@ -402,7 +402,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
     uint nj = mNj;
 
     if (ni == 0)
-      ni = getGridOriginalColumnCount();
+      ni = getGridColumnCount();
 
     if (grid_i > C_DOUBLE(ni))
       return false;
@@ -475,7 +475,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     uint nj = mNj;
 
     if (ni == 0)
-      ni = getGridOriginalColumnCount();
+      ni = getGridColumnCount();
 
     if (grid_i > C_DOUBLE(ni))
       return false;
@@ -546,7 +546,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint g
     uint nj = mNj;
 
     if (ni == 0)
-      ni = getGridOriginalColumnCount();
+      ni = getGridColumnCount();
 
     if (grid_i > ni)
       return false;
@@ -614,7 +614,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByGridPosition(double grid_i,d
     uint nj = mNj;
 
     if (ni == 0)
-      ni = getGridOriginalColumnCount();
+      ni = getGridColumnCount();
 
     if (grid_i > C_DOUBLE(ni))
       return false;

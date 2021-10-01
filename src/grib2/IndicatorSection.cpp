@@ -88,9 +88,6 @@ void IndicatorSection::getAttributeList(const std::string& prefix,T::AttributeLi
     sprintf(name,"%sindicator.discipline",prefix.c_str());
     attributeList.addAttribute(name,toString(getDiscipline()));
 
-    sprintf(name,"%sindicator.disciplineString",prefix.c_str());
-    attributeList.addAttribute(name,getDisciplineString());
-
     sprintf(name,"%sindicator.editionNumber",prefix.c_str());
     attributeList.addAttribute(name,toString(getEditionNumber()));
 
@@ -103,6 +100,45 @@ void IndicatorSection::getAttributeList(const std::string& prefix,T::AttributeLi
   }
 }
 
+
+
+
+
+bool IndicatorSection::getAttributeValue(const char *attributeName, std::string& attributeValue) const
+{
+  try
+  {
+    if (strcasecmp(attributeName,"discipline") == 0)
+    {
+      attributeValue = toString(getDiscipline());
+      return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+bool IndicatorSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const
+{
+  try
+  {
+    if (strcasecmp(attributeName,"discipline") == 0  &&  strcasecmp(attributeValue,toString(getDiscipline()).c_str()) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -403,23 +439,6 @@ std::uint64_t IndicatorSection::getTotalLength() const
 
 
 
-
-std::string IndicatorSection::getDisciplineString() const
-{
-  try
-  {
-    return Identification::gridDef.getGribTableValue(2,1,"0.0",getDiscipline());
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
 void IndicatorSection::setDiscipline(std::uint8_t discipline)
 {
   try
@@ -483,7 +502,6 @@ void IndicatorSection::print(std::ostream& stream,uint level,uint optionFlags) c
     stream << space(level) << "- filePosition     = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- reserved         = " << toString(getReserved()) << "\n";
     stream << space(level) << "- discipline       = " << toString(getDiscipline()) << "\n";
-    stream << space(level) << "- disciplineString = " << getDisciplineString() << "\n";
     stream << space(level) << "- editionNumber    = " << toString(getEditionNumber()) << "\n";
     stream << space(level) << "- totalLength      = " << toString(getTotalLength()) << "\n";
   }

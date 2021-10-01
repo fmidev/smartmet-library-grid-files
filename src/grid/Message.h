@@ -70,6 +70,8 @@ class Message
     virtual                     ~Message();
 
     virtual void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
+    virtual bool                getAttributeValue(const char *attributeName, std::string& attributeValue) const;
+    virtual bool                hasAttributeValue(const char *attributeName, const char *attributeValue) const;
     virtual uint                getFileId() const;
     virtual T::FileType         getMessageType() const;
     virtual uint                getProducerId() const;
@@ -82,7 +84,6 @@ class Message
     virtual short               getForecastType() const;
     virtual short               getForecastNumber() const;
 
-    virtual const char*         getFmiProducerName() const;
     virtual T::FmiParamId       getFmiParameterId() const;
     virtual T::ParamLevelId     getFmiParameterLevelId() const;
     virtual const char*         getFmiParameterName() const;
@@ -100,9 +101,6 @@ class Message
 
     virtual T::GribParamId      getGribParameterId() const;
     virtual const char*         getGribParameterName() const;
-    virtual const char*         getGribParameterUnits() const;
-    virtual T::ParamLevelId     getGrib1ParameterLevelId() const;
-    virtual T::ParamLevelId     getGrib2ParameterLevelId() const;
 
     virtual void                getGridCellAverageSize(double& width,double& height) const;
     virtual T::Dimensions       getGridDimensions() const;
@@ -120,7 +118,7 @@ class Message
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
-    virtual T::GridLayout       getGridLayout() const;
+    //virtual T::GridLayout       getGridLayout() const;
     virtual bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual bool                getGridMetricCellSize(double& width,double& height) const;
     virtual bool                getGridMetricSize(double& width,double& height) const;
@@ -128,9 +126,6 @@ class Message
     virtual bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
-    virtual std::size_t         getGridOriginalColumnCount(std::size_t row) const;
-    virtual std::size_t         getGridOriginalColumnCount() const;
-    virtual std::size_t         getGridOriginalRowCount() const;
     virtual std::size_t         getGridOriginalValueCount() const;
     virtual int                 getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
     virtual float               getGridPointAngleByLatLonCoordinates(double lat,double lon) const;
@@ -142,7 +137,6 @@ class Message
     virtual bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     virtual T::GridProjection   getGridProjection() const;
     virtual void                getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const;
-    virtual std::string         getGridProjectionString() const;
     virtual std::size_t         getGridColumnCount() const;
     virtual std::size_t         getGridRowCount() const;
     virtual uint                getGridWidth() const;
@@ -166,7 +160,6 @@ class Message
     virtual void                getGridOriginalValueVector(T::ParamValue_vec& values) const;
     virtual T::ParamLevel       getGridParameterLevel() const;
     virtual T::ParamLevelId     getGridParameterLevelId() const;
-    virtual std::string         getGridParameterLevelIdString() const;
     virtual void                getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
 
     virtual void                getGridValueVectorByPoint(T::CoordinateType coordinateType,double x,double y,uint vectorType,double_vec& valueVector) const;
@@ -217,11 +210,7 @@ class Message
 
     // Grib 1 specific settings
 
-    virtual void                setGrib1ParameterLevelId(T::ParamLevelId grib1ParameterLevelId);
-
     // Grib 2 specific settings
-
-    virtual void                setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId);
 
     virtual bool                getProperty(uint propertyId,long long& value);
     virtual bool                getProperty(const char *propertyName,long long& value);
@@ -284,7 +273,6 @@ class Message
     /*! \brief  The geometry identifier. */
     T::GeometryId               mGeometryId;
 
-
     /*! \brief  The fmi parameter name. */
     uint                        mFmiParameterName;
 
@@ -303,19 +291,8 @@ class Message
     /*! \brief  The grib parameter units. */
     uint                        mGribParameterUnits;
 
-    /*! \brief  The fmi producer name. */
-    uint                        mFmiProducerName;
-
-
-
     /*! \brief  The file type. */
     uchar                       mFileType;
-
-    /*! \brief  The grib1 parameter level identifier. */
-    T::ParamLevelId             mGrib1ParameterLevelId;
-
-    /*! \brief  The grib2 parameter level identifier. */
-    T::ParamLevelId             mGrib2ParameterLevelId;
 
     /*! \brief  The fmi parameter level identifier. */
     T::ParamLevelId             mFmiParameterLevelId;

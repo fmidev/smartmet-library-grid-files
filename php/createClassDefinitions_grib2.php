@@ -330,6 +330,8 @@ function process_template($file, $name, $class, $outdir)
   $body .= "virtual void read(MemoryReader& memoryReader);\n";
   $body .= "virtual void write(DataWriter& dataWriter);\n";
   $body .= "virtual void getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;\n";
+  $body .= "virtual bool getAttributeValue(const char *attributeName,std::string& attributeValue) const;\n";
+  $body .= "virtual bool hasAttributeValue(const char *attributeName,const char *attributeValue) const;\n";
   $body .= "virtual void print(std::ostream& stream,uint level,uint optionFlags) const;\n";
   $body .= "virtual T::Hash countHash();\n\n";
 
@@ -660,8 +662,14 @@ function process_template($file, $name, $class, $outdir)
     } 
     else
     {
-      $cpp .= "sprintf(name,\"%s${class}.$member\",prefix.c_str());\n";
-      $cpp .= "attributeList.addAttribute(name,toString(m${member}));\n";
+      if (substr($type,0,3) == "PAD")
+      {
+      }     
+      else
+      {
+        $cpp .= "sprintf(name,\"%s${class}.$member\",prefix.c_str());\n";
+        $cpp .= "attributeList.addAttribute(name,toString(m${member}));\n";
+      }
     }
   }
   $cpp .= "} catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}}\n\n";
@@ -669,6 +677,67 @@ function process_template($file, $name, $class, $outdir)
 
   
   
+  // ##### Adding the getAttributeValue method.
+
+  $cpp .= "/*! \brief The method is used for getting attribute values by their names.\n\n";
+
+  $cpp .= "    \param attributeName  The name of the attribute.\n";
+  $cpp .= "    \param attributeValue The value of the attribute (string).\n";
+  $cpp .= "*/\n\n";
+  
+  $cpp .= "bool ${class}::getAttributeValue(const char *attributeName,std::string& attributeValue) const { ";
+  $cpp .= "try {"; 
+  $cpp .= "if (attributeName == nullptr) return false;";
+
+  foreach ( $members as $member => $type )
+  {
+    $method = lcfirst ( $member );
+
+    if ($type == "class")
+    {
+      $cpp .= "if (m${member}.getAttributeValue(attributeName,attributeValue)) return true;";
+    } 
+    else
+    {
+      $cpp .= "if (strcasecmp(attributeName,\"$member\") == 0) {attributeValue = toString(m${member});return true;}\n";
+    }
+  }
+  $cpp .= "return false;} catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}}\n\n";
+  
+
+  
+  // ##### Adding the hasAttributeValue method.
+  
+  $cpp .= "/*! \brief The method is used for checking if the attribute value matches to the given value.\n\n";
+
+  $cpp .= "    \param attributeName  The name of the attribute.\n";
+  $cpp .= "    \param attributeValue The value of the attribute (string).\n";
+  $cpp .= "*/\n\n";
+  
+  $cpp .= "bool ${class}::hasAttributeValue(const char *attributeName,const char *attributeValue) const { ";
+  $cpp .= "try {";
+  $cpp .= "if (attributeName == nullptr ||  attributeValue == nullptr) return false;";
+
+  foreach ( $members as $member => $type )
+  {
+    $method = lcfirst ( $member );
+    
+    if ($type == "class")
+    {
+      $cpp .= "if (m${member}.hasAttributeValue(attributeName,attributeValue)) return true;";
+    }
+    else 
+    if (substr($type,0,3) == "PAD")
+    {
+    }     
+    else
+    {
+      $cpp .= "if (strcasecmp(attributeName,\"$member\") == 0  &&  strcasecmp(attributeValue,toString(m${member}).c_str()) == 0) return true;\n";
+    }
+  }
+  $cpp .= "return false;} catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}}\n\n";
+
+
   // ##### Adding the print method.
 
   $cpp .= "/*! \brief The method prints the content of the current object into the given stream.\n\n";
@@ -684,17 +753,11 @@ function process_template($file, $name, $class, $outdir)
 
   foreach ( $members as $member => $type )
   {
-    //$codetable = @$codetables [$member];
-    //$flagtable = @$flagtables [$member];
-
     $method = lcfirst ( $member );
 
     if ($type == "class")
     {
       $cpp .= "m${member}.print(stream,level+1,optionFlags);";
-      $prefix = "";
-      if (isset($nohash["m${member}"])) { $prefix = "//";}
-      $hash .= "${prefix} boost::hash_combine(seed,m${member}.countHash());\n";
     } 
     else
     {

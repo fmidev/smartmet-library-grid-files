@@ -112,6 +112,104 @@ void AuxiliarySatelliteProduct::getAttributeList(const std::string &prefix, T::A
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool AuxiliarySatelliteProduct::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "ParameterCategory") == 0) {
+      attributeValue = toString(mParameterCategory);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ParameterNumber") == 0) {
+      attributeValue = toString(mParameterNumber);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TypeOfGeneratingProcess") == 0) {
+      attributeValue = toString(mTypeOfGeneratingProcess);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ObservationGeneratingProcessIdentifier") == 0) {
+      attributeValue = toString(mObservationGeneratingProcessIdentifier);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NB") == 0) {
+      attributeValue = toString(mNB);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TypeOfAuxiliaryInformation") == 0) {
+      attributeValue = toString(mTypeOfAuxiliaryInformation);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SatelliteSeries") == 0) {
+      attributeValue = toString(mSatelliteSeries);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SatelliteNumber") == 0) {
+      attributeValue = toString(mSatelliteNumber);
+      return true;
+    }
+    if (strcasecmp(attributeName, "InstrumentType") == 0) {
+      attributeValue = toString(mInstrumentType);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfCentralWaveNumber") == 0) {
+      attributeValue = toString(mScaleFactorOfCentralWaveNumber);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfCentralWaveNumber") == 0) {
+      attributeValue = toString(mScaledValueOfCentralWaveNumber);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool AuxiliarySatelliteProduct::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "ParameterCategory") == 0 && strcasecmp(attributeValue, toString(mParameterCategory).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ParameterNumber") == 0 && strcasecmp(attributeValue, toString(mParameterNumber).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TypeOfGeneratingProcess") == 0 && strcasecmp(attributeValue, toString(mTypeOfGeneratingProcess).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ObservationGeneratingProcessIdentifier") == 0 && strcasecmp(attributeValue, toString(mObservationGeneratingProcessIdentifier).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NB") == 0 && strcasecmp(attributeValue, toString(mNB).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TypeOfAuxiliaryInformation") == 0 && strcasecmp(attributeValue, toString(mTypeOfAuxiliaryInformation).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SatelliteSeries") == 0 && strcasecmp(attributeValue, toString(mSatelliteSeries).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SatelliteNumber") == 0 && strcasecmp(attributeValue, toString(mSatelliteNumber).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "InstrumentType") == 0 && strcasecmp(attributeValue, toString(mInstrumentType).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfCentralWaveNumber") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfCentralWaveNumber).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfCentralWaveNumber") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfCentralWaveNumber).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

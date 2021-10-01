@@ -92,6 +92,68 @@ void TimeIntervalAggregateForecast::getAttributeList(const std::string &prefix, 
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool TimeIntervalAggregateForecast::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mParameter.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mPointInTime.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mHorizontal.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "StatisticalProcess") == 0) {
+      attributeValue = toString(mStatisticalProcess);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SpatialProcessing") == 0) {
+      attributeValue = toString(mSpatialProcessing);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfPointsUsed") == 0) {
+      attributeValue = toString(mNumberOfPointsUsed);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool TimeIntervalAggregateForecast::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mParameter.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mPointInTime.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mHorizontal.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "StatisticalProcess") == 0 && strcasecmp(attributeValue, toString(mStatisticalProcess).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SpatialProcessing") == 0 && strcasecmp(attributeValue, toString(mSpatialProcessing).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfPointsUsed") == 0 && strcasecmp(attributeValue, toString(mNumberOfPointsUsed).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -124,9 +186,6 @@ T::Hash TimeIntervalAggregateForecast::countHash() {
       boost::hash_combine(seed, *mSpatialProcessing);
     if (mNumberOfPointsUsed)
       boost::hash_combine(seed, *mNumberOfPointsUsed);
-    boost::hash_combine(seed, mParameter.countHash());
-    boost::hash_combine(seed, mPointInTime.countHash());
-    boost::hash_combine(seed, mHorizontal.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

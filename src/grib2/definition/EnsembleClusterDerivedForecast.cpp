@@ -92,6 +92,64 @@ void EnsembleClusterDerivedForecast::getAttributeList(const std::string &prefix,
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool EnsembleClusterDerivedForecast::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mParameter.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mPointInTime.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mHorizontal.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mDerived.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mRectangularCluster.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "EnsembleForecastNumbers") == 0) {
+      attributeValue = toString(mEnsembleForecastNumbers);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool EnsembleClusterDerivedForecast::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mParameter.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mPointInTime.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mHorizontal.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mDerived.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mRectangularCluster.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "EnsembleForecastNumbers") == 0 && strcasecmp(attributeValue, toString(mEnsembleForecastNumbers).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -120,11 +178,6 @@ T::Hash EnsembleClusterDerivedForecast::countHash() {
     std::size_t seed = 0;
     if (mEnsembleForecastNumbers)
       boost::hash_combine(seed, *mEnsembleForecastNumbers);
-    boost::hash_combine(seed, mParameter.countHash());
-    boost::hash_combine(seed, mPointInTime.countHash());
-    boost::hash_combine(seed, mHorizontal.countHash());
-    boost::hash_combine(seed, mDerived.countHash());
-    boost::hash_combine(seed, mRectangularCluster.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

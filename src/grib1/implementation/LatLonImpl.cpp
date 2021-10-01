@@ -791,7 +791,7 @@ void LatLonImpl::initSpatialReference()
 
     uint ni = mNi;
     if (ni == 0)
-      ni = getGridOriginalColumnCount();
+      ni = getGridColumnCount();
 
     double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement) / 1000;
     if (iDirectionIncrement == 0)

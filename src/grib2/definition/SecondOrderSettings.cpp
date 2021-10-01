@@ -112,6 +112,104 @@ void SecondOrderSettings::getAttributeList(const std::string &prefix, T::Attribu
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool SecondOrderSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "GroupSplitting") == 0) {
+      attributeValue = toString(mGroupSplitting);
+      return true;
+    }
+    if (strcasecmp(attributeName, "MissingValueManagement") == 0) {
+      attributeValue = toString(mMissingValueManagement);
+      return true;
+    }
+    if (strcasecmp(attributeName, "PrimaryMissingValue") == 0) {
+      attributeValue = toString(mPrimaryMissingValue);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SecondaryMissingValue") == 0) {
+      attributeValue = toString(mSecondaryMissingValue);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfGroups") == 0) {
+      attributeValue = toString(mNumberOfGroups);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ReferenceOfWidths") == 0) {
+      attributeValue = toString(mReferenceOfWidths);
+      return true;
+    }
+    if (strcasecmp(attributeName, "WidthOfWidths") == 0) {
+      attributeValue = toString(mWidthOfWidths);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ReferenceOfLengths") == 0) {
+      attributeValue = toString(mReferenceOfLengths);
+      return true;
+    }
+    if (strcasecmp(attributeName, "IncrementOfLengths") == 0) {
+      attributeValue = toString(mIncrementOfLengths);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TrueLengthOfLastGroup") == 0) {
+      attributeValue = toString(mTrueLengthOfLastGroup);
+      return true;
+    }
+    if (strcasecmp(attributeName, "WidthOfLengths") == 0) {
+      attributeValue = toString(mWidthOfLengths);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool SecondOrderSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "GroupSplitting") == 0 && strcasecmp(attributeValue, toString(mGroupSplitting).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "MissingValueManagement") == 0 && strcasecmp(attributeValue, toString(mMissingValueManagement).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "PrimaryMissingValue") == 0 && strcasecmp(attributeValue, toString(mPrimaryMissingValue).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SecondaryMissingValue") == 0 && strcasecmp(attributeValue, toString(mSecondaryMissingValue).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfGroups") == 0 && strcasecmp(attributeValue, toString(mNumberOfGroups).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ReferenceOfWidths") == 0 && strcasecmp(attributeValue, toString(mReferenceOfWidths).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "WidthOfWidths") == 0 && strcasecmp(attributeValue, toString(mWidthOfWidths).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ReferenceOfLengths") == 0 && strcasecmp(attributeValue, toString(mReferenceOfLengths).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "IncrementOfLengths") == 0 && strcasecmp(attributeValue, toString(mIncrementOfLengths).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TrueLengthOfLastGroup") == 0 && strcasecmp(attributeValue, toString(mTrueLengthOfLastGroup).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "WidthOfLengths") == 0 && strcasecmp(attributeValue, toString(mWidthOfLengths).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

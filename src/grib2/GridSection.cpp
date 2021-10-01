@@ -125,13 +125,9 @@ void GridSection::getAttributeList(const std::string& prefix,T::AttributeList& a
   try
   {
     char name[300];
-    std::uint8_t tablesVersion = mMessage->getTablesVersion();
 
     sprintf(name,"%sgrid.sourceOfGridDefinition",prefix.c_str());
     attributeList.addAttribute(name,toString(getSourceOfGridDefinition()));
-
-    sprintf(name,"%sgrid.sourceStringOfGridDefinition",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,tablesVersion,"3.0",getSourceOfGridDefinition()));
 
     sprintf(name,"%sgrid.numberOfGridPoints",prefix.c_str());
     attributeList.addAttribute(name,toString(getNumberOfGridPoints()));
@@ -142,14 +138,8 @@ void GridSection::getAttributeList(const std::string& prefix,T::AttributeList& a
     sprintf(name,"%sgrid.interpretationOfNumberOfPoints",prefix.c_str());
     attributeList.addAttribute(name,toString(getInterpretationOfNumberOfPoints()));
 
-    sprintf(name,"%sgrid.interpretationStringOfNumberOfPoints",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,tablesVersion,"3.11",getInterpretationOfNumberOfPoints()));
-
     sprintf(name,"%sgrid.gridDefinitionTemplateNumber",prefix.c_str());
     attributeList.addAttribute(name,toString(getGridDefinitionTemplateNumber()));
-
-    sprintf(name,"%sgrid.gridDefinitionString",prefix.c_str());
-    attributeList.addAttribute(name,getGridProjectionString());
 
     sprintf(name,"%sgrid.def.",prefix.c_str());
     if (mGridDefinition)
@@ -673,7 +663,7 @@ T::UInt16_opt GridSection::getGridDefinitionTemplateNumber() const
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each
     row might have different number of columns. In this case we can find out the grid
-    dimensions by using the "getGridOriginalRowCount()" and "getGridOriginalColumnCount()"
+    dimensions by using the "getGridRowCount()" and "getGridColumnCount()"
     methods.
 
       \return   The grid dimensions.
@@ -1223,55 +1213,6 @@ bool GridSection::getGridPointByOriginalCoordinates(double x,double y,double& gr
 
 
 
-/*! \brief The method returns the grid definition string, which is a textual description
-    of the grid definition template.
-
-      \return        The grid definition string.
-*/
-
-std::string GridSection::getGridProjectionString() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    std::uint8_t tablesVersion = mMessage->getTablesVersion();
-    return Identification::gridDef.getGribTableValue(2,tablesVersion,"3.1",getGridDefinitionTemplateNumber());
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the type of the grid layout.
-
-     \return   The layout of the grid (expressed as an enum value).
-*/
-
-T::GridLayout GridSection::getGridLayout() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGridDefinition == nullptr)
-      throw Fmi::Exception(BCP,"The 'mGridDefinition' attribute points to nullptr!");
-
-    return mGridDefinition->getGridLayout();
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
 /*! \brief This method can be used for finding out the grid projection type (Mercator, LatLon, PolarStereographic, etc.).
 
         \return   The type of the grid projection (expressed as an enum value).
@@ -1334,88 +1275,6 @@ std::size_t GridSection::getGridColumnCount() const
   {
     if (mGridDefinition != nullptr)
       return mGridDefinition->getGridColumnCount();
-
-    return 0;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-
-/*! \brief The method returns the number of rows used in the original grid.
-
-     \return   The number of the grid rows.
-*/
-
-std::size_t GridSection::getGridOriginalRowCount() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    auto d = getGridDimensions();
-    if (d.getDimensions() == 2)
-      return d.ny();
-
-    return 0;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the number of columns used in the given original grid row.
-
-      \param row    The grid row index (= j-position).
-
-      \return       The number of columns in the given grid row.
-*/
-
-std::size_t GridSection::getGridOriginalColumnCount(std::size_t row) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    auto d = getGridDimensions();
-    if (d.getDimensions() == 2)
-      return d.nx();
-
-    return 0;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the maximum number of the columns used in the original grid.
-    If the grid is irregular, this method returns the length of the longest row.
-
-       \return   The maximum number of the columns in the grid.
-*/
-
-std::size_t GridSection::getGridOriginalColumnCount() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    auto d = getGridDimensions();
-    if (d.getDimensions() == 2)
-      return d.nx();
 
     return 0;
   }
@@ -1910,18 +1769,18 @@ void GridSection::print(std::ostream& stream,uint level,uint optionFlags) const
 {
   try
   {
-    std::uint8_t tablesVersion = mMessage->getTablesVersion();
+    //std::uint8_t tablesVersion = mMessage->getTablesVersion();
 
     stream << space(level) << "SECTION ["<< toString(getSectionNumber()) << "] " << getSectionName() << "\n";
     stream << space(level) << "- filePosition                    = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- sectionLength                   = " << toString(mSectionLength) << "\n";
     stream << space(level) << "- numberOfSection                 = " << toString(mNumberOfSection) << "\n";
-    stream << space(level) << "- sourceOfGridDefinition          = " << Identification::gridDef.getGribTableValue(2,tablesVersion,"3.0",getSourceOfGridDefinition()) << "\n";
+    stream << space(level) << "- sourceOfGridDefinition          = " << toString(getSourceOfGridDefinition()) << "\n";
     stream << space(level) << "- numberOfGridPoints              = " << toString(getNumberOfGridPoints()) << "\n";
     stream << space(level) << "- numberOfOctetsForNumberOfPoints = " << toString(getNumberOfOctetsForNumberOfPoints()) << "\n";
-    stream << space(level) << "- interpretationOfNumberOfPoints  = " << Identification::gridDef.getGribTableValue(2,tablesVersion,"3.11",getInterpretationOfNumberOfPoints()) << "\n";
+    stream << space(level) << "- interpretationOfNumberOfPoints  = " << toString(getInterpretationOfNumberOfPoints()) << "\n";
     stream << space(level) << "- gridDefinitionTemplateNumber    = " << toString(getGridDefinitionTemplateNumber()) << "\n";
-    stream << space(level) << "- gridDefinitionString            = " << getGridProjectionString() << "\n";
+    //stream << space(level) << "- gridDefinitionString            = " << getGridProjectionString() << "\n";
 
     // Dump the projection details: code table 3.1
     auto gridnumber = getGridDefinitionTemplateNumber();

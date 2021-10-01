@@ -100,6 +100,82 @@ void VariableLatLonSettings::getAttributeList(const std::string &prefix, T::Attr
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool VariableLatLonSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Ni") == 0) {
+      attributeValue = toString(mNi);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Nj") == 0) {
+      attributeValue = toString(mNj);
+      return true;
+    }
+    if (strcasecmp(attributeName, "BasicAngleOfTheInitialProductionDomain") == 0) {
+      attributeValue = toString(mBasicAngleOfTheInitialProductionDomain);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SubdivisionsOfBasicAngle") == 0) {
+      attributeValue = toString(mSubdivisionsOfBasicAngle);
+      return true;
+    }
+    if (mResolution.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Longitudes") == 0) {
+      attributeValue = toString(mLongitudes);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Latitudes") == 0) {
+      attributeValue = toString(mLatitudes);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool VariableLatLonSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Ni") == 0 && strcasecmp(attributeValue, toString(mNi).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Nj") == 0 && strcasecmp(attributeValue, toString(mNj).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "BasicAngleOfTheInitialProductionDomain") == 0 && strcasecmp(attributeValue, toString(mBasicAngleOfTheInitialProductionDomain).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SubdivisionsOfBasicAngle") == 0 && strcasecmp(attributeValue, toString(mSubdivisionsOfBasicAngle).c_str()) == 0)
+      return true;
+    if (mResolution.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Longitudes") == 0 && strcasecmp(attributeValue, toString(mLongitudes).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Latitudes") == 0 && strcasecmp(attributeValue, toString(mLatitudes).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -138,8 +214,6 @@ T::Hash VariableLatLonSettings::countHash() {
       boost::hash_combine(seed, *mLongitudes);
     if (mLatitudes)
       boost::hash_combine(seed, *mLatitudes);
-    // boost::hash_combine(seed,mResolution.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -51,6 +51,8 @@ class Message : public GRID::Message
     // ### Common methods for all message types
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
+    bool                getAttributeValue(const char *attributeName, std::string& attributeValue) const;
+    bool                hasAttributeValue(const char *attributeName, const char *attributeValue) const;
     uint                getFileId() const;
     T::FileType         getMessageType() const;
     uint                getProducerId() const;
@@ -78,7 +80,7 @@ class Message : public GRID::Message
     bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
-    T::GridLayout       getGridLayout() const;
+    //T::GridLayout       getGridLayout() const;
     bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     bool                getGridMetricCellSize(double& width,double& height) const;
     bool                getGridMetricSize(double& width,double& height) const;
@@ -86,9 +88,6 @@ class Message : public GRID::Message
     bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
-    std::size_t         getGridOriginalColumnCount() const;
-    std::size_t         getGridOriginalColumnCount(std::size_t row) const;
-    std::size_t         getGridOriginalRowCount() const;
     std::size_t         getGridOriginalValueCount() const;
     int                 getGridOriginalValueIndex(uint grid_i,uint grid_j) const;
     void                getGridOriginalValueVector(T::ParamValue_vec& values) const;
@@ -98,10 +97,8 @@ class Message : public GRID::Message
     bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     T::GridProjection   getGridProjection() const;
     void                getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const;
-    std::string         getGridProjectionString() const;
     T::ParamLevel       getGridParameterLevel() const;
     T::ParamLevelId     getGridParameterLevelId() const;
-    std::string         getGridParameterLevelIdString() const;
     void                getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
     std::size_t         getGridColumnCount() const;
     std::size_t         getGridRowCount() const;

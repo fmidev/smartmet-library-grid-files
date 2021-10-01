@@ -96,6 +96,80 @@ void CategoricalSettings::getAttributeList(const std::string &prefix, T::Attribu
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool CategoricalSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "NumberOfCategories") == 0) {
+      attributeValue = toString(mNumberOfCategories);
+      return true;
+    }
+    if (strcasecmp(attributeName, "CategoryType") == 0) {
+      attributeValue = toString(mCategoryType);
+      return true;
+    }
+    if (strcasecmp(attributeName, "CodeFigure") == 0) {
+      attributeValue = toString(mCodeFigure);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfLowerLimit") == 0) {
+      attributeValue = toString(mScaleFactorOfLowerLimit);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfLowerLimit") == 0) {
+      attributeValue = toString(mScaledValueOfLowerLimit);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfUpperLimit") == 0) {
+      attributeValue = toString(mScaleFactorOfUpperLimit);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfUpperLimit") == 0) {
+      attributeValue = toString(mScaledValueOfUpperLimit);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool CategoricalSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "NumberOfCategories") == 0 && strcasecmp(attributeValue, toString(mNumberOfCategories).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "CategoryType") == 0 && strcasecmp(attributeValue, toString(mCategoryType).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "CodeFigure") == 0 && strcasecmp(attributeValue, toString(mCodeFigure).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfLowerLimit") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfLowerLimit).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfLowerLimit") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfLowerLimit).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfUpperLimit") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfUpperLimit).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfUpperLimit") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfUpperLimit).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

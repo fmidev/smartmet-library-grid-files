@@ -120,6 +120,112 @@ void ComplexGridDataRepresentation::getAttributeList(const std::string &prefix, 
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool ComplexGridDataRepresentation::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mPacking.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mOriginalValues.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "GroupSplittingMethodUsed") == 0) {
+      attributeValue = toString(mGroupSplittingMethodUsed);
+      return true;
+    }
+    if (strcasecmp(attributeName, "MissingValueManagementUsed") == 0) {
+      attributeValue = toString(mMissingValueManagementUsed);
+      return true;
+    }
+    if (strcasecmp(attributeName, "PrimaryMissingValueSubstitute") == 0) {
+      attributeValue = toString(mPrimaryMissingValueSubstitute);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SecondaryMissingValueSubstitute") == 0) {
+      attributeValue = toString(mSecondaryMissingValueSubstitute);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfGroupsOfDataValues") == 0) {
+      attributeValue = toString(mNumberOfGroupsOfDataValues);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ReferenceForGroupWidths") == 0) {
+      attributeValue = toString(mReferenceForGroupWidths);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfBitsUsedForTheGroupWidths") == 0) {
+      attributeValue = toString(mNumberOfBitsUsedForTheGroupWidths);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ReferenceForGroupLengths") == 0) {
+      attributeValue = toString(mReferenceForGroupLengths);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LengthIncrementForTheGroupLengths") == 0) {
+      attributeValue = toString(mLengthIncrementForTheGroupLengths);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TrueLengthOfLastGroup") == 0) {
+      attributeValue = toString(mTrueLengthOfLastGroup);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfBitsForScaledGroupLengths") == 0) {
+      attributeValue = toString(mNumberOfBitsForScaledGroupLengths);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool ComplexGridDataRepresentation::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mPacking.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mOriginalValues.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "GroupSplittingMethodUsed") == 0 && strcasecmp(attributeValue, toString(mGroupSplittingMethodUsed).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "MissingValueManagementUsed") == 0 && strcasecmp(attributeValue, toString(mMissingValueManagementUsed).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "PrimaryMissingValueSubstitute") == 0 && strcasecmp(attributeValue, toString(mPrimaryMissingValueSubstitute).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SecondaryMissingValueSubstitute") == 0 && strcasecmp(attributeValue, toString(mSecondaryMissingValueSubstitute).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfGroupsOfDataValues") == 0 && strcasecmp(attributeValue, toString(mNumberOfGroupsOfDataValues).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ReferenceForGroupWidths") == 0 && strcasecmp(attributeValue, toString(mReferenceForGroupWidths).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfBitsUsedForTheGroupWidths") == 0 && strcasecmp(attributeValue, toString(mNumberOfBitsUsedForTheGroupWidths).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ReferenceForGroupLengths") == 0 && strcasecmp(attributeValue, toString(mReferenceForGroupLengths).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LengthIncrementForTheGroupLengths") == 0 && strcasecmp(attributeValue, toString(mLengthIncrementForTheGroupLengths).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TrueLengthOfLastGroup") == 0 && strcasecmp(attributeValue, toString(mTrueLengthOfLastGroup).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfBitsForScaledGroupLengths") == 0 && strcasecmp(attributeValue, toString(mNumberOfBitsForScaledGroupLengths).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -175,8 +281,6 @@ T::Hash ComplexGridDataRepresentation::countHash() {
       boost::hash_combine(seed, *mTrueLengthOfLastGroup);
     if (mNumberOfBitsForScaledGroupLengths)
       boost::hash_combine(seed, *mNumberOfBitsForScaledGroupLengths);
-    boost::hash_combine(seed, mPacking.countHash());
-    boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

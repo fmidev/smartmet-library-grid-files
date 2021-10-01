@@ -104,6 +104,74 @@ void RotatedGaussian::getAttributeList(const std::string &prefix, T::AttributeLi
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool RotatedGaussian::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Ni") == 0) {
+      attributeValue = toString(mNi);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Nj") == 0) {
+      attributeValue = toString(mNj);
+      return true;
+    }
+    if (mGridArea.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "IDirectionIncrement") == 0) {
+      attributeValue = toString(mIDirectionIncrement);
+      return true;
+    }
+    if (strcasecmp(attributeName, "N") == 0) {
+      attributeValue = toString(mN);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mRotation.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool RotatedGaussian::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Ni") == 0 && strcasecmp(attributeValue, toString(mNi).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Nj") == 0 && strcasecmp(attributeValue, toString(mNj).c_str()) == 0)
+      return true;
+    if (mGridArea.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "IDirectionIncrement") == 0 && strcasecmp(attributeValue, toString(mIDirectionIncrement).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "N") == 0 && strcasecmp(attributeValue, toString(mN).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mRotation.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -135,9 +203,6 @@ T::Hash RotatedGaussian::countHash() {
     boost::hash_combine(seed, mNj);
     boost::hash_combine(seed, mIDirectionIncrement);
     boost::hash_combine(seed, mN);
-    boost::hash_combine(seed, mGridArea.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
-    boost::hash_combine(seed, mRotation.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

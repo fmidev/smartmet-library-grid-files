@@ -84,6 +84,58 @@ void LatLonSettings::getAttributeList(const std::string &prefix, T::AttributeLis
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool LatLonSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mGrid.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "IDirectionIncrement") == 0) {
+      attributeValue = toString(mIDirectionIncrement);
+      return true;
+    }
+    if (strcasecmp(attributeName, "JDirectionIncrement") == 0) {
+      attributeValue = toString(mJDirectionIncrement);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool LatLonSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mGrid.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "IDirectionIncrement") == 0 && strcasecmp(attributeValue, toString(mIDirectionIncrement).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "JDirectionIncrement") == 0 && strcasecmp(attributeValue, toString(mJDirectionIncrement).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -112,8 +164,6 @@ T::Hash LatLonSettings::countHash() {
       boost::hash_combine(seed, *mIDirectionIncrement);
     if (mJDirectionIncrement)
       boost::hash_combine(seed, *mJDirectionIncrement);
-    boost::hash_combine(seed, mGrid.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

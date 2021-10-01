@@ -114,6 +114,104 @@ void Triangular::getAttributeList(const std::string &prefix, T::AttributeList &a
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Triangular::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "N2") == 0) {
+      attributeValue = toString(mN2);
+      return true;
+    }
+    if (strcasecmp(attributeName, "N3") == 0) {
+      attributeValue = toString(mN3);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Ni") == 0) {
+      attributeValue = toString(mNi);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Nd") == 0) {
+      attributeValue = toString(mNd);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfThePolePoint") == 0) {
+      attributeValue = toString(mLatitudeOfThePolePoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfThePolePoint") == 0) {
+      attributeValue = toString(mLongitudeOfThePolePoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfFirstDiamondCenterLine") == 0) {
+      attributeValue = toString(mLongitudeOfFirstDiamondCenterLine);
+      return true;
+    }
+    if (strcasecmp(attributeName, "GridPointPosition") == 0) {
+      attributeValue = toString(mGridPointPosition);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberingOrderOfDiamonds") == 0) {
+      attributeValue = toString(mNumberingOrderOfDiamonds);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScanningModeForOneDiamond") == 0) {
+      attributeValue = toString(mScanningModeForOneDiamond);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TotalNumberOfGridPoints") == 0) {
+      attributeValue = toString(mTotalNumberOfGridPoints);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Triangular::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "N2") == 0 && strcasecmp(attributeValue, toString(mN2).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "N3") == 0 && strcasecmp(attributeValue, toString(mN3).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Ni") == 0 && strcasecmp(attributeValue, toString(mNi).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Nd") == 0 && strcasecmp(attributeValue, toString(mNd).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfThePolePoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfThePolePoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfThePolePoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfThePolePoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfFirstDiamondCenterLine") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfFirstDiamondCenterLine).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "GridPointPosition") == 0 && strcasecmp(attributeValue, toString(mGridPointPosition).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberingOrderOfDiamonds") == 0 && strcasecmp(attributeValue, toString(mNumberingOrderOfDiamonds).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScanningModeForOneDiamond") == 0 && strcasecmp(attributeValue, toString(mScanningModeForOneDiamond).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TotalNumberOfGridPoints") == 0 && strcasecmp(attributeValue, toString(mTotalNumberOfGridPoints).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

@@ -39,8 +39,6 @@ Message::Message()
     mPixelCount = 0;
     mTableIndex = 0;
     mValueIndex = 0;
-    mGrib1ParameterLevelId = 0;
-    mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
     mForecastType = 1;
     mForecastNumber = -1;
@@ -85,8 +83,6 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mForecastType = messageInfo.mForecastType;
     mForecastNumber = messageInfo.mForecastNumber;
     mGeometryId = messageInfo.mGeometryId;
-    mGrib1ParameterLevelId = 0;
-    mGrib2ParameterLevelId = 0;
     mIsRead = false;
     mFileType = T::FileTypeValue::Fmig1;
     mDataPosition = 0;
@@ -174,25 +170,11 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
   {
     char name[300];
 
-    //const GRID::ParameterDefinition *paramDef = SmartMet::GRID::gridDef.getParameterDefById(getGribParameterId());
-
-    sprintf(name,"%smessage[%u].fmiProducerName",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,getFmiProducerName());
-
     sprintf(name,"%smessage[%u].gribParameterId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGribParameterId()));
 
-    sprintf(name,"%smessage[%u].grib1ParameterLevelId",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,toString(getGrib1ParameterLevelId()));
-
-    sprintf(name,"%smessage[%u].grib2ParameterLevelId",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,toString(getGrib2ParameterLevelId()));
-
     sprintf(name,"%smessage[%u].gribParameterName",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getGribParameterName());
-
-    sprintf(name,"%smessage[%u].gribParameterUnits",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,getGribParameterUnits());
 
     sprintf(name,"%smessage[%u].fmiParameterId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(mFmiParameterId));
@@ -218,14 +200,8 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
     sprintf(name,"%smessage[%u].parameterLevelId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGridParameterLevelId()));
 
-    sprintf(name,"%smessage[%u].parameterLevelIdString",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,getGridParameterLevelIdString());
-
     sprintf(name,"%smessage[%u].foracastTime",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getForecastTime());
-
-    //sprintf(name,"%smessage[%u].referenceTime",prefix.c_str(),mMessageIndex);
-    //attributeList.addAttribute(name,getReferenceTime());
 
     sprintf(name,"%smessage[%u].gridGeometryId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGridGeometryId()));
@@ -233,20 +209,11 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
     sprintf(name,"%smessage[%u].gridType",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGridProjection()));
 
-    sprintf(name,"%smessage[%u].gridTypeString",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,getGridProjectionString());
-
-    sprintf(name,"%smessage[%u].gridLayout",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,toString(getGridLayout()));
-
-    sprintf(name,"%smessage[%u].gridLayoutString",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,T::get_gridLayoutString(getGridLayout()));
-
     sprintf(name,"%smessage[%u].gridRows",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,toString(getGridOriginalRowCount()));
+    attributeList.addAttribute(name,toString(getGridRowCount()));
 
     sprintf(name,"%smessage[%u].gridColumns",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,toString(getGridOriginalColumnCount()));
+    attributeList.addAttribute(name,toString(getGridColumnCount()));
 
     sprintf(name,"%smessage[%u].WKT",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getWKT());
@@ -445,10 +412,6 @@ void Message::read(MemoryReader& memoryReader)
 
     mDataPosition = memoryReader.getGlobalReadPosition();
 
-
-    const char *producerName = mAttributeList.getAttributeValue("producer.name");
-    if (producerName != nullptr)
-      mFmiProducerName = stringFactory.create(producerName);
 
     const char *fmiParameterId = mAttributeList.getAttributeValue("param.fmi.id");
     if (fmiParameterId != nullptr)
@@ -874,35 +837,11 @@ T::GridProjection Message::getGridProjection() const
 
 
 
-/*! \brief The method returns the type of the grid layout.
-
-        \return   The layout of the grid (expressed as an enum value).
-*/
-
-T::GridLayout Message::getGridLayout() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return 0;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
 /*! \brief The method returns the grid dimensions (i.e. the width and the height).
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each
     row might have different number of columns. In this case we can find out the grid
-    dimensions by using the "getGridOriginalRowCount()" and "getGridOriginalColumnCount()"
+    dimensions by using the "getGridRowCount()" and "getGridColumnCount()"
     methods.
 
         \return   The grid dimensions.
@@ -1253,30 +1192,6 @@ T::FilePosition Message::getFilePosition() const
 
 
 
-
-/*! \brief The method returns the grid definition string (=> Projection name).
-
-        \return   The projection used in the current grid (LatLon, Mercator, etc.)
-*/
-
-std::string Message::getGridProjectionString() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    std::string str;
-    return str;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
 /*! \brief This method calculates the estimated grid position by using the latlon coordinates.
     The estimated grid position is returned in the 'grid_i' and 'grid_j' parameters.
 
@@ -1329,80 +1244,6 @@ bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i
   try
   {
     return false;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the number of rows used in the original grid.
-
-        \return   The number of the grid rows.
-*/
-
-std::size_t Message::getGridOriginalRowCount() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mHeight;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the number of columns used in the given original grid row.
-
-        \param row    The grid row index (= j-position).
-        \return       The number of columns in the given grid row.
-*/
-
-std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mWidth;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the maximum number of the columns used in the original grid.
-    If the grid is irregular, this method returns the length of the longest row.
-
-        \return   The maximum number of the columns in the grid.
-*/
-
-std::size_t Message::getGridOriginalColumnCount() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mWidth;
   }
   catch (...)
   {
@@ -1575,8 +1416,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   {
     int idx = 0; //getGridOriginalValueIndex(grid_i,grid_j);
 
-    auto rows = getGridOriginalRowCount();
-    auto cols = getGridOriginalColumnCount();
+    auto rows = getGridRowCount();
+    auto cols = getGridColumnCount();
 
     if (grid_j >= rows)
       return ParamValueMissing;
@@ -1679,7 +1520,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     is regular then the 'getGridValueVector()' method returns the same
     result as this method. However, if the grid is irregular then the grid rows
     might contain different number of columns. In this case the data should be
-    processed row-by-row and the 'getGridOriginalColumnCount()' method should be
+    processed row-by-row and the 'getGridColumnCount()' method should be
     used in order to find out the number of the columns used in each row. Also
     the 'getGridOriginalValueIndex()' method can be used in order to locate values
     in the returned vector.
@@ -1746,31 +1587,6 @@ T::ParamLevelId Message::getGridParameterLevelId() const
   try
   {
     return mFmiParameterLevelId;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the parameter level type string (define in Table 4.5).
-
-        \return   The parameter level type (expressed in a string).
-*/
-
-std::string Message::getGridParameterLevelIdString() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    std::string str = Fmi::to_string(mFmiParameterLevelId);
-    return str;
   }
   catch (...)
   {
@@ -2061,11 +1877,8 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- fileType                = " << toString(mFileType) << "\n";
     stream << space(level) << "- gribParameterId         = " << toString(mGribParameterId) << "\n";
     stream << space(level) << "- gribParameterName       = " << getGribParameterName() << "\n";
-    stream << space(level) << "- gribParameterUnits      = " << getGribParameterUnits() << "\n";
     stream << space(level) << "- parameterLevel          = " << toString(getGridParameterLevel()) << "\n";
     stream << space(level) << "- parameterLevelId        = " << toString(getGridParameterLevelId()) << "\n";
-    stream << space(level) << "- parameterLevelIdString  = " << getGridParameterLevelIdString() << "\n";
-    stream << space(level) << "- fmiProducerName         = " << getFmiProducerName() << "\n";
     stream << space(level) << "- fmiParameterId          = " << toString(mFmiParameterId) << "\n";
     stream << space(level) << "- fmiParameterLevelId     = " << toString(mFmiParameterLevelId) << "\n";
     stream << space(level) << "- fmiParameterName        = " << getFmiParameterName() << "\n";
@@ -2076,10 +1889,8 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- forecastTime            = " << getForecastTime() << "\n";
     stream << space(level) << "- gridGeometryId          = " << getGridGeometryId() << "\n";
     stream << space(level) << "- gridHash                = " << getGridHash() << "\n";
-    stream << space(level) << "- gridProjection          = " << T::get_gridProjectionString(getGridProjection()) << "\n";
-    stream << space(level) << "- gridLayout              = " << T::get_gridLayoutString(getGridLayout()) << "\n";
-    stream << space(level) << "- gridOriginalRowCount    = " << toString(getGridOriginalRowCount()) << "\n";
-    stream << space(level) << "- gridOriginalColumnCount = " << toString(getGridOriginalColumnCount()) << "\n";
+    stream << space(level) << "- gridOriginalRowCount    = " << toString(getGridRowCount()) << "\n";
+    stream << space(level) << "- gridOriginalColumnCount = " << toString(getGridColumnCount()) << "\n";
     stream << space(level) << "- WKT                     = " << getWKT() << "\n";
   }
   catch (...)

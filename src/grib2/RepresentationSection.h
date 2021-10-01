@@ -68,7 +68,7 @@ class RepresentationSection : public GRID::MessageSection
     std::uint8_t    getNumberOfSection() const;
     std::uint32_t   getNumberOfValues() const;
     std::uint16_t   getDataRepresentationTemplateNumber() const;
-    std::string     getDataRepresentationString() const;
+    //std::string     getDataRepresentationString() const;
     bool            getValueByIndex(uint index,T::ParamValue& value) const;
 
     void            setNumberOfValues(std::uint32_t numOfValues);

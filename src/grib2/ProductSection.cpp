@@ -140,9 +140,6 @@ void ProductSection::getAttributeList(const std::string& prefix,T::AttributeList
     sprintf(name,"%sproduct.productDefinitionTemplateNumber",prefix.c_str());
     attributeList.addAttribute(name,toString(getProductDefinitionTemplateNumber()));
 
-    sprintf(name,"%sproduct.productDefinitionString",prefix.c_str());
-    attributeList.addAttribute(name,getProductDefinitionString());
-
     sprintf(name,"%sproduct.def.",prefix.c_str());
     if (mProductDefinition)
       mProductDefinition->getAttributeList(name,attributeList);
@@ -153,6 +150,47 @@ void ProductSection::getAttributeList(const std::string& prefix,T::AttributeList
   }
 }
 
+
+
+
+bool ProductSection::getAttributeValue(const char *attributeName, std::string& attributeValue) const
+{
+  try
+  {
+    if (mProductDefinition)
+    {
+      if (mProductDefinition->getAttributeValue(attributeName,attributeValue))
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+bool ProductSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const
+{
+  try
+  {
+    if (mProductDefinition)
+    {
+      if (mProductDefinition->hasAttributeValue(attributeName,attributeValue))
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -479,24 +517,6 @@ T::UInt16_opt ProductSection::getNV() const
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
-
-
-
-
-std::string ProductSection::getProductDefinitionString() const
-{
-  try
-  {
-    std::uint8_t tablesVersion = mMessage->getTablesVersion();
-    return Identification::gridDef.getGribTableValue(2,tablesVersion,"4.0", getProductDefinitionTemplateNumber());
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
 
 
 
@@ -980,7 +1000,6 @@ void ProductSection::print(std::ostream& stream,uint level,uint optionFlags) con
     stream << space(level) << "- numberOfSection                 = " << toString(mNumberOfSection) << "\n";
     stream << space(level) << "- NV                              = " << toString(getNV()) << "\n";
     stream << space(level) << "- productDefinitionTemplateNumber = " << toString(getProductDefinitionTemplateNumber()) << "\n";
-    stream << space(level) << "- productDefinitionString         = " <<  getProductDefinitionString() << "\n";
 
     // Dump the product details: code table 4.0
 

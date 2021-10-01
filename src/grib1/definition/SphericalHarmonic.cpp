@@ -97,6 +97,68 @@ void SphericalHarmonic::getAttributeList(const std::string &prefix, T::Attribute
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool SphericalHarmonic::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "J") == 0) {
+      attributeValue = toString(mJ);
+      return true;
+    }
+    if (strcasecmp(attributeName, "K") == 0) {
+      attributeValue = toString(mK);
+      return true;
+    }
+    if (strcasecmp(attributeName, "M") == 0) {
+      attributeValue = toString(mM);
+      return true;
+    }
+    if (strcasecmp(attributeName, "RepresentationType") == 0) {
+      attributeValue = toString(mRepresentationType);
+      return true;
+    }
+    if (strcasecmp(attributeName, "RepresentationMode") == 0) {
+      attributeValue = toString(mRepresentationMode);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool SphericalHarmonic::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "J") == 0 && strcasecmp(attributeValue, toString(mJ).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "K") == 0 && strcasecmp(attributeValue, toString(mK).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "M") == 0 && strcasecmp(attributeValue, toString(mM).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "RepresentationType") == 0 && strcasecmp(attributeValue, toString(mRepresentationType).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "RepresentationMode") == 0 && strcasecmp(attributeValue, toString(mRepresentationMode).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

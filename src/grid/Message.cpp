@@ -54,8 +54,6 @@ Message::Message()
     mMessageSize = 0;
     mGeometryId = 0;
     mGridFilePtr = nullptr;
-    mGrib1ParameterLevelId = 0;
-    mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
     mFmiParameterId = 0;
     mNewbaseParameterId = 0;
@@ -75,7 +73,6 @@ Message::Message()
     mGribParameterName = 0;
     mFmiParameterUnits = 0;
     mGribParameterUnits = 0;
-    mFmiProducerName = 0;
   }
   catch (...)
   {
@@ -99,12 +96,9 @@ Message::Message(const Message& message)
     mMessageSize = message.mMessageSize;
     mGeometryId = message.mGeometryId;
     mGribParameterId = message.mGribParameterId;
-    mGrib1ParameterLevelId = message.mGrib1ParameterLevelId;
-    mGrib2ParameterLevelId = message.mGrib2ParameterLevelId;
     mParameterLevel = message.mParameterLevel;
     mGribParameterName = message.mGribParameterName;
     mGribParameterUnits = message.mGribParameterUnits;
-    mFmiProducerName = message.mFmiProducerName;
     mFmiParameterId = message.mFmiParameterId;
     mFmiParameterLevelId = message.mFmiParameterLevelId;
     mFmiParameterName = message.mFmiParameterName;
@@ -151,6 +145,21 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
 }
 
 
+
+
+
+bool Message::getAttributeValue(const char *attributeName, std::string& attributeValue) const
+{
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
+bool Message::hasAttributeValue(const char *attributeName, const char *attributeValue) const
+{
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+}
 
 
 
@@ -392,34 +401,6 @@ T::Hash Message::getGridHash() const
 */
 
 T::GridProjection Message::getGridProjection() const
-{
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
-}
-
-
-
-
-
-/*! \brief The method returns the type of the grid layout.
-
-        \return   The layout of the grid (expressed as an enum value).
-*/
-
-T::GridLayout Message::getGridLayout() const
-{
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
-}
-
-
-
-
-
-/*! \brief The method returns the grid definition string (=> Projection name).
-
-        \return   The projection used in the current grid (LatLon, Mercator, etc.)
-*/
-
-std::string Message::getGridProjectionString() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1178,7 +1159,7 @@ T::Coordinate_svec Message::getGridLatLonCoordinates() const
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each
     row might have different number of columns. In this case we can find out the grid
-    dimensions by using the 'getGridOriginalRowCount' and 'getGridOriginalColumnCount' methods.
+    dimensions by using the 'getGridRowCount' and 'getGridColumnCount' methods.
 
         \return   The grid dimensions.
 */
@@ -1242,49 +1223,6 @@ std::size_t Message::getGridRowCount() const
 */
 
 std::size_t Message::getGridColumnCount() const
-{
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
-}
-
-
-
-
-/*! \brief The method returns the number of rows used in the original grid.
-
-       \return   The number of the grid rows.
-*/
-
-std::size_t Message::getGridOriginalRowCount() const
-{
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
-}
-
-
-
-
-
-/*! \brief The method returns the number of columns used in the given original grid row.
-
-        \param row    The grid row index (= j-position).
-        \return       The number of columns in the given grid row.
-*/
-
-std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
-{
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
-}
-
-
-
-
-
-/*! \brief The method returns the maximum number of the columns used in the original grid
-    If the grid is irregular, this method returns the length of the longest row.
-
-         \return   The maximum number of the columns in the grid.
-*/
-
-std::size_t Message::getGridOriginalColumnCount() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -1837,44 +1775,6 @@ void Message::getGridProjectionAttributes(const std::string& prefix,T::Attribute
 
 
 
-/*! \brief The method returns the parameterId of the grid data. If the data cannot be recognized
-     then the method return 0.
-
-    Notice that the messages do not contain any exact parameter identifiers. In the GRIB_API attributeList
-    files unique parameter identifiers are defined as a combination of multiple attributes.
-
-    For example "temperature 2m" (parameterId = 167) is defined as follows:
-
-      '167' = {
-         discipline = 0 ;
-         parameterCategory = 0 ;
-         parameterNumber = 0 ;
-         typeOfFirstFixedSurface = 103 ;
-         scaleFactorOfFirstFixedSurface = 0 ;
-         scaledValueOfFirstFixedSurface = 2 ;
-      }
-
-    So, in order to find an unique parameterId, we should compare several attribute values
-    to the parameterId definition. After that we should select the closest match. The task
-    is not easy, because some parameterId definition are overlapping. For example "temperature"
-    (parameterId = 130) is defined as follows:
-
-      '130' = {
-         discipline = 0 ;
-         parameterCategory = 0 ;
-         parameterNumber = 0 ;
-      }
-
-    As can be seen, the definition looks similar to the "temperature 2m" definition. The difference is
-    that there are no requirements for "scaleFactorOfFirstFixedSurface" and "scaledValueOfFirstFixedSurface"
-    attributes. Let's assume that the "scaledValueOfFirstFixedSurface" attribute have value "5". In this case
-    the parameter definition do not match "temperature 2m" definition, but it matches "temperature" definition.
-
-    The point is that this kind of parameter identification is very confusing. In my opinion, there should
-    be just one parameterId for the temperature and the level definition should not be part of the parameter
-    definition.
-*/
-
 T::GribParamId Message::getGribParameterId() const
 {
   FUNCTION_TRACE
@@ -1903,96 +1803,6 @@ const char* Message::getGribParameterName() const
   try
   {
     return stringFactory[mGribParameterName];
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the grib parameter units.
-
-         \return   The grib parameter units.
-*/
-
-const char* Message::getGribParameterUnits() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return stringFactory[mGribParameterUnits];
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the grib 1 parameter level id.
-
-         \return   The parameter level type (= enum value).
-*/
-
-
-T::ParamLevelId Message::getGrib1ParameterLevelId() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mGrib1ParameterLevelId;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the grib 2 parameter level id.
-
-         \return   The parameter level type (= enum value).
-*/
-
-
-T::ParamLevelId Message::getGrib2ParameterLevelId() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mGrib2ParameterLevelId;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the FMI producer name.
-
-         \return   The FMI producer name.
-*/
-
-const char* Message::getFmiProducerName() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return stringFactory[mFmiProducerName];
   }
   catch (...)
   {
@@ -2183,20 +1993,6 @@ T::ParamLevel Message::getGridParameterLevel() const
 
 
 T::ParamLevelId Message::getGridParameterLevelId() const
-{
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
-}
-
-
-
-
-
-/*! \brief The method returns the parameter level type string (define in Table 4.5).
-
-        \return   The parameter level type (expressed in a string).
-*/
-
-std::string Message::getGridParameterLevelIdString() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -2728,7 +2524,7 @@ void Message::getGridValueVectorWithCaching(T::ParamValue_vec& values) const
     If the grid is regular then the 'getGridValueVector()' method returns the same
     result as this method. However, if the grid is irregular then the grid rows
     might contain different number of columns. In this case the data should be
-    processed row-by-row and the 'getGridOriginalColumnCount()' method should be
+    processed row-by-row and the 'getGridColumnCount()' method should be
     used in order to find out the number of the columns used in each row. Also
     the 'getGridOriginalValueIndex()' method can be used in order to locate values
     in the returned vector.
@@ -3522,50 +3318,6 @@ void Message::setGribParameterUnits(const char *gribParameterUnits)
   try
   {
     mGribParameterUnits = stringFactory.create(gribParameterUnits);
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method sets the value of the 'mGrib1ParameterLevelId' member attribute.
-
-        \param grib1ParameterLevelId   The new value for the member attribute.
-*/
-
-void Message::setGrib1ParameterLevelId(T::ParamLevelId grib1ParameterLevelId)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mGrib1ParameterLevelId = grib1ParameterLevelId;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method sets the value of the 'mGrib2ParameterLevelId' member attribute.
-
-        \param grib2ParameterLevelId   The new value for the member attribute.
-*/
-
-void Message::setGrib2ParameterLevelId(T::ParamLevelId grib2ParameterLevelId)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mGrib2ParameterLevelId = grib2ParameterLevelId;
   }
   catch (...)
   {
@@ -5087,11 +4839,7 @@ void Message::addCachedValue(uint index,T::ParamValue value) const
       return;
 
     AutoWriteLock lock(&mCacheModificationLock);
-    //auto it = mPointCache.find(index);
-    //if (it == mPointCache.end())
-    {
-      mPointCache.insert(std::pair<uint,T::ParamValue>(index,value));
-    }
+    mPointCache.insert(std::pair<uint,T::ParamValue>(index,value));
   }
   catch (...)
   {

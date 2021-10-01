@@ -106,8 +106,8 @@ void RepresentationSection::getAttributeList(const std::string& prefix,T::Attrib
     sprintf(name,"%srepresentation.dataRepresentationTemplateNumber",prefix.c_str());
     attributeList.addAttribute(name,toString(getDataRepresentationTemplateNumber()));
 
-    sprintf(name,"%srepresentation.dataRepresentationString",prefix.c_str());
-    attributeList.addAttribute(name,getDataRepresentationString());
+    //sprintf(name,"%srepresentation.dataRepresentationString",prefix.c_str());
+    //attributeList.addAttribute(name,getDataRepresentationString());
 
     sprintf(name,"%srepresentation.def.",prefix.c_str());
     if (mRepresentationDefinition)
@@ -446,7 +446,7 @@ void RepresentationSection::setNumberOfValues(std::uint32_t numOfValues)
 
 
 
-
+/*
 std::string RepresentationSection::getDataRepresentationString() const
 {
   try
@@ -459,7 +459,7 @@ std::string RepresentationSection::getDataRepresentationString() const
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 
@@ -673,7 +673,7 @@ void RepresentationSection::print(std::ostream& stream,uint level,uint optionFla
     stream << space(level) << "- numberOfSection                  = " << toString(mNumberOfSection) << "\n";
     stream << space(level) << "- numberOfValues                   = " << toString(getNumberOfValues()) << "\n";
     stream << space(level) << "- dataRepresentationTemplateNumber = " << toString(getDataRepresentationTemplateNumber()) << "\n";
-    stream << space(level) << "- dataRepresentationString         = " << getDataRepresentationString() << "\n";
+    //stream << space(level) << "- dataRepresentationString         = " << getDataRepresentationString() << "\n";
 
     if (mRepresentationDefinition)
       mRepresentationDefinition->print(stream,level+1,optionFlags);

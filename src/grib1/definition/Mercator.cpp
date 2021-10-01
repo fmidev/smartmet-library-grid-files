@@ -109,6 +109,76 @@ void Mercator::getAttributeList(const std::string &prefix, T::AttributeList &att
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Mercator::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Ni") == 0) {
+      attributeValue = toString(mNi);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Nj") == 0) {
+      attributeValue = toString(mNj);
+      return true;
+    }
+    if (mGridArea.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Latin") == 0) {
+      attributeValue = toString(mLatin);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "DiInMetres") == 0) {
+      attributeValue = toString(mDiInMetres);
+      return true;
+    }
+    if (strcasecmp(attributeName, "DjInMetres") == 0) {
+      attributeValue = toString(mDjInMetres);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Mercator::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Ni") == 0 && strcasecmp(attributeValue, toString(mNi).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Nj") == 0 && strcasecmp(attributeValue, toString(mNj).c_str()) == 0)
+      return true;
+    if (mGridArea.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Latin") == 0 && strcasecmp(attributeValue, toString(mLatin).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "DiInMetres") == 0 && strcasecmp(attributeValue, toString(mDiInMetres).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "DjInMetres") == 0 && strcasecmp(attributeValue, toString(mDjInMetres).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -141,8 +211,6 @@ T::Hash Mercator::countHash() {
     boost::hash_combine(seed, mLatin);
     boost::hash_combine(seed, mDiInMetres);
     boost::hash_combine(seed, mDjInMetres);
-    boost::hash_combine(seed, mGridArea.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

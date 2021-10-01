@@ -50,6 +50,8 @@ class IndicatorSection : public GRID::MessageSection
     // ### Common methods for all message sections
 
     void              getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
+    bool              getAttributeValue(const char *attributeName, std::string& attributeValue) const;
+    bool              hasAttributeValue(const char *attributeName, const char *attributeValue) const;
     T::FilePosition   getFilePosition() const;
     std::uint32_t     getSectionLength() const;
     std::string       getSectionName() const;
@@ -59,7 +61,6 @@ class IndicatorSection : public GRID::MessageSection
 
     T::UInt16_opt     getReserved() const;
     T::UInt8_opt      getDiscipline() const;
-    std::string       getDisciplineString() const;
     T::UInt8_opt      getEditionNumber() const;
     std::uint64_t     getTotalLength() const;
 

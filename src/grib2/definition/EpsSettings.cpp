@@ -80,6 +80,56 @@ void EpsSettings::getAttributeList(const std::string &prefix, T::AttributeList &
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool EpsSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "TypeOfEnsembleForecast") == 0) {
+      attributeValue = toString(mTypeOfEnsembleForecast);
+      return true;
+    }
+    if (strcasecmp(attributeName, "PerturbationNumber") == 0) {
+      attributeValue = toString(mPerturbationNumber);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfForecastsInEnsemble") == 0) {
+      attributeValue = toString(mNumberOfForecastsInEnsemble);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool EpsSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "TypeOfEnsembleForecast") == 0 && strcasecmp(attributeValue, toString(mTypeOfEnsembleForecast).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "PerturbationNumber") == 0 && strcasecmp(attributeValue, toString(mPerturbationNumber).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfForecastsInEnsemble") == 0 && strcasecmp(attributeValue, toString(mNumberOfForecastsInEnsemble).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

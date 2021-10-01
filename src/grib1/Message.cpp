@@ -39,8 +39,6 @@ Message::Message()
   {
     mFilePosition = 0;
     mMessageSize = 0;
-    mGrib1ParameterLevelId = 0;
-    mGrib2ParameterLevelId = 0;
     mFmiParameterLevelId = 0;
     mGeometryId = 0;
     mCacheKey = 0;
@@ -75,8 +73,6 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mFmiParameterLevelId = messageInfo.mFmiParameterLevelId;
     mParameterLevel = messageInfo.mParameterLevel;
     mGeometryId = messageInfo.mGeometryId;
-    mGrib1ParameterLevelId = 0;
-    mGrib2ParameterLevelId = 0;
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
@@ -108,7 +104,6 @@ Message::Message(const Message& other)
     mFilePosition = other.mFilePosition;
     mMessageSize = other.mMessageSize;
     mFileType = other.mFileType;
-    //mForecastTime = other.mForecastTime;
     mForecastTimeT = other.mForecastTimeT;
 
     if (other.mIndicatorSection)
@@ -214,25 +209,11 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
   {
     char name[300];
 
-    //const GRID::ParameterDefinition *paramDef = SmartMet::GRID::gridDef.getParameterDefById(getGribParameterId());
-
-    sprintf(name,"%smessage[%u].fmiProducerName",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,getFmiProducerName());
-
     sprintf(name,"%smessage[%u].gribParameterId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGribParameterId()));
 
-    sprintf(name,"%smessage[%u].grib1ParameterLevelId",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,toString(getGrib1ParameterLevelId()));
-
-    sprintf(name,"%smessage[%u].grib2ParameterLevelId",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,toString(getGrib2ParameterLevelId()));
-
     sprintf(name,"%smessage[%u].gribParameterName",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getGribParameterName());
-
-    sprintf(name,"%smessage[%u].gribParameterUnits",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,getGribParameterUnits());
 
     sprintf(name,"%smessage[%u].fmiParameterId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(mFmiParameterId));
@@ -258,9 +239,6 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
     sprintf(name,"%smessage[%u].parameterLevelId",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGridParameterLevelId()));
 
-    sprintf(name,"%smessage[%u].parameterLevelIdString",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,getGridParameterLevelIdString());
-
     sprintf(name,"%smessage[%u].foracastTime",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getForecastTime());
 
@@ -270,20 +248,11 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
     sprintf(name,"%smessage[%u].gridType",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,toString(getGridProjection()));
 
-    sprintf(name,"%smessage[%u].gridTypeString",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,getGridProjectionString());
-
-    sprintf(name,"%smessage[%u].gridLayout",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,toString(getGridLayout()));
-
-    sprintf(name,"%smessage[%u].gridLayoutString",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,T::get_gridLayoutString(getGridLayout()));
-
     sprintf(name,"%smessage[%u].gridRows",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,toString(getGridOriginalRowCount()));
+    attributeList.addAttribute(name,toString(getGridRowCount()));
 
     sprintf(name,"%smessage[%u].gridColumns",prefix.c_str(),mMessageIndex);
-    attributeList.addAttribute(name,toString(getGridOriginalColumnCount()));
+    attributeList.addAttribute(name,toString(getGridColumnCount()));
 
     sprintf(name,"%smessage[%u].WKT",prefix.c_str(),mMessageIndex);
     attributeList.addAttribute(name,getWKT());
@@ -312,6 +281,49 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
   }
 }
 
+
+
+
+
+bool Message::getAttributeValue(const char *attributeName, std::string& attributeValue) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mProductSection)
+    {
+      if (mProductSection->getAttributeValue(attributeName,attributeValue))
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+bool Message::hasAttributeValue(const char *attributeName, const char *attributeValue) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mProductSection)
+    {
+      if (mProductSection->hasAttributeValue(attributeName,attributeValue))
+        return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -474,26 +486,53 @@ void Message::read(MemoryReader& memoryReader)
       throw exception;
     }
 
-    mGribParameterId = Identification::gridDef.getGribParameterId(*this);
-    mGribParameterName = stringFactory.create(Identification::gridDef.getGribParameterName(*this));
-    mGribParameterUnits = stringFactory.create(Identification::gridDef.getGribParameterUnits(*this));
-    mGrib1ParameterLevelId = Identification::gridDef.getGrib1LevelId(*this);
+    if (mFmiParameterId != 0)
+    {
+      // We have fmi-id, which means that we can use parameter mappings;
 
-    mGrib2ParameterLevelId = Identification::gridDef.getGrib2LevelId(*this);
+      Identification::Grib1ParameterDef def;
+      if (Identification::gridDef.getGrib1ParameterDefByFmiId(mFmiParameterId,def))
+        mGribParameterId = def.mGribParameterId;
+    }
 
-    //mFmiProducerName = Identification::gridDef.mMessageIdentifier_fmi.getProducerName(*this);
+    if (mGribParameterId == 0)
+      mGribParameterId = Identification::gridDef.getGribParameterId(*this);
 
-    mFmiParameterId = Identification::gridDef.getFmiParameterId(*this);
-    mFmiParameterName = stringFactory.create(Identification::gridDef.getFmiParameterName(*this));
-    mFmiParameterUnits = stringFactory.create(Identification::gridDef.getFmiParameterUnits(*this));
-    mFmiParameterLevelId = Identification::gridDef.getFmiLevelId(*this);
+    if (mGribParameterId != 0)
+    {
+      Identification::GribParameterDef def;
+      if (Identification::gridDef.getGribParameterDefById(mGribParameterId,def))
+      {
+        mGribParameterName = stringFactory.create(def.mParameterName);
+        mGribParameterUnits  = stringFactory.create(def.mParameterUnits);
+      }
 
-    mNewbaseParameterId = Identification::gridDef.getNewbaseParameterId(*this);
-    mNewbaseParameterName = stringFactory.create(Identification::gridDef.getNewbaseParameterName(*this));
+      if (mFmiParameterId == 0)
+      {
+        Identification::FmiParameterDef def;
+        if (Identification::gridDef.getFmiParameterDefByGribId(mGribParameterId,def))
+        {
+          mFmiParameterId = def.mFmiParameterId;
+        }
+      }
+    }
 
-    mNetCdfParameterName = stringFactory.create(Identification::gridDef.getNetCdfParameterName(*this));
+    if (mFmiParameterId != 0)
+    {
+      Identification::FmiParameterDef def;
+      if (Identification::gridDef.getFmiParameterDefById(mFmiParameterId,def))
+      {
+        mFmiParameterName = stringFactory.create(def.mParameterName);
+        mFmiParameterUnits = stringFactory.create(def.mParameterUnits);
+        mDefaultInterpolationMethod = def.mAreaInterpolationMethod;
+      }
+      mFmiParameterLevelId = Identification::gridDef.getFmiLevelId(*this);
 
-    mDefaultInterpolationMethod = Identification::gridDef.getFmiParameterInterpolationMethod(*this);
+      mNewbaseParameterId = Identification::gridDef.getNewbaseParameterId(*this);
+      mNewbaseParameterName = stringFactory.create(Identification::gridDef.getNewbaseParameterName(*this));
+
+      mNetCdfParameterName = stringFactory.create(Identification::gridDef.getNetCdfParameterName(*this));
+    }
 
     int gi = getGridGeometryId();
     if (gi == 0)
@@ -1373,7 +1412,6 @@ T::GeometryId Message::getGridGeometryId() const
 
 
 
-
 void Message::getGridCellAverageSize(double& width,double& height) const
 {
   FUNCTION_TRACE
@@ -1601,38 +1639,11 @@ T::GridProjection Message::getGridProjection() const
 
 
 
-/*! \brief The method returns the type of the grid layout.
-
-        \return   The layout of the grid (expressed as an enum value).
-*/
-
-T::GridLayout Message::getGridLayout() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGridSection == nullptr)
-      throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
-
-    return mGridSection->getGridLayout();
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
 /*! \brief The method returns the grid dimensions (i.e. the width and the height).
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each
     row might have different number of columns. In this case we can find out the grid
-    dimensions by using the "getGridOriginalRowCount()" and "getGridOriginalColumnCount()"
+    dimensions by using the "getGridRowCount()" and "getGridColumnCount()"
     methods.
 
         \return   The grid dimensions.
@@ -2130,30 +2141,6 @@ DataSect_sptr Message::getDataSection() const
 
 
 
-/*! \brief The method returns the grid definition string (=> Projection name).
-
-        \return   The projection used in the current grid (LatLon, Mercator, etc.)
-*/
-
-std::string Message::getGridProjectionString() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGridSection == nullptr)
-      throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
-
-    return mGridSection->getGridProjectionString();
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
 void Message::getGridPointListByLatLonCoordinates(T::Coordinate_vec& latlon,T::Coordinate_vec& points) const
 {
   {
@@ -2318,89 +2305,6 @@ std::size_t Message::getGridColumnCount() const
 
 
 
-/*! \brief The method returns the number of rows used in the original grid.
-
-        \return   The number of the grid rows.
-*/
-
-std::size_t Message::getGridOriginalRowCount() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGridSection == nullptr)
-      throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
-
-    return mGridSection->getGridOriginalRowCount();
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the number of columns used in the given original grid row.
-
-        \param row    The grid row index (= j-position).
-        \return       The number of columns in the given grid row.
-*/
-
-std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGridSection == nullptr)
-      throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
-
-    return mGridSection->getGridOriginalColumnCount(row);
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the maximum number of the columns used in the original grid.
-    If the grid is irregular, this method returns the length of the longest row.
-
-        \return   The maximum number of the columns in the grid.
-*/
-
-std::size_t Message::getGridOriginalColumnCount() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGridSection == nullptr)
-      throw Fmi::Exception(BCP,"The 'mGridSection' attribute points to nullptr!");
-
-    return mGridSection->getGridOriginalColumnCount();
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
 /*! \brief The method returns the number of original values defined in the original grid.
 
         \return   The number of the values in the original grid.
@@ -2531,9 +2435,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     }
 
     int idx = 0;
-
-    //auto rows = getGridOriginalRowCount();
-    //auto cols = getGridOriginalColumnCount();
 
     if (grid_j >= mRowCount)
       return ParamValueMissing;
@@ -2733,7 +2634,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
         return;
     }
 
-    auto n = mGridSection->getGridOriginalValueCount();
+    //auto n = mGridSection->getGridOriginalValueCount();
     auto d = getGridDimensions();
 
     try
@@ -2742,7 +2643,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mOrigCacheKey = GRID::valueCache.addValues(values);
-
+#if 0
       if (d.getDimensions() == 2  &&  n != (d.nx() * d.ny()))
       {
         // Grid rows have different number of columns. Let's fill the rows so that they all have the same
@@ -2750,14 +2651,14 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
         // TODO: We should interpolate between the columns. Now we just repeat the same value.
 
-        auto maxCols = getGridOriginalColumnCount();
+        auto maxCols = getGridColumnCount();
 
         T::ParamValue_vec valVector;
         uint rows = d.ny();
 
         for (uint r=0; r<rows; r++)
         {
-          uint cols = getGridOriginalColumnCount(r);
+          uint cols = getGridColumnCount(r);
           double step = C_DOUBLE(maxCols) / C_DOUBLE(cols);
 
           for (std::size_t c=0; c<maxCols; c++)
@@ -2774,10 +2675,11 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
         if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
           mCacheKey = GRID::valueCache.addValues(values);
       }
-      else
-      {
+#endif
+      //else
+      //{
         mCacheKey = mOrigCacheKey;
-      }
+      //}
     }
     catch (...)
     {
@@ -2803,7 +2705,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     is regular then the 'getGridValueVector()' method returns the same
     result as this method. However, if the grid is irregular then the grid rows
     might contain different number of columns. In this case the data should be
-    processed row-by-row and the 'getGridOriginalColumnCount()' method should be
+    processed row-by-row and the 'getGridColumnCount()' method should be
     used in order to find out the number of the columns used in each row. Also
     the 'getGridOriginalValueIndex()' method can be used in order to locate values
     in the returned vector.
@@ -2840,12 +2742,13 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
-      if (getGridLayout() == T::GridLayoutValue::Regular)
-      {
+      //if (getGridLayout() == T::GridLayoutValue::Regular)
+      //{
         mCacheKey = mOrigCacheKey;
         return;
-      }
+      //}
 
+#if 0
       if (getGridLayout() == T::GridLayoutValue::Irregular)
       {
         // The grid layout is irregular, which means that grid rows can contain different number of columns.
@@ -2853,7 +2756,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
         // TODO: We should interpolate between the columns. Now we just repeat the same value.
 
-        uint maxCols = getGridOriginalColumnCount();
+        uint maxCols = getGridColumnCount();
 
         T::ParamValue_vec valVector;
         uint rows = 0;
@@ -2862,7 +2765,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
         for (uint r=0; r<rows; r++)
         {
-          std::size_t cols = getGridOriginalColumnCount(r);
+          std::size_t cols = getGridColumnCount(r);
           double step = C_DOUBLE(maxCols) / C_DOUBLE(cols);
 
           for (uint c=0; c<maxCols; c++)
@@ -2876,6 +2779,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
         if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
           mCacheKey = GRID::valueCache.addValues(valVector);
       }
+#endif
     }
     catch (...)
     {
@@ -2943,30 +2847,6 @@ T::ParamLevelId Message::getGridParameterLevelId() const
       return mProductSection->getIndicatorOfTypeOfLevel();
 
     return 0;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the parameter level type string (define in Table 4.5).
-
-        \return   The parameter level type (expressed in a string).
-*/
-
-std::string Message::getGridParameterLevelIdString() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return Identification::gridDef.getGribTableValue(1,0,"3",getGridParameterLevelId());
   }
   catch (...)
   {
@@ -3512,31 +3392,40 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
   try
   {
     stream << "\n" << space(level) << "########## MESSAGE [" << mMessageIndex << "] ##########\n\n";
-    stream << space(level) << "- filePosition            = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
-    stream << space(level) << "- fileType                = " << toString(mFileType) << "\n";
-    stream << space(level) << "- gribParameterId         = " << toString(mGribParameterId) << "\n";
-    stream << space(level) << "- gribParameterName       = " << getGribParameterName() << "\n";
-    stream << space(level) << "- gribParameterUnits      = " << getGribParameterUnits() << "\n";
-    stream << space(level) << "- parameterLevel          = " << toString(getGridParameterLevel()) << "\n";
-    stream << space(level) << "- fmiParameterLevelId     = " << toString(mFmiParameterLevelId) << "\n";
-    stream << space(level) << "- grib1ParameterLevelId   = " << toString(mGrib1ParameterLevelId) << "\n";
-    stream << space(level) << "- grib2ParameterLevelId   = " << toString(mGrib2ParameterLevelId) << "\n";
-    stream << space(level) << "- fmiProducerName         = " << getFmiProducerName() << "\n";
-    stream << space(level) << "- fmiParameterId          = " << toString(mFmiParameterId) << "\n";
-    stream << space(level) << "- fmiParameterName        = " << getFmiParameterName() << "\n";
-    stream << space(level) << "- fmiParameterUnits       = " << getFmiParameterUnits() << "\n";
-    stream << space(level) << "- newbaseParameterId      = " << mNewbaseParameterId << "\n";
-    stream << space(level) << "- newbaseParameterName    = " << getNewbaseParameterName() << "\n";
-    stream << space(level) << "- netCdfParameterName     = " << getNetCdfParameterName() << "\n";
-    stream << space(level) << "- referenceTime           = " << getReferenceTime() << "\n";
-    stream << space(level) << "- forecastTime            = " << getForecastTime() << "\n";
-    stream << space(level) << "- gridGeometryId          = " << getGridGeometryId() << "\n";
-    stream << space(level) << "- gridHash                = " << getGridHash() << "\n";
-    stream << space(level) << "- gridProjection          = " << T::get_gridProjectionString(getGridProjection()) << "\n";
-    stream << space(level) << "- gridLayout              = " << T::get_gridLayoutString(getGridLayout()) << "\n";
-    stream << space(level) << "- gridOriginalRowCount    = " << toString(getGridOriginalRowCount()) << "\n";
-    stream << space(level) << "- gridOriginalColumnCount = " << toString(getGridOriginalColumnCount()) << "\n";
-    stream << space(level) << "- WKT                     = " << getWKT() << "\n";
+    stream << space(level) << "- filePosition             = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
+    stream << space(level) << "- fileType                 = " << toString(mFileType) << "\n";
+    stream << space(level) << "- referenceTime            = " << getReferenceTime() << "\n";
+    stream << space(level) << "- forecastTime             = " << getForecastTime() << "\n";
+    stream << space(level) << "- gridProjection           = " << T::get_gridProjectionString(getGridProjection()) << "\n";
+    stream << space(level) << "- gridGeometryId           = " << getGridGeometryId() << "\n";
+    stream << space(level) << "- gridRowCount             = " << toString(getGridRowCount()) << "\n";
+    stream << space(level) << "- gridColumnCount          = " << toString(getGridColumnCount()) << "\n";
+
+    stream << space(level) << "- fmiParameterId           = " << toString(mFmiParameterId) << "\n";
+    stream << space(level) << "- fmiParameterName         = " << getFmiParameterName() << "\n";
+    stream << space(level) << "- fmiParameterUnits        = " << getFmiParameterUnits() << "\n";
+    stream << space(level) << "- fmiParameterLevelId      = " << toString(mFmiParameterLevelId) << "\n";
+    stream << space(level) << "- parameterLevel           = " << toString(getGridParameterLevel()) << "\n";
+
+    stream << space(level) << "- gribParameterId          = " << toString(mGribParameterId) << "\n";
+    if (mGribParameterId != 0)
+    {
+      Identification::GribParameterDef def;
+      if (Identification::gridDef.getGribParameterDefById(mGribParameterId,def))
+      {
+        stream << space(level) << "- gribParameterName        = " << def.mParameterName << "\n";
+        stream << space(level) << "- gribParameterUnits       = " << def.mParameterUnits << "\n";
+        stream << space(level) << "- gribParameterDescription = " << def.mParameterDescription << "\n";
+      }
+    }
+
+    stream << space(level) << "- newbaseParameterId       = " << mNewbaseParameterId << "\n";
+    stream << space(level) << "- newbaseParameterName     = " << getNewbaseParameterName() << "\n";
+
+    stream << space(level) << "- netCdfParameterName      = " << getNetCdfParameterName() << "\n";
+
+    stream << space(level) << "- gridHash                 = " << getGridHash() << "\n";
+    stream << space(level) << "- WKT                      = " << getWKT() << "\n";
 
     if (mIndicatorSection)
       mIndicatorSection->print(stream,level+1,optionFlags);
@@ -3562,8 +3451,8 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
         stream << space(level+1) << "- data (from the grid corners):\n";
 
         char st[1000];
-        uint ny = mGridSection->getGridOriginalRowCount();
-        uint nx = mGridSection->getGridOriginalColumnCount();
+        uint ny = mGridSection->getGridRowCount();
+        uint nx = mGridSection->getGridColumnCount();
         uint c = 0;
         std::size_t sz = values.size();
 

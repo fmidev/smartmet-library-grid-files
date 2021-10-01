@@ -92,6 +92,74 @@ void ReforecastSettings::getAttributeList(const std::string &prefix, T::Attribut
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool ReforecastSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "YearOfModelVersion") == 0) {
+      attributeValue = toString(mYearOfModelVersion);
+      return true;
+    }
+    if (strcasecmp(attributeName, "MonthOfModelVersion") == 0) {
+      attributeValue = toString(mMonthOfModelVersion);
+      return true;
+    }
+    if (strcasecmp(attributeName, "DayOfModelVersion") == 0) {
+      attributeValue = toString(mDayOfModelVersion);
+      return true;
+    }
+    if (strcasecmp(attributeName, "HourOfModelVersion") == 0) {
+      attributeValue = toString(mHourOfModelVersion);
+      return true;
+    }
+    if (strcasecmp(attributeName, "MinuteOfModelVersion") == 0) {
+      attributeValue = toString(mMinuteOfModelVersion);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SecondOfModelVersion") == 0) {
+      attributeValue = toString(mSecondOfModelVersion);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool ReforecastSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "YearOfModelVersion") == 0 && strcasecmp(attributeValue, toString(mYearOfModelVersion).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "MonthOfModelVersion") == 0 && strcasecmp(attributeValue, toString(mMonthOfModelVersion).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "DayOfModelVersion") == 0 && strcasecmp(attributeValue, toString(mDayOfModelVersion).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "HourOfModelVersion") == 0 && strcasecmp(attributeValue, toString(mHourOfModelVersion).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "MinuteOfModelVersion") == 0 && strcasecmp(attributeValue, toString(mMinuteOfModelVersion).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SecondOfModelVersion") == 0 && strcasecmp(attributeValue, toString(mSecondOfModelVersion).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

@@ -494,7 +494,7 @@ T::GridProjection Message::getGridProjection() const
 
         \return   The layout of the grid (expressed as an enum value).
 */
-
+/*
 T::GridLayout Message::getGridLayout() const
 {
   FUNCTION_TRACE
@@ -512,7 +512,7 @@ T::GridLayout Message::getGridLayout() const
     throw exception;
   }
 }
-
+*/
 
 
 
@@ -522,6 +522,7 @@ T::GridLayout Message::getGridLayout() const
         \return   The projection used in the current grid (LatLon, Mercator, etc.)
 */
 
+/*
 std::string Message::getGridProjectionString() const
 {
   FUNCTION_TRACE
@@ -536,7 +537,7 @@ std::string Message::getGridProjectionString() const
     throw exception;
   }
 }
-
+*/
 
 
 
@@ -606,7 +607,7 @@ T::Coordinate_svec Message::getGridLatLonCoordinates() const
     Notice that the grid might be irregular. For example, the number of rows might
     be specified while the number of columns is missing. This usually means that each
     row might have different number of columns. In this case we can find out the grid
-    dimensions by using the 'getGridOriginalRowCount' and 'getGridOriginalColumnCount' methods.
+    dimensions by using the 'getGridRowCount' and 'getGridColumnCount' methods.
 
         \return   The grid dimensions.
 */
@@ -687,8 +688,8 @@ std::size_t Message::getGridColumnCount() const
 
        \return   The number of the grid rows.
 */
-
-std::size_t Message::getGridOriginalRowCount() const
+/*
+std::size_t Message::getGridRowCount() const
 {
   FUNCTION_TRACE
   try
@@ -705,7 +706,7 @@ std::size_t Message::getGridOriginalRowCount() const
     throw exception;
   }
 }
-
+*/
 
 
 
@@ -715,8 +716,8 @@ std::size_t Message::getGridOriginalRowCount() const
         \param row    The grid row index (= j-position).
         \return       The number of columns in the given grid row.
 */
-
-std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
+/*
+std::size_t Message::getGridColumnCount(std::size_t row) const
 {
   FUNCTION_TRACE
   try
@@ -733,7 +734,7 @@ std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
     throw exception;
   }
 }
-
+*/
 
 
 
@@ -743,8 +744,8 @@ std::size_t Message::getGridOriginalColumnCount(std::size_t row) const
 
          \return   The maximum number of the columns in the grid.
 */
-
-std::size_t Message::getGridOriginalColumnCount() const
+/*
+std::size_t Message::getGridColumnCount() const
 {
   FUNCTION_TRACE
   try
@@ -761,7 +762,7 @@ std::size_t Message::getGridOriginalColumnCount() const
     throw exception;
   }
 }
-
+*/
 
 
 
@@ -1449,12 +1450,13 @@ T::ParamLevelId Message::getGridParameterLevelId() const
         \return   The parameter level type (expressed in a string).
 */
 
+/*
 std::string Message::getGridParameterLevelIdString() const
 {
   return std::string("");
   //throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
-
+*/
 
 
 
@@ -1666,7 +1668,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     If the grid is regular then the 'getGridValueVector()' method returns the same
     result as this method. However, if the grid is irregular then the grid rows
     might contain different number of columns. In this case the data should be
-    processed row-by-row and the 'getGridOriginalColumnCount()' method should be
+    processed row-by-row and the 'getGridColumnCount()' method should be
     used in order to find out the number of the columns used in each row. Also
     the 'getGridOriginalValueIndex()' method can be used in order to locate values
     in the returned vector.
@@ -2016,12 +2018,11 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- scaleFactor            = " << std::to_string(mScaleFactor) << "\n";
     stream << space(level) << "- gribParameterId        = " << toString(mGribParameterId) << "\n";
     stream << space(level) << "- gribParameterName      = " << getGribParameterName() << "\n";
-    stream << space(level) << "- gribParameterUnits     = " << getGribParameterUnits() << "\n";
+    //stream << space(level) << "- gribParameterUnits     = " << getGribParameterUnits() << "\n";
     stream << space(level) << "- parameterLevel         = " << toString(getGridParameterLevel()) << "\n";
     stream << space(level) << "- fmiParameterLevelId    = " << toString(mFmiParameterLevelId) << "\n";
-    stream << space(level) << "- grib1ParameterLevelId  = " << toString(mGrib1ParameterLevelId) << "\n";
-    stream << space(level) << "- grib2ParameterLevelId  = " << toString(mGrib2ParameterLevelId) << "\n";
-    stream << space(level) << "- fmiProducerName        = " << getFmiProducerName() << "\n";
+    //stream << space(level) << "- grib1ParameterLevelId  = " << toString(mGrib1ParameterLevelId) << "\n";
+    //stream << space(level) << "- grib2ParameterLevelId  = " << toString(mGrib2ParameterLevelId) << "\n";
     stream << space(level) << "- fmiParameterId         = " << toString(mFmiParameterId) << "\n";
     stream << space(level) << "- fmiParameterName       = " << getFmiParameterName() << "\n";
     stream << space(level) << "- fmiParameterUnits      = " << getFmiParameterUnits() << "\n";
@@ -2053,8 +2054,8 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
       stream << space(level+1) << "- data (from the grid corners):\n";
 
       char st[1000];
-      uint ny = getGridOriginalRowCount();
-      uint nx = getGridOriginalColumnCount();
+      uint ny = getGridRowCount();
+      uint nx = getGridColumnCount();
       uint c = 0;
       std::size_t sz = values.size();
 

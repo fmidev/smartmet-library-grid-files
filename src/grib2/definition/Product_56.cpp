@@ -84,6 +84,58 @@ void Product_56::getAttributeList(const std::string &prefix, T::AttributeList &a
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Product_56::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mHorizontal.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mEps.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "PerturbationNumber") == 0) {
+      attributeValue = toString(mPerturbationNumber);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfForecastsInEnsemble") == 0) {
+      attributeValue = toString(mNumberOfForecastsInEnsemble);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Product_56::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mHorizontal.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mEps.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "PerturbationNumber") == 0 && strcasecmp(attributeValue, toString(mPerturbationNumber).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfForecastsInEnsemble") == 0 && strcasecmp(attributeValue, toString(mNumberOfForecastsInEnsemble).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -112,8 +164,6 @@ T::Hash Product_56::countHash() {
       boost::hash_combine(seed, *mPerturbationNumber);
     if (mNumberOfForecastsInEnsemble)
       boost::hash_combine(seed, *mNumberOfForecastsInEnsemble);
-    boost::hash_combine(seed, mHorizontal.countHash());
-    boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);
