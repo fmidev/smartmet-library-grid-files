@@ -39,7 +39,7 @@ bool convert(const OGRSpatialReference *sr_from,const OGRSpatialReference *sr_to
         coordinateConverterCache = new std::unordered_map<std::size_t,SmartMet::CoordinateConverter>;
     }
 
-    std::size_t hash = (std::size_t)sr_from;
+    auto hash = (std::size_t)sr_from;
     boost::hash_combine(hash, (std::size_t)sr_to);
 
     {

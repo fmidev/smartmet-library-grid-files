@@ -671,7 +671,7 @@ void Message::initIndicatorSection()
   {
     if (mIndicatorSection == nullptr)
     {
-      IndicatorSection *section = new IndicatorSection();
+      auto *section = new IndicatorSection();
       section->setMessagePtr(this);
       mIndicatorSection.reset(section);
     }
@@ -695,7 +695,7 @@ void Message::initIdentificationSection()
   {
     if (mIdentificationSection == nullptr)
     {
-      IdentificationSection *section = new IdentificationSection();
+      auto *section = new IdentificationSection();
       section->setMessagePtr(this);
       mIdentificationSection.reset(section);
     }
@@ -719,7 +719,7 @@ void Message::initLocalSection()
   {
     if (mLocalSection == nullptr)
     {
-      LocalSection *section = new LocalSection();
+      auto *section = new LocalSection();
       section->setMessagePtr(this);
       mLocalSection.reset(section);
     }
@@ -743,7 +743,7 @@ void Message::initGridSection()
   {
     if (mGridSection == nullptr)
     {
-      GridSection *section = new GridSection();
+      auto *section = new GridSection();
       section->setMessagePtr(this);
       mGridSection.reset(section);
     }
@@ -767,7 +767,7 @@ void Message::initProductSection()
   {
     if (mProductSection == nullptr)
     {
-      ProductSection *section = new ProductSection();
+      auto *section = new ProductSection();
       section->setMessagePtr(this);
       mProductSection.reset(section);
     }
@@ -791,7 +791,7 @@ void Message::initRepresentationSection()
   {
     if (mRepresentationSection == nullptr)
     {
-      RepresentationSection *section = new RepresentationSection();
+      auto *section = new RepresentationSection();
       section->setMessagePtr(this);
       mRepresentationSection.reset(section);
     }
@@ -815,7 +815,7 @@ void Message::initBitmapSection()
   {
     if (mBitmapSection == nullptr)
     {
-      BitmapSection *section = new BitmapSection();
+      auto *section = new BitmapSection();
       section->setMessagePtr(this);
       mBitmapSection.reset(section);
     }
@@ -839,7 +839,7 @@ void Message::initDataSection()
   {
     if (mDataSection == nullptr)
     {
-      DataSection *section = new DataSection();
+      auto *section = new DataSection();
       section->setMessagePtr(this);
       mDataSection.reset(section);
     }
@@ -962,7 +962,7 @@ void Message::setGridValues(T::ParamValue_vec& values)
         initBitmapSection();
 
         uint bmSize = size /  8 + 1;
-        uchar *bm = new uchar[bmSize];
+        auto *bm = new uchar[bmSize];
 
         BitArrayWriter bmWriter(bm,size);
         for (uint a=0; a<size; a++)
@@ -1029,7 +1029,7 @@ void Message::read()
     }
 
     long s = mGridFilePtr->getSize();
-    uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();
+    auto *d = (uchar*)mGridFilePtr->getMemoryPtr();
     uchar *e = d + s;
 
     MemoryReader memoryReader(d,e);
@@ -1085,7 +1085,7 @@ void Message::read(MemoryReader& memoryReader)
         if (spos >= 0)
         {
           memoryReader.setReadPosition(memoryReader.getReadPosition()+spos);
-          IndicatorSection *section = new IndicatorSection();
+          auto *section = new IndicatorSection();
           section->setMessagePtr(this);
           mIndicatorSection.reset(section);
           section->read(memoryReader);
@@ -1121,7 +1121,7 @@ void Message::read(MemoryReader& memoryReader)
           {
             case SectionNumber::identification_section:
             {
-              IdentificationSection *section = new IdentificationSection();
+              auto *section = new IdentificationSection();
               section->setMessagePtr(this);
               mIdentificationSection.reset(section);
               auto p1 = memoryReader.getReadPosition();
@@ -1136,7 +1136,7 @@ void Message::read(MemoryReader& memoryReader)
 
             case SectionNumber::local_section:
             {
-              LocalSection *section = new LocalSection();
+              auto *section = new LocalSection();
               section->setMessagePtr(this);
               mLocalSection.reset(section);
               auto p1 = memoryReader.getReadPosition();
@@ -1151,7 +1151,7 @@ void Message::read(MemoryReader& memoryReader)
 
             case SectionNumber::grid_section:
             {
-              GridSection *section = new GridSection();
+              auto *section = new GridSection();
               section->setMessagePtr(this);
               mGridSection.reset(section);
               auto p1 = memoryReader.getReadPosition();
@@ -1166,7 +1166,7 @@ void Message::read(MemoryReader& memoryReader)
 
             case SectionNumber::product_section:
             {
-              ProductSection *section = new ProductSection();
+              auto *section = new ProductSection();
               section->setMessagePtr(this);
               mProductSection.reset(section);
               auto p1 = memoryReader.getReadPosition();
@@ -1181,7 +1181,7 @@ void Message::read(MemoryReader& memoryReader)
 
             case SectionNumber::representation_section:
             {
-              RepresentationSection *section = new RepresentationSection();
+              auto *section = new RepresentationSection();
               section->setMessagePtr(this);
               mRepresentationSection.reset(section);
               auto p1 = memoryReader.getReadPosition();
@@ -1196,7 +1196,7 @@ void Message::read(MemoryReader& memoryReader)
 
             case SectionNumber::bitmap_section:
             {
-              BitmapSection *section = new BitmapSection();
+              auto *section = new BitmapSection();
               section->setMessagePtr(this);
               mBitmapSection.reset(section);
               auto p1 = memoryReader.getReadPosition();
@@ -1211,7 +1211,7 @@ void Message::read(MemoryReader& memoryReader)
 
             case SectionNumber::data_section:
             {
-              DataSection *section = new DataSection();
+              auto *section = new DataSection();
               section->setMessagePtr(this);
               mDataSection.reset(section);
               auto p1 = memoryReader.getReadPosition();

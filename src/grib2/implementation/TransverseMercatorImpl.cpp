@@ -203,7 +203,7 @@ void TransverseMercatorImpl::initSpatialReference()
     double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
     double falseEasting = C_DOUBLE(*dfFalseEasting) / 1000;
     double falseNorthing = C_DOUBLE(*dfFalseNorthing) / 1000;
-    double scale = C_DOUBLE(dfScale);
+    auto scale = C_DOUBLE(dfScale);
 
     mSpatialReference.SetTM(centerLat, centerLon, scale, falseEasting,
                             falseNorthing);

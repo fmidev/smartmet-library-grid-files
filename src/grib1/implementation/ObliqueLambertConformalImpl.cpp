@@ -125,8 +125,8 @@ T::Coordinate_svec ObliqueLambertConformalImpl::getGridOriginalCoordinates() con
     double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
     double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
 
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
+    auto dx = C_DOUBLE(mDxInMetres);
+    auto dy = C_DOUBLE(mDyInMetres);
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)

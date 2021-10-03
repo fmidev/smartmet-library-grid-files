@@ -216,7 +216,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
           //std::string tm = utcTimeFromTimeT(it->mForecastTimeT);
           //printf(" %u %s %d %s %lu\n",idx,tm.c_str(),it->mParameterLevel,it->mParameterName.c_str(),it->mFilePosition);
 
-          NetCDF::Message *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
+          auto *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
           mMessages.insert(std::pair<uint,Message*>(idx,message));
           idx++;
         }
@@ -235,21 +235,21 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
     {
       case T::FileTypeValue::Grib1:
       {
-        GRIB1::Message *msg = new GRIB1::Message(this,messageIndex,messageInfo);
+        auto *msg = new GRIB1::Message(this,messageIndex,messageInfo);
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
 
       case T::FileTypeValue::Grib2:
       {
-        GRIB2::Message *msg = new GRIB2::Message(this,messageIndex,messageInfo);
+        auto *msg = new GRIB2::Message(this,messageIndex,messageInfo);
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
 
       case T::FileTypeValue::Fmig1:
       {
-        FMIG1::Message *msg = new FMIG1::Message(this,messageIndex,messageInfo);
+        auto *msg = new FMIG1::Message(this,messageIndex,messageInfo);
         mMessages.insert(std::pair<uint,Message*>(messageIndex,msg));
         return msg;
       }
@@ -469,7 +469,7 @@ void PhysicalGridFile::read(MemoryReader& memoryReader)
               //std::string tm = utcTimeFromTimeT(it->mForecastTimeT);
               //printf(" %u %s %d %s %lu\n",idx,tm.c_str(),it->mParameterLevel,it->mParameterName.c_str(),it->mFilePosition);
 
-              NetCDF::Message *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
+              auto *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
               mMessages.insert(std::pair<uint,Message*>(idx,message));
               idx++;
             }
@@ -505,7 +505,7 @@ void PhysicalGridFile::readGrib1Message(MemoryReader& memoryReader, uint message
   FUNCTION_TRACE
   try
   {
-    GRIB1::Message *message = new GRIB1::Message();
+    auto *message = new GRIB1::Message();
     message->setGridFilePtr(this);
     message->setMessageIndex(messageIndex);
     message->setPointCacheEnabled(mPointCacheEnabled);
@@ -535,7 +535,7 @@ void PhysicalGridFile::readFmig1Message(MemoryReader& memoryReader, uint message
   FUNCTION_TRACE
   try
   {
-    FMIG1::Message *message = new FMIG1::Message();
+    auto *message = new FMIG1::Message();
     message->setGridFilePtr(this);
     message->setMessageIndex(messageIndex);
     message->setPointCacheEnabled(mPointCacheEnabled);
@@ -565,7 +565,7 @@ void PhysicalGridFile::readNetCDFMessage(MemoryReader& memoryReader, uint messag
   try
   {
 
-    NetCDF::NetCdfFile *netCdf = new NetCDF::NetCdfFile();
+    auto *netCdf = new NetCDF::NetCdfFile();
     NetCDF::MessageInfoVec messageInfoList;
     netCdf->read(memoryReader,messageInfoList);
     /*
@@ -635,7 +635,7 @@ void PhysicalGridFile::readGrib2Message(MemoryReader& memoryReader, uint message
         break;
       }
 
-      GRIB2::Message *message = new GRIB2::Message();
+      auto *message = new GRIB2::Message();
       message->setGridFilePtr(this);
       message->setMessageIndex(messageIndex);
       message->setPointCacheEnabled(mPointCacheEnabled);

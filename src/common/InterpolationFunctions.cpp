@@ -312,16 +312,16 @@ double linearInterpolation2(double x,double y,double x1,double y1,double x2,doub
       val_q12 == ParamValueMissing &&  val_q22 == ParamValueMissing)
     return ParamValueMissing;
 
-  longlong ax = (longlong)(x*1000000);
-  longlong ay = (longlong)(y*1000000);
-  longlong ax1 = (longlong)(x1*1000000);
-  longlong ay1 = (longlong)(y1*1000000);
-  longlong ax2 = (longlong)(x2*1000000);
-  longlong ay2 = (longlong)(y2*1000000);
-  longlong aval_q11 = (longlong)(val_q11*1000000);
-  longlong aval_q21 = (longlong)(val_q21*1000000);
-  longlong aval_q22 = (longlong)(val_q22*1000000);
-  longlong aval_q12 = (longlong)(val_q12*1000000);
+  auto ax = (longlong)(x*1000000);
+  auto ay = (longlong)(y*1000000);
+  auto ax1 = (longlong)(x1*1000000);
+  auto ay1 = (longlong)(y1*1000000);
+  auto ax2 = (longlong)(x2*1000000);
+  auto ay2 = (longlong)(y2*1000000);
+  auto aval_q11 = (longlong)(val_q11*1000000);
+  auto aval_q21 = (longlong)(val_q21*1000000);
+  auto aval_q22 = (longlong)(val_q22*1000000);
+  auto aval_q12 = (longlong)(val_q12*1000000);
 
   longlong res = linearInterpolation(ax,ay,ax1,ay1,ax2,ay2,aval_q11,aval_q21,aval_q22,aval_q12);
 
@@ -374,9 +374,9 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,int l
     if (level2 == newLevel)
       return value2;
 
-    float diff1 = C_FLOAT(newLevel - level1);
-    float diff2 = C_FLOAT(level2 - newLevel);
-    float levelDiff = C_FLOAT(level2 - level1);
+    auto diff1 = C_FLOAT(newLevel - level1);
+    auto diff2 = C_FLOAT(level2 - newLevel);
+    auto levelDiff = C_FLOAT(level2 - level1);
 
     switch (levelInterpolationMethod)
     {
@@ -449,9 +449,9 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,in
       return;
     }
 
-    float diff1 = C_FLOAT(newLevel - level1);
-    float diff2 = C_FLOAT(level2 - newLevel);
-    float levelDiff = C_FLOAT(level2 - level1);
+    auto diff1 = C_FLOAT(newLevel - level1);
+    auto diff2 = C_FLOAT(level2 - newLevel);
+    auto levelDiff = C_FLOAT(level2 - level1);
 
     uint len1 = values1.size();
     uint len2 = values2.size();
@@ -557,9 +557,9 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int 
       return;
     }
 
-    float diff1 = C_FLOAT(newLevel - level1);
-    float diff2 = C_FLOAT(level2 - newLevel);
-    float levelDiff = C_FLOAT(level2 - level1);
+    auto diff1 = C_FLOAT(newLevel - level1);
+    auto diff2 = C_FLOAT(level2 - newLevel);
+    auto levelDiff = C_FLOAT(level2 - level1);
 
     uint len1 = values1.getLength();
     uint len2 = values2.getLength();
@@ -711,9 +711,9 @@ T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,time_
     if (t2 == newTime)
       return value2;
 
-    double timeDiff = C_DOUBLE(t2 - t1);
-    double diff1 = C_DOUBLE(newTime - t1);
-    double diff2 = C_DOUBLE(t2 - newTime);
+    auto timeDiff = C_DOUBLE(t2 - t1);
+    auto diff1 = C_DOUBLE(newTime - t1);
+    auto diff2 = C_DOUBLE(t2 - newTime);
 
     switch (timeInterpolationMethod)
     {
@@ -820,9 +820,9 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,tim
     }
 
 
-    double timeDiff = C_DOUBLE(t2 - t1);
-    double diff1 = C_DOUBLE(newTime - t1);
-    double diff2 = C_DOUBLE(t2 - newTime);
+    auto timeDiff = C_DOUBLE(t2 - t1);
+    auto diff1 = C_DOUBLE(newTime - t1);
+    auto diff2 = C_DOUBLE(t2 - newTime);
 
     uint sz = values1.size();
     newValues.reserve(sz);

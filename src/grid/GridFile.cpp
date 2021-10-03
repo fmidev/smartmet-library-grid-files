@@ -753,14 +753,14 @@ Message* GridFile::newMessage(T::FileType fileType)
     {
       case T::FileTypeValue::Grib1:
       {
-        GRIB1::Message *msg = new GRIB1::Message();
+        auto *msg = new GRIB1::Message();
         addMessage(msg);
         return msg;
       }
 
       case T::FileTypeValue::Grib2:
       {
-        GRIB2::Message *msg = new GRIB2::Message();
+        auto *msg = new GRIB2::Message();
 
         msg->setBitmapSection(new GRIB2::BitmapSection());
         msg->setIdentificationSection(new GRIB2::IdentificationSection());

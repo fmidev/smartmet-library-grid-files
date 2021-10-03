@@ -393,7 +393,7 @@ void DataWriter::write_float(std::float_t _value)
 {
   try
   {
-    unsigned char* f = reinterpret_cast<unsigned char*>(&_value);
+    auto* f = reinterpret_cast<unsigned char*>(&_value);
 
     if (littleEndian)
     {
@@ -423,7 +423,7 @@ void DataWriter::write_double(std::double_t _value)
 {
   try
   {
-    unsigned char* f = reinterpret_cast<unsigned char*>(&_value);
+    auto* f = reinterpret_cast<unsigned char*>(&_value);
 
     if (littleEndian)
     {

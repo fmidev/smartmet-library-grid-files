@@ -31,8 +31,8 @@ using uchar = unsigned char;
 
 int compare_coordinates(const void *p1, const void *p2)
 {
-  const double *v1 = (const double*)p1;
-  const double *v2 = (const double*)p2;
+  const auto *v1 = (const double*)p1;
+  const auto *v2 = (const double*)p2;
 
   if (*v1 < *v2)
     return -1;
@@ -156,7 +156,7 @@ void jpeg_save(const char *filename, uint *image, int image_height,int image_wid
   try
   {
     int size = image_width * image_height;
-    unsigned char *image_buffer = new unsigned char[size*3];
+    auto *image_buffer = new unsigned char[size*3];
     uint c = 0;
     uint p = 0;
 
@@ -245,7 +245,7 @@ METHODDEF(void) my_error_exit (j_common_ptr cinfo)
 {
   // ### cinfo->err really points to a my_error_mgr struct, so coerce pointer
 
-  my_error_ptr myerr = (my_error_ptr) cinfo->err;
+  auto myerr = (my_error_ptr) cinfo->err;
 
   // ### Always display the message.
   // ### We could postpone this until after returning, if we chose.
@@ -382,7 +382,7 @@ int jpg_load(const char *_filename,CImage& _image)
       // ### Assume put_scanline_someplace wants a pointer and sample count.
 
       int p = 0;
-      uchar *data = (uchar*)buffer[0];
+      auto *data = (uchar*)buffer[0];
       for (uint x=0; x<cinfo.output_width; x++)
       {
         uchar cc[10] = {0};
@@ -633,7 +633,7 @@ uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbyte
     return nullptr;
   }
 
-  png_bytepp row_pointers = (png_bytepp)malloc(height*sizeof(png_bytep));
+  auto row_pointers = (png_bytepp)malloc(height*sizeof(png_bytep));
   if (row_pointers == nullptr)
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
@@ -723,7 +723,7 @@ int png_load(const char *_filename,CImage& _image)
     int p1 = 0;
     int p2 = 0;
 
-    uchar *ptr = (uchar*)_image.pixel;
+    auto *ptr = (uchar*)_image.pixel;
 
     for (int t=0; t<size; t++)
     {
@@ -787,7 +787,7 @@ void writepng_version_info(void)
 
 void* png_writeOpen(const char *_filename,int image_width,int image_height)
 {
-  CImageHandle_png *handle = new CImageHandle_png;
+  auto *handle = new CImageHandle_png;
 
   handle->file = fopen(_filename,"wb");
   if (handle->file == nullptr)
@@ -825,7 +825,7 @@ void* png_writeOpen(const char *_filename,int image_width,int image_height)
 
 int png_writeImageRow(void *_handle,uchar *_row)
 {
-  CImageHandle_png *handle = (CImageHandle_png*)_handle;
+  auto *handle = (CImageHandle_png*)_handle;
   png_write_row(handle->png_ptr,_row);
   return 0;
 }
@@ -836,7 +836,7 @@ int png_writeImageRow(void *_handle,uchar *_row)
 
 int png_writeClose(void *_handle)
 {
-  CImageHandle_png *handle = (CImageHandle_png*)_handle;
+  auto *handle = (CImageHandle_png*)_handle;
   png_write_end(handle->png_ptr, nullptr);
 
   fclose(handle->file);
@@ -870,9 +870,9 @@ int png_save(const char *filename,uint *image,int image_width,int image_height)
 
   int len = image_width * psize;
 
-  uchar *pixel = new uchar[len];
+  auto *pixel = new uchar[len];
 
-  uchar *ptr = (uchar*)image;
+  auto *ptr = (uchar*)image;
 
   for (int y=0; y<image_height; y++)
   {
@@ -972,7 +972,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 {
   try
   {
-    unsigned char* out = new unsigned char[geom->WkbSize()+10];
+    auto* out = new unsigned char[geom->WkbSize()+10];
     geom->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
 
     //std::string st = Fmi::OGR::exportToWkt(*geom);
@@ -1042,7 +1042,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
       for (auto g = geomVec.begin();g != geomVec.end(); ++g)
       {
         auto gg = g->get();
-        unsigned char* out = new unsigned char[gg->WkbSize()+10];
+        auto* out = new unsigned char[gg->WkbSize()+10];
         gg->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
 
       //std::string st = Fmi::OGR::exportToWkt(*g);
@@ -1088,7 +1088,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
     for (auto g = geomVec.begin();g != geomVec.end(); ++g)
     {
       auto gg = g->get();
-      unsigned char* out = new unsigned char[gg->WkbSize()+10];
+      auto* out = new unsigned char[gg->WkbSize()+10];
       gg->exportToWkb(wkbNDR,out,wkbVariantOldOgc);
       imagePaint.paintWkb(ss, ss, dx+10/ss, dy+10/ss,out,gg->WkbSize());
       CPLFree(out);

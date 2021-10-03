@@ -22,8 +22,8 @@ int gridPointValue_compare(const void *_val1,const void *_val2)
 {
   if (_val1 != nullptr  &&  _val2 != nullptr)
   {
-    GridPointValuePtr *obj1 = const_cast<GridPointValuePtr*>(reinterpret_cast<const GridPointValuePtr *>(_val1));
-    GridPointValuePtr *obj2 = const_cast<GridPointValuePtr*>(reinterpret_cast<const GridPointValuePtr *>(_val2));
+    auto *obj1 = const_cast<GridPointValuePtr*>(reinterpret_cast<const GridPointValuePtr *>(_val1));
+    auto *obj2 = const_cast<GridPointValuePtr*>(reinterpret_cast<const GridPointValuePtr *>(_val2));
 
     return (*obj1)->compare(gridPointValue_comparisonMethod,(*obj2));
   }
@@ -298,7 +298,7 @@ void GridPointValueList::increaseSize(uint newSize)
       return;
     }
 
-    GridPointValuePtr *newArray = new GridPointValuePtr[newSize];
+    auto *newArray = new GridPointValuePtr[newSize];
     for (uint t=0; t<newSize; t++)
     {
       if (t < mSize)

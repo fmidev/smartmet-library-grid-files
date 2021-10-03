@@ -82,8 +82,8 @@ void LambertConformalImpl::init() const
     double latitudeOfFirstGridPoint = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
     double longitudeOfFirstGridPoint = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
 
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
+    auto dx = C_DOUBLE(mDxInMetres);
+    auto dy = C_DOUBLE(mDyInMetres);
 
     mDx = dx;
     mDy = dy;
@@ -221,8 +221,8 @@ std::string LambertConformalImpl::getGridGeometryString() const
     double latin2 = C_DOUBLE(mLatin2) / 1000;
     double sx = getLongitude(C_DOUBLE(mLongitudeOfSouthernPole) / 1000);
     double sy = C_DOUBLE(mLatitudeOfSouthernPole) / 1000;
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
+    auto dx = C_DOUBLE(mDxInMetres);
+    auto dy = C_DOUBLE(mDyInMetres);
     double laD = latin1;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();

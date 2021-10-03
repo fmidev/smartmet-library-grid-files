@@ -104,10 +104,10 @@ T::Coordinate_svec StretchedRotatedLatLonImpl::getGridOriginalCoordinates() cons
     uint ni = (*mLatLon.getGrid()->getNi());
     uint nj = (*mLatLon.getGrid()->getNj());
 
-    double latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
-    double longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
-    double iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
-    double jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
+    auto latitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLatitudeOfFirstGridPoint());
+    auto longitudeOfFirstGridPoint = C_DOUBLE(*mLatLon.getGrid()->getLongitudeOfFirstGridPoint());
+    auto iDirectionIncrement = C_DOUBLE(*mLatLon.getIDirectionIncrement());
+    auto jDirectionIncrement = C_DOUBLE(*mLatLon.getJDirectionIncrement());
 
     unsigned char scanningMode = mLatLon.getScanningMode()->getScanningMode();
 

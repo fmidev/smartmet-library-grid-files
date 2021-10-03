@@ -395,7 +395,7 @@ int MemoryReader::search_string(const char *_str)
     if (_str == nullptr)
       throw Fmi::Exception(BCP,"The '_str' parameter points to nullptr!");
 
-    uchar *p = (uchar*)_str;
+    auto *p = (uchar*)_str;
     uchar *r = readPtr;
     while (*p != '\0' && r < endPtr)
     {
@@ -470,7 +470,7 @@ std::uint16_t MemoryReader::read_uint16()
 
     if (networkByteOrder)
     {
-      ushort *v = (ushort*)readPtr;
+      auto *v = (ushort*)readPtr;
       ushort val = ntohs(*v);
       readPtr += 2;
       return val;
@@ -478,7 +478,7 @@ std::uint16_t MemoryReader::read_uint16()
 
     unsigned short a = readPtr[0];
     unsigned short b = readPtr[1];
-    unsigned short val = static_cast<unsigned short>((a << 8 | b));
+    auto val = static_cast<unsigned short>((a << 8 | b));
     if (littleEndian)
       val = static_cast<unsigned short>((b << 8 | a));
 
@@ -665,7 +665,7 @@ std::int16_t MemoryReader::read_int16()
 
     if (networkByteOrder)
     {
-      short *v = (short*)readPtr;
+      auto *v = (short*)readPtr;
       short val = ntohs(*v);
       readPtr += 2;
       return val;
@@ -673,7 +673,7 @@ std::int16_t MemoryReader::read_int16()
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
-    short val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
+    auto val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
     if (littleEndian)
       val = static_cast<short>((1 - ((b & 128) >> 6)) * ((b & 127) << 8 | a));
 
@@ -790,7 +790,7 @@ std::float_t MemoryReader::read_float()
 
     float val = 0.0;
 
-    unsigned char* f = reinterpret_cast<unsigned char*>(&val);
+    auto* f = reinterpret_cast<unsigned char*>(&val);
 
     f[0] = readPtr[3];
     f[1] = readPtr[2];
@@ -836,7 +836,7 @@ std::double_t MemoryReader::read_double()
 
     double val = 0.0;
 
-    unsigned char* f = reinterpret_cast<unsigned char*>(&val);
+    auto* f = reinterpret_cast<unsigned char*>(&val);
 
     f[0] = readPtr[7];
     f[1] = readPtr[6];
@@ -1155,7 +1155,7 @@ T::Int16_opt MemoryReader::read_Int16_opt()
 
     unsigned char a = readPtr[0];
     unsigned char b = readPtr[1];
-    short val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
+    auto val = static_cast<short>((1 - ((a & 128) >> 6)) * ((a & 127) << 8 | b));
     if (littleEndian)
       val = static_cast<short>((1 - ((b & 128) >> 6)) * ((b & 127) << 8 | a));
 
@@ -1274,7 +1274,7 @@ T::Float_opt MemoryReader::read_Float_opt()
 
     float val = 0.0;
 
-    unsigned char* f = reinterpret_cast<unsigned char*>(&val);
+    auto* f = reinterpret_cast<unsigned char*>(&val);
 
     f[0] = readPtr[3];
     f[1] = readPtr[2];

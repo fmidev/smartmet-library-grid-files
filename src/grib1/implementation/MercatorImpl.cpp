@@ -125,8 +125,8 @@ std::string MercatorImpl::getGridGeometryString() const
 
     double x = getLongitude(C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000);
     double y = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
-    double dx = C_DOUBLE(mDiInMetres);
-    double dy = C_DOUBLE(mDjInMetres);
+    auto dx = C_DOUBLE(mDiInMetres);
+    auto dy = C_DOUBLE(mDjInMetres);
     double latin = C_DOUBLE(mLatin)/1000;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
@@ -188,8 +188,8 @@ T::Coordinate_svec MercatorImpl::getGridOriginalCoordinates() const
     double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
     double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
 
-    double di = C_DOUBLE(mDiInMetres);
-    double dj = C_DOUBLE(mDjInMetres);
+    auto di = C_DOUBLE(mDiInMetres);
+    auto dj = C_DOUBLE(mDjInMetres);
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)
@@ -290,8 +290,8 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint()) / 1000;
     double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
 
-    double di = C_DOUBLE(mDiInMetres);
-    double dj = C_DOUBLE(mDjInMetres);
+    auto di = C_DOUBLE(mDiInMetres);
+    auto dj = C_DOUBLE(mDjInMetres);
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
     if ((scanningMode & 0x80) != 0)

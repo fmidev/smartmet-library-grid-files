@@ -208,8 +208,8 @@ std::string PolarStereographicImpl::getGridGeometryString() const
 
     double y = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
     double x = getLongitude(C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000);
-    double dx = C_DOUBLE(mDxInMetres);
-    double dy = C_DOUBLE(mDyInMetres);
+    auto dx = C_DOUBLE(mDxInMetres);
+    auto dy = C_DOUBLE(mDyInMetres);
     double orientation = C_DOUBLE(mOrientationOfTheGrid)/1000;
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
@@ -333,8 +333,8 @@ void PolarStereographicImpl::init() const
     if (mInitialized)
       return;
 
-    double dxx = C_DOUBLE(mDxInMetres);
-    double dyy = C_DOUBLE(mDyInMetres);
+    auto dxx = C_DOUBLE(mDxInMetres);
+    auto dyy = C_DOUBLE(mDyInMetres);
 
     unsigned char scanningMode = mScanningMode.getScanningMode();
 
