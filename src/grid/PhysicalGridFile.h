@@ -33,28 +33,28 @@ class PhysicalGridFile : public GridFile
   public:
                           PhysicalGridFile();
                           PhysicalGridFile(const PhysicalGridFile& other);
-    virtual               ~PhysicalGridFile();
+                  ~PhysicalGridFile() override;
 
-    virtual Message*      getMessageByIndex(std::size_t index);
-    virtual char*         getMemoryPtr();
-    virtual std::size_t   getNumberOfMessages();
-    virtual long long     getSize();
+    Message*      getMessageByIndex(std::size_t index) override;
+    char*         getMemoryPtr() override;
+    std::size_t   getNumberOfMessages() override;
+    long long     getSize() override;
 
-    virtual bool          isMemoryMapped() const;
-    virtual bool          isPhysical() const;
-    virtual bool          isVirtual() const;
+    bool          isMemoryMapped() const override;
+    bool          isPhysical() const override;
+    bool          isVirtual() const override;
 
-    virtual bool          hasMessagePositionError() const;
+    bool          hasMessagePositionError() const override;
 
-    virtual void          mapToMemory();
+    void          mapToMemory() override;
 
-    virtual void          print(std::ostream& stream,uint level,uint optionFlags) const;
+    void          print(std::ostream& stream,uint level,uint optionFlags) const override;
 
-    virtual void          read(const std::string& filename);
+    void          read(const std::string& filename) override;
     virtual void          read(MemoryReader& memoryReader);
 
-    virtual void          write(const std::string& filename);
-    virtual void          write(DataWriter& dataWriter);
+    void          write(const std::string& filename) override;
+    void          write(DataWriter& dataWriter) override;
 
   private:
 

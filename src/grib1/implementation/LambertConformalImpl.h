@@ -13,26 +13,26 @@ class LambertConformalImpl : public LambertConformal
 
                         LambertConformalImpl();
                         LambertConformalImpl(const LambertConformalImpl& other);
-    virtual             ~LambertConformalImpl();
+                ~LambertConformalImpl() override;
 
-    GridDefinition*     createGridDefinition() const;
+    GridDefinition*     createGridDefinition() const override;
 
-    bool                getGridMetricCellSize(double& width,double& height) const;
-    T::Coordinate_svec  getGridOriginalCoordinates() const;
-    T::Dimensions       getGridDimensions() const;
-    std::size_t         getGridColumnCount() const;
-    std::size_t         getGridRowCount() const;
-    std::string         getGridGeometryString() const;
-    bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
-    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
-    bool                reverseXDirection() const;
-    bool                reverseYDirection() const;
+    bool                getGridMetricCellSize(double& width,double& height) const override;
+    T::Coordinate_svec  getGridOriginalCoordinates() const override;
+    T::Dimensions       getGridDimensions() const override;
+    std::size_t         getGridColumnCount() const override;
+    std::size_t         getGridRowCount() const override;
+    std::string         getGridGeometryString() const override;
+    bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const override;
+    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const override;
+    bool                reverseXDirection() const override;
+    bool                reverseYDirection() const override;
 
-    bool                getProperty(uint propertyId,long long& value);
-    bool                setProperty(uint propertyId,long long value);
+    bool                getProperty(uint propertyId,long long& value) override;
+    bool                setProperty(uint propertyId,long long value) override;
 
-    void                initSpatialReference();
-    void                read(MemoryReader& memoryReader);
+    void                initSpatialReference() override;
+    void                read(MemoryReader& memoryReader) override;
 
   private:
 

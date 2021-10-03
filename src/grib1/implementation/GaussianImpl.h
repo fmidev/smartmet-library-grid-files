@@ -13,18 +13,18 @@ class GaussianImpl : public Gaussian
 
                         GaussianImpl();
                         GaussianImpl(const GaussianImpl& other);
-    virtual             ~GaussianImpl();
+                ~GaussianImpl() override;
 
-    GridDefinition*     createGridDefinition() const;
+    GridDefinition*     createGridDefinition() const override;
 
-    T::Coordinate_svec  getGridOriginalCoordinates() const;
-    T::Dimensions       getGridDimensions() const;
-    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
-    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
+    T::Coordinate_svec  getGridOriginalCoordinates() const override;
+    T::Dimensions       getGridDimensions() const override;
+    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const override;
+    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const override;
 
-    void                initSpatialReference();
-    void                print(std::ostream& stream,uint level,uint optionFlags) const;
-    void                read(MemoryReader& memoryReader);
+    void                initSpatialReference() override;
+    void                print(std::ostream& stream,uint level,uint optionFlags) const override;
+    void                read(MemoryReader& memoryReader) override;
 };
 
 }  // namespace GRIB1

@@ -22,19 +22,19 @@ namespace GRIB2 {
 class JpegGridDataRepresentation : public RepresentationDefinition {
 public:
   JpegGridDataRepresentation();
-  virtual ~JpegGridDataRepresentation();
+  ~JpegGridDataRepresentation() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual RepresentationDefinition *createRepresentationDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  RepresentationDefinition *createRepresentationDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash();
 
-  PackingSettings *getPacking() const;
+  PackingSettings *getPacking() const override;
   void setPacking(PackingSettings &packing);
-  OriginalValuesSettings *getOriginalValues() const;
+  OriginalValuesSettings *getOriginalValues() const override;
   void setOriginalValues(OriginalValuesSettings &originalValues);
   const T::UInt8_opt &getTypeOfCompressionUsed() const;
   void setTypeOfCompressionUsed(T::UInt8_opt typeOfCompressionUsed);

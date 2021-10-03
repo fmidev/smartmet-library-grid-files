@@ -14,14 +14,14 @@ class AuxiliarySatelliteProductImpl : public AuxiliarySatelliteProduct
   public:
                         AuxiliarySatelliteProductImpl();
                         AuxiliarySatelliteProductImpl(const AuxiliarySatelliteProductImpl& other);
-    virtual             ~AuxiliarySatelliteProductImpl();
+                ~AuxiliarySatelliteProductImpl() override;
 
-    ProductDefinition*  createProductDefinition() const;
+    ProductDefinition*  createProductDefinition() const override;
 
-    T::TimeString       getForecastTime(T::TimeString referenceTime) const;
-    T::ParamLevel       getGribParameterLevel() const;
-    T::ParamLevelId     getGribParameterLevelId() const;
-    void                read(MemoryReader& memoryReader);
+    T::TimeString       getForecastTime(T::TimeString referenceTime) const override;
+    T::ParamLevel       getGribParameterLevel() const override;
+    T::ParamLevelId     getGribParameterLevelId() const override;
+    void                read(MemoryReader& memoryReader) override;
 };
 
 }  // namespace GRIB2

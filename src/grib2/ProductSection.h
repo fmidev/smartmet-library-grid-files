@@ -52,15 +52,15 @@ class ProductSection : public GRID::MessageSection
 
                           ProductSection();
                           ProductSection(const ProductSection& other);
-    virtual               ~ProductSection();
+                  ~ProductSection() override;
 
     // ### Common methods for all message sections
 
-    void                  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
-    T::FilePosition       getFilePosition() const;
-    std::uint32_t         getSectionLength() const;
-    std::string           getSectionName() const;
-    std::uint8_t          getSectionNumber() const;
+    void                  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
+    T::FilePosition       getFilePosition() const override;
+    std::uint32_t         getSectionLength() const override;
+    std::string           getSectionName() const override;
+    std::uint8_t          getSectionNumber() const override;
 
     // ### Section specific methods
 
@@ -88,7 +88,7 @@ class ProductSection : public GRID::MessageSection
 
     void                  read(MemoryReader& memoryReader);
     void                  write(DataWriter& dataWriter);
-    void                  print(std::ostream& stream,uint level,uint optionFlags) const;
+    void                  print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   private:
 

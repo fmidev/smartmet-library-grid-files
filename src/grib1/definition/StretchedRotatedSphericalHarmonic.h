@@ -22,16 +22,16 @@ namespace GRIB1 {
 class StretchedRotatedSphericalHarmonic : public GridDefinition {
 public:
   StretchedRotatedSphericalHarmonic();
-  virtual ~StretchedRotatedSphericalHarmonic();
+  ~StretchedRotatedSphericalHarmonic() override;
 
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash();
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  T::Hash countHash() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
   std::uint16_t getJ() const;
   void setJ(std::uint16_t j);
   std::uint16_t getK() const;
@@ -42,7 +42,7 @@ public:
   void setRepresentationType(std::uint8_t representationType);
   std::uint8_t getRepresentationMode() const;
   void setRepresentationMode(std::uint8_t representationMode);
-  RotationSettings *getRotation() const;
+  RotationSettings *getRotation() const override;
   void setRotation(RotationSettings &rotation);
   GridStretchingSettings *getGridStretching() const;
   void setGridStretching(GridStretchingSettings &gridStretching);

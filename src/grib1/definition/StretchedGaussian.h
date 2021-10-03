@@ -23,27 +23,27 @@ namespace GRIB1 {
 class StretchedGaussian : public GridDefinition {
 public:
   StretchedGaussian();
-  virtual ~StretchedGaussian();
+  ~StretchedGaussian() override;
 
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash();
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  T::Hash countHash() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
   std::uint16_t getNi() const;
   void setNi(std::uint16_t ni);
   std::int16_t getNj() const;
   void setNj(std::int16_t nj);
-  GridAreaSettings *getGridArea() const;
+  GridAreaSettings *getGridArea() const override;
   void setGridArea(GridAreaSettings &gridArea);
   std::uint16_t getIDirectionIncrement() const;
   void setIDirectionIncrement(std::uint16_t iDirectionIncrement);
   std::uint16_t getN() const;
   void setN(std::uint16_t n);
-  ScanningModeSettings *getScanningMode() const;
+  ScanningModeSettings *getScanningMode() const override;
   void setScanningMode(ScanningModeSettings &scanningMode);
   GridStretchingSettings *getGridStretching() const;
   void setGridStretching(GridStretchingSettings &gridStretching);

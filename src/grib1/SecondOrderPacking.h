@@ -33,15 +33,15 @@ class SecondOrderPacking : public DataDefinition
   public:
                     SecondOrderPacking();
                     SecondOrderPacking(const SecondOrderPacking& other);
-    virtual         ~SecondOrderPacking();
+            ~SecondOrderPacking() override;
 
-    DataDefinition* createDataDefinition() const;
-    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    PackingMethod   getPackingMethod() const;
+    DataDefinition* createDataDefinition() const override;
+    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
+    PackingMethod   getPackingMethod() const override;
 
-    void            read(MemoryReader& memoryReader);
-    void            write(DataWriter& dataWriter);
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void            read(MemoryReader& memoryReader) override;
+    void            write(DataWriter& dataWriter) override;
+    void            print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   private:
 

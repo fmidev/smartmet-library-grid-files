@@ -21,15 +21,15 @@ namespace GRIB2 {
 class Unstructured : public GridDefinition {
 public:
   Unstructured();
-  virtual ~Unstructured();
+  ~Unstructured() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash();
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  T::Hash countHash() override;
 
   const T::UInt8_opt &getShapeOfTheEarth() const;
   void setShapeOfTheEarth(T::UInt8_opt shapeOfTheEarth);

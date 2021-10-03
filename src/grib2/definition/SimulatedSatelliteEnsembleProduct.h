@@ -22,19 +22,19 @@ namespace GRIB2 {
 class SimulatedSatelliteEnsembleProduct : public ProductDefinition {
 public:
   SimulatedSatelliteEnsembleProduct();
-  virtual ~SimulatedSatelliteEnsembleProduct();
+  ~SimulatedSatelliteEnsembleProduct() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash();
 
   SimulatedSatelliteProduct *getSimulatedSatelliteProduct() const;
   void setSimulatedSatelliteProduct(SimulatedSatelliteProduct &simulatedSatelliteProduct);
-  EpsSettings *getEps() const;
+  EpsSettings *getEps() const override;
   void setEps(EpsSettings &eps);
 
 protected:

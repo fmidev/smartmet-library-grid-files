@@ -22,19 +22,19 @@ namespace GRIB2 {
 class Product_55 : public ProductDefinition {
 public:
   Product_55();
-  virtual ~Product_55();
+  ~Product_55() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash();
 
   PointInTimeSettings *getPointInTime() const;
   void setPointInTime(PointInTimeSettings &pointInTime);
-  HorizontalSettings *getHorizontal() const;
+  HorizontalSettings *getHorizontal() const override;
   void setHorizontal(HorizontalSettings &horizontal);
 
 protected:

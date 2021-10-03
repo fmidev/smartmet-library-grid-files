@@ -20,25 +20,25 @@ class VirtualGridFile : public GridFile
   public:
                         VirtualGridFile();
                         VirtualGridFile(VirtualGridFile *gridFile);
-    virtual             ~VirtualGridFile();
+                ~VirtualGridFile() override;
 
-    void                addMessage(Message *message);
+    void                addMessage(Message *message) override;
     void                addPhysicalGridFile(GRID::GridFile_sptr physicalGridFile);
 
-    Message*            getMessageByIndex(std::size_t index);
-    virtual T::FileType getFileType() const;
-    virtual std::string getFileTypeString() const;
-    std::size_t         getNumberOfMessages();
+    Message*            getMessageByIndex(std::size_t index) override;
+    T::FileType getFileType() const override;
+    std::string getFileTypeString() const override;
+    std::size_t         getNumberOfMessages() override;
     std::size_t         getNumberOfPhysicalGridFiles();
     GRID::GridFile_sptr getPhysicalGridFileByIndex(std::size_t index);
 
-    virtual bool        isMemoryMapped() const;
-    virtual bool        isPhysical() const;
-    virtual bool        isVirtual() const;
+    bool        isMemoryMapped() const override;
+    bool        isPhysical() const override;
+    bool        isVirtual() const override;
 
-    virtual void        mapToMemory();
+    void        mapToMemory() override;
 
-    virtual void        print(std::ostream& stream,uint level,uint optionFlags) const;
+    void        print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   protected:
 

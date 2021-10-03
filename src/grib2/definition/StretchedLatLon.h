@@ -23,19 +23,19 @@ namespace GRIB2 {
 class StretchedLatLon : public GridDefinition {
 public:
   StretchedLatLon();
-  virtual ~StretchedLatLon();
+  ~StretchedLatLon() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual GridDefinition *createGridDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash();
+  uint getTemplateNumber() const override;
+  GridDefinition *createGridDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  T::Hash countHash() override;
 
-  EarthShapeSettings *getEarthShape() const;
+  EarthShapeSettings *getEarthShape() const override;
   void setEarthShape(EarthShapeSettings &earthShape);
-  LatLonSettings *getLatLon() const;
+  LatLonSettings *getLatLon() const override;
   void setLatLon(LatLonSettings &latLon);
   StretchingSettings *getStretching() const;
   void setStretching(StretchingSettings &stretching);

@@ -25,25 +25,25 @@ namespace GRIB2 {
 class TimeIntervalEnsembleClusterDerivedForecast : public ProductDefinition {
 public:
   TimeIntervalEnsembleClusterDerivedForecast();
-  virtual ~TimeIntervalEnsembleClusterDerivedForecast();
+  ~TimeIntervalEnsembleClusterDerivedForecast() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash();
 
-  ParameterSettings *getParameter() const;
+  ParameterSettings *getParameter() const override;
   void setParameter(ParameterSettings &parameter);
-  HorizontalSettings *getHorizontal() const;
+  HorizontalSettings *getHorizontal() const override;
   void setHorizontal(HorizontalSettings &horizontal);
-  DerivedSettings *getDerived() const;
+  DerivedSettings *getDerived() const override;
   void setDerived(DerivedSettings &derived);
-  RectangularClusterSettings *getRectangularCluster() const;
+  RectangularClusterSettings *getRectangularCluster() const override;
   void setRectangularCluster(RectangularClusterSettings &rectangularCluster);
-  StatisticalSettings *getStatistical() const;
+  StatisticalSettings *getStatistical() const override;
   void setStatistical(StatisticalSettings &statistical);
   const T::UInt8_opt &getEnsembleForecastNumbers() const;
   void setEnsembleForecastNumbers(T::UInt8_opt ensembleForecastNumbers);

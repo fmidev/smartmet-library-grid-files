@@ -13,24 +13,24 @@ class MercatorImpl : public Mercator
 
                         MercatorImpl();
                         MercatorImpl(const MercatorImpl& other);
-    virtual             ~MercatorImpl();
+                ~MercatorImpl() override;
 
-    GridDefinition*     createGridDefinition() const;
+    GridDefinition*     createGridDefinition() const override;
 
-    bool                getGridMetricCellSize(double& width,double& height) const;
-    T::Coordinate_svec  getGridOriginalCoordinates() const;
-    T::Dimensions       getGridDimensions() const;
-    std::string         getGridGeometryString() const;
-    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
-    bool                reverseXDirection() const;
-    bool                reverseYDirection() const;
+    bool                getGridMetricCellSize(double& width,double& height) const override;
+    T::Coordinate_svec  getGridOriginalCoordinates() const override;
+    T::Dimensions       getGridDimensions() const override;
+    std::string         getGridGeometryString() const override;
+    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const override;
+    bool                reverseXDirection() const override;
+    bool                reverseYDirection() const override;
 
-    bool                getProperty(uint propertyId,long long& value);
-    bool                setProperty(uint propertyId,long long value);
+    bool                getProperty(uint propertyId,long long& value) override;
+    bool                setProperty(uint propertyId,long long value) override;
 
-    void                initSpatialReference();
-    void                print(std::ostream& stream,uint level,uint optionFlags) const;
-    void                read(MemoryReader& memoryReader);
+    void                initSpatialReference() override;
+    void                print(std::ostream& stream,uint level,uint optionFlags) const override;
+    void                read(MemoryReader& memoryReader) override;
 };
 
 }  // namespace GRIB1

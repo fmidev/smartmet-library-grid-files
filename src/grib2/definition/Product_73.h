@@ -24,23 +24,23 @@ namespace GRIB2 {
 class Product_73 : public ProductDefinition {
 public:
   Product_73();
-  virtual ~Product_73();
+  ~Product_73() override;
 
-  virtual uint getTemplateNumber() const;
-  virtual ProductDefinition *createProductDefinition() const;
-  virtual void read(MemoryReader &memoryReader);
-  virtual void write(DataWriter &dataWriter);
-  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  uint getTemplateNumber() const override;
+  ProductDefinition *createProductDefinition() const override;
+  void read(MemoryReader &memoryReader) override;
+  void write(DataWriter &dataWriter) override;
+  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
+  void print(std::ostream &stream, uint level, uint optionFlags) const override;
   virtual T::Hash countHash();
 
-  PostprocSettings *getPostproc() const;
+  PostprocSettings *getPostproc() const override;
   void setPostproc(PostprocSettings &postproc);
-  HorizontalSettings *getHorizontal() const;
+  HorizontalSettings *getHorizontal() const override;
   void setHorizontal(HorizontalSettings &horizontal);
-  EpsSettings *getEps() const;
+  EpsSettings *getEps() const override;
   void setEps(EpsSettings &eps);
-  StatisticalSettings *getStatistical() const;
+  StatisticalSettings *getStatistical() const override;
   void setStatistical(StatisticalSettings &statistical);
 
 protected:

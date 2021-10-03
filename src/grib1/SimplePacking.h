@@ -16,15 +16,15 @@ class SimplePacking : public DataDefinition
   public:
                     SimplePacking();
                     SimplePacking(const SimplePacking& other);
-    virtual         ~SimplePacking();
+            ~SimplePacking() override;
 
-    DataDefinition* createDataDefinition() const;
-    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
-    void            encodeValues(Message *message,T::ParamValue_vec& encodeValues);
-    PackingMethod   getPackingMethod() const;
-    bool            getValueByIndex(Message *message,uint index,T::ParamValue& value) const;
+    DataDefinition* createDataDefinition() const override;
+    void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
+    void            encodeValues(Message *message,T::ParamValue_vec& encodeValues) override;
+    PackingMethod   getPackingMethod() const override;
+    bool            getValueByIndex(Message *message,uint index,T::ParamValue& value) const override;
 
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void            print(std::ostream& stream,uint level,uint optionFlags) const override;
 
   protected:
 
