@@ -134,7 +134,7 @@ class RepresentationSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<RepresentationSection> RepresentSect_sptr;
+using RepresentSect_sptr = std::shared_ptr<RepresentationSection>;
 
 
 }  // namespace GRIB2

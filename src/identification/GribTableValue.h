@@ -32,7 +32,7 @@ class GribTableValue
 };
 
 
-typedef std::vector<GribTableValue>  GribTableValue_vec;
+using GribTableValue_vec = std::vector<GribTableValue>;
 
 }
 }

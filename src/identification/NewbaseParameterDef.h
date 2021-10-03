@@ -22,9 +22,9 @@ class NewbaseParameterDef
     std::string       mParameterName;
 };
 
-typedef const NewbaseParameterDef* NewbaseParamDef_cptr;
-typedef std::vector<NewbaseParameterDef> NewbaseParamDef_vec;
-typedef std::unordered_map<uint,NewbaseParameterDef> NewbaseParamDef_umap;
+using NewbaseParamDef_cptr = const NewbaseParameterDef *;
+using NewbaseParamDef_vec = std::vector<NewbaseParameterDef>;
+using NewbaseParamDef_umap = std::unordered_map<uint, NewbaseParameterDef>;
 
 
 }

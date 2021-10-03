@@ -162,7 +162,7 @@ class GridSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<GridSection> GridSect_sptr;
+using GridSect_sptr = std::shared_ptr<GridSection>;
 
 }  // namespace GRIB1
 }  // namespace SmartMet

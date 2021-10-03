@@ -159,7 +159,7 @@ enum DataSection_additionalFlags
 };
 
 
-typedef std::shared_ptr<DataSection> DataSect_sptr;
+using DataSect_sptr = std::shared_ptr<DataSection>;
 
 
 }  // namespace GRIB1

@@ -33,8 +33,8 @@ class GribParameterDef
     std::string     mParameterUnits;
 };
 
-typedef std::vector<GribParameterDef> GribParamDef_vec;
-typedef const GribParameterDef* GribParamDef_cptr;
+using GribParamDef_vec = std::vector<GribParameterDef>;
+using GribParamDef_cptr = const GribParameterDef *;
 
 }
 }

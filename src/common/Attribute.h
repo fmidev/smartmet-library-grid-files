@@ -29,7 +29,7 @@ class Attribute
 };
 
 
-typedef Attribute* Attribute_ptr;
+using Attribute_ptr = Attribute *;
 
 
 }

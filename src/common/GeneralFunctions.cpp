@@ -2706,10 +2706,7 @@ std::string base64_encode(unsigned char *data, size_t dataSize)
     std::stringstream os;
 
     // convert binary values to base64 characters
-    typedef bai::base64_from_binary
-        // retrieve 6 bit integers from a sequence of 8 bit bytes
-        <bai::transform_width<const char *, 6, 8>>
-            base64_enc;
+    using base64_enc = bai::base64_from_binary<bai::transform_width<const char *, 6, 8>>;
 
     std::copy(base64_enc(data), base64_enc(data + dataSize), std::ostream_iterator<char>(os));
 

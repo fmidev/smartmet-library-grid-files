@@ -131,12 +131,12 @@ class GridDefinition
 };
 
 
-typedef GridDefinition* GridDef_ptr;
-typedef std::vector<GridDefinition*> GridDef_pvec;
-typedef std::map<std::string,GridDefinition*> GridDef_map;
-typedef std::map<uint,GridDefinition*> GridDefinition_pmap;
-typedef std::shared_ptr<GridDefinition> GridDefinition_sptr;
-typedef std::vector<GridDefinition_sptr> GridDefinition_spvec;
+using GridDef_ptr = GridDefinition *;
+using GridDef_pvec = std::vector<GridDefinition *>;
+using GridDef_map = std::map<std::string, GridDefinition *>;
+using GridDefinition_pmap = std::map<uint, GridDefinition *>;
+using GridDefinition_sptr = std::shared_ptr<GridDefinition>;
+using GridDefinition_spvec = std::vector<GridDefinition_sptr>;
 
 
 }  // namespace GRIB2

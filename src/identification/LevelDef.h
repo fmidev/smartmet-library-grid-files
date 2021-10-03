@@ -22,8 +22,8 @@ class LevelDef
 };
 
 
-typedef std::vector<LevelDef> LevelDef_vec;
-typedef const LevelDef* LevelDef_cptr;
+using LevelDef_vec = std::vector<LevelDef>;
+using LevelDef_cptr = const LevelDef *;
 
 
 }

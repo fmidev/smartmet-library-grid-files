@@ -563,7 +563,7 @@ std::string AdditionalParameters::formatDate(
   FUNCTION_TRACE
   try
   {
-    typedef boost::date_time::time_facet<boost::local_time::local_date_time, char> tfacet;
+    using tfacet = boost::date_time::time_facet<boost::local_time::local_date_time, char>;
     std::ostringstream os;
     os.imbue(std::locale(llocale, new tfacet(fmt)));
     os << ldt;

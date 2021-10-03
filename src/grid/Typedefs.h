@@ -22,63 +22,63 @@ namespace SmartMet
 namespace T
 {
 
-typedef std::size_t Hash;
-typedef std::uint64_t FilePosition;
-typedef std::string ParamId;
-typedef std::uint32_t NewbaseParamId;
-typedef std::uint32_t FmiParamId;
-typedef std::uint32_t GribParamId;
-typedef std::int32_t ParamLevel;
-typedef std::uint8_t ParamLevelId;
-typedef float ParamValue;
+using Hash = std::size_t;
+using FilePosition = std::uint64_t;
+using ParamId = std::string;
+using NewbaseParamId = std::uint32_t;
+using FmiParamId = std::uint32_t;
+using GribParamId = std::uint32_t;
+using ParamLevel = std::int32_t;
+using ParamLevelId = std::uint8_t;
+using ParamValue = float;
 #define ParamValueMissing -16777216
 
-typedef std::vector<ParamId> ParamId_vec;
-typedef std::vector<ParamLevel> ParamLevel_vec;
-typedef std::vector<ParamValue> ParamValue_vec;
-typedef ParamValue_vec* ParamValue_vec_ptr;
-typedef std::vector<Coordinate> Coordinate_vec;
+using ParamId_vec = std::vector<ParamId>;
+using ParamLevel_vec = std::vector<ParamLevel>;
+using ParamValue_vec = std::vector<ParamValue>;
+using ParamValue_vec_ptr = ParamValue_vec *;
+using Coordinate_vec = std::vector<Coordinate>;
 
-typedef std::vector<std::size_t> Index_vec;
-typedef boost::posix_time::ptime TimeStamp;
-typedef std::string TimeString;
+using Index_vec = std::vector<std::size_t>;
+using TimeStamp = boost::posix_time::ptime;
+using TimeString = std::string;
 
-typedef OGRSpatialReference SpatialRef;
-typedef unsigned char* Data_ptr;
+using SpatialRef = OGRSpatialReference;
+using Data_ptr = unsigned char *;
 
-typedef std::vector<Data_ptr> Data_ptr_vec;
+using Data_ptr_vec = std::vector<Data_ptr>;
 
-typedef std::int8_t Int8;
-typedef std::int16_t Int16;
-typedef std::int32_t Int32;
-typedef std::int64_t Int64;
-typedef std::uint8_t UInt8;
-typedef std::uint16_t UInt16;
-typedef std::uint32_t UInt32;
-typedef std::uint64_t UInt64;
+using Int8 = std::int8_t;
+using Int16 = std::int16_t;
+using Int32 = std::int32_t;
+using Int64 = std::int64_t;
+using UInt8 = std::uint8_t;
+using UInt16 = std::uint16_t;
+using UInt32 = std::uint32_t;
+using UInt64 = std::uint64_t;
 
-typedef boost::optional<std::int8_t> Int8_opt;
-typedef boost::optional<std::int16_t> Int16_opt;
-typedef boost::optional<std::int32_t> Int32_opt;
-typedef boost::optional<std::int64_t> Int64_opt;
-typedef boost::optional<std::uint8_t> UInt8_opt;
-typedef boost::optional<std::uint16_t> UInt16_opt;
-typedef boost::optional<std::uint24_t> UInt24_opt;
-typedef boost::optional<std::uint32_t> UInt32_opt;
-typedef boost::optional<std::uint64_t> UInt64_opt;
-typedef boost::optional<std::float_t> Float_opt;
+using Int8_opt = boost::optional<std::int8_t>;
+using Int16_opt = boost::optional<std::int16_t>;
+using Int32_opt = boost::optional<std::int32_t>;
+using Int64_opt = boost::optional<std::int64_t>;
+using UInt8_opt = boost::optional<std::uint8_t>;
+using UInt16_opt = boost::optional<std::uint16_t>;
+using UInt24_opt = boost::optional<std::uint24_t>;
+using UInt32_opt = boost::optional<std::uint32_t>;
+using UInt64_opt = boost::optional<std::uint64_t>;
+using Float_opt = boost::optional<std::float_t>;
 
-typedef std::vector<int> IndexVector;
+using IndexVector = std::vector<int>;
 
-typedef unsigned long long SessionId;
+using SessionId = unsigned long long;
 
-typedef short ForecastType;
-typedef short ForecastNumber;
-typedef int   GeometryId;
-typedef std::set<T::GeometryId> GeometryId_set;
+using ForecastType = short;
+using ForecastNumber = short;
+using GeometryId = int;
+using GeometryId_set = std::set<T::GeometryId>;
 
 
-typedef uchar ParamKeyType;
+using ParamKeyType = uchar;
 
 class ParamKeyTypeValue
 {
@@ -95,7 +95,7 @@ class ParamKeyTypeValue
 
 
 
-typedef uchar ParamLevelIdType;
+using ParamLevelIdType = uchar;
 
 class ParamLevelIdTypeValue
 {
@@ -109,7 +109,7 @@ class ParamLevelIdTypeValue
 
 
 
-typedef uchar FileType;
+using FileType = uchar;
 
 class FileTypeValue
 {
@@ -125,7 +125,7 @@ class FileTypeValue
 };
 
 
-typedef uchar GridLayout;
+using GridLayout = uchar;
 
 class GridLayoutValue
 {
@@ -185,7 +185,7 @@ class LevelInterpolationMethod
 };
 
 
-typedef uchar CoordinateType;
+using CoordinateType = uchar;
 
 class CoordinateTypeValue
 {
@@ -198,7 +198,7 @@ class CoordinateTypeValue
 
 
 
-typedef ushort GridProjection;
+using GridProjection = ushort;
 
 class GridProjectionValue
 {

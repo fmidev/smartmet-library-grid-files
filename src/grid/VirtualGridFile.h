@@ -47,7 +47,7 @@ class VirtualGridFile : public GridFile
 };
 
 
-typedef VirtualGridFile* VirtualGridFilePtr;
+using VirtualGridFilePtr = VirtualGridFile *;
 
 }  // namespace GRID
 }  // namespace SmartMet

@@ -22,8 +22,8 @@ class ForecastTypeDef
 };
 
 
-typedef std::vector<ForecastTypeDef> ForecastTypeDef_vec;
-typedef const ForecastTypeDef* ForecastTypeDef_cptr;
+using ForecastTypeDef_vec = std::vector<ForecastTypeDef>;
+using ForecastTypeDef_cptr = const ForecastTypeDef *;
 
 
 }

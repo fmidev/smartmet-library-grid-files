@@ -9,8 +9,8 @@
 namespace SmartMet
 {
 
-typedef unsigned int uint;
-typedef unsigned long long UInt64;
+using uint = unsigned int;
+using UInt64 = unsigned long long;
 
 class Log
 {

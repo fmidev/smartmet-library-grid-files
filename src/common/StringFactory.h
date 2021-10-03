@@ -6,9 +6,9 @@
 namespace SmartMet
 {
 
-typedef char* pchar;
-typedef pchar* StringArray;
-typedef std::unordered_map<std::string,uint> StringIndex;
+using pchar = char *;
+using StringArray = pchar *;
+using StringIndex = std::unordered_map<std::string, uint>;
 
 
 class StringFactory

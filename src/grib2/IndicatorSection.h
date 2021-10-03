@@ -100,7 +100,7 @@ class IndicatorSection : public GRID::MessageSection
 
 };
 
-typedef std::shared_ptr<IndicatorSection> IndicatorSect_sptr;
+using IndicatorSect_sptr = std::shared_ptr<IndicatorSection>;
 
 
 }  // namespace GRIB2

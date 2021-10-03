@@ -73,8 +73,8 @@ class Grib2ParameterDef
 
 };
 
-typedef const Grib2ParameterDef* Grib2ParamDef_cptr;
-typedef std::vector<Grib2ParameterDef> Grib2ParamDef_vec;
+using Grib2ParamDef_cptr = const Grib2ParameterDef *;
+using Grib2ParamDef_vec = std::vector<Grib2ParameterDef>;
 
 
 }

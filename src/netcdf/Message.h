@@ -36,7 +36,7 @@ struct MessageInfo
   int                mGeometryId;
 };
 
-typedef std::vector<MessageInfo> MessageInfoVec;
+using MessageInfoVec = std::vector<MessageInfo>;
 
 class NetCdfFile;
 
@@ -156,8 +156,8 @@ class Message : public GRID::Message
 
 
 
-typedef Message* MessagePtr;
-typedef std::vector<MessagePtr> MessagePtr_vec;
+using MessagePtr = Message *;
+using MessagePtr_vec = std::vector<MessagePtr>;
 
 
 }  // namespace NetCDF

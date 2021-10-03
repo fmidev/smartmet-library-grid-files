@@ -14,9 +14,9 @@ namespace SmartMet
 class SimpleDataMatrixAdapter
 {
   public:
-    typedef float value_type;
-    typedef double coord_type;
-    typedef NFmiDataMatrix<float>::size_type size_type;
+    using value_type = float;
+    using coord_type = double;
+    using size_type = NFmiDataMatrix<float>::size_type;
 
 
     SimpleDataMatrixAdapter(std::vector<float>& values,std::vector<T::Coordinate> *coordinates,uint width,uint height)

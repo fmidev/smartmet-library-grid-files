@@ -21,8 +21,8 @@ namespace SmartMet
 namespace GRID
 {
 
-typedef std::vector<float> AngleList;
-typedef std::map<int,AngleList> AngleCache;
+using AngleList = std::vector<float>;
+using AngleCache = std::map<int, AngleList>;
 
 AngleCache gridAngleCache;
 

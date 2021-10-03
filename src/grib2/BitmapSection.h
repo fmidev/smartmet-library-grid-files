@@ -103,7 +103,7 @@ class BitmapSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<BitmapSection> BitmapSect_sptr;
+using BitmapSect_sptr = std::shared_ptr<BitmapSection>;
 
 }  // namespace GRIB2
 }  // namespace SmartMet

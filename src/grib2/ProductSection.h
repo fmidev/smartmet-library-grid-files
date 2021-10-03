@@ -179,7 +179,7 @@ class ProductSection : public GRID::MessageSection
 };
 
 
-typedef std::shared_ptr<ProductSection> ProductSect_sptr;
+using ProductSect_sptr = std::shared_ptr<ProductSection>;
 
 
 }  // namespace GRIB2

@@ -10,8 +10,8 @@ namespace NetCDF
 {
 
 
-typedef std::map<std::string,std::vector<std::string>> PropertyVec;
-typedef std::vector<float> FloatVec;
+using PropertyVec = std::map<std::string, std::vector<std::string>>;
+using FloatVec = std::vector<float>;
 
 
 class NetCdfFile
@@ -64,7 +64,7 @@ class NetCdfFile
 
 
 
-typedef NetCdfFile* NetCdfFilePtr;
+using NetCdfFilePtr = NetCdfFile *;
 
 
 }  // namespace NetCDF

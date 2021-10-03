@@ -24,8 +24,8 @@ class FmiLevelId_grib
 };
 
 
-typedef std::vector<FmiLevelId_grib> FmiLevelId_grib_vec;
-typedef const FmiLevelId_grib* FmiLevelId_grib_cptr;
+using FmiLevelId_grib_vec = std::vector<FmiLevelId_grib>;
+using FmiLevelId_grib_cptr = const FmiLevelId_grib *;
 
 
 }

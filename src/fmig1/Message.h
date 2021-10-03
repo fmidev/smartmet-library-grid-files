@@ -133,7 +133,7 @@ class Message : public GRID::Message
 };
 
 
-typedef std::shared_ptr<Message> Message_sptr;
+using Message_sptr = std::shared_ptr<Message>;
 
 
 

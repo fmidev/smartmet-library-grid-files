@@ -148,11 +148,11 @@ class GridDefinition
      bool                       mGlobal;
 };
 
-typedef GridDefinition* GridDef_ptr;
-typedef std::shared_ptr<GridDefinition> GridDefinition_sptr;
-typedef std::vector<GridDef_ptr> GridDef_pvec;
-typedef std::map<uint,GridDef_ptr> GridDefinition_pmap;
-typedef std::map<std::string,GridDef_ptr> GridDef_map;
+using GridDef_ptr = GridDefinition *;
+using GridDefinition_sptr = std::shared_ptr<GridDefinition>;
+using GridDef_pvec = std::vector<GridDef_ptr>;
+using GridDefinition_pmap = std::map<uint, GridDef_ptr>;
+using GridDef_map = std::map<std::string, GridDef_ptr>;
 
 
 }  // namespace GRID

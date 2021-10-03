@@ -11,18 +11,18 @@
 namespace SmartMet
 {
 
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef unsigned long ulong;
-typedef long long longlong;
-typedef unsigned long long ulonglong;
-typedef std::float_t ibmfloat;
+using uchar = unsigned char;
+using ushort = unsigned short;
+using uint = unsigned int;
+using ulong = unsigned long;
+using longlong = long long;
+using ulonglong = unsigned long long;
+using ibmfloat = std::float_t;
 
-typedef std::set<std::string> string_set;
-typedef std::vector<std::string> string_vec;
-typedef std::vector<double> double_vec;
-typedef std::vector<uchar> uchar_vec;
+using string_set = std::set<std::string>;
+using string_vec = std::vector<std::string>;
+using double_vec = std::vector<double>;
+using uchar_vec = std::vector<uchar>;
 
 template <typename A>
 bool missing(const A& obj)
@@ -32,8 +32,8 @@ bool missing(const A& obj)
 
 namespace T
 {
-  typedef std::vector<uchar> ByteData;
-  typedef std::vector<ByteData> ByteData_vec;
+  using ByteData = std::vector<uchar>;
+  using ByteData_vec = std::vector<ByteData>;
 }
 
 }
@@ -43,8 +43,8 @@ namespace T
 
 namespace std
 {
-  typedef int32_t int24_t;
-  typedef uint32_t uint24_t;
+  using int24_t = int32_t;
+  using uint24_t = uint32_t;
 }
 
 

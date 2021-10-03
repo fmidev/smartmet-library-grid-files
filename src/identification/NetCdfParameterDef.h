@@ -23,9 +23,9 @@ class NetCdfParameterDef
     std::string   mParameterUnits;
 };
 
-typedef const NetCdfParameterDef* NetCdfParamDef_cptr;
-typedef std::vector<NetCdfParameterDef> NetCdfParamDef_vec;
-typedef std::unordered_map<std::string,NetCdfParameterDef> NetCdfParamDef_umap;
+using NetCdfParamDef_cptr = const NetCdfParameterDef *;
+using NetCdfParamDef_vec = std::vector<NetCdfParameterDef>;
+using NetCdfParamDef_umap = std::unordered_map<std::string, NetCdfParameterDef>;
 
 
 }

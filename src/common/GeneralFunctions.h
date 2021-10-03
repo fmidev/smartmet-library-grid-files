@@ -16,7 +16,7 @@
 namespace SmartMet
 {
 
-typedef std::vector<float> FloatVec;
+using FloatVec = std::vector<float>;
 
 std::string uint64_toHex(unsigned long long value);
 double int_power(double x, int y);

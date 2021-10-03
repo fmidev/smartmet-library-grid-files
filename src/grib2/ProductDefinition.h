@@ -90,7 +90,7 @@ class ProductDefinition
 };
 
 
-typedef std::shared_ptr<ProductDefinition> ProductDefinition_sptr;
+using ProductDefinition_sptr = std::shared_ptr<ProductDefinition>;
 
 
 

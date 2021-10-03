@@ -25,8 +25,8 @@ class FmiProducerId_grib
 };
 
 
-typedef std::vector<FmiProducerId_grib> FmiProducerId_grib_vec;
-typedef const FmiProducerId_grib* FmiProducerId_grib_cptr;
+using FmiProducerId_grib_vec = std::vector<FmiProducerId_grib>;
+using FmiProducerId_grib_cptr = const FmiProducerId_grib *;
 
 
 }
