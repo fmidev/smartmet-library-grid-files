@@ -119,7 +119,7 @@ void MemoryWriter::write_data(void *_data,ulonglong _size)
 {
   try
   {
-    auto *d = (uchar*)_data;
+    uchar *d = (uchar*)_data;
     if ((mWritePosition + _size) >= mDataSize)
       throw Fmi::Exception(BCP,"Trying to write data to outsize of the buffer!");
 

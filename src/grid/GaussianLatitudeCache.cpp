@@ -73,7 +73,7 @@ int gaussian_getLatitudes(long N, double *lats)
   {
     double precision = 1.0E-14;
     long  nlat = N*2;
-    auto dnlat = C_DOUBLE(nlat);
+    double dnlat = C_DOUBLE(nlat);
     double legfonc = 0;
     double rad2deg = 180.0/M_PI;
     double convval   = (1.0 - ((2.0 / M_PI)*(2.0 / M_PI)) * 0.25);

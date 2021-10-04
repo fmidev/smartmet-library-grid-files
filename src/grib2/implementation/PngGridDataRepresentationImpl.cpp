@@ -27,7 +27,7 @@ using png_read_callback_data = struct png_read_callback_data
 
 static void png_read_callback(png_structp png,png_bytep data, png_size_t length)
 {
-  auto* p = (png_read_callback_data*)png_get_io_ptr(png);
+  png_read_callback_data* p = (png_read_callback_data*)png_get_io_ptr(png);
   memcpy(data,p->buffer+p->offset,length);
   p->offset += length;
 }

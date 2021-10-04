@@ -1515,7 +1515,7 @@ T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) 
     {
       case 1:  // byte
       {
-        auto *v = (uchar*)(mDataStartPtr + idx);
+        uchar *v = (uchar*)(mDataStartPtr + idx);
         if ((T::ParamValue)(*v) == mMissingValue)
           return ParamValueMissing;
 
@@ -1535,7 +1535,7 @@ T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) 
 
       case 3:  // short
       {
-        auto *v = (short*)(mDataStartPtr + idx);
+        short *v = (short*)(mDataStartPtr + idx);
         short val = ntohs(*v);
         if ((T::ParamValue)val == mMissingValue)
           return ParamValueMissing;
@@ -1559,7 +1559,7 @@ T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) 
       {
         int *v = (int*)(mDataStartPtr + idx);
         int vv = ntohl(*v);
-        auto *val = (float*)&vv;
+        float *val = (float*)&vv;
         if ((T::ParamValue)(*val) == mMissingValue)
           return ParamValueMissing;
 
@@ -1569,9 +1569,9 @@ T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) 
 
       case 6:  // double
       {
-        auto *v = (long long*)(mDataStartPtr + idx);
+        long long *v = (long long*)(mDataStartPtr + idx);
         long long vv = ntohll(*v);
-        auto *val = (double*)&vv;
+        double *val = (double*)&vv;
         if ((T::ParamValue)(*val) == mMissingValue)
           return ParamValueMissing;
 

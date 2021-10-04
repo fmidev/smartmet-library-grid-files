@@ -297,11 +297,11 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
         double xj = polygonPoints[j].x();
         double yj = polygonPoints[j].y();
 
-        auto dy = C_DOUBLE(y);
+        double dy = C_DOUBLE(y);
 
         if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
         {
-          auto xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+          double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
           nodeX[nodes++] = C_DOUBLE(xx);
         }
         j = i;
@@ -445,11 +445,11 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
           double xj = pointsX[j];
           double yj = pointsY[j];
 
-          auto dy = C_DOUBLE(y);
+          double dy = C_DOUBLE(y);
 
           if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
           {
-            auto xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+            double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
             nodeX[nodes++] = C_DOUBLE(xx);
           }
           j = i;
@@ -877,7 +877,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,T::ByteD
     if (sz == 0)
       return;
 
-    auto *buf = new uchar[sz];
+    uchar *buf = new uchar[sz];
     MemoryReader memoryReader(buf,sz,true);
 
     for (size_t t=0; t<sz; t++)

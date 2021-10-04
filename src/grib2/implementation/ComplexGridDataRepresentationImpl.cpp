@@ -125,7 +125,7 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
 
     // Allocating some memory and making sure that it will be released.
 
-    auto *value = new T::ParamValue[numOfValues];
+    T::ParamValue *value = new T::ParamValue[numOfValues];
     std::unique_ptr<T::ParamValue> value_delete(value);
 
     int *dataValue = new int[numberOfValues];

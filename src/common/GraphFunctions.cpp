@@ -58,8 +58,8 @@ extern void convertWkbCoordinates(MemoryReader& _memoryReader,MemoryWriter& _mem
 
 static int compare_points(const void *p1, const void *p2)
 {
-  const auto *v1 = (const double*)p1;
-  const auto *v2 = (const double*)p2;
+  const double *v1 = (const double*)p1;
+  const double *v2 = (const double*)p2;
 
   if (*v1 < *v2)
     return -1;
@@ -254,11 +254,11 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
         double xj = polygonPoints[j].x();
         double yj = polygonPoints[j].y();
 
-        auto dy = C_DOUBLE(y);
+        double dy = C_DOUBLE(y);
 
         if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
         {
-          auto xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+          double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
           nodeX[nodes++] = C_DOUBLE(xx);
         }
         j = i;
@@ -443,11 +443,11 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
           double xj = pointsX[j];
           double yj = pointsY[j];
 
-          auto dy = C_DOUBLE(y);
+          double dy = C_DOUBLE(y);
 
           if ((yi < dy  &&  yj >= dy)  ||  (yj < dy &&  yi >= dy))
           {
-            auto xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
+            double xx = C_DOUBLE(xi + (y - yi)/(yj - yi)*(xj - xi));
             nodeX[nodes++] = C_DOUBLE(xx);
           }
           j = i;
@@ -1204,7 +1204,7 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
 
 
         const auto &wkb = out.str();
-        auto *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+        unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
         size_t size = wkb.length();
 
         if (size > 0)
@@ -1355,7 +1355,7 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
 
 
           const auto &wkb = out.str();
-          auto *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+          unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
           size_t size = wkb.length();
 
           if (size > 0)

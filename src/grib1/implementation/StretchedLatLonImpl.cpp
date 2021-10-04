@@ -107,10 +107,10 @@ T::Coordinate_svec StretchedLatLonImpl::getGridOriginalCoordinates() const
     uint ni = mNi;
     uint nj = mNj;
 
-    auto latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
-    auto longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
-    auto iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
-    auto jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
+    double latitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLatitudeOfFirstGridPoint());
+    double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint());
+    double iDirectionIncrement = C_DOUBLE(mIDirectionIncrement);
+    double jDirectionIncrement = C_DOUBLE(mJDirectionIncrement);
 
     unsigned char scanMode = mScanningMode.getScanningMode();
 

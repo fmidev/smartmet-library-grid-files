@@ -137,7 +137,7 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
       }
     }
 
-    auto *dest = new int32_t[numOfValues];
+    int32_t *dest = new int32_t[numOfValues];
     for (size_t t=0; t<numOfValues; t++)
       dest[t] = 0;
 
