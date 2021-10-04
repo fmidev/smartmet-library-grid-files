@@ -22,17 +22,17 @@ namespace GRIB2 {
 class Hovmoller : public GridDefinition {
 public:
   Hovmoller();
-  ~Hovmoller() override;
+  virtual ~Hovmoller();
 
-  uint getTemplateNumber() const override;
-  GridDefinition *createGridDefinition() const override;
-  void read(MemoryReader &memoryReader) override;
-  void write(DataWriter &dataWriter) override;
-  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
-  void print(std::ostream &stream, uint level, uint optionFlags) const override;
-  T::Hash countHash() override;
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
+  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  virtual T::Hash countHash();
 
-  EarthShapeSettings *getEarthShape() const override;
+  EarthShapeSettings *getEarthShape() const;
   void setEarthShape(EarthShapeSettings &earthShape);
   const T::UInt32_opt &getBasicAngleOfTheInitialProductionDomain() const;
   void setBasicAngleOfTheInitialProductionDomain(T::UInt32_opt basicAngleOfTheInitialProductionDomain);

@@ -23,21 +23,21 @@ namespace GRIB2 {
 class NormalProduct : public ProductDefinition {
 public:
   NormalProduct();
-  ~NormalProduct() override;
+  virtual ~NormalProduct();
 
-  uint getTemplateNumber() const override;
-  ProductDefinition *createProductDefinition() const override;
-  void read(MemoryReader &memoryReader) override;
-  void write(DataWriter &dataWriter) override;
-  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
-  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  virtual uint getTemplateNumber() const;
+  virtual ProductDefinition *createProductDefinition() const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
+  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
-  ParameterSettings *getParameter() const override;
+  ParameterSettings *getParameter() const;
   void setParameter(ParameterSettings &parameter);
   PointInTimeSettings *getPointInTime() const;
   void setPointInTime(PointInTimeSettings &pointInTime);
-  HorizontalSettings *getHorizontal() const override;
+  HorizontalSettings *getHorizontal() const;
   void setHorizontal(HorizontalSettings &horizontal);
 
 protected:

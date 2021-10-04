@@ -14,13 +14,13 @@ class Product_58Impl : public Product_58
   public:
                         Product_58Impl();
                         Product_58Impl(const Product_58Impl& other);
-                ~Product_58Impl() override;
+    virtual             ~Product_58Impl();
 
-    ProductDefinition*  createProductDefinition() const override;
+    ProductDefinition*  createProductDefinition() const;
 
-    T::ParamLevel       getGribParameterLevel() const override;
-    T::ParamLevelId     getGribParameterLevelId() const override;
-    void                read(MemoryReader& memoryReader) override;
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

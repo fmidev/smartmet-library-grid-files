@@ -13,12 +13,12 @@ class SpectralDataRepresentationImpl : public SpectralDataRepresentation
   public:
               SpectralDataRepresentationImpl();
               SpectralDataRepresentationImpl(const SpectralDataRepresentationImpl& other);
-      ~SpectralDataRepresentationImpl() override;
+    virtual   ~SpectralDataRepresentationImpl();
 
-    RepresentationDefinition* createRepresentationDefinition() const override;
+    RepresentationDefinition* createRepresentationDefinition() const;
 
-    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
-    void      read(MemoryReader& memoryReader) override;
+    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
+    void      read(MemoryReader& memoryReader);
 };
 
 

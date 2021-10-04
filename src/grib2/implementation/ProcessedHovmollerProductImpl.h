@@ -14,13 +14,13 @@ class ProcessedHovmollerProductImpl : public ProcessedHovmollerProduct
   public:
                         ProcessedHovmollerProductImpl();
                         ProcessedHovmollerProductImpl(const ProcessedHovmollerProductImpl& other);
-                ~ProcessedHovmollerProductImpl() override;
+    virtual             ~ProcessedHovmollerProductImpl();
 
-    ProductDefinition*  createProductDefinition() const override;
+    ProductDefinition*  createProductDefinition() const;
 
-    T::ParamLevel       getGribParameterLevel() const override;
-    T::ParamLevelId     getGribParameterLevelId() const override;
-    void                read(MemoryReader& memoryReader) override;
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

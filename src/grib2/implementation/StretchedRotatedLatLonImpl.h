@@ -14,17 +14,17 @@ class StretchedRotatedLatLonImpl : public StretchedRotatedLatLon
 
                         StretchedRotatedLatLonImpl();
                         StretchedRotatedLatLonImpl(const StretchedRotatedLatLonImpl& other);
-                ~StretchedRotatedLatLonImpl() override;
+    virtual             ~StretchedRotatedLatLonImpl();
 
-    GridDefinition*     createGridDefinition() const override;
+    GridDefinition*     createGridDefinition() const;
 
-    T::Coordinate_svec  getGridOriginalCoordinates() const override;
-    T::Dimensions       getGridDimensions() const override;
-    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const override;
-    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const override;
+    T::Coordinate_svec  getGridOriginalCoordinates() const;
+    T::Dimensions       getGridDimensions() const;
+    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
+    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
 
-    void                initSpatialReference() override;
-    void                read(MemoryReader& memoryReader) override;
+    void                initSpatialReference();
+    void                read(MemoryReader& memoryReader);
 };
 
 

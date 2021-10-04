@@ -14,13 +14,13 @@ class TimeIntervalEnsembleClusterDerivedForecastImpl : public TimeIntervalEnsemb
   public:
                         TimeIntervalEnsembleClusterDerivedForecastImpl();
                         TimeIntervalEnsembleClusterDerivedForecastImpl(const TimeIntervalEnsembleClusterDerivedForecastImpl& other);
-                ~TimeIntervalEnsembleClusterDerivedForecastImpl() override;
+    virtual             ~TimeIntervalEnsembleClusterDerivedForecastImpl();
 
-    ProductDefinition*  createProductDefinition() const override;
+    ProductDefinition*  createProductDefinition() const;
 
-    T::ParamLevel       getGribParameterLevel() const override;
-    T::ParamLevelId     getGribParameterLevelId() const override;
-    void                read(MemoryReader& memoryReader) override;
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

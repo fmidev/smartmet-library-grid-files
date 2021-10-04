@@ -14,26 +14,26 @@ class LambertConformalImpl : public LambertConformal
 
                         LambertConformalImpl();
                         LambertConformalImpl(const LambertConformalImpl& other);
-                ~LambertConformalImpl() override;
+    virtual             ~LambertConformalImpl();
 
-    GridDefinition*     createGridDefinition() const override;
+    GridDefinition*     createGridDefinition() const;
 
-    bool                getGridMetricCellSize(double& width,double& height) const override;
-    T::Coordinate_svec  getGridOriginalCoordinates() const override;
-    T::Dimensions       getGridDimensions() const override;
-    std::size_t         getGridColumnCount() const override;
-    std::size_t         getGridRowCount() const override;
-    std::string         getGridGeometryString() const override;
-    bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const override;
-    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const override;
-    bool                reverseXDirection() const override;
-    bool                reverseYDirection() const override;
+    bool                getGridMetricCellSize(double& width,double& height) const;
+    T::Coordinate_svec  getGridOriginalCoordinates() const;
+    T::Dimensions       getGridDimensions() const;
+    std::size_t         getGridColumnCount() const;
+    std::size_t         getGridRowCount() const;
+    std::string         getGridGeometryString() const;
+    bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
+    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
+    bool                reverseXDirection() const;
+    bool                reverseYDirection() const;
 
-    bool                setProperty(uint propertyId,long long value) override;
+    bool                setProperty(uint propertyId,long long value);
 
-    void                initSpatialReference() override;
-    void                print(std::ostream& stream,uint level,uint optionFlags) const override;
-    void                read(MemoryReader& memoryReader) override;
+    void                initSpatialReference();
+    void                print(std::ostream& stream,uint level,uint optionFlags) const;
+    void                read(MemoryReader& memoryReader);
 
   private:
 

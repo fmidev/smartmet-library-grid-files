@@ -45,15 +45,15 @@ class IndicatorSection : public GRID::MessageSection
 
                       IndicatorSection();
                       IndicatorSection(const IndicatorSection& other);
-              ~IndicatorSection() override;
+    virtual           ~IndicatorSection();
 
     // ### Common methods for all message sections
 
-    void              getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const override;
-    T::FilePosition   getFilePosition() const override;
-    std::uint32_t     getSectionLength() const override;
-    std::string       getSectionName() const override;
-    std::uint8_t      getSectionNumber() const override;
+    void              getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
+    T::FilePosition   getFilePosition() const;
+    std::uint32_t     getSectionLength() const;
+    std::string       getSectionName() const;
+    std::uint8_t      getSectionNumber() const;
 
     // ### Section specific methods
 
@@ -73,7 +73,7 @@ class IndicatorSection : public GRID::MessageSection
 
     void              read(MemoryReader& memoryReader);
     void              write(DataWriter& dataWriter);
-    void              print(std::ostream& stream,uint level,uint optionFlags) const override;
+    void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
   private:
 

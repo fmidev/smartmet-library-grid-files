@@ -13,12 +13,12 @@ class ComplexSphericalHarmonicsDataRepresentationImpl : public ComplexSphericalH
  public:
               ComplexSphericalHarmonicsDataRepresentationImpl();
               ComplexSphericalHarmonicsDataRepresentationImpl(const ComplexSphericalHarmonicsDataRepresentationImpl& other);
-      ~ComplexSphericalHarmonicsDataRepresentationImpl() override;
+    virtual   ~ComplexSphericalHarmonicsDataRepresentationImpl();
 
-    RepresentationDefinition* createRepresentationDefinition() const override;
+    RepresentationDefinition* createRepresentationDefinition() const;
 
-    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
-    void      read(MemoryReader& memoryReader) override;
+    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
+    void      read(MemoryReader& memoryReader);
 };
 
 }

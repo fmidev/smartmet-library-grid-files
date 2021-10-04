@@ -20,14 +20,14 @@ namespace GRIB2 {
 class SpectralData : public DataDefinition {
 public:
   SpectralData();
-  ~SpectralData() override;
+  virtual ~SpectralData();
 
-  uint getTemplateNumber() const override;
+  virtual uint getTemplateNumber() const;
   virtual DataDefinition *createDataDefinition() const;
   virtual void read(MemoryReader &memoryReader);
   virtual void write(DataWriter &dataWriter);
   virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
-  void print(std::ostream &stream, uint level, uint optionFlags) const override;
+  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual T::Hash countHash();
 
 protected:

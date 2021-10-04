@@ -14,13 +14,13 @@ class AreaProcessedCrossSectionProductImpl : public AreaProcessedCrossSectionPro
   public:
                         AreaProcessedCrossSectionProductImpl();
                         AreaProcessedCrossSectionProductImpl(const AreaProcessedCrossSectionProductImpl& other);
-                ~AreaProcessedCrossSectionProductImpl() override;
+    virtual             ~AreaProcessedCrossSectionProductImpl();
 
-    ProductDefinition*  createProductDefinition() const override;
+    ProductDefinition*  createProductDefinition() const;
 
-    T::ParamLevel       getGribParameterLevel() const override;
-    T::ParamLevelId     getGribParameterLevelId() const override;
-    void                read(MemoryReader& memoryReader) override;
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

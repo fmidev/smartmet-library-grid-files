@@ -13,16 +13,16 @@ class ObliqueLambertConformalImpl : public ObliqueLambertConformal
 
                         ObliqueLambertConformalImpl();
                         ObliqueLambertConformalImpl(const ObliqueLambertConformalImpl& other);
-                ~ObliqueLambertConformalImpl() override;
+    virtual             ~ObliqueLambertConformalImpl();
 
-    GridDefinition*     createGridDefinition() const override;
+    GridDefinition*     createGridDefinition() const;
 
-    T::Coordinate_svec  getGridOriginalCoordinates() const override;
-    T::Dimensions       getGridDimensions() const override;
-    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const override;
+    T::Coordinate_svec  getGridOriginalCoordinates() const;
+    T::Dimensions       getGridDimensions() const;
+    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
 
-    void                initSpatialReference() override;
-    void                read(MemoryReader& memoryReader) override;
+    void                initSpatialReference();
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB1

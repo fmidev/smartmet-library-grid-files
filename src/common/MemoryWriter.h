@@ -11,13 +11,13 @@ class MemoryWriter : public DataWriter
 {
   public:
                 MemoryWriter(uchar *_data,ulonglong _dataSize,bool _dataRelease);
-        ~MemoryWriter() override;
+    virtual     ~MemoryWriter();
 
     uchar*      getDataPtr();
-    ulonglong   getWritePosition() override;
-    ulonglong   getMaxWritePosition() override;
-    void        setWritePosition(ulonglong _pos) override;
-    void        write_data(void *_data,ulonglong _size) override;
+    ulonglong   getWritePosition();
+    ulonglong   getMaxWritePosition();
+    void        setWritePosition(ulonglong _pos);
+    void        write_data(void *_data,ulonglong _size);
 
   protected:
 

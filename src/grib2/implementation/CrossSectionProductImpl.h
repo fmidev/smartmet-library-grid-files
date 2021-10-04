@@ -14,14 +14,14 @@ class CrossSectionProductImpl : public CrossSectionProduct
   public:
                         CrossSectionProductImpl();
                         CrossSectionProductImpl(const CrossSectionProductImpl& other);
-                ~CrossSectionProductImpl() override;
+    virtual             ~CrossSectionProductImpl();
 
-    ProductDefinition*  createProductDefinition() const override;
+    ProductDefinition*  createProductDefinition() const;
 
-    T::TimeString       getForecastTime(T::TimeString referenceTime) const override;
-    T::ParamLevel       getGribParameterLevel() const override;
-    T::ParamLevelId     getGribParameterLevelId() const override;
-    void                read(MemoryReader& memoryReader) override;
+    T::TimeString       getForecastTime(T::TimeString referenceTime) const;
+    T::ParamLevel       getGribParameterLevel() const;
+    T::ParamLevelId     getGribParameterLevelId() const;
+    void                read(MemoryReader& memoryReader);
 };
 
 }  // namespace GRIB2

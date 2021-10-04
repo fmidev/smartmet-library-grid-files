@@ -13,13 +13,13 @@ class JpegGridDataRepresentationImpl : public JpegGridDataRepresentation
   public:
               JpegGridDataRepresentationImpl();
               JpegGridDataRepresentationImpl(const JpegGridDataRepresentationImpl& other);
-      ~JpegGridDataRepresentationImpl() override;
+    virtual   ~JpegGridDataRepresentationImpl();
 
-    RepresentationDefinition* createRepresentationDefinition() const override;
+    RepresentationDefinition* createRepresentationDefinition() const;
 
-    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const override;
-    void      encodeValues(Message *message,T::ParamValue_vec& values) override;
-    void      read(MemoryReader& memoryReader) override;
+    void      decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
+    void      encodeValues(Message *message,T::ParamValue_vec& values);
+    void      read(MemoryReader& memoryReader);
 };
 
 }

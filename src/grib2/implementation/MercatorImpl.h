@@ -13,21 +13,21 @@ class MercatorImpl : public Mercator
   public:
                         MercatorImpl();
                         MercatorImpl(const MercatorImpl& other);
-                ~MercatorImpl() override;
+    virtual             ~MercatorImpl();
 
-    GridDefinition*     createGridDefinition() const override;
+    GridDefinition*     createGridDefinition() const;
 
-    T::Coordinate_svec  getGridOriginalCoordinates() const override;
-    T::Dimensions       getGridDimensions() const override;
-    std::string         getGridGeometryString() const override;
-    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const override;
-    bool                getGridMetricCellSize(double& width,double& height) const override;
+    T::Coordinate_svec  getGridOriginalCoordinates() const;
+    T::Dimensions       getGridDimensions() const;
+    std::string         getGridGeometryString() const;
+    bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
+    bool                getGridMetricCellSize(double& width,double& height) const;
 
-    bool                setProperty(uint propertyId,long long value) override;
+    bool                setProperty(uint propertyId,long long value);
 
-    void                initSpatialReference() override;
-    void                print(std::ostream& stream,uint level,uint optionFlags) const override;
-    void                read(MemoryReader& memoryReader) override;
+    void                initSpatialReference();
+    void                print(std::ostream& stream,uint level,uint optionFlags) const;
+    void                read(MemoryReader& memoryReader);
 };
 
 

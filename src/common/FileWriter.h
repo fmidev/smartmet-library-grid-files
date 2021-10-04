@@ -11,14 +11,14 @@ class FileWriter : public DataWriter
 {
   public:
                 FileWriter();
-        ~FileWriter() override;
+    virtual     ~FileWriter();
 
     void        createFile(const char *_filename);
     void        closeFile();
-    ulonglong   getWritePosition() override;
-    ulonglong   getMaxWritePosition() override;
-    void        setWritePosition(ulonglong _pos) override;
-    void        write_data(void *_data,ulonglong _size) override;
+    ulonglong   getWritePosition();
+    ulonglong   getMaxWritePosition();
+    void        setWritePosition(ulonglong _pos);
+    void        write_data(void *_data,ulonglong _size);
 
   protected:
 

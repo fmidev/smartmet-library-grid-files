@@ -22,16 +22,16 @@ namespace GRIB1 {
 class PolarStereographic : public GridDefinition {
 public:
   PolarStereographic();
-  ~PolarStereographic() override;
+  virtual ~PolarStereographic();
 
-  void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const override;
-  void read(MemoryReader &memoryReader) override;
-  void write(DataWriter &dataWriter) override;
-  void print(std::ostream &stream, uint level, uint optionFlags) const override;
-  T::Hash countHash() override;
+  virtual void getAttributeList(const std::string &prefix, T::AttributeList &attributeList) const;
+  virtual void read(MemoryReader &memoryReader);
+  virtual void write(DataWriter &dataWriter);
+  virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  virtual T::Hash countHash();
 
-  uint getTemplateNumber() const override;
-  GridDefinition *createGridDefinition() const override;
+  virtual uint getTemplateNumber() const;
+  virtual GridDefinition *createGridDefinition() const;
   std::uint16_t getNx() const;
   void setNx(std::uint16_t nx);
   std::uint16_t getNy() const;
@@ -40,7 +40,7 @@ public:
   void setLatitudeOfFirstGridPoint(std::int24_t latitudeOfFirstGridPoint);
   std::int24_t getLongitudeOfFirstGridPoint() const;
   void setLongitudeOfFirstGridPoint(std::int24_t longitudeOfFirstGridPoint);
-  ResolutionFlagsSettings *getResolutionFlags() const override;
+  ResolutionFlagsSettings *getResolutionFlags() const;
   void setResolutionFlags(ResolutionFlagsSettings &resolutionFlags);
   std::int24_t getOrientationOfTheGrid() const;
   void setOrientationOfTheGrid(std::int24_t orientationOfTheGrid);
@@ -50,7 +50,7 @@ public:
   void setDyInMetres(std::uint24_t dyInMetres);
   std::uint8_t getProjectionCentreFlag() const;
   void setProjectionCentreFlag(std::uint8_t projectionCentreFlag);
-  ScanningModeSettings *getScanningMode() const override;
+  ScanningModeSettings *getScanningMode() const;
   void setScanningMode(ScanningModeSettings &scanningMode);
 
 protected:
