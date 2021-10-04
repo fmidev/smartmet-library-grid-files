@@ -14,12 +14,12 @@ namespace GRIB2
 
 
 
-using png_read_callback_data = struct png_read_callback_data
+typedef struct png_read_callback_data
 {
     unsigned char* buffer;
     size_t         length;
     size_t         offset;
-};
+} png_read_callback_data;
 
 
 

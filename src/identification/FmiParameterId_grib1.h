@@ -29,8 +29,8 @@ class FmiParameterId_grib1
 };
 
 
-using FmiParamId_grib1_vec = std::vector<FmiParameterId_grib1>;
-using FmiParamId_grib1_cptr = const FmiParameterId_grib1 *;
+typedef std::vector<FmiParameterId_grib1> FmiParamId_grib1_vec;
+typedef const FmiParameterId_grib1* FmiParamId_grib1_cptr;
 
 
 }

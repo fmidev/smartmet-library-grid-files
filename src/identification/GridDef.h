@@ -48,11 +48,11 @@ struct CoordinateRec
     T::Coordinate_svec originalCoordinates;
 };
 
-using CoordinateCache = std::unordered_map<std::size_t, CoordinateRec>;
-using CoordinateCacheIterator = std::unordered_map<std::size_t, CoordinateRec>::iterator;
-using GeometryNames = std::unordered_map<uint, std::string>;
-using IdMap = std::unordered_map<uint, uint>;
-using StringIdMap = std::unordered_map<std::string, uint>;
+typedef std::unordered_map<std::size_t,CoordinateRec> CoordinateCache;
+typedef std::unordered_map<std::size_t,CoordinateRec>::iterator CoordinateCacheIterator;
+typedef std::unordered_map<uint,std::string> GeometryNames;
+typedef std::unordered_map<uint,uint> IdMap;
+typedef std::unordered_map<std::string,uint> StringIdMap;
 
 
 class GridDef

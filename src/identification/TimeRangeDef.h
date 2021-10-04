@@ -22,8 +22,8 @@ class TimeRangeDef
 };
 
 
-using TimeRangeDef_vec = std::vector<TimeRangeDef>;
-using TimeRangeDef_cptr = const TimeRangeDef *;
+typedef std::vector<TimeRangeDef> TimeRangeDef_vec;
+typedef const TimeRangeDef*       TimeRangeDef_cptr;
 
 
 }

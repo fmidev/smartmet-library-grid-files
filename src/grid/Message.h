@@ -45,8 +45,8 @@ struct MessageInfo
   T::GeometryId      mGeometryId;
 };
 
-using MessageInfo_map = std::map<uint, MessageInfo>;
-using PointCache = std::unordered_map<uint, T::ParamValue>;
+typedef std::map<uint,MessageInfo> MessageInfo_map;
+typedef std::unordered_map<uint,T::ParamValue> PointCache;
 
 class GridFile;
 
@@ -343,8 +343,8 @@ class Message
 
 
 
-using MessagePtr = Message *;
-using MessagePtr_vec = std::vector<MessagePtr>;
+typedef Message* MessagePtr;
+typedef std::vector<MessagePtr> MessagePtr_vec;
 
 
 }  // namespace GRID

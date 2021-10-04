@@ -9,8 +9,8 @@
 
 namespace bf = boost::filesystem;
 
-using MappedFileParams = boost::iostreams::mapped_file_params;
-using MappedFile = boost::iostreams::mapped_file;
+typedef boost::iostreams::mapped_file_params MappedFileParams;
+typedef boost::iostreams::mapped_file MappedFile;
 
 
 namespace SmartMet
@@ -18,8 +18,8 @@ namespace SmartMet
 namespace GRID
 {
 
-using MappedFile_uptr = std::unique_ptr<MappedFile>;
-using MessagePos_vec = std::vector<std::pair<uchar, ulonglong>>;
+typedef std::unique_ptr<MappedFile> MappedFile_uptr;
+typedef std::vector<std::pair<uchar,ulonglong>> MessagePos_vec;
 
 
 // ====================================================================================

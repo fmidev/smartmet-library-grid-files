@@ -28,9 +28,9 @@ class FmiParameterDef
     short         mDefaultPrecision;
 };
 
-using FmiParamDef_vec = std::vector<FmiParameterDef>;
-using FmiParamDef_umap = std::unordered_map<uint, FmiParameterDef>;
-using FmiParamDef_cptr = const FmiParameterDef *;
+typedef std::vector<FmiParameterDef> FmiParamDef_vec;
+typedef std::unordered_map<uint,FmiParameterDef> FmiParamDef_umap;
+typedef const FmiParameterDef* FmiParamDef_cptr;
 
 }
 }

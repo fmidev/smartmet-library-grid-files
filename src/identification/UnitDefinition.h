@@ -39,7 +39,7 @@ class UnitDefinition
     short         mPreferredLevelInterpolationMethod;
 };
 
-using UnitDefinition_vec = std::vector<UnitDefinition>;
+typedef std::vector<UnitDefinition> UnitDefinition_vec;
 
 }
 }

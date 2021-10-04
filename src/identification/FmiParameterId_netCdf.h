@@ -24,9 +24,9 @@ class FmiParameterId_netCdf
 };
 
 
-using FmiParamId_netCdf_vec = std::vector<FmiParameterId_netCdf>;
-using FmiParamId_netCdf_umap = std::unordered_map<uint, FmiParameterId_netCdf>;
-using FmiParamId_netCdf_cptr = const FmiParameterId_netCdf *;
+typedef std::vector<FmiParameterId_netCdf> FmiParamId_netCdf_vec;
+typedef std::unordered_map<uint,FmiParameterId_netCdf> FmiParamId_netCdf_umap;
+typedef const FmiParameterId_netCdf* FmiParamId_netCdf_cptr;
 
 
 }

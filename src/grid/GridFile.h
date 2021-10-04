@@ -25,7 +25,7 @@ namespace GRID
 // ====================================================================================
 
 
-using Message_ptr_map = std::map<uint, Message *>;
+typedef std::map<uint,Message*> Message_ptr_map;
 
 
 class GridFile
@@ -115,8 +115,8 @@ class GridFile
 };
 
 
-using GridFile_sptr = std::shared_ptr<GridFile>;
-using GridFile_sptr_vec = std::vector<GridFile_sptr>;
+typedef std::shared_ptr<GridFile> GridFile_sptr;
+typedef std::vector<GridFile_sptr> GridFile_sptr_vec;
 
 
 }  // namespace GRID

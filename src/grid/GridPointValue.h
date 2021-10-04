@@ -62,8 +62,8 @@ class GridPointValue
 };
 
 
-using GridPointValue_vec = std::vector<GridPointValue>;
-using GridPointValuePtr = GridPointValue *;
+typedef std::vector<GridPointValue> GridPointValue_vec;
+typedef GridPointValue* GridPointValuePtr;
 
 
 }

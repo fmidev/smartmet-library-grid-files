@@ -6,7 +6,7 @@
 namespace SmartMet
 {
 
-using longlong = long long;
+typedef long long longlong;
 
 double linearInterpolation(double wantedPosition, double position1, double position2, double value1, double value2)
 {

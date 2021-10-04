@@ -176,7 +176,7 @@ class IdentificationSection : public GRID::MessageSection
     bool            mReleaseData;
 };
 
-using IdentifSect_sptr = std::shared_ptr<IdentificationSection>;
+typedef std::shared_ptr<IdentificationSection> IdentifSect_sptr;
 
 }  // namespace GRIB2
 }  // namespace SmartMet

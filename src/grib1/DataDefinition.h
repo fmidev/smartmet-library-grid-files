@@ -44,7 +44,7 @@ class DataDefinition
 };
 
 
-using DataDefintionUptr = std::unique_ptr<DataDefinition>;
+typedef std::unique_ptr<DataDefinition> DataDefintionUptr;
 
 }  // namespace GRIB1
 }  // namespace SmartMet

@@ -24,9 +24,9 @@ class FmiParameterId_grib
 };
 
 
-using FmiParamId_grib_vec = std::vector<FmiParameterId_grib>;
-using FmiParamId_grib_umap = std::unordered_map<uint, FmiParameterId_grib>;
-using FmiParamId_grib_cptr = const FmiParameterId_grib *;
+typedef std::vector<FmiParameterId_grib> FmiParamId_grib_vec;
+typedef std::unordered_map<uint,FmiParameterId_grib> FmiParamId_grib_umap;
+typedef const FmiParameterId_grib* FmiParamId_grib_cptr;
 
 
 }

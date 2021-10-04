@@ -16,10 +16,10 @@ namespace SmartMet
 {
 
 
-using HitCounter = std::unordered_map<uint, uint>;
-using GeometryHitCounter = std::map<uint, HitCounter>;
-using KeyCounter = std::unordered_map<ulonglong, uint>;
-using TopList = std::multimap<uint, ulonglong>;
+typedef std::unordered_map<uint,uint> HitCounter;
+typedef std::map<uint,HitCounter> GeometryHitCounter;
+typedef std::unordered_map<ulonglong,uint> KeyCounter;
+typedef std::multimap<uint,ulonglong> TopList;
 
 
 

@@ -38,14 +38,14 @@ std::size_t gridPointCacheHash[GRID_POINT_CACHE_SIZE] = {0};
 uint hashCounter = 0;
 ThreadLock pointCacheThreadLock;
 
-using GeometryPtr = boost::shared_ptr<geos::geom::Geometry>;
+typedef boost::shared_ptr<geos::geom::Geometry> GeometryPtr;
 
-using MyTraits = Tron::Traits<double, double, Tron::InfMissing>;
-using MyLinearContourer = Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LinearInterpolation>;
-using MyLogLinearContourer = Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LogLinearInterpolation>;
-using MyNearestContourer = Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::NearestNeighbourInterpolation>;
-using MyDiscreteContourer = Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::DiscreteInterpolation>;
-using MyHints = Tron::Hints<SimpleDataMatrixAdapter, MyTraits>;
+typedef Tron::Traits<double, double, Tron::InfMissing> MyTraits;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LinearInterpolation>  MyLinearContourer;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::LogLinearInterpolation> MyLogLinearContourer;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::NearestNeighbourInterpolation>  MyNearestContourer;
+typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::DiscreteInterpolation> MyDiscreteContourer;
+typedef Tron::Hints<SimpleDataMatrixAdapter, MyTraits> MyHints;
 
 
 

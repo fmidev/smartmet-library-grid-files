@@ -96,7 +96,7 @@ class DataSection : public GRID::MessageSection
 };
 
 
-using DataSect_sptr = std::shared_ptr<DataSection>;
+typedef std::shared_ptr<DataSection> DataSect_sptr;
 
 
 }  // namespace GRIB2

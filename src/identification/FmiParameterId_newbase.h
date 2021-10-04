@@ -24,9 +24,9 @@ class FmiParameterId_newbase
 };
 
 
-using FmiParamId_newbase_vec = std::vector<FmiParameterId_newbase>;
-using FmiParamId_newbase_umap = std::unordered_map<uint, FmiParameterId_newbase>;
-using FmiParamId_newbase_cptr = const FmiParameterId_newbase *;
+typedef std::vector<FmiParameterId_newbase> FmiParamId_newbase_vec;
+typedef std::unordered_map<uint,FmiParameterId_newbase> FmiParamId_newbase_umap;
+typedef const FmiParameterId_newbase* FmiParamId_newbase_cptr;
 
 
 }

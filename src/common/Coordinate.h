@@ -28,10 +28,10 @@ class Coordinate
     double mY;
 };
 
-using Coordinate_vec = std::vector<T::Coordinate>;
-using Coordinate_svec = std::shared_ptr<std::vector<T::Coordinate>>;
-using AreaCoordinates = std::vector<Coordinate_vec>;
-using Polygon_vec = std::vector<std::vector<T::Coordinate>>;
+typedef std::vector<T::Coordinate> Coordinate_vec;
+typedef std::shared_ptr<std::vector<T::Coordinate>> Coordinate_svec;
+typedef std::vector<Coordinate_vec> AreaCoordinates;
+typedef std::vector<std::vector<T::Coordinate>> Polygon_vec;
 
 
 }

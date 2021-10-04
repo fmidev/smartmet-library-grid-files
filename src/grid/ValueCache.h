@@ -28,13 +28,13 @@ namespace GRID
 */
 // ====================================================================================
 
-using UInt64 = unsigned long long;
+typedef unsigned long long UInt64;
 
 #ifndef uchar
-  using uchar = unsigned char;
+  typedef unsigned char uchar;
 #endif
 
-using puchar = uchar *;
+typedef uchar *puchar;
 
 
 class ValueCache

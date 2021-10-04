@@ -46,7 +46,7 @@ class RepresentationDefinition
 };
 
 
-using RepresentationDefinition_sptr = std::shared_ptr<RepresentationDefinition>;
+typedef std::shared_ptr<RepresentationDefinition> RepresentationDefinition_sptr;
 
 }  // namespace GRIB2
 }  // namespace SmartMet
