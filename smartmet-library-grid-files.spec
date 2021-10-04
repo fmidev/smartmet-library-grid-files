@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.9.15
+Version: 21.10.4
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,9 +11,9 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.9.14
-BuildRequires: smartmet-library-spine-devel >= 21.9.13
-BuildRequires: smartmet-library-macgyver >= 21.9.13
+BuildRequires: smartmet-library-newbase-devel >= 21.9.22
+BuildRequires: smartmet-library-spine-devel >= 21.9.17
+BuildRequires: smartmet-library-macgyver >= 21.9.21
 BuildRequires: smartmet-library-tron-devel >= 21.6.21
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -35,9 +35,9 @@ Requires: boost169-thread
 Requires: gdal32-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.9.14
-Requires: smartmet-library-macgyver >= 21.9.13
-Requires: smartmet-library-spine >= 21.9.13
+Requires: smartmet-library-newbase >= 21.9.22
+Requires: smartmet-library-macgyver >= 21.9.21
+Requires: smartmet-library-spine >= 21.9.17
 Requires: smartmet-library-tron >= 21.6.21
 
 %description
@@ -77,6 +77,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Oct  4 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.10.4-1.fmi
+- Improved GRIB identification
+- Simplified configuration files
 * Wed Sep 15 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.9.15-1.fmi
 - NetCDF support
 * Tue Aug 31 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.8.31-1.fmi
