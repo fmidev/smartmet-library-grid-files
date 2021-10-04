@@ -113,6 +113,100 @@ void LambertAzimuthalEqualArea::getAttributeList(const std::string &prefix, T::A
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool LambertAzimuthalEqualArea::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mEarthShape.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "NumberOfPointsAlongXAxis") == 0) {
+      attributeValue = toString(mNumberOfPointsAlongXAxis);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfPointsAlongYAxis") == 0) {
+      attributeValue = toString(mNumberOfPointsAlongYAxis);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLatitudeOfFirstGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLongitudeOfFirstGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "StandardParallelInMicrodegrees") == 0) {
+      attributeValue = toString(mStandardParallelInMicrodegrees);
+      return true;
+    }
+    if (strcasecmp(attributeName, "CentralLongitudeInMicrodegrees") == 0) {
+      attributeValue = toString(mCentralLongitudeInMicrodegrees);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ResolutionAndComponentFlags") == 0) {
+      attributeValue = toString(mResolutionAndComponentFlags);
+      return true;
+    }
+    if (strcasecmp(attributeName, "XDirectionGridLengthInMillimetres") == 0) {
+      attributeValue = toString(mXDirectionGridLengthInMillimetres);
+      return true;
+    }
+    if (strcasecmp(attributeName, "YDirectionGridLengthInMillimetres") == 0) {
+      attributeValue = toString(mYDirectionGridLengthInMillimetres);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool LambertAzimuthalEqualArea::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mEarthShape.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "NumberOfPointsAlongXAxis") == 0 && strcasecmp(attributeValue, toString(mNumberOfPointsAlongXAxis).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfPointsAlongYAxis") == 0 && strcasecmp(attributeValue, toString(mNumberOfPointsAlongYAxis).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "StandardParallelInMicrodegrees") == 0 && strcasecmp(attributeValue, toString(mStandardParallelInMicrodegrees).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "CentralLongitudeInMicrodegrees") == 0 && strcasecmp(attributeValue, toString(mCentralLongitudeInMicrodegrees).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ResolutionAndComponentFlags") == 0 && strcasecmp(attributeValue, toString(mResolutionAndComponentFlags).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "XDirectionGridLengthInMillimetres") == 0 && strcasecmp(attributeValue, toString(mXDirectionGridLengthInMillimetres).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "YDirectionGridLengthInMillimetres") == 0 && strcasecmp(attributeValue, toString(mYDirectionGridLengthInMillimetres).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -161,8 +255,6 @@ T::Hash LambertAzimuthalEqualArea::countHash() {
       boost::hash_combine(seed, *mXDirectionGridLengthInMillimetres);
     if (mYDirectionGridLengthInMillimetres)
       boost::hash_combine(seed, *mYDirectionGridLengthInMillimetres);
-    // boost::hash_combine(seed,mEarthShape.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

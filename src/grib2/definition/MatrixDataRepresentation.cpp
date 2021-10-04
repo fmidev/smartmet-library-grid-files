@@ -122,6 +122,114 @@ void MatrixDataRepresentation::getAttributeList(const std::string &prefix, T::At
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool MatrixDataRepresentation::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mPacking.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "MatrixBitmapsPresent") == 0) {
+      attributeValue = toString(mMatrixBitmapsPresent);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfCodedValues") == 0) {
+      attributeValue = toString(mNumberOfCodedValues);
+      return true;
+    }
+    if (strcasecmp(attributeName, "FirstDimension") == 0) {
+      attributeValue = toString(mFirstDimension);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SecondDimension") == 0) {
+      attributeValue = toString(mSecondDimension);
+      return true;
+    }
+    if (strcasecmp(attributeName, "FirstDimensionCoordinateValueDefinition") == 0) {
+      attributeValue = toString(mFirstDimensionCoordinateValueDefinition);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NC1") == 0) {
+      attributeValue = toString(mNC1);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SecondDimensionCoordinateValueDefinition") == 0) {
+      attributeValue = toString(mSecondDimensionCoordinateValueDefinition);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NC2") == 0) {
+      attributeValue = toString(mNC2);
+      return true;
+    }
+    if (strcasecmp(attributeName, "FirstDimensionPhysicalSignificance") == 0) {
+      attributeValue = toString(mFirstDimensionPhysicalSignificance);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SecondDimensionPhysicalSignificance") == 0) {
+      attributeValue = toString(mSecondDimensionPhysicalSignificance);
+      return true;
+    }
+    if (strcasecmp(attributeName, "CoefsFirst") == 0) {
+      attributeValue = toString(mCoefsFirst);
+      return true;
+    }
+    if (strcasecmp(attributeName, "CoefsSecond") == 0) {
+      attributeValue = toString(mCoefsSecond);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool MatrixDataRepresentation::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mPacking.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "MatrixBitmapsPresent") == 0 && strcasecmp(attributeValue, toString(mMatrixBitmapsPresent).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfCodedValues") == 0 && strcasecmp(attributeValue, toString(mNumberOfCodedValues).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "FirstDimension") == 0 && strcasecmp(attributeValue, toString(mFirstDimension).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SecondDimension") == 0 && strcasecmp(attributeValue, toString(mSecondDimension).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "FirstDimensionCoordinateValueDefinition") == 0 && strcasecmp(attributeValue, toString(mFirstDimensionCoordinateValueDefinition).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NC1") == 0 && strcasecmp(attributeValue, toString(mNC1).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SecondDimensionCoordinateValueDefinition") == 0 && strcasecmp(attributeValue, toString(mSecondDimensionCoordinateValueDefinition).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NC2") == 0 && strcasecmp(attributeValue, toString(mNC2).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "FirstDimensionPhysicalSignificance") == 0 && strcasecmp(attributeValue, toString(mFirstDimensionPhysicalSignificance).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SecondDimensionPhysicalSignificance") == 0 && strcasecmp(attributeValue, toString(mSecondDimensionPhysicalSignificance).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "CoefsFirst") == 0 && strcasecmp(attributeValue, toString(mCoefsFirst).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "CoefsSecond") == 0 && strcasecmp(attributeValue, toString(mCoefsSecond).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -177,7 +285,6 @@ T::Hash MatrixDataRepresentation::countHash() {
       boost::hash_combine(seed, *mSecondDimensionPhysicalSignificance);
     boost::hash_combine(seed, mCoefsFirst);
     boost::hash_combine(seed, mCoefsSecond);
-    boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

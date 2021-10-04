@@ -118,9 +118,6 @@ void IdentificationSection::getAttributeList(const std::string& prefix,T::Attrib
     sprintf(name,"%sidentification.centre.id",prefix.c_str());
     attributeList.addAttribute(name,toString(mCentre));
 
-    sprintf(name,"%sidentification.centre.name",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(1,0,"0",mCentre));
-
     sprintf(name,"%sidentification.subCentre",prefix.c_str());
     attributeList.addAttribute(name,toString(mSubCentre));
 
@@ -132,9 +129,6 @@ void IdentificationSection::getAttributeList(const std::string& prefix,T::Attrib
 
     sprintf(name,"%sidentification.significanceOfReferenceTime",prefix.c_str());
     attributeList.addAttribute(name,toString(mSignificanceOfReferenceTime));
-
-    sprintf(name,"%sidentification.significanceOfReferenceTimeString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.2", mSignificanceOfReferenceTime));
 
     sprintf(name,"%sidentification.referenceTime.year",prefix.c_str());
     attributeList.addAttribute(name,toString(mYear));
@@ -157,14 +151,8 @@ void IdentificationSection::getAttributeList(const std::string& prefix,T::Attrib
     sprintf(name,"%sidentification.processedData.productionStatus",prefix.c_str());
     attributeList.addAttribute(name,toString(mProductionStatusOfProcessedData));
 
-    sprintf(name,"%sidentification.processedData.productionStatusString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.3", mProductionStatusOfProcessedData));
-
     sprintf(name,"%sidentification.processedData.type",prefix.c_str());
     attributeList.addAttribute(name,toString(mTypeOfProcessedData));
-
-    sprintf(name,"%sidentification.processedData.typeString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.4",mTypeOfProcessedData));
   }
   catch (...)
   {
@@ -172,6 +160,98 @@ void IdentificationSection::getAttributeList(const std::string& prefix,T::Attrib
   }
 }
 
+
+
+
+bool IdentificationSection::getAttributeValue(const char *attributeName, std::string& attributeValue) const
+{
+  try
+  {
+    if (strcasecmp(attributeName,"centre") == 0)
+    {
+      attributeValue = toString(mCentre);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"subCentre") == 0)
+    {
+      attributeValue = toString(mSubCentre);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"tablesVersion") == 0)
+    {
+      attributeValue = toString(mTablesVersion);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"localTablesVersion") == 0)
+    {
+      attributeValue = toString(mLocalTablesVersion);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"significanceOfReferenceTime") == 0)
+    {
+      attributeValue = toString(mSignificanceOfReferenceTime);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"productionStatusOfProcessedData") == 0)
+    {
+      attributeValue = toString(mProductionStatusOfProcessedData);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"typeOfProcessedData") == 0)
+    {
+      attributeValue = toString(mTypeOfProcessedData);
+      return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+bool IdentificationSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const
+{
+  try
+  {
+    if (strcasecmp(attributeName,"centre") == 0  &&  strcasecmp(attributeValue,toString(mCentre).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"subCentre") == 0  &&  strcasecmp(attributeValue,toString(mSubCentre).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"tablesVersion") == 0  &&  strcasecmp(attributeValue,toString(mTablesVersion).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"localTablesVersion") == 0  &&  strcasecmp(attributeValue,toString(mLocalTablesVersion).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"significanceOfReferenceTime") == 0  &&  strcasecmp(attributeValue,toString(mSignificanceOfReferenceTime).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"productionStatusOfProcessedData") == 0  &&  strcasecmp(attributeValue,toString(mProductionStatusOfProcessedData).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"typeOfProcessedData") == 0  &&  strcasecmp(attributeValue,toString(mTypeOfProcessedData).c_str()) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -1138,19 +1218,19 @@ void IdentificationSection::print(std::ostream& stream,uint level,uint optionFla
     stream << space(level) << "- filePosition                    = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- sectionLength                   = " <<  toString(mSectionLength) << "\n";
     stream << space(level) << "- numberOfSection                 = " <<  toString(mNumberOfSection) << "\n";
-    stream << space(level) << "- centre                          = " <<  toString(mCentre) << " (" << Identification::gridDef.getGribTableValue(1,0,"0",mCentre) << ")\n";
+    stream << space(level) << "- centre                          = " <<  toString(mCentre) << "\n";
     stream << space(level) << "- subCentre                       = " <<  toString(mSubCentre) << "\n";
     stream << space(level) << "- tablesVersion                   = " << toString(mTablesVersion) << "\n";
     stream << space(level) << "- localTablesVersion              = " << toString(mLocalTablesVersion) << "\n";  // table 1.1 is local, not dumping "1.1"
-    stream << space(level) << "- significanceOfReferenceTime     = " << toString(mSignificanceOfReferenceTime) << " (" << Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.2", mSignificanceOfReferenceTime)<< ")\n";
+    stream << space(level) << "- significanceOfReferenceTime     = " << toString(mSignificanceOfReferenceTime) <<  "\n";
     stream << space(level) << "- year                            = " << toString(mYear) << "\n";
     stream << space(level) << "- month                           = " << toString(mMonth) << "\n";
     stream << space(level) << "- day                             = " << toString(mDay) << "\n";
     stream << space(level) << "- hour                            = " << toString(mHour) << "\n";
     stream << space(level) << "- minute                          = " << toString(mMinute) << "\n";
     stream << space(level) << "- second                          = " << toString(mSecond) << "\n";
-    stream << space(level) << "- productionStatusOfProcessedData = " << toString(mProductionStatusOfProcessedData) << " (" << Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.3", mProductionStatusOfProcessedData) << ")\n";
-    stream << space(level) << "- typeOfProcessedData             = " << toString(mTypeOfProcessedData) << " (" << Identification::gridDef.getGribTableValue(2,*mTablesVersion,"1.4",mTypeOfProcessedData) << ")\n";
+    stream << space(level) << "- productionStatusOfProcessedData = " << toString(mProductionStatusOfProcessedData) << ")\n";
+    stream << space(level) << "- typeOfProcessedData             = " << toString(mTypeOfProcessedData) << "\n";
     stream << space(level) << "- reserved                        = " << mDataSize << " bytes\n";
   }
   catch (...)

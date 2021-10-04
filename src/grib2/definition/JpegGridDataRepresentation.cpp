@@ -84,6 +84,58 @@ void JpegGridDataRepresentation::getAttributeList(const std::string &prefix, T::
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool JpegGridDataRepresentation::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mPacking.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mOriginalValues.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "TypeOfCompressionUsed") == 0) {
+      attributeValue = toString(mTypeOfCompressionUsed);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TargetCompressionRatio") == 0) {
+      attributeValue = toString(mTargetCompressionRatio);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool JpegGridDataRepresentation::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mPacking.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mOriginalValues.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "TypeOfCompressionUsed") == 0 && strcasecmp(attributeValue, toString(mTypeOfCompressionUsed).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TargetCompressionRatio") == 0 && strcasecmp(attributeValue, toString(mTargetCompressionRatio).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -112,8 +164,6 @@ T::Hash JpegGridDataRepresentation::countHash() {
       boost::hash_combine(seed, *mTypeOfCompressionUsed);
     if (mTargetCompressionRatio)
       boost::hash_combine(seed, *mTargetCompressionRatio);
-    boost::hash_combine(seed, mPacking.countHash());
-    boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

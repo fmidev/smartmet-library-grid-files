@@ -132,6 +132,134 @@ void TimeSection::getAttributeList(const std::string &prefix, T::AttributeList &
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool TimeSection::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "NumberOfTimeSteps") == 0) {
+      attributeValue = toString(mNumberOfTimeSteps);
+      return true;
+    }
+    if (strcasecmp(attributeName, "UnitOfOffsetFromReferenceTime") == 0) {
+      attributeValue = toString(mUnitOfOffsetFromReferenceTime);
+      return true;
+    }
+    if (strcasecmp(attributeName, "OffsetFromReferenceOfFirstTime") == 0) {
+      attributeValue = toString(mOffsetFromReferenceOfFirstTime);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TypeOfTimeIncrement") == 0) {
+      attributeValue = toString(mTypeOfTimeIncrement);
+      return true;
+    }
+    if (strcasecmp(attributeName, "UnitOfTimeIncrement") == 0) {
+      attributeValue = toString(mUnitOfTimeIncrement);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TimeIncrement") == 0) {
+      attributeValue = toString(mTimeIncrement);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Year") == 0) {
+      attributeValue = toString(mYear);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Month") == 0) {
+      attributeValue = toString(mMonth);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Day") == 0) {
+      attributeValue = toString(mDay);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Hour") == 0) {
+      attributeValue = toString(mHour);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Minute") == 0) {
+      attributeValue = toString(mMinute);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Second") == 0) {
+      attributeValue = toString(mSecond);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfVerticalPoints") == 0) {
+      attributeValue = toString(mNumberOfVerticalPoints);
+      return true;
+    }
+    if (strcasecmp(attributeName, "PhysicalMeaningOfVerticalCoordinate") == 0) {
+      attributeValue = toString(mPhysicalMeaningOfVerticalCoordinate);
+      return true;
+    }
+    if (strcasecmp(attributeName, "VerticalCoordinate") == 0) {
+      attributeValue = toString(mVerticalCoordinate);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NC") == 0) {
+      attributeValue = toString(mNC);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool TimeSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "NumberOfTimeSteps") == 0 && strcasecmp(attributeValue, toString(mNumberOfTimeSteps).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "UnitOfOffsetFromReferenceTime") == 0 && strcasecmp(attributeValue, toString(mUnitOfOffsetFromReferenceTime).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "OffsetFromReferenceOfFirstTime") == 0 && strcasecmp(attributeValue, toString(mOffsetFromReferenceOfFirstTime).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TypeOfTimeIncrement") == 0 && strcasecmp(attributeValue, toString(mTypeOfTimeIncrement).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "UnitOfTimeIncrement") == 0 && strcasecmp(attributeValue, toString(mUnitOfTimeIncrement).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TimeIncrement") == 0 && strcasecmp(attributeValue, toString(mTimeIncrement).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Year") == 0 && strcasecmp(attributeValue, toString(mYear).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Month") == 0 && strcasecmp(attributeValue, toString(mMonth).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Day") == 0 && strcasecmp(attributeValue, toString(mDay).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Hour") == 0 && strcasecmp(attributeValue, toString(mHour).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Minute") == 0 && strcasecmp(attributeValue, toString(mMinute).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Second") == 0 && strcasecmp(attributeValue, toString(mSecond).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfVerticalPoints") == 0 && strcasecmp(attributeValue, toString(mNumberOfVerticalPoints).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "PhysicalMeaningOfVerticalCoordinate") == 0 && strcasecmp(attributeValue, toString(mPhysicalMeaningOfVerticalCoordinate).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "VerticalCoordinate") == 0 && strcasecmp(attributeValue, toString(mVerticalCoordinate).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NC") == 0 && strcasecmp(attributeValue, toString(mNC).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

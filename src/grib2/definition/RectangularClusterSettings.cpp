@@ -124,6 +124,122 @@ void RectangularClusterSettings::getAttributeList(const std::string &prefix, T::
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool RectangularClusterSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "ClusterIdentifier") == 0) {
+      attributeValue = toString(mClusterIdentifier);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NH") == 0) {
+      attributeValue = toString(mNH);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NL") == 0) {
+      attributeValue = toString(mNL);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TotalNumberOfClusters") == 0) {
+      attributeValue = toString(mTotalNumberOfClusters);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ClusteringMethod") == 0) {
+      attributeValue = toString(mClusteringMethod);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NorthernLatitudeOfClusterDomain") == 0) {
+      attributeValue = toString(mNorthernLatitudeOfClusterDomain);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SouthernLatitudeOfClusterDomain") == 0) {
+      attributeValue = toString(mSouthernLatitudeOfClusterDomain);
+      return true;
+    }
+    if (strcasecmp(attributeName, "EasternLongitudeOfClusterDomain") == 0) {
+      attributeValue = toString(mEasternLongitudeOfClusterDomain);
+      return true;
+    }
+    if (strcasecmp(attributeName, "WesternLongitudeOfClusterDomain") == 0) {
+      attributeValue = toString(mWesternLongitudeOfClusterDomain);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfForecastsInTheCluster") == 0) {
+      attributeValue = toString(mNumberOfForecastsInTheCluster);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfStandardDeviation") == 0) {
+      attributeValue = toString(mScaleFactorOfStandardDeviation);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfStandardDeviation") == 0) {
+      attributeValue = toString(mScaledValueOfStandardDeviation);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfDistanceFromEnsembleMean") == 0) {
+      attributeValue = toString(mScaleFactorOfDistanceFromEnsembleMean);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfDistanceFromEnsembleMean") == 0) {
+      attributeValue = toString(mScaledValueOfDistanceFromEnsembleMean);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool RectangularClusterSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "ClusterIdentifier") == 0 && strcasecmp(attributeValue, toString(mClusterIdentifier).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NH") == 0 && strcasecmp(attributeValue, toString(mNH).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NL") == 0 && strcasecmp(attributeValue, toString(mNL).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TotalNumberOfClusters") == 0 && strcasecmp(attributeValue, toString(mTotalNumberOfClusters).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ClusteringMethod") == 0 && strcasecmp(attributeValue, toString(mClusteringMethod).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NorthernLatitudeOfClusterDomain") == 0 && strcasecmp(attributeValue, toString(mNorthernLatitudeOfClusterDomain).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SouthernLatitudeOfClusterDomain") == 0 && strcasecmp(attributeValue, toString(mSouthernLatitudeOfClusterDomain).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "EasternLongitudeOfClusterDomain") == 0 && strcasecmp(attributeValue, toString(mEasternLongitudeOfClusterDomain).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "WesternLongitudeOfClusterDomain") == 0 && strcasecmp(attributeValue, toString(mWesternLongitudeOfClusterDomain).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfForecastsInTheCluster") == 0 && strcasecmp(attributeValue, toString(mNumberOfForecastsInTheCluster).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfStandardDeviation") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfStandardDeviation).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfStandardDeviation") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfStandardDeviation).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfDistanceFromEnsembleMean") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfDistanceFromEnsembleMean).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfDistanceFromEnsembleMean") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfDistanceFromEnsembleMean).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

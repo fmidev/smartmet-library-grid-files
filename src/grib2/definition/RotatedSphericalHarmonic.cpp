@@ -76,6 +76,46 @@ void RotatedSphericalHarmonic::getAttributeList(const std::string &prefix, T::At
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool RotatedSphericalHarmonic::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mSphericalHarmonic.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mRotation.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool RotatedSphericalHarmonic::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mSphericalHarmonic.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mRotation.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -98,8 +138,6 @@ void RotatedSphericalHarmonic::print(std::ostream &stream, uint level, uint opti
 T::Hash RotatedSphericalHarmonic::countHash() {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mSphericalHarmonic.countHash());
-    boost::hash_combine(seed, mRotation.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

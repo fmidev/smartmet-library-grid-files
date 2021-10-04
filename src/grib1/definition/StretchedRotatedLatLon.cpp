@@ -109,6 +109,84 @@ void StretchedRotatedLatLon::getAttributeList(const std::string &prefix, T::Attr
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool StretchedRotatedLatLon::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Ni") == 0) {
+      attributeValue = toString(mNi);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Nj") == 0) {
+      attributeValue = toString(mNj);
+      return true;
+    }
+    if (mGridArea.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "IDirectionIncrement") == 0) {
+      attributeValue = toString(mIDirectionIncrement);
+      return true;
+    }
+    if (strcasecmp(attributeName, "JDirectionIncrement") == 0) {
+      attributeValue = toString(mJDirectionIncrement);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Zero") == 0) {
+      attributeValue = toString(mZero);
+      return true;
+    }
+    if (mRotation.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mGridStretching.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool StretchedRotatedLatLon::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Ni") == 0 && strcasecmp(attributeValue, toString(mNi).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Nj") == 0 && strcasecmp(attributeValue, toString(mNj).c_str()) == 0)
+      return true;
+    if (mGridArea.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "IDirectionIncrement") == 0 && strcasecmp(attributeValue, toString(mIDirectionIncrement).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "JDirectionIncrement") == 0 && strcasecmp(attributeValue, toString(mJDirectionIncrement).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Zero") == 0 && strcasecmp(attributeValue, toString(mZero).c_str()) == 0)
+      return true;
+    if (mRotation.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mGridStretching.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -143,10 +221,6 @@ T::Hash StretchedRotatedLatLon::countHash() {
     boost::hash_combine(seed, mIDirectionIncrement);
     boost::hash_combine(seed, mJDirectionIncrement);
     // boost::hash_combine(seed,mZero);
-    boost::hash_combine(seed, mGridArea.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
-    boost::hash_combine(seed, mRotation.countHash());
-    boost::hash_combine(seed, mGridStretching.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

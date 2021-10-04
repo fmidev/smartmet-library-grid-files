@@ -25,9 +25,6 @@ class GribParameterDef
     virtual void    print(std::ostream& stream,uint level,uint optionFlags) const;
 
     T::GribParamId  mGribParameterId;
-    uint            mDiscipline;
-    uint            mParameterCategory;
-    uint            mParameterNumber;
     std::string     mParameterName;
     std::string     mParameterDescription;
     std::string     mParameterUnits;

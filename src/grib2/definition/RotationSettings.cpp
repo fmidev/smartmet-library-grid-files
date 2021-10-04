@@ -81,6 +81,56 @@ void RotationSettings::getAttributeList(const std::string &prefix, T::AttributeL
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool RotationSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "LatitudeOfSouthernPole") == 0) {
+      attributeValue = toString(mLatitudeOfSouthernPole);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfSouthernPole") == 0) {
+      attributeValue = toString(mLongitudeOfSouthernPole);
+      return true;
+    }
+    if (strcasecmp(attributeName, "AngleOfRotation") == 0) {
+      attributeValue = toString(mAngleOfRotation);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool RotationSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "LatitudeOfSouthernPole") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfSouthernPole).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfSouthernPole") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfSouthernPole).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "AngleOfRotation") == 0 && strcasecmp(attributeValue, toString(mAngleOfRotation).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

@@ -84,6 +84,54 @@ void StretchedRotatedGaussian::getAttributeList(const std::string &prefix, T::At
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool StretchedRotatedGaussian::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mEarthShape.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mGaussian.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mRotation.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mStretching.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool StretchedRotatedGaussian::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mEarthShape.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mGaussian.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mRotation.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mStretching.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -108,10 +156,6 @@ void StretchedRotatedGaussian::print(std::ostream &stream, uint level, uint opti
 T::Hash StretchedRotatedGaussian::countHash() {
   try {
     std::size_t seed = 0;
-    // boost::hash_combine(seed,mEarthShape.countHash());
-    boost::hash_combine(seed, mGaussian.countHash());
-    boost::hash_combine(seed, mRotation.countHash());
-    boost::hash_combine(seed, mStretching.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

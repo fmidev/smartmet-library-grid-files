@@ -76,6 +76,46 @@ void PartitionedEnsembleProduct::getAttributeList(const std::string &prefix, T::
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool PartitionedEnsembleProduct::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mPartitionedProduct.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mEps.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool PartitionedEnsembleProduct::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mPartitionedProduct.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mEps.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -98,8 +138,6 @@ void PartitionedEnsembleProduct::print(std::ostream &stream, uint level, uint op
 T::Hash PartitionedEnsembleProduct::countHash() {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mPartitionedProduct.countHash());
-    boost::hash_combine(seed, mEps.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

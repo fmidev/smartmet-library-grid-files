@@ -82,6 +82,56 @@ void GridStretchingSettings::getAttributeList(const std::string &prefix, T::Attr
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool GridStretchingSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "LatitudeOfStretchingPole") == 0) {
+      attributeValue = toString(mLatitudeOfStretchingPole);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfStretchingPole") == 0) {
+      attributeValue = toString(mLongitudeOfStretchingPole);
+      return true;
+    }
+    if (strcasecmp(attributeName, "StretchingFactor") == 0) {
+      attributeValue = toString(mStretchingFactor);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool GridStretchingSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "LatitudeOfStretchingPole") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfStretchingPole).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfStretchingPole") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfStretchingPole).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "StretchingFactor") == 0 && strcasecmp(attributeValue, toString(mStretchingFactor).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

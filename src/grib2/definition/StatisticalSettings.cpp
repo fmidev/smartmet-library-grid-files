@@ -124,6 +124,122 @@ void StatisticalSettings::getAttributeList(const std::string &prefix, T::Attribu
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool StatisticalSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "YearOfEndOfOverallTimeInterval") == 0) {
+      attributeValue = toString(mYearOfEndOfOverallTimeInterval);
+      return true;
+    }
+    if (strcasecmp(attributeName, "MonthOfEndOfOverallTimeInterval") == 0) {
+      attributeValue = toString(mMonthOfEndOfOverallTimeInterval);
+      return true;
+    }
+    if (strcasecmp(attributeName, "DayOfEndOfOverallTimeInterval") == 0) {
+      attributeValue = toString(mDayOfEndOfOverallTimeInterval);
+      return true;
+    }
+    if (strcasecmp(attributeName, "HourOfEndOfOverallTimeInterval") == 0) {
+      attributeValue = toString(mHourOfEndOfOverallTimeInterval);
+      return true;
+    }
+    if (strcasecmp(attributeName, "MinuteOfEndOfOverallTimeInterval") == 0) {
+      attributeValue = toString(mMinuteOfEndOfOverallTimeInterval);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SecondOfEndOfOverallTimeInterval") == 0) {
+      attributeValue = toString(mSecondOfEndOfOverallTimeInterval);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfTimeRange") == 0) {
+      attributeValue = toString(mNumberOfTimeRange);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfMissingInStatisticalProcess") == 0) {
+      attributeValue = toString(mNumberOfMissingInStatisticalProcess);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TypeOfStatisticalProcessing") == 0) {
+      attributeValue = toString(mTypeOfStatisticalProcessing);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TypeOfTimeIncrement") == 0) {
+      attributeValue = toString(mTypeOfTimeIncrement);
+      return true;
+    }
+    if (strcasecmp(attributeName, "IndicatorOfUnitForTimeRange") == 0) {
+      attributeValue = toString(mIndicatorOfUnitForTimeRange);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LengthOfTimeRange") == 0) {
+      attributeValue = toString(mLengthOfTimeRange);
+      return true;
+    }
+    if (strcasecmp(attributeName, "IndicatorOfUnitForTimeIncrement") == 0) {
+      attributeValue = toString(mIndicatorOfUnitForTimeIncrement);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TimeIncrement") == 0) {
+      attributeValue = toString(mTimeIncrement);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool StatisticalSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "YearOfEndOfOverallTimeInterval") == 0 && strcasecmp(attributeValue, toString(mYearOfEndOfOverallTimeInterval).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "MonthOfEndOfOverallTimeInterval") == 0 && strcasecmp(attributeValue, toString(mMonthOfEndOfOverallTimeInterval).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "DayOfEndOfOverallTimeInterval") == 0 && strcasecmp(attributeValue, toString(mDayOfEndOfOverallTimeInterval).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "HourOfEndOfOverallTimeInterval") == 0 && strcasecmp(attributeValue, toString(mHourOfEndOfOverallTimeInterval).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "MinuteOfEndOfOverallTimeInterval") == 0 && strcasecmp(attributeValue, toString(mMinuteOfEndOfOverallTimeInterval).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SecondOfEndOfOverallTimeInterval") == 0 && strcasecmp(attributeValue, toString(mSecondOfEndOfOverallTimeInterval).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfTimeRange") == 0 && strcasecmp(attributeValue, toString(mNumberOfTimeRange).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfMissingInStatisticalProcess") == 0 && strcasecmp(attributeValue, toString(mNumberOfMissingInStatisticalProcess).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TypeOfStatisticalProcessing") == 0 && strcasecmp(attributeValue, toString(mTypeOfStatisticalProcessing).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TypeOfTimeIncrement") == 0 && strcasecmp(attributeValue, toString(mTypeOfTimeIncrement).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "IndicatorOfUnitForTimeRange") == 0 && strcasecmp(attributeValue, toString(mIndicatorOfUnitForTimeRange).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LengthOfTimeRange") == 0 && strcasecmp(attributeValue, toString(mLengthOfTimeRange).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "IndicatorOfUnitForTimeIncrement") == 0 && strcasecmp(attributeValue, toString(mIndicatorOfUnitForTimeIncrement).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TimeIncrement") == 0 && strcasecmp(attributeValue, toString(mTimeIncrement).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

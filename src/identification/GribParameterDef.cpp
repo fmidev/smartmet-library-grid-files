@@ -17,9 +17,6 @@ GribParameterDef::GribParameterDef()
   try
   {
     mGribParameterId = 0;
-    mDiscipline = 0;
-    mParameterCategory = 0;
-    mParameterNumber = 0;
   }
   catch (...)
   {
@@ -62,9 +59,6 @@ void GribParameterDef::print(std::ostream& stream,uint level,uint optionFlags) c
   {
     stream << space(level) << "GribParameterDef\n";
     stream << space(level) << "- mGribParameterId      = " << mGribParameterId << "\n";
-    stream << space(level) << "- mDiscipline           = " << toString(mDiscipline) << "\n";
-    stream << space(level) << "- mParameterCategory    = " << toString(mParameterCategory) << "\n";
-    stream << space(level) << "- mParameterNumber      = " << toString(mParameterNumber) << "\n";
     stream << space(level) << "- mParameterName        = " << mParameterName << "\n";
     stream << space(level) << "- mParameterDescription = " << mParameterDescription << "\n";
     stream << space(level) << "- mParameterUnits       = " << mParameterUnits << "\n";

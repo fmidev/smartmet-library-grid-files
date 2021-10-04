@@ -29,6 +29,8 @@ public:
   virtual void read(MemoryReader &memoryReader);
   virtual void write(DataWriter &dataWriter);
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
+  virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
+  virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
   virtual T::Hash countHash();
 
   virtual uint getTemplateNumber() const;

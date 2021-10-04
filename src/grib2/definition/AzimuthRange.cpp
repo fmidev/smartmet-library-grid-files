@@ -104,6 +104,90 @@ void AzimuthRange::getAttributeList(const std::string &prefix, T::AttributeList 
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool AzimuthRange::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "NumberOfDataBinsAlongRadials") == 0) {
+      attributeValue = toString(mNumberOfDataBinsAlongRadials);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfRadials") == 0) {
+      attributeValue = toString(mNumberOfRadials);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfCenterPoint") == 0) {
+      attributeValue = toString(mLatitudeOfCenterPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfCenterPoint") == 0) {
+      attributeValue = toString(mLongitudeOfCenterPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SpacingOfBinsAlongRadials") == 0) {
+      attributeValue = toString(mSpacingOfBinsAlongRadials);
+      return true;
+    }
+    if (strcasecmp(attributeName, "OffsetFromOriginToInnerBound") == 0) {
+      attributeValue = toString(mOffsetFromOriginToInnerBound);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "StartingAzimuth") == 0) {
+      attributeValue = toString(mStartingAzimuth);
+      return true;
+    }
+    if (strcasecmp(attributeName, "AzimuthalWidth") == 0) {
+      attributeValue = toString(mAzimuthalWidth);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool AzimuthRange::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "NumberOfDataBinsAlongRadials") == 0 && strcasecmp(attributeValue, toString(mNumberOfDataBinsAlongRadials).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfRadials") == 0 && strcasecmp(attributeValue, toString(mNumberOfRadials).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfCenterPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfCenterPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfCenterPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfCenterPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SpacingOfBinsAlongRadials") == 0 && strcasecmp(attributeValue, toString(mSpacingOfBinsAlongRadials).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "OffsetFromOriginToInnerBound") == 0 && strcasecmp(attributeValue, toString(mOffsetFromOriginToInnerBound).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "StartingAzimuth") == 0 && strcasecmp(attributeValue, toString(mStartingAzimuth).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "AzimuthalWidth") == 0 && strcasecmp(attributeValue, toString(mAzimuthalWidth).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -149,7 +233,6 @@ T::Hash AzimuthRange::countHash() {
       boost::hash_combine(seed, *mStartingAzimuth);
     if (mAzimuthalWidth)
       boost::hash_combine(seed, *mAzimuthalWidth);
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

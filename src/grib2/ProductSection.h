@@ -57,6 +57,8 @@ class ProductSection : public GRID::MessageSection
     // ### Common methods for all message sections
 
     void                  getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
+    bool                  getAttributeValue(const char *attributeName, std::string& attributeValue) const;
+    bool                  hasAttributeValue(const char *attributeName, const char *attributeValue) const;
     T::FilePosition       getFilePosition() const;
     std::uint32_t         getSectionLength() const;
     std::string           getSectionName() const;
@@ -76,7 +78,6 @@ class ProductSection : public GRID::MessageSection
     T::UInt16_opt         getNV() const;
     ProductDefinition*    getProductDefinition() const;
     std::uint16_t         getProductDefinitionTemplateNumber() const;
-    std::string           getProductDefinitionString() const;
 
     void                  setNV(T::UInt16_opt nv);
 

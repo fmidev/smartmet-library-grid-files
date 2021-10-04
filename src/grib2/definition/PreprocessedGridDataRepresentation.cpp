@@ -81,6 +81,54 @@ void PreprocessedGridDataRepresentation::getAttributeList(const std::string &pre
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool PreprocessedGridDataRepresentation::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mPacking.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "TypeOfPreProcessing") == 0) {
+      attributeValue = toString(mTypeOfPreProcessing);
+      return true;
+    }
+    if (strcasecmp(attributeName, "PreProcessingParameter") == 0) {
+      attributeValue = toString(mPreProcessingParameter);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool PreprocessedGridDataRepresentation::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mPacking.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "TypeOfPreProcessing") == 0 && strcasecmp(attributeValue, toString(mTypeOfPreProcessing).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "PreProcessingParameter") == 0 && strcasecmp(attributeValue, toString(mPreProcessingParameter).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -107,7 +155,6 @@ T::Hash PreprocessedGridDataRepresentation::countHash() {
     if (mTypeOfPreProcessing)
       boost::hash_combine(seed, *mTypeOfPreProcessing);
     boost::hash_combine(seed, mPreProcessingParameter);
-    boost::hash_combine(seed, mPacking.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -103,13 +103,9 @@ void BitmapSection::getAttributeList(const std::string& prefix,T::AttributeList&
   try
   {
     char name[300];
-    std::uint8_t tablesVersion = mMessage->getTablesVersion();
 
     sprintf(name,"%sbitmap.indicator",prefix.c_str());
     attributeList.addAttribute(name,toString(getBitMapIndicator()));
-
-    sprintf(name,"%sbitmap.indicatorString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(2,tablesVersion,"6.0",getBitMapIndicator()));
 
     sprintf(name,"%sbitmap.sizeInBytes",prefix.c_str());
     attributeList.addAttribute(name,toString(mBitmapDataSizeInBytes));
@@ -553,13 +549,13 @@ void BitmapSection::print(std::ostream& stream,uint level,uint optionFlags) cons
 {
   try
   {
-    std::uint8_t tablesVersion = mMessage->getTablesVersion();
+    //std::uint8_t tablesVersion = mMessage->getTablesVersion();
 
     stream << space(level) << "SECTION ["<< toString(getSectionNumber()) << "] " << getSectionName() << "\n";
     stream << space(level) << "- filePosition        = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- sectionLength       = " << toString(mSectionLength) << "\n";
     stream << space(level) << "- numberOfSection     = " << toString(mNumberOfSection) << "\n";
-    stream << space(level) << "- bitMapIndicator     = " << toString(getBitMapIndicator()) << " : " << Identification::gridDef.getGribTableValue(2,tablesVersion,"6.0",getBitMapIndicator()) << "\n";
+    stream << space(level) << "- bitMapIndicator     = " << toString(getBitMapIndicator()) << "\n";
     stream << space(level) << "- bitMapLengthInBytes = " << toString(mBitmapDataSizeInBytes) << "\n";
   }
   catch (...)

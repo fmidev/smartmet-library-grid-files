@@ -88,6 +88,64 @@ void SpectralGridDataRepresentation::getAttributeList(const std::string &prefix,
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool SpectralGridDataRepresentation::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mPacking.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mOriginalValues.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "CcsdsFlags") == 0) {
+      attributeValue = toString(mCcsdsFlags);
+      return true;
+    }
+    if (strcasecmp(attributeName, "CcsdsBlockSize") == 0) {
+      attributeValue = toString(mCcsdsBlockSize);
+      return true;
+    }
+    if (strcasecmp(attributeName, "CcsdsRsi") == 0) {
+      attributeValue = toString(mCcsdsRsi);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool SpectralGridDataRepresentation::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mPacking.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mOriginalValues.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "CcsdsFlags") == 0 && strcasecmp(attributeValue, toString(mCcsdsFlags).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "CcsdsBlockSize") == 0 && strcasecmp(attributeValue, toString(mCcsdsBlockSize).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "CcsdsRsi") == 0 && strcasecmp(attributeValue, toString(mCcsdsRsi).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -119,8 +177,6 @@ T::Hash SpectralGridDataRepresentation::countHash() {
       boost::hash_combine(seed, *mCcsdsBlockSize);
     if (mCcsdsRsi)
       boost::hash_combine(seed, *mCcsdsRsi);
-    boost::hash_combine(seed, mPacking.countHash());
-    boost::hash_combine(seed, mOriginalValues.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

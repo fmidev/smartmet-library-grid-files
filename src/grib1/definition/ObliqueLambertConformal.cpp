@@ -140,6 +140,118 @@ void ObliqueLambertConformal::getAttributeList(const std::string &prefix, T::Att
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool ObliqueLambertConformal::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Nx") == 0) {
+      attributeValue = toString(mNx);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Ny") == 0) {
+      attributeValue = toString(mNy);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLatitudeOfFirstGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLongitudeOfFirstGridPoint);
+      return true;
+    }
+    if (mResolutionFlags.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "LoV") == 0) {
+      attributeValue = toString(mLoV);
+      return true;
+    }
+    if (strcasecmp(attributeName, "DxInMetres") == 0) {
+      attributeValue = toString(mDxInMetres);
+      return true;
+    }
+    if (strcasecmp(attributeName, "DyInMetres") == 0) {
+      attributeValue = toString(mDyInMetres);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ProjectionCentreFlag") == 0) {
+      attributeValue = toString(mProjectionCentreFlag);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Latin1") == 0) {
+      attributeValue = toString(mLatin1);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Latin2") == 0) {
+      attributeValue = toString(mLatin2);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfSouthernPole") == 0) {
+      attributeValue = toString(mLatitudeOfSouthernPole);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfSouthernPole") == 0) {
+      attributeValue = toString(mLongitudeOfSouthernPole);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool ObliqueLambertConformal::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Nx") == 0 && strcasecmp(attributeValue, toString(mNx).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Ny") == 0 && strcasecmp(attributeValue, toString(mNy).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (mResolutionFlags.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "LoV") == 0 && strcasecmp(attributeValue, toString(mLoV).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "DxInMetres") == 0 && strcasecmp(attributeValue, toString(mDxInMetres).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "DyInMetres") == 0 && strcasecmp(attributeValue, toString(mDyInMetres).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ProjectionCentreFlag") == 0 && strcasecmp(attributeValue, toString(mProjectionCentreFlag).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Latin1") == 0 && strcasecmp(attributeValue, toString(mLatin1).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Latin2") == 0 && strcasecmp(attributeValue, toString(mLatin2).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfSouthernPole") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfSouthernPole).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfSouthernPole") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfSouthernPole).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -186,8 +298,6 @@ T::Hash ObliqueLambertConformal::countHash() {
     boost::hash_combine(seed, mLatin2);
     boost::hash_combine(seed, mLatitudeOfSouthernPole);
     boost::hash_combine(seed, mLongitudeOfSouthernPole);
-    // boost::hash_combine(seed,mResolutionFlags.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

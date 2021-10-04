@@ -45,7 +45,6 @@ GridDefinition::GridDefinition()
   try
   {
     mGridProjection = T::GridProjectionValue::Unknown;
-    mGridLayout = T::GridLayoutValue::Regular;
     mHash = 0;
     mGlobal = false;
     mGeometryId = 0;
@@ -70,7 +69,6 @@ GridDefinition::GridDefinition(const GridDefinition& other)
   try
   {
     mSpatialReference = other.mSpatialReference;
-    mGridLayout = other.mGridLayout;
     mHash = other.mHash;
     mGlobal = other.mGlobal;
     mGeometryId = other.mGeometryId;
@@ -1605,28 +1603,6 @@ T::SpatialRef* GridDefinition::getSpatialReference()
   try
   {
     return &mSpatialReference;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the type of the grid layout.
-
-        \return   The layout of the grid (expressed as an enum value).
-*/
-
-T::GridLayout GridDefinition::getGridLayout()
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mGridLayout;
   }
   catch (...)
   {

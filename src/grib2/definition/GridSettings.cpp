@@ -104,6 +104,90 @@ void GridSettings::getAttributeList(const std::string &prefix, T::AttributeList 
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool GridSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Ni") == 0) {
+      attributeValue = toString(mNi);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Nj") == 0) {
+      attributeValue = toString(mNj);
+      return true;
+    }
+    if (strcasecmp(attributeName, "BasicAngleOfTheInitialProductionDomain") == 0) {
+      attributeValue = toString(mBasicAngleOfTheInitialProductionDomain);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SubdivisionsOfBasicAngle") == 0) {
+      attributeValue = toString(mSubdivisionsOfBasicAngle);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLatitudeOfFirstGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLongitudeOfFirstGridPoint);
+      return true;
+    }
+    if (mResolution.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfLastGridPoint") == 0) {
+      attributeValue = toString(mLatitudeOfLastGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfLastGridPoint") == 0) {
+      attributeValue = toString(mLongitudeOfLastGridPoint);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool GridSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Ni") == 0 && strcasecmp(attributeValue, toString(mNi).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Nj") == 0 && strcasecmp(attributeValue, toString(mNj).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "BasicAngleOfTheInitialProductionDomain") == 0 && strcasecmp(attributeValue, toString(mBasicAngleOfTheInitialProductionDomain).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SubdivisionsOfBasicAngle") == 0 && strcasecmp(attributeValue, toString(mSubdivisionsOfBasicAngle).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (mResolution.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfLastGridPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfLastGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfLastGridPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfLastGridPoint).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -145,7 +229,6 @@ T::Hash GridSettings::countHash() {
       boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
     // if (mLatitudeOfLastGridPoint) boost::hash_combine(seed,*mLatitudeOfLastGridPoint);
     // if (mLongitudeOfLastGridPoint) boost::hash_combine(seed,*mLongitudeOfLastGridPoint);
-    // boost::hash_combine(seed,mResolution.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

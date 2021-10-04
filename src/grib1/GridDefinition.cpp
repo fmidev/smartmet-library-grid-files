@@ -39,11 +39,7 @@ GridDefinition::GridDefinition()
   FUNCTION_TRACE
   try
   {
-    mGridLayout = T::GridLayoutValue::Regular;
     mHash = 0;
-    //mOrigSpatialReference = nullptr;
-    //mCoordinateTranformation_latlon2orig = nullptr;
-    //mCoordinateTranformation_orig2latlon = nullptr;
     mGlobal = false;
     mGeometryId = 0;
     mGridProjection = T::GridProjectionValue::Unknown;
@@ -71,10 +67,8 @@ GridDefinition::GridDefinition(const GridDefinition& other)
   try
   {
      mSpatialReference = other.mSpatialReference;
-     mGridLayout = other.mGridLayout;
      mHash = other.mHash;
      mGlobal = other.mGlobal;
-     mRowPositions = other.mRowPositions;
      mGeometryId = other.mGeometryId;
      mGridProjection = other.mGridProjection;
      mEarth_semiMajor = other.mEarth_semiMajor;
@@ -1504,31 +1498,6 @@ void GridDefinition::initSpatialReference()
 
 
 
-/*! \brief The method initializes the row start positions in the case of an irregular
-    grid. The point is that each grid row might contain different number of grid columns
-    (i.e the row lengths are varying).
-
-       \param   The vector of the start positions of the grid rows.
-*/
-
-void GridDefinition::initRowPositions(std::vector<std::uint32_t>& rowPositions)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mRowPositions = rowPositions;
-    mGridLayout = T::GridLayoutValue::Irregular;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
 std::string GridDefinition::getWKT()
 {
   FUNCTION_TRACE
@@ -1629,28 +1598,6 @@ T::GridProjection GridDefinition::getGridProjection() const
   try
   {
     return mGridProjection;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the type of the grid layout.
-
-     \return   The layout of the grid (expressed as an enum value).
-*/
-
-T::GridLayout GridDefinition::getGridLayout()
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mGridLayout;
   }
   catch (...)
   {
@@ -1810,113 +1757,8 @@ std::uint32_t GridDefinition::getGridOriginalValueCount() const
 
 
 
-/*! \brief The method returns the number of rows used in the original grid.
-
-     \return   The number of the grid rows.
-*/
-
-std::size_t GridDefinition::getGridOriginalRowCount() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mRowPositions.size() > 0)
-      return mRowPositions.size() - 1;
-
-    auto d = getGridDimensions();
-    if (d.getDimensions() == 2)
-      return d.ny();
-
-    return 0;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the number of columns used in the given original grid row.
-
-      \param row    The grid row index (= j-position).
-      \return       The number of columns in the given grid row.
-*/
-
-std::size_t GridDefinition::getGridOriginalColumnCount(std::size_t row) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mRowPositions.size() > 0)
-    {
-      if ((row+1) < mRowPositions.size())
-        return mRowPositions[row+1] - mRowPositions[row];
-
-      return 0;
-    }
-
-    auto d = getGridDimensions();
-    if (d.getDimensions() == 2)
-      return d.nx();
-
-    return 0;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the maximum number of the columns used in the original grid.
-    If the grid is irregular, this method returns the length of the longest row.
-
-       \return   The maximum number of the columns in the grid.
-*/
-
-std::size_t GridDefinition::getGridOriginalColumnCount() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mRowPositions.size() > 0)
-    {
-      std::size_t cnt = 0;
-      std::size_t rows = getGridOriginalRowCount();
-      for (std::size_t t=0; t<rows; t++)
-      {
-        auto len = getGridOriginalColumnCount(t);
-        if (len > cnt)
-          cnt = len;
-      }
-      return cnt;
-    }
-
-    auto d = getGridDimensions();
-    if (d.getDimensions() == 2)
-      return d.nx();
-
-    return 0;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
 /*! \brief The method returns the index of given grid position in the original grid data.
-    In the case of irregular grid the grid rows might contain different number of
-    columns. If the given grid position is outside of the grid data then the method
+    If the given grid position is outside of the grid data then the method
     returns -1. This is the case when the grid column (grid_i) is bigger than
     the length of the given grid row (grid_j), or if the given grid row (grid_j)
     is bigger than the actual number of grid rows.
@@ -1932,29 +1774,16 @@ int GridDefinition::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
   FUNCTION_TRACE
   try
   {
-    if (mRowPositions.size() > 0)
+    auto d = getGridDimensions();
+    if (d.getDimensions() == 2)
     {
-      if (grid_j < mRowPositions.size()-1)
-      {
-        int pos = mRowPositions[grid_j] + grid_i;
-        if ((std::size_t)pos < mRowPositions[grid_j+1])
-          return pos;
-      }
-      return -1;
-    }
-    else
-    {
-      auto d = getGridDimensions();
-      if (d.getDimensions() == 2)
-      {
-        if (grid_j >= d.ny())
-          return -1;
+      if (grid_j >= d.ny())
+        return -1;
 
-        if (grid_i >= d.nx() &&  !isGridGlobal())
-          return -1;
+      if (grid_i >= d.nx() &&  !isGridGlobal())
+        return -1;
 
-        return (grid_j * d.nx() + (grid_i % d.nx()));
-      }
+      return (grid_j * d.nx() + (grid_i % d.nx()));
     }
     return -1;
   }

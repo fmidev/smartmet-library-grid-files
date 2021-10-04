@@ -18,7 +18,6 @@ class FmiParameterDef
     void          print(std::ostream& stream,uint level,uint optionFlags) const;
 
     T::FmiParamId mFmiParameterId;
-    uint          mVersion;
     std::string   mParameterName;
     std::string   mParameterUnits;
     std::string   mParameterDescription;

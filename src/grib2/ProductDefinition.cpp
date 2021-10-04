@@ -1074,6 +1074,24 @@ void ProductDefinition::getAttributeList(const std::string& prefix,T::AttributeL
 
 
 
+bool ProductDefinition::hasAttributeValue(const char *attributeName, const char *attributeValue) const
+{
+  return false;
+}
+
+
+
+
+
+bool ProductDefinition::getAttributeValue(const char *attributeName, std::string& attributeValue) const
+{
+  return false;
+}
+
+
+
+
+
 uint ProductDefinition::getTemplateNumber() const
 {
   throw Fmi::Exception(BCP,"Not implemented!");

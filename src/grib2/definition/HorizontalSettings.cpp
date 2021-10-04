@@ -92,6 +92,74 @@ void HorizontalSettings::getAttributeList(const std::string &prefix, T::Attribut
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool HorizontalSettings::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "TypeOfFirstFixedSurface") == 0) {
+      attributeValue = toString(mTypeOfFirstFixedSurface);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfFirstFixedSurface") == 0) {
+      attributeValue = toString(mScaleFactorOfFirstFixedSurface);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfFirstFixedSurface") == 0) {
+      attributeValue = toString(mScaledValueOfFirstFixedSurface);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TypeOfSecondFixedSurface") == 0) {
+      attributeValue = toString(mTypeOfSecondFixedSurface);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfSecondFixedSurface") == 0) {
+      attributeValue = toString(mScaleFactorOfSecondFixedSurface);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfSecondFixedSurface") == 0) {
+      attributeValue = toString(mScaledValueOfSecondFixedSurface);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool HorizontalSettings::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "TypeOfFirstFixedSurface") == 0 && strcasecmp(attributeValue, toString(mTypeOfFirstFixedSurface).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfFirstFixedSurface") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfFirstFixedSurface).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfFirstFixedSurface") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfFirstFixedSurface).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TypeOfSecondFixedSurface") == 0 && strcasecmp(attributeValue, toString(mTypeOfSecondFixedSurface).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfSecondFixedSurface") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfSecondFixedSurface).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfSecondFixedSurface") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfSecondFixedSurface).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.

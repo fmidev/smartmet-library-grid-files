@@ -96,6 +96,78 @@ void AreaProcessedCrossSectionProduct::getAttributeList(const std::string &prefi
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool AreaProcessedCrossSectionProduct::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mParameter.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "HorizontalDimensionProcessed") == 0) {
+      attributeValue = toString(mHorizontalDimensionProcessed);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TreatmentOfMissingData") == 0) {
+      attributeValue = toString(mTreatmentOfMissingData);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TypeOfStatisticalProcessing") == 0) {
+      attributeValue = toString(mTypeOfStatisticalProcessing);
+      return true;
+    }
+    if (strcasecmp(attributeName, "StartOfRange") == 0) {
+      attributeValue = toString(mStartOfRange);
+      return true;
+    }
+    if (strcasecmp(attributeName, "EndOfRange") == 0) {
+      attributeValue = toString(mEndOfRange);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfDataValues") == 0) {
+      attributeValue = toString(mNumberOfDataValues);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool AreaProcessedCrossSectionProduct::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mParameter.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "HorizontalDimensionProcessed") == 0 && strcasecmp(attributeValue, toString(mHorizontalDimensionProcessed).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TreatmentOfMissingData") == 0 && strcasecmp(attributeValue, toString(mTreatmentOfMissingData).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TypeOfStatisticalProcessing") == 0 && strcasecmp(attributeValue, toString(mTypeOfStatisticalProcessing).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "StartOfRange") == 0 && strcasecmp(attributeValue, toString(mStartOfRange).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "EndOfRange") == 0 && strcasecmp(attributeValue, toString(mEndOfRange).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfDataValues") == 0 && strcasecmp(attributeValue, toString(mNumberOfDataValues).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -135,7 +207,6 @@ T::Hash AreaProcessedCrossSectionProduct::countHash() {
       boost::hash_combine(seed, *mEndOfRange);
     if (mNumberOfDataValues)
       boost::hash_combine(seed, *mNumberOfDataValues);
-    boost::hash_combine(seed, mParameter.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

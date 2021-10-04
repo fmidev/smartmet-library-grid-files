@@ -154,9 +154,6 @@ void ProductSection::getAttributeList(const std::string& prefix,T::AttributeList
     sprintf(name,"%sproduct.centre.id",prefix.c_str());
     attributeList.addAttribute(name,toString(mCentre));
 
-    sprintf(name,"%sproduct.centre.name",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(1,0,"0",mCentre));
-
     sprintf(name,"%sproduct.generatingProcessIdentifier",prefix.c_str());
     attributeList.addAttribute(name,toString(mGeneratingProcessIdentifier));
 
@@ -169,14 +166,8 @@ void ProductSection::getAttributeList(const std::string& prefix,T::AttributeList
     sprintf(name,"%sproduct.indicatorOfParameter",prefix.c_str());
     attributeList.addAttribute(name,toString(mIndicatorOfParameter));
 
-    sprintf(name,"%sproduct.indicatorOfParameterString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(1,0,"2.128",mIndicatorOfParameter));
-
     sprintf(name,"%sproduct.indicatorOfTypeOfLevel",prefix.c_str());
     attributeList.addAttribute(name,toString(mIndicatorOfTypeOfLevel));
-
-    sprintf(name,"%sproduct.indicatorOfTypeOfLevelString",prefix.c_str());
-    attributeList.addAttribute(name,Identification::gridDef.getGribTableValue(1,0,"3",mIndicatorOfTypeOfLevel));
 
     sprintf(name,"%sproduct.level",prefix.c_str());
     attributeList.addAttribute(name,toString(mLevel));
@@ -228,6 +219,173 @@ void ProductSection::getAttributeList(const std::string& prefix,T::AttributeList
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
+
+
+
+
+bool ProductSection::getAttributeValue(const char *attributeName, std::string& attributeValue) const
+{
+  try
+  {
+    if (strcasecmp(attributeName,"table2Version") == 0)
+    {
+      attributeValue = toString(mTableVersion);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"centre") == 0)
+    {
+      attributeValue = toString(mCentre);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"generatingProcessIdentifier") == 0)
+    {
+      attributeValue = toString(mGeneratingProcessIdentifier);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"subCentre") == 0)
+    {
+      attributeValue = toString(mSubCentre);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"indicatorOfParameter") == 0)
+    {
+      attributeValue = toString(mIndicatorOfParameter);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"indicatorOfTypeOfLevel") == 0)
+    {
+      attributeValue = toString(mIndicatorOfTypeOfLevel);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"level") == 0)
+    {
+      attributeValue = toString(mLevel);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"gridDefinitionNumber") == 0)
+    {
+      attributeValue = toString(mGridDefinitionNumber);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"sectionFlags") == 0)
+    {
+      attributeValue = toString(mSectionFlags);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"unitOfTimeRange") == 0)
+    {
+      attributeValue = toString(mUnitOfTimeRange);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"timeRangeIndicator") == 0)
+    {
+      attributeValue = toString(mTimeRangeIndicator);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"numberIncludedInAverage") == 0)
+    {
+      attributeValue = toString(mNumberIncludedInAverage);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"numberMissingFromAveragesOrAccumulations") == 0)
+    {
+      attributeValue == toString(mNumberMissingFromAveragesOrAccumulations);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"centuryOfReferenceTimeOfData") == 0)
+    {
+      attributeValue = toString(mCenturyOfReferenceTimeOfData);
+      return true;
+    }
+
+    if (strcasecmp(attributeName,"decimalScaleFactor") == 0)
+    {
+      attributeValue = toString(mDecimalScaleFactor);
+      return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+bool ProductSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const
+{
+  try
+  {
+    if (strcasecmp(attributeName,"table2Version") == 0  &&  strcasecmp(attributeValue,toString(mTableVersion).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"centre") == 0  &&  strcasecmp(attributeValue,toString(mCentre).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"generatingProcessIdentifier") == 0  &&  strcasecmp(attributeValue,toString(mGeneratingProcessIdentifier).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"subCentre") == 0  &&  strcasecmp(attributeValue,toString(mSubCentre).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"indicatorOfParameter") == 0  &&  strcasecmp(attributeValue,toString(mIndicatorOfParameter).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"indicatorOfTypeOfLevel") == 0  &&  strcasecmp(attributeValue,toString(mIndicatorOfTypeOfLevel).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"level") == 0  &&  strcasecmp(attributeValue,toString(mLevel).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"gridDefinitionNumber") == 0  &&  strcasecmp(attributeValue,toString(mGridDefinitionNumber).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"sectionFlags") == 0  &&  strcasecmp(attributeValue,toString(mSectionFlags).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"unitOfTimeRange") == 0  &&  strcasecmp(attributeValue,toString(mUnitOfTimeRange).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"timeRangeIndicator") == 0  &&  strcasecmp(attributeValue,toString(mTimeRangeIndicator).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"numberIncludedInAverage") == 0  &&  strcasecmp(attributeValue,toString(mNumberIncludedInAverage).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"numberMissingFromAveragesOrAccumulations") == 0  &&  strcasecmp(attributeValue,toString(mNumberMissingFromAveragesOrAccumulations).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"centuryOfReferenceTimeOfData") == 0  &&  strcasecmp(attributeValue,toString(mCenturyOfReferenceTimeOfData).c_str()) == 0)
+      return true;
+
+    if (strcasecmp(attributeName,"decimalScaleFactor") == 0  &&  strcasecmp(attributeValue,toString(mDecimalScaleFactor).c_str()) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
 
 
 
@@ -1788,12 +1946,12 @@ void ProductSection::print(std::ostream& stream,uint level,uint optionFlags) con
     stream << space(level) << "- filePosition                             = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- sectionLength                            = " <<  toString(mSectionLength) << "\n";
     stream << space(level) << "- tableVersion                             = " <<  toString(mTableVersion) << "\n";
-    stream << space(level) << "- centre                                   = " <<  toString(mCentre) << " (" << Identification::gridDef.getGribTableValue(1,0,"0",mCentre) << ")\n";
+    stream << space(level) << "- centre                                   = " <<  toString(mCentre) << "\n";
     stream << space(level) << "- generatingProcessIdentifier              = " <<  toString(mGeneratingProcessIdentifier) << "\n";
     stream << space(level) << "- gridDefinitionNumber                     = " <<  toString(mGridDefinitionNumber) << "\n";
     stream << space(level) << "- sectionFlags                             = " <<  toString(mSectionFlags) << "\n";
-    stream << space(level) << "- indicatorOfParameter                     = " <<  toString(mIndicatorOfParameter)  << " (" << Identification::gridDef.getGribTableValue(1,0,"2.128",mIndicatorOfParameter) << ")\n";
-    stream << space(level) << "- indicatorOfTypeOfLevel                   = " <<  toString(mIndicatorOfTypeOfLevel) << " (" << Identification::gridDef.getGribTableValue(1,0,"3",mIndicatorOfTypeOfLevel) << ")\n";
+    stream << space(level) << "- indicatorOfParameter                     = " <<  toString(mIndicatorOfParameter)  << "\n";
+    stream << space(level) << "- indicatorOfTypeOfLevel                   = " <<  toString(mIndicatorOfTypeOfLevel) << "\n";
     stream << space(level) << "- level                                    = " <<  toString(mLevel) << "\n";
     stream << space(level) << "- yearOfCentury                            = " <<  toString(mYearOfCentury) << "\n";
     stream << space(level) << "- month                                    = " <<  toString(mMonth) << "\n";

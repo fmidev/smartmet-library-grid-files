@@ -124,6 +124,118 @@ void CrossSection::getAttributeList(const std::string &prefix, T::AttributeList 
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool CrossSection::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mEarthShape.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "NumberOfHorizontalPoints") == 0) {
+      attributeValue = toString(mNumberOfHorizontalPoints);
+      return true;
+    }
+    if (strcasecmp(attributeName, "BasicAngleOfTheInitialProductionDomain") == 0) {
+      attributeValue = toString(mBasicAngleOfTheInitialProductionDomain);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SubdivisionsOfBasicAngle") == 0) {
+      attributeValue = toString(mSubdivisionsOfBasicAngle);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLatitudeOfFirstGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLongitudeOfFirstGridPoint);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfLastGridPoint") == 0) {
+      attributeValue = toString(mLatitudeOfLastGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfLastGridPoint") == 0) {
+      attributeValue = toString(mLongitudeOfLastGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "TypeOfHorizontalLine") == 0) {
+      attributeValue = toString(mTypeOfHorizontalLine);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NumberOfVerticalPoints") == 0) {
+      attributeValue = toString(mNumberOfVerticalPoints);
+      return true;
+    }
+    if (strcasecmp(attributeName, "MeaningOfVerticalCoordinate") == 0) {
+      attributeValue = toString(mMeaningOfVerticalCoordinate);
+      return true;
+    }
+    if (strcasecmp(attributeName, "VerticalCoordinate") == 0) {
+      attributeValue = toString(mVerticalCoordinate);
+      return true;
+    }
+    if (strcasecmp(attributeName, "NC") == 0) {
+      attributeValue = toString(mNC);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool CrossSection::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mEarthShape.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "NumberOfHorizontalPoints") == 0 && strcasecmp(attributeValue, toString(mNumberOfHorizontalPoints).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "BasicAngleOfTheInitialProductionDomain") == 0 && strcasecmp(attributeValue, toString(mBasicAngleOfTheInitialProductionDomain).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SubdivisionsOfBasicAngle") == 0 && strcasecmp(attributeValue, toString(mSubdivisionsOfBasicAngle).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfLastGridPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfLastGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfLastGridPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfLastGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "TypeOfHorizontalLine") == 0 && strcasecmp(attributeValue, toString(mTypeOfHorizontalLine).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NumberOfVerticalPoints") == 0 && strcasecmp(attributeValue, toString(mNumberOfVerticalPoints).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "MeaningOfVerticalCoordinate") == 0 && strcasecmp(attributeValue, toString(mMeaningOfVerticalCoordinate).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "VerticalCoordinate") == 0 && strcasecmp(attributeValue, toString(mVerticalCoordinate).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "NC") == 0 && strcasecmp(attributeValue, toString(mNC).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -178,8 +290,6 @@ T::Hash CrossSection::countHash() {
       boost::hash_combine(seed, *mVerticalCoordinate);
     if (mNC)
       boost::hash_combine(seed, *mNC);
-    // boost::hash_combine(seed,mEarthShape.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -88,6 +88,58 @@ void EnsembleReforecast::getAttributeList(const std::string &prefix, T::Attribut
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool EnsembleReforecast::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mParameter.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mPointInTime.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mHorizontal.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mEps.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mReforecast.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool EnsembleReforecast::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mParameter.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mPointInTime.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mHorizontal.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mEps.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mReforecast.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -113,11 +165,6 @@ void EnsembleReforecast::print(std::ostream &stream, uint level, uint optionFlag
 T::Hash EnsembleReforecast::countHash() {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mParameter.countHash());
-    boost::hash_combine(seed, mPointInTime.countHash());
-    boost::hash_combine(seed, mHorizontal.countHash());
-    boost::hash_combine(seed, mEps.countHash());
-    boost::hash_combine(seed, mReforecast.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

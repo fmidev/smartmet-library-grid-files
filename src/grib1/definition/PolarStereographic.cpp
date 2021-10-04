@@ -120,6 +120,94 @@ void PolarStereographic::getAttributeList(const std::string &prefix, T::Attribut
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool PolarStereographic::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Nx") == 0) {
+      attributeValue = toString(mNx);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Ny") == 0) {
+      attributeValue = toString(mNy);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLatitudeOfFirstGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLongitudeOfFirstGridPoint);
+      return true;
+    }
+    if (mResolutionFlags.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "OrientationOfTheGrid") == 0) {
+      attributeValue = toString(mOrientationOfTheGrid);
+      return true;
+    }
+    if (strcasecmp(attributeName, "DxInMetres") == 0) {
+      attributeValue = toString(mDxInMetres);
+      return true;
+    }
+    if (strcasecmp(attributeName, "DyInMetres") == 0) {
+      attributeValue = toString(mDyInMetres);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ProjectionCentreFlag") == 0) {
+      attributeValue = toString(mProjectionCentreFlag);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool PolarStereographic::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (strcasecmp(attributeName, "Nx") == 0 && strcasecmp(attributeValue, toString(mNx).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Ny") == 0 && strcasecmp(attributeValue, toString(mNy).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (mResolutionFlags.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "OrientationOfTheGrid") == 0 && strcasecmp(attributeValue, toString(mOrientationOfTheGrid).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "DxInMetres") == 0 && strcasecmp(attributeValue, toString(mDxInMetres).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "DyInMetres") == 0 && strcasecmp(attributeValue, toString(mDyInMetres).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ProjectionCentreFlag") == 0 && strcasecmp(attributeValue, toString(mProjectionCentreFlag).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -158,8 +246,6 @@ T::Hash PolarStereographic::countHash() {
     boost::hash_combine(seed, mDxInMetres);
     boost::hash_combine(seed, mDyInMetres);
     boost::hash_combine(seed, mProjectionCentreFlag);
-    // boost::hash_combine(seed,mResolutionFlags.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

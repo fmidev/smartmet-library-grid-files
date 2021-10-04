@@ -80,6 +80,50 @@ void Product_72::getAttributeList(const std::string &prefix, T::AttributeList &a
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Product_72::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mPostproc.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mHorizontal.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mStatistical.getAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Product_72::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mPostproc.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mHorizontal.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mStatistical.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -103,9 +147,6 @@ void Product_72::print(std::ostream &stream, uint level, uint optionFlags) const
 T::Hash Product_72::countHash() {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mPostproc.countHash());
-    boost::hash_combine(seed, mHorizontal.countHash());
-    boost::hash_combine(seed, mStatistical.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

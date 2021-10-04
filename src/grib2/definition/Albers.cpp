@@ -133,6 +133,128 @@ void Albers::getAttributeList(const std::string &prefix, T::AttributeList &attri
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Albers::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mEarthShape.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Nx") == 0) {
+      attributeValue = toString(mNx);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Ny") == 0) {
+      attributeValue = toString(mNy);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLatitudeOfFirstGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLongitudeOfFirstGridPoint);
+      return true;
+    }
+    if (mResolution.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "LaD") == 0) {
+      attributeValue = toString(mLaD);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LoV") == 0) {
+      attributeValue = toString(mLoV);
+      return true;
+    }
+    if (strcasecmp(attributeName, "XDirectionGridLength") == 0) {
+      attributeValue = toString(mXDirectionGridLength);
+      return true;
+    }
+    if (strcasecmp(attributeName, "YDirectionGridLength") == 0) {
+      attributeValue = toString(mYDirectionGridLength);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ProjectionCentreFlag") == 0) {
+      attributeValue = toString(mProjectionCentreFlag);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Latin1") == 0) {
+      attributeValue = toString(mLatin1);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Latin2") == 0) {
+      attributeValue = toString(mLatin2);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfTheSouthernPoleOfProjection") == 0) {
+      attributeValue = toString(mLatitudeOfTheSouthernPoleOfProjection);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfTheSouthernPoleOfProjection") == 0) {
+      attributeValue = toString(mLongitudeOfTheSouthernPoleOfProjection);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Albers::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mEarthShape.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Nx") == 0 && strcasecmp(attributeValue, toString(mNx).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Ny") == 0 && strcasecmp(attributeValue, toString(mNy).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (mResolution.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "LaD") == 0 && strcasecmp(attributeValue, toString(mLaD).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LoV") == 0 && strcasecmp(attributeValue, toString(mLoV).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "XDirectionGridLength") == 0 && strcasecmp(attributeValue, toString(mXDirectionGridLength).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "YDirectionGridLength") == 0 && strcasecmp(attributeValue, toString(mYDirectionGridLength).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ProjectionCentreFlag") == 0 && strcasecmp(attributeValue, toString(mProjectionCentreFlag).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Latin1") == 0 && strcasecmp(attributeValue, toString(mLatin1).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Latin2") == 0 && strcasecmp(attributeValue, toString(mLatin2).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfTheSouthernPoleOfProjection") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfTheSouthernPoleOfProjection).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfTheSouthernPoleOfProjection") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfTheSouthernPoleOfProjection).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -194,9 +316,6 @@ T::Hash Albers::countHash() {
       boost::hash_combine(seed, *mLatitudeOfTheSouthernPoleOfProjection);
     if (mLongitudeOfTheSouthernPoleOfProjection)
       boost::hash_combine(seed, *mLongitudeOfTheSouthernPoleOfProjection);
-    // boost::hash_combine(seed,mEarthShape.countHash());
-    // boost::hash_combine(seed,mResolution.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

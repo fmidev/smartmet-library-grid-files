@@ -133,6 +133,128 @@ void TransverseMercator::getAttributeList(const std::string &prefix, T::Attribut
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool TransverseMercator::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mEarthShape.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Ni") == 0) {
+      attributeValue = toString(mNi);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Nj") == 0) {
+      attributeValue = toString(mNj);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfReferencePoint") == 0) {
+      attributeValue = toString(mLatitudeOfReferencePoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfReferencePoint") == 0) {
+      attributeValue = toString(mLongitudeOfReferencePoint);
+      return true;
+    }
+    if (mResolution.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorAtReferencePoint") == 0) {
+      attributeValue = toString(mScaleFactorAtReferencePoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "XR") == 0) {
+      attributeValue = toString(mXR);
+      return true;
+    }
+    if (strcasecmp(attributeName, "YR") == 0) {
+      attributeValue = toString(mYR);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Di") == 0) {
+      attributeValue = toString(mDi);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Dj") == 0) {
+      attributeValue = toString(mDj);
+      return true;
+    }
+    if (strcasecmp(attributeName, "X1") == 0) {
+      attributeValue = toString(mX1);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Y1") == 0) {
+      attributeValue = toString(mY1);
+      return true;
+    }
+    if (strcasecmp(attributeName, "X2") == 0) {
+      attributeValue = toString(mX2);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Y2") == 0) {
+      attributeValue = toString(mY2);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool TransverseMercator::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mEarthShape.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Ni") == 0 && strcasecmp(attributeValue, toString(mNi).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Nj") == 0 && strcasecmp(attributeValue, toString(mNj).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfReferencePoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfReferencePoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfReferencePoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfReferencePoint).c_str()) == 0)
+      return true;
+    if (mResolution.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorAtReferencePoint") == 0 && strcasecmp(attributeValue, toString(mScaleFactorAtReferencePoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "XR") == 0 && strcasecmp(attributeValue, toString(mXR).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "YR") == 0 && strcasecmp(attributeValue, toString(mYR).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Di") == 0 && strcasecmp(attributeValue, toString(mDi).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Dj") == 0 && strcasecmp(attributeValue, toString(mDj).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "X1") == 0 && strcasecmp(attributeValue, toString(mX1).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Y1") == 0 && strcasecmp(attributeValue, toString(mY1).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "X2") == 0 && strcasecmp(attributeValue, toString(mX2).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Y2") == 0 && strcasecmp(attributeValue, toString(mY2).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -194,9 +316,6 @@ T::Hash TransverseMercator::countHash() {
       boost::hash_combine(seed, *mX2);
     if (mY2)
       boost::hash_combine(seed, *mY2);
-    // boost::hash_combine(seed,mEarthShape.countHash());
-    // boost::hash_combine(seed,mResolution.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

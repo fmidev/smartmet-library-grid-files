@@ -111,7 +111,7 @@ T::Coordinate_svec GaussianImpl::getGridOriginalCoordinates() const
       longitudeOfLastGridPoint += 360000;
 
     if (ni == 0xFFFF)
-      ni = getGridOriginalColumnCount();
+      ni = getGridColumnCount();
 
     double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / C_DOUBLE(ni-1);
 
@@ -229,7 +229,7 @@ bool GaussianImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
       longitudeOfLastGridPoint += 360;
 
     if (ni == 0xFFFF)
-      ni = getGridOriginalColumnCount();
+      ni = getGridColumnCount();
 
     double iDirectionIncrement = (longitudeOfLastGridPoint - longitudeOfFirstGridPoint) / C_DOUBLE(ni-1);
 
@@ -326,7 +326,7 @@ void GaussianImpl::initSpatialReference()
 
     uint ni = mNi;
     if (ni == 0xFFFF)
-      ni = getGridOriginalColumnCount();
+      ni = getGridColumnCount();
 
     double longitudeOfFirstGridPoint = C_DOUBLE(mGridArea.getLongitudeOfFirstGridPoint()) / 1000;
     double longitudeOfLastGridPoint = C_DOUBLE(mGridArea.getLongitudeOfLastGridPoint()) / 1000;
@@ -378,7 +378,7 @@ void GaussianImpl::print(std::ostream& stream,uint level,uint optionFlags) const
       uint nx = mNi;
       uint ny = mNj;
       if (nx == 0xFFFF)
-        nx = getGridOriginalColumnCount();
+        nx = getGridColumnCount();
 
       uint c = 0;
 

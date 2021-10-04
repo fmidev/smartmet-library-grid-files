@@ -7,6 +7,8 @@ namespace SmartMet
 namespace Identification
 {
 
+typedef std::vector<std::pair<uint,std::string>> ParameterList;
+
 
 class FmiLevelId_grib
 {
@@ -16,11 +18,8 @@ class FmiLevelId_grib
 
     void            print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    uint            mFmiProducerId;
-    uint            mGeneratingProcessIdentifier;
-    uint            mCentre;
-    uint            mGribLevelId;
     uint            mFmiLevelId;
+    ParameterList   mParameterList;
 };
 
 

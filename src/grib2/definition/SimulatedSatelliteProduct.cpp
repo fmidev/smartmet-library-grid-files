@@ -100,6 +100,82 @@ void SimulatedSatelliteProduct::getAttributeList(const std::string &prefix, T::A
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool SimulatedSatelliteProduct::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mParameter.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mPointInTime.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "NB") == 0) {
+      attributeValue = toString(mNB);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SatelliteSeries") == 0) {
+      attributeValue = toString(mSatelliteSeries);
+      return true;
+    }
+    if (strcasecmp(attributeName, "SatelliteNumber") == 0) {
+      attributeValue = toString(mSatelliteNumber);
+      return true;
+    }
+    if (strcasecmp(attributeName, "InstrumentType") == 0) {
+      attributeValue = toString(mInstrumentType);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaleFactorOfCentralWaveNumber") == 0) {
+      attributeValue = toString(mScaleFactorOfCentralWaveNumber);
+      return true;
+    }
+    if (strcasecmp(attributeName, "ScaledValueOfCentralWaveNumber") == 0) {
+      attributeValue = toString(mScaledValueOfCentralWaveNumber);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool SimulatedSatelliteProduct::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mParameter.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (mPointInTime.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "NB") == 0 && strcasecmp(attributeValue, toString(mNB).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SatelliteSeries") == 0 && strcasecmp(attributeValue, toString(mSatelliteSeries).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "SatelliteNumber") == 0 && strcasecmp(attributeValue, toString(mSatelliteNumber).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "InstrumentType") == 0 && strcasecmp(attributeValue, toString(mInstrumentType).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaleFactorOfCentralWaveNumber") == 0 && strcasecmp(attributeValue, toString(mScaleFactorOfCentralWaveNumber).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "ScaledValueOfCentralWaveNumber") == 0 && strcasecmp(attributeValue, toString(mScaledValueOfCentralWaveNumber).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -140,8 +216,6 @@ T::Hash SimulatedSatelliteProduct::countHash() {
       boost::hash_combine(seed, *mScaleFactorOfCentralWaveNumber);
     if (mScaledValueOfCentralWaveNumber)
       boost::hash_combine(seed, *mScaledValueOfCentralWaveNumber);
-    boost::hash_combine(seed, mParameter.countHash());
-    boost::hash_combine(seed, mPointInTime.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

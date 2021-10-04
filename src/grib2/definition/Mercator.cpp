@@ -120,6 +120,110 @@ void Mercator::getAttributeList(const std::string &prefix, T::AttributeList &att
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Mercator::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mEarthShape.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Ni") == 0) {
+      attributeValue = toString(mNi);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Nj") == 0) {
+      attributeValue = toString(mNj);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLatitudeOfFirstGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0) {
+      attributeValue = toString(mLongitudeOfFirstGridPoint);
+      return true;
+    }
+    if (mResolution.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "LaD") == 0) {
+      attributeValue = toString(mLaD);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfLastGridPoint") == 0) {
+      attributeValue = toString(mLatitudeOfLastGridPoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfLastGridPoint") == 0) {
+      attributeValue = toString(mLongitudeOfLastGridPoint);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "OrientationOfTheGrid") == 0) {
+      attributeValue = toString(mOrientationOfTheGrid);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Di") == 0) {
+      attributeValue = toString(mDi);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Dj") == 0) {
+      attributeValue = toString(mDj);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool Mercator::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mEarthShape.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Ni") == 0 && strcasecmp(attributeValue, toString(mNi).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Nj") == 0 && strcasecmp(attributeValue, toString(mNj).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfFirstGridPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfFirstGridPoint).c_str()) == 0)
+      return true;
+    if (mResolution.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "LaD") == 0 && strcasecmp(attributeValue, toString(mLaD).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfLastGridPoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfLastGridPoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfLastGridPoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfLastGridPoint).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "OrientationOfTheGrid") == 0 && strcasecmp(attributeValue, toString(mOrientationOfTheGrid).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Di") == 0 && strcasecmp(attributeValue, toString(mDi).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Dj") == 0 && strcasecmp(attributeValue, toString(mDj).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -171,9 +275,6 @@ T::Hash Mercator::countHash() {
       boost::hash_combine(seed, *mDi);
     if (mDj)
       boost::hash_combine(seed, *mDj);
-    // boost::hash_combine(seed,mEarthShape.countHash());
-    // boost::hash_combine(seed,mResolution.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -157,7 +157,7 @@ bool SimplePacking::getValueByIndex(Message *message,uint index,T::ParamValue& v
 {
   try
   {
-    T::Data_ptr bitmap = message->getBitmapDataPtr();
+    //T::Data_ptr bitmap = message->getBitmapDataPtr();
     //if (bitmap != nullptr && (bitmap[index / 8] & bitmask[index % 8]) == 0)
     //  return false;
 

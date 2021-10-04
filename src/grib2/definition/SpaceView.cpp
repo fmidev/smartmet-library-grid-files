@@ -128,6 +128,122 @@ void SpaceView::getAttributeList(const std::string &prefix, T::AttributeList &at
   }
 }
 
+/*! \brief The method is used for getting attribute values by their names.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool SpaceView::getAttributeValue(const char *attributeName, std::string &attributeValue) const {
+  try {
+    if (attributeName == nullptr)
+      return false;
+    if (mEarthShape.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Nx") == 0) {
+      attributeValue = toString(mNx);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Ny") == 0) {
+      attributeValue = toString(mNy);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LatitudeOfSubSatellitePoint") == 0) {
+      attributeValue = toString(mLatitudeOfSubSatellitePoint);
+      return true;
+    }
+    if (strcasecmp(attributeName, "LongitudeOfSubSatellitePoint") == 0) {
+      attributeValue = toString(mLongitudeOfSubSatellitePoint);
+      return true;
+    }
+    if (mResolution.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Dx") == 0) {
+      attributeValue = toString(mDx);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Dy") == 0) {
+      attributeValue = toString(mDy);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Xp") == 0) {
+      attributeValue = toString(mXp);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Yp") == 0) {
+      attributeValue = toString(mYp);
+      return true;
+    }
+    if (mScanningMode.getAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "OrientationOfTheGrid") == 0) {
+      attributeValue = toString(mOrientationOfTheGrid);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Nr") == 0) {
+      attributeValue = toString(mNr);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Xo") == 0) {
+      attributeValue = toString(mXo);
+      return true;
+    }
+    if (strcasecmp(attributeName, "Yo") == 0) {
+      attributeValue = toString(mYo);
+      return true;
+    }
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
+/*! \brief The method is used for checking if the attribute value matches to the given value.
+
+    \param attributeName  The name of the attribute.
+    \param attributeValue The value of the attribute (string).
+*/
+
+bool SpaceView::hasAttributeValue(const char *attributeName, const char *attributeValue) const {
+  try {
+    if (attributeName == nullptr || attributeValue == nullptr)
+      return false;
+    if (mEarthShape.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Nx") == 0 && strcasecmp(attributeValue, toString(mNx).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Ny") == 0 && strcasecmp(attributeValue, toString(mNy).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LatitudeOfSubSatellitePoint") == 0 && strcasecmp(attributeValue, toString(mLatitudeOfSubSatellitePoint).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "LongitudeOfSubSatellitePoint") == 0 && strcasecmp(attributeValue, toString(mLongitudeOfSubSatellitePoint).c_str()) == 0)
+      return true;
+    if (mResolution.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "Dx") == 0 && strcasecmp(attributeValue, toString(mDx).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Dy") == 0 && strcasecmp(attributeValue, toString(mDy).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Xp") == 0 && strcasecmp(attributeValue, toString(mXp).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Yp") == 0 && strcasecmp(attributeValue, toString(mYp).c_str()) == 0)
+      return true;
+    if (mScanningMode.hasAttributeValue(attributeName, attributeValue))
+      return true;
+    if (strcasecmp(attributeName, "OrientationOfTheGrid") == 0 && strcasecmp(attributeValue, toString(mOrientationOfTheGrid).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Nr") == 0 && strcasecmp(attributeValue, toString(mNr).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Xo") == 0 && strcasecmp(attributeValue, toString(mXo).c_str()) == 0)
+      return true;
+    if (strcasecmp(attributeName, "Yo") == 0 && strcasecmp(attributeValue, toString(mYo).c_str()) == 0)
+      return true;
+    return false;
+  } catch (...) {
+    throw Fmi::Exception(BCP, "Operation failed", nullptr);
+  }
+}
+
 /*! \brief The method prints the content of the current object into the given stream.
 
     \param ostream      The output stream.
@@ -187,9 +303,6 @@ T::Hash SpaceView::countHash() {
       boost::hash_combine(seed, *mXo);
     if (mYo)
       boost::hash_combine(seed, *mYo);
-    // boost::hash_combine(seed,mEarthShape.countHash());
-    // boost::hash_combine(seed,mResolution.countHash());
-    boost::hash_combine(seed, mScanningMode.countHash());
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

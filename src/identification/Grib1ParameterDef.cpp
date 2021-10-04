@@ -1,6 +1,7 @@
 #include "Grib1ParameterDef.h"
 #include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
+#include "../common/StringFactory.h"
 
 
 namespace SmartMet
@@ -14,11 +15,6 @@ Grib1ParameterDef::Grib1ParameterDef()
   try
   {
     mGribParameterId = 0;
-    mTable2Version = 0;
-    mCentre = 0;
-    mIndicatorOfParameter = 0;
-    mIndicatorOfTypeOfLevel = 0;
-    mParameterLevel = 0;
   }
   catch (...)
   {
@@ -56,15 +52,10 @@ void Grib1ParameterDef::print(std::ostream& stream,uint level,uint optionFlags) 
   try
   {
     stream << space(level) << "GribParameterDef1\n";
-    stream << space(level) << "- mGribParameterId        = " << mGribParameterId << "\n";
-    stream << space(level) << "- mTable2Version          = " << toString(mTable2Version) << "\n";
-    stream << space(level) << "- mCentre                 = " << toString(mCentre) << "\n";
-    stream << space(level) << "- mIndicatorOfParameter   = " << toString(mIndicatorOfParameter) << "\n";
-    stream << space(level) << "- mIndicatorOfTypeOfLevel = " << toString(mIndicatorOfTypeOfLevel) << "\n";
-    stream << space(level) << "- mParameterLevel         = " << toString(mParameterLevel) << "\n";
-    stream << space(level) << "- mParameterUnits         = " << mParameterUnits << "\n";
-    stream << space(level) << "- mParameterName          = " << mParameterName << "\n";
-    stream << space(level) << "- mParameterDescription   = " << mParameterDescription << "\n";
+    stream << space(level) << "- mGribParameterId  = " << mGribParameterId << "\n";
+    stream << space(level) << "- mParameterList    = \n";
+    for (auto it = mParameterList.begin(); it != mParameterList.end(); ++it)
+      stream << space(level+2) << stringFactory[it->first] << " : " << it->second << "\n";
   }
   catch (...)
   {
