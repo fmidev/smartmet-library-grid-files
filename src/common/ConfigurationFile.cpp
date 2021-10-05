@@ -711,8 +711,7 @@ bool ConfigurationFile::getAttributeFields(const char *attributeName,std::set<st
           else
             itm = attr->mName.substr(len+1);
 
-          //if (attributeFields.find(itm) == attributeFields.end())
-            attributeFields.insert(itm);
+          attributeFields.insert(itm);
         }
       }
     }

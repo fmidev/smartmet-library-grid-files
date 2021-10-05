@@ -2742,44 +2742,8 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
-      //if (getGridLayout() == T::GridLayoutValue::Regular)
-      //{
-        mCacheKey = mOrigCacheKey;
-        return;
-      //}
-
-#if 0
-      if (getGridLayout() == T::GridLayoutValue::Irregular)
-      {
-        // The grid layout is irregular, which means that grid rows can contain different number of columns.
-        // Let's fill the rows so that they all have the same number of columns. I.e. let's create a regular grid.
-
-        // TODO: We should interpolate between the columns. Now we just repeat the same value.
-
-        uint maxCols = getGridColumnCount();
-
-        T::ParamValue_vec valVector;
-        uint rows = 0;
-        if (d.getDimensions() == 2)
-          rows = d.ny();
-
-        for (uint r=0; r<rows; r++)
-        {
-          std::size_t cols = getGridColumnCount(r);
-          double step = C_DOUBLE(maxCols) / C_DOUBLE(cols);
-
-          for (uint c=0; c<maxCols; c++)
-          {
-            uint cc = C_UINT(C_DOUBLE(c) / step);
-            int idx = C_INT(getGridOriginalValueIndex(cc,r));
-            T::ParamValue val = values[idx];
-            valVector.emplace_back(val);
-          }
-        }
-        if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
-          mCacheKey = GRID::valueCache.addValues(valVector);
-      }
-#endif
+      mCacheKey = mOrigCacheKey;
+      return;
     }
     catch (...)
     {

@@ -302,7 +302,7 @@ bool ProductSection::getAttributeValue(const char *attributeName, std::string& a
 
     if (strcasecmp(attributeName,"numberMissingFromAveragesOrAccumulations") == 0)
     {
-      attributeValue == toString(mNumberMissingFromAveragesOrAccumulations);
+      attributeValue = toString(mNumberMissingFromAveragesOrAccumulations);
       return true;
     }
 
