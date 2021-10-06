@@ -4794,6 +4794,107 @@ T::FmiParamId GridDef::getFmiParameterIdByFmiName(const std::string& fmiParamNam
 
 
 
+T::FmiParamId GridDef::getFmiParameterIdByNewbaseName(const std::string& newbaseParamName)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    std::string key = toUpperString(newbaseParamName);
+
+    auto p = mNewbaseNameToId.find(key);
+    if (p != mNewbaseNameToId.end())
+    {
+      auto pp = mNewbaseIdToFmiId.find(p->second);
+      if (pp != mNewbaseIdToFmiId.end())
+        return pp->second;
+    }
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::FmiParamId GridDef::getFmiParameterIdByNetCdfName(const std::string& netCdfParamName)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    std::string key = toUpperString(netCdfParamName);
+    auto p = mNetCdfNameToFmiId.find(key);
+    if (p != mNetCdfNameToFmiId.end())
+      return p->second;
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::FmiParamId GridDef::getFmiParameterIdByNewbaseId(T::NewbaseParamId newbaseParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    auto p = mNewbaseIdToFmiId.find(newbaseParamId);
+    if (p != mNewbaseIdToFmiId.end())
+      return p->second;
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::FmiParamId GridDef::getFmiParameterIdByGribId(T::GribParamId gribParamId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    auto p = mGribIdToFmiId.find(gribParamId);
+    if (p != mGribIdToFmiId.end())
+      return p->second;
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 FmiParamDef_cptr GridDef::getFmiParameterDefById(T::FmiParamId fmiParamId)
 {
   FUNCTION_TRACE

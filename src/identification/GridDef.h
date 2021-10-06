@@ -96,6 +96,10 @@ class GridDef
     T::FmiParamId       getFmiParameterId(GRIB1::Message& message);
     T::FmiParamId       getFmiParameterId(GRIB2::Message& message);
     T::FmiParamId       getFmiParameterIdByFmiName(const std::string& fmiParamName);
+    T::FmiParamId       getFmiParameterIdByNewbaseName(const std::string& newbaseParamName);
+    T::FmiParamId       getFmiParameterIdByNetCdfName(const std::string& netCdfParamName);
+    T::FmiParamId       getFmiParameterIdByNewbaseId(T::NewbaseParamId newbaseParamId);
+    T::FmiParamId       getFmiParameterIdByGribId(T::GribParamId gribParamId);
     short               getFmiParameterInterpolationMethod(GRIB1::Message& message);
     short               getFmiParameterInterpolationMethod(GRIB2::Message& message);
     std::string         getFmiParameterName(GRIB1::Message& message);
