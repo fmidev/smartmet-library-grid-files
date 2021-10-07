@@ -116,7 +116,7 @@ void ComplexPackingSettings::print(std::ostream &stream, uint level, uint option
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash ComplexPackingSettings::countHash() {
+T::Hash ComplexPackingSettings::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

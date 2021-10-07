@@ -116,7 +116,7 @@ void FloatingPointGridData::print(std::ostream &stream, uint level, uint optionF
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash FloatingPointGridData::countHash() {
+T::Hash FloatingPointGridData::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

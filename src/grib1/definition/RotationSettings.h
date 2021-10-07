@@ -27,7 +27,7 @@ public:
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-  virtual T::Hash countHash();
+  virtual T::Hash countHash() const;
 
   std::int24_t getLatitudeOfSouthernPole() const;
   void setLatitudeOfSouthernPole(std::int24_t latitudeOfSouthernPole);

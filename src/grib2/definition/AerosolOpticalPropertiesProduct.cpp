@@ -144,7 +144,7 @@ void AerosolOpticalPropertiesProduct::print(std::ostream &stream, uint level, ui
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash AerosolOpticalPropertiesProduct::countHash() {
+T::Hash AerosolOpticalPropertiesProduct::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

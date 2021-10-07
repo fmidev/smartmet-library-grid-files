@@ -153,7 +153,7 @@ void EnsembleDerivedForecast::print(std::ostream &stream, uint level, uint optio
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash EnsembleDerivedForecast::countHash() {
+T::Hash EnsembleDerivedForecast::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

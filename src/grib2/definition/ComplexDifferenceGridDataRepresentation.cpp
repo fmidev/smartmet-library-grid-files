@@ -278,7 +278,7 @@ void ComplexDifferenceGridDataRepresentation::print(std::ostream &stream, uint l
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash ComplexDifferenceGridDataRepresentation::countHash() {
+T::Hash ComplexDifferenceGridDataRepresentation::countHash() const {
   try {
     std::size_t seed = 0;
     if (mGroupSplittingMethodUsed)

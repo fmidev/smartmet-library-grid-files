@@ -126,7 +126,7 @@ void ForecastError::print(std::ostream &stream, uint level, uint optionFlags) co
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash ForecastError::countHash() {
+T::Hash ForecastError::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

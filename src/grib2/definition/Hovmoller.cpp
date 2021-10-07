@@ -344,7 +344,7 @@ void Hovmoller::print(std::ostream &stream, uint level, uint optionFlags) const 
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash Hovmoller::countHash() {
+T::Hash Hovmoller::countHash() const {
   try {
     std::size_t seed = 0;
     // if (mBasicAngleOfTheInitialProductionDomain) boost::hash_combine(seed,*mBasicAngleOfTheInitialProductionDomain);

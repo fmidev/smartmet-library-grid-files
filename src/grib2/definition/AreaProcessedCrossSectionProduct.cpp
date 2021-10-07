@@ -192,7 +192,7 @@ void AreaProcessedCrossSectionProduct::print(std::ostream &stream, uint level, u
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash AreaProcessedCrossSectionProduct::countHash() {
+T::Hash AreaProcessedCrossSectionProduct::countHash() const {
   try {
     std::size_t seed = 0;
     if (mHorizontalDimensionProcessed)

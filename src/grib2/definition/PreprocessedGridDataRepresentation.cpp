@@ -149,7 +149,7 @@ void PreprocessedGridDataRepresentation::print(std::ostream &stream, uint level,
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash PreprocessedGridDataRepresentation::countHash() {
+T::Hash PreprocessedGridDataRepresentation::countHash() const {
   try {
     std::size_t seed = 0;
     if (mTypeOfPreProcessing)

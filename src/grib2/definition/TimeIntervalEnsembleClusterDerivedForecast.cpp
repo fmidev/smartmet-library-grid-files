@@ -173,7 +173,7 @@ void TimeIntervalEnsembleClusterDerivedForecast::print(std::ostream &stream, uin
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash TimeIntervalEnsembleClusterDerivedForecast::countHash() {
+T::Hash TimeIntervalEnsembleClusterDerivedForecast::countHash() const {
   try {
     std::size_t seed = 0;
     if (mEnsembleForecastNumbers)

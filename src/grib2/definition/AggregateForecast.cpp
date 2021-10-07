@@ -144,7 +144,7 @@ void AggregateForecast::print(std::ostream &stream, uint level, uint optionFlags
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash AggregateForecast::countHash() {
+T::Hash AggregateForecast::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

@@ -187,7 +187,7 @@ void Gaussian::print(std::ostream &stream, uint level, uint optionFlags) const {
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash Gaussian::countHash() {
+T::Hash Gaussian::countHash() const {
   try {
     std::size_t seed = 0;
     boost::hash_combine(seed, mNi);

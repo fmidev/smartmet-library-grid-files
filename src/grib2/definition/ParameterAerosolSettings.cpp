@@ -282,7 +282,7 @@ void ParameterAerosolSettings::print(std::ostream &stream, uint level, uint opti
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash ParameterAerosolSettings::countHash() {
+T::Hash ParameterAerosolSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mParameterCategory)

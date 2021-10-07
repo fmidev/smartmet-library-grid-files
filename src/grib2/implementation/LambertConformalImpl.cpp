@@ -107,7 +107,13 @@ void LambertConformalImpl::init() const
     double startX = longitudeOfFirstGridPoint;
     double startY = latitudeOfFirstGridPoint;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
+    auto hash = getGridHash();
+    if (hash == 0 || !getTransformFromCache(hash,latitudeOfFirstGridPoint,longitudeOfFirstGridPoint,startX,startY))
+    {
+      convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
+      if (hash != 0)
+        insertTranformIntoCache(mHash,latitudeOfFirstGridPoint,longitudeOfFirstGridPoint,startX,startY);
+    }
 
     mStartX = startX;
     mStartY = startY;

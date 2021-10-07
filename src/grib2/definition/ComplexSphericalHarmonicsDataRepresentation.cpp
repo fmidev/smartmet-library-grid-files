@@ -159,7 +159,7 @@ void ComplexSphericalHarmonicsDataRepresentation::print(std::ostream &stream, ui
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash ComplexSphericalHarmonicsDataRepresentation::countHash() {
+T::Hash ComplexSphericalHarmonicsDataRepresentation::countHash() const {
   try {
     std::size_t seed = 0;
     if (mLaplacianScalingFactor)

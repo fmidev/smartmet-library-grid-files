@@ -177,7 +177,7 @@ void TimeIntervalAggregateForecast::print(std::ostream &stream, uint level, uint
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash TimeIntervalAggregateForecast::countHash() {
+T::Hash TimeIntervalAggregateForecast::countHash() const {
   try {
     std::size_t seed = 0;
     if (mStatisticalProcess)

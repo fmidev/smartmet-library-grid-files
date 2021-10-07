@@ -31,14 +31,14 @@ class GridDefinition
                                 GridDefinition(const GridDefinition& other);
     virtual                     ~GridDefinition();
 
-    virtual T::Hash             countHash(); // Do not call this, call getGridHash() instead.
+    virtual T::Hash             countHash() const; // Do not call this, call getGridHash() instead.
     virtual GridDefinition*     createGridDefinition() const;
 
     virtual void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual T::Dimensions       getGridDimensions() const;
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
-    T::Hash                     getGridHash();
+    T::Hash                     getGridHash() const;
     virtual bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual T::Coordinate_svec  getGridLatLonCoordinates() const;
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
@@ -104,6 +104,9 @@ class GridDefinition
     virtual double              getMinorAxis(uchar resolutionAndComponentFlags);
     virtual double              getFlattening(uchar resolutionAndComponentFlags);
 
+    virtual void                insertTranformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const;
+    virtual bool                getTransformFromCache(std::size_t hash,double lat,double lon,double& x,double& y) const;
+
     virtual bool                getProperty_gridArea(uint propertyId,long long& value);
     virtual bool                getProperty_scanningMode(uint propertyId,long long& value);
     virtual bool                getProperty_resolutionFlags(uint propertyId,long long& value);
@@ -124,7 +127,7 @@ class GridDefinition
      double                     mEarth_semiMinor;
 
      /*! \brief The hash of the grid. */
-     T::Hash                    mHash;
+     mutable T::Hash            mHash;
 
      /*! \brief The geometry identifier. */
      T::GeometryId              mGeometryId;

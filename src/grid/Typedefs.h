@@ -29,7 +29,7 @@ typedef std::uint32_t NewbaseParamId;
 typedef std::uint32_t FmiParamId;
 typedef std::uint32_t GribParamId;
 typedef std::int32_t ParamLevel;
-typedef std::uint8_t ParamLevelId;
+typedef std::int16_t ParamLevelId;
 typedef float ParamValue;
 #define ParamValueMissing -16777216
 
@@ -94,7 +94,7 @@ class ParamKeyTypeValue
 };
 
 
-
+/*
 typedef uchar ParamLevelIdType;
 
 class ParamLevelIdTypeValue
@@ -106,7 +106,7 @@ class ParamLevelIdTypeValue
     static const ParamLevelIdType GRIB2     = 3;
     static const ParamLevelIdType IGNORE    = 100;
 };
-
+*/
 
 
 typedef uchar FileType;
@@ -124,7 +124,7 @@ class FileTypeValue
     static const FileType Virtual   = 200;
 };
 
-
+/*
 typedef uchar GridLayout;
 
 class GridLayoutValue
@@ -136,7 +136,7 @@ class GridLayoutValue
     static const GridLayout Points    = 3;   // No 'shapeOfEarth'; no coordinate transformations
     static const GridLayout Data      = 4;   // No coordinates
 };
-
+*/
 
 
 class AreaInterpolationMethod
@@ -266,7 +266,7 @@ class CompressionMethod
 
 
 std::string get_fileTypeString(FileType fileType);
-std::string get_gridLayoutString(GridLayout layout);
+//std::string get_gridLayoutString(GridLayout layout);
 std::string get_areaInterpolationMethodString(short interpolationMethod);
 std::string get_timeInterpolationMethodString(short interpolationMethod);
 std::string get_levelInterpolationMethodString(short interpolationMethod);

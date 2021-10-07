@@ -214,7 +214,7 @@ void AzimuthRange::print(std::ostream &stream, uint level, uint optionFlags) con
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash AzimuthRange::countHash() {
+T::Hash AzimuthRange::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNumberOfDataBinsAlongRadials)

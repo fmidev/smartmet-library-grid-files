@@ -194,7 +194,7 @@ void ProbabilitySettings::print(std::ostream &stream, uint level, uint optionFla
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash ProbabilitySettings::countHash() {
+T::Hash ProbabilitySettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mForecastProbabilityNumber)

@@ -144,7 +144,7 @@ void PartitionedProduct::print(std::ostream &stream, uint level, uint optionFlag
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash PartitionedProduct::countHash() {
+T::Hash PartitionedProduct::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;
