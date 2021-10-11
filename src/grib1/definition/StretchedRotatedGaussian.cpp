@@ -205,7 +205,7 @@ void StretchedRotatedGaussian::print(std::ostream &stream, uint level, uint opti
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash StretchedRotatedGaussian::countHash() {
+T::Hash StretchedRotatedGaussian::countHash() const {
   try {
     std::size_t seed = 0;
     boost::hash_combine(seed, mNi);

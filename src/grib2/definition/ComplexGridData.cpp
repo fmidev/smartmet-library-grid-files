@@ -116,7 +116,7 @@ void ComplexGridData::print(std::ostream &stream, uint level, uint optionFlags) 
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash ComplexGridData::countHash() {
+T::Hash ComplexGridData::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

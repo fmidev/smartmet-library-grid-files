@@ -347,10 +347,19 @@ void PolarStereographicImpl::init() const
     if ((scanningMode & 0x40) == 0)
       mDyy = -dyy;
 
-    double startX = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
-    double startY = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
+    double lon = C_DOUBLE(mLongitudeOfFirstGridPoint) / 1000;
+    double lat = C_DOUBLE(mLatitudeOfFirstGridPoint) / 1000;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
+    double startX = lon;
+    double startY = lat;
+
+    auto hash = getGridHash();
+    if (hash == 0 || !getTransformFromCache(hash,lat,lon,startX,startY))
+    {
+      convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
+      if (hash != 0)
+        insertTranformIntoCache(mHash,lat,lon,startX,startY);
+    }
 
     mStartX = startX;
     mStartY = startY;

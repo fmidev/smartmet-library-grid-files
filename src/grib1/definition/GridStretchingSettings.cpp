@@ -152,7 +152,7 @@ void GridStretchingSettings::print(std::ostream &stream, uint level, uint option
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash GridStretchingSettings::countHash() {
+T::Hash GridStretchingSettings::countHash() const {
   try {
     std::size_t seed = 0;
     boost::hash_combine(seed, mLatitudeOfStretchingPole);

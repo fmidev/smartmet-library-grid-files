@@ -46,7 +46,7 @@ std::string get_fileTypeString(FileType fileType)
 
 
 
-
+/*
 std::string get_gridLayoutString(GridLayout layout)
 {
   try
@@ -75,7 +75,7 @@ std::string get_gridLayoutString(GridLayout layout)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
+*/
 
 
 
@@ -100,6 +100,9 @@ std::string get_areaInterpolationMethodString(short interpolationMethod)
 
       case AreaInterpolationMethod::Max:
         return "Max";
+
+      case AreaInterpolationMethod::Landscape:
+        return "Landscape";
 
       case AreaInterpolationMethod::External:
         return "External";

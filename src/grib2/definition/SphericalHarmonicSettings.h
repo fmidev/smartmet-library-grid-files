@@ -27,7 +27,7 @@ public:
   virtual bool getAttributeValue(const char *attributeName, std::string &attributeValue) const;
   virtual bool hasAttributeValue(const char *attributeName, const char *attributeValue) const;
   virtual void print(std::ostream &stream, uint level, uint optionFlags) const;
-  virtual T::Hash countHash();
+  virtual T::Hash countHash() const;
 
   const T::UInt32_opt &getJ() const;
   void setJ(T::UInt32_opt j);

@@ -157,7 +157,7 @@ void LatLonSettings::print(std::ostream &stream, uint level, uint optionFlags) c
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash LatLonSettings::countHash() {
+T::Hash LatLonSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mIDirectionIncrement)

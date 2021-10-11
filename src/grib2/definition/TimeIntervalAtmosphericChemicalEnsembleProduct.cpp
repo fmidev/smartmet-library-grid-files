@@ -153,7 +153,7 @@ void TimeIntervalAtmosphericChemicalEnsembleProduct::print(std::ostream &stream,
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash TimeIntervalAtmosphericChemicalEnsembleProduct::countHash() {
+T::Hash TimeIntervalAtmosphericChemicalEnsembleProduct::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

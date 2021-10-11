@@ -135,7 +135,7 @@ void VariableResolutionLatLon::print(std::ostream &stream, uint level, uint opti
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash VariableResolutionLatLon::countHash() {
+T::Hash VariableResolutionLatLon::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

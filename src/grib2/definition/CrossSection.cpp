@@ -267,7 +267,7 @@ void CrossSection::print(std::ostream &stream, uint level, uint optionFlags) con
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash CrossSection::countHash() {
+T::Hash CrossSection::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNumberOfHorizontalPoints)

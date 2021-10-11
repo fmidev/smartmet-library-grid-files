@@ -116,7 +116,7 @@ void PngGridData::print(std::ostream &stream, uint level, uint optionFlags) cons
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash PngGridData::countHash() {
+T::Hash PngGridData::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

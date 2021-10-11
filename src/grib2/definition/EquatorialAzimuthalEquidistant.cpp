@@ -224,7 +224,7 @@ void EquatorialAzimuthalEquidistant::print(std::ostream &stream, uint level, uin
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash EquatorialAzimuthalEquidistant::countHash() {
+T::Hash EquatorialAzimuthalEquidistant::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNumberOfPointsAlongXAxis)

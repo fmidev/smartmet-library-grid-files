@@ -129,7 +129,7 @@ void ResolutionSettings::print(std::ostream &stream, uint level, uint optionFlag
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash ResolutionSettings::countHash() {
+T::Hash ResolutionSettings::countHash() const {
   try {
     std::size_t seed = 0;
     boost::hash_combine(seed, mResolutionAndComponentFlags);

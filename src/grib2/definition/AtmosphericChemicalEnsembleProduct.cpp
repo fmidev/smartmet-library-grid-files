@@ -153,7 +153,7 @@ void AtmosphericChemicalEnsembleProduct::print(std::ostream &stream, uint level,
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash AtmosphericChemicalEnsembleProduct::countHash() {
+T::Hash AtmosphericChemicalEnsembleProduct::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

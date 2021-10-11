@@ -219,7 +219,7 @@ function process_template($file, $name, $class, $outdir)
   $body .= "virtual void print(std::ostream& stream,uint level,uint optionFlags) const;\n";
   $body .= "virtual bool getAttributeValue(const char *attributeName,std::string& attributeValue) const;\n";
   $body .= "virtual bool hasAttributeValue(const char *attributeName,const char *attributeValue) const;\n";
-  $body .= "virtual T::Hash countHash();\n\n";
+  $body .= "virtual T::Hash countHash() const;\n\n";
 
   $p = explode("_", $name);
   if ($p[0] == "grid" && $p[1] == "definition" &&  is_numeric($p[2]))
@@ -733,7 +733,7 @@ function process_template($file, $name, $class, $outdir)
   // ##### Adding the hash method.
   
   $cpp .= "\n/*! \brief The method counts the hash value of the current object. */\n\n";
-  $cpp .= "T::Hash ${class}::countHash() { try { std::size_t seed = 0;\n${hash} return seed;\n";
+  $cpp .= "T::Hash ${class}::countHash() const { try { std::size_t seed = 0;\n${hash} return seed;\n";
   $cpp .= "} catch (...) {throw Fmi::Exception(BCP,\"Operation failed\",nullptr);}}\n\n";
 
  

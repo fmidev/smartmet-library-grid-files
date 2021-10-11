@@ -151,7 +151,7 @@ void RotationSettings::print(std::ostream &stream, uint level, uint optionFlags)
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash RotationSettings::countHash() {
+T::Hash RotationSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mLatitudeOfSouthernPole)

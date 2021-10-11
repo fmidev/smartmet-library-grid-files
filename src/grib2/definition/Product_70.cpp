@@ -144,7 +144,7 @@ void Product_70::print(std::ostream &stream, uint level, uint optionFlags) const
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash Product_70::countHash() {
+T::Hash Product_70::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

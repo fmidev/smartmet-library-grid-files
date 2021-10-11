@@ -116,7 +116,7 @@ void SpectralData::print(std::ostream &stream, uint level, uint optionFlags) con
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash SpectralData::countHash() {
+T::Hash SpectralData::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

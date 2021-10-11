@@ -369,6 +369,7 @@ void GridSection::read(MemoryReader& memoryReader)
         }
       }
 
+      mGridDefinition->countHash();
       mGridDefinition->initSpatialReference();
     }
 

@@ -190,7 +190,7 @@ void StretchedSphericalHarmonic::print(std::ostream &stream, uint level, uint op
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash StretchedSphericalHarmonic::countHash() {
+T::Hash StretchedSphericalHarmonic::countHash() const {
   try {
     std::size_t seed = 0;
     boost::hash_combine(seed, mJ);

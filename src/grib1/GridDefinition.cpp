@@ -701,6 +701,86 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
 
 
 
+bool GridDefinition::getTransformFromCache(std::size_t hash,double lat,double lon,double& x,double& y) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    boost::hash_combine(hash,lat);
+    boost::hash_combine(hash,lon);
+    uint idx = hash % 10000;
+
+    AutoReadLock lock(&transformCache1ModificationLock);
+
+    if (mPrevHash1[idx] == hash)
+    {
+      x = mPrevCoordinate1[idx].x();
+      y = mPrevCoordinate1[idx].y();
+      return true;
+    }
+
+    auto it = transformCache1.find(hash);
+    if (it != transformCache1.end())
+    {
+      x = it->second.x();
+      y = it->second.y();
+      mPrevHash1[idx] = hash;
+      mPrevCoordinate1[idx] = it->second;
+      return true;
+    }
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    boost::hash_combine(hash,lat);
+    boost::hash_combine(hash,lon);
+    uint idx = hash % 10000;
+
+    {
+      AutoReadLock lock(&transformCache1ModificationLock);
+
+      if (mPrevHash1[idx] == hash  &&  x == mPrevCoordinate1[idx].x()  &&  y == mPrevCoordinate1[idx].y())
+        return;
+
+      auto it = transformCache1.find(hash);
+      if (it != transformCache1.end()  &&  x == it->second.x() && y == it->second.y())
+        return;
+    }
+
+    if (hash != 0)
+    {
+      AutoWriteLock lock(&transformCache1ModificationLock);
+      if (transformCache1.size() >= 1000000)
+        transformCache1.clear();
+
+      mPrevHash1[idx] = hash;
+      mPrevCoordinate1[idx] = T::Coordinate(x,y);
+
+      transformCache1.insert(std::pair<std::size_t,T::Coordinate>(hash,mPrevCoordinate1[idx]));
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double lat,double lon,double& x,double& y) const
 {
   FUNCTION_TRACE
@@ -1614,7 +1694,7 @@ T::GridProjection GridDefinition::getGridProjection() const
         \return   The grid hash value.
 */
 
-T::Hash GridDefinition::getGridHash()
+T::Hash GridDefinition::getGridHash() const
 {
   FUNCTION_TRACE
   try
@@ -1634,7 +1714,7 @@ T::Hash GridDefinition::getGridHash()
 
 
 
-T::Hash GridDefinition::countHash()
+T::Hash GridDefinition::countHash() const
 {
   FUNCTION_TRACE
   return 0;

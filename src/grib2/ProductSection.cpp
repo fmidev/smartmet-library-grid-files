@@ -614,7 +614,7 @@ const T::UInt8_opt ProductSection::getGribParameterNumber() const
          \return   The parameter level type (= enum value).
 */
 
-std::uint8_t ProductSection::getGribParameterLevelId() const
+T::ParamLevelId ProductSection::getGribParameterLevelId() const
 {
   try
   {

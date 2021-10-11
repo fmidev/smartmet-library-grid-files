@@ -153,7 +153,7 @@ void TimeIntervalPercentileForecast::print(std::ostream &stream, uint level, uin
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash TimeIntervalPercentileForecast::countHash() {
+T::Hash TimeIntervalPercentileForecast::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

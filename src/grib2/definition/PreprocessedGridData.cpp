@@ -116,7 +116,7 @@ void PreprocessedGridData::print(std::ostream &stream, uint level, uint optionFl
 
 /*! \brief The method counts the hash value of the current object. */
 
-T::Hash PreprocessedGridData::countHash() {
+T::Hash PreprocessedGridData::countHash() const {
   try {
     std::size_t seed = 0;
     return seed;

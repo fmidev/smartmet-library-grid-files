@@ -30,14 +30,14 @@ class GridDefinition
                                 GridDefinition(const GridDefinition& other);
     virtual                     ~GridDefinition();
 
-    virtual T::Hash             countHash(); // Do not call this, call getGridHash() instead.
+    virtual T::Hash             countHash() const; // Do not call this, call getGridHash() instead.
     virtual GridDefinition*     createGridDefinition() const;
     virtual void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
     virtual void                getGridCellAverageSize(double& width,double& height) const;
     virtual T::Dimensions       getGridDimensions() const;
-    T::Hash                     getGridHash();
+    T::Hash                     getGridHash() const;
     virtual bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual T::Coordinate_svec  getGridLatLonCoordinates() const;
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
@@ -105,6 +105,9 @@ class GridDefinition
     virtual double              getMinorAxis(EarthShapeSettings& earthSettings);
     virtual double              getFlattening(EarthShapeSettings& earthSettings);
 
+    virtual void                insertTranformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const;
+    virtual bool                getTransformFromCache(std::size_t hash,double lat,double lon,double& x,double& y) const;
+
 
     /*! \brief The spatial reference. */
     T::SpatialRef               mSpatialReference;
@@ -114,7 +117,7 @@ class GridDefinition
     double                      mEarth_semiMinor;
 
     /*! \brief The hash of the grid. */
-    T::Hash                     mHash;
+    mutable T::Hash             mHash;
 
     /*! \brief The geometry identifier. */
     T::GeometryId               mGeometryId;
