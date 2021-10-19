@@ -82,7 +82,7 @@ class Message : public GRID::Message
     void                getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const;
     void                getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
     T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const;
-    T::ParamValue       getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
+    //T::ParamValue       getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
     void                getGridValueVector(T::ParamValue_vec& values) const;
     T::TimeString       getReferenceTime() const;
     T::SpatialRef*      getSpatialReference() const;

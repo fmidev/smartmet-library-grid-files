@@ -1456,6 +1456,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         \return         The parameter value of the given grid point.
 */
 
+/*
 T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const
 {
   FUNCTION_TRACE
@@ -1470,7 +1471,7 @@ T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) 
     throw exception;
   }
 }
-
+*/
 
 
 

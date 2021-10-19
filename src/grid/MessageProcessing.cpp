@@ -30,6 +30,22 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
 {
   try
   {
+    getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
+{
+  try
+  {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
     const char *levelInterpolationMethodStr = attributeList.getAttributeValue("grid.levelInterpolationMethod");
     if (levelInterpolationMethodStr != nullptr)
@@ -56,7 +72,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
       smoothDegree = toSize_t(smoothDegreeStr);
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,gridValues);
+    getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,modificationOperation,modificationParameters,gridValues);
 
     T::Dimensions d = message1.getGridDimensions();
     T::Coordinate_svec coordinates;
@@ -126,6 +142,22 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
 {
   try
   {
+    getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
+{
+  try
+  {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
     if (timeInterpolationMethodStr != nullptr)
@@ -152,7 +184,7 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
       smoothDegree = toSize_t(smoothDegreeStr);
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByTime(message1,message2,newTime,timeInterpolationMethod,gridValues);
+    getGridValueVectorByTime(message1,message2,newTime,timeInterpolationMethod,modificationOperation,modificationParameters,gridValues);
 
     T::Dimensions d = message1.getGridDimensions();
     T::Coordinate_svec coordinates;
@@ -198,6 +230,21 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
 
 
 void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
+{
+  try
+  {
+    getGridIsobandsByLevelAndGeometry(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
   try
   {
@@ -313,7 +360,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
-      getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,contours);
+      getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       T::Dimensions  d = message1.getGridDimensions();
       attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
       attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -334,12 +381,12 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
     if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
-      getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,contours);
+      getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,gridValues);
+    getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
@@ -412,7 +459,24 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
 
 
+
 void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
+{
+  try
+  {
+    getGridIsobandsByLevelAndGrid(message1,message2,newLevel,contourLowValues,contourHighValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
   try
   {
@@ -445,8 +509,8 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
     T::ParamValue_vec values1;
     T::ParamValue_vec values2;
 
-    message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values1);
-    message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values2);
+    message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
+    message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
     levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
@@ -491,6 +555,21 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
 {
   try
   {
+    getGridIsobandsByTimeAndGrid(message1,message2,newTime,contourLowValues,contourHighValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
+{
+  try
+  {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *ti = attributeList.getAttributeValue("grid.timeInterpolationMethod");
     if (ti != nullptr)
@@ -520,8 +599,8 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
     T::ParamValue_vec values1;
     T::ParamValue_vec values2;
 
-    message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values1);
-    message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values2);
+    message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
+    message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
 
     timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,gridValues);
 
@@ -562,7 +641,24 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
 
 
 
+
 void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
+{
+  try
+  {
+    getGridIsobandsByTimeAndGeometry(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
   try
   {
@@ -678,7 +774,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
-      getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,contours);
+      getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       T::Dimensions  d = message1.getGridDimensions();
       attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
       attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -699,12 +795,12 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
     if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
-      getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,contours);
+      getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByTimeAndGeometry(message1,message2,newTime,attributeList,gridValues);
+    getGridValueVectorByTimeAndGeometry(message1,message2,newTime,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
@@ -782,6 +878,22 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
 {
   try
   {
+    getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
+{
+  try
+  {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
     if (timeInterpolationMethodStr != nullptr)
@@ -813,7 +925,7 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
       smoothDegree = toSize_t(smoothDegreeStr);
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,gridValues);
+    getGridValueVectorByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,modificationOperation,modificationParameters,gridValues);
 
     T::Dimensions d = message1.getGridDimensions();
     T::Coordinate_svec coordinates;
@@ -860,6 +972,22 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
 
 
 void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
+{
+  try
+  {
+    getGridIsobandsByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
   try
   {
@@ -975,7 +1103,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
-      getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,contours);
+      getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       T::Dimensions  d = message1.getGridDimensions();
       attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
       attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -996,12 +1124,12 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
     if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
-      getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,contours);
+      getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,gridValues);
+    getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
@@ -1079,8 +1207,24 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& m
 {
   try
   {
+    getGridIsobandsByTimeLevelAndGrid(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
+{
+  try
+  {
     T::ParamValue_vec gridValues;
-    getGridValueVectorByTimeLevelAndCoordinateList(message1,message2,message3,message4,newTime,newLevel,T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,attributeList,gridValues);
+    getGridValueVectorByTimeLevelAndCoordinateList(message1,message2,message3,message4,newTime,newLevel,T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
@@ -1117,6 +1261,22 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
 {
   try
   {
+    getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
+{
+  try
+  {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
     if (timeInterpolationMethodStr != nullptr)
@@ -1148,7 +1308,7 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
       smoothDegree = toSize_t(smoothDegreeStr);
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,gridValues);
+    getGridValueVectorByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,modificationOperation,modificationParameters,gridValues);
 
     T::Dimensions d = message1.getGridDimensions();
     T::Coordinate_svec coordinates;
@@ -1195,6 +1355,22 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
 
 
 void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
+{
+  try
+  {
+    getGridIsolinesByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
   try
   {
@@ -1310,7 +1486,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
-      getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,contours);
+      getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       T::Dimensions  d = message1.getGridDimensions();
       attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
       attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -1331,12 +1507,12 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
     if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
-      getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,contours);
+      getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,gridValues);
+    getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
@@ -1420,6 +1596,22 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
 {
   try
   {
+    getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
+{
+  try
+  {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
     const char *levelInterpolationMethodStr = attributeList.getAttributeValue("grid.levelInterpolationMethod");
     if (levelInterpolationMethodStr != nullptr)
@@ -1431,7 +1623,7 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
       areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,gridValues);
+    getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,modificationOperation,modificationParameters,gridValues);
 
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
@@ -1495,6 +1687,22 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
 {
   try
   {
+    getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
+{
+  try
+  {
 
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
@@ -1507,7 +1715,7 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
       areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByTime(message1,message2,newTime,timeInterpolationMethod,gridValues);
+    getGridValueVectorByTime(message1,message2,newTime,timeInterpolationMethod,modificationOperation,modificationParameters,gridValues);
 
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
@@ -1568,6 +1776,22 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
 
 
 void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
+{
+  try
+  {
+    getGridIsolinesByLevelAndGeometry(message1,message2,newLevel,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
   try
   {
@@ -1683,7 +1907,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
-      getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,contours);
+      getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       T::Dimensions  d = message1.getGridDimensions();
       attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
       attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -1704,12 +1928,12 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
     if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
-      getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,contours);
+      getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,gridValues);
+    getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
@@ -1793,6 +2017,22 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 {
   try
   {
+    getGridIsolinesByTimeAndGeometry(message1,message2,newTime,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
+{
+  try
+  {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *centerStr = attributeList.getAttributeValue("grid.center");
@@ -1905,7 +2145,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
     if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
     {
-      getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,contours);
+      getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       T::Dimensions  d = message1.getGridDimensions();
       attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
       attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -1926,12 +2166,12 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
     if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
-      getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,contours);
+      getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByTimeAndGeometry(message1,message2,newTime,attributeList,gridValues);
+    getGridValueVectorByTimeAndGeometry(message1,message2,newTime,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
@@ -2015,6 +2255,22 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
 {
   try
   {
+    getGridIsolinesByLevelAndGrid(message1,message2,newLevel,contourValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
+{
+  try
+  {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
     const char *li = attributeList.getAttributeValue("grid.levelInterpolationMethod");
     if (li != nullptr)
@@ -2044,8 +2300,8 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
     T::ParamValue_vec values1;
     T::ParamValue_vec values2;
 
-    message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values1);
-    message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values2);
+    message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
+    message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
     levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
@@ -2090,6 +2346,22 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
 {
   try
   {
+    getGridIsolinesByTimeAndGrid(message1,message2,newTime,contourValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
+{
+  try
+  {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *ti = attributeList.getAttributeValue("grid.timeInterpolationMethod");
     if (ti != nullptr)
@@ -2119,8 +2391,8 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
     T::ParamValue_vec values1;
     T::ParamValue_vec values2;
 
-    message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values1);
-    message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,values2);
+    message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
+    message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
 
     timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,gridValues);
 
@@ -2165,8 +2437,24 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& m
 {
   try
   {
+    getGridIsolinesByTimeLevelAndGrid(message1,message2,message3,message4,newTime,newLevel,contourValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
+{
+  try
+  {
     T::ParamValue_vec gridValues;
-    getGridValueVectorByTimeLevelAndCoordinateList(message1,message2,message3,message4,newTime,newLevel,T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,attributeList,gridValues);
+    getGridValueVectorByTimeLevelAndCoordinateList(message1,message2,message3,message4,newTime,newLevel,T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
@@ -2203,11 +2491,27 @@ void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message
 {
   try
   {
+    getGridValueByLevelAndPoint(message1,message2,level1,level2,newLevel,coordinateType,x,y,areaInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,value);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message1,const GRID::Message& message2,int level1,int level2,int newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
+{
+  try
+  {
     T::ParamValue value1 = ParamValueMissing;
     T::ParamValue value2 = ParamValueMissing;
 
-    message1.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,value1);
-    message2.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,value2);
+    message1.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,modificationOperation,modificationParameters,value1);
+    message2.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,modificationOperation,modificationParameters,value2);
 
     int l1 = level1;
     int l2 = level2;
@@ -2240,11 +2544,27 @@ void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1
 {
   try
   {
+    getGridValueByTimeAndPoint(message1,message2,newTime,coordinateType,x,y,areaInterpolationMethod,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,value);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
+{
+  try
+  {
     T::ParamValue value1 = ParamValueMissing;
     T::ParamValue value2 = ParamValueMissing;
 
-    message1.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,value1);
-    message2.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,value2);
+    message1.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,modificationOperation,modificationParameters,value1);
+    message2.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,modificationOperation,modificationParameters,value2);
 
     value = timeInterpolation(value1,value2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod);
   }
@@ -2259,6 +2579,22 @@ void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1
 
 
 void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& message1,int level1,const GRID::Message& message2,int level2,const GRID::Message& message3,int level3,const GRID::Message& message4,int level4,time_t newTime,int newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,T::ParamValue& value) const
+{
+  try
+  {
+    getGridValueByTimeLevelAndPoint(message1,level1,message2,level2,message3,level3,message4,level4,newTime,newLevel,coordinateType,x,y,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,value);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& message1,int level1,const GRID::Message& message2,int level2,const GRID::Message& message3,int level3,const GRID::Message& message4,int level4,time_t newTime,int newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
 {
   try
   {
@@ -2286,10 +2622,10 @@ void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& mes
     T::ParamValue nextTimeNextLevel = ParamValueMissing;
     T::ParamValue nextValue = ParamValueMissing;
 
-    message1.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,prevTimePrevLevel);
-    message2.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,prevTimeNextLevel);
-    message3.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,nextTimePrevLevel);
-    message4.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,nextTimeNextLevel);
+    message1.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,modificationOperation,modificationParameters,prevTimePrevLevel);
+    message2.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,modificationOperation,modificationParameters,prevTimeNextLevel);
+    message3.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,modificationOperation,modificationParameters,nextTimePrevLevel);
+    message4.getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,modificationOperation,modificationParameters,nextTimeNextLevel);
 
     tuneLevels(prevTimeLevel1,prevTimeLevel2,newLevel);
     prevValue = levelInterpolation(prevTimePrevLevel,prevTimeNextLevel,prevTimeLevel1,prevTimeLevel2,newLevel,levelInterpolationMethod);
@@ -2313,11 +2649,27 @@ void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message&
 {
   try
   {
+    getGridValueListByLevelAndPointList(message1,message2,newLevel,coordinateType,pointList,areaInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    message1.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,values1);
-    message2.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,values2);
+    message1.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
+    message2.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
 
     int level1 = message1.getGridParameterLevel();
     int level2 = message2.getGridParameterLevel();
@@ -2343,11 +2695,27 @@ void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& me
 {
   try
   {
+    getGridValueListByLevelAndCircle(message1,message2,newLevel,coordinateType,origoX,origoY,radius,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    message1.getGridValueListByCircle(coordinateType,origoX,origoY,radius,values1);
-    message2.getGridValueListByCircle(coordinateType,origoX,origoY,radius,values2);
+    message1.getGridValueListByCircle(coordinateType,origoX,origoY,radius,modificationOperation,modificationParameters,values1);
+    message2.getGridValueListByCircle(coordinateType,origoX,origoY,radius,modificationOperation,modificationParameters,values2);
 
     levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,valueList);
   }
@@ -2365,11 +2733,27 @@ void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& mes
 {
   try
   {
+    getGridValueListByTimeAndCircle(message1,message2,newTime,coordinateType,origoX,origoY,radius,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    message1.getGridValueListByCircle(coordinateType,origoX,origoY,radius,values1);
-    message2.getGridValueListByCircle(coordinateType,origoX,origoY,radius,values2);
+    message1.getGridValueListByCircle(coordinateType,origoX,origoY,radius,modificationOperation,modificationParameters,values1);
+    message2.getGridValueListByCircle(coordinateType,origoX,origoY,radius,modificationOperation,modificationParameters,values2);
 
     timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,valueList);
   }
@@ -2387,11 +2771,26 @@ void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message
 {
   try
   {
+    getGridValueListByTimeLevelAndCircle(message1,message2,message3,message4,newTime,newLevel,coordinateType,origoX,origoY,radius,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    getGridValueListByTimeAndCircle(message1,message3,newTime,coordinateType,origoX,origoY,radius,timeInterpolationMethod,values1);
-    getGridValueListByTimeAndCircle(message2,message4,newTime,coordinateType,origoX,origoY,radius,timeInterpolationMethod,values2);
+    getGridValueListByTimeAndCircle(message1,message3,newTime,coordinateType,origoX,origoY,radius,timeInterpolationMethod,modificationOperation,modificationParameters,values1);
+    getGridValueListByTimeAndCircle(message2,message4,newTime,coordinateType,origoX,origoY,radius,timeInterpolationMethod,modificationOperation,modificationParameters,values2);
 
     levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,valueList);
   }
@@ -2408,11 +2807,27 @@ void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& 
 {
   try
   {
+    getGridValueListByTimeAndPointList(message1,message2,newTime,coordinateType,pointList,areaInterpolationMethod,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    message1.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,values1);
-    message2.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,values2);
+    message1.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
+    message2.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
 
     timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,valueList);
   }
@@ -2430,11 +2845,27 @@ void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& m
 {
   try
   {
+    getGridValueListByLevelAndPolygon(message1,message2,newLevel,coordinateType,polygonPoints,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    message1.getGridValueListByPolygon(coordinateType,polygonPoints,values1);
-    message2.getGridValueListByPolygon(coordinateType,polygonPoints,values2);
+    message1.getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,values1);
+    message2.getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,values2);
 
     levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,valueList);
   }
@@ -2452,11 +2883,27 @@ void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& me
 {
   try
   {
+    getGridValueListByTimeAndPolygon(message1,message2,newTime,coordinateType,polygonPoints,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    message1.getGridValueListByPolygon(coordinateType,polygonPoints,values1);
-    message2.getGridValueListByPolygon(coordinateType,polygonPoints,values2);
+    message1.getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,values1);
+    message2.getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,values2);
 
     timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,valueList);
   }
@@ -2474,11 +2921,27 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Messag
 {
   try
   {
+    getGridValueListByTimeLevelAndPolygon(message1,message2,message3,message4,newTime,newLevel,coordinateType,polygonPoints,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    getGridValueListByTimeAndPolygon(message1,message3,newTime,coordinateType,polygonPoints,timeInterpolationMethod,values1);
-    getGridValueListByTimeAndPolygon(message2,message4,newTime,coordinateType,polygonPoints,timeInterpolationMethod,values2);
+    getGridValueListByTimeAndPolygon(message1,message3,newTime,coordinateType,polygonPoints,timeInterpolationMethod,modificationOperation,modificationParameters,values1);
+    getGridValueListByTimeAndPolygon(message2,message4,newTime,coordinateType,polygonPoints,timeInterpolationMethod,modificationOperation,modificationParameters,values2);
 
     levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,valueList);
   }
@@ -2496,11 +2959,27 @@ void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Messag
 {
   try
   {
+    getGridValueListByLevelAndPolygonPath(message1,message2,newLevel,coordinateType,polygonPath,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    message1.getGridValueListByPolygonPath(coordinateType,polygonPath,values1);
-    message2.getGridValueListByPolygonPath(coordinateType,polygonPath,values2);
+    message1.getGridValueListByPolygonPath(coordinateType,polygonPath,modificationOperation,modificationParameters,values1);
+    message2.getGridValueListByPolygonPath(coordinateType,polygonPath,modificationOperation,modificationParameters,values2);
 
     levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,valueList);
   }
@@ -2518,11 +2997,27 @@ void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message
 {
   try
   {
+    getGridValueListByTimeAndPolygonPath(message1,message2,newTime,coordinateType,polygonPath,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    message1.getGridValueListByPolygonPath(coordinateType,polygonPath,values1);
-    message2.getGridValueListByPolygonPath(coordinateType,polygonPath,values2);
+    message1.getGridValueListByPolygonPath(coordinateType,polygonPath,modificationOperation,modificationParameters,values1);
+    message2.getGridValueListByPolygonPath(coordinateType,polygonPath,modificationOperation,modificationParameters,values2);
 
     timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,valueList);
   }
@@ -2540,11 +3035,27 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Me
 {
   try
   {
+    getGridValueListByTimeLevelAndPolygonPath(message1,message2,message3,message4,newTime,newLevel,coordinateType,polygonPath,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     T::GridValueList values1;
     T::GridValueList values2;
 
-    getGridValueListByTimeAndPolygonPath(message1,message3,newTime,coordinateType,polygonPath,timeInterpolationMethod,values1);
-    getGridValueListByTimeAndPolygonPath(message2,message4,newTime,coordinateType,polygonPath,timeInterpolationMethod,values2);
+    getGridValueListByTimeAndPolygonPath(message1,message3,newTime,coordinateType,polygonPath,timeInterpolationMethod,modificationOperation,modificationParameters,values1);
+    getGridValueListByTimeAndPolygonPath(message2,message4,newTime,coordinateType,polygonPath,timeInterpolationMethod,modificationOperation,modificationParameters,values2);
 
     levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,valueList);
   }
@@ -2562,6 +3073,22 @@ void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Mess
 {
   try
   {
+    getGridValueListByTimeLevelAndPointList(message1,message2,message3,message4,newTime,newLevel,coordinateType,pointList,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  try
+  {
     int prevTimeLevel1 = message1.getGridParameterLevel();
     int prevTimeLevel2 = message2.getGridParameterLevel();
 
@@ -2576,10 +3103,10 @@ void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Mess
     T::GridValueList nextTimeNextLevel;
     T::GridValueList nextValues;
 
-    message1.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,prevTimePrevLevel);
-    message2.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,prevTimeNextLevel);
-    message3.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,nextTimePrevLevel);
-    message4.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,nextTimeNextLevel);
+    message1.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,modificationOperation,modificationParameters,prevTimePrevLevel);
+    message2.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,modificationOperation,modificationParameters,prevTimeNextLevel);
+    message3.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,modificationOperation,modificationParameters,nextTimePrevLevel);
+    message4.getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,modificationOperation,modificationParameters,nextTimeNextLevel);
 
     if (prevTimeLevel1 == nextTimeLevel1  &&  prevTimeLevel2 == nextTimeLevel2)
     {
@@ -2604,6 +3131,22 @@ void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,
 {
   try
   {
+    getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,const GRID::Message& message2,int newLevel,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  try
+  {
     int level1 = message1.getGridParameterLevel();
     int level2 = message2.getGridParameterLevel();
 
@@ -2615,8 +3158,8 @@ void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,
     T::ParamValue_vec values1;
     T::ParamValue_vec values2;
 
-    message1.getGridValueVectorWithCaching(values1);
-    message2.getGridValueVectorWithCaching(values2);
+    message1.getGridValueVectorWithCaching(modificationOperation,modificationParameters,values1);
+    message2.getGridValueVectorWithCaching(modificationOperation,modificationParameters,values2);
 
     levelInterpolation(values1,values2,level1,level2,newLevel,levelInterpolationMethod,values);
   }
@@ -2634,6 +3177,22 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
 {
   try
   {
+    getGridValueVectorByTime(message1,message2,newTime,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  try
+  {
     time_t tt = newTime;
     time_t t1 = message1.getForecastTimeT();
     time_t t2 = message2.getForecastTimeT();
@@ -2642,21 +3201,21 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
         (timeInterpolationMethod == T::TimeInterpolationMethod::Nearest  &&  (tt-t1) <= (t2-tt)) ||
         (timeInterpolationMethod == T::TimeInterpolationMethod::Linear  &&  tt == t1))
     {
-      message1.getGridValueVectorWithCaching(values);
+      message1.getGridValueVectorWithCaching(modificationOperation,modificationParameters,values);
       return;
     }
 
     if ((timeInterpolationMethod == T::TimeInterpolationMethod::Nearest  &&  (tt-t1) > (t2-tt)) ||
         (timeInterpolationMethod == T::TimeInterpolationMethod::Linear  &&  tt == t2))
     {
-      message2.getGridValueVectorWithCaching(values);
+      message2.getGridValueVectorWithCaching(modificationOperation,modificationParameters,values);
       return;
     }
 
     T::ParamValue_vec values1;
     T::ParamValue_vec values2;
-    message1.getGridValueVectorWithCaching(values1);
-    message2.getGridValueVectorWithCaching(values2);
+    message1.getGridValueVectorWithCaching(modificationOperation,modificationParameters,values1);
+    message2.getGridValueVectorWithCaching(modificationOperation,modificationParameters,values2);
 
     timeInterpolation(values1,values2,t1,t2,tt,timeInterpolationMethod,values);
   }
@@ -2671,6 +3230,22 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
 
 
 void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values) const
+{
+  try
+  {
+    getGridValueVectorByLevelAndCoordinateList(message1,message2,newLevel,coordinateType,coordinates,attributeList,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
   try
   {
@@ -2692,10 +3267,10 @@ void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::M
       return;
 
     T::ParamValue_vec gridValues1;
-    message1.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,gridValues1);
+    message1.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,gridValues1);
 
     T::ParamValue_vec gridValues2;
-    message2.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,gridValues2);
+    message2.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,gridValues2);
 
     levelInterpolation(gridValues1,gridValues2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,values);
   }
@@ -2710,6 +3285,22 @@ void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::M
 
 
 void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values) const
+{
+  try
+  {
+    getGridValueVectorByTimeAndCoordinateList(message1,message2,newTime,coordinateType,coordinates,attributeList,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
   try
   {
@@ -2731,10 +3322,10 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
       return;
 
     T::ParamValue_vec gridValues1;
-    message1.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,gridValues1);
+    message1.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,gridValues1);
 
     T::ParamValue_vec gridValues2;
-    message2.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,gridValues2);
+    message2.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,gridValues2);
 
     timeInterpolation(gridValues1,gridValues2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
@@ -2752,17 +3343,32 @@ void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message
 {
   try
   {
+    getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  try
+  {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
     const char *levelInterpolationMethodStr = attributeList.getAttributeValue("grid.levelInterpolationMethod");
     if (levelInterpolationMethodStr != nullptr)
       levelInterpolationMethod = toInt16(levelInterpolationMethodStr);
 
-
     T::ParamValue_vec values1;
     T::ParamValue_vec values2;
 
-    message1.getGridValueVectorByGeometry(attributeList,values1);
-    message2.getGridValueVectorByGeometry(attributeList,values2);
+    message1.getGridValueVectorByGeometry(attributeList,modificationOperation,modificationParameters,values1);
+    message2.getGridValueVectorByGeometry(attributeList,modificationOperation,modificationParameters,values2);
 
     levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,values);
   }
@@ -2780,6 +3386,22 @@ void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message&
 {
   try
   {
+    getGridValueVectorByTimeAndGeometry(message1,message2,newTime,attributeList,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  try
+  {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
     if (timeInterpolationMethodStr != nullptr)
@@ -2788,8 +3410,8 @@ void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message&
     T::ParamValue_vec values1;
     T::ParamValue_vec values2;
 
-    message1.getGridValueVectorByGeometry(attributeList,values1);
-    message2.getGridValueVectorByGeometry(attributeList,values2);
+    message1.getGridValueVectorByGeometry(attributeList,modificationOperation,modificationParameters,values1);
+    message2.getGridValueVectorByGeometry(attributeList,modificationOperation,modificationParameters,values2);
 
     timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
@@ -2807,11 +3429,27 @@ void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& me
 {
   try
   {
+    getGridValueVectorByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  try
+  {
     T::ParamValue_vec values1;
     T::ParamValue_vec values2;
 
-    getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,values1);
-    getGridValueVectorByLevel(message3,message4,newLevel,levelInterpolationMethod,values2);
+    getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,modificationOperation,modificationParameters,values1);
+    getGridValueVectorByLevel(message3,message4,newLevel,levelInterpolationMethod,modificationOperation,modificationParameters,values2);
 
     timeInterpolation(values1,values2,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
@@ -2829,6 +3467,22 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Mes
 {
   try
   {
+    getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  try
+  {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
     if (timeInterpolationMethodStr != nullptr)
@@ -2837,8 +3491,8 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Mes
     T::ParamValue_vec values1;
     T::ParamValue_vec values2;
 
-    getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,values1);
-    getGridValueVectorByLevelAndGeometry(message3,message4,newLevel,attributeList,values2);
+    getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,values1);
+    getGridValueVectorByLevelAndGeometry(message3,message4,newLevel,attributeList,modificationOperation,modificationParameters,values2);
 
     timeInterpolation(values1,values2,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
@@ -2856,18 +3510,7 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRI
 {
   try
   {
-    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
-    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
-    if (timeInterpolationMethodStr != nullptr)
-      timeInterpolationMethod = toInt16(timeInterpolationMethodStr);
-
-    T::ParamValue_vec values1;
-    T::ParamValue_vec values2;
-
-    getGridValueVectorByLevelAndCoordinateList(message1,message2,newLevel,coordinateType,coordinates,attributeList,values1);
-    getGridValueVectorByLevelAndCoordinateList(message3,message4,newLevel,coordinateType,coordinates,attributeList,values2);
-
-    timeInterpolation(values1,values2,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
+    getGridValueVectorByTimeLevelAndCoordinateList(message1,message2,message3,message4,newTime,newLevel,coordinateType,coordinates,attributeList,0,EMPTY_DOUBLE_VEC,values);
   }
   catch (...)
   {
@@ -2878,6 +3521,29 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRI
 
 
 
+
+void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  try
+  {
+    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
+    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
+    if (timeInterpolationMethodStr != nullptr)
+      timeInterpolationMethod = toInt16(timeInterpolationMethodStr);
+
+    T::ParamValue_vec values1;
+    T::ParamValue_vec values2;
+
+    getGridValueVectorByLevelAndCoordinateList(message1,message2,newLevel,coordinateType,coordinates,attributeList,modificationOperation,modificationParameters,values1);
+    getGridValueVectorByLevelAndCoordinateList(message3,message4,newLevel,coordinateType,coordinates,attributeList,modificationOperation,modificationParameters,values2);
+
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 }  // namespace GRID
 }  // namespace SmartMet

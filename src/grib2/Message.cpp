@@ -3344,56 +3344,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
         }
       }
     }
-/*
-    else
-    {
-      if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
-      {
-        long long hash = mBitmapSection->getHash();
-
-        int index = 0;
-        if (GRID::indexCache.getIndex(hash,idx,index))
-        {
-          if (index < 0)
-            return ParamValueMissing;
-
-          if (mRepresentationSection->getValueByIndex(index,value))
-          {
-#ifdef POINT_CACHE
-            if (mPointCacheEnabled)
-              addCachedValue(idx,value);
-#endif
-            return value;
-          }
-          else
-          {
-            return ParamValueMissing;
-          }
-        }
-        else
-        {
-          T::IndexVector indexVector;
-          mBitmapSection->getIndexVector(mColumnCount*mRowCount,indexVector);
-          GRID::indexCache.addIndexVector(hash,indexVector);
-          if (indexVector[idx] < 0)
-            return ParamValueMissing;
-
-          if (mRepresentationSection->getValueByIndex(indexVector[idx],value))
-          {
-#ifdef POINT_CACHE
-            if (mPointCacheEnabled)
-              addCachedValue(idx,value);
-#endif
-            return value;
-          }
-          else
-          {
-            return ParamValueMissing;
-          }
-        }
-      }
-    }
-*/
     if (mCacheKey > 0)
     {
       // Trying to get a memory cache value.

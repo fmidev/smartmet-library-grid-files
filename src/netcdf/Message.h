@@ -97,7 +97,7 @@ class Message : public GRID::Message
     std::size_t         getGridRowCount() const;
 
     T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const;
-    T::ParamValue       getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
+    //T::ParamValue       getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
     void                getGridValueVector(T::ParamValue_vec& values) const;
     void                getGridOriginalValueVector(T::ParamValue_vec& values) const;
     T::ParamLevel       getGridParameterLevel() const;
