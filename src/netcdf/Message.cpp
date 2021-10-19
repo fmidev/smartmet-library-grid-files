@@ -1468,6 +1468,7 @@ std::string Message::getGridParameterLevelIdString() const
         \return         The parameter value of the given grid point.
 */
 
+/*
 T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 {
   FUNCTION_TRACE
@@ -1482,19 +1483,19 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     throw exception;
   }
 }
+*/
 
 
 
 
-
-/*! \brief The method returns the grid value in the given original grid point.
+/*! \brief The method returns the grid value in the given grid point.
 
         \param grid_i   The grid i-position.
         \param grid_j   The grid j-position.
         \return         The parameter value of the given grid point.
 */
 
-T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const
+T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 {
   FUNCTION_TRACE
   try
@@ -1615,7 +1616,7 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
     {
       for (uint x=0; x<mColumns; x++)
       {
-        T::ParamValue val = getGridValueByOriginalGridPoint(x,y);
+        T::ParamValue val = getGridValueByGridPoint(x,y);
         if (val != ParamValueMissing)
         {
           if (val < minValue)
@@ -1684,7 +1685,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     {
       for (uint x=0; x<mColumns; x++)
       {
-        T::ParamValue val = getGridValueByOriginalGridPoint(x,y);
+        T::ParamValue val = getGridValueByGridPoint(x,y);
         values.push_back(val);
       }
     }
@@ -2067,7 +2068,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
           {
             if (c < sz)
             {
-              auto val = getGridValueByOriginalGridPoint(x,y);
+              auto val = getGridValueByGridPoint(x,y);
               double xx = 0;
               double yy = 0;
               getGridOriginalCoordinatesByGridPoint(x,y,xx,yy);

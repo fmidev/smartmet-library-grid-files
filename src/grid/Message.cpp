@@ -39,7 +39,8 @@ struct TmpValueCacheRec
 
 TmpValueCacheRec tmpValueCache[tmpValueCacheSize];
 ThreadLock tmpCacheThreadLock;
-
+std::vector<double> EMPTY_DOUBLE_VEC;
+std::vector<Message*> EMPTY_MSG_VEC;
 
 
 
@@ -431,6 +432,23 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
   FUNCTION_TRACE
   try
   {
+    getGridIsobands(contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
+{
+  FUNCTION_TRACE
+  try
+  {
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (areaInterpolationMethodStr != nullptr)
@@ -452,7 +470,7 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
       smoothDegree = static_cast<size_t>(toInt32(smoothDegreeStr));
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorWithCaching(gridValues);
+    getGridValueVectorWithCaching(modificationOperation,modificationParameters,gridValues);
 
     T::Dimensions d = getGridDimensions();
     T::Coordinate_svec coordinates;
@@ -494,6 +512,23 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
 
 
 void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours)
+{
+  FUNCTION_TRACE
+  try
+  {
+    getGridIsobandsByGeometry(contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
   FUNCTION_TRACE
   try
@@ -674,12 +709,12 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
 
     if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
-      getGridIsobands(contourLowValues,contourHighValues,attributeList,contours);
+      getGridIsobands(contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,*latLonCoordinates,areaInterpolationMethod,gridValues);
+    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,*latLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
 
@@ -718,6 +753,23 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
   FUNCTION_TRACE
   try
   {
+    getGridIsobandsByGrid(contourLowValues,contourHighValues,gridWidth,gridHeight,gridLatLonCoordinates,projectionCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
+{
+  FUNCTION_TRACE
+  try
+  {
     if (gridLatLonCoordinates.size() == 0 ||  gridWidth == 0 || gridHeight == 0)
       return;
 
@@ -742,7 +794,7 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
       smoothDegree = toSize_t(smoothDegreeStr);
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,gridValues);
+    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,gridValues);
     T::Coordinate_vec *coordinatePtr = nullptr;
 
     switch (coordinateType)
@@ -785,6 +837,23 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
   FUNCTION_TRACE
   try
   {
+    getGridIsolines(contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
+{
+  FUNCTION_TRACE
+  try
+  {
     short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
     const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
     if (areaInterpolationMethodStr != nullptr)
@@ -806,7 +875,7 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
       smoothDegree = toSize_t(smoothDegreeStr);
 
     T::ParamValue_vec gridValues;
-    getGridValueVector(gridValues);
+    getGridValueVector(modificationOperation,modificationParameters,gridValues);
 
     T::Dimensions d = getGridDimensions();
     T::Coordinate_svec coordinates;
@@ -856,6 +925,23 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
   FUNCTION_TRACE
   try
   {
+    getGridIsolinesByGeometry(contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
+{
+  FUNCTION_TRACE
+  try
+  {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
     const char *centerStr = attributeList.getAttributeValue("grid.center");
@@ -1031,13 +1117,13 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
 
     if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
-      getGridIsolines(contourValues,attributeList,contours);
+      getGridIsolines(contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
 
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,*latLonCoordinates,areaInterpolationMethod,gridValues);
+    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,*latLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
 
@@ -1076,6 +1162,23 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
   FUNCTION_TRACE
   try
   {
+    getGridIsolinesByGrid(contourValues,gridWidth,gridHeight,gridLatLonCoordinates,projectionCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
+{
+  FUNCTION_TRACE
+  try
+  {
     if (gridLatLonCoordinates.size() == 0 ||  gridWidth == 0 || gridHeight == 0)
       return;
 
@@ -1100,7 +1203,7 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
       smoothDegree = toSize_t(smoothDegreeStr);
 
     T::ParamValue_vec gridValues;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,gridValues);
+    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
 
@@ -2017,18 +2120,194 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
 
 
+T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j,uint modificationOperation,double_vec& modificationParameters) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto value = getGridValueByGridPoint(grid_i,grid_j);
+
+    uint sz = modificationParameters.size();
+    if (value == ParamValueMissing || sz == 0)
+      return value;
+
+    switch (modificationOperation)
+    {
+      case Operation::NONE:
+        return value;
+
+      case Operation::GRID_ADD:
+      {
+        auto w = getGridWidth();
+        auto h = getGridHeight();
+        auto s = w*h;
+        auto idx = grid_j * h + grid_i;
+
+        if (sz == s && idx < sz)
+        {
+          auto val = modificationParameters[idx];
+          if (val != ParamValueMissing)
+            value = value + val;
+        }
+      }
+      return value;
+
+      case Operation::GRID_DEC:
+      {
+        auto w = getGridWidth();
+        auto h = getGridHeight();
+        auto s = w*h;
+        auto idx = grid_j * h + grid_i;
+
+        if (sz == s && idx < sz)
+        {
+          auto val = modificationParameters[idx];
+          if (val != ParamValueMissing)
+            value = value - val;
+        }
+      }
+      return value;
+
+      case Operation::GRID_MUL:
+      {
+        auto w = getGridWidth();
+        auto h = getGridHeight();
+        auto s = w*h;
+        auto idx = grid_j * h + grid_i;
+
+        if (sz == s && idx < sz)
+        {
+          auto val = modificationParameters[idx];
+          if (val != ParamValueMissing)
+            value = value * val;
+        }
+      }
+      return value;
+
+      case Operation::GRID_DIV:
+      {
+        auto w = getGridWidth();
+        auto h = getGridHeight();
+        auto s = w*h;
+        auto idx = grid_j * h + grid_i;
+
+        if (sz == s && idx < sz)
+        {
+          auto val = modificationParameters[idx];
+          if (val != ParamValueMissing)
+            value = value / val;
+        }
+      }
+      return value;
+
+      case Operation::GRID_HYPOT:
+      {
+        auto w = getGridWidth();
+        auto h = getGridHeight();
+        auto s = w*h;
+        auto idx = grid_j * h + grid_i;
+
+        if (sz == s && idx < sz)
+        {
+          auto val = modificationParameters[idx];
+          if (val != ParamValueMissing)
+            value = sqrt(value*value + val*val);
+        }
+      }
+      return value;
+
+      case Operation::ADD:
+        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+          return (value + modificationParameters[0]);
+        else
+          return value;
+
+      case Operation::DEC:
+        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+          return (value - modificationParameters[0]);
+        else
+          return value;
+
+      case Operation::MUL:
+        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+          return (value * modificationParameters[0]);
+        else
+          return value;
+
+      case Operation::DIV:
+        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+          return (value / modificationParameters[0]);
+        else
+          return value;
+
+      case Operation::ABS:
+        if (value < 0)
+          return -value;
+        else
+          return value;
+
+      case Operation::NEG:
+        return -value;
+
+      case Operation::ROUND:
+        return round(value);
+
+      case Operation::FLOOR:
+        return Fmi::floor(value);
+
+      case Operation::CEIL:
+        return (Fmi::floor(value) + 1.0);
+
+      case Operation::K2C:
+        return (value - 273.15);
+
+      case Operation::C2K:
+        return (value + 273.15);
+
+      case Operation::F2C:
+        return (5*(value - 32.0)/9.0);
+
+      case Operation::C2F:
+        return (value*1.8 + 32.0);
+
+      case Operation::F2K:
+        return ((5.0*(value - 32.0)/9.0) + 273.15);
+
+      case Operation::K2F:
+        return ((value - 273.15)*1.8 + 32.0);
+
+      case Operation::RAD2DEG:
+        return (360.0*value/(2*3.1415926535898));
+
+      case Operation::DEG2RAD:
+        return (2*3.1415926535898*value/360.0);
+    }
+    return value;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method returns the grid value in the given original grid point.
 
         \param grid_i   The grid i-position.
         \param grid_j   The grid j-position.
         \return         The parameter value of the given grid point.
 */
-
+/*
 T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
-
+*/
 
 
 
@@ -2065,6 +2344,245 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
 
 
+void Message::modifyGridValueVector(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  try
+  {
+    uint vsz = values.size();
+    if (vsz == 0)
+      return;
+
+    uint sz = modificationParameters.size();
+    if (sz == 0)
+      return;
+
+    switch (modificationOperation)
+    {
+      case Operation::NONE:
+        return;
+
+      case Operation::GRID_ADD:
+        if (sz == vsz)
+        {
+          for (uint v=0; v<vsz; v++)
+          {
+            if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
+              values[v] = values[v] + modificationParameters[v];
+          }
+        }
+        return;
+
+      case Operation::GRID_DEC:
+        if (sz == vsz)
+        {
+          for (uint v=0; v<vsz; v++)
+          {
+            if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
+              values[v] = values[v] - modificationParameters[v];
+          }
+        }
+        return;
+
+      case Operation::GRID_MUL:
+        if (sz == vsz)
+        {
+          for (uint v=0; v<vsz; v++)
+          {
+            if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
+              values[v] = values[v] * modificationParameters[v];
+          }
+        }
+        return;
+
+      case Operation::GRID_DIV:
+        if (sz == vsz)
+        {
+          for (uint v=0; v<vsz; v++)
+          {
+            if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
+              values[v] = values[v] / modificationParameters[v];
+          }
+        }
+        return;
+
+      case Operation::GRID_HYPOT:
+        if (sz == vsz)
+        {
+          for (uint v=0; v<vsz; v++)
+          {
+            if (modificationParameters[v] != ParamValueMissing  &&  values[v] != ParamValueMissing)
+              values[v] = sqrt(values[v]*values[v] + modificationParameters[v]*modificationParameters[v]);
+          }
+        }
+        return;
+
+      case Operation::ADD:
+        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+        {
+          auto val = modificationParameters[0];
+          for (uint v=0; v<vsz; v++)
+          {
+            values[v] = values[v] + val;
+          }
+        }
+        return;
+
+      case Operation::DEC:
+        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+        {
+          auto val = modificationParameters[0];
+          for (uint v=0; v<vsz; v++)
+          {
+            values[v] = values[v] - val;
+          }
+        }
+        return;
+
+      case Operation::MUL:
+        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+        {
+          auto val = modificationParameters[0];
+          for (uint v=0; v<vsz; v++)
+          {
+            values[v] = values[v] * val;
+          }
+        }
+        return;
+
+      case Operation::DIV:
+        if (sz > 0 && modificationParameters[0] != ParamValueMissing)
+        {
+          auto val = modificationParameters[0];
+          for (uint v=0; v<vsz; v++)
+          {
+            values[v] = values[v] / val;
+          }
+        }
+        return;
+
+      case Operation::ABS:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = fabs(values[v]);
+        }
+        return;
+
+      case Operation::NEG:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = -values[v];
+        }
+        return;
+
+      case Operation::ROUND:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = round(values[v]);
+        }
+        return;
+
+      case Operation::FLOOR:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = Fmi::floor(values[v]);
+        }
+        return;
+
+      case Operation::CEIL:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = Fmi::floor(values[v]) + 1.0;
+        }
+        return;
+
+      case Operation::K2C:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = values[v] - 273.15;
+        }
+        return;
+
+      case Operation::C2K:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = values[v] + 273.15;
+        }
+        return;
+
+      case Operation::F2C:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = (5*(values[v] - 32.0)/9.0);
+        }
+        return;
+
+      case Operation::C2F:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = (values[v]*1.8 + 32.0);
+        }
+        return;
+
+      case Operation::F2K:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = ((5.0*(values[v] - 32.0)/9.0) + 273.15);
+        }
+        return;
+
+      case Operation::K2F:
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = ((values[v] - 273.15)*1.8 + 32.0);
+        }
+        return;
+
+      case Operation::RAD2DEG:
+      {
+        double m = 360.0/(2*3.1415926535898);
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = (m*values[v]);
+        }
+      }
+      return;
+
+      case Operation::DEG2RAD:
+      {
+        double m = (2*3.1415926535898/360.0);
+        for (uint v=0; v<vsz; v++)
+        {
+          values[v] = (m*values[v]);
+        }
+      }
+      return;
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void Message::getGridValueVector(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  try
+  {
+    getGridValueVector(values);
+    modifyGridValueVector(modificationOperation,modificationParameters,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 /*! \brief The method returns grid values according to the geometry defined by attributes.
 
         \param attributeList   The list of attributes that should contain geometry definitions.
@@ -2076,11 +2594,28 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
   FUNCTION_TRACE
   try
   {
+    getGridValueVectorByGeometry(attributeList,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
 
     if (crsStr != nullptr &&  strcasecmp(crsStr,"crop") == 0)
     {
-      getGridValueVectorByCrop(attributeList,values);
+      getGridValueVectorByCrop(attributeList,modificationOperation,modificationParameters,values);
       return;
     }
 
@@ -2232,7 +2767,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
     {
       // The geometryId is same as the original geometry.
 
-      getGridValueVector(values);
+      getGridValueVector(modificationOperation,modificationParameters,values);
       T::Dimensions  d = getGridDimensions();
       attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
       attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -2247,7 +2782,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
     if (!latLonCoordinates || latLonCoordinates->size() == 0)
     {
-      getGridValueVector(values);
+      getGridValueVector(modificationOperation,modificationParameters,values);
       T::Dimensions  d = getGridDimensions();
       attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
       attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
@@ -2256,7 +2791,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
 
     //T::ParamValue_vec gridValues;
-    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,*latLonCoordinates,areaInterpolationMethod,values);
+    getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,*latLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values);
 
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
@@ -2272,6 +2807,23 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,T::Pa
 
 
 void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    getGridValueVectorByCrop(attributeList,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
   try
@@ -2373,7 +2925,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamV
     T::GridValueList valueList;
 
     // Picking grid points that are inside the rectangle.
-    getGridValueListByRectangle(T::CoordinateTypeValue::GRID_COORDINATES,x1,y1,x2,y2,gridRectangle,valueList);
+    getGridValueListByRectangle(T::CoordinateTypeValue::GRID_COORDINATES,x1,y1,x2,y2,gridRectangle,modificationOperation,modificationParameters,valueList);
 
     double minX = 0;
     double minY = 0;
@@ -2509,6 +3061,23 @@ void Message::getGridValueVectorWithCaching(T::ParamValue_vec& values) const
       tmpValueCache[idx].fileId = fileId;
       tmpValueCache[idx].messageIndex = messageIndex;
     }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void Message::getGridValueVectorWithCaching(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    getGridValueVectorWithCaching(values);
+    modifyGridValueVector(modificationOperation,modificationParameters,values);
   }
   catch (...)
   {
@@ -3409,16 +3978,33 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
   FUNCTION_TRACE
   try
   {
+    getGridValueByPoint(coordinateType,x,y,areaInterpolationMethod,0,EMPTY_DOUBLE_VEC,value);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
+{
+  FUNCTION_TRACE
+  try
+  {
     value = ParamValueMissing;
     switch (coordinateType)
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        value = getGridValueByLatLonCoordinate(y,x,areaInterpolationMethod);
+        value = getGridValueByLatLonCoordinate(y,x,areaInterpolationMethod,modificationOperation,modificationParameters);
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
-        value = getGridValueByGridPoint_byInterpolation(x,y,areaInterpolationMethod);
+        value = getGridValueByGridPoint_byInterpolation(x,y,areaInterpolationMethod,modificationOperation,modificationParameters);
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
@@ -3441,8 +4027,6 @@ void Message::getGridValueByPoint(T::CoordinateType coordinateType,double x,doub
 
 
 
-
-
 /*! \brief The method returns the value vector related to the given grid coordinates (for example grid corner values).
 
         \param coordinateType  The type of the used coordinates.
@@ -3457,15 +4041,32 @@ void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double 
   FUNCTION_TRACE
   try
   {
+    getGridValueVectorByPoint(coordinateType,x,y,vectorType,0,EMPTY_DOUBLE_VEC,valueVector);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueVectorByPoint(T::CoordinateType coordinateType,double x,double y,uint vectorType,uint modificationOperation,double_vec& modificationParameters,double_vec& valueVector) const
+{
+  FUNCTION_TRACE
+  try
+  {
     switch (coordinateType)
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        getGridValueVectorByLatLonCoordinate(y,x,vectorType,valueVector);
+        getGridValueVectorByLatLonCoordinate(y,x,vectorType,modificationOperation,modificationParameters,valueVector);
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
-        getGridValueVectorByGridPoint(x,y,vectorType,valueVector);
+        getGridValueVectorByGridPoint(x,y,vectorType,modificationOperation,modificationParameters,valueVector);
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
@@ -3503,6 +4104,23 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
   FUNCTION_TRACE
   try
   {
+    getGridValueVectorByGridPoint(grid_i,grid_j,vectorType,0,EMPTY_DOUBLE_VEC,valueVector);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vectorType,uint modificationOperation,double_vec& modificationParameters,double_vec& valueVector) const
+{
+  FUNCTION_TRACE
+  try
+  {
     double x = grid_i;
     double y = grid_j;
 
@@ -3514,33 +4132,33 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
     switch (vectorType)
     {
       case T::AreaInterpolationMethod::None:
-        valueVector.emplace_back(getGridValueByGridPoint(x1,y1));
+        valueVector.emplace_back(getGridValueByGridPoint(x1,y1,modificationOperation,modificationParameters));
         break;
 
       case T::AreaInterpolationMethod::Linear:
-        valueVector.emplace_back(getGridValueByGridPoint_linearInterpolation(x,y));
+        valueVector.emplace_back(getGridValueByGridPoint_linearInterpolation(x,y,modificationOperation,modificationParameters));
         break;
 
       case T::AreaInterpolationMethod::Nearest:
-        valueVector.emplace_back(getGridValueByGridPoint_nearest(x,y));
+        valueVector.emplace_back(getGridValueByGridPoint_nearest(x,y,modificationOperation,modificationParameters));
         break;
 
       case T::AreaInterpolationMethod::Min:
-        valueVector.emplace_back(getGridValueByGridPoint_min(x,y));
+        valueVector.emplace_back(getGridValueByGridPoint_min(x,y,modificationOperation,modificationParameters));
         break;
 
       case T::AreaInterpolationMethod::Max:
-        valueVector.emplace_back(getGridValueByGridPoint_max(x,y));
+        valueVector.emplace_back(getGridValueByGridPoint_max(x,y,modificationOperation,modificationParameters));
         break;
 
       case T::AreaInterpolationMethod::List:
         valueVector.emplace_back(2);
         valueVector.emplace_back(x-C_DOUBLE(x1));
         valueVector.emplace_back(y-C_DOUBLE(y1));
-        valueVector.emplace_back(getGridValueByGridPoint(x1,y1));
-        valueVector.emplace_back(getGridValueByGridPoint(x2,y1));
-        valueVector.emplace_back(getGridValueByGridPoint(x2,y2));
-        valueVector.emplace_back(getGridValueByGridPoint(x1,y2));
+        valueVector.emplace_back(getGridValueByGridPoint(x1,y1,modificationOperation,modificationParameters));
+        valueVector.emplace_back(getGridValueByGridPoint(x2,y1,modificationOperation,modificationParameters));
+        valueVector.emplace_back(getGridValueByGridPoint(x2,y2,modificationOperation,modificationParameters));
+        valueVector.emplace_back(getGridValueByGridPoint(x1,y2,modificationOperation,modificationParameters));
         break;
 
       case T::AreaInterpolationMethod::ListWithAngles:
@@ -3552,10 +4170,10 @@ void Message::getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vec
         valueVector.emplace_back(getGridPointAngle(T::CoordinateTypeValue::GRID_COORDINATES,C_DOUBLE(x2),C_DOUBLE(y1)));
         valueVector.emplace_back(getGridPointAngle(T::CoordinateTypeValue::GRID_COORDINATES,C_DOUBLE(x2),C_DOUBLE(y2)));
         valueVector.emplace_back(getGridPointAngle(T::CoordinateTypeValue::GRID_COORDINATES,C_DOUBLE(x1),C_DOUBLE(y2)));
-        valueVector.emplace_back(getGridValueByGridPoint(x1,y1));
-        valueVector.emplace_back(getGridValueByGridPoint(x2,y1));
-        valueVector.emplace_back(getGridValueByGridPoint(x2,y2));
-        valueVector.emplace_back(getGridValueByGridPoint(x1,y2));
+        valueVector.emplace_back(getGridValueByGridPoint(x1,y1,modificationOperation,modificationParameters));
+        valueVector.emplace_back(getGridValueByGridPoint(x2,y1,modificationOperation,modificationParameters));
+        valueVector.emplace_back(getGridValueByGridPoint(x2,y2,modificationOperation,modificationParameters));
+        valueVector.emplace_back(getGridValueByGridPoint(x1,y2,modificationOperation,modificationParameters));
         break;
     }
   }
@@ -3582,11 +4200,28 @@ void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint ve
   FUNCTION_TRACE
   try
   {
+    getGridValueVectorByLatLonCoordinate(lat,lon,vectorType,0,EMPTY_DOUBLE_VEC,valueVector);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint vectorType,uint modificationOperation,double_vec& modificationParameters,double_vec& valueVector) const
+{
+  FUNCTION_TRACE
+  try
+  {
     double grid_i = 0;
     double grid_j = 0;
 
     if (getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
-      getGridValueVectorByGridPoint(grid_i,grid_j,vectorType,valueVector);
+      getGridValueVectorByGridPoint(grid_i,grid_j,vectorType,modificationOperation,modificationParameters,valueVector);
   }
   catch (...)
   {
@@ -3608,6 +4243,23 @@ void Message::getGridValueVectorByLatLonCoordinate(double lat,double lon,uint ve
 */
 
 void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    getGridValueListByCircle(coordinateType,origoX,origoY,radius,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -3660,7 +4312,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         polygonPoints.emplace_back(T::Coordinate(x1,y2));
 
         T::GridValueList tmpValueList;
-        getGridValueListByPolygon(coordinateType,polygonPoints,tmpValueList);
+        getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
 
         uint len = tmpValueList.getLength();
         for (uint t=0; t<len; t++)
@@ -3687,7 +4339,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
           rec.mX = it->x();
           rec.mY = it->y();
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
           valueList.addGridValue(rec);
         }
       }
@@ -3748,7 +4400,7 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         polygonPoints.emplace_back(T::Coordinate(xx1,yy2));
 
         T::GridValueList tmpValueList;
-        getGridValueListByPolygon(coordinateType,polygonPoints,tmpValueList);
+        getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
 
         uint len = tmpValueList.getLength();
         for (uint t=0; t<len; t++)
@@ -3776,7 +4428,6 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
 
 
 
-
 /*! \brief The method returns the list of grid point values according to the given list of coordinates.
 
         \param coordinateType            The type of the used coordinates.
@@ -3790,12 +4441,29 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
   FUNCTION_TRACE
   try
   {
+    getGridValueListByPointList(coordinateType,pointList,areaInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  FUNCTION_TRACE
+  try
+  {
     for (auto it = pointList.begin(); it != pointList.end(); ++it)
     {
       T::GridValue rec;
       rec.mX = it->x();
       rec.mY = it->y();
-      getGridValueByPoint(coordinateType,it->x(),it->y(),areaInterpolationMethod,rec.mValue);
+      getGridValueByPoint(coordinateType,it->x(),it->y(),areaInterpolationMethod,modificationOperation,modificationParameters,rec.mValue);
       valueList.addGridValue(rec);
     }
   }
@@ -3817,6 +4485,24 @@ void Message::getGridValueListByPointList(T::CoordinateType coordinateType,std::
 */
 
 void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    getGridValueListByPolygon(coordinateType,polygonPoints,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
+void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -3855,7 +4541,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
             rec.mY = lat;
           }
 
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
           valueList.addGridValue(rec);
         }
       }
@@ -3877,7 +4563,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
           rec.mX = it->x();
           rec.mY = it->y();
-          rec.mValue = getGridValueByGridPoint(it->x() % cols,it->y());
+          rec.mValue = getGridValueByGridPoint(it->x() % cols,it->y(),modificationOperation,modificationParameters);
           valueList.addGridValue(rec);
 
           //double lat = 0,lon = 0;
@@ -3914,7 +4600,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
             rec.mY = y;
           }
 
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
           valueList.addGridValue(rec);
         }
       }
@@ -3931,6 +4617,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 
 
 
+
 /*! \brief The method returns a list of grid point values that are inside the given polygon area. The polygon area
     can consists of multiple polygons. If a polygon is inside of another polygon then it is seen as a "hole" in
     the current area.
@@ -3941,6 +4628,23 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
 */
 
 void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,T::GridValueList& valueList) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    getGridValueListByPolygonPath(coordinateType,polygonPath,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -3985,7 +4689,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
             rec.mY = lat;
           }
 
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
           valueList.addGridValue(rec);
         }
       }
@@ -4003,7 +4707,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
           rec.mX = it->x();
           rec.mY = it->y();
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
           valueList.addGridValue(rec);
         }
       }
@@ -4043,7 +4747,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
             rec.mY = y;
           }
 
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y());
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
           valueList.addGridValue(rec);
         }
       }
@@ -4055,7 +4759,6 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
 
 
 
@@ -4072,6 +4775,23 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 */
 
 void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,bool gridRectangle,T::GridValueList& valueList) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    getGridValueListByRectangle(coordinateType,x1,y1,x2,y2,gridRectangle,0,EMPTY_DOUBLE_VEC,valueList);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,bool gridRectangle,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
   FUNCTION_TRACE
   try
@@ -4119,7 +4839,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
           double lat2 = 0,lon2 = 0;
           getGridLatLonCoordinatesByGridPosition(gx1,gy2,lat1,lon1);
           getGridLatLonCoordinatesByGridPosition(gx2,gy1,lat2,lon2);
-          getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,valueList);
+          getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,modificationOperation,modificationParameters,valueList);
         }
         break;
 
@@ -4139,7 +4859,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
             polygonPoints.emplace_back(T::Coordinate(xx2,y2));
             polygonPoints.emplace_back(T::Coordinate(xx2,y1));
             polygonPoints.emplace_back(T::Coordinate(xx1,y1));
-            getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,valueList);
+            getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,modificationOperation,modificationParameters,valueList);
           }
           else
           {
@@ -4149,7 +4869,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
             polygonPoints.emplace_back(T::Coordinate(x2,y2));
             polygonPoints.emplace_back(T::Coordinate(x2,y1));
             polygonPoints.emplace_back(T::Coordinate(x1,y1));
-            getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,valueList);
+            getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,modificationOperation,modificationParameters,valueList);
           }
         }
         break;
@@ -4168,7 +4888,7 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
           polygonPoints.emplace_back(T::Coordinate(gx2,gy2));
           polygonPoints.emplace_back(T::Coordinate(gx2,gy1));
           polygonPoints.emplace_back(T::Coordinate(gx1,gy1));
-          getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,valueList);
+          getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,modificationOperation,modificationParameters,valueList);
         }
         break;
 
@@ -4204,6 +4924,23 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
   FUNCTION_TRACE
   try
   {
+    getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
     AutoThreadLock lock(&mThreadLock);
 
     // ### Counting a hash value for the coordinates
@@ -4235,11 +4972,11 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
     {
       case T::CoordinateTypeValue::UNKNOWN:
       case T::CoordinateTypeValue::LATLON_COORDINATES:
-        getGridValueVectorByLatLonCoordinateList(coordinates,areaInterpolationMethod,values);
+        getGridValueVectorByLatLonCoordinateList(coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values);
         break;
 
       case T::CoordinateTypeValue::GRID_COORDINATES:
-        getGridValueVectorByGridPointList(coordinates,areaInterpolationMethod,values);
+        getGridValueVectorByGridPointList(coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values);
         break;
 
       case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
@@ -4275,7 +5012,6 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
 
 
 
-
 /*! \brief The method returns a vector of grid point values according the given latlon coordinate vector.
 
         \param coordinates               The vector of latlon coordinates.
@@ -4284,6 +5020,24 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
 */
 
 void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    getGridValueVectorByLatLonCoordinateList(coordinates,areaInterpolationMethod,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
+void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
   FUNCTION_TRACE
   try
@@ -4298,7 +5052,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::None:
         for (auto it = points.begin(); it != points.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_noInterpolation(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_noInterpolation(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         break;
@@ -4306,7 +5060,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::Nearest:
         for (auto it = points.begin(); it != points.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         break;
@@ -4314,7 +5068,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::Linear:
         for (auto it = points.begin(); it != points.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_linearInterpolation(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_linearInterpolation(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         break;
@@ -4322,7 +5076,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::Min:
         for (auto it = points.begin(); it != points.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_min(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_min(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         break;
@@ -4330,7 +5084,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::Max:
         for (auto it = points.begin(); it != points.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_max(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_max(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         break;
@@ -4338,7 +5092,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       case T::AreaInterpolationMethod::External:
         for (auto it = points.begin(); it != points.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         break;
@@ -4346,7 +5100,7 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
       default:
         for (auto it = points.begin(); it != points.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         break;
@@ -4357,7 +5111,6 @@ void Message::getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
 
 
 
@@ -4375,6 +5128,23 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
   FUNCTION_TRACE
   try
   {
+    getGridValueVectorByGridPointList(coordinates,areaInterpolationMethod,0,EMPTY_DOUBLE_VEC,values);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
+{
+  FUNCTION_TRACE
+  try
+  {
     values.reserve(coordinates.size());
 
     switch (areaInterpolationMethod)
@@ -4382,7 +5152,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
       case T::AreaInterpolationMethod::None:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_noInterpolation(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_noInterpolation(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         return;
@@ -4390,7 +5160,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
       case T::AreaInterpolationMethod::Nearest:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         return;
@@ -4398,7 +5168,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
       case T::AreaInterpolationMethod::Linear:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_linearInterpolation(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_linearInterpolation(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         return;
@@ -4406,7 +5176,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
       case T::AreaInterpolationMethod::Min:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_min(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_min(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         return;
@@ -4414,7 +5184,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
       case T::AreaInterpolationMethod::Max:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_max(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_max(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         return;
@@ -4422,7 +5192,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
       case T::AreaInterpolationMethod::External:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         return;
@@ -4430,7 +5200,7 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
       default:
         for (auto it = coordinates.begin(); it != coordinates.end(); ++it)
         {
-          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y());
+          T::ParamValue value = getGridValueByGridPoint_nearest(it->x(),it->y(),modificationOperation,modificationParameters);
           values.emplace_back(value);
         }
         return;
@@ -4441,7 +5211,6 @@ void Message::getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coor
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
 
 
 
@@ -4463,6 +5232,24 @@ T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,dou
   FUNCTION_TRACE
   try
   {
+    return getGridValueByGridPoint_byInterpolation(grid_i,grid_j,areaInterpolationMethod,0,EMPTY_DOUBLE_VEC);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
+T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,double grid_j,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters) const
+{
+  FUNCTION_TRACE
+  try
+  {
     short ipm = areaInterpolationMethod;
 
     if (areaInterpolationMethod == T::AreaInterpolationMethod::Undefined)
@@ -4471,25 +5258,25 @@ T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,dou
     switch (ipm)
     {
       case T::AreaInterpolationMethod::None:
-        return getGridValueByGridPoint_noInterpolation(grid_i,grid_j);
+        return getGridValueByGridPoint_noInterpolation(grid_i,grid_j,modificationOperation,modificationParameters);
 
       case T::AreaInterpolationMethod::Nearest:
-        return getGridValueByGridPoint_nearest(grid_i,grid_j);
+        return getGridValueByGridPoint_nearest(grid_i,grid_j,modificationOperation,modificationParameters);
 
       case T::AreaInterpolationMethod::Linear:
-        return getGridValueByGridPoint_linearInterpolation(grid_i,grid_j);
+        return getGridValueByGridPoint_linearInterpolation(grid_i,grid_j,modificationOperation,modificationParameters);
 
       case T::AreaInterpolationMethod::Min:
-        return getGridValueByGridPoint_min(grid_i,grid_j);
+        return getGridValueByGridPoint_min(grid_i,grid_j,modificationOperation,modificationParameters);
 
       case T::AreaInterpolationMethod::Max:
-        return getGridValueByGridPoint_max(grid_i,grid_j);
+        return getGridValueByGridPoint_max(grid_i,grid_j,modificationOperation,modificationParameters);
 
       case T::AreaInterpolationMethod::External:
-        return getGridValueByGridPoint_nearest(grid_i,grid_j);
+        return getGridValueByGridPoint_nearest(grid_i,grid_j,modificationOperation,modificationParameters);
 
       default:
-        return getGridValueByGridPoint_nearest(grid_i,grid_j);
+        return getGridValueByGridPoint_nearest(grid_i,grid_j,modificationOperation,modificationParameters);
     }
   }
   catch (...)
@@ -4497,7 +5284,6 @@ T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,dou
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
 
 
 
@@ -4517,11 +5303,28 @@ T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,shor
   FUNCTION_TRACE
   try
   {
+    return getGridValueByLatLonCoordinate(lat,lon,areaInterpolationMethod,0,EMPTY_DOUBLE_VEC);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::ParamValue Message::getGridValueByLatLonCoordinate(double lat,double lon,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters) const
+{
+  FUNCTION_TRACE
+  try
+  {
     double grid_i = 0;
     double grid_j = 0;
     if (getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j))
     {
-      return getGridValueByGridPoint_byInterpolation(grid_i,grid_j,areaInterpolationMethod);
+      return getGridValueByGridPoint_byInterpolation(grid_i,grid_j,areaInterpolationMethod,modificationOperation,modificationParameters);
     }
 
     return ParamValueMissing;
@@ -4550,13 +5353,31 @@ void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,
   FUNCTION_TRACE
   try
   {
+    getGridValueVectorByRectangle(grid_i_start,grid_j_start,grid_i_end,grid_j_end,0,EMPTY_DOUBLE_VEC,gridPointValues);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
+void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,uint modificationOperation,double_vec& modificationParameters,T::GridPointValue_vec& gridPointValues) const
+{
+  FUNCTION_TRACE
+  try
+  {
     time_t tm = getForecastTimeT();
 
     for (uint j=grid_j_start; j<= grid_j_end; j++)
     {
       for (uint i=grid_i_start; i<= grid_i_end; i++)
       {
-        auto val = getGridValueByGridPoint(i,j);
+        auto val = getGridValueByGridPoint(i,j,modificationOperation,modificationParameters);
         gridPointValues.emplace_back(T::GridPointValue(getFileId(),getMessageIndex(),i,j,getGridParameterLevel(),tm,val));
       }
     }
@@ -4566,6 +5387,7 @@ void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
 
 
 
@@ -4581,6 +5403,23 @@ void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,
 */
 
 void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValueList& gridPointValues) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    getParameterValuesByRectangle(grid_i_start,grid_j_start,grid_i_end,grid_j_end,0,EMPTY_DOUBLE_VEC,gridPointValues);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,uint modificationOperation,double_vec& modificationParameters,T::GridPointValueList& gridPointValues) const
 {
   FUNCTION_TRACE
   try
@@ -4605,7 +5444,6 @@ void Message::getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,
 
 
 
-
 /*! \brief The method returns the value of the rounded grid position.
 
         \param grid_i   The grid i-position.
@@ -4618,7 +5456,24 @@ T::ParamValue Message::getGridValueByGridPoint_noInterpolation(double grid_i,dou
   FUNCTION_TRACE
   try
   {
-    return getGridValueByGridPoint(Fmi::floor(grid_i),Fmi::floor(grid_j));
+    return getGridValueByGridPoint_noInterpolation(grid_i,grid_j,0,EMPTY_DOUBLE_VEC);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::ParamValue Message::getGridValueByGridPoint_noInterpolation(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return getGridValueByGridPoint(Fmi::floor(grid_i),Fmi::floor(grid_j),modificationOperation,modificationParameters);
   }
   catch (...)
   {
@@ -4642,6 +5497,23 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
   FUNCTION_TRACE
   try
   {
+    return getGridValueByGridPoint_nearest(grid_i,grid_j,0,EMPTY_DOUBLE_VEC);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const
+{
+  FUNCTION_TRACE
+  try
+  {
     double x = grid_i;
     double y = grid_j;
 
@@ -4656,7 +5528,7 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
     double dist_y2 = C_DOUBLE(y2) - y;
 
     if (dist_x1 == 0  &&  dist_y1 == 0)
-      return getGridValueByGridPoint(round(grid_i),round(grid_j));
+      return getGridValueByGridPoint(round(grid_i),round(grid_j),modificationOperation,modificationParameters);
 
     double dist_q11 = (dist_x1)*(dist_x1) + (dist_y1)*(dist_y1);
     double dist_q21 = (dist_x2)*(dist_x2) + (dist_y1)*(dist_y1);
@@ -4664,15 +5536,15 @@ T::ParamValue Message::getGridValueByGridPoint_nearest(double grid_i,double grid
     double dist_q22 = (dist_x2)*(dist_x2) + (dist_y2)*(dist_y2);
 
     if (dist_q11 < dist_q21  &&  dist_q11 <= dist_q12 && dist_q11 <= dist_q22)
-      return getGridValueByGridPoint(x1,y1);
+      return getGridValueByGridPoint(x1,y1,modificationOperation,modificationParameters);
 
     if (dist_q21 < dist_q11  &&  dist_q21 <= dist_q12 && dist_q21 <= dist_q22)
-      return getGridValueByGridPoint(x2,y1);
+      return getGridValueByGridPoint(x2,y1,modificationOperation,modificationParameters);
 
     if (dist_q12 < dist_q11  &&  dist_q12 <= dist_q21   &&  dist_q12 <= dist_q22)
-      return getGridValueByGridPoint(x1,y2);
+      return getGridValueByGridPoint(x1,y2,modificationOperation,modificationParameters);
 
-    return getGridValueByGridPoint(x2,y2);
+    return getGridValueByGridPoint(x2,y2,modificationOperation,modificationParameters);
   }
   catch (...)
   {
@@ -4696,6 +5568,23 @@ T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) 
   FUNCTION_TRACE
   try
   {
+    return getGridValueByGridPoint_min(grid_i,grid_j,0,EMPTY_DOUBLE_VEC);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const
+{
+  FUNCTION_TRACE
+  try
+  {
     double x = grid_i;
     double y = grid_j;
 
@@ -4705,10 +5594,10 @@ T::ParamValue Message::getGridValueByGridPoint_min(double grid_i,double grid_j) 
     uint y2 = C_UINT(y1+1);
 
     std::set<T::ParamValue> values;
-    values.insert(getGridValueByGridPoint(x1,y1));
-    values.insert(getGridValueByGridPoint(x2,y1));
-    values.insert(getGridValueByGridPoint(x1,y2));
-    values.insert(getGridValueByGridPoint(x2,y2));
+    values.insert(getGridValueByGridPoint(x1,y1,modificationOperation,modificationParameters));
+    values.insert(getGridValueByGridPoint(x2,y1,modificationOperation,modificationParameters));
+    values.insert(getGridValueByGridPoint(x1,y2,modificationOperation,modificationParameters));
+    values.insert(getGridValueByGridPoint(x2,y2,modificationOperation,modificationParameters));
 
     return *values.begin();
   }
@@ -4734,6 +5623,23 @@ T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) 
   FUNCTION_TRACE
   try
   {
+    return getGridValueByGridPoint_max(grid_i,grid_j,0,EMPTY_DOUBLE_VEC);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const
+{
+  FUNCTION_TRACE
+  try
+  {
     double x = grid_i;
     double y = grid_j;
 
@@ -4743,10 +5649,10 @@ T::ParamValue Message::getGridValueByGridPoint_max(double grid_i,double grid_j) 
     uint y2 = C_UINT(y1+1);
 
     std::set<T::ParamValue> values;
-    values.insert(getGridValueByGridPoint(x1,y1));
-    values.insert(getGridValueByGridPoint(x2,y1));
-    values.insert(getGridValueByGridPoint(x1,y2));
-    values.insert(getGridValueByGridPoint(x2,y2));
+    values.insert(getGridValueByGridPoint(x1,y1,modificationOperation,modificationParameters));
+    values.insert(getGridValueByGridPoint(x2,y1,modificationOperation,modificationParameters));
+    values.insert(getGridValueByGridPoint(x1,y2,modificationOperation,modificationParameters));
+    values.insert(getGridValueByGridPoint(x2,y2,modificationOperation,modificationParameters));
 
     return *values.rbegin();
 
@@ -4773,6 +5679,23 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
   FUNCTION_TRACE
   try
   {
+    return getGridValueByGridPoint_linearInterpolation(grid_i,grid_j,0,EMPTY_DOUBLE_VEC);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const
+{
+  FUNCTION_TRACE
+  try
+  {
     // https://en.wikipedia.org/wiki/Bilinear_interpolation
 
     double x = grid_i;
@@ -4785,10 +5708,10 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
 
     // Reading values of the corner grid points
 
-    auto val_q11 = getGridValueByGridPoint(x1,y1);
-    auto val_q21 = getGridValueByGridPoint(x2,y1);
-    auto val_q12 = getGridValueByGridPoint(x1,y2);
-    auto val_q22 = getGridValueByGridPoint(x2,y2);
+    auto val_q11 = getGridValueByGridPoint(x1,y1,modificationOperation,modificationParameters);
+    auto val_q21 = getGridValueByGridPoint(x2,y1,modificationOperation,modificationParameters);
+    auto val_q12 = getGridValueByGridPoint(x1,y2,modificationOperation,modificationParameters);
+    auto val_q22 = getGridValueByGridPoint(x2,y2,modificationOperation,modificationParameters);
 
     return linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12);
   }

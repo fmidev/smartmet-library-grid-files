@@ -107,18 +107,26 @@ class Message
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
     virtual T::Hash             getGridHash() const;
+
     virtual void                getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours);
+    virtual void                getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours);
     virtual void                getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours);
+    virtual void                getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours);
     virtual void                getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours);
+    virtual void                getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours);
+
     virtual void                getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours);
+    virtual void                getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours);
     virtual void                getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours);
+    virtual void                getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours);
     virtual void                getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours);
+    virtual void                getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,std::vector<T::Coordinate>& projectionCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours);
+
     virtual bool                getGridLatLonArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual T::Coordinate_svec  getGridLatLonCoordinates() const;
     virtual bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     virtual bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
-    //virtual T::GridLayout       getGridLayout() const;
     virtual bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     virtual bool                getGridMetricCellSize(double& width,double& height) const;
     virtual bool                getGridMetricSize(double& width,double& height) const;
@@ -143,19 +151,32 @@ class Message
     virtual uint                getGridHeight() const;
 
     virtual void                getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,T::ParamValue& value) const;
+    virtual void                getGridValueByPoint(T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const;
     virtual void                getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,T::GridValueList& valueList) const;
+    virtual void                getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const;
     virtual void                getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,T::GridValueList& valueList) const;
+    virtual void                getGridValueListByPointList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const;
     virtual void                getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,T::GridValueList& valueList) const;
+    virtual void                getGridValueListByPolygon(T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const;
     virtual void                getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,T::GridValueList& valueList) const;
+    virtual void                getGridValueListByPolygonPath(T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const;
     virtual void                getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,bool gridRectangle,T::GridValueList& valueList) const;
+    virtual void                getGridValueListByRectangle(T::CoordinateType coordinateType,double x1,double y1,double x2,double y2,bool gridRectangle,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const;
 
     virtual void                getGridValueVector(T::ParamValue_vec& values) const;
+    virtual void                getGridValueVector(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
     virtual void                getGridValueVectorWithCaching(T::ParamValue_vec& values) const;
+    virtual void                getGridValueVectorWithCaching(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
     virtual void                getGridValueVectorByCrop(T::AttributeList& attributeList,T::ParamValue_vec& values) const;
+    virtual void                getGridValueVectorByCrop(T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
     virtual void                getGridValueVectorByGeometry(T::AttributeList& attributeList,T::ParamValue_vec& values) const;
+    virtual void                getGridValueVectorByGeometry(T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
     virtual void                getGridValueVectorByCoordinateList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const;
+    virtual void                getGridValueVectorByCoordinateList(T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
     virtual void                getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const;
+    virtual void                getGridValueVectorByLatLonCoordinateList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
     virtual void                getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,T::ParamValue_vec& values) const;
+    virtual void                getGridValueVectorByGridPointList(std::vector<T::Coordinate>& coordinates,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
 
     virtual void                getGridOriginalValueVector(T::ParamValue_vec& values) const;
     virtual T::ParamLevel       getGridParameterLevel() const;
@@ -163,20 +184,32 @@ class Message
     virtual void                getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
 
     virtual void                getGridValueVectorByPoint(T::CoordinateType coordinateType,double x,double y,uint vectorType,double_vec& valueVector) const;
+    virtual void                getGridValueVectorByPoint(T::CoordinateType coordinateType,double x,double y,uint vectorType,uint modificationOperation,double_vec& modificationParameters,double_vec& valueVector) const;
     virtual void                getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vectorType,double_vec& valueVector) const;
+    virtual void                getGridValueVectorByGridPoint(double grid_i,double grid_j,uint vectorType,uint modificationOperation,double_vec& modificationParameters,double_vec& valueVector) const;
     virtual void                getGridValueVectorByLatLonCoordinate(double lat,double lon,uint vectorType,double_vec& valueVector) const;
+    virtual void                getGridValueVectorByLatLonCoordinate(double lat,double lon,uint vectorType,uint modificationOperation,double_vec& modificationParameters,double_vec& valueVector) const;
 
     virtual T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const;
+    virtual T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j,uint modificationOperation,double_vec& modificationParameters) const;
     virtual T::ParamValue       getGridValueByGridPoint_byInterpolation(double grid_i,double grid_j,short areaInterpolationMethod) const;
+    virtual T::ParamValue       getGridValueByGridPoint_byInterpolation(double grid_i,double grid_j,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters) const;
     virtual T::ParamValue       getGridValueByGridPoint_noInterpolation(double grid_i,double grid_j) const;
+    virtual T::ParamValue       getGridValueByGridPoint_noInterpolation(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const;
     virtual T::ParamValue       getGridValueByGridPoint_nearest(double grid_i,double grid_j) const;
+    virtual T::ParamValue       getGridValueByGridPoint_nearest(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const;
     virtual T::ParamValue       getGridValueByGridPoint_min(double grid_i,double grid_j) const;
+    virtual T::ParamValue       getGridValueByGridPoint_min(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const;
     virtual T::ParamValue       getGridValueByGridPoint_max(double grid_i,double grid_j) const;
+    virtual T::ParamValue       getGridValueByGridPoint_max(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const;
     virtual T::ParamValue       getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j) const;
+    virtual T::ParamValue       getGridValueByGridPoint_linearInterpolation(double grid_i,double grid_j,uint modificationOperation,double_vec& modificationParameters) const;
     virtual T::ParamValue       getGridValueByLatLonCoordinate(double lat,double lon,short areaInterpolationMethod) const;
-    virtual T::ParamValue       getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
+    virtual T::ParamValue       getGridValueByLatLonCoordinate(double lat,double lon,short areaInterpolationMethod,uint modificationOperation,double_vec& modificationParameters) const;
     virtual void                getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValue_vec& gridPointValues) const;
+    virtual void                getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,uint modificationOperation,double_vec& modificationParameters,T::GridPointValue_vec& gridPointValues) const;
     virtual void                getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,T::GridPointValueList& gridPointValues) const;
+    virtual void                getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,uint modificationOperation,double_vec& modificationParameters,T::GridPointValueList& gridPointValues) const;
     virtual short               getDefaultInterpolationMethod() const;
     virtual T::TimeString       getReferenceTime() const;
     virtual T::SpatialRef*      getSpatialReference() const;
@@ -187,6 +220,8 @@ class Message
     virtual bool                isRelativeUV() const;
     virtual bool                reverseXDirection() const;
     virtual bool                reverseYDirection() const;
+
+    virtual void                modifyGridValueVector(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
 
     virtual void                setMessageIndex(uint index);
     virtual void                setGridFilePtr(GridFile *gridFilePtr);
@@ -319,9 +354,79 @@ class Message
 };
 
 
+class Operation
+{
+  public:
+
+    static const uint NONE              = 0;
+
+    static const uint GRID_ADD          = 1;
+    static const uint GRID_SUM          = 1;
+    static const uint GRID_DEC          = 2;
+    static const uint GRID_MUL          = 3;
+    static const uint GRID_DIV          = 4;
+    static const uint GRID_HYPOT        = 5;
+
+    static const uint ADD               = 1001;
+    static const uint SUM               = 1001;
+    static const uint DEC               = 1002;
+    static const uint MUL               = 1003;
+    static const uint DIV               = 1004;
+
+    static const uint ABS               = 2000;  // value => abs(value)
+    static const uint NEG               = 2001;  // value => -value
+    static const uint ROUND             = 2002;  // value => round(value)
+    static const uint FLOOR             = 2003;  // value => floor(value)
+    static const uint CEIL              = 2004;  // value => ceil(value)
+
+    static const uint K2C               = 3000;  // Kevin => Celsius
+    static const uint C2K               = 3001;  // Celsus => Kelvin
+    static const uint F2C               = 3002;  // Fahrenheit => Celsius
+    static const uint C2F               = 3003;  // Celsius => Fahrenheit
+    static const uint F2K               = 3004;  // Fahrenheit => Kelvin
+    static const uint K2F               = 3005;  // Kelvin => Fahrenheit
+    static const uint RAD2DEG           = 3006;  // Radians => Degrees
+    static const uint DEG2RAD           = 3007;  // Degrees => Radians
+
+    static void getOperatorNames(std::map<std::string,uint>& names)
+    {
+      names.insert(std::pair<std::string,uint>("GRID_ADD",GRID_ADD));
+      names.insert(std::pair<std::string,uint>("GRID_SUM",GRID_SUM));
+      names.insert(std::pair<std::string,uint>("GRID_DEC",GRID_DEC));
+      names.insert(std::pair<std::string,uint>("GRID_MUL",GRID_MUL));
+      names.insert(std::pair<std::string,uint>("GRID_DIV",GRID_DIV));
+      names.insert(std::pair<std::string,uint>("GRID_HYPOT",GRID_HYPOT));
+
+      names.insert(std::pair<std::string,uint>("ADD",ADD));
+      names.insert(std::pair<std::string,uint>("SUM",SUM));
+      names.insert(std::pair<std::string,uint>("DEC",DEC));
+      names.insert(std::pair<std::string,uint>("MUL",MUL));
+      names.insert(std::pair<std::string,uint>("DIV",DIV));
+
+      names.insert(std::pair<std::string,uint>("ABS",ABS));
+      names.insert(std::pair<std::string,uint>("NEG",NEG));
+      names.insert(std::pair<std::string,uint>("ROUND",ROUND));
+      names.insert(std::pair<std::string,uint>("FLOOR",FLOOR));
+      names.insert(std::pair<std::string,uint>("CEIL",CEIL));
+
+      names.insert(std::pair<std::string,uint>("K2C",K2C));
+      names.insert(std::pair<std::string,uint>("C2K",C2K));
+      names.insert(std::pair<std::string,uint>("F2C",F2C));
+      names.insert(std::pair<std::string,uint>("C2F",C2F));
+      names.insert(std::pair<std::string,uint>("F2K",F2K));
+      names.insert(std::pair<std::string,uint>("K2F",K2F));
+      names.insert(std::pair<std::string,uint>("RAD2DEG",RAD2DEG));
+      names.insert(std::pair<std::string,uint>("DEG2RAD",DEG2RAD));
+    }
+};
+
 
 typedef Message* MessagePtr;
 typedef std::vector<MessagePtr> MessagePtr_vec;
+
+extern std::vector<double> EMPTY_DOUBLE_VEC;
+extern std::vector<Message*> EMPTY_MSG_VEC;
+
 
 
 }  // namespace GRID
