@@ -1,5 +1,5 @@
 #include "Message.h"
-#include "NetCdfFile.h"
+#include "QueryDataFile.h"
 #include "../common/ShowFunction.h"
 #include "../grid/PrintOptions.h"
 #include "../grid/GridFile.h"
@@ -16,7 +16,7 @@
 
 namespace SmartMet
 {
-namespace NetCDF
+namespace QueryData
 {
 
 /*! \brief The constructor of the class. */
@@ -27,28 +27,22 @@ Message::Message()
   try
   {
     mGridFile = nullptr;
-    mDataStartPtr = nullptr;
-    mDataEndPtr = nullptr;
     mMessageIndex = 0;
-    mFilePosition = 0;
-    mFileType = T::FileTypeValue::NetCdf4;
+    mFileType = T::FileTypeValue::QueryData;
+    mParameterIndex = 0;
+    mLevelIndex = 0;
+    mTimeIndex = 0;
     mColumns = 0;
     mRows = 0;
-    mRowMultiplier = 0;
-    mColumnMultiplier = 0;
-    mDataType = 0;
-    mBaseValue = 0.0;
-    mScaleFactor = 1.0;
     mParameterLevel = 0;
     mForecastType = 0;
     mForecastNumber = 0;
     mForecastTimeT = 0;
-    mProjectionId = 0;
     mIsRead = false;
-    mNetCdfFile = nullptr;
-    mMissingValue = ParamValueMissing;
+    mQueryDataFile = nullptr;
     mGeometryId = 0;
     mGeometryDef = nullptr;
+    mProjectionId = 0;
   }
   catch (...)
   {
@@ -69,32 +63,22 @@ Message::Message(const Message& message)
   try
   {
     mGridFile = message.mGridFile;
-    mDataStartPtr = message.mDataStartPtr;
-    mDataEndPtr = message.mDataEndPtr;
-    mMessageIndex = message.mMessageIndex;
-    mFilePosition = message.mFilePosition;
-    mMessageSize = message.mMessageSize;
+    mProjectionId = message.mProjectionId;
     mColumns = message.mColumns;
     mRows = message.mRows;
-    mRowMultiplier = message.mRowMultiplier;
-    mColumnMultiplier = message.mColumnMultiplier;
-    mDataType = message.mDataType;
-    mBaseValue = message.mBaseValue;
-    mScaleFactor = message.mScaleFactor;
-    mParameterName = message.mParameterName;
-    mVariableName = message.mVariableName;
+    mParameterIndex = message.mParameterIndex;
+    mLevelIndex = message.mLevelIndex;
+    mTimeIndex = message.mTimeIndex;
+    mParameterLevelId = message.mParameterLevelId;
     mParameterLevel = message.mParameterLevel;
-    mParameterUnits = message.mParameterUnits;
+    mGeometryId = message.mGeometryId;
     mForecastType = message.mForecastType;
     mForecastNumber = message.mForecastNumber;
-    mForecastTimeT = message.mForecastTimeT;
     mForecastTime = message.mForecastTime;
-    mMissingValue = message.mMissingValue;
-    mProjectionId = message.mProjectionId;
-    mGeometryId = message.mGeometryId;
+    mForecastTimeT = message.mForecastTimeT;
+    mQueryDataFile = message.mQueryDataFile;
+    mGeometryDef = message.mGeometryDef;
     mIsRead = message.mIsRead;
-    mNetCdfFile = message.mNetCdfFile;
-    mGeometryDef = nullptr;
   }
   catch (...)
   {
@@ -106,61 +90,43 @@ Message::Message(const Message& message)
 
 
 
-Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,uint messageIndex,NetCDF::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,uint messageIndex,QueryData::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
   {
     mGridFile = gridFile;
-    mNetCdfFile = netCdfFile;
+    mQueryDataFile = queryDataFile;
     mMessageIndex = messageIndex;
-    mFilePosition = messageInfo.mFilePosition;
-    mMessageSize = messageInfo.mMessageSize;
-    mFileType = messageInfo.mMessageType;
+    mFileType = T::FileTypeValue::QueryData;
     mColumns = messageInfo.mColumns;
     mRows = messageInfo.mRows;
-    mRowMultiplier = messageInfo.mRowMultiplier;
-    mColumnMultiplier = messageInfo.mColumnMultiplier;
-    mDataType = messageInfo.mDataType;
-    mBaseValue = messageInfo.mBaseValue;
-    mScaleFactor = messageInfo.mScaleFactor;
-    mParameterName = messageInfo.mParameterName;
-    std::string paramName = mParameterName;
-    mVariableName = messageInfo.mParameterName;
-
-    if (!messageInfo.mParameterStandardName.empty())
-    {
-      paramName = messageInfo.mParameterStandardName;
-      setNetCdfParameterName(messageInfo.mParameterStandardName.c_str());
-    }
-    else
-    {
-      setNetCdfParameterName(messageInfo.mParameterName.c_str());
-    }
+    mParameterIndex = messageInfo.mParameterIndex;
+    mLevelIndex = messageInfo.mLevelIndex;
+    mTimeIndex = messageInfo.mTimeIndex;
+    mNewbaseParameterId = messageInfo.mNewbaseId;
 
     mFmiParameterLevelId = messageInfo.mParameterLevelId;
     mParameterLevel = messageInfo.mParameterLevel;
-    mParameterUnits = messageInfo.mParameterUnits;
-    mForecastType = messageInfo.mForecastType;
-    mForecastNumber = messageInfo.mForecastNumber;
+    mForecastType = 1;
+    mForecastNumber = 0;
     mForecastTimeT = messageInfo.mForecastTimeT;
     mForecastTime = utcTimeFromTimeT(mForecastTimeT);
-    mMissingValue = messageInfo.mMissingValue;
-    mProjectionId = messageInfo.mProjectionId;
 
     mGeometryId = messageInfo.mGeometryId;
     mGeometryDef = nullptr;
     if (mGeometryId != 0)
       mGeometryDef = Identification::gridDef.getGrib2DefinitionByGeometryId(mGeometryId);
 
-    mDataStartPtr = (uchar*)gridFile->getMemoryPtr() + mFilePosition;
-    mDataEndPtr = mDataStartPtr + mMessageSize + 1;
-
+    mFmiParameterId = Identification::gridDef.getFmiParameterIdByNewbaseId(mNewbaseParameterId);
+    if (mFmiParameterId == 0)
+    {
+      printf("**** MISSING DIRECT PARAMETER MAPPING: Newbase-Id (%d) => FMI-Id ****\n",mNewbaseParameterId);
+      printf("(We cannot name the parameter with FMI-NAME if the mapping requires conversion)\n");
+    }
 
     Identification::FmiParameterDef fmiDef;
-    std::string longname = paramName + ":" + mParameterUnits;
-    std::string name = paramName;
-    if (Identification::gridDef.getFmiParameterDefByNetCdfName(longname,fmiDef) || Identification::gridDef.getFmiParameterDefByNetCdfName(name,fmiDef))
+    if (mFmiParameterId != 0  &&  Identification::gridDef.getFmiParameterDefById(mFmiParameterId,fmiDef))
     {
       mFmiParameterId = fmiDef.mFmiParameterId;
       mFmiParameterName = stringFactory.create(fmiDef.mParameterName);
@@ -170,7 +136,6 @@ Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,uint messageInd
       Identification::NewbaseParameterDef nbDef;
       if (Identification::gridDef.getNewbaseParameterDefByFmiId(mFmiParameterId,nbDef))
       {
-        mNewbaseParameterId = nbDef.mNewbaseParameterId;
         mNewbaseParameterName = stringFactory.create(nbDef.mParameterName);
       }
 
@@ -186,6 +151,10 @@ Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,uint messageInd
         }
       }
     }
+
+    if (mGeometryDef)
+      mProjectionId = mGeometryDef->getGridProjection();
+
     mIsRead = true;
   }
   catch (...)
@@ -217,15 +186,6 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
   try
   {
     char name[300];
-    if (mNetCdfFile)
-    {
-      sprintf(name, "%sNetCDF.", prefix.c_str());
-      mNetCdfFile->getAttributeList("netcdf",name,attributeList);
-
-      sprintf(name, "%sVariable.", prefix.c_str());
-      mNetCdfFile->getAttributeList(mVariableName.c_str(),name,attributeList);
-    }
-
     if (mGeometryDef)
     {
       sprintf(name, "%sProjection.", prefix.c_str());
@@ -330,7 +290,7 @@ T::FilePosition Message::getFilePosition() const
   FUNCTION_TRACE
   try
   {
-    return mFilePosition;
+    return 0;
   }
   catch (...)
   {
@@ -490,58 +450,6 @@ T::GridProjection Message::getGridProjection() const
 
 
 
-/*! \brief The method returns the type of the grid layout.
-
-        \return   The layout of the grid (expressed as an enum value).
-*/
-/*
-T::GridLayout Message::getGridLayout() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGeometryDef)
-      return mGeometryDef->getGridLayout();
-
-    return 0;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-*/
-
-
-
-
-/*! \brief The method returns the grid definition string (=> Projection name).
-
-        \return   The projection used in the current grid (LatLon, Mercator, etc.)
-*/
-
-/*
-std::string Message::getGridProjectionString() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return T::get_gridProjectionString(mProjectionId);
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-*/
-
-
-
-
 /*! \brief The method returns all grid coordinates as a coordinate vector.
     Notice that if the grid layout is "irregular" (i.e. its row lengths vary) then
     grid width is the same as the length of the longest grid row. I.e. the coordinates
@@ -684,88 +592,6 @@ std::size_t Message::getGridColumnCount() const
 
 
 
-/*! \brief The method returns the number of rows used in the original grid.
-
-       \return   The number of the grid rows.
-*/
-/*
-std::size_t Message::getGridRowCount() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGeometryDef)
-      return mGeometryDef->getGridRowCount();
-
-    return 0;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-*/
-
-
-
-
-/*! \brief The method returns the number of columns used in the given original grid row.
-
-        \param row    The grid row index (= j-position).
-        \return       The number of columns in the given grid row.
-*/
-/*
-std::size_t Message::getGridColumnCount(std::size_t row) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGeometryDef)
-      return mGeometryDef->getGridColumnCount();
-
-    return 0;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-*/
-
-
-
-
-/*! \brief The method returns the maximum number of the columns used in the original grid
-    If the grid is irregular, this method returns the length of the longest row.
-
-         \return   The maximum number of the columns in the grid.
-*/
-/*
-std::size_t Message::getGridColumnCount() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    if (mGeometryDef)
-      return mGeometryDef->getGridColumnCount();
-
-    return 0;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-*/
-
-
-
 
 /*! \brief The method returns the number of original values defined in the original grid.
 
@@ -809,7 +635,7 @@ int Message::getGridOriginalValueIndex(uint grid_i,uint grid_j) const
   FUNCTION_TRACE
   try
   {
-    return grid_j*mColumnMultiplier+grid_i*mRowMultiplier;
+    return 0;
   }
   catch (...)
   {
@@ -1353,7 +1179,6 @@ bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,doubl
       \return        Returns 'false' if the given coordinates are outside of the grid.
 */
 
-
 bool Message::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
 {
   FUNCTION_TRACE
@@ -1500,6 +1325,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
   FUNCTION_TRACE
   try
   {
+    return mQueryDataFile->getGridValue(mParameterIndex,mLevelIndex,mTimeIndex,grid_i,grid_j);
+#if 0
     //printf("  ** getGridValueByOriginalGridPoint %u,%u\n",grid_i,grid_j);
 
     if (grid_i >= mColumns)
@@ -1582,6 +1409,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       }
       break;
     }
+#endif
     return ParamValueMissing;
   }
   catch (...)
@@ -2010,13 +1838,13 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
   try
   {
     stream << "\n" << space(level) << "########## MESSAGE [" << mMessageIndex << "] ##########\n\n";
-    stream << space(level) << "- filePosition           = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
+    //stream << space(level) << "- filePosition           = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
     stream << space(level) << "- fileType               = " << toString(mFileType) << "\n";
-    stream << space(level) << "- messageSize            = " << toString(mMessageSize) << " (" << uint64_toHex(mMessageSize) << ")\n";
+    //stream << space(level) << "- messageSize            = " << toString(mMessageSize) << " (" << uint64_toHex(mMessageSize) << ")\n";
     stream << space(level) << "- columns                = " << toString(mColumns) << "\n";
     stream << space(level) << "- rows                   = " << toString(mRows) << "\n";
-    stream << space(level) << "- dataType               = " << toString(mDataType) << "\n";
-    stream << space(level) << "- scaleFactor            = " << std::to_string(mScaleFactor) << "\n";
+    //stream << space(level) << "- dataType               = " << toString(mDataType) << "\n";
+    //stream << space(level) << "- scaleFactor            = " << std::to_string(mScaleFactor) << "\n";
     stream << space(level) << "- gribParameterId        = " << toString(mGribParameterId) << "\n";
     stream << space(level) << "- gribParameterName      = " << getGribParameterName() << "\n";
     //stream << space(level) << "- gribParameterUnits     = " << getGribParameterUnits() << "\n";
@@ -2031,12 +1859,12 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- newbaseParameterName   = " << getNewbaseParameterName() << "\n";
     stream << space(level) << "- netCdfParameterName    = " << getNetCdfParameterName() << "\n";
     stream << space(level) << "- parameterLevel         = " << toString(mParameterLevel) << "\n";
-    stream << space(level) << "- parameterUnits         = " << mParameterUnits << "\n";
+    //stream << space(level) << "- parameterUnits         = " << mParameterUnits << "\n";
     stream << space(level) << "- forecastType           = " << toString(mForecastType) << "\n";
     stream << space(level) << "- forecastNumber         = " << toString(mForecastNumber) << "\n";
     stream << space(level) << "- forecastTime           = " << getForecastTime() << "\n";
     stream << space(level) << "- forecastTimeT          = " << toString(mForecastTimeT) << "\n";
-    stream << space(level) << "- missingValue           = " << toString(mMissingValue) << "\n";
+    //stream << space(level) << "- missingValue           = " << toString(mMissingValue) << "\n";
     //stream << space(level) << "- referenceTime          = " << getReferenceTime() << "\n";
     stream << space(level) << "- gridGeometryId         = " << getGridGeometryId() << "\n";
     stream << space(level) << "- gridHash               = " << getGridHash() << "\n";

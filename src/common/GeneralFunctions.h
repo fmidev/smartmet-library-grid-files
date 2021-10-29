@@ -54,6 +54,7 @@ std::string utcTimeToLocalTime(std::string utcTime,const char *tzone);
 
 std::string utcTimeFromTimeT(time_t t);
 time_t      utcTimeToTimeT(const std::string& utcTime);
+time_t      utcTimeToTimeT(const char *utcTime);
 time_t      utcTimeToTimeT(int year,int month,int day,int hour,int minute,int second);
 std::string localTimeFromTimeT(time_t t,const char *tzone);
 boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
@@ -172,6 +173,7 @@ std::string fileToBase64(const char *filename);
 std::string base64_encode(unsigned char *data,size_t dataSize);
 
 void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& records);
+void readEofLines(const char *filename,uint numberOfLines,std::vector<std::string>& lines);
 
 
 std::uint8_t  read_uint8(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);

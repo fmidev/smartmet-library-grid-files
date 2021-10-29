@@ -87,6 +87,7 @@ class GridDef
     bool                getFmiLevelDef(uint levelId,LevelDef& levelDef);
     T::ParamLevelId     getFmiLevelId(GRIB1::Message& message);
     T::ParamLevelId     getFmiLevelId(GRIB2::Message& message);
+    uint                getFmiLevelIdByNewbaseLevelId(uint newbaseLevelId);
     bool                getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecastTypeDef);
     bool                getFmiParameterDefById(T::FmiParamId fmiParamId,FmiParameterDef& paramDef);
     bool                getFmiParameterDefByGribId(T::GribParamId gribParamId,FmiParameterDef& paramDef);
@@ -200,6 +201,7 @@ class GridDef
     void                    loadNewbaseParameterDefinitions(const char *filename);
     void                    loadFmiLevelId_grib1(const char *filename);
     void                    loadFmiLevelId_grib2(const char *filename);
+    void                    loadFmiLevelId_newbase(const char *filename);
 
     void                    updateCheck();
     time_t                  getModificationTime(string_vec& files);
@@ -258,6 +260,10 @@ class GridDef
     string_vec              mFmi_levelsFromGrib2_files;
     time_t                  mFmi_levelsFromGrib2_modificationTime;
     FmiLevelId_grib_vec     mFmi_levelsFromGrib2_records;
+
+    string_vec              mFmi_levelsFromNewbase_files;
+    time_t                  mFmi_levelsFromNewbase_modificationTime;
+    IdMap                   mNewbaseLevelIdToFmiLevelId;
 
     string_vec              mFmi_geometryDef_files;
     time_t                  mFmi_geometryDef_modificationTime;

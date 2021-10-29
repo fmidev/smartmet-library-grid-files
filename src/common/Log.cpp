@@ -168,6 +168,33 @@ void Log::close()
 
 
 
+void Log::clear()
+{
+  try
+  {
+    AutoThreadLock tLock(&threadLock);
+    if (file != nullptr)
+    {
+      fclose(file);
+      file = nullptr;
+    }
+    open();
+    if (!enabled)
+    {
+      fclose(file);
+      file = nullptr;
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 void Log::disable()
 {
   try

@@ -32,6 +32,9 @@ std::string get_fileTypeString(FileType fileType)
       case FileTypeValue::NetCdf4:
         return "NetCDF-4";
 
+      case FileTypeValue::QueryData:
+        return "QueryData";
+
       case FileTypeValue::Virtual:
         return "Virtual";
     }

@@ -2,6 +2,7 @@
 
 #include "GridFile.h"
 #include "../netcdf/NetCdfFile.h"
+#include "../querydata/QueryDataFile.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
@@ -51,7 +52,9 @@ class PhysicalGridFile : public GridFile
     virtual void          print(std::ostream& stream,uint level,uint optionFlags) const;
 
     virtual void          read(const std::string& filename);
+    virtual void          read(const std::string& filename,uint maxMessages);
     virtual void          read(MemoryReader& memoryReader);
+    virtual void          read(MemoryReader& memoryReader,uint maxMessages);
 
     virtual void          write(const std::string& filename);
     virtual void          write(DataWriter& dataWriter);
@@ -65,7 +68,7 @@ class PhysicalGridFile : public GridFile
     void                  readGrib1Message(MemoryReader& memoryReader, uint messageIndex);
     void                  readGrib2Message(MemoryReader& memoryReader, uint messageIndex);
     uchar                 readMessageType(MemoryReader& memoryReader);
-    MessagePos_vec        searchMessageLocations(MemoryReader& memoryReader);
+    MessagePos_vec        searchMessageLocations(MemoryReader& memoryReader,uint maxMessages);
 
   protected:
 
@@ -77,6 +80,7 @@ class PhysicalGridFile : public GridFile
     char*                 mMemoryPtr;
     bool                  mMessagePositionError;
     NetCDF::NetCdfFile*   mNetCdfFile;
+    QueryData::QueryDataFile*  mQueryDataFile;
 };
 
 

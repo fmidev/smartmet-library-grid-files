@@ -641,28 +641,43 @@ time_t localTimeToTimeT(const std::string& localTime, const char *tzone)
 
 
 
-time_t utcTimeToTimeT(const std::string& utcTime)
+time_t utcTimeToTimeT(const char *utcTime)
 {
   try
   {
-    if (utcTime.length() != 15)
+    if (utcTime == 0 || strlen(utcTime) != 15)
       throw Fmi::Exception(BCP, "Invalid timestamp format (expected YYYYMMDDTHHMMSS)!");
 
-    const char *str = utcTime.c_str();
-
     struct tm tt;
-    tt.tm_year = getInt(str, 0, 4) - 1900; /* Year - 1900 */
-    tt.tm_mon = getInt(str, 4, 2) - 1;     /* Month (0-11) */
-    tt.tm_mday = getInt(str, 6, 2);        /* Day of the month (1-31) */
-    tt.tm_hour = getInt(str, 9, 2);
+    tt.tm_year = getInt(utcTime, 0, 4) - 1900; /* Year - 1900 */
+    tt.tm_mon = getInt(utcTime, 4, 2) - 1;     /* Month (0-11) */
+    tt.tm_mday = getInt(utcTime, 6, 2);        /* Day of the month (1-31) */
+    tt.tm_hour = getInt(utcTime, 9, 2);
     ; /* Hours (0-23) */
-    tt.tm_min = getInt(str, 11, 2);
+    tt.tm_min = getInt(utcTime, 11, 2);
     ; /* Minutes (0-59) */
-    tt.tm_sec = getInt(str, 13, 2);
+    tt.tm_sec = getInt(utcTime, 13, 2);
     ;                 /* Seconds (0-60) */
     tt.tm_isdst = -1; /* Daylight saving time */
 
     return mktime_tz(&tt, "");
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP, "Operation failed!", nullptr);
+    exception.addParameter("utcTime",utcTime);
+    throw exception;
+  }
+}
+
+
+
+
+time_t utcTimeToTimeT(const std::string& utcTime)
+{
+  try
+  {
+    return utcTimeToTimeT(utcTime.c_str());
   }
   catch (...)
   {
@@ -2825,6 +2840,64 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
       }
     }
     fclose(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void readEofLines(const char *filename,uint numberOfLines,std::vector<std::string>& lines)
+{
+  try
+  {
+    std::size_t fSize = getFileSize(filename);
+    if (fSize <= 0)
+      return;
+
+    FILE *file = fopen(filename,"re");
+    if (file == nullptr)
+    {
+      Fmi::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    std::vector<std::string> tmpLines;
+
+    std::size_t s = numberOfLines * 100;
+
+    std::size_t startPos = 0;
+
+    if (s > fSize)
+      startPos = fSize - s;
+
+    char st[10000];
+    fseek(file,startPos,SEEK_SET);
+
+    while (!feof(file))
+    {
+      if (fgets(st,10000,file) != nullptr)
+      {
+        char *p = strstr(st,"\n");
+        if (p)
+          *p ='\0';
+
+        tmpLines.push_back(std::string(st));
+      }
+    }
+    fclose(file);
+
+    for (auto it = tmpLines.rbegin(); it != tmpLines.rend(); it++)
+    {
+      lines.push_back(*it);
+      if (lines.size() == numberOfLines)
+        return;
+    }
   }
   catch (...)
   {

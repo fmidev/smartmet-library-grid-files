@@ -263,8 +263,8 @@ CLDICE-KGKG;CloudIce;;;
 # REFLTY-N;0;;;
 
 # Maximum wind speed
-# MAXWS-MS => UNKNOWN
-# MAXWS-MS;0;;;
+# MAXWS-MS => MaximumWind
+# MAXWS-MS;MaximumWind;;;
 
 # Minimum wind speed
 # MINWS-MS => UNKNOWN
@@ -525,14 +525,16 @@ FLSEN-JM2;SensibleHeatFlux;;;
 # Maximum Temperature in Celsius
 # TMAX-C[122] => MaximumTemperature[5]
 TMAX-C;MaximumTemperature;;;
+TMAX-C;MaximumTemperature2m;;;
 
 # Minimum Temperature in Celsius
 # TMIN-C[123] => MinimumTemperature[6]
 TMIN-C;MinimumTemperature;;;
+TMIN-C;MinimumTemperature2m;;;
 
 # Ground Temperature in Celcius
-# TG-C => UNKNOWN
-# TG-C;0;;;
+# TG-C => GroundTemperature
+TG-C;GroundTemperature;;;
 
 # Temperature Anomaly in Celsius
 # TANM-C => UNKNOWN
@@ -674,6 +676,7 @@ Z-M2S2;GeomHeight;MUL{$,0.010200};DIV{$,0.010200};
 # TPW-K[159] => PseudoAdiabaticPotentialTemperature[9]
 TPW-K;PseudoAdiabaticPotentialTemperature;SUM{$,-273.15};SUM{$,273.15};
 
+
 # Dew point Temperature in 10ths of C
 # TD-C10 => UNKNOWN
 # TD-C10;0;;;
@@ -711,12 +714,8 @@ CLDSYM-N;CloudSymbol;;;
 FF-MS;WindSpeedMS;;;
 
 # Wind speed in m/s
-# FF-MS[166] => SoundingWindSpeed1500m[4774]
-FF-MS;SoundingWindSpeed1500m;;;
-
-# Wind speed in m/s
-# FF-MS[166] => NEWBASE-PARAMETER[47740]
-FF-MS;47740;;;
+# FF-MS[166] => TotalWindMS[4774]
+FF-MS;TotalWindMS;;;
 
 # Wind Direction in Degrees
 # DD-D[169] => WindDirection[20]
@@ -942,11 +941,11 @@ TMAX-K;MaximumTemperature;SUM{$,-273.15};SUM{$,273.15};
 # TMAX-K[214] => MaximumTemperature2m[360]
 TMAX-K;MaximumTemperature2m;SUM{$,-273.15};SUM{$,273.15};
 
-# Maximum Temperature in Kelvins
+# Minimum Temperature in Kelvins
 # TMIN-K[215] => MinimumTemperature[6]
 TMIN-K;MinimumTemperature;SUM{$,-273.15};SUM{$,273.15};
 
-# Maximum Temperature in Kelvins
+# Minimum Temperature in Kelvins
 # TMIN-K[215] => MinimumTemperature2m[361]
 TMIN-K;MinimumTemperature2m;SUM{$,-273.15};SUM{$,273.15};
 
@@ -2639,20 +2638,20 @@ TMAX18-C;MaximumTemperature18;;;
 # HSUN-N;0;;;
 
 # Hourly global radiation in kJ m-2
-# HRADG-KJM2 => UNKNOWN
-# HRADG-KJM2;0;;;
+# HRADG-KJM2 => HourlyGlobalRadiation
+HRADG-KJM2;HourlyGlobalRadiation;;;
 
 # Hourly diffuse radiation in kJ m-2
-# HRADD-KJM2 => UNKNOWN
-# HRADD-KJM2;0;;;
+# HRADD-KJM2 => HourlyDiffuseRadiation
+HRADD-KJM2;HourlyDiffuseRadiation;;;
 
 # Hourly reflected radiation in kJ m-2
-# HRADR-KJM2 => UNKNOWN
-# HRADR-KJM2;0;;;
+# HRADR-KJM2 => HourlyReflectedRadiation
+HRADR-KJM2;HourlyReflectedRadiation;;;
 
 # Hourly net radiation in kJ m-2
-# HRADN-KJM2 => UNKNOWN
-# HRADN-KJM2;0;;;
+# HRADN-KJM2 => HourlyNetRadiation
+HRADN-KJM2;HourlyNetRadiation;;;
 
 # Monthly mean precipitation for period 1931-60
 # RR3160-KGM2 => UNKNOWN
@@ -2991,56 +2990,56 @@ GR-KGM2;PrecipitationGraupel;;;
 # SD6190-CM;0;;;
 
 # Hourly mean pressure
-# HP-HPA => UNKNOWN
-# HP-HPA;0;;;
+# HP-HPA => HourlyPressure
+HP-HPA;HourlyPressure;;;
 
 # Hourly mean temperature
-# HT-C => UNKNOWN
-# HT-C;0;;;
+# HT-C => HourlyTemperature
+HT-C;HourlyTemperature;;;
 
 # Hourly minimum temperature
-# HTMIN-C => UNKNOWN
-# HTMIN-C;0;;;
+# HTMIN-C => HourlyMinimumTemperature
+HTMIN-C;HourlyMinimumTemperature;;;
 
 # Hourly maximum temperature
-# HTMAX-C => UNKNOWN
-# HTMAX-C;0;;;
+# HTMAX-C => HourlyMaximumTemperature
+HTMAX-C;HourlyMaximumTemperature;;;
 
 # Hourly mean relative humidity
-# HRH-PRCNT => UNKNOWN
-# HRH-PRCNT;0;;;
+# HRH-PRCNT => HourlyRelativeHumidity
+HRH-PRCNT;HourlyRelativeHumidity;;;
 
 # Hourly mean wind speed
-# HFF-MS => UNKNOWN
-# HFF-MS;0;;;
+# HFF-MS => HourlyWindSpeed
+HFF-MS;HourlyWindSpeed;;;
 
 # Hourly minimum wind speed
-# HFFMIN-MS => UNKNOWN
-# HFFMIN-MS;0;;;
+# HFFMIN-MS => HourlyMinimumWindSpeed
+HFFMIN-MS;HourlyMinimumWindSpeed;;;
 
 # Hourly maximum wind speed
-# HFFMAX-MS => UNKNOWN
-# HFFMAX-MS;0;;;
+# HFFMAX-MS => HourlyMaximumWindSpeed
+HFFMAX-MS;HourlyMaximumWindSpeed;;;
 
 # Hourly maximum wind gust
-# HFFG-MS => UNKNOWN
-# HFFG-MS;0;;;
+# HFFG-MS => HourlyMaximumGust
+HFFG-MS;HourlyMaximumGust;;;
 
 # Hourly mean wind direction
-# HDD-D => UNKNOWN
-# HDD-D;0;;;
+# HDD-D => HourlyWindDirection
+HDD-D;HourlyWindDirection;;;
 
 # Hourly maximum precipitation rate
-# HRRR-KGM2 => UNKNOWN
-# HRRR-KGM2;0;;;
+# HRRR-KGM2 => HourlyMaxRainIntensity
+# HRRR-KGM2;HourlyMaxRainIntensity;;;
 
 # Weather code of Hourly maximum precipitation rate
 # HWWRRR-N => UNKNOWN
 # HWWRRR-N;0;;;
 
 # Hourly mean sea temperature
-# HTSEA-C => UNKNOWN
-# HTSEA-C;0;;;
+# HTSEA-C => HourlyWaterTemperature
+# HTSEA-C;HourlyWaterTemperature;;;
 
 # The duration of the rain during 1 hour
 # HRRDUR-MIN => UNKNOWN
@@ -3212,7 +3211,8 @@ ANOM+8-T-K;ProbabilityOfTempLimit4;;;
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-1[681] => ProbabilityOfPrecLimit1[571]
-PROB-RR-1;ProbabilityOfPrecLimit1;MUL{$,100.000000};DIV{$,100.000000};
+#PROB-RR-1;ProbabilityOfPrecLimit1;MUL{$,100.000000};DIV{$,100.000000};
+PROB-RR-1;ProbabilityOfPrecLimit1;;;
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-1[681] => ProbabilityOfPr6Limit1[1061]
@@ -3224,7 +3224,8 @@ PROB-RR-1;ProbabilityOfPr6Limit1;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-2[682] => ProbabilityOfPrecLimit2[572]
-PROB-RR-2;ProbabilityOfPrecLimit2;MUL{$,100.000000};DIV{$,100.000000};
+#PROB-RR-2;ProbabilityOfPrecLimit2;MUL{$,100.000000};DIV{$,100.000000};
+PROB-RR-2;ProbabilityOfPrecLimit2;;;
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-2[682] => ProbabilityOfPr6Limit2[1062]
@@ -3236,7 +3237,8 @@ PROB-RR-2;ProbabilityOfPr6Limit2;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-3[683] => ProbabilityOfPrecLimit3[573]
-PROB-RR-3;ProbabilityOfPrecLimit3;MUL{$,100.000000};DIV{$,100.000000};
+#PROB-RR-3;ProbabilityOfPrecLimit3;MUL{$,100.000000};DIV{$,100.000000};
+PROB-RR-3;ProbabilityOfPrecLimit3;;;
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-3[683] => ProbabilityOfPr6Limit3[1063]
@@ -3248,11 +3250,8 @@ PROB-RR-3;ProbabilityOfPr6Limit3;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-4[684] => ProbabilityOfPrecLimit4[574]
+#PROB-RR-4;ProbabilityOfPrecLimit4;MUL{$,100.000000};DIV{$,100.000000};
 PROB-RR-4;ProbabilityOfPrecLimit4;;;
-
-# Probability of reaching some precipitation threshold value
-# PROB-RR-4[684] => ProbabilityOfPrecLimit4[574]
-PROB-RR-4;ProbabilityOfPrecLimit4;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-4[684] => ProbabilityOfPr6Limit4[1064]
@@ -3328,11 +3327,13 @@ PRECFORM3-N;PrecipitationForm2;;;
 
 # Clear Air Turbulence forecasting index
 # TI-S2[699] => ClearAirTurbulence[1164]
-TI-S2;ClearAirTurbulence;MUL{$,10000000.000000};DIV{$,10000000.000000};
+#TI-S2;ClearAirTurbulence;MUL{$,10000000.000000};DIV{$,10000000.000000};
+TI-S2;ClearAirTurbulence;;;
 
 # Clear Air Turbulence forecasting index 2
 # TI2-S2[700] => ClearAirTurbulence2[1209]
-TI2-S2;ClearAirTurbulence2;MUL{$,10000000.000000};DIV{$,10000000.000000};
+#TI2-S2;ClearAirTurbulence2;MUL{$,10000000.000000};DIV{$,10000000.000000};
+TI2-S2;ClearAirTurbulence2;;;
 
 # Probability of thunderstorms
 # POT-PRCNT[701] => ProbabilityThunderstorm[260]
@@ -3472,7 +3473,7 @@ SNOWMR-KGKG;SnowMixingRatio;;;
 
 # Height of cloud layer in feet, second parameter
 # CL-2-FT => UNKNOWN
-# CL-2-FT;0;;;
+CL-2-FT;CloudBase2;;;
 
 # Relative humidity, 0 to 1
 # RH-0TO1[769] => Humidity[13]
@@ -5752,7 +5753,8 @@ PROB-FROST-1;FrostProbability;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of severe frost
 # PROB-FROST-2[1359] => SevereFrostProbability[373]
-PROB-FROST-2;SevereFrostProbability;MUL{$,100.000000};DIV{$,100.000000};
+#PROB-FROST-2;SevereFrostProbability;MUL{$,100.000000};DIV{$,100.000000};
+PROB-FROST-2;SevereFrostProbability;;;
 
 # Probability of reaching POT of 1
 # PROB-POT-1[1360] => NEWBASE-PARAMETER[1447]
