@@ -63,7 +63,6 @@ class Message : public GRID::Message
     bool                getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j,double& lat,double& lon) const;
     bool                getGridLatLonCoordinatesByGridPosition(double grid_i,double grid_j,double& lat,double& lon) const;
     bool                getGridLatLonCoordinatesByOriginalCoordinates(double x,double y,double& lat,double& lon) const;
-    //T::GridLayout       getGridLayout() const;
     bool                getGridMetricArea(T::Coordinate& topLeft,T::Coordinate& topRight,T::Coordinate& bottomLeft,T::Coordinate& bottomRight);
     bool                getGridMetricCellSize(double& width,double& height) const;
     bool                getGridMetricSize(double& width,double& height) const;
@@ -82,7 +81,6 @@ class Message : public GRID::Message
     void                getGridProjectionAttributes(const std::string& prefix,T::AttributeList& attributeList) const;
     void                getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
     T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const;
-    //T::ParamValue       getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const;
     void                getGridValueVector(T::ParamValue_vec& values) const;
     T::TimeString       getReferenceTime() const;
     T::SpatialRef*      getSpatialReference() const;

@@ -388,6 +388,50 @@ bool MemoryReader::peek_string(const char *_str)
 
 
 
+bool MemoryReader::read_string(uchar _endChar,char *_str,uint _maxLen)
+{
+  try
+  {
+    if (_str == nullptr)
+      throw Fmi::Exception(BCP,"The '_str' parameter points to nullptr!");
+
+    uchar *s = (uchar*)_str;
+    uchar *r = readPtr;
+    uchar *e = readPtr + _maxLen;
+    if (e > endPtr)
+      e = endPtr;
+
+    while (r < e)
+    {
+      if (*r == _endChar)
+      {
+        *s = '\0';
+        while (s > (uchar*)_str  &&  *s <= ' ')
+        {
+          *s = '\0';
+          s--;
+        }
+
+        readPtr = r+1;
+        return true;
+      }
+      *s = *r;
+      s++;
+      r++;
+    }
+    *_str = '\0';
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 int MemoryReader::search_string(const char *_str)
 {
   try

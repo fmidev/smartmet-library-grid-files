@@ -34,6 +34,7 @@ class MemoryReader
     bool                peek_string(const char *_str);
     int                 search_string(const char *_str);
 
+    bool                read_string(uchar _endChar,char *_str,uint _maxLen);
     void                read_data(unsigned char *_data,ulonglong _size);
     void                read_null(ulonglong _size);
 

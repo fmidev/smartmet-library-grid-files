@@ -6,11 +6,12 @@
 # FIELDS:
 # 1) FmiParameterId
 # 2) FmiParameterName
-# 3) FmiParameterDescription
-# 4) AreaInterpolationMethod
-# 5) TimeInterpolationMethod
-# 6) LevelInterpolationMethod
-# 7) DefaultPrecision
+# 3) FmiParameterUnits
+# 4) FmiParameterDescription
+# 5) AreaInterpolationMethod
+# 6) TimeInterpolationMethod
+# 7) LevelInterpolationMethod
+# 8) DefaultPrecision
 #
 #################################################################################
 

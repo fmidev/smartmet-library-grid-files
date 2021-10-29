@@ -88,6 +88,7 @@ GridDef::GridDef()
     mFmi_parametersFromNewbase_modificationTime = 0;
     mFmi_levelsFromGrib1_modificationTime = 0;
     mFmi_levelsFromGrib2_modificationTime = 0;
+    mFmi_levelsFromNewbase_modificationTime = 0;
     mFmi_geometryDef_modificationTime = 0;
     mNetCdf_parameterDef_modificationTime = 0;
     mNewbase_parameterDef_modificationTime = 0;
@@ -150,6 +151,7 @@ void GridDef::init(const char* configFile)
       "smartmet.library.grid-files.fmi.parametersFromNewbase[]",
       "smartmet.library.grid-files.fmi.levelsFromGrib1[]",
       "smartmet.library.grid-files.fmi.levelsFromGrib2[]",
+//    "smartmet.library.grid-files.fmi.levelsFromNewbase[]",
       "smartmet.library.grid-files.netcdf.parameterDef[]",
       "smartmet.library.grid-files.newbase.parameterDef[]",
        nullptr
@@ -186,6 +188,7 @@ void GridDef::init(const char* configFile)
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromNewbase",mFmi_parametersFromNewbase_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelsFromGrib1",mFmi_levelsFromGrib1_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelsFromGrib2",mFmi_levelsFromGrib2_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelsFromNewbase",mFmi_levelsFromNewbase_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.netcdf.parameterDef",mNetCdf_parameterDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.newbase.parameterDef",mNewbase_parameterDef_files);
 
@@ -438,6 +441,17 @@ void GridDef::updateFmi()
         loadFmiLevelId_grib2(it->c_str());
       }
       mFmi_levelsFromGrib2_modificationTime = tt;
+    }
+
+    tt = getModificationTime(mFmi_levelsFromNewbase_files);
+    if (tt != mFmi_levelsFromNewbase_modificationTime)
+    {
+      mNewbaseLevelIdToFmiLevelId.clear();
+      for (auto it = mFmi_levelsFromNewbase_files.begin(); it != mFmi_levelsFromNewbase_files.end(); ++it)
+      {
+        loadFmiLevelId_newbase(it->c_str());
+      }
+      mFmi_levelsFromNewbase_modificationTime = tt;
     }
 
     tt = getModificationTime(mFmi_geometryDef_files);
@@ -1560,8 +1574,11 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
             rec.mReverseConversionFunction = field[3];
 
           mFmi_parametersFromNewbase_records.insert(std::pair<uint,FmiParameterId_newbase>(rec.mFmiParameterId,rec));
-          mNewbaseIdToFmiId.insert(std::pair<uint,uint>(rec.mNewbaseParameterId,rec.mFmiParameterId));
-          mFmiIdToNewbaseId.insert(std::pair<uint,uint>(rec.mFmiParameterId,rec.mNewbaseParameterId));
+          if (rec.mConversionFunction.empty())
+            mNewbaseIdToFmiId.insert(std::pair<uint,uint>(rec.mNewbaseParameterId,rec.mFmiParameterId));
+
+          if (rec.mReverseConversionFunction.empty())
+            mFmiIdToNewbaseId.insert(std::pair<uint,uint>(rec.mFmiParameterId,rec.mNewbaseParameterId));
         }
       }
     }
@@ -1907,6 +1924,97 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
       }
     }
     fclose(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::loadFmiLevelId_newbase(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *file = fopen(filename,"re");
+    if (file == nullptr)
+    {
+      Fmi::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c >= 2)
+        {
+          uint fmiLevelId = 0;
+          uint newbaseLevelId = 0;
+
+          if (field[0][0] != '\0')
+            fmiLevelId = toUInt32(field[0]);
+
+          if (field[1][0] != '\0')
+            newbaseLevelId = toUInt32(field[1]);
+
+          if (newbaseLevelId != 0 || fmiLevelId != 0)
+            mNewbaseLevelIdToFmiLevelId.insert(std::pair<uint,uint>(newbaseLevelId,fmiLevelId));
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+uint GridDef::getFmiLevelIdByNewbaseLevelId(uint newbaseLevelId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    auto f = mNewbaseLevelIdToFmiLevelId.find(newbaseLevelId);
+    if (f != mNewbaseLevelIdToFmiLevelId.end())
+      return f->second;
+
+    return 0;
   }
   catch (...)
   {
@@ -4060,6 +4168,9 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setEarthSemiMajor(earthSemiMajor);
           def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
+          //printf("%s\n",str);
+          //std::string s = def2->getGridGeometryString();
+          //printf("GEOM [%s]\n",s.c_str());
 
           return def2;
         }

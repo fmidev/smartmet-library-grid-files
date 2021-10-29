@@ -246,6 +246,7 @@
 316;RadiationSW
 317;RadiationGlobal
 318;RadiationReflected
+319;RadiationDownLWClearSky
 321;LatentHeatFlux
 322;SensibleHeatFlux
 323;BoundaryLayerDissipation

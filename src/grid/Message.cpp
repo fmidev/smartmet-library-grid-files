@@ -2296,22 +2296,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j,uint modi
 
 
 
-/*! \brief The method returns the grid value in the given original grid point.
-
-        \param grid_i   The grid i-position.
-        \param grid_j   The grid j-position.
-        \return         The parameter value of the given grid point.
-*/
-/*
-T::ParamValue Message::getGridValueByOriginalGridPoint(uint grid_i,uint grid_j) const
-{
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
-}
-*/
-
-
-
-
 /*! \brief The method returns the minimum and maximum value used in the current grid.
     This functionality might help to visualize the grid data.
 

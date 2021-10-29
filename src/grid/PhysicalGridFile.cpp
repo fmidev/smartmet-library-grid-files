@@ -9,6 +9,7 @@
 #include "../fmig1/Message.h"
 #include "../netcdf/Message.h"
 #include "../netcdf/NetCdfFile.h"
+#include "../querydata/Message.h"
 #include <macgyver/StringConversion.h>
 
 
@@ -34,6 +35,7 @@ PhysicalGridFile::PhysicalGridFile()
     mFileSize = 0;
     mMessagePositionError = false;
     mNetCdfFile = nullptr;
+    mQueryDataFile = nullptr;
   }
   catch (...)
   {
@@ -58,6 +60,7 @@ PhysicalGridFile::PhysicalGridFile(const PhysicalGridFile& other)
     mMemoryPtr = nullptr;
     mMessagePositionError = false;
     mNetCdfFile = nullptr;
+    mQueryDataFile = nullptr;
   }
   catch (...)
   {
@@ -81,6 +84,9 @@ PhysicalGridFile::~PhysicalGridFile()
 
     if (mNetCdfFile)
       delete mNetCdfFile;
+
+    if (mQueryDataFile)
+      delete mQueryDataFile;
   }
   catch (...)
   {
@@ -213,12 +219,44 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
         uint idx = 0;
         for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
         {
-          //std::string tm = utcTimeFromTimeT(it->mForecastTimeT);
-          //printf(" %u %s %d %s %lu\n",idx,tm.c_str(),it->mParameterLevel,it->mParameterName.c_str(),it->mFilePosition);
-
           NetCDF::Message *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
           mMessages.insert(std::pair<uint,Message*>(idx,message));
           idx++;
+        }
+      }
+      auto msg = mMessages.find(messageIndex);
+      if (msg != mMessages.end())
+        return msg->second;
+
+      return nullptr;
+    }
+
+    if (messageInfo.mMessageType == T::FileTypeValue::QueryData)
+    {
+      auto startAddr = mMemoryPtr;
+      auto endAddr = startAddr + fsize;
+
+      MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
+
+      if (mMessages.size() == 0)
+      {
+        memoryReader.setReadPosition(0);
+        mQueryDataFile = new QueryData::QueryDataFile(mFileName.c_str());
+        QueryData::MessageInfoVec messageInfoList;
+        mQueryDataFile->read(messageInfoList);
+
+        uint idx = 0;
+        for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
+        {
+          QueryData::Message *message = new QueryData::Message(this,mQueryDataFile,idx,*it);
+          mMessages.insert(std::pair<uint,Message*>(idx,message));
+          idx++;
+        }
+
+        // QueryData file has its own mapping functionality. We do not need double mapping.
+        if (mMappedFile  &&  mIsMemoryMapped)
+        {
+          mMappedFile->close();
         }
       }
       auto msg = mMessages.find(messageIndex);
@@ -355,6 +393,26 @@ void PhysicalGridFile::read(const std::string& filename)
   FUNCTION_TRACE
   try
   {
+    uint maxMessages = 100000000;
+    read(filename,maxMessages);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Read failed!",nullptr);
+    exception.addParameter("Filename ",filename);
+    throw exception;
+  }
+}
+
+
+
+
+
+void PhysicalGridFile::read(const std::string& filename,uint maxMessages)
+{
+  FUNCTION_TRACE
+  try
+  {
     if (mIsRead)
       return;  // Already read
 
@@ -395,7 +453,7 @@ void PhysicalGridFile::read(const std::string& filename)
     auto endAddr = mMemoryPtr + mFileSize;
 
     MemoryReader memoryReader(reinterpret_cast<unsigned char*>(mMemoryPtr),reinterpret_cast<unsigned char*>(endAddr));
-    read(memoryReader);
+    read(memoryReader,maxMessages);
   }
   catch (...)
   {
@@ -419,10 +477,30 @@ void PhysicalGridFile::read(MemoryReader& memoryReader)
   FUNCTION_TRACE
   try
   {
+    uint maxMessages = 1000000000;
+    read(memoryReader,maxMessages);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Filename",mFileName);
+    throw exception;
+  }
+}
+
+
+
+
+
+void PhysicalGridFile::read(MemoryReader& memoryReader,uint maxMessages)
+{
+  FUNCTION_TRACE
+  try
+  {
     mIsMemoryMapped = true;
 
     memoryReader.setReadPosition(0);
-    auto gribs = searchMessageLocations(memoryReader);
+    auto gribs = searchMessageLocations(memoryReader,maxMessages);
 
     auto startAddr = memoryReader.getStartPtr();
     auto endAddr = memoryReader.getEndPtr();
@@ -466,16 +544,42 @@ void PhysicalGridFile::read(MemoryReader& memoryReader)
             uint idx = 0;
             for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
             {
-              //std::string tm = utcTimeFromTimeT(it->mForecastTimeT);
-              //printf(" %u %s %d %s %lu\n",idx,tm.c_str(),it->mParameterLevel,it->mParameterName.c_str(),it->mFilePosition);
-
               NetCDF::Message *message = new NetCDF::Message(this,mNetCdfFile,idx,*it);
               mMessages.insert(std::pair<uint,Message*>(idx,message));
               idx++;
+              if (mMessages.size() >= maxMessages)
+                return;
             }
           }
         }
-          //readNetCDFMessage(memoryReader,i);
+        break;
+
+        case T::FileTypeValue::QueryData:
+        {
+          if (mMessages.size() == 0)
+          {
+            memoryReader.setReadPosition(0);
+            mQueryDataFile = new QueryData::QueryDataFile(mFileName.c_str());
+            QueryData::MessageInfoVec messageInfoList;
+            mQueryDataFile->read(messageInfoList);
+            uint idx = 0;
+            for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
+            {
+              QueryData::Message *message = new QueryData::Message(this,mQueryDataFile,idx,*it);
+              mMessages.insert(std::pair<uint,Message*>(idx,message));
+              idx++;
+              if (mMessages.size() >= maxMessages)
+                return;
+            }
+
+            // QueryData file has its own mapping functionality. We do not need double mapping.
+            if (mMappedFile  &&  mIsMemoryMapped)
+            {
+              mMappedFile->close();
+            }
+
+          }
+        }
         break;
       }
     }
@@ -697,7 +801,7 @@ void PhysicalGridFile::readGrib2Message(MemoryReader& memoryReader, uint message
         \return              A vector of data pointers pointing to the found messages.
 */
 
-MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryReader)
+MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryReader,uint maxMessages)
 {
   FUNCTION_TRACE
   try
@@ -708,7 +812,6 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
     // thus making sure all reads inside the loop succeed.
 
     auto fileStartPtr = memoryReader.getReadPtr();
-
 
     if (memoryReader.peek_string("FMIG"))
     {
@@ -725,6 +828,13 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
     if (memoryReader.peek_string("CDF"))
     {
       gribs.emplace_back(std::pair<uchar,ulonglong>(T::FileTypeValue::NetCdf4,0));
+      return gribs;
+    }
+
+    const uchar qd[] = {0x40,0x24,0xB0,0xA3,0x51,0};
+    if (memoryReader.peek_string((const char*)qd))
+    {
+      gribs.emplace_back(std::pair<uchar,ulonglong>(T::FileTypeValue::QueryData,0));
       return gribs;
     }
 
@@ -791,6 +901,8 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
       {
         memoryReader.read_null(totalLength-16);
         gribs.emplace_back(std::pair<uchar,ulonglong>(edition,(ulonglong)(startPtr-fileStartPtr)));
+        if (gribs.size() >= maxMessages)
+          return gribs;
       }
       else
       {
@@ -989,6 +1101,13 @@ uchar PhysicalGridFile::readMessageType(MemoryReader& memoryReader)
 
       if (d[3] == 1 || d[3] == 2)
         return T::FileTypeValue::NetCdf4;
+    }
+
+    if (d[0] == 0x40 &&  d[1] == 0x24  &&  d[2] == 0xB0  &&  d[3] == 0xA3  &&  d[4] == 0x51)
+    {
+      // This is a querydata file.
+
+      return T::FileTypeValue::QueryData;
     }
 
     return T::FileTypeValue::Unknown;

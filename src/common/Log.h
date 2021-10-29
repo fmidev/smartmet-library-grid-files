@@ -21,6 +21,7 @@ class Log
     virtual void        init(bool _enabled,const char *_filename,uint _maxSize,uint _truncateSize);
     virtual void        open();
     virtual void        openForAppend();
+    virtual void        clear();
     virtual void        close();
     virtual void        disable();
     virtual void        enable();

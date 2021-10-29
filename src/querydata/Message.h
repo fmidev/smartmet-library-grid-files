@@ -7,38 +7,27 @@
 
 namespace SmartMet
 {
-namespace NetCDF
+namespace QueryData
 {
 
 struct MessageInfo
 {
-  std::uint64_t      mFilePosition;
-  uint               mMessageSize;
-  T::FileType        mMessageType;
   uint               mColumns;
   uint               mRows;
-  uint               mRowMultiplier;
-  uint               mColumnMultiplier;
-  uint               mLevels;
-  uchar              mDataType;
-  double             mBaseValue;
-  double             mScaleFactor;
-  std::string        mParameterName;
-  std::string        mParameterStandardName;
-  T::ParamLevelId    mParameterLevelId;
-  T::ParamLevel      mParameterLevel;
-  std::string        mParameterUnits;
-  T::ForecastType    mForecastType;
-  T::ForecastNumber  mForecastNumber;
+  unsigned long      mParameterIndex;
+  unsigned long      mLevelIndex;
+  unsigned long      mTimeIndex;
+  uint               mNewbaseId;
+  int                mParameterLevelId;
+  int                mParameterLevel;
   time_t             mForecastTimeT;
-  T::ParamValue      mMissingValue;
-  T::GridProjection  mProjectionId;
   int                mGeometryId;
 };
 
+
 typedef std::vector<MessageInfo> MessageInfoVec;
 
-class NetCdfFile;
+class QueryDataFile;
 
 
 class Message : public GRID::Message
@@ -47,7 +36,7 @@ class Message : public GRID::Message
 
                         Message();
                         Message(const Message& message);
-                        Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,uint messageIndex,NetCDF::MessageInfo& messageInfo);
+                        Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,uint messageIndex,QueryData::MessageInfo& messageInfo);
     virtual             ~Message();
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
@@ -106,6 +95,7 @@ class Message : public GRID::Message
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
 
+    void                setGridSize(uint columns,uint rows);
     void                setGridGeometryId(T::GeometryId geometryId);
     void                setGridValues(T::ParamValue_vec& values);
 
@@ -120,28 +110,22 @@ class Message : public GRID::Message
 
   protected:
 
-    std::uint64_t       mFilePosition;
+    GRID::GridFile*     mGridFile;
     uint                mColumns;
     uint                mRows;
-    uint                mRowMultiplier;
-    uint                mColumnMultiplier;
-    double              mBaseValue;
-    double              mScaleFactor;
-    std::string         mParameterName;
-    std::string         mParameterUnits;
-    std::string         mVariableName;
+    unsigned long       mParameterIndex;
+    unsigned long       mLevelIndex;
+    unsigned long       mTimeIndex;
+    int                 mParameterLevelId;
+    int                 mParameterLevel;
+    int                 mGeometryId;
     T::ForecastType     mForecastType;
     T::ForecastNumber   mForecastNumber;
     std::string         mForecastTime;
     time_t              mForecastTimeT;
-    T::ParamValue       mMissingValue;
-    T::GridProjection   mProjectionId;
-    GRID::GridFile*     mGridFile;
-    uchar*              mDataStartPtr;
-    uchar*              mDataEndPtr;
-    NetCdfFile*         mNetCdfFile;
+    QueryDataFile*      mQueryDataFile;
     GRIB2::GridDef_ptr  mGeometryDef;
-    uchar               mDataType;
+    T::GridProjection   mProjectionId;
     bool                mIsRead;
 };
 
