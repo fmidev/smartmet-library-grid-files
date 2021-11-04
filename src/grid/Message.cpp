@@ -61,9 +61,6 @@ Message::Message()
     mGribParameterId = 0;
     mParameterLevel = 0;
     mDefaultInterpolationMethod = T::AreaInterpolationMethod::Nearest;
-    mLastCacheAccess = time(0);
-    mCacheHitCounter = 0;
-    mPointCacheEnabled = false;
     mFileType = 0;
     mVirtualFileId = 0;
     mRowCount = 0;
@@ -109,9 +106,6 @@ Message::Message(const Message& message)
     mNewbaseParameterName = message.mNewbaseParameterName;
     mVirtualFileId = message.mVirtualFileId;
     mDefaultInterpolationMethod = message.mDefaultInterpolationMethod;
-    mLastCacheAccess = time(0);
-    mCacheHitCounter = 0;
-    mPointCacheEnabled = message.mPointCacheEnabled;
     mFileType = message.mFileType;
     mRowCount = message.mRowCount;
     mColumnCount = message.mColumnCount;
@@ -5698,127 +5692,6 @@ T::ParamValue Message::getGridValueByGridPoint_linearInterpolation(double grid_i
     auto val_q22 = getGridValueByGridPoint(x2,y2,modificationOperation,modificationParameters);
 
     return linearInterpolation(x,y,x1,y1,x2,y2,val_q11,val_q21,val_q22,val_q12);
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method enabled or disables the point cache in the current message object.
-
-        \param enabled   The 'true' value enables the point cache and the 'false' value disables it.
-*/
-
-void Message::setPointCacheEnabled(bool enabled)
-{
-  //FUNCTION_TRACE
-  try
-  {
-    mPointCacheEnabled = enabled;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method add a value into the point cache if the cache is enabled.
-
-        \param index   The index of the value (in the grid value vector).
-        \param value   The value that is added into the cache.
-*/
-
-void Message::addCachedValue(uint index,T::ParamValue value) const
-{
-  //FUNCTION_TRACE
-  try
-  {
-    if (!mPointCacheEnabled)
-      return;
-
-    AutoWriteLock lock(&mCacheModificationLock);
-    mPointCache.insert(std::pair<uint,T::ParamValue>(index,value));
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method returns the cached value.
-
-        \param index   The index of the value (in the grid value vector).
-        \param value   The cached value is returned in this parameter.
-        \return        The method returns 'true' if the cached value is found.
-*/
-
-bool Message::getCachedValue(uint index,T::ParamValue& value) const
-{
-  //FUNCTION_TRACE
-  try
-  {
-    if (!mPointCacheEnabled)
-      return false;
-
-    AutoReadLock lock(&mCacheModificationLock);
-    auto it = mPointCache.find(index);
-    if (it != mPointCache.end())
-    {
-      mCacheHitCounter++;
-      value = it->second;
-      return true;
-    }
-    return false;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method clears all cached values if there are not enough read hits in the given time period.
-
-        \param hitsRequired   The number of read hits required.
-        \param timePeriod     The time period.
-*/
-
-void Message::clearCachedValues(uint hitsRequired,uint timePeriod) const
-{
-  //FUNCTION_TRACE
-  try
-  {
-    if (!mPointCacheEnabled)
-      return;
-
-    AutoWriteLock lock(&mCacheModificationLock);
-
-    if ((mLastCacheAccess + timePeriod) < time(0))
-    {
-      if (mCacheHitCounter < hitsRequired)
-      {
-        mPointCache.clear();
-      }
-
-      mLastCacheAccess = time(0);
-      mCacheHitCounter = 0;
-    }
   }
   catch (...)
   {

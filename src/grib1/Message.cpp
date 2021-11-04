@@ -44,7 +44,6 @@ Message::Message()
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
-    mPointCacheEnabled = false;
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
     mForecastTimeT = 0;
@@ -76,7 +75,6 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
-    mPointCacheEnabled = mGridFilePtr->getPointCacheEnabled();
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
     mForecastTimeT = 0;
@@ -138,7 +136,6 @@ Message::Message(const Message& other)
 
     mCacheKey = 0;
     mOrigCacheKey = 0;
-    mPointCacheEnabled = false;
     mValueDecodingFailed = other.mValueDecodingFailed;
   }
   catch (...)
@@ -2448,84 +2445,23 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       return ParamValueMissing;
 
     T::ParamValue value = 0;
-#ifdef POINT_CACHE
-    // Trying to find a value from the point cache.
-    if (mPointCacheEnabled && getCachedValue(idx,value))
-      return value;
-#endif
-
     if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
     {
       if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
       {
         if (mDataSection->getValueByIndex(idx,value))
         {
-#ifdef POINT_CACHE
-          if (mPointCacheEnabled)
-            addCachedValue(idx,value);
-#endif
           return value;
         }
       }
     }
-/*
-    else
-    {
-      if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
-      {
-        long long hash = mBitmapSection->getHash();
-        int index = 0;
-        if (GRID::indexCache.getIndex(hash,idx,index))
-        {
-          if (index < 0)
-            return ParamValueMissing;
 
-          if (mDataSection->getValueByIndex(index,value))
-          {
-#ifdef POINT_CACHE
-            if (mPointCacheEnabled)
-              addCachedValue(idx,value);
-#endif
-            return value;
-          }
-          else
-          {
-            return ParamValueMissing;
-          }
-        }
-        else
-        {
-          T::IndexVector indexVector;
-          mBitmapSection->getIndexVector((mRowCount*mColumnCount),indexVector);
-          GRID::indexCache.addIndexVector(hash,indexVector);
-          if (indexVector[idx] < 0)
-            return ParamValueMissing;
-
-          if (mDataSection->getValueByIndex(indexVector[idx],value))
-          {
-#ifdef POINT_CACHE
-            if (mPointCacheEnabled)
-              addCachedValue(idx,value);
-#endif
-            return value;
-          }
-          else
-          {
-            return ParamValueMissing;
-          }
-        }
-      }
-    }
-*/
     if (mCacheKey > 0)
     {
       // Trying to get a memory cached value.
 
       if (GRID::valueCache.getValue(mCacheKey,idx,value))
       {
-#ifdef POINT_CACHE
-        addCachedValue(idx,value);
-#endif
         return value;
       }
     }
@@ -2535,10 +2471,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     if ((std::size_t)idx >= values.size())
       return ParamValueMissing;
 
-#ifdef POINT_CACHE
-    if (mPointCacheEnabled)
-      addCachedValue(idx,values[idx]);
-#endif
     return values[idx];
   }
   catch (...)

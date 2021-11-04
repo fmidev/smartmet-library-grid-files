@@ -40,7 +40,6 @@ class GridFile
     virtual void          addMessage(Message *message);
     virtual void          addUser(uint fileId);
 
-    virtual void          clearCachedValues(uint hitsRequired,uint timePeriod) const;
     virtual GridFile*     createGridFile();
 
     virtual void          deleteUsers();
@@ -59,7 +58,6 @@ class GridFile
     virtual time_t        getModificationTime() const;
     virtual std::size_t   getNumberOfMessages();
 
-    virtual bool          getPointCacheEnabled();
     virtual uint          getProducerId() const;
     virtual long long     getSize();
     virtual uint          getSourceId() const;
@@ -88,7 +86,6 @@ class GridFile
     virtual void          setFileName(const std::string& fileName);
     virtual void          setGenerationId(uint generationId);
     virtual void          setGroupFlags(uint groupFlags);
-    virtual void          setPointCacheEnabled(bool enabled);
     virtual void          setProducerId(uint producerId);
     virtual void          setSourceId(uint sourceId);
 
@@ -106,7 +103,6 @@ class GridFile
     uint                  mGroupFlags;
     MessageInfo_map       mMessagePositions;
     Message_ptr_map       mMessages;
-    bool                  mPointCacheEnabled;
     uint                  mProducerId;
     bool                  mRequestCounterEnabled;
     uint                  mSourceId;

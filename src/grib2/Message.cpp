@@ -46,7 +46,6 @@ Message::Message()
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
-    mPointCacheEnabled = false;
     mIsRead = false;
     mMessageSize = 0;
     mDataLocked = false;
@@ -80,7 +79,6 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = false;
-    mPointCacheEnabled = mGridFilePtr->getPointCacheEnabled();
     mIsRead = false;
     mDataLocked = false;
     mFileType = T::FileTypeValue::Grib2;
@@ -167,7 +165,6 @@ Message::Message(const Message& other)
 
     mCacheKey = 0;
     mOrigCacheKey = 0;
-    mPointCacheEnabled = false;
     mValueDecodingFailed = other.mValueDecodingFailed;
     mDataLocked = false;
   }
@@ -3324,22 +3321,12 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     // Trying to find the value from the point cache.
 
     T::ParamValue value = 0;
-
-#ifdef POINT_CACHE
-    if (mPointCacheEnabled  && getCachedValue(idx,value))
-      return value;
-#endif
-
     if (mBitmapSection == nullptr  ||  mBitmapSection->getBitmapDataSizeInBytes() == 0)
     {
       if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
       {
         if (mRepresentationSection->getValueByIndex(idx,value))
         {
-#ifdef POINT_CACHE
-          if (mPointCacheEnabled)
-            addCachedValue(idx,value);
-#endif
           return value;
         }
       }
@@ -3350,10 +3337,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
       if (GRID::valueCache.getValue(mCacheKey,idx,value))
       {
-#ifdef POINT_CACHE
-        if (mPointCacheEnabled)
-          addCachedValue(idx,value);
-#endif
         return value;
       }
     }
@@ -3363,10 +3346,6 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     if (idx >= values.size())
       return ParamValueMissing;
 
-#ifdef POINT_CACHE
-    if (mPointCacheEnabled)
-      addCachedValue(idx,values[idx]);
-#endif
     return values[idx];
   }
   catch (...)
