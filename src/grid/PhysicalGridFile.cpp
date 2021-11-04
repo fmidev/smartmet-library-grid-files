@@ -612,7 +612,6 @@ void PhysicalGridFile::readGrib1Message(MemoryReader& memoryReader, uint message
     GRIB1::Message *message = new GRIB1::Message();
     message->setGridFilePtr(this);
     message->setMessageIndex(messageIndex);
-    message->setPointCacheEnabled(mPointCacheEnabled);
     mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
     message->read(memoryReader);
   }
@@ -642,7 +641,6 @@ void PhysicalGridFile::readFmig1Message(MemoryReader& memoryReader, uint message
     FMIG1::Message *message = new FMIG1::Message();
     message->setGridFilePtr(this);
     message->setMessageIndex(messageIndex);
-    message->setPointCacheEnabled(mPointCacheEnabled);
     mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
     message->read(memoryReader);
   }
@@ -677,7 +675,6 @@ void PhysicalGridFile::readNetCDFMessage(MemoryReader& memoryReader, uint messag
     NetCDF::Message *message = new NetCDF::Message();
     message->setGridFilePtr(this);
     message->setMessageIndex(messageIndex);
-    message->setPointCacheEnabled(mPointCacheEnabled);
     mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
     message->read(memoryReader);
     */
@@ -742,7 +739,6 @@ void PhysicalGridFile::readGrib2Message(MemoryReader& memoryReader, uint message
       GRIB2::Message *message = new GRIB2::Message();
       message->setGridFilePtr(this);
       message->setMessageIndex(messageIndex);
-      message->setPointCacheEnabled(mPointCacheEnabled);
       message->read(memoryReader);
 
       // Complete the sections from the previous message

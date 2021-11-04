@@ -46,7 +46,6 @@ struct MessageInfo
 };
 
 typedef std::map<uint,MessageInfo> MessageInfo_map;
-typedef std::unordered_map<uint,T::ParamValue> PointCache;
 
 class GridFile;
 
@@ -272,12 +271,6 @@ class Message
     virtual bool                setProperty(const char *propertyName,long long value);
     virtual bool                setProperty(const char *propertyName,double value);
 
-    virtual void                setPointCacheEnabled(bool enabled);
-
-    virtual void                addCachedValue(uint index,T::ParamValue value) const;
-    virtual bool                getCachedValue(uint index,T::ParamValue& value) const;
-    virtual void                clearCachedValues(uint hitsRequired,uint timePeriod) const;
-
     virtual void                lockData();
     virtual void                unlockData();
 
@@ -342,15 +335,9 @@ class Message
     uint                        mVirtualFileId;
     uint                        mRowCount;
     uint                        mColumnCount;
-    mutable uint                mCacheHitCounter;
-
-    mutable time_t              mLastCacheAccess;
     GridFile*                   mGridFilePtr;
     mutable ThreadLock          mThreadLock;
-    mutable ModificationLock    mCacheModificationLock;
-    mutable PointCache          mPointCache;
     short                       mDefaultInterpolationMethod;
-    bool                        mPointCacheEnabled;
 };
 
 

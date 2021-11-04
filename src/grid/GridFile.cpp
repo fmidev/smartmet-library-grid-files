@@ -31,7 +31,6 @@ GridFile::GridFile()
     mCheckTime = 0;
     mSourceId = 0;
     mDeletionTime = 0;
-    mPointCacheEnabled = false;
   }
   catch (...)
   {
@@ -60,7 +59,6 @@ GridFile::GridFile(const GridFile& other)
     mSourceId = other.mSourceId;
     mCheckTime = other.mCheckTime;
     mUserList = other.mUserList;
-    mPointCacheEnabled = other.mPointCacheEnabled;
 
   }
   catch (...)
@@ -85,7 +83,6 @@ GridFile::GridFile(GridFile *gridFile)
     mGenerationId = 0;
     mCheckTime = 0;
     mSourceId = 0;
-    mPointCacheEnabled = false;
   }
   catch (...)
   {
@@ -991,66 +988,6 @@ std::string GridFile::getFileTypeString() const
   try
   {
     return std::string("Unknown");
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void GridFile::clearCachedValues(uint hitsRequired,uint timePeriod) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
-    {
-      if (msg->second->isRead())
-        msg->second->clearCachedValues(hitsRequired,timePeriod);
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-bool GridFile::getPointCacheEnabled()
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mPointCacheEnabled;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-void GridFile::setPointCacheEnabled(bool enabled)
-{
-  FUNCTION_TRACE
-  try
-  {
-    mPointCacheEnabled = enabled;
-
-    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
-    {
-      msg->second->setPointCacheEnabled(mPointCacheEnabled);
-    }
   }
   catch (...)
   {
