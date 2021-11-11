@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.10.29
+Version: 21.11.11
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -12,7 +12,7 @@ Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 21.10.13
-BuildRequires: smartmet-library-spine-devel >= 21.10.18
+BuildRequires: smartmet-library-spine-devel >= 21.11.10
 BuildRequires: smartmet-library-macgyver >= 21.10.4
 BuildRequires: smartmet-library-tron-devel >= 21.6.21
 BuildRequires: boost169-devel
@@ -37,7 +37,7 @@ Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 21.10.13
 Requires: smartmet-library-macgyver >= 21.10.4
-Requires: smartmet-library-spine >= 21.10.18
+Requires: smartmet-library-spine >= 21.11.10
 Requires: smartmet-library-tron >= 21.6.21
 
 %description
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Nov 11 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.11.11-1.fmi
+- Repackaged since ValueFormatter ABI changed
 * Fri Oct 29 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.10.29-1.fmi
 - Added support for querydata
 * Tue Oct 19 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.10.19-1.fmi
