@@ -102,12 +102,15 @@ clean:
 	rm -rf obj
 	rm -rf $(LIBFILE)
 
+clean-install: 
+	rm -rf $(includedir)/$(INCDIR)/*
+	rm -f $(libdir)/$(LIBFILE)
+
 format:
 	clang-format -i -style=file $(SUBNAME)/*.h $(SUBNAME)/*.cpp test/*.cpp
 
 install:
 	@mkdir -p $(includedir)/$(INCDIR)
-	@rm -rf $(includedir)/$(INCDIR)/*
 	@mkdir -p $(includedir)/$(INCDIR)/common
 	@mkdir -p $(includedir)/$(INCDIR)/fmig1
 	@mkdir -p $(includedir)/$(INCDIR)/grid

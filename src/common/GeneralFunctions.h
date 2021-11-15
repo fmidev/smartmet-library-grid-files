@@ -73,6 +73,9 @@ long long getFileSize(const char *filename);
 std::string getAbsoluteFilePath(const std::string& filename);
 std::string getFileDir(const std::string& filename);
 int getInt(const char *str, uint startIdx, uint len);
+long long getCsvInt64Field(const char *csv,uint fieldIndex);
+int getCsvCompare(const char *csv,uint fieldIndex,const char *value);
+int getCsvCaseCompare(const char *csv,uint fieldIndex,const char *value);
 
 std::string space(uint size);
 

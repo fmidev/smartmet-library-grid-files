@@ -3624,4 +3624,166 @@ int getClosestIndex(FloatVec& values,float value)
 }
 
 
+
+
+
+long long getCsvInt64Field(const char *csv,uint fieldIndex)
+{
+  try
+  {
+    const char *p = csv;
+    uint cnt = 0;
+    long long val = 0;
+    bool neg = false;
+    while (true)
+    {
+
+      if (*p == ';' || *p == '\n' || *p == '\0')
+      {
+        if (cnt == fieldIndex)
+        {
+          if (neg)
+            return -val;
+          else
+            return val;
+        }
+
+        if (*p == '\0')
+          return 0;
+
+        cnt++;
+      }
+      else
+      {
+        if (cnt == fieldIndex)
+        {
+          if (*p == '-')
+          {
+            neg = true;
+          }
+          else
+          {
+            val = val * 10;
+            val = val + (*p - '0');
+          }
+        }
+      }
+
+      if (*p == '\0')
+        return 0;
+
+      p++;
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+int getCsvCompare(const char *csv,uint fieldIndex,const char *value)
+{
+  try
+  {
+    const char *p = csv;
+    uint cnt = 0;
+    uint len = 0;
+    char buf[1000];
+    char *b = buf;
+    while (true)
+    {
+
+      if (*p == ';' || *p == '\n' || *p == '\0')
+      {
+        if (cnt == fieldIndex)
+        {
+          *b = '\0';
+          return strcmp(buf,value);
+        }
+
+        if (*p == '\0')
+          return -2;
+
+        cnt++;
+      }
+      else
+      {
+        if (cnt == fieldIndex  && len < 999)
+        {
+          *b = *p;
+          b++;
+          len++;
+        }
+      }
+
+
+      if (*p == '\0')
+        return -2;
+
+      p++;
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+int getCsvCaseCompare(const char *csv,uint fieldIndex,const char *value)
+{
+  try
+  {
+    const char *p = csv;
+    uint cnt = 0;
+    uint len = 0;
+    char buf[1000];
+    char *b = buf;
+    while (true)
+    {
+
+      if (*p == ';' || *p == '\n' || *p == '\0')
+      {
+        if (cnt == fieldIndex)
+        {
+          *b = '\0';
+          return strcasecmp(buf,value);
+        }
+
+        if (*p == '\0')
+          return -2;
+
+        cnt++;
+      }
+      else
+      {
+        if (cnt == fieldIndex  && len < 999)
+        {
+          *b = *p;
+          b++;
+          len++;
+        }
+      }
+
+
+      if (*p == '\0')
+        return -2;
+
+      p++;
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
 }  // Namespace SmartMet
