@@ -17,7 +17,7 @@ BuildRequires: smartmet-library-macgyver >= 21.10.4
 BuildRequires: smartmet-library-tron-devel >= 21.6.21
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
-BuildRequires: gdal32-devel
+BuildRequires: gdal33-devel
 BuildRequires: geos39-devel
 BuildRequires: make
 BuildRequires: libaec-devel
@@ -32,7 +32,7 @@ Requires: boost169-iostreams
 Requires: boost169-regex
 Requires: boost169-system
 Requires: boost169-thread
-Requires: gdal32-libs
+Requires: gdal33-libs
 Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 21.11.15
