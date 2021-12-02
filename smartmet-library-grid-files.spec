@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.11.15
+Version: 21.12.2
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,9 +11,9 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.11.15
-BuildRequires: smartmet-library-spine-devel >= 21.11.10
-BuildRequires: smartmet-library-macgyver >= 21.10.4
+BuildRequires: smartmet-library-newbase-devel >= 21.12.1
+BuildRequires: smartmet-library-spine-devel >= 21.12.2
+BuildRequires: smartmet-library-macgyver >= 21.12.1
 BuildRequires: smartmet-library-tron-devel >= 21.6.21
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -35,9 +35,9 @@ Requires: boost169-thread
 Requires: gdal33-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.11.15
-Requires: smartmet-library-macgyver >= 21.10.4
-Requires: smartmet-library-spine >= 21.11.10
+Requires: smartmet-library-newbase >= 21.12.1
+Requires: smartmet-library-macgyver >= 21.12.1
+Requires: smartmet-library-spine >= 21.12.2
 Requires: smartmet-library-tron >= 21.6.21
 
 %description
