@@ -2358,6 +2358,46 @@ void splitString(const std::string& str, char separator, std::set<double> &partL
 
 
 
+void lineSplit(const char *str,std::vector<std::string> &lines)
+{
+  try
+  {
+    char buf[10000];
+    uint c = 0;
+    char *p = const_cast<char *>(str);
+
+    bool ind = false;
+    while (*p != '\0' && c < 10000)
+    {
+      if (*p == '"') ind = !ind;
+
+      if (*p == '\n' && !ind)
+      {
+        buf[c] = '\0';
+        lines.emplace_back(std::string(buf));
+        c = 0;
+      }
+      else
+      {
+        buf[c] = *p;
+        c++;
+      }
+      p++;
+    }
+    if (c > 0)
+    {
+      buf[c] = '\0';
+      lines.emplace_back(std::string(buf));
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
 std::string getAbsoluteFilePath(const std::string& filename)
 {
   try
@@ -2820,6 +2860,7 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
           if ((*p == ';'  || *p == '\n') && !ind)
           {
             *p = '\0';
+            //printf("[%s]",field[c-1]);
             p++;
             field[c] = p;
             c++;
@@ -2830,8 +2871,10 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
           }
         }
 
+        //printf("\n");
         if (c > 1)
         {
+          c--;
           for (uint t=0; t<c; t++)
             fields.emplace_back(std::string(field[t]));
 
@@ -3784,6 +3827,35 @@ int getCsvCaseCompare(const char *csv,uint fieldIndex,const char *value)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
+
+time_t timeToValue(uint year,uint month,uint day,uint hour,uint min,uint sec,uint usec)
+{
+  time_t val = year;
+  val = (val << 4) + month;
+  val = (val << 5) + day;
+  val = (val << 5) + hour;
+  val = (val << 7) + min;
+  val = (val << 7) + sec;
+  val = (val << 20) + usec;
+
+  return val;
+}
+
+
+void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& min,uint& sec,uint& usec)
+{
+  year  = (value & 0x7FFF000000000000) >> 48;
+  month = (value & 0x0000F00000000000) >> 44;
+  day   = (value & 0x00000F8000000000) >> 39;
+  hour  = (value & 0x0000007C00000000) >> 34;
+  min   = (value & 0x00000003F8000000) >> 27;
+  sec   = (value & 0x0000000007F00000) >> 20;
+  usec  =  value & 0x00000000000FFFFF;
+}
+
+
+
 
 
 }  // Namespace SmartMet

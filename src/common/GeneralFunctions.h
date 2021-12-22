@@ -66,6 +66,9 @@ std::string addSeconds(const std::string& timeStr,int seconds);
 time_t mktime_tz(struct tm *tm, const char *tzone);
 struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone);
 
+time_t timeToValue(uint year,uint month,uint day,uint hour,uint min,uint sec,uint usec);
+void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& min,uint& sec,uint& usec);
+
 
 time_t toTimeT(boost::posix_time::ptime tim);
 time_t getFileModificationTime(const char *filename);
@@ -159,6 +162,8 @@ void splitString(const char *str,char separator,std::set<double>& partList);
 void splitString(const std::string& str,char separator,std::set<double>& partList);
 void splitString(const char *str,char separator,std::set<int>& partList);
 void splitString(const std::string& str,char separator,std::set<int>& partList);
+
+void lineSplit(const char *str,std::vector<std::string> &lines);
 
 std::string toString(std::list<std::string>& parts,char separator);
 std::string toString(std::set<int>& parts,char separator);
