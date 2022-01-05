@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 21.12.7
+Version: 22.1.5
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,9 +11,9 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.12.1
-BuildRequires: smartmet-library-spine-devel >= 21.12.2
-BuildRequires: smartmet-library-macgyver >= 21.12.1
+BuildRequires: smartmet-library-newbase-devel >= 21.12.7
+BuildRequires: smartmet-library-spine-devel >= 22.1.5
+BuildRequires: smartmet-library-macgyver >= 22.1.4
 BuildRequires: smartmet-library-tron-devel >= 21.6.21
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -35,9 +35,9 @@ Requires: boost169-thread
 Requires: gdal33-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.12.1
-Requires: smartmet-library-macgyver >= 21.12.1
-Requires: smartmet-library-spine >= 21.12.2
+Requires: smartmet-library-newbase >= 21.12.7
+Requires: smartmet-library-macgyver >= 22.1.4
+Requires: smartmet-library-spine >= 22.1.5
 Requires: smartmet-library-tron >= 21.6.21
 
 %description
@@ -77,9 +77,10 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Jan  5 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.1.5-1.fmi
+- Added small utility functions
 * Tue Dec  7 2021 Andris Pavēnis <andris.pavenis@fmi.fi> 21.12.7-1.fmi
 - Update to postgresql 13 and gdal 3.3
-
 * Mon Nov 15 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.11.15-1.fmi
 - New CSV utility functions
 * Thu Nov 11 2021 Mika Heiskanen <mika.heiskanen@fmi.fi> - 21.11.11-1.fmi
