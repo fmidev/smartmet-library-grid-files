@@ -82,7 +82,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mIsRead = false;
     mDataLocked = false;
     mFileType = T::FileTypeValue::Grib2;
-    mForecastTimeT = 0;
+    mForecastTimeT = messageInfo.mForecastTime;
   }
   catch (...)
   {
@@ -1303,7 +1303,7 @@ void Message::read(MemoryReader& memoryReader)
     if (mMessageSize == 0)
       mMessageSize = (memoryReader.getGlobalReadPosition() - mFilePosition);
 
-    if (mIdentificationSection != nullptr &&  mProductSection != nullptr)
+    if (mIdentificationSection != nullptr &&  mProductSection != nullptr  &&  mForecastTimeT == 0)
     {
       std::string fTime = mProductSection->getForecastTime(mIdentificationSection->getReferenceTime());
       mForecastTimeT = utcTimeToTimeT(fTime);

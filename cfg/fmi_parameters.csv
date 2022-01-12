@@ -617,7 +617,7 @@
 655;MIXHGT-M;m;Mixed layer height in m;1;1;1;;
 656;SDC-M;m;Convective snowfall in m;1;1;1;;
 657;SDL-M;m;Large scale snowfall in m;1;1;1;;
-658;EVAP-KGM2;hPa s-1;Accumulated  in mm;1;1;1;;
+658;EVAP-KGM2;hPa s-1;Accumulated evaporation in mm;1;1;1;;
 659;VFLMOM-NM2;N m-2 s;V-component of momentum flux in N m-2;1;1;1;;
 660;UFLMOM-NM2;N m-2 s;U-component of momentum flux in N m-2;1;1;1;;
 661;PRCWAT-KGM2;kg m-2;Precipitable water in mm;1;1;1;;
@@ -1313,3 +1313,5 @@
 1431;RAIL-N;No Unit;Rail traffic condition;2;2;2;;
 1432;RADLWCA-JM2;J m-2;Surface thermal radiation downward clear-sky;1;1;1;;
 1433;RADLWC-WM2;J m-2;Surface thermal radiation downward clear-sky;1;1;1;;
+1434;RAIL-MEAN-N;No Unit;Rail traffic condition probability;2;2;2;;
+1435;POP-0TO1;0to1;Probability of precipitation;1;1;1;;

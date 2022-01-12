@@ -1431,7 +1431,7 @@ CTBT-K;CloudTopBrightnessTemperature;SUM{$,-273.15};SUM{$,273.15};
 
 # Cloud base height
 # CLDBASE-M[276] => CloudBase[500]
-CLDBASE-M;CloudBase;;;
+# CLDBASE-M;CloudBase;;;
 
 # Cloud base height
 # CLDBASE-M[276] => effective_radius_of_stratiform_cloud_graupel_particle[10500]
@@ -3473,7 +3473,7 @@ SNOWMR-KGKG;SnowMixingRatio;;;
 
 # Height of cloud layer in feet, second parameter
 # CL-2-FT => UNKNOWN
-CL-2-FT;CloudBase2;;;
+# CL-2-FT;CloudBase2;;;
 
 # Relative humidity, 0 to 1
 # RH-0TO1[769] => Humidity[13]

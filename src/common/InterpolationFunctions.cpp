@@ -397,12 +397,20 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,int l
           return value2;
         break;
 
-        case T::LevelInterpolationMethod::Max:
-          if (value1 > value2)
-            return value1;
-          else
-            return value2;
-          break;
+      case T::LevelInterpolationMethod::Max:
+        if (value1 > value2)
+          return value1;
+        else
+          return value2;
+        break;
+
+      case T::LevelInterpolationMethod::Previous:
+        return value1;
+        break;
+
+      case T::LevelInterpolationMethod::Next:
+        return value2;
+        break;
 
       case T::LevelInterpolationMethod::Logarithmic:
         return logarithmicInterpolation(newLevel, level1, level2, value1, value2);
@@ -509,6 +517,14 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,in
             T::ParamValue val = logarithmicInterpolation(newLevel, level1, level2, val1, val2);
             values.emplace_back(val);
           }
+          break;
+
+        case T::LevelInterpolationMethod::Previous:
+          values = values1;
+          break;
+
+        case T::LevelInterpolationMethod::Next:
+          values = values2;
           break;
 
         default:
@@ -641,6 +657,14 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int 
           }
           break;
 
+        case T::LevelInterpolationMethod::Previous:
+          valueList = values1;
+          break;
+
+        case T::LevelInterpolationMethod::Next:
+          valueList = values2;
+          break;
+
         default:
         case T::LevelInterpolationMethod::Linear:
           for (uint t = 0; t < len1; t++)
@@ -763,6 +787,12 @@ T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,time_
         {
           return ParamValueMissing;
         }
+
+      case T::TimeInterpolationMethod::Previous:
+        return value1;
+
+      case T::TimeInterpolationMethod::Next:
+        return value2;
 
       default:
         throw Fmi::Exception(BCP,"Unsupported or unknown intepolation method!");
@@ -904,6 +934,14 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,tim
         }
         return;
 
+      case T::TimeInterpolationMethod::Previous:
+        newValues = values1;
+        return;
+
+      case T::TimeInterpolationMethod::Next:
+        newValues = values2;
+        return;
+
       default:
         throw Fmi::Exception(BCP,"Unsupported or unknown intepolation method!");
     }
@@ -956,8 +994,8 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_
       return;
     }
 
-    time_t diff1 = newTime - t1;
-    time_t diff2 = t2 - t1;
+    double diff1 = (double)(newTime - t1);
+    double diff2 = (double)(t2 - t1);
 
     uint len1 = values1.getLength();
     uint len2 = values2.getLength();
@@ -1021,6 +1059,14 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_
           }
           break;
 
+        case T::TimeInterpolationMethod::Previous:
+          valueList = values1;
+          break;
+
+        case T::TimeInterpolationMethod::Next:
+          valueList = values2;
+          break;
+
         default:
         case T::TimeInterpolationMethod::Linear:
           for (uint t = 0; t < len1; t++)
@@ -1037,8 +1083,8 @@ void timeInterpolation(T::GridValueList& values1,T::GridValueList& values2,time_
 
             if (val1.mValue != ParamValueMissing && val2.mValue != ParamValueMissing)
             {
-              T::ParamValue valueDiff = val2.mValue - val1.mValue;
-              T::ParamValue valueStep = valueDiff / diff2;
+              double valueDiff = val2.mValue - val1.mValue;
+              double valueStep = valueDiff / diff2;
               rec.mValue = val1.mValue + (diff1 * valueStep);
             }
             else

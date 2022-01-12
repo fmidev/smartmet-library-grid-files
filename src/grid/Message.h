@@ -40,6 +40,7 @@ struct MessageInfo
   uint               mFmiParameterName;
   T::ParamLevelId    mFmiParameterLevelId;
   T::ParamLevel      mParameterLevel;
+  time_t             mForecastTime;
   T::ForecastType    mForecastType;
   T::ForecastNumber  mForecastNumber;
   T::GeometryId      mGeometryId;
