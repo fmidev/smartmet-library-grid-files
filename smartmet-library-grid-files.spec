@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 22.1.5
+Version: 22.1.13
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -13,7 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 21.12.7
 BuildRequires: smartmet-library-spine-devel >= 22.1.5
-BuildRequires: smartmet-library-macgyver >= 22.1.4
+BuildRequires: smartmet-library-macgyver >= 22.1.10
 BuildRequires: smartmet-library-tron-devel >= 21.6.21
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -36,7 +36,7 @@ Requires: gdal33-libs
 Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 21.12.7
-Requires: smartmet-library-macgyver >= 22.1.4
+Requires: smartmet-library-macgyver >= 22.1.10
 Requires: smartmet-library-spine >= 22.1.5
 Requires: smartmet-library-tron >= 21.6.21
 
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Jan 13 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.1.13-1.fmi
+- Improved time interpolation
 * Wed Jan  5 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.1.5-1.fmi
 - Added small utility functions
 * Tue Dec  7 2021 Andris Pavēnis <andris.pavenis@fmi.fi> 21.12.7-1.fmi
