@@ -1557,7 +1557,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               else
               {
                 std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
+                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
                 std::cout << projectionString << "\n";
               }
             }
@@ -1608,7 +1608,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               else
               {
                 std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
+                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
                 std::cout << projectionString << "\n";
               }
             }
@@ -1632,7 +1632,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               else
               {
                 std::cout << "#### Geometry not found ####\n";
-                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
+                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
                 std::cout << projectionString << "\n";
               }
             }

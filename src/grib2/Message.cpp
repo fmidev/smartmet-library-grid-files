@@ -1636,7 +1636,7 @@ void Message::initParameterInfo()
       else
       {
         std::cout << "\n** GRIB2 Geometry not configured : " << mGridFilePtr->getFileName() << "\n";
-        std::cout << "** Add the following line into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
+        std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
         std::cout << getGridGeometryString() << "\n\n";
           //Fmi::Exception exception(BCP,"Geometry not found");
           //throw exception;

@@ -241,7 +241,7 @@ uint QueryDataFile::getGeometryId()
     }
     else
     {
-      std::cout << "** Add the following geometry into the geometry definition file (=> fill id,name and desciption fields) :\n\n";
+      std::cout << "** Add the following geometry into the geometry definition file (=> fill id,name and description fields) :\n\n";
       std::cout << "MISSING GEOMETRY: " << projectionString << "\n";
       return 0;
     }
