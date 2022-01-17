@@ -47,9 +47,9 @@ StringFactory::~StringFactory()
               delete[] stringTable[t][a];
           }
         }
-        delete stringTable[t];
+        delete [] stringTable[t];
       }
-      delete stringTable;
+      delete [] stringTable;
     }
   }
   catch (...)
