@@ -11,14 +11,14 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.12.7
-BuildRequires: smartmet-library-spine-devel >= 22.1.5
-BuildRequires: smartmet-library-macgyver >= 22.1.10
-BuildRequires: smartmet-library-tron-devel >= 21.6.21
+BuildRequires: smartmet-library-newbase-devel >= 21.1.21
+BuildRequires: smartmet-library-spine-devel >= 21.1.21
+BuildRequires: smartmet-library-macgyver >= 21.1.21
+BuildRequires: smartmet-library-tron-devel >= 21.1.21
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
-BuildRequires: gdal33-devel
-BuildRequires: geos39-devel
+BuildRequires: gdal34-devel
+BuildRequires: geos310-devel
 BuildRequires: make
 BuildRequires: libaec-devel
 BuildRequires: libjpeg-devel
@@ -32,13 +32,13 @@ Requires: boost169-iostreams
 Requires: boost169-regex
 Requires: boost169-system
 Requires: boost169-thread
-Requires: gdal33-libs
+Requires: gdal34-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.12.7
-Requires: smartmet-library-macgyver >= 22.1.10
-Requires: smartmet-library-spine >= 22.1.5
-Requires: smartmet-library-tron >= 21.6.21
+Requires: smartmet-library-newbase >= 21.1.21
+Requires: smartmet-library-macgyver >= 21.1.21
+Requires: smartmet-library-spine >= 21.1.21
+Requires: smartmet-library-tron >= 21.1.21
 
 %description
 FMI Grid File handling library
