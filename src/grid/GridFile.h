@@ -44,6 +44,7 @@ class GridFile
 
     virtual void          deleteUsers();
 
+    virtual time_t        getAccessTime() const;
     virtual time_t        getCheckTime() const;
     virtual time_t        getDeletionTime() const;
     virtual std::string   getDeletionTimeStr() const;
@@ -79,6 +80,7 @@ class GridFile
 
     virtual void          read(const std::string& filename);
 
+    virtual void          setAccessTime(time_t checkTime);
     virtual void          setCheckTime(time_t checkTime);
     virtual void          setDeletionTime(time_t deletionTime);
     virtual void          setDeletionTime(const std::string& deletionTime);
@@ -94,6 +96,7 @@ class GridFile
 
   protected:
 
+    time_t                mAccessTime;
     time_t                mCheckTime;
     time_t                mDeletionTime;      // The file should not be accessed after this time
     uint                  mFileId;

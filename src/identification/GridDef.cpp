@@ -457,12 +457,13 @@ void GridDef::updateFmi()
     tt = getModificationTime(mFmi_geometryDef_files);
     if (tt != mFmi_geometryDef_modificationTime)
     {
+      /*
       for (auto it = mGridDefinitions1.begin(); it != mGridDefinitions1.end(); ++it)
         delete (it->second);
 
       for (auto it = mGridDefinitions2.begin(); it != mGridDefinitions2.end(); ++it)
         delete (it->second);
-
+      */
       mGridDefinitions1.clear();
       mGridDefinitions2.clear();
 
@@ -2173,13 +2174,13 @@ bool GridDef::getGridLatLonAreaByGeometryId(T::GeometryId geometryId,T::Coordina
   try
   {
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
-    if (g2 != nullptr)
+    if (g2)
     {
       return g2->getGridLatLonArea(topLeft,topRight,bottomLeft,bottomRight);
     }
 
     auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
-    if (g1 != nullptr)
+    if (g1)
     {
       return g1->getGridLatLonArea(topLeft,topRight,bottomLeft,bottomRight);
     }
@@ -2202,7 +2203,7 @@ bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double
   try
   {
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
-    if (g2 != nullptr)
+    if (g2)
     {
       g2->getGridCellAverageSize(width,height);
       if (width != 0  &&  height != 0)
@@ -2210,7 +2211,7 @@ bool GridDef::getGridCellAverageSizeByGeometryId(T::GeometryId geometryId,double
     }
 
     auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
-    if (g1 != nullptr)
+    if (g1)
     {
       g1->getGridCellAverageSize(width,height);
       if (width != 0  &&  height != 0)
@@ -2235,11 +2236,11 @@ T::Coordinate_svec GridDef::getGridOriginalCoordinatesByGeometryId(T::GeometryId
   try
   {
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
-    if (g2 != nullptr)
+    if (g2)
       return g2->getGridOriginalCoordinates();
 
     auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
-    if (g1 != nullptr)
+    if (g1)
       return g1->getGridOriginalCoordinates();
 
     T::Coordinate_svec empty(new T::Coordinate_vec());
@@ -2261,13 +2262,13 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  
   try
   {
     auto g2 = GridDef::getGrib2DefinitionByGeometryId(geometryId);
-    if (g2 != nullptr)
+    if (g2)
     {
       return g2->getGridLatLonCoordinates();
     }
 
     auto g1 = GridDef::getGrib1DefinitionByGeometryId(geometryId);
-    if (g1 != nullptr)
+    if (g1)
     {
       return g1->getGridLatLonCoordinates();
     }
@@ -2317,7 +2318,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
     // Checking if the geometry is defined by the geometryId
 
-    GRIB2::GridDef_ptr def = nullptr;
+    GRIB2::GridDef_sptr def;
     if (geometryIdStr != nullptr)
     {
       def = getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
@@ -2330,19 +2331,18 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
     // Checking if the geometry is defigned by the geometry string
 
-    std::shared_ptr<GRIB2::GridDefinition> defPtr;
-    if (geometryStringStr != nullptr)
+    if (!def &&  geometryStringStr != nullptr)
     {
-      def =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!def)
+      auto defPtr = Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
+      if (!defPtr)
         return;
 
-      defPtr.reset(def);
+      def.reset(defPtr);
       latLonCoordinates = def->getGridLatLonCoordinates();
     }
 
 
-    if (def != nullptr)
+    if (def)
     {
       // If we have valid geometry definition then we know the grid width and the height.
 
@@ -2595,7 +2595,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
     // Checking if the geometry is defined by the geometryId
 
-    GRIB2::GridDef_ptr def = nullptr;
+    GRIB2::GridDef_sptr def;
     if (geometryIdStr != nullptr)
     {
       def = getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
@@ -2608,19 +2608,18 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
     // Checking if the geometry is defigned by the geometry string
 
-    std::shared_ptr<GRIB2::GridDefinition> defPtr;
     if (geometryStringStr != nullptr)
     {
-      def =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
-      if (!def)
+      auto defPtr =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
+      if (!defPtr)
         return;
 
-      defPtr.reset(def);
+      def.reset(defPtr);
       latLonCoordinates = def->getGridLatLonCoordinates();
     }
 
 
-    if (def != nullptr)
+    if (def)
     {
       // If we have valid geometry definition then we know the grid width and the height.
 
@@ -2914,7 +2913,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
 
 
-GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
+GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
 {
   FUNCTION_TRACE
   try
@@ -2937,7 +2936,7 @@ GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryId(int geometryId)
 
 
 
-GRIB1::GridDef_ptr GridDef::getGrib1Definition(GRIB1::Message& message)
+GRIB1::GridDef_sptr GridDef::getGrib1Definition(GRIB1::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -2960,7 +2959,7 @@ GRIB1::GridDef_ptr GridDef::getGrib1Definition(GRIB1::Message& message)
 
 
 
-GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryString(const char *geometryStr)
+GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(const char *geometryStr)
 {
   FUNCTION_TRACE
   try
@@ -2981,7 +2980,7 @@ GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryString(const char *geome
 
 
 
-GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryString(std::string& geometryStr)
+GRIB1::GridDef_sptr GridDef::getGrib1DefinitionByGeometryString(std::string& geometryStr)
 {
   FUNCTION_TRACE
   try
@@ -3002,7 +3001,7 @@ GRIB1::GridDef_ptr GridDef::getGrib1DefinitionByGeometryString(std::string& geom
 
 
 
-GRIB2::GridDef_ptr GridDef::getGrib2DefinitionByGeometryString(const char *geometryStr)
+GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(const char *geometryStr)
 {
   FUNCTION_TRACE
   try
@@ -3023,7 +3022,7 @@ GRIB2::GridDef_ptr GridDef::getGrib2DefinitionByGeometryString(const char *geome
 
 
 
-GRIB2::GridDef_ptr GridDef::getGrib2DefinitionByGeometryString(std::string& geometryStr)
+GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryString(std::string& geometryStr)
 {
   FUNCTION_TRACE
   try
@@ -3044,7 +3043,7 @@ GRIB2::GridDef_ptr GridDef::getGrib2DefinitionByGeometryString(std::string& geom
 
 
 
-GRIB2::GridDef_ptr GridDef::getGrib2Definition(GRIB2::Message& message)
+GRIB2::GridDef_sptr GridDef::getGrib2Definition(GRIB2::Message& message)
 {
   FUNCTION_TRACE
   try
@@ -3067,7 +3066,7 @@ GRIB2::GridDef_ptr GridDef::getGrib2Definition(GRIB2::Message& message)
 
 
 
-GRIB2::GridDef_ptr GridDef::getGrib2DefinitionByGeometryId(int geometryId)
+GRIB2::GridDef_sptr GridDef::getGrib2DefinitionByGeometryId(int geometryId)
 {
   FUNCTION_TRACE
   try
@@ -3097,7 +3096,7 @@ int GridDef::getGrib1GeometryId(GRIB1::Message& message)
     AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib1Definition(message);
-    if (def == nullptr)
+    if (!def)
       return 0;
 
     return def->getGridGeometryId();
@@ -3121,7 +3120,7 @@ int GridDef::getGrib2GeometryId(GRIB2::Message& message)
     AutoReadLock lock(&mModificationLock);
 
     auto def = getGrib2Definition(message);
-    if (def == nullptr)
+    if (!def)
       return 0;
 
     return def->getGridGeometryId();
@@ -3169,7 +3168,7 @@ bool GridDef::getGridDirectionsByGeometryId(T::GeometryId  geometryId,bool& reve
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    auto def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
     {
       reverseXDirection = def2->reverseXDirection();
@@ -3177,7 +3176,7 @@ bool GridDef::getGridDirectionsByGeometryId(T::GeometryId  geometryId,bool& reve
       return true;
     }
 
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    auto def1 = getGrib1DefinitionByGeometryId(geometryId);
     if (def1)
     {
       reverseXDirection = def1->reverseXDirection();
@@ -3223,14 +3222,14 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geo
       }
     }
 
-    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    auto def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
     {
       def2->getGridPointListByLatLonCoordinates(latlon,*coordinates);
       return coordinates;
     }
 
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    auto def1 = getGrib1DefinitionByGeometryId(geometryId);
     if (def1)
     {
       def1->getGridPointListByLatLonCoordinates(latlon,*coordinates);
@@ -3257,7 +3256,7 @@ bool GridDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    auto def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
     {
       T::Dimensions d = def2->getGridDimensions();
@@ -3269,7 +3268,7 @@ bool GridDef::getGridDimensionsByGeometryId(T::GeometryId  geometryId,uint& cols
       }
     }
 
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    auto def1 = getGrib1DefinitionByGeometryId(geometryId);
     if (def1)
     {
       T::Dimensions d = def1->getGridDimensions();
@@ -3301,11 +3300,11 @@ bool GridDef::getGridPointByGeometryIdAndLatLonCoordinates(T::GeometryId  geomet
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    auto def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
       return def2->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
 
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    auto def1 = getGrib1DefinitionByGeometryId(geometryId);
     if (def1)
       return def1->getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
 
@@ -3329,14 +3328,14 @@ bool GridDef::getGridLatLonCoordinatesByGeometryId(T::GeometryId  geometryId,T::
     updateCheck();
     AutoReadLock lock(&mModificationLock);
 
-    auto *def2 = getGrib2DefinitionByGeometryId(geometryId);
+    auto def2 = getGrib2DefinitionByGeometryId(geometryId);
     if (def2)
     {
       coordinates = def2->getGridLatLonCoordinates();
       return true;
     }
 
-    auto *def1 = getGrib1DefinitionByGeometryId(geometryId);
+    auto def1 = getGrib1DefinitionByGeometryId(geometryId);
     if (def1)
     {
       coordinates = def1->getGridLatLonCoordinates();
@@ -3463,9 +3462,9 @@ void GridDef::loadGeometryDefinitions(const char *filename)
         {
           std::string gstr = def1->getGridGeometryString();
           if (mGridDefinitions1.find(gstr) == mGridDefinitions1.end())
-            mGridDefinitions1.insert(std::pair<std::string,GRIB1::GridDefinition*>(gstr,def1));
+            mGridDefinitions1.insert(std::pair<std::string,GRIB1::GridDefinition_sptr>(gstr,GRIB1::GridDefinition_sptr(def1)));
           else
-            mGridDefinitions1.insert(std::pair<std::string,GRIB1::GridDefinition*>(gstr+Fmi::to_string(cnt),def1));
+            mGridDefinitions1.insert(std::pair<std::string,GRIB1::GridDefinition_sptr>(gstr+Fmi::to_string(cnt),GRIB1::GridDefinition_sptr(def1)));
         }
 
         GRIB2::GridDefinition *def2 = createGrib2GridDefinition(st);
@@ -3473,9 +3472,9 @@ void GridDef::loadGeometryDefinitions(const char *filename)
         {
           std::string gstr = def2->getGridGeometryString();
           if (mGridDefinitions2.find(gstr) == mGridDefinitions2.end())
-            mGridDefinitions2.insert(std::pair<std::string,GRIB2::GridDefinition*>(gstr,def2));
+            mGridDefinitions2.insert(std::pair<std::string,GRIB2::GridDefinition_sptr>(gstr,GRIB2::GridDefinition_sptr(def2)));
           else
-            mGridDefinitions2.insert(std::pair<std::string,GRIB2::GridDefinition*>(gstr+Fmi::to_string(cnt),def2));
+            mGridDefinitions2.insert(std::pair<std::string,GRIB2::GridDefinition_sptr>(gstr+Fmi::to_string(cnt),GRIB2::GridDefinition_sptr(def2)));
         }
       }
     }
@@ -3597,6 +3596,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           def1->setEarthSemiMajor(earthSemiMajor);
           def1->setEarthSemiMinor(earthSemiMinor);
           def1->initSpatialReference();
+          def1->countHash();
 
           return def1;
         }
@@ -3671,6 +3671,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           def1->setEarthSemiMajor(earthSemiMajor);
           def1->setEarthSemiMinor(earthSemiMinor);
           def1->initSpatialReference();
+          def1->countHash();
 
           return def1;
         }
@@ -3745,6 +3746,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           //def1->setEarthSemiMajor(earthSemiMajor);
           //def1->setEarthSemiMinor(earthSemiMinor);
           def1->initSpatialReference();
+          def1->countHash();
 
           return def1;
         }
@@ -3809,6 +3811,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           def1->setEarthSemiMajor(earthSemiMajor);
           def1->setEarthSemiMinor(earthSemiMinor);
           def1->initSpatialReference();
+          def1->countHash();
 
           return def1;
         }
@@ -3873,6 +3876,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           def1->setEarthSemiMajor(earthSemiMajor);
           def1->setEarthSemiMinor(earthSemiMinor);
           def1->initSpatialReference();
+          def1->countHash();
 
           return def1;
         }
@@ -4078,6 +4082,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setEarthSemiMajor(earthSemiMajor);
           def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
+          def2->countHash();
 
           return def2;
         }
@@ -4168,6 +4173,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setEarthSemiMajor(earthSemiMajor);
           def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
+          def2->countHash();
           //printf("%s\n",str);
           //std::string s = def2->getGridGeometryString();
           //printf("GEOM [%s]\n",s.c_str());
@@ -4256,6 +4262,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setEarthSemiMajor(earthSemiMajor);
           def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
+          def2->countHash();
           return def2;
         }
         break;
@@ -4335,6 +4342,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setEarthSemiMajor(earthSemiMajor);
           def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
+          def2->countHash();
 
           return def2;
         }
@@ -4440,6 +4448,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setEarthSemiMajor(earthSemiMajor);
           def2->setEarthSemiMinor(earthSemiMinor);
           def2->initSpatialReference();
+          def2->countHash();
 
           //std::string s = def2->getGridGeometryString();
           //printf("GEOM [%s]\n",s.c_str());

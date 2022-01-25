@@ -1549,7 +1549,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                   T::GridProjectionValue::PolarStereographic,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                   startx,starty,fabs(dx),fabs(dy),sm,straight_vertical_longitude_from_pole,latitude_of_projection_origin);
 
-              GRIB2::GridDef_ptr def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
+              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
               if (def)
               {
                 geometryId = def->getGridGeometryId();
@@ -1600,7 +1600,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                   T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                   startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
 
-              GRIB2::GridDef_ptr def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
+              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
               if (def)
               {
                 geometryId = def->getGridGeometryId();
@@ -1624,7 +1624,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                 T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
                 startx,starty,fabs(dx),fabs(dy),sm);
 
-              GRIB2::GridDef_ptr def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
+              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
               if (def)
               {
                 geometryId = def->getGridGeometryId();

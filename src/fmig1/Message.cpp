@@ -1207,7 +1207,7 @@ bool Message::getGridPointByLatLonCoordinates(double lat,double lon,double& grid
   FUNCTION_TRACE
   try
   {
-    GRIB1::GridDef_ptr  def = Identification::gridDef.getGrib1DefinitionByGeometryId(mGeometryId);
+    auto def = Identification::gridDef.getGrib1DefinitionByGeometryId(mGeometryId);
     if (!def)
       return false;
 

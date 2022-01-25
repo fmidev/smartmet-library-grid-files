@@ -234,7 +234,7 @@ uint QueryDataFile::getGeometryId()
 
   if (projectionString[0] != '\0')
   {
-    GRIB2::GridDef_ptr def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
+    auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
     if (def)
     {
       return def->getGridGeometryId();

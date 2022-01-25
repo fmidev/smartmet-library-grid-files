@@ -135,6 +135,8 @@ typedef std::vector<GridDefinition*> GridDef_pvec;
 typedef std::map<std::string,GridDefinition*> GridDef_map;
 typedef std::map<uint,GridDefinition*> GridDefinition_pmap;
 typedef std::shared_ptr<GridDefinition> GridDefinition_sptr;
+typedef std::shared_ptr<GridDefinition> GridDef_sptr;
+typedef std::map<std::string,GridDef_sptr> GridDef_spmap;
 typedef std::vector<GridDefinition_sptr> GridDefinition_spvec;
 
 

@@ -386,19 +386,30 @@ void GridSection::read(MemoryReader& memoryReader)
 
     try
     {
-      if (mGridDefinition != nullptr)
+      if (mGridDefinition)
       {
-        if (getGridGeometryId() == 0)
+        auto geomId = getGridGeometryId();
+        if (geomId == 0)
         {
           auto gs = getGridGeometryString();
-          auto *def = Identification::gridDef.getGrib1DefinitionByGeometryString(gs);
-          if (def != nullptr)
+          auto def = Identification::gridDef.getGrib1DefinitionByGeometryString(gs);
+          if (def)
           {
             mGridDefinition->setGridGeometryId(def->getGridGeometryId());
             mGridDefinition->setEarthSemiMajor(def->getEarthSemiMajor());
             mGridDefinition->setEarthSemiMinor(def->getEarthSemiMinor());
           }
         }
+        /*
+        else
+        {
+          auto def = Identification::gridDef.getGrib1DefinitionByGeometryId(geomId);
+          if (def)
+          {
+            mGridDefinition = def;
+          }
+        }
+        */
 
         mGridDefinition->initSpatialReference();
       }
