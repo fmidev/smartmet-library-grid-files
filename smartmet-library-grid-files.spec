@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 22.1.21
+Version: 22.1.25
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -11,10 +11,10 @@ URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 21.1.21
-BuildRequires: smartmet-library-spine-devel >= 21.1.21
-BuildRequires: smartmet-library-macgyver >= 21.1.21
-BuildRequires: smartmet-library-tron-devel >= 21.1.21
+BuildRequires: smartmet-library-newbase-devel >= 22.1.21
+BuildRequires: smartmet-library-spine-devel >= 22.1.21
+BuildRequires: smartmet-library-macgyver >= 22.1.21
+BuildRequires: smartmet-library-tron-devel >= 22.1.21
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal34-devel
@@ -35,10 +35,10 @@ Requires: boost169-thread
 Requires: gdal34-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 21.1.21
-Requires: smartmet-library-macgyver >= 21.1.21
-Requires: smartmet-library-spine >= 21.1.21
-Requires: smartmet-library-tron >= 21.1.21
+Requires: smartmet-library-newbase >= 22.1.21
+Requires: smartmet-library-macgyver >= 22.1.21
+Requires: smartmet-library-spine >= 22.1.21
+Requires: smartmet-library-tron >= 22.1.21
 
 %description
 FMI Grid File handling library
@@ -77,6 +77,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Jan 25 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.1.25-1.fmi
+- Increased use of shared_ptr for memory management
+
 * Fri Jan 21 2022 Andris Pavēnis <andris.pavenis@fmi.fi> 22.1.21-1.fmi
 - Repackage due to upgrade of packages from PGDG repo: gdal-3.4, geos-3.10, proj-8.2
 
