@@ -122,7 +122,7 @@ class Message : public GRID::Message
     uchar*              mDataStartPtr;
     uchar*              mDataEndPtr;
 
-    GRIB1::GridDef_ptr  mGeometryDef;
+    GRIB1::GridDef_sptr mGeometryDef;
 };
 
 

@@ -355,19 +355,30 @@ void GridSection::read(MemoryReader& memoryReader)
       // TODO: Read the datapoints
     }
 
-    if (mGridDefinition != nullptr)
+    if (mGridDefinition)
     {
-      if (getGridGeometryId() == 0)
+      auto geomId = getGridGeometryId();
+      if (geomId == 0)
       {
         auto gs = getGridGeometryString();
-        auto *def = Identification::gridDef.getGrib2DefinitionByGeometryString(gs);
-        if (def != nullptr)
+        auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(gs);
+        if (def)
         {
           mGridDefinition->setGridGeometryId(def->getGridGeometryId());
           mGridDefinition->setEarthSemiMajor(def->getEarthSemiMajor());
           mGridDefinition->setEarthSemiMinor(def->getEarthSemiMinor());
         }
       }
+      /*
+      else
+      {
+        auto def = Identification::gridDef.getGrib2DefinitionByGeometryId(geomId);
+        if (def)
+        {
+          mGridDefinition = def;
+        }
+      }
+      */
 
       mGridDefinition->countHash();
       mGridDefinition->initSpatialReference();

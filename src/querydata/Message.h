@@ -124,7 +124,7 @@ class Message : public GRID::Message
     std::string         mForecastTime;
     time_t              mForecastTimeT;
     QueryDataFile*      mQueryDataFile;
-    GRIB2::GridDef_ptr  mGeometryDef;
+    GRIB2::GridDef_sptr mGeometryDef;
     T::GridProjection   mProjectionId;
     bool                mIsRead;
 };

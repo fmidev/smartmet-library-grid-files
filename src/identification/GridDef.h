@@ -64,9 +64,9 @@ class GridDef
     std::string         getGribParameterName(GRIB1::Message& message);
     std::string         getGribParameterName(GRIB2::Message& message);
 
-    GRIB1::GridDef_ptr  getGrib1DefinitionByGeometryId(int geometryId);
-    GRIB1::GridDef_ptr  getGrib1DefinitionByGeometryString(const char *geometryStr);
-    GRIB1::GridDef_ptr  getGrib1DefinitionByGeometryString(std::string& geometryStr);
+    GRIB1::GridDef_sptr getGrib1DefinitionByGeometryId(int geometryId);
+    GRIB1::GridDef_sptr getGrib1DefinitionByGeometryString(const char *geometryStr);
+    GRIB1::GridDef_sptr getGrib1DefinitionByGeometryString(std::string& geometryStr);
     int                 getGrib1GeometryId(GRIB1::Message& message);
     bool                getGrib1LevelDef(uint fmiLevelId,FmiLevelId_grib& def);
     uint                getGrib1ParameterDefCount();
@@ -74,9 +74,9 @@ class GridDef
     bool                getGrib1ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib1ParameterDef& paramDef);
     bool                getGrib1ParameterDefByIndex(uint index,Grib1ParameterDef& paramDef);
 
-    GRIB2::GridDef_ptr  getGrib2DefinitionByGeometryId(int geometryId);
-    GRIB2::GridDef_ptr  getGrib2DefinitionByGeometryString(const char *geometryStr);
-    GRIB2::GridDef_ptr  getGrib2DefinitionByGeometryString(std::string& geometryStr);
+    GRIB2::GridDef_sptr getGrib2DefinitionByGeometryId(int geometryId);
+    GRIB2::GridDef_sptr getGrib2DefinitionByGeometryString(const char *geometryStr);
+    GRIB2::GridDef_sptr getGrib2DefinitionByGeometryString(std::string& geometryStr);
     int                 getGrib2GeometryId(GRIB2::Message& message);
     bool                getGrib2LevelDef(uint fmiLevelId,FmiLevelId_grib& def);
     uint                getGrib2ParameterDefCount();
@@ -158,12 +158,12 @@ class GridDef
     GribParamDef_cptr       getGribParameterDefByName(const std::string& gribParamName);
     FmiParamId_grib_cptr    getGribParameterMappingByFmiId(T::FmiParamId fmiParamId);
 
-    GRIB1::GridDef_ptr      getGrib1Definition(GRIB1::Message& message);
+    GRIB1::GridDef_sptr     getGrib1Definition(GRIB1::Message& message);
     Grib1ParamDef_cptr      getGrib1ParameterDefById(T::GribParamId gribParamId);
     Grib1ParamDef_cptr      getGrib1ParameterDefByFmiId(T::FmiParamId fmiParamId);
     Grib1ParamDef_cptr      getGrib1ParameterDefByIndex(uint index);
 
-    GRIB2::GridDef_ptr      getGrib2Definition(GRIB2::Message& message);
+    GRIB2::GridDef_sptr     getGrib2Definition(GRIB2::Message& message);
     Grib2ParamDef_cptr      getGrib2ParameterDefById(T::GribParamId gribParamId);
     Grib2ParamDef_cptr      getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId);
 
@@ -267,8 +267,8 @@ class GridDef
 
     string_vec              mFmi_geometryDef_files;
     time_t                  mFmi_geometryDef_modificationTime;
-    GRIB1::GridDef_map      mGridDefinitions1;
-    GRIB2::GridDef_map      mGridDefinitions2;
+    GRIB1::GridDef_spmap    mGridDefinitions1;
+    GRIB2::GridDef_spmap    mGridDefinitions2;
 
     string_vec              mNewbase_parameterDef_files;
     time_t                  mNewbase_parameterDef_modificationTime;

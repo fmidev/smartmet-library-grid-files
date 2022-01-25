@@ -140,7 +140,7 @@ class Message : public GRID::Message
     uchar*              mDataStartPtr;
     uchar*              mDataEndPtr;
     NetCdfFile*         mNetCdfFile;
-    GRIB2::GridDef_ptr  mGeometryDef;
+    GRIB2::GridDef_sptr mGeometryDef;
     uchar               mDataType;
     bool                mIsRead;
 };

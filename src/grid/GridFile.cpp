@@ -28,6 +28,7 @@ GridFile::GridFile()
     mGroupFlags = 0;
     mProducerId = 0;
     mGenerationId = 0;
+    mAccessTime = 0;
     mCheckTime = 0;
     mSourceId = 0;
     mDeletionTime = 0;
@@ -57,9 +58,9 @@ GridFile::GridFile(const GridFile& other)
     mProducerId = other.mProducerId;
     mGenerationId = other.mGenerationId;
     mSourceId = other.mSourceId;
+    mAccessTime = other.mAccessTime;
     mCheckTime = other.mCheckTime;
     mUserList = other.mUserList;
-
   }
   catch (...)
   {
@@ -81,6 +82,7 @@ GridFile::GridFile(GridFile *gridFile)
     mGroupFlags = 0;
     mProducerId = 0;
     mGenerationId = 0;
+    mAccessTime = 0;
     mCheckTime = 0;
     mSourceId = 0;
   }
@@ -206,6 +208,28 @@ uint GridFile::getGenerationId() const
   try
   {
     return mGenerationId;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method returns the time when the grid file was last time accessed.
+
+      \return    The last access time of the current grid file.
+*/
+
+time_t GridFile::getAccessTime() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mAccessTime;
   }
   catch (...)
   {
@@ -522,6 +546,28 @@ bool GridFile::isVirtual() const
   try
   {
     return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method sets time when the current grid file was last accessed.
+
+      \param checkTime   The last check time.
+*/
+
+void GridFile::setAccessTime(time_t accessTime)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mAccessTime = accessTime;
   }
   catch (...)
   {
