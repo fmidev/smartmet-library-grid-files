@@ -799,7 +799,7 @@ RRC-KGM2;PrecipitationConv;MUL{$,1000.000000};DIV{$,1000.000000};
 
 # Total Cloud Cover in %
 # N-PRCNT[187] => TotalCloudCover[79]
-N-PRCNT;TotalCloudCover;;;
+# N-PRCNT;TotalCloudCover;;;
 
 # Total Cloud Cover in %
 # N-PRCNT[187] => TotalCloudCover[79]
@@ -3410,6 +3410,7 @@ TMIN12H-K;MinimumTemperature;SUM{$,-273.15};SUM{$,273.15};
 # Probability of precipitation
 # POP-PRCNT[750] => PoP[259]
 POP-PRCNT;PoP;;;
+POP-0TO1;PoP;MUL{$,100.000000};DIV{$,100.000000};
 
 # Precipitation type categorical rain, 0 or 1
 # CRAIN-0OR1 => UNKNOWN
@@ -5753,8 +5754,8 @@ PROB-FROST-1;FrostProbability;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of severe frost
 # PROB-FROST-2[1359] => SevereFrostProbability[373]
-#PROB-FROST-2;SevereFrostProbability;MUL{$,100.000000};DIV{$,100.000000};
-PROB-FROST-2;SevereFrostProbability;;;
+PROB-FROST-2;SevereFrostProbability;MUL{$,100.000000};DIV{$,100.000000};
+#PROB-FROST-2;SevereFrostProbability;;;
 
 # Probability of reaching POT of 1
 # PROB-POT-1[1360] => NEWBASE-PARAMETER[1447]
