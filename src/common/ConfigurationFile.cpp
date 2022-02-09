@@ -803,7 +803,7 @@ bool ConfigurationFile::findAttribute(const char *attributeName)
     {
       if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
       {
-        if (attr->mName.length() == len  ||  attr->mName[len] == '.')
+        if (attr->mName.length() == len  ||  attr->mName[len] == '.' || attr->mName[len] == '[')
           return true;
       }
     }
