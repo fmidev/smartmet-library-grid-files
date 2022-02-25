@@ -2,8 +2,8 @@
 
 #include "ThreadLock.h"
 #include <time.h>
+#include <atomic>
 
-// #define TRACE LOCK 1
 
 
 namespace SmartMet
@@ -17,7 +17,20 @@ class ModificationLock
     ModificationLock()
     {
       mReadCounter = 0;
+      mWriteCounter = 0;
       mLockingEnabled = true;
+
+      r1.tv_sec = 0;
+      r1.tv_nsec = 100;
+    }
+
+
+    ModificationLock(const ModificationLock& modificationLock)
+    {
+      mReadCounter = 0;
+      mWriteCounter = 0;
+      mLockingEnabled = modificationLock.mLockingEnabled;
+
       r1.tv_sec = 0;
       r1.tv_nsec = 100;
     }
@@ -28,14 +41,32 @@ class ModificationLock
     }
 
 
+    void operator=(const ModificationLock& modificationLock)
+    {
+      mReadCounter = 0;
+      mWriteCounter = 0;
+      mLockingEnabled = modificationLock.mLockingEnabled;
+
+      r1.tv_sec = 0;
+      r1.tv_nsec = 100;
+    }
+
+
     inline void readLock()
     {
       if (!mLockingEnabled)
         return;
 
-      mThreadLock.lock();
-      mReadCounter++;
-      mThreadLock.unlock();
+      if (mWriteCounter > 0)
+      {
+        mThreadLock.lock();
+        mReadCounter++;
+        mThreadLock.unlock();
+      }
+      else
+      {
+        mReadCounter++;
+      }
     }
 
 
@@ -44,9 +75,7 @@ class ModificationLock
       if (!mLockingEnabled)
         return;
 
-      mThreadLock.lock();
       mReadCounter--;
-      mThreadLock.unlock();
     }
 
 
@@ -55,13 +84,13 @@ class ModificationLock
       if (!mLockingEnabled)
         return;
 
+      mWriteCounter++;
+      mThreadLock.lock();
       while (true)
       {
-        mThreadLock.lock();
         if (mReadCounter == 0)
           return;
 
-        mThreadLock.unlock();
         nanosleep(&r1,&r2);
       }
     }
@@ -72,13 +101,13 @@ class ModificationLock
       if (!mLockingEnabled)
         return;
 
+      mWriteCounter++;
+      mThreadLock.lock();
       while (true)
       {
-        mThreadLock.lock();
         if (mReadCounter == 1)
           return;
 
-        mThreadLock.unlock();
         nanosleep(&r1,&r2);
       }
     }
@@ -90,6 +119,7 @@ class ModificationLock
         return;
 
       mThreadLock.unlock();
+      mWriteCounter--;
     }
 
 
@@ -117,10 +147,11 @@ class ModificationLock
 
   protected:
 
-    timespec        r1, r2;
-    ThreadLock      mThreadLock;
-    int             mReadCounter;
-    bool            mLockingEnabled;
+    timespec          r1, r2;
+    ThreadLock        mThreadLock;
+    std::atomic<int>  mReadCounter;
+    std::atomic<int>  mWriteCounter;
+    bool              mLockingEnabled;
 };
 
 
