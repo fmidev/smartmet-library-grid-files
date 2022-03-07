@@ -84,11 +84,11 @@ class ModificationLock
       if (!mLockingEnabled)
         return;
 
-      mWriteCounter++;
       mThreadLock.lock();
+      mWriteCounter++;
       while (true)
       {
-        if (mReadCounter == 0)
+        if (mReadCounter == (mWriteCounter-1))
           return;
 
         nanosleep(&r1,&r2);
