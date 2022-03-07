@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 22.2.28
+Version: 22.3.7
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -13,7 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 22.1.21
 BuildRequires: smartmet-library-spine-devel >= 22.2.10
-BuildRequires: smartmet-library-macgyver >= 22.1.21
+BuildRequires: smartmet-library-macgyver >= 22.2.24
 BuildRequires: smartmet-library-tron-devel >= 22.1.21
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -36,7 +36,7 @@ Requires: gdal34-libs
 Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 22.1.21
-Requires: smartmet-library-macgyver >= 22.1.21
+Requires: smartmet-library-macgyver >= 22.2.24
 Requires: smartmet-library-spine >= 22.2.10
 Requires: smartmet-library-tron >= 22.1.21
 
@@ -77,18 +77,16 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Mar  7 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.3.7-1.fmi
+- Fixed possible deadlock situation
 * Mon Feb 28 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.2.28-1.fmi
 - Performance improvements
-
 * Wed Feb  9 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.2.9-1.fmi
 - Improved attribute parsing
-
 * Tue Jan 25 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.1.25-1.fmi
 - Increased use of shared_ptr for memory management
-
 * Fri Jan 21 2022 Andris Pavēnis <andris.pavenis@fmi.fi> 22.1.21-1.fmi
 - Repackage due to upgrade of packages from PGDG repo: gdal-3.4, geos-3.10, proj-8.2
-
 * Thu Jan 13 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.1.13-1.fmi
 - Improved time interpolation
 * Wed Jan  5 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.1.5-1.fmi
