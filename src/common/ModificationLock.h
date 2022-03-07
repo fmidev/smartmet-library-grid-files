@@ -105,7 +105,7 @@ class ModificationLock
       mThreadLock.lock();
       while (true)
       {
-        if (mReadCounter == 1)
+        if (mReadCounter == mWriteCounter)
           return;
 
         nanosleep(&r1,&r2);
