@@ -9,7 +9,6 @@
 #include <macgyver/TimeZones.h>
 #include <macgyver/TimeFormatter.h>
 #include <macgyver/TimeZoneFactory.h>
-#include <spine/TimeSeriesGenerator.h>
 #include <spine/ValueFormatter.h>
 #include <spine/Location.h>
 
