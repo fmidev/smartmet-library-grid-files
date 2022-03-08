@@ -18,7 +18,7 @@ AdditionalParameters::AdditionalParameters(
     const Fmi::TimeZones& timezones,
     const std::locale& locale,
     const Fmi::TimeFormatter& timeFormatter,
-    const Spine::ValueFormatter& valueFormatter
+    const Fmi::ValueFormatter& valueFormatter
 ):
     mTimezones(timezones),
     mLocale(locale),

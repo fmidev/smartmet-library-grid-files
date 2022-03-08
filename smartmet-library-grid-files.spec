@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 22.3.7
+Version: 22.3.8
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -12,8 +12,8 @@ Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 22.1.21
-BuildRequires: smartmet-library-spine-devel >= 22.2.10
-BuildRequires: smartmet-library-macgyver >= 22.2.24
+BuildRequires: smartmet-library-spine-devel >= 22.3.8
+BuildRequires: smartmet-library-macgyver >= 22.3.8
 BuildRequires: smartmet-library-tron-devel >= 22.1.21
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
@@ -36,8 +36,8 @@ Requires: gdal34-libs
 Requires: libaec
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 22.1.21
-Requires: smartmet-library-macgyver >= 22.2.24
-Requires: smartmet-library-spine >= 22.2.10
+Requires: smartmet-library-macgyver >= 22.3.8
+Requires: smartmet-library-spine >= 22.3.8
 Requires: smartmet-library-tron >= 22.1.21
 
 %description
@@ -77,6 +77,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Mar  8 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.3.8-1.fmi
+- Using Fmi::ValueFormatter instead of Spine::ValueFormatter
 * Mon Mar  7 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.3.7-1.fmi
 - Fixed possible deadlock situation
 * Mon Feb 28 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.2.28-1.fmi

@@ -9,7 +9,7 @@
 #include <macgyver/TimeZones.h>
 #include <macgyver/TimeFormatter.h>
 #include <macgyver/TimeZoneFactory.h>
-#include <spine/ValueFormatter.h>
+#include <macgyver/ValueFormatter.h>
 #include <spine/Location.h>
 
 
@@ -24,7 +24,7 @@ class AdditionalParameters
                     const Fmi::TimeZones& timezones,
                     const std::locale& locale,
                     const Fmi::TimeFormatter& timeFormatter,
-                    const Spine::ValueFormatter& valueFormatter);
+                    const Fmi::ValueFormatter& valueFormatter);
 
     virtual     ~AdditionalParameters();
 
@@ -62,7 +62,7 @@ class AdditionalParameters
     const Fmi::TimeZones&         mTimezones;
     std::locale                   mLocale;
     const Fmi::TimeFormatter&     mTimeFormatter;
-    const Spine::ValueFormatter&  mValueFormatter;
+    const Fmi::ValueFormatter&  mValueFormatter;
 
 };
 
