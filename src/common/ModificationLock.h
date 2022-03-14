@@ -21,7 +21,7 @@ class ModificationLock
       mLockingEnabled = true;
 
       r1.tv_sec = 0;
-      r1.tv_nsec = 100;
+      r1.tv_nsec = 10;
     }
 
 
@@ -57,15 +57,14 @@ class ModificationLock
       if (!mLockingEnabled)
         return;
 
+      mReadCounter++;
+
       if (mWriteCounter > 0)
       {
+        mReadCounter--;
         mThreadLock.lock();
         mReadCounter++;
         mThreadLock.unlock();
-      }
-      else
-      {
-        mReadCounter++;
       }
     }
 
