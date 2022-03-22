@@ -969,7 +969,7 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
     }
     else
     {
-      printf("*** Message not found %lu / %lu\n",index,mMessages.size());
+      printf("*** PhysicalGridFile.cpp: Message not found (%s) %lu / %lu\n",mFileName.c_str(),index,mMessages.size());
     }
 
     return nullptr;
