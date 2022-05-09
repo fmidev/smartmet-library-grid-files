@@ -1,11 +1,20 @@
 #include "GraphFunctions.h"
 #include "ImageFunctions.h"
+#include "ImagePaint.h"
 #include "MemoryReader.h"
 #include "MemoryWriter.h"
 #include "GeneralFunctions.h"
 #include "AutoThreadLock.h"
 #include "ShowFunction.h"
 #include "SimpleDataMatrixAdapter.h"
+
+#include <trax/Grid.h>
+#include <trax/Contour.h>
+#include <trax/IsolineValues.h>
+#include <trax/IsobandLimits.h>
+#include <fmt/format.h>
+#include <cmath>
+#include <vector>
 
 #include <math.h>
 #include <sstream>
@@ -46,6 +55,112 @@ typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tro
 typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::NearestNeighbourInterpolation>  MyNearestContourer;
 typedef Tron::Contourer<SimpleDataMatrixAdapter, Tron::FmiBuilder, MyTraits, Tron::DiscreteInterpolation> MyDiscreteContourer;
 typedef Tron::Hints<SimpleDataMatrixAdapter, MyTraits> MyHints;
+
+
+
+
+
+
+class TraxGrid : public Trax::Grid
+{
+ public:
+  TraxGrid(std::vector<float> *gridData,std::vector<T::Coordinate> *coordinates,long width,long height)
+  {
+    mGridData = gridData;
+    mCoordinates = coordinates;
+    mWidth = width;
+    mHeight = height;
+  }
+
+  std::size_t width() const override
+  {
+    return mWidth;
+  }
+
+  std::size_t height() const override
+  {
+    return mHeight;
+  }
+
+  double x(long i, long j) const override
+  {
+    if (mCoordinates == nullptr)
+      return i;
+
+    return (*mCoordinates)[i + mWidth * j].x();
+  }
+
+  double y(long i, long j) const override
+  {
+    if (mCoordinates == nullptr)
+      return j;
+
+    return (*mCoordinates)[i + mWidth * j].y();
+  }
+
+  double operator()(long i, long j) const override
+  {
+    T::ParamValue v = (*mGridData)[i + mWidth * j];
+    if (v == ParamValueMissing)
+      return NAN;
+
+    return v;
+  }
+
+  double get(long i, long j) const
+  {
+    T::ParamValue v = (*mGridData)[i + mWidth * j];
+    if (v == ParamValueMissing)
+      return NAN;
+
+    return v;
+  }
+
+  void set(long i, long j, double z) override
+  {
+    (*mGridData)[i + mWidth * j] = z;
+  }
+
+  void set(long i, long j, double x, double y)
+  {
+    (*mCoordinates)[i + mWidth * j].set(x,y);
+  }
+
+  bool valid(long i, long j) const override
+  {
+    return !std::isnan(get(i, j)) && !std::isnan(get(i + 1, j)) && !std::isnan(get(i, j + 1)) &&
+           !std::isnan(get(i + 1, j + 1)) && !std::isnan(x(i, j)) && !std::isnan(x(i + 1, j)) &&
+           !std::isnan(x(i, j + 1)) && !std::isnan(x(i + 1, j + 1)) && !std::isnan(y(i, j)) &&
+           !std::isnan(y(i + 1, j)) && !std::isnan(y(i, j + 1)) && !std::isnan(y(i + 1, j + 1));
+  }
+
+  std::string dump(const std::string& indent) const
+  {
+    std::string out;
+    for (long j = mHeight - 1; j >= 0; j--)
+    {
+      for (long i = 0; i < mWidth; i++)
+      {
+        if (i == 0)
+          out += indent;
+        else
+          out += ' ';
+        out += fmt::format("{}", (*this)(i, j));
+      }
+      out += '\n';
+    }
+    return out;
+  }
+
+ private:
+  std::vector<float> *mGridData;
+  std::vector<T::Coordinate> *mCoordinates;
+  long mWidth;
+  long mHeight;
+};
+
+
+
 
 
 
@@ -1128,6 +1243,261 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
     if (sz == 0)
       return;
 
+    Trax::Contour contourer;
+
+    switch (interpolationMethod)
+    {
+      case T::AreaInterpolationMethod::Linear:
+        contourer.interpolation(Trax::InterpolationType::Linear);
+        break;
+
+      default:
+        contourer.interpolation(Trax::InterpolationType::Midpoint);
+        break;
+    }
+
+    TraxGrid grid(&gridData,coordinates,width,height);
+
+    Trax::IsolineValues isolineValues;
+    for (auto v = contourValues.begin(); v != contourValues.end(); v++)
+      isolineValues.add(*v);
+
+    auto result = contourer.isolines(grid,isolineValues);
+
+    //ImagePaint paint(3600,1800,0xFFFFFF,0xFF0000,0x0000FF,false,false);
+    if (result.size() > 0)
+    {
+      std::ostringstream out;
+      for (auto g = result.begin(); g != result.end(); ++g)
+      {
+        g->wkb(out);
+        const auto &wkb = out.str();
+        size_t size = wkb.length();
+
+        T::ByteData wkbData;
+        if (size > 0)
+        {
+          const auto &wkb = out.str();
+          unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+
+          //paint.paintWkb(1,1,0,0,data,size);
+
+          wkbData.reserve(size);
+          for (size_t t=0; t<size; t++)
+            wkbData.emplace_back(data[t]);
+        }
+        contours.emplace_back(wkbData);
+      }
+    }
+
+    //paint.saveJpgImage("/tmp/TEST.jpg");
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
+void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordinates,int width,int height,std::vector<float>& contourLowValues,std::vector<float>& contourHighValues,short interpolationMethod,size_t smooth_size,size_t smooth_degree,T::ByteData_vec& contours)
+{
+  try
+  {
+    size_t sz = gridData.size();
+    if (sz == 0)
+      return;
+
+    Trax::Contour contourer;
+
+    switch (interpolationMethod)
+    {
+      case T::AreaInterpolationMethod::Linear:
+        contourer.interpolation(Trax::InterpolationType::Linear);
+        break;
+
+      default:
+        contourer.interpolation(Trax::InterpolationType::Midpoint);
+        break;
+    }
+
+    TraxGrid grid(&gridData,coordinates,width,height);
+    Trax::IsobandLimits limits;
+
+    uint cnt = contourLowValues.size();
+    for (uint t=0; t<cnt; t++)
+      limits.add(contourLowValues[t],contourHighValues[t]);
+
+    auto result = contourer.isobands(grid,limits);
+
+#if 0
+    width = width*2;
+    height = height*2;
+
+    bool autoscale = true;
+    double ww = width;
+    double hh = height;
+    double dx = 0;
+    double dy = 0;
+    double ss = 1;
+
+    ImagePaint paint(width,height,0xFFFFFF,0xFF0000,0x0000FF,false,true);
+    if (result.size() > 0)
+    {
+      double tminX = 0, tminY = 0, tmaxX = 0, tmaxY = 0;
+      if (autoscale)
+      {
+        tminX = 1000000000;
+        tminY = 1000000000;
+        tmaxX = -1000000000;
+        tmaxY = -1000000000;
+
+        std::ostringstream out;
+
+        for (auto g = result.begin(); g != result.end(); ++g)
+        {
+          g->wkb(out);
+          const auto &wkb = out.str();
+          unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+          size_t size = wkb.length();
+
+          double minX = 0, minY = 0, maxX = 0, maxY = 0;
+          paint.countPaintWkbArea(data,size,minX,minY,maxX,maxY);
+
+
+          if (minX < tminX)
+            tminX = minX;
+
+          if (minY < tminY)
+            tminY = minY;
+
+          if (maxX > tmaxX)
+            tmaxX = maxX;
+
+          if (maxY > tmaxY)
+            tmaxY = maxY;
+        }
+      }
+
+      if (autoscale)
+      {
+        dx = -tminX;
+        dy = -tminY;
+
+        ww = tmaxX - tminX;
+        hh = tmaxY - tminY;
+      }
+
+      double sx = (width-20)/ww;
+      double sy = (height-20)/hh;
+
+      ss = sx;
+      if (sy < sx)
+        ss = sy;
+
+      ImagePaint ipaint(width,height,0xFFFFFF,0xFF0000,0x0000FF,false,true);
+
+      uint c = 0;
+      for (auto g = result.begin(); g != result.end(); ++g)
+      {
+        std::ostringstream out;
+
+        g->wkb(out);
+        const auto &wkb = out.str();
+        size_t size = wkb.length();
+
+        if (size > 0)
+        {
+          unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+
+          uint fillCol = (rand() << 8) + rand();
+          ipaint.setDrawColor(fillCol);
+          ipaint.setFillColor(fillCol);
+
+          ipaint.paintWkb(ss, ss, dx+10/ss, dy+10/ss,data,size);
+        }
+/*
+        char filename[100];
+        sprintf(filename,"/tmp/TEST_%04u.jpg",c);
+        ipaint.saveJpgImage(filename);
+        c++;
+        */
+      }
+      ipaint.saveJpgImage("/tmp/TEST.jpg");
+    }
+
+#endif
+
+    if (result.size() > 0)
+    {
+      for (auto g = result.begin(); g != result.end(); ++g)
+      {
+        std::ostringstream out;
+
+        g->wkb(out);
+        const auto &wkb = out.str();
+        size_t size = wkb.length();
+
+        T::ByteData wkbData;
+        if (size > 0)
+        {
+          const auto &wkb = out.str();
+          unsigned char *data = reinterpret_cast<unsigned char *>(const_cast<char *>(wkb.c_str()));
+
+          wkbData.reserve(size);
+          for (size_t t=0; t<size; t++)
+            wkbData.emplace_back(data[t]);
+        }
+        contours.emplace_back(wkbData);
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void getIsolines2(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int width,int height,std::vector<float>& contourValues,short interpolationMethod,size_t smooth_size,size_t smooth_degree,T::ByteData_vec& contours)
+{
+  try
+  {
+    size_t sz = gridData.size();
+    if (sz == 0)
+      return;
+
     double minValue = gridData[0];
     double maxValue = gridData[0];
 
@@ -1229,7 +1599,7 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
 
 
 
-void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordinates,int width,int height,std::vector<float>& contourLowValues,std::vector<float>& contourHighValues,short interpolationMethod,size_t smooth_size,size_t smooth_degree,T::ByteData_vec& contours)
+void getIsobands2(std::vector<float>& gridData,std::vector<T::Coordinate> *coordinates,int width,int height,std::vector<float>& contourLowValues,std::vector<float>& contourHighValues,short interpolationMethod,size_t smooth_size,size_t smooth_degree,T::ByteData_vec& contours)
 {
   try
   {
@@ -1381,7 +1751,6 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
 
 
 }
