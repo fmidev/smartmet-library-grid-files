@@ -67,7 +67,11 @@ rm -rf $RPM_BUILD_ROOT
 %package -n %{SPECNAME}-devel
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
-Requires: %{SPECNAME}
+Requires: %{SPECNAME} = %{version}-%{release}
+Requires: smartmet-library-newbase-devel
+Requires: smartmet-library-spine-devel
+Requires: smartmet-library-macgyver
+Requires: smartmet-library-tron-devel
 
 %description -n %{SPECNAME}-devel
 FMI Grid File library development files

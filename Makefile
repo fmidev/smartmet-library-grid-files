@@ -46,7 +46,7 @@ vpath %.cpp src \
 			src/identification \
 			src/netcdf \
 			src/querydata
-			
+
 vpath %.h 	src \
 			src/common \
 			src/fmig1 \
@@ -96,6 +96,13 @@ profile: all
 
 $(LIBFILE): $(OBJFILES)
 	$(CXX) $(LDFLAGS) -shared -rdynamic -o $(LIBFILE) $(OBJFILES) $(LIBS)
+	@echo Checking $(LIBFILE) for unresolved references
+	@if ldd -r $(LIBFILE) 2>&1 | c++filt | grep ^undefined\ symbol |\
+			grep -Pv ':\ __(?:(?:a|t|ub)san_|sanitizer_)'; \
+	then \
+		rm -v $(LIBFILE); \
+		exit 1; \
+	fi
 
 clean: 
 	rm -f src/*~ src/*/*~ src/*/*/*~
