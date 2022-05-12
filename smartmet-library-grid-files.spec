@@ -15,7 +15,7 @@ BuildRequires: smartmet-library-newbase-devel >= 22.1.21
 BuildRequires: smartmet-library-spine-devel >= 22.3.8
 BuildRequires: smartmet-library-macgyver >= 22.3.8
 BuildRequires: smartmet-library-tron-devel >= 22.1.21
-BuildRequires: smartmet-library-trax >= 22.5.5
+BuildRequires: smartmet-library-trax-devel >= 22.5.5
 BuildRequires: boost169-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal34-devel
