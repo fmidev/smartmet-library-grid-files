@@ -262,12 +262,8 @@ std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocircl
     {
       // Should this be fixed? Probably not - the coordinates should behave the same
       double dist = i * distance / steps;
-#ifdef WGS84      
-      auto loc = startpoint.GetLocation(bearing, dist);
-#else
       const bool pacific_view = false;
       auto loc = startpoint.GetLocation(bearing, dist, pacific_view);
-#endif      
       auto cc = loc.GetLocation();
       coordinates.emplace_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
       distances.emplace_back(dist / 1000.0);
