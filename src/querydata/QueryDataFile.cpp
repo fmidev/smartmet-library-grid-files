@@ -7,21 +7,12 @@
 #include <macgyver/StringConversion.h>
 #include <newbase/NFmiCmdLine.h>
 #include <newbase/NFmiEnumConverter.h>
-#include <newbase/NFmiEquidistArea.h>
 #include <newbase/NFmiFastQueryInfo.h>
 #include <newbase/NFmiFileString.h>
 #include <newbase/NFmiFileSystem.h>
-#include <newbase/NFmiGnomonicArea.h>
 #include <newbase/NFmiGrid.h>
-#include <newbase/NFmiKKJArea.h>
-#include <newbase/NFmiLatLonArea.h>
-#include <newbase/NFmiMercatorArea.h>
-#include <newbase/NFmiPKJArea.h>
-#include <newbase/NFmiRotatedLatLonArea.h>
 #include <newbase/NFmiSettings.h>
-#include <newbase/NFmiStereographicArea.h>
 #include <newbase/NFmiStringList.h>
-#include <newbase/NFmiYKJArea.h>
 #include <newbase/NFmiStreamQueryData.h>
 
 #include <algorithm>
