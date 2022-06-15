@@ -10,12 +10,19 @@ Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
 Source0: %{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+%if 0%{?rhel} && 0%{rhel} < 9
+%define smartmet_boost boost169
+%else
+%define smartmet_boost boost
+%endif
+
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 22.5.24
-BuildRequires: smartmet-library-spine-devel >= 22.5.24
-BuildRequires: smartmet-library-macgyver >= 22.3.28
-BuildRequires: smartmet-library-trax-devel >= 22.5.23
-BuildRequires: boost169-devel
+BuildRequires: smartmet-library-newbase-devel >= 22.6.16
+BuildRequires: smartmet-library-spine-devel >= 22.6.16
+BuildRequires: smartmet-library-macgyver >= 22.6.16
+BuildRequires: smartmet-library-trax-devel >= 22.6.16
+BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal34-devel
 BuildRequires: geos310-devel
@@ -26,19 +33,19 @@ BuildRequires: libjpeg-turbo-devel
 BuildRequires: libpng-devel
 BuildRequires: libjasper-devel
 Provides: %{SPECNAME}
-Requires: boost169-date-time
-Requires: boost169-filesystem
-Requires: boost169-iostreams
-Requires: boost169-regex
-Requires: boost169-system
-Requires: boost169-thread
+Requires: %{smartmet_boost}-date-time
+Requires: %{smartmet_boost}-filesystem
+Requires: %{smartmet_boost}-iostreams
+Requires: %{smartmet_boost}-regex
+Requires: %{smartmet_boost}-system
+Requires: %{smartmet_boost}-thread
 Requires: gdal34-libs
 Requires: libaec
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 22.5.24
-Requires: smartmet-library-macgyver >= 22.3.28
-Requires: smartmet-library-spine >= 22.5.24
-Requires: smartmet-library-trax >= 22.5.23
+Requires: smartmet-library-newbase >= 22.6.16
+Requires: smartmet-library-macgyver >= 22.6.16
+Requires: smartmet-library-spine >= 22.6.16
+Requires: smartmet-library-trax >= 22.6.16
 
 %description
 FMI Grid File handling library
