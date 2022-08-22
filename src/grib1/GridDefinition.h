@@ -12,6 +12,7 @@
 #include "definition/ResolutionFlagsSettings.h"
 #include "definition/RotationSettings.h"
 
+#include <macgyver/CacheStats.h>
 #include <ogr_spatialref.h>
 #include <map>
 
@@ -146,6 +147,10 @@ typedef std::vector<GridDef_ptr> GridDef_pvec;
 typedef std::map<uint,GridDef_ptr> GridDefinition_pmap;
 typedef std::map<std::string,GridDef_ptr> GridDef_map;
 typedef std::map<std::string,GridDef_sptr> GridDef_spmap;
+
+extern Fmi::Cache::CacheStats coordinateCache_stats;
+extern Fmi::Cache::CacheStats transformCache1_stats;
+extern Fmi::Cache::CacheStats transformCache2_stats;
 
 
 }  // namespace GRID

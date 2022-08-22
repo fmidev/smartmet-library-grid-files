@@ -11,6 +11,7 @@
 #include "definition/LatLonSettings.h"
 #include "definition/RotationSettings.h"
 
+#include <macgyver/CacheStats.h>
 #include <ogr_spatialref.h>
 #include <map>
 
@@ -138,6 +139,10 @@ typedef std::shared_ptr<GridDefinition> GridDefinition_sptr;
 typedef std::shared_ptr<GridDefinition> GridDef_sptr;
 typedef std::map<std::string,GridDef_sptr> GridDef_spmap;
 typedef std::vector<GridDefinition_sptr> GridDefinition_spvec;
+
+extern Fmi::Cache::CacheStats coordinateCache_stats;
+extern Fmi::Cache::CacheStats transformCache1_stats;
+extern Fmi::Cache::CacheStats transformCache2_stats;
 
 
 }  // namespace GRIB2

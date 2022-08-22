@@ -20,17 +20,23 @@ namespace GRIB1
 {
 
 std::unordered_map<uint,T::Coordinate_svec> coordinateCache;
+ModificationLock coordinateCacheModificationLock;
+Fmi::Cache::CacheStats coordinateCache_stats;
+
+
 std::unordered_map <std::size_t,T::Coordinate> transformCache1;
+ModificationLock transformCache1ModificationLock;
+Fmi::Cache::CacheStats transformCache1_stats;
+
 std::unordered_map <std::size_t,T::Coordinate> transformCache2;
+ModificationLock transformCache2ModificationLock;
+Fmi::Cache::CacheStats transformCache2_stats;
 
 std::size_t      mPrevHash1[10000] = {0};
 T::Coordinate    mPrevCoordinate1[10000];
 std::size_t      mPrevHash2[10000] = {0};
 T::Coordinate    mPrevCoordinate2[10000];
 
-ModificationLock coordinateCacheModificationLock;
-ModificationLock transformCache1ModificationLock;
-ModificationLock transformCache2ModificationLock;
 
 /*! \brief The constructor of the class. */
 
@@ -45,6 +51,18 @@ GridDefinition::GridDefinition()
     mGridProjection = T::GridProjectionValue::Unknown;
     mEarth_semiMajor = 0;
     mEarth_semiMinor = 0;
+
+    if (coordinateCache_stats.maxsize == 0)
+    {
+      coordinateCache_stats.maxsize = 1000000;
+      coordinateCache_stats.starttime = boost::posix_time::second_clock::universal_time();
+
+      transformCache1_stats.maxsize = 1000000;
+      transformCache1_stats.starttime = boost::posix_time::second_clock::universal_time();
+
+      transformCache2_stats.maxsize = 1000000;
+      transformCache2_stats.starttime = boost::posix_time::second_clock::universal_time();
+    }
 
     mLatlonSpatialReference.importFromEPSG(4326);
     mLatlonSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
@@ -520,8 +538,10 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
       auto it = coordinateCache.find(geomId);
       if (it != coordinateCache.end())
       {
+        coordinateCache_stats.hits++;
         return it->second;
       }
+      coordinateCache_stats.misses++;
     }
 
     T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
@@ -555,6 +575,8 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
     {
       AutoWriteLock lock(&coordinateCacheModificationLock);
       coordinateCache.insert(std::pair<uint,T::Coordinate_svec>(geomId,latLonCoordinates));
+      coordinateCache_stats.inserts++;
+      coordinateCache_stats.size++;
     }
 
     return latLonCoordinates;
@@ -656,6 +678,7 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
       {
         if (mPrevHash1[idx] == hash)
         {
+          transformCache1_stats.hits++;
           x = mPrevCoordinate1[idx].x();
           y = mPrevCoordinate1[idx].y();
           return true;
@@ -665,10 +688,12 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
         auto it = transformCache1.find(hash);
         if (it != transformCache1.end())
         {
+          transformCache1_stats.hits++;
           x = it->second.x();
           y = it->second.y();
           return true;
         }
+        transformCache1_stats.misses++;
       }
     }
 
@@ -681,12 +706,17 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
     {
       AutoWriteLock lock(&transformCache1ModificationLock);
       if (transformCache1.size() >= 1000000)
+      {
         transformCache1.clear();
+        transformCache1_stats.size = 0;
+      }
 
       mPrevHash1[idx] = hash;
       mPrevCoordinate1[idx] = T::Coordinate(x,y);
 
       transformCache1.insert(std::pair<std::size_t,T::Coordinate>(hash,mPrevCoordinate1[idx]));
+      transformCache1_stats.inserts++;
+      transformCache1_stats.size++;
     }
 
     return true;
@@ -722,13 +752,14 @@ bool GridDefinition::getTransformFromCache(std::size_t hash,double lat,double lo
     auto it = transformCache1.find(hash);
     if (it != transformCache1.end())
     {
+      transformCache1_stats.hits++;
       x = it->second.x();
       y = it->second.y();
       mPrevHash1[idx] = hash;
       mPrevCoordinate1[idx] = it->second;
       return true;
     }
-
+    transformCache1_stats.misses++;
     return false;
   }
   catch (...)
@@ -757,18 +788,24 @@ void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double 
       auto it = transformCache1.find(hash);
       if (it != transformCache1.end()  &&  x == it->second.x() && y == it->second.y())
         return;
+
     }
 
     if (hash != 0)
     {
       AutoWriteLock lock(&transformCache1ModificationLock);
       if (transformCache1.size() >= 1000000)
+      {
         transformCache1.clear();
+        transformCache1_stats.size = 0;
+      }
 
       mPrevHash1[idx] = hash;
       mPrevCoordinate1[idx] = T::Coordinate(x,y);
 
       transformCache1.insert(std::pair<std::size_t,T::Coordinate>(hash,mPrevCoordinate1[idx]));
+      transformCache1_stats.inserts++;
+      transformCache1_stats.size++;
     }
   }
   catch (...)
@@ -1909,6 +1946,7 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
 
         if (mPrevHash2[idx] == hash)
         {
+          transformCache2_stats.hits++;
           grid_i = mPrevCoordinate2[idx].x();
           grid_j = mPrevCoordinate2[idx].y();
           return true;
@@ -1917,12 +1955,14 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
         auto it = transformCache2.find(hash);
         if (it != transformCache2.end())
         {
+          transformCache2_stats.hits++;
           grid_i = it->second.x();
           grid_j = it->second.y();
           mPrevHash2[idx] = hash;
           mPrevCoordinate2[idx] = it->second;
           return true;
         }
+        transformCache2_stats.misses++;
       }
     }
 
@@ -1935,12 +1975,17 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
       {
         AutoWriteLock lock(&transformCache2ModificationLock);
         if (transformCache2.size() >= 1000000)
+        {
           transformCache2.clear();
+          transformCache2_stats.size = 0;
+        }
 
         mPrevHash2[idx] = hash;
         mPrevCoordinate2[idx] = T::Coordinate(grid_i,grid_j);
 
         transformCache2.insert(std::pair<std::size_t,T::Coordinate>(hash,mPrevCoordinate2[idx]));
+        transformCache2_stats.inserts++;
+        transformCache2_stats.size++;
       }
       return true;
     }
