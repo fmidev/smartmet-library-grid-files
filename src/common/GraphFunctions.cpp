@@ -1253,9 +1253,9 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
     //ImagePaint paint(3600,1800,0xFFFFFF,0xFF0000,0x0000FF,false,false);
     if (result.size() > 0)
     {
-      std::ostringstream out;
       for (auto g = result.begin(); g != result.end(); ++g)
       {
+        std::ostringstream out;
         g->wkb(out);
         const auto &wkb = out.str();
         size_t size = wkb.length();
