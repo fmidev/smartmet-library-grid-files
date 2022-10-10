@@ -23,6 +23,7 @@ typedef std::unique_ptr<MappedFile> MappedFile_uptr;
 typedef std::vector<std::pair<uchar,ulonglong>> MessagePos_vec;
 
 
+
 // ====================================================================================
 /*! \brief The main purpose of this class is ...
 */
@@ -40,6 +41,7 @@ class PhysicalGridFile : public GridFile
     virtual char*         getMemoryPtr();
     virtual std::size_t   getNumberOfMessages();
     virtual long long     getSize();
+    virtual void          setSize(long long size);
 
     virtual bool          isMemoryMapped() const;
     virtual bool          isPhysical() const;
@@ -61,7 +63,6 @@ class PhysicalGridFile : public GridFile
 
   private:
 
-    //void                  read();
     GRID::Message*        createMessage(uint messageIndex,GRID::MessageInfo& messageInfo);
     void                  readFmig1Message(MemoryReader& memoryReader, uint messageIndex);
     void                  readNetCDFMessage(MemoryReader& memoryReader, uint messageIndex);
@@ -73,6 +74,7 @@ class PhysicalGridFile : public GridFile
   protected:
 
     long long             mFileSize;
+    time_t                mMemoryMappingTime;
     bool                  mIsMemoryMapped;
     bool                  mIsRead;
     MappedFile_uptr       mMappedFile;

@@ -25,6 +25,7 @@ GridFile::GridFile()
   {
     mCheckTime = 0;
     mFileId = 0;
+    mProtocol = 1;
     mGroupFlags = 0;
     mProducerId = 0;
     mGenerationId = 0;
@@ -51,6 +52,8 @@ GridFile::GridFile(const GridFile& other)
   try
   {
     mFileName = other.mFileName;
+    mProtocol = other.mProtocol;
+    mServer = other.mServer;
     mFileId = other.mFileId;
     mFileModificationTime = other.mFileModificationTime;
     mDeletionTime = other.mDeletionTime;
@@ -78,6 +81,7 @@ GridFile::GridFile(GridFile *gridFile)
   try
   {
     mCheckTime = 0;
+    mProtocol = 1;
     mFileId = 0;
     mGroupFlags = 0;
     mProducerId = 0;
@@ -162,6 +166,48 @@ uint GridFile::getGroupFlags() const
   try
   {
     return mGroupFlags;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+/*! \brief The method returns the protocol that is used for accessing the current current grid file.
+
+      \return  The protocol.
+*/
+
+uchar GridFile::getProtocol() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mProtocol;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+/*! \brief The method returns the server where the current current grid file is stored.
+
+      \return  The server name.
+*/
+
+std::string GridFile::getServer() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mServer;
   }
   catch (...)
   {
@@ -368,7 +414,22 @@ long long GridFile::getSize()
   FUNCTION_TRACE
   try
   {
-    return 0;
+    long long fileSize = 0;
+    for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
+    {
+      long long fsize = it->second.mFilePosition + it->second.mMessageSize;
+      if (fileSize < fsize)
+        fileSize = fsize;
+    }
+
+    for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
+    {
+      long long fsize = it->second->getFilePosition() + it->second->getMessageSize();
+      if (fileSize < fsize)
+        fileSize = fsize;
+    }
+
+    return fileSize;
   }
   catch (...)
   {
@@ -783,6 +844,53 @@ void GridFile::setSourceId(uint sourceId)
   }
 }
 
+
+
+
+
+void GridFile::setProtocol(uchar protocol)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mProtocol = protocol;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridFile::setServer(const std::string& server)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mServer = server;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridFile::setSize(long long size)
+{
+  FUNCTION_TRACE
+  try
+  {
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 

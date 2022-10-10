@@ -58,6 +58,8 @@ class GridFile
     virtual Message*      getMessageByIndex(std::size_t index);
     virtual time_t        getModificationTime() const;
     virtual std::size_t   getNumberOfMessages();
+    virtual uchar         getProtocol() const;
+    virtual std::string   getServer() const;
 
     virtual uint          getProducerId() const;
     virtual long long     getSize();
@@ -89,6 +91,9 @@ class GridFile
     virtual void          setGenerationId(uint generationId);
     virtual void          setGroupFlags(uint groupFlags);
     virtual void          setProducerId(uint producerId);
+    virtual void          setProtocol(uchar protocol);
+    virtual void          setServer(const std::string& server);
+    virtual void          setSize(long long size);
     virtual void          setSourceId(uint sourceId);
 
     virtual void          write(const std::string& filename);
@@ -108,6 +113,8 @@ class GridFile
     Message_ptr_map       mMessages;
     uint                  mProducerId;
     bool                  mRequestCounterEnabled;
+    uchar                 mProtocol;
+    std::string           mServer;
     uint                  mSourceId;
     std::set<uint>        mUserList;
 

@@ -213,6 +213,20 @@ int getClosestIndex(FloatVec& values,float value);
 
 
 
+inline int ptr_compare(char *v1, char *v2)
+{
+  if (v1 == v2)
+    return 0;
+
+  if (v1 < v2)
+    return -1;
+
+  return 1;
+}
+
+
+
+
 inline int num_compare(uint& v1, uint& v2)
 {
   if (v1 == v2)
