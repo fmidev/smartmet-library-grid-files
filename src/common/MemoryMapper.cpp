@@ -54,38 +54,15 @@ MemoryMapper::MemoryMapper()
 
     mMaxProcessingThreads = 5;
     mMaxMessages = 1000;
-
-    mMessage = new uffd_msg[mMaxMessages];
-    mFaultProcessingThread = new pthread_t[mMaxProcessingThreads];
-
-    DataFetcher_sptr df_filesys(new DataFetcher_filesys);
-    //DataFetcher_sptr df_thredds(new DataFetcher_THREDDS);
-    //DataFetcher_sptr df_s3(new DataFetcher_S3);
-    DataFetcher_sptr df_http(new DataFetcher_HTTP);
-
-    mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(0,df_filesys));   // Unknow protocol
-    mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(1,df_filesys));   // Fileys
-    mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(2,df_filesys));   // S3
-    mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(3,df_filesys));   // THREDDS
-    mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(4,df_http));      // HTTP
+    mMessage = nullptr;
+    mFaultProcessingThread = nullptr;
 
     mThreadsRunning = 0;
     mStopRequired = false;
     mMessageReadCount = 0;
     mMessageProcessCount = 0;
-
-    mPageSize = sysconf(_SC_PAGE_SIZE);
-    mUffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
-
-    if (mUffd == -1)
-      throw Fmi::Exception(BCP,"userfaultfd");
-
-    struct uffdio_api uffdio_api;
-    uffdio_api.api = UFFD_API;
-    uffdio_api.features = 0;
-
-    if (ioctl(mUffd, UFFDIO_API, &uffdio_api) == -1)
-      throw Fmi::Exception(BCP,"ioctl-UFFDIO_API");
+    mUffd = -1;
+    mPageSize = 0;
   }
   catch (...)
   {
@@ -101,7 +78,7 @@ MemoryMapper::~MemoryMapper()
 {
   mStopRequired = true;
 
-  while (mThreadsRunning)
+  while (mEnabled  &&  mThreadsRunning)
     time_usleep(0,100);
 
   if (mMessage)
@@ -220,7 +197,46 @@ bool MemoryMapper::isEnabled()
 
 void MemoryMapper::setEnabled(bool enabled)
 {
-  mEnabled = enabled;
+  try
+  {
+    mEnabled = enabled;
+
+    if (mEnabled  &&  mUffd < 0)
+    {
+      // ### Initializing the service
+
+      mMessage = new uffd_msg[mMaxMessages];
+      mFaultProcessingThread = new pthread_t[mMaxProcessingThreads];
+
+      DataFetcher_sptr df_filesys(new DataFetcher_filesys);
+      //DataFetcher_sptr df_thredds(new DataFetcher_THREDDS);
+      //DataFetcher_sptr df_s3(new DataFetcher_S3);
+      DataFetcher_sptr df_http(new DataFetcher_HTTP);
+
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(0,df_filesys));   // Unknow protocol
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(1,df_filesys));   // Fileys
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(2,df_filesys));   // S3
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(3,df_filesys));   // THREDDS
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(4,df_http));      // HTTP
+
+      mPageSize = sysconf(_SC_PAGE_SIZE);
+      mUffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
+
+      if (mUffd == -1)
+        throw Fmi::Exception(BCP,"userfaultfd");
+
+      struct uffdio_api uffdio_api;
+      uffdio_api.api = UFFD_API;
+      uffdio_api.features = 0;
+
+      if (ioctl(mUffd, UFFDIO_API, &uffdio_api) == -1)
+        throw Fmi::Exception(BCP,"ioctl-UFFDIO_API");
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
 }
 
 
