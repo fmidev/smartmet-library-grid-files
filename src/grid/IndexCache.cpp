@@ -123,6 +123,31 @@ bool IndexCache::getIndexVector(long long hash,T::IndexVector& indexVector)
 
 
 
+bool IndexCache::findIndexVector(long long hash)
+{
+  try
+  {
+    AutoReadLock lock(&mModificationLock);
+
+    int sz = C_INT(mHashVector.size());
+    int idx = getClosestIndexByHashNoLock(hash);
+
+    if (idx >= 0  &&  idx < sz  &&  mHashVector[idx] == hash)
+    {
+      return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 bool IndexCache::getIndex(long long hash,uint pos,int& index)
 {
   try

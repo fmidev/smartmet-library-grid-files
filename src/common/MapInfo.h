@@ -15,7 +15,7 @@ class MapInfo
     {
       protocol = 0;
       server = "127.0.0.1";
-      port = 80;
+      port = 0;
       fileSize = 0;
       allocatedSize = 0;
       memoryPtr = nullptr;

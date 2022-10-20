@@ -266,6 +266,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
     // Number of bits per value
     unsigned int nbits = *bits_per_value;
 
+    //printf("BITS PER VALUE %u  DATASIZE %ld  NumOfValues %ld\n",nbits,dataSize,numOfValues);
 
     // Binary scale factor E, possibly negative
     std::int16_t E = (mPacking.getBinaryScaleFactor() ? *mPacking.getBinaryScaleFactor() : 0);
@@ -310,7 +311,15 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
           else
           {
             ulonglong X = 0;
-            bitArrayReader.readBits(nbits,X);
+            try
+            {
+              bitArrayReader.readBits(nbits,X);
+            }
+            catch (...)
+            {
+              //printf("READ VALUE %u/%u\n",i,numOfValues);
+              throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+            }
 
             // Output the caclulated value
             double Y = RDfac + X * EDfac;

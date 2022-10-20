@@ -45,6 +45,7 @@ class ValueCache
 
     uint        addValues(T::ParamValue_vec& values);
     bool        getValues(uint key,T::ParamValue_vec& values);
+    void        deleteValues(uint key);
     bool        getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamValue& maxValue);
     void        init(uint maxLen,UInt64 maxSize);
 

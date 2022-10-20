@@ -220,6 +220,7 @@ class Message
     virtual bool                isRelativeUV() const;
     virtual bool                reverseXDirection() const;
     virtual bool                reverseYDirection() const;
+    virtual void                premap() const;
 
     virtual void                modifyGridValueVector(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
 
@@ -339,6 +340,8 @@ class Message
     GridFile*                   mGridFilePtr;
     mutable ThreadLock          mThreadLock;
     short                       mDefaultInterpolationMethod;
+    mutable bool                mPremapped;
+    mutable uint                mRequestCounter;
 };
 
 

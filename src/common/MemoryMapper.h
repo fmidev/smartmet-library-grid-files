@@ -23,6 +23,8 @@ class MemoryMapper
 
     MapInfo*  getMapInfo(char *address);
 
+    void      premap(char *startAddress,char *endAddress);
+
     void      map(MapInfo& info);
     void      unmap(MapInfo& info);
 
@@ -39,22 +41,30 @@ class MemoryMapper
     int       getClosestIndex(char *address);
 
   protected:
-    long                    mUffd;
-    int                     mPageSize;
-    std::vector<MapInfo*>   mMemoryMappings;
-    ModificationLock        mModificationLock;
-    uffd_msg*               mMessage;
-    std::atomic<long long>  mMessageReadCount;
-    std::atomic<long long>  mMessageProcessCount;
-    std::atomic<uint>       mThreadsRunning;
-    pthread_t               mFaultHandlerThread;
-    pthread_t*              mFaultProcessingThread;
-    bool                    mStopRequired;
-    ThreadLock              mThreadLock;
-    DataFetcher_sptr_map    mDataFetchers;
-    uint                    mMaxProcessingThreads;
-    uint                    mMaxMessages;
-    bool                    mEnabled;
+    long                      mUffd;
+    int                       mPageSize;
+    std::vector<MapInfo*>     mMemoryMappings;
+    ModificationLock          mModificationLock;
+    uffd_msg*                 mMessage;
+    std::atomic<long long>    mMessageReadCount;
+    std::atomic<long long>    mMessageProcessCount;
+    std::atomic<uint>         mThreadsRunning;
+    pthread_t                 mFaultHandlerThread;
+    pthread_t*                mFaultProcessingThread;
+    bool                      mStopRequired;
+    ThreadLock                mThreadLock;
+    DataFetcher_sptr_map      mDataFetchers;
+    uint                      mMaxProcessingThreads;
+    uint                      mMaxMessages;
+    bool                      mEnabled;
+    ModificationLock          mPageCacheModificationLock;
+    std::map<long long,uint>  mPageCacheIndexList;
+    char**                    mPageCache;
+    long long*                mPageCacheIndex;
+    uint                      mPageCacheCounter;
+    long long                 mPageCacheFreedCounter;
+    long long                 mPageCacheSize;
+    std::map<char*,char*>     mPremapRequests;
 };
 
 

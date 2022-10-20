@@ -22,6 +22,7 @@ class IndexCache
 
     void      addIndexVector(long long hash,T::IndexVector& indexVector);
     bool      getIndexVector(long long hash,T::IndexVector& indexVector);
+    bool      findIndexVector(long long hash);
     bool      getIndex(long long hash,uint pos,int& index);
     int       getClosestIndexByHash(long long hash);
     int       getClosestIndexByHashNoLock(long long hash);

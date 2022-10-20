@@ -173,6 +173,7 @@ class Message : public GRID::Message
     void                read(MemoryReader& memoryReader);
     void                write(DataWriter& dataWriter);
     void                print(std::ostream& stream,uint level,uint optionFlags) const;
+    void                premap() const;
 
 
   private:
