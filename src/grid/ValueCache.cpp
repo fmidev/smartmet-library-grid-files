@@ -340,6 +340,33 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
 
 
 
+
+void ValueCache::deleteValues(uint key)
+{
+  try
+  {
+    uint idx = key % mMaxLength;
+
+    AutoWriteLock lock(&mModificationLock);
+    if (mKeyList[idx] != key)
+      return;
+
+    if (mValueList[idx] == nullptr)
+      return;
+
+    delete mValueList[idx];
+    mValueList[idx] = nullptr;
+    mKeyList[idx] = 0;
+    mAccessCounterList[idx] = 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 /*! \brief This method returns the minimum and the maximum values stored into
     the cached value vector.
 

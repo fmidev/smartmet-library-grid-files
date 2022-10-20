@@ -17,6 +17,7 @@
 #include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
+#include "../common/MemoryMapper.h"
 #include "../identification/GridDef.h"
 #include "../common/ShowFunction.h"
 #include <iostream>
@@ -185,6 +186,12 @@ Message::~Message()
   FUNCTION_TRACE
   try
   {
+    if (mCacheKey)
+      GRID::valueCache.deleteValues(mCacheKey);
+
+    if (mOrigCacheKey)
+      GRID::valueCache.deleteValues(mOrigCacheKey);
+
     if (mDataLocked)
     {
       auto addr = getDataPtr();
@@ -203,6 +210,50 @@ Message::~Message()
     exception.printError();
   }
 }
+
+
+
+
+
+void Message::premap() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mPremapped)
+      return;
+
+    mPremapped = true;
+
+    if (mDataSection)
+    {
+      auto addr = mDataSection->getDataPtr();
+      auto sz = mDataSection->getDataSize();
+
+      if (addr && sz > 0)
+      {
+        memoryMapper.premap((char*)addr,(char*)addr+sz-1);
+      }
+    }
+
+    if (mBitmapSection)
+    {
+      auto bitmap = mBitmapSection->getBitmapDataPtr();
+      auto sz = mBitmapSection->getBitmapDataSizeInBytes();
+
+      if (bitmap && sz > 0)
+        memoryMapper.premap((char*)bitmap,(char*)bitmap+sz-1);
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 
 
 
@@ -1225,9 +1276,6 @@ void Message::read(MemoryReader& memoryReader)
               section->read(memoryReader);
               auto p2 = memoryReader.getReadPosition();
               auto len = section->getSectionLength();
-
-              if (len > 0  &&  (p1+len) != p2)
-                memoryReader.setReadPosition(p1+len);
             }
             break;
 
@@ -1238,6 +1286,20 @@ void Message::read(MemoryReader& memoryReader)
               mBitmapSection.reset(section);
               auto p1 = memoryReader.getReadPosition();
               section->read(memoryReader);
+              /*
+              if (section->getBitmapDataSizeInBytes() > 0)
+              {
+                auto numOfValues = getGridOriginalValueCount();
+                auto hash = section->getHash();
+                T::IndexVector indexVector;
+                if (!GRID::indexCache.findIndexVector(hash))
+                {
+                  section->getIndexVector(numOfValues,indexVector);
+                  GRID::indexCache.addIndexVector(hash,indexVector);
+                }
+              }
+              */
+
               auto p2 = memoryReader.getReadPosition();
               auto len = section->getSectionLength();
 
@@ -2949,6 +3011,7 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
     try
     {
+      premap();
       mRepresentationSection->decodeValues(values);
 
       if (mRepresentationSection->getDataRepresentationTemplateNumber() != RepresentationSection::Template::GridDataRepresentation || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
@@ -3013,6 +3076,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
 
     try
     {
+      premap();
       mRepresentationSection->decodeValues(values);
       mCacheKey = GRID::valueCache.addValues(values);
       mOrigCacheKey = mCacheKey;
@@ -3325,12 +3389,33 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     {
       if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
       {
+        mRequestCounter++;
+        if (!mPremapped)
+          premap();
+
         if (mRepresentationSection->getValueByIndex(idx,value))
         {
           return value;
         }
       }
     }
+    /*
+    else
+    {
+      if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
+      {
+        auto hash = mBitmapSection->getHash();
+        int newidx = 0;
+        if (GRID::indexCache.getIndex(hash,idx,newidx) &&  newidx >= 0)
+        {
+          if (mRepresentationSection->getValueByIndex(newidx,value))
+            return value;
+          else
+            return ParamValueMissing;
+        }
+      }
+    }
+    */
     if (mCacheKey > 0)
     {
       // Trying to get a memory cache value.

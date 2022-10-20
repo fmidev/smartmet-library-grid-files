@@ -11,6 +11,7 @@
 #include "../common/GeneralFunctions.h"
 #include "../common/GeneralDefinitions.h"
 #include "../common/BitArrayWriter.h"
+#include "../common/MemoryMapper.h"
 #include "../identification/GridDef.h"
 #include "../grid/ValueCache.h"
 #include "../grid/IndexCache.h"
@@ -154,11 +155,56 @@ Message::~Message()
   FUNCTION_TRACE
   try
   {
+    if (mCacheKey)
+      GRID::valueCache.deleteValues(mCacheKey);
+
+    if (mOrigCacheKey)
+      GRID::valueCache.deleteValues(mOrigCacheKey);
   }
   catch (...)
   {
     Fmi::Exception exception(BCP,"Destructor failed",nullptr);
     exception.printError();
+  }
+}
+
+
+
+
+
+void Message::premap() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mPremapped)
+      return;
+
+    mPremapped = true;
+
+    if (mDataSection)
+    {
+      auto addr = mDataSection->getDataPtr();
+      auto sz = mDataSection->getDataSize();
+
+      if (addr && sz > 0)
+      {
+        memoryMapper.premap((char*)addr,(char*)addr+sz-1);
+      }
+    }
+
+    if (mBitmapSection)
+    {
+      auto bitmap = mBitmapSection->getBitmapDataPtr();
+      auto sz = mBitmapSection->getBitmapDataSizeInBytes();
+
+      if (bitmap && sz > 0)
+        memoryMapper.premap((char*)bitmap,(char*)bitmap+sz-1);
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
 
@@ -2449,6 +2495,10 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     {
       if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
       {
+        mRequestCounter++;
+        if (!mPremapped)
+          premap();
+
         if (mDataSection->getValueByIndex(idx,value))
         {
           return value;
@@ -2571,6 +2621,8 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
 
     try
     {
+      premap();
+
       mDataSection->decodeValues(values);
 
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
@@ -2670,6 +2722,7 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     auto d = getGridDimensions();
     try
     {
+      premap();
       mDataSection->decodeValues(values);
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mOrigCacheKey = GRID::valueCache.addValues(values);

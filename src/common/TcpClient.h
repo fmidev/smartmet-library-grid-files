@@ -1,40 +1,34 @@
 #pragma once
 
-#include "ThreadLock.h"
+#include "Client.h"
 
-#include <string>
-#include <vector>
 
 namespace SmartMet
 {
 
 
-class TcpClient
+class TcpClient : public Client
 {
   public:
-    TcpClient();
-    ~TcpClient();
+            TcpClient();
+    virtual ~TcpClient();
 
-    void openConnection(const char *serverAddress,int serverPort);
-    void closeConnection();
+    void    openConnection(const char *serverAddress,int serverPort);
+    void    closeConnection();
 
-    bool isActive();
-    void setActive(bool active);
+    bool    isConnected();
 
-    bool isConnected();
-
-    int  writeData(char *data,int size);
-    int  readData(char *data,int size);
-    int  writeAll(char *data,int size);
-    int  readAll(char *data,int size);
-    int  readLine(char *data,int size);
+    int     writeData(char *data,int size);
+    int     readData(char *data,int size);
+    int     writeAll(char *data,int size);
+    int     readAll(char *data,int size);
+    int     readLine(char *data,int size);
 
   protected:
 
-    std::string mServerAddress;
-    int         mServerPort;
-    int         mSockfd;
-    bool        mActive;
+    std::string   mServerAddress;
+    int           mServerPort;
+    int           mSockfd;
 };
 
 typedef TcpClient* TcpClient_ptr;

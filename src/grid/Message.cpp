@@ -71,6 +71,8 @@ Message::Message()
     mGribParameterName = 0;
     mFmiParameterUnits = 0;
     mGribParameterUnits = 0;
+    mPremapped = false;
+    mRequestCounter = 0;
   }
   catch (...)
   {
@@ -109,6 +111,8 @@ Message::Message(const Message& message)
     mFileType = message.mFileType;
     mRowCount = message.mRowCount;
     mColumnCount = message.mColumnCount;
+    mPremapped = message.mPremapped;
+    mRequestCounter = message.mRequestCounter;
   }
   catch (...)
   {
@@ -127,6 +131,11 @@ Message::~Message()
 }
 
 
+
+
+void Message::premap() const
+{
+}
 
 
 

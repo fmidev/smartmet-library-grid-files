@@ -1,5 +1,4 @@
 #include "TcpClient.h"
-#include "AutoThreadLock.h"
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 #include <fcntl.h>
@@ -139,20 +138,6 @@ bool TcpClient::isConnected()
   }
 }
 
-
-
-bool TcpClient::isActive()
-{
-  return mActive;
-}
-
-
-
-
-void TcpClient::setActive(bool active)
-{
-  mActive = active;
-}
 
 
 
