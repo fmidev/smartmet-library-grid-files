@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 22.10.11
+Version: 22.10.20
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -20,7 +20,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 22.8.29
 BuildRequires: smartmet-library-spine-devel >= 22.9.5
-BuildRequires: smartmet-library-macgyver >= 22.8.23
+BuildRequires: smartmet-library-macgyver >= 22.10.12
 BuildRequires: smartmet-library-trax-devel >= 22.10.3
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -28,6 +28,7 @@ BuildRequires: gdal34-devel
 BuildRequires: geos310-devel
 BuildRequires: make
 BuildRequires: libaec-devel
+BuildRequires: libcurl-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libjpeg-turbo-devel
 BuildRequires: libpng-devel
@@ -41,9 +42,10 @@ Requires: %{smartmet_boost}-system
 Requires: %{smartmet_boost}-thread
 Requires: gdal34-libs
 Requires: libaec
+Requires: libcurl
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 22.8.29
-Requires: smartmet-library-macgyver >= 22.8.23
+Requires: smartmet-library-macgyver >= 22.10.12
 Requires: smartmet-library-spine >= 22.9.5
 Requires: smartmet-library-trax >= 22.10.3
 
@@ -88,6 +90,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Oct 20 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.10.20-1.fmi
+- Improved userfaultd mechanisms
 * Tue Oct 11 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.10.11-1.fmi
 - Delay userfaultfd initialization until needed since it is blocked in Docker containers
 * Mon Oct 10 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.10.10-1.fmi
