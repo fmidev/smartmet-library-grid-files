@@ -2,6 +2,7 @@
 
 #include "Typedefs.h"
 #include <macgyver/Exception.h>
+#include <macgyver/CacheStats.h>
 #include "../common/AutoReadLock.h"
 #include "../common/AutoWriteLock.h"
 
@@ -47,6 +48,7 @@ class ValueCache
     bool        getValues(uint key,T::ParamValue_vec& values);
     void        deleteValues(uint key);
     bool        getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamValue& maxValue);
+    void        getCacheStats(Fmi::Cache::CacheStatistics& statistics) const;
     void        init(uint maxLen,UInt64 maxSize);
 
   protected:
@@ -81,6 +83,8 @@ class ValueCache
     /*! \brief The cached value vectors. */
     T::ParamValue_vec_ptr *mValueList;
 
+    Fmi::Cache::CacheStats mCacheStats;
+
     ModificationLock       mModificationLock;
 
   public:
@@ -113,6 +117,7 @@ class ValueCache
         {
           // The value vector is cached with a different key.
 
+          mCacheStats.misses++;
           return false;
         }
 
@@ -120,6 +125,7 @@ class ValueCache
         {
           // The value vector is not cache in the memory.
 
+          mCacheStats.misses++;
           return false;
         }
 
@@ -137,6 +143,7 @@ class ValueCache
 
         // Updating the access time of the current value vector.
         mAccessCounterList[idx] = mAccessCounter++;
+        mCacheStats.hits++;
 
         return true;
       }

@@ -28,6 +28,14 @@ ValueCache::ValueCache()
     mAccessCounterList = nullptr;
     mMaxSize = 1000;
     init(1000,1000);
+
+    mCacheStats.starttime = boost::posix_time::second_clock::universal_time();
+    mCacheStats.maxsize = mMaxSize*1000000;
+    mCacheStats.size = 0;
+    mCacheStats.inserts = 0;
+    mCacheStats.hits = 0;
+    mCacheStats.misses = 0;
+
   }
   catch (...)
   {
@@ -70,6 +78,8 @@ void ValueCache::init(uint maxLen,UInt64 maxSize)
     mKeyCounter = 0;
     mMaxLength = maxLen;
     mMaxSize = maxSize;
+    mCacheStats.maxsize = mMaxSize*1000000;
+
 
     AutoWriteLock lock(&mModificationLock);
     mValueList = new T::ParamValue_vec_ptr[mMaxLength];
@@ -82,6 +92,22 @@ void ValueCache::init(uint maxLen,UInt64 maxSize)
       mValueList[t] = nullptr;
       mAccessCounterList[t] = 0;
     }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ValueCache::getCacheStats(Fmi::Cache::CacheStatistics& statistics) const
+{
+  try
+  {
+    statistics.insert(std::make_pair("Grid-files::gridData_cache", mCacheStats));
   }
   catch (...)
   {
@@ -121,6 +147,7 @@ uint ValueCache::getEmpty()
 
     if (mValueList[idx] != nullptr)
     {
+      mCacheStats.size -= mValueList[idx]->size()* sizeof(T::ParamValue);
       delete mValueList[idx];
       mValueList[idx] = nullptr;
     }
@@ -158,6 +185,7 @@ void ValueCache::deleteOldest()
 
     if (mValueList[idx] != nullptr)
     {
+      mCacheStats.size -= mValueList[idx]->size()* sizeof(T::ParamValue);
       delete mValueList[idx];
       mValueList[idx] = nullptr;
     }
@@ -204,6 +232,11 @@ void ValueCache::clear()
       delete[] mAccessCounterList;
       mAccessCounterList = nullptr;
     }
+
+    mCacheStats.size = 0;
+    mCacheStats.inserts = 0;
+    mCacheStats.hits = 0;
+    mCacheStats.misses = 0;
   }
   catch (...)
   {
@@ -289,6 +322,11 @@ uint ValueCache::addValues(T::ParamValue_vec& values)
 
     if (mValueList[idx] == nullptr)
       mValueList[idx] = new T::ParamValue_vec();
+    else
+      mCacheStats.size -= mValueList[idx]->size()* sizeof(T::ParamValue);
+
+    mCacheStats.inserts++;
+    mCacheStats.size += values.size()* sizeof(T::ParamValue);
 
     *mValueList[idx] = values;
     mKeyList[idx] = mKeyCounter;
@@ -322,11 +360,18 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
 
     AutoReadLock lock(&mModificationLock);
     if (mKeyList[idx] != key)
+    {
+      mCacheStats.misses++;
       return false;
+    }
 
     if (mValueList[idx] == nullptr)
+    {
+      mCacheStats.misses++;
       return false;
+    }
 
+    mCacheStats.hits++;
     values = *mValueList[idx];
     mAccessCounterList[idx] = mAccessCounter++;
     return true;
@@ -353,6 +398,9 @@ void ValueCache::deleteValues(uint key)
 
     if (mValueList[idx] == nullptr)
       return;
+
+
+    mCacheStats.size -= mValueList[idx]->size()* sizeof(T::ParamValue);
 
     delete mValueList[idx];
     mValueList[idx] = nullptr;
