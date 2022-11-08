@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 22.10.20
+Version: 22.11.8
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -19,8 +19,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 22.8.29
-BuildRequires: smartmet-library-spine-devel >= 22.9.5
-BuildRequires: smartmet-library-macgyver >= 22.10.12
+BuildRequires: smartmet-library-spine-devel >= 22.10.26
+BuildRequires: smartmet-library-macgyver >= 22.10.20
 BuildRequires: smartmet-library-trax-devel >= 22.10.3
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -45,8 +45,8 @@ Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 22.8.29
-Requires: smartmet-library-macgyver >= 22.10.12
-Requires: smartmet-library-spine >= 22.9.5
+Requires: smartmet-library-macgyver >= 22.10.20
+Requires: smartmet-library-spine >= 22.10.26
 Requires: smartmet-library-trax >= 22.10.3
 
 %description
@@ -90,6 +90,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Nov  8 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.11.8-1.fmi
+- More improvements to userfaultd based memory mapper
 * Thu Oct 20 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.10.20-1.fmi
 - Improved userfaultd mechanisms
 * Tue Oct 11 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.10.11-1.fmi
