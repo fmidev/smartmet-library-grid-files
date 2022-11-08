@@ -25,7 +25,8 @@ GridFile::GridFile()
   {
     mCheckTime = 0;
     mFileId = 0;
-    mProtocol = 1;
+    mServerType = 1;
+    mProtocol = 0;
     mGroupFlags = 0;
     mProducerId = 0;
     mGenerationId = 0;
@@ -52,6 +53,7 @@ GridFile::GridFile(const GridFile& other)
   try
   {
     mFileName = other.mFileName;
+    mServerType = other.mServerType;
     mProtocol = other.mProtocol;
     mServer = other.mServer;
     mFileId = other.mFileId;
@@ -81,7 +83,8 @@ GridFile::GridFile(GridFile *gridFile)
   try
   {
     mCheckTime = 0;
-    mProtocol = 1;
+    mServerType = 1;
+    mProtocol = 0;
     mFileId = 0;
     mGroupFlags = 0;
     mProducerId = 0;
@@ -187,6 +190,27 @@ uchar GridFile::getProtocol() const
   try
   {
     return mProtocol;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+/*! \brief The method returns the server type (filesys,S3,etc.) that is used for accessing the current current grid file.
+
+      \return  The service type.
+*/
+
+uchar GridFile::getServerType() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mServerType;
   }
   catch (...)
   {
@@ -854,6 +878,22 @@ void GridFile::setProtocol(uchar protocol)
   try
   {
     mProtocol = protocol;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridFile::setServerType(uchar serverType)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mServerType = serverType;
   }
   catch (...)
   {

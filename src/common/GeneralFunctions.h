@@ -210,7 +210,17 @@ int getClosestIndexPos(FloatVec& values,float value);
 int getClosestIndexNeg(FloatVec& values,float value);
 int getClosestIndex(FloatVec& values,float value);
 
+int hmac_sha256(const uint8_t *secretKey,int secretKeyLen,const uint8_t *input,int inputSize,uint8_t *output);
 
+int signature_aws_s3_v4(const char *username,
+                 const char *password,
+                 const char *date,
+                 const char *dateRegion,
+                 const char *dateRegionService,
+                 const char *stringToSign,
+                 char *hexSignature);
+
+void hash_sha256(uchar *input,int inputLen,char *hexHash);
 
 
 inline int ptr_compare(char *v1, char *v2)

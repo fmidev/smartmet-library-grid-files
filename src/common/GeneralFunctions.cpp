@@ -24,6 +24,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <openssl/sha.h>
+#include <openssl/hmac.h>
+#include <openssl/err.h>
 #include "AutoThreadLock.h"
 #include "GeneralDefinitions.h"
 
@@ -3855,6 +3858,87 @@ void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& 
 }
 
 
+
+
+int hmac_sha256(const uint8_t *secretKey,int secretKeyLen,const uint8_t *input,int inputSize,uint8_t *output)
+{
+  uint outputSize = 32;
+  if (!HMAC(EVP_sha256(), secretKey,secretKeyLen, input, inputSize, output, &outputSize))
+  {
+    return 0;
+  }
+  return outputSize;
+}
+
+
+
+
+int signature_aws_s3_v4(const char *username,
+                 const char *password,
+                 const char *date,
+                 const char *dateRegion,
+                 const char *dateRegionService,
+                 const char *stringToSign,
+                 char *hexSignature)
+{
+  const char *signing = "aws4_request";
+  int passwordLen = strlen(password);
+  uint8_t secretKey[passwordLen+5];
+  memcpy(secretKey,"AWS4",4);
+  memcpy(secretKey+4,password,passwordLen);
+
+  uint8_t dateKey[32];
+  uint8_t dateRegionKey[32];
+  uint8_t dateRegionServiceKey[32];
+  uint8_t signingKey[32];
+  uint8_t signature[32];
+
+  if (hmac_sha256(secretKey,passwordLen+4,(const unsigned char*)date,strlen(date),dateKey) != 32)
+    return -1;
+
+  //for (uint t=0; t<32; t++) printf("%02x",dateKey[t]); printf("\n");
+
+  if (hmac_sha256(dateKey,32,(const unsigned char*)dateRegion,strlen(dateRegion),dateRegionKey) != 32)
+    return -2;
+
+  //for (uint t=0; t<32; t++) printf("%02x",dateRegionKey[t]); printf("\n");
+
+  if (hmac_sha256(dateRegionKey,32,(const unsigned char*)dateRegionService,strlen(dateRegionService),dateRegionServiceKey) != 32)
+    return -3;
+
+  //for (uint t=0; t<32; t++) printf("%02x",dateRegionServiceKey[t]); printf("\n");
+
+  if (hmac_sha256(dateRegionServiceKey,32,(const unsigned char*)signing,strlen(signing),signingKey) != 32)
+    return -4;
+
+  //for (uint t=0; t<32; t++) printf("%02x",signingKey[t]); printf("\n");
+
+  if (hmac_sha256(signingKey,32,(const unsigned char*)stringToSign,strlen(stringToSign),signature) != 32)
+    return -5;
+
+  //for (uint t=0; t<32; t++) printf("%02x",signature[t]); printf("\n");
+
+  char *p = hexSignature;
+  for (uint t=0; t<32; t++)
+    p += sprintf(p,"%02x",signature[t]);
+
+  return 0;
+}
+
+
+
+void hash_sha256(uchar *input,int inputLen,char *hexHash)
+{
+  unsigned char hash[SHA256_DIGEST_LENGTH];
+  SHA256_CTX sha256;
+  SHA256_Init(&sha256);
+  SHA256_Update(&sha256, input, inputLen);
+  SHA256_Final(hash, &sha256);
+
+  char *p = hexHash;
+  for (uint t=0; t<SHA256_DIGEST_LENGTH; t++)
+    p += sprintf(p,"%02x",hash[t]);
+}
 
 
 

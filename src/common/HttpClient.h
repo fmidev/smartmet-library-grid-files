@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Client.h"
-#include <curl/curl.h>
 
 
 namespace SmartMet
@@ -20,15 +19,6 @@ class HttpClient : public Client
 
     CURL*     curl;
 
-  public:
-
-    class Response
-    {
-      public:
-        char *data;
-        uint dataSize;
-        uint maxSize;
-    };
 };
 
 typedef HttpClient* HttpClient_ptr;

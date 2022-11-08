@@ -59,6 +59,7 @@ class GridFile
     virtual time_t        getModificationTime() const;
     virtual std::size_t   getNumberOfMessages();
     virtual uchar         getProtocol() const;
+    virtual uchar         getServerType() const;
     virtual std::string   getServer() const;
 
     virtual uint          getProducerId() const;
@@ -92,6 +93,7 @@ class GridFile
     virtual void          setGroupFlags(uint groupFlags);
     virtual void          setProducerId(uint producerId);
     virtual void          setProtocol(uchar protocol);
+    virtual void          setServerType(uchar serverType);
     virtual void          setServer(const std::string& server);
     virtual void          setSize(long long size);
     virtual void          setSourceId(uint sourceId);
@@ -114,6 +116,7 @@ class GridFile
     uint                  mProducerId;
     bool                  mRequestCounterEnabled;
     uchar                 mProtocol;
+    uchar                 mServerType;
     std::string           mServer;
     uint                  mSourceId;
     std::set<uint>        mUserList;

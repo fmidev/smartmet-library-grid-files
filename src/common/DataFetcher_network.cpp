@@ -10,11 +10,11 @@
 namespace SmartMet
 {
 
-DataFetcher_network::DataFetcher_network(uint clientType)
+DataFetcher_network::DataFetcher_network(uint protocol)
 {
   try
   {
-    mClientType = clientType;
+    mProtocol = protocol;
   }
   catch (...)
   {
@@ -51,12 +51,12 @@ Client* DataFetcher_network::newClient()
 {
   try
   {
-    switch (mClientType)
+    switch (mProtocol)
     {
-      case ClientType::HTTP:
+      case Protocol::HTTP:
         return new HttpClient();
 
-      case ClientType::HTTPS:
+      case Protocol::HTTPS:
         return new HttpsClient();
     }
     return new HttpClient();
@@ -70,14 +70,14 @@ Client* DataFetcher_network::newClient()
 
 
 
-Client* DataFetcher_network::getClient(const char *serverAddress,int serverPort)
+Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType)
 {
   try
   {
     AutoThreadLock lock(&mThreadLock);
 
     char key[100];
-    sprintf(key,"%s:%d",serverAddress,serverPort);
+    sprintf(key,"%s:%u",serverAddress,serverType);
 
     auto convec = mClients.find(key);
     if (convec != mClients.end())
@@ -130,7 +130,7 @@ int DataFetcher_network::getData(MapInfo& info,std::size_t filePosition,int data
     uint cnt = 0;
     while (!client)
     {
-      client = getClient(info.server.c_str(),info.port);
+      client = getClient(info.server.c_str(),info.serverType);
       if (!client)
       {
         cnt++;

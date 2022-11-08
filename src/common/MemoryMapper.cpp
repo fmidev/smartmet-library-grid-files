@@ -215,8 +215,8 @@ void MemoryMapper::setEnabled(bool enabled)
       mFaultProcessingThread = new pthread_t[mMaxProcessingThreads];
 
       DataFetcher_sptr df_filesys(new DataFetcher_filesys);
-      DataFetcher_sptr df_http(new DataFetcher_network(DataFetcher_network::ClientType::HTTP));
-      DataFetcher_sptr df_https(new DataFetcher_network(DataFetcher_network::ClientType::HTTPS));
+      DataFetcher_sptr df_http(new DataFetcher_network(DataFetcher_network::Protocol::HTTP));
+      DataFetcher_sptr df_https(new DataFetcher_network(DataFetcher_network::Protocol::HTTPS));
 
       mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(0,df_filesys));   // Unknow protocol
       mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(1,df_filesys));   // Fileys

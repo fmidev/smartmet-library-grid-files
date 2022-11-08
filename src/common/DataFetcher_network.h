@@ -20,7 +20,7 @@ typedef std::map<std::string,Client_ptr_vec> Client_vecmap;
 class DataFetcher_network : public DataFetcher
 {
   public:
-                  DataFetcher_network(uint clientType);
+                  DataFetcher_network(uint protocol);
     virtual       ~DataFetcher_network();
 
     virtual int   getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr);
@@ -28,15 +28,15 @@ class DataFetcher_network : public DataFetcher
   protected:
 
     Client*       newClient();
-    Client*       getClient(const char *serverAddress,int serverPort);
+    Client*       getClient(const char *serverAddress,uint serviceType);
 
-    uint          mClientType;
+    uint          mProtocol;
     ThreadLock    mThreadLock;
     Client_vecmap mClients;
 
   public:
 
-    class ClientType
+    class Protocol
     {
       public:
         static const uint HTTP  = 1;

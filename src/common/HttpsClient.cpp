@@ -12,6 +12,9 @@
 #include <netdb.h>
 
 
+//#define CURL_DEBUG 1
+
+
 namespace SmartMet
 {
 
@@ -42,34 +45,6 @@ HttpsClient::~HttpsClient()
 
 
 
-size_t HttpsClient_responseProcessing(char *ptr, size_t size, size_t nmemb, void *userdata)
-{
-  try
-  {
-    //printf("RECEIVE %ld\n",nmemb);
-    HttpsClient::Response *response = (HttpsClient::Response*)userdata;
-
-    for (size_t t=0; t<nmemb; t++)
-    {
-      char ch = ptr[t];
-      if (response->dataSize < response->maxSize)
-      {
-        response->data[response->dataSize] = ch;
-        response->dataSize++;
-      }
-    }
-    return nmemb;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
 int HttpsClient::getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   try
@@ -78,35 +53,47 @@ int HttpsClient::getData(MapInfo& info,std::size_t filePosition,int dataSize,cha
       return 0;
 
     // printf("*** SEND REQUEST %s  : %ld : %d\n",info.filename.c_str(),filePosition,dataSize);
-
-    info.port = 443;
-
-    char tmp[1000];
-    sprintf(tmp,"https://%s:%u%s",info.server.c_str(),info.port,info.filename.c_str());
-    //printf("SEND [%s]\n",tmp);
-
+/*
+    info.server = "127.0.0.1:9000";
+    info.filename = "/demo/T-K.grib";
+    filePosition = 0;
+    dataSize = 4096;
+*/
     Response response;
     response.data = dataPtr;
     response.maxSize = dataSize;
     response.dataSize = 0;
 
-    curl_easy_setopt(curl,CURLOPT_PROXY,"");
-    curl_easy_setopt(curl, CURLOPT_URL,tmp);
+    char url[1000];
+    sprintf(url,"https://%s%s",info.server.c_str(),info.filename.c_str());
+    //printf("URL [%s]\n",url);
+
+    curl_easy_setopt(curl, CURLOPT_URL,url);
+    curl_easy_setopt(curl, CURLOPT_PROXY,"");
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,HttpsClient_responseProcessing);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,curl_responseProcessing);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
-    struct curl_slist *list = NULL;
-    sprintf(tmp,"Range: bytes=%ld-%ld\r\n",filePosition,filePosition+dataSize-1);
-    list = curl_slist_append(list, tmp);
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+#ifdef CURL_DEBUG
+    curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, curl_trace);
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+#endif
 
+    struct curl_slist *headerList = NULL;
+
+    char tmp[1000];
+    sprintf(tmp,"Range: bytes=%ld-%ld",filePosition,filePosition+dataSize-1);
+    headerList = curl_slist_append(headerList, tmp);
+
+    headerList = addAuthenticationHeaders(info,headerList);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerList);
 
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK)
       fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
 
-    curl_slist_free_all(list);
+    curl_slist_free_all(headerList);
 
     return response.dataSize;
   }

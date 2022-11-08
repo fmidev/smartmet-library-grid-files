@@ -150,11 +150,11 @@ void PhysicalGridFile::mapToMemory()
       MapInfo info;
       info.protocol = mProtocol;
       info.filename = mFileName;
+      info.serverType = mServerType;
       //info.filename = "/demo/T-K.grib";
       info.server = mServer;
 
-      info.port = 80; //443
-      if (info.protocol == 1)
+      if (info.serverType == 1)
         mFileSize = getFileSize(mFileName.c_str());
       else
         mFileSize = GridFile::getSize();
