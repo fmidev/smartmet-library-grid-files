@@ -33,6 +33,7 @@ BuildRequires: libjpeg-devel
 BuildRequires: libjpeg-turbo-devel
 BuildRequires: libpng-devel
 BuildRequires: libjasper-devel
+BuildRequires: openssl-devel
 Provides: %{SPECNAME}
 Requires: %{smartmet_boost}-date-time
 Requires: %{smartmet_boost}-filesystem
