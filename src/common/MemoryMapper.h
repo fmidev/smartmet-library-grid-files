@@ -2,7 +2,7 @@
 
 #include "ModificationLock.h"
 #include "MapInfo.h"
-#include "DataFetcher.h"
+#include "DataFetcher_network.h"
 
 #include <string>
 #include <vector>
@@ -12,6 +12,9 @@
 namespace SmartMet
 {
 
+
+
+
 class MemoryMapper
 {
   public:
@@ -20,6 +23,8 @@ class MemoryMapper
 
     bool      isEnabled();
     void      setEnabled(bool enabled);
+
+    void      loadAccessFile(const char *filename);
 
     MapInfo*  getMapInfo(char *address);
 
@@ -39,6 +44,7 @@ class MemoryMapper
     void      addMapInfo(MapInfo *mapInfo);
     int       getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr);
     int       getClosestIndex(char *address);
+
 
   protected:
     long                      mUffd;
@@ -65,6 +71,7 @@ class MemoryMapper
     long long                 mPageCacheFreedCounter;
     long long                 mPageCacheSize;
     std::map<char*,char*>     mPremapRequests;
+    AccessMap                 mAccessMap;
 };
 
 

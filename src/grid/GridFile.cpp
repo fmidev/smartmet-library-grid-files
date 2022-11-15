@@ -909,7 +909,7 @@ void GridFile::setServer(const std::string& server)
   FUNCTION_TRACE
   try
   {
-    mServer = server;
+    mServer = toLowerString(server);
   }
   catch (...)
   {

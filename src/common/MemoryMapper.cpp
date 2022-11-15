@@ -99,6 +99,9 @@ void MemoryMapper::addMapInfo(MapInfo *mapInfo)
 {
   try
   {
+
+    //std::cout << "MAP " << mapInfo->protocol << ":" << mapInfo->serverType << ":" << mapInfo->server << ":" << mapInfo->filename << "\n";
+
     //AutoWriteLock lock(&mModificationLock);
 
     int length = mMemoryMappings.size();
@@ -199,6 +202,82 @@ bool MemoryMapper::isEnabled()
 
 
 
+void MemoryMapper::loadAccessFile(const char *filename)
+{
+  try
+  {
+    FILE *file = fopen(filename,"re");
+    if (file == nullptr)
+    {
+      Fmi::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 3)
+        {
+          std::string server;
+          AccessInfo rec;
+
+          if (field[0][0] != '\0')
+            server = field[0];
+
+          if (field[1][0] != '\0')
+            rec.authenticationMethod = toUInt32(field[1]);
+
+          if (field[2][0] != '\0')
+            rec.username = field[2];
+
+          if (field[3][0] != '\0')
+            rec.password = field[3];
+
+          std::string key = toLowerString(server);
+          //printf("ADD ACCESS [%s][%u][%s][%s]\n",server.c_str(),rec.authenticationMethod,rec.username.c_str(),rec.password.c_str());
+          mAccessMap.insert(std::pair<std::string,AccessInfo>(key,rec));
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 void MemoryMapper::setEnabled(bool enabled)
 {
   try
@@ -215,8 +294,8 @@ void MemoryMapper::setEnabled(bool enabled)
       mFaultProcessingThread = new pthread_t[mMaxProcessingThreads];
 
       DataFetcher_sptr df_filesys(new DataFetcher_filesys);
-      DataFetcher_sptr df_http(new DataFetcher_network(DataFetcher_network::Protocol::HTTP));
-      DataFetcher_sptr df_https(new DataFetcher_network(DataFetcher_network::Protocol::HTTPS));
+      DataFetcher_sptr df_http(new DataFetcher_network(DataFetcher_network::Protocol::HTTP,&mAccessMap));
+      DataFetcher_sptr df_https(new DataFetcher_network(DataFetcher_network::Protocol::HTTPS,&mAccessMap));
 
       mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(0,df_filesys));   // Unknow protocol
       mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(1,df_filesys));   // Fileys
@@ -246,6 +325,8 @@ void MemoryMapper::setEnabled(bool enabled)
         mPageCache[t] = new char[mPageSize];
         mPageCacheIndex[t] = -1;
       }
+
+      startFaultHandler();
     }
   }
   catch (...)
@@ -271,9 +352,6 @@ void MemoryMapper::map(MapInfo& info)
 
     if (info.memoryPtr == MAP_FAILED)
       throw Fmi::Exception(BCP,"mmap failed");
-
-    if (mMemoryMappings.size() == 0  &&  mThreadsRunning == 0  &&  !mStopRequired)
-      startFaultHandler();
 
     //printf("Add %ld %s %lld - %lld  %ld\n",mMemoryMappings.size(),info.filename.c_str(),(long long)info.memoryPtr,(long long)info.memoryPtr+info.allocatedSize,info.allocatedSize);
 
@@ -627,7 +705,7 @@ void MemoryMapper::faultProcessingThread()
         else
         {
           sleepCount++;
-          if (sleepCount < 100)
+          if (sleepCount < 50  &&  mMessageReadCount > 0)
             time_usleep(0,500000);
           else
             time_usleep(0,10000000);

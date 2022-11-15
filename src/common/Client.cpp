@@ -12,6 +12,7 @@ Client::Client()
   try
   {
     mActive = false;
+    mAuthenticationMethod = 0;
   }
   catch (...)
   {
@@ -52,11 +53,14 @@ void Client::setActive(bool active)
 
 
 
-uint Client::getAuthenticationMethod(MapInfo& info)
+void Client::setAuthentication(uint authenticationMethod,const char *username,const char *password)
 {
   try
   {
-    return 0;
+    mAuthenticationMethod = authenticationMethod;
+    mUsername = username;
+    mPassword = password;
+    //printf("SET AUTH %u:%s:%s\n",authenticationMethod,username,password);
   }
   catch (...)
   {
@@ -71,16 +75,14 @@ struct curl_slist* Client::addAuthenticationHeaders(MapInfo& info,struct curl_sl
 {
   try
   {
-    uint authenticationMethod = getAuthenticationMethod(info);
-
-    if (authenticationMethod == 1)
+    if (mAuthenticationMethod == 1)
     {
       time_t currentTime = time(0);
 
       std::string timeStamp = utcTimeFromTimeT(currentTime);
       std::string date = timeStamp.substr(0,8);
-      std::string username = "test";
-      std::string password = "testtest";
+      //std::string username = "test";
+      //std::string password = "testtest";
       std::string dateRegion = "eu-north-1";
       std::string dateRegionService = "s3";
       std::string signing = "aws4_request";
@@ -101,7 +103,7 @@ struct curl_slist* Client::addAuthenticationHeaders(MapInfo& info,struct curl_sl
       char hexHash[100];
       hash_sha256((unsigned char*)canonicalRequest,strlen(canonicalRequest),hexHash);
 
-      printf("CANONICAL REQUEST:\n%s\n",canonicalRequest);
+      //printf("CANONICAL REQUEST:\n%s\n",canonicalRequest);
 
       char stringToSign[10000];
       char *p = stringToSign;
@@ -110,12 +112,12 @@ struct curl_slist* Client::addAuthenticationHeaders(MapInfo& info,struct curl_sl
       p += sprintf(p,"%s/%s/%s/%s\n",date.c_str(),dateRegion.c_str(),dateRegionService.c_str(),signing.c_str());
       p += sprintf(p,"%s",hexHash);
 
-      printf("STRING TO SIGN:\n%s\n",stringToSign);
+      //printf("STRING TO SIGN:\n%s\n",stringToSign);
 
       char hexSignature[100];
-      if (signature_aws_s3_v4(username.c_str(),password.c_str(),date.c_str(),dateRegion.c_str(),dateRegionService.c_str(),stringToSign,hexSignature) == 0)
+      if (signature_aws_s3_v4(mUsername.c_str(),mPassword.c_str(),date.c_str(),dateRegion.c_str(),dateRegionService.c_str(),stringToSign,hexSignature) == 0)
       {
-        printf("SIGNATURE : %s\n",hexSignature);
+        //printf("SIGNATURE : %s\n",hexSignature);
 
         headerList = curl_slist_append(headerList,"x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
 
@@ -124,7 +126,7 @@ struct curl_slist* Client::addAuthenticationHeaders(MapInfo& info,struct curl_sl
         headerList = curl_slist_append(headerList, tmp);
 
         sprintf(tmp,"Authorization: AWS4-HMAC-SHA256 Credential=%s/%s/%s/%s/%s,SignedHeaders=host;x-amz-content-sha256;x-amz-date,Signature=%s",
-            username.c_str(),date.c_str(),dateRegion.c_str(),dateRegionService.c_str(),signing.c_str(),hexSignature);
+            mUsername.c_str(),date.c_str(),dateRegion.c_str(),dateRegionService.c_str(),signing.c_str(),hexSignature);
 
         headerList = curl_slist_append(headerList, tmp);
       }

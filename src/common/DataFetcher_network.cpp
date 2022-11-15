@@ -10,11 +10,12 @@
 namespace SmartMet
 {
 
-DataFetcher_network::DataFetcher_network(uint protocol)
+DataFetcher_network::DataFetcher_network(uint protocol,AccessMap *accessMap)
 {
   try
   {
     mProtocol = protocol;
+    mAccessMap = accessMap;
   }
   catch (...)
   {
@@ -44,6 +45,32 @@ DataFetcher_network::~DataFetcher_network()
     exception.printError();
   }
 }
+
+
+
+
+
+AccessInfo* DataFetcher_network::getAccessInfo(const char *server)
+{
+  try
+  {
+    if (!mAccessMap)
+      return NULL;
+
+    auto rec = mAccessMap->find(server);
+    if (rec != mAccessMap->end())
+    {
+      return &rec->second;
+    }
+
+    return NULL;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
 
 
 
@@ -98,6 +125,12 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
 
       Client *conn = newClient();
       conn->setActive(true);
+      AccessInfo *accessInfo = getAccessInfo(serverAddress);
+      if (accessInfo)
+        conn->setAuthentication(accessInfo->authenticationMethod,accessInfo->username.c_str(),accessInfo->password.c_str());
+      else
+        printf("NO AUTH %s\n",serverAddress);
+
       convec->second.push_back(conn);
       //printf("Connections %ld:%ld\n",mClients.size(),convec->second.size());
       return conn;
@@ -106,6 +139,11 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
     {
       Client_ptr_vec vec;
       Client *conn = newClient();
+      AccessInfo *accessInfo = getAccessInfo(serverAddress);
+      if (accessInfo)
+        conn->setAuthentication(accessInfo->authenticationMethod,accessInfo->username.c_str(),accessInfo->password.c_str());
+      else
+        printf("NO AUTH %s\n",serverAddress);
       conn->setActive(true);
       vec.push_back(conn);
       mClients.insert(std::pair<std::string,Client_ptr_vec>(key,vec));

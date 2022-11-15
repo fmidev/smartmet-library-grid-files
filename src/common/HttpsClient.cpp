@@ -53,12 +53,6 @@ int HttpsClient::getData(MapInfo& info,std::size_t filePosition,int dataSize,cha
       return 0;
 
     // printf("*** SEND REQUEST %s  : %ld : %d\n",info.filename.c_str(),filePosition,dataSize);
-/*
-    info.server = "127.0.0.1:9000";
-    info.filename = "/demo/T-K.grib";
-    filePosition = 0;
-    dataSize = 4096;
-*/
     Response response;
     response.data = dataPtr;
     response.maxSize = dataSize;

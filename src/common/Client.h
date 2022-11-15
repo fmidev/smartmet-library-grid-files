@@ -5,6 +5,7 @@
 #include <curl/curl.h>
 #include <string>
 #include <vector>
+#include <map>
 
 
 namespace SmartMet
@@ -17,6 +18,7 @@ class Client
                   Client();
     virtual       ~Client();
 
+    virtual void  setAuthentication(uint authenticationMethod,const char *username,const char *password);
     virtual int   getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr);
 
     virtual bool  isActive();
@@ -24,10 +26,13 @@ class Client
 
   protected:
 
-    uint          getAuthenticationMethod(MapInfo& info);
     struct curl_slist* addAuthenticationHeaders(MapInfo& info,struct curl_slist *headerList);
 
     bool          mActive;
+    uint          mAuthenticationMethod;
+    std::string   mUsername;
+    std::string   mPassword;
+
 
   public:
 
@@ -39,7 +44,6 @@ class Client
         uint maxSize;
     };
 };
-
 
 
 
