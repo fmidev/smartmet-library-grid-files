@@ -12,8 +12,6 @@
 #include <netdb.h>
 
 
-//#define CURL_DEBUG 1
-
 
 namespace SmartMet
 {
@@ -45,7 +43,7 @@ HttpsClient::~HttpsClient()
 
 
 
-int HttpsClient::getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr)
+int HttpsClient::getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr)
 {
   try
   {
@@ -59,7 +57,67 @@ int HttpsClient::getData(MapInfo& info,std::size_t filePosition,int dataSize,cha
     response.dataSize = 0;
 
     char url[1000];
-    sprintf(url,"https://%s%s",info.server.c_str(),info.filename.c_str());
+    sprintf(url,"https://%s%s",server,filename);
+    //printf("URL [%s]\n",url);
+
+    curl_easy_setopt(curl, CURLOPT_URL,url);
+    curl_easy_setopt(curl, CURLOPT_PROXY,"");
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,curl_responseProcessing);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+    curl_easy_setopt(curl, CURLOPT_HEADER, 1L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
+
+    if (mDebugEnabled)
+    {
+      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, curl_trace);
+      curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+    }
+
+    struct curl_slist *headerList = NULL;
+
+    headerList = addAuthenticationHeaders(server,filename,headerList);
+    if (headerList)
+      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerList);
+
+    CURLcode res = curl_easy_perform(curl);
+    if (res != CURLE_OK)
+      fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
+
+    if (headerList)
+      curl_slist_free_all(headerList);
+
+
+    response.data[response.dataSize] = '\0';
+    //printf("%s\n",response.data);
+
+    return response.dataSize;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+int HttpsClient::getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
+{
+  try
+  {
+    if (!curl)
+      return 0;
+
+    // printf("*** SEND REQUEST %s  : %ld : %d\n",info.filename.c_str(),filePosition,dataSize);
+    Response response;
+    response.data = dataPtr;
+    response.maxSize = dataSize;
+    response.dataSize = 0;
+
+    char url[1000];
+    sprintf(url,"https://%s%s",server,filename);
     //printf("URL [%s]\n",url);
 
     curl_easy_setopt(curl, CURLOPT_URL,url);
@@ -69,18 +127,22 @@ int HttpsClient::getData(MapInfo& info,std::size_t filePosition,int dataSize,cha
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
-#ifdef CURL_DEBUG
-    curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, curl_trace);
-    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-#endif
+    if (mDebugEnabled)
+    {
+      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, curl_trace);
+      curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+    }
 
     struct curl_slist *headerList = NULL;
 
-    char tmp[1000];
-    sprintf(tmp,"Range: bytes=%ld-%ld",filePosition,filePosition+dataSize-1);
-    headerList = curl_slist_append(headerList, tmp);
+    if ((int)filePosition != dataSize)
+    {
+      char tmp[1000];
+      sprintf(tmp,"Range: bytes=%ld-%ld",filePosition,filePosition+dataSize-1);
+      headerList = curl_slist_append(headerList, tmp);
+    }
 
-    headerList = addAuthenticationHeaders(info,headerList);
+    headerList = addAuthenticationHeaders(server,filename,headerList);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerList);
 
     CURLcode res = curl_easy_perform(curl);
@@ -96,6 +158,7 @@ int HttpsClient::getData(MapInfo& info,std::size_t filePosition,int dataSize,cha
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
 
 
 }

@@ -64,7 +64,7 @@ MemoryMapper::MemoryMapper()
     mPageSize = 0;
     mPageCacheCounter = 0;
     mPageCacheFreedCounter = 0;
-    mPageCacheSize = 1000000;
+    mPageCacheSize = 100000;
   }
   catch (...)
   {
@@ -100,7 +100,7 @@ void MemoryMapper::addMapInfo(MapInfo *mapInfo)
   try
   {
 
-    //std::cout << "MAP " << mapInfo->protocol << ":" << mapInfo->serverType << ":" << mapInfo->server << ":" << mapInfo->filename << "\n";
+    // std::cout << "MAP " << mapInfo->protocol << ":" << mapInfo->serverType << ":" << mapInfo->server << ":" << mapInfo->filename << "\n";
 
     //AutoWriteLock lock(&mModificationLock);
 
@@ -117,6 +117,7 @@ void MemoryMapper::addMapInfo(MapInfo *mapInfo)
     }
 
     mMemoryMappings.insert(mMemoryMappings.begin() + idx, mapInfo);
+
 /*
     printf("\n\nMAPPINGS\n");
     for (auto it = mMemoryMappings.begin(); it != mMemoryMappings.end(); ++it)
@@ -202,71 +203,30 @@ bool MemoryMapper::isEnabled()
 
 
 
-void MemoryMapper::loadAccessFile(const char *filename)
+void MemoryMapper::addAccessInfo(const char *server,uint authenticationMethod,const char *username,const char *password)
 {
   try
   {
-    FILE *file = fopen(filename,"re");
-    if (file == nullptr)
+    for (auto it = mDataFetchers.begin(); it != mDataFetchers.end(); ++it)
     {
-      Fmi::Exception exception(BCP,"Cannot open file!");
-      exception.addParameter("Filename",std::string(filename));
-      throw exception;
+      (it->second)->addAccessInfo(server,authenticationMethod,username,password);
     }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
-    char st[1000];
 
-    while (!feof(file))
-    {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
-      {
-        bool ind = false;
-        char *field[100];
-        uint c = 1;
-        field[0] = st;
-        char *p = st;
-        while (*p != '\0'  &&  c < 100)
-        {
-          if (*p == '"')
-            ind = !ind;
 
-          if ((*p == ';'  || *p == '\n') && !ind)
-          {
-            *p = '\0';
-            p++;
-            field[c] = p;
-            c++;
-          }
-          else
-          {
-            p++;
-          }
-        }
 
-        if (c > 3)
-        {
-          std::string server;
-          AccessInfo rec;
 
-          if (field[0][0] != '\0')
-            server = field[0];
-
-          if (field[1][0] != '\0')
-            rec.authenticationMethod = toUInt32(field[1]);
-
-          if (field[2][0] != '\0')
-            rec.username = field[2];
-
-          if (field[3][0] != '\0')
-            rec.password = field[3];
-
-          std::string key = toLowerString(server);
-          //printf("ADD ACCESS [%s][%u][%s][%s]\n",server.c_str(),rec.authenticationMethod,rec.username.c_str(),rec.password.c_str());
-          mAccessMap.insert(std::pair<std::string,AccessInfo>(key,rec));
-        }
-      }
-    }
-    fclose(file);
+void MemoryMapper::setAccessFile(const char *filename)
+{
+  try
+  {
+    mAccessFile = filename;
   }
   catch (...)
   {
@@ -294,15 +254,16 @@ void MemoryMapper::setEnabled(bool enabled)
       mFaultProcessingThread = new pthread_t[mMaxProcessingThreads];
 
       DataFetcher_sptr df_filesys(new DataFetcher_filesys);
-      DataFetcher_sptr df_http(new DataFetcher_network(DataFetcher_network::Protocol::HTTP,&mAccessMap));
-      DataFetcher_sptr df_https(new DataFetcher_network(DataFetcher_network::Protocol::HTTPS,&mAccessMap));
+      DataFetcher_sptr df_network(new DataFetcher_network());
 
-      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(0,df_filesys));   // Unknow protocol
-      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(1,df_filesys));   // Fileys
-      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(2,df_https));     // S3
-      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(3,df_filesys));   // THREDDS
-      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(4,df_http));      // HTTP
-      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(5,df_https));     // HTTPS
+      if (!mAccessFile.empty())
+        df_network->setAccessFile(mAccessFile.c_str());
+
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::Unknown,df_filesys));   // Unknow protocol
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::Filesys,df_filesys));   // Fileys
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::S3,df_network));        // S3
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::THREDDS,df_network));   // THREDDS
+      mDataFetchers.insert(std::pair<uint,DataFetcher_sptr>(DataFetcher::ServerType::HTTPD,df_network));     // HTTPD
 
       mPageSize = sysconf(_SC_PAGE_SIZE);
       mUffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
@@ -557,6 +518,25 @@ void MemoryMapper::stopFaultHandler()
 
 
 
+long long MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
+{
+  try
+  {
+    auto it = mDataFetchers.find(serverType);
+    if (it != mDataFetchers.end())
+      return it->second->getFileSize(serverType,protocol,server,filename);
+
+    return -1;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 int MemoryMapper::getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   try
@@ -588,9 +568,9 @@ int MemoryMapper::getData(MapInfo& info,std::size_t filePosition,int dataSize,ch
       }
     }
 
-    auto it = mDataFetchers.find(info.protocol);
+    auto it = mDataFetchers.find(info.serverType);
     if (it != mDataFetchers.end())
-      return it->second->getData(info,filePosition,dataSize,dataPtr);
+      return it->second->getData(info.serverType,info.protocol,info.server.c_str(),info.filename.c_str(),filePosition,dataSize,dataPtr);
 
     return 0;
   }

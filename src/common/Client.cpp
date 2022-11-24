@@ -13,6 +13,7 @@ Client::Client()
   {
     mActive = false;
     mAuthenticationMethod = 0;
+    mDebugEnabled = false;
   }
   catch (...)
   {
@@ -30,7 +31,15 @@ Client::~Client()
 
 
 
-int Client::getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr)
+int Client::getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
+{
+  throw Fmi::Exception(BCP,"Should be implemented in the child class!");
+}
+
+
+
+
+int Client::getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr)
 {
   throw Fmi::Exception(BCP,"Should be implemented in the child class!");
 }
@@ -53,6 +62,14 @@ void Client::setActive(bool active)
 
 
 
+void Client::setDebugEnabled(bool enabled)
+{
+  mDebugEnabled = enabled;
+}
+
+
+
+
 void Client::setAuthentication(uint authenticationMethod,const char *username,const char *password)
 {
   try
@@ -71,7 +88,7 @@ void Client::setAuthentication(uint authenticationMethod,const char *username,co
 
 
 
-struct curl_slist* Client::addAuthenticationHeaders(MapInfo& info,struct curl_slist *headerList)
+struct curl_slist* Client::addAuthenticationHeaders(const char *server,const char *filename,struct curl_slist *headerList)
 {
   try
   {
@@ -90,9 +107,9 @@ struct curl_slist* Client::addAuthenticationHeaders(MapInfo& info,struct curl_sl
       char canonicalRequest[10000];
       char *r = canonicalRequest;
       r += sprintf(r,"GET\n");
-      r += sprintf(r,"%s\n",info.filename.c_str());
+      r += sprintf(r,"%s\n",filename);
       r += sprintf(r,"\n");
-      r += sprintf(r,"host:%s\n",info.server.c_str());
+      r += sprintf(r,"host:%s\n",server);
       r += sprintf(r,"x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\n");
       r += sprintf(r,"x-amz-date:%sZ\n",timeStamp.c_str());
       r += sprintf(r,"\n");

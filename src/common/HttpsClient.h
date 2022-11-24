@@ -13,9 +13,12 @@ class HttpsClient : public Client
               HttpsClient();
     virtual   ~HttpsClient();
 
-    int       getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr);
+    int       getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr);
+    int       getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr);
 
   protected:
+
+
 
     CURL*     curl;
 };

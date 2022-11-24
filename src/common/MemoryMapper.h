@@ -24,8 +24,10 @@ class MemoryMapper
     bool      isEnabled();
     void      setEnabled(bool enabled);
 
-    void      loadAccessFile(const char *filename);
+    void      addAccessInfo(const char *server,uint authenticationMethod,const char *username,const char *password);
+    void      setAccessFile(const char *filename);
 
+    long long getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
     MapInfo*  getMapInfo(char *address);
 
     void      premap(char *startAddress,char *endAddress);
@@ -71,7 +73,7 @@ class MemoryMapper
     long long                 mPageCacheFreedCounter;
     long long                 mPageCacheSize;
     std::map<char*,char*>     mPremapRequests;
-    AccessMap                 mAccessMap;
+    std::string               mAccessFile;
 };
 
 

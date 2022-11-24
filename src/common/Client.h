@@ -18,17 +18,20 @@ class Client
                   Client();
     virtual       ~Client();
 
-    virtual void  setAuthentication(uint authenticationMethod,const char *username,const char *password);
-    virtual int   getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr);
+    virtual int   getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr);
+    virtual int   getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr);
 
     virtual bool  isActive();
     virtual void  setActive(bool active);
+    virtual void  setDebugEnabled(bool enabled);
+    virtual void  setAuthentication(uint authenticationMethod,const char *username,const char *password);
 
   protected:
 
-    struct curl_slist* addAuthenticationHeaders(MapInfo& info,struct curl_slist *headerList);
+    struct curl_slist* addAuthenticationHeaders(const char *server,const char *filename,struct curl_slist *headerList);
 
     bool          mActive;
+    bool          mDebugEnabled;
     uint          mAuthenticationMethod;
     std::string   mUsername;
     std::string   mPassword;

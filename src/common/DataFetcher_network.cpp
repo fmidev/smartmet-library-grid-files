@@ -5,17 +5,16 @@
 #include "GeneralFunctions.h"
 
 #include <macgyver/Exception.h>
+#include <macgyver/TimeParser.h>
 #include <curl/curl.h>
 
 namespace SmartMet
 {
 
-DataFetcher_network::DataFetcher_network(uint protocol,AccessMap *accessMap)
+DataFetcher_network::DataFetcher_network()
 {
   try
   {
-    mProtocol = protocol;
-    mAccessMap = accessMap;
   }
   catch (...)
   {
@@ -50,35 +49,11 @@ DataFetcher_network::~DataFetcher_network()
 
 
 
-AccessInfo* DataFetcher_network::getAccessInfo(const char *server)
+Client* DataFetcher_network::newClient(uint protocol)
 {
   try
   {
-    if (!mAccessMap)
-      return NULL;
-
-    auto rec = mAccessMap->find(server);
-    if (rec != mAccessMap->end())
-    {
-      return &rec->second;
-    }
-
-    return NULL;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-Client* DataFetcher_network::newClient()
-{
-  try
-  {
-    switch (mProtocol)
+    switch (protocol)
     {
       case Protocol::HTTP:
         return new HttpClient();
@@ -97,14 +72,14 @@ Client* DataFetcher_network::newClient()
 
 
 
-Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType)
+Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType,uint protocol)
 {
   try
   {
     AutoThreadLock lock(&mThreadLock);
 
     char key[100];
-    sprintf(key,"%s:%u",serverAddress,serverType);
+    sprintf(key,"%s:%u:%u",serverAddress,serverType,protocol);
 
     auto convec = mClients.find(key);
     if (convec != mClients.end())
@@ -116,6 +91,7 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
         if (!(*it)->isActive())
         {
           (*it)->setActive(true);
+          (*it)->setDebugEnabled(mDebugEnabled);
           return *it;
         }
       }
@@ -123,13 +99,14 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
       if (convec->second.size() >= 10)
         return nullptr;
 
-      Client *conn = newClient();
+      Client *conn = newClient(protocol);
       conn->setActive(true);
+      conn->setDebugEnabled(mDebugEnabled);
       AccessInfo *accessInfo = getAccessInfo(serverAddress);
       if (accessInfo)
         conn->setAuthentication(accessInfo->authenticationMethod,accessInfo->username.c_str(),accessInfo->password.c_str());
-      else
-        printf("NO AUTH %s\n",serverAddress);
+      //else
+      //  printf("NO AUTH %s\n",serverAddress);
 
       convec->second.push_back(conn);
       //printf("Connections %ld:%ld\n",mClients.size(),convec->second.size());
@@ -138,13 +115,14 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
     else
     {
       Client_ptr_vec vec;
-      Client *conn = newClient();
+      Client *conn = newClient(protocol);
       AccessInfo *accessInfo = getAccessInfo(serverAddress);
       if (accessInfo)
         conn->setAuthentication(accessInfo->authenticationMethod,accessInfo->username.c_str(),accessInfo->password.c_str());
-      else
-        printf("NO AUTH %s\n",serverAddress);
+      //else
+      //  printf("NO AUTH %s\n",serverAddress);
       conn->setActive(true);
+      conn->setDebugEnabled(mDebugEnabled);
       vec.push_back(conn);
       mClients.insert(std::pair<std::string,Client_ptr_vec>(key,vec));
       return conn;
@@ -160,7 +138,7 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
 
 
 
-int DataFetcher_network::getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr)
+int DataFetcher_network::getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   try
   {
@@ -168,7 +146,7 @@ int DataFetcher_network::getData(MapInfo& info,std::size_t filePosition,int data
     uint cnt = 0;
     while (!client)
     {
-      client = getClient(info.server.c_str(),info.serverType);
+      client = getClient(server,serverType,protocol);
       if (!client)
       {
         cnt++;
@@ -181,7 +159,7 @@ int DataFetcher_network::getData(MapInfo& info,std::size_t filePosition,int data
 
     if (client)
     {
-      auto res = client->getData(info,filePosition,dataSize,dataPtr);
+      auto res = client->getData(server,filename,filePosition,dataSize,dataPtr);
       client->setActive(false);
       return res;
     }
@@ -192,6 +170,198 @@ int DataFetcher_network::getData(MapInfo& info,std::size_t filePosition,int data
     throw Fmi::Exception(BCP,"Cannot get data!",nullptr);
   }
 }
+
+
+
+
+bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElement& rootElement,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey)
+{
+  try
+  {
+    bool truncated = false;
+    for (auto a = rootElement.elementList.begin(); a != rootElement.elementList.end(); ++a)
+    {
+      if (strcasecmp((*a)->tag.c_str(), "ListBucketResult") == 0)
+      {
+        std::string name;
+        for (auto b = (*a)->elementList.begin(); b != (*a)->elementList.end(); ++b)
+        {
+          if (strcasecmp((*b)->tag.c_str(), "IsTruncated") == 0)
+          {
+            if (strcasecmp((*b)->value.c_str(),"true") == 0)
+              truncated = true;
+          }
+          if (strcasecmp((*b)->tag.c_str(), "Name") == 0)
+          {
+            name = (*b)->value;
+          }
+          else
+          if (strcasecmp((*b)->tag.c_str(), "Contents") == 0)
+          {
+            FileRec rec;
+            rec.serverType = ServerType::S3;
+            rec.protocol = protocol;
+            rec.server = server;
+            for (auto c = (*b)->elementList.begin(); c != (*b)->elementList.end(); ++c)
+            {
+              if (strcasecmp((*c)->tag.c_str(), "Key") == 0)
+              {
+                if (truncated)
+                  lastKey = (*c)->value;
+
+                rec.filename = "/" + name + "/" + (*c)->value;
+              }
+              else
+              if (strcasecmp((*c)->tag.c_str(), "LastModified") == 0)
+              {
+                auto tt = Fmi::TimeParser::parse((*c)->value);
+                rec.lastModified = toTimeT(tt);
+              }
+              else
+              if (strcasecmp((*c)->tag.c_str(), "Size") == 0)
+              {
+                rec.size = atoll((*c)->value.c_str());
+              }
+            }
+
+            if (filePatterns.size() == 0 || patternMatch(rec.filename.c_str(),filePatterns))
+              fileList.push_back(rec);
+          }
+        }
+      }
+    }
+    return truncated;
+  }
+  catch (Fmi::Exception& e)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+void DataFetcher_network::getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
+{
+  try
+  {
+    switch (serverType)
+    {
+      case ServerType::Unknown:
+        return;
+
+      case ServerType::Filesys:
+        return;
+
+      case ServerType::S3:
+        getFileList_S3(protocol,server,dir,filePatterns,fileList);
+        return;
+
+      case ServerType::THREDDS:
+        return;
+
+      case ServerType::HTTPD:
+        return;
+    }
+  }
+  catch (Fmi::Exception& e)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
+{
+  try
+  {
+    int dataSize = 1000000;
+    char data[dataSize];
+    bool truncated = false;
+    std::string lastKey;
+    char fname[1000];
+
+    do
+    {
+      if (truncated)
+        sprintf(fname,"%s?marker=%s",dir,lastKey.c_str());
+      else
+        strcpy(fname,dir);
+
+      int n = getData(ServerType::S3,protocol,server,fname,dataSize,dataSize,data);
+      //printf("READ %d\n",n);
+      if (n <= 0)
+        return;
+
+      XmlElement xml;
+      XmlElement::parseXml(data,n,xml);
+      truncated = getFileList(protocol,server,xml,filePatterns,fileList,lastKey);
+    } while (truncated);
+
+  }
+  catch (Fmi::Exception& e)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+void DataFetcher_network::getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers)
+{
+  try
+  {
+    Client *client = nullptr;
+    uint cnt = 0;
+    while (!client)
+    {
+      client = getClient(server,serverType,protocol);
+      if (!client)
+      {
+        cnt++;
+        if (cnt == 1000)
+          return;
+
+        time_usleep(0,1000);
+      }
+    }
+
+    if (client)
+    {
+      int dataSize = 20000;
+      char data[dataSize];
+
+      auto n = client->getHeaderData(server,filename,dataSize,data);
+      client->setActive(false);
+      parseHeaders(data,n,headers);
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+long long DataFetcher_network::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
+{
+  try
+  {
+    std::map<std::string,std::string> headers;
+    getFileHeaders(serverType,protocol,server,filename,headers);
+    auto it = headers.find("CONTENT-LENGTH");
+    if (it != headers.end())
+      return atoll(it->second.c_str());
+
+    return -1;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
 
 
 }  // namespace SmartMet

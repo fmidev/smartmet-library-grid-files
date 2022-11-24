@@ -3,6 +3,7 @@
 #include "DataFetcher.h"
 #include "ThreadLock.h"
 #include "Client.h"
+#include "XmlElement.h"
 
 namespace SmartMet
 {
@@ -18,38 +19,28 @@ typedef std::map<std::string,Client_ptr_vec> Client_vecmap;
 
 
 
-class AccessInfo
-{
-  public:
-    uint authenticationMethod = 0;
-    std::string username;
-    std::string password;
-};
-
-typedef std::map<std::string,AccessInfo> AccessMap;
-
-
-
-
 
 class DataFetcher_network : public DataFetcher
 {
   public:
-                  DataFetcher_network(uint protocol,AccessMap *accessMap);
+                  DataFetcher_network();
     virtual       ~DataFetcher_network();
 
-    virtual int   getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr);
+    int           getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr);
+    void          getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
+    long long     getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
+    void          getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers);
 
   protected:
 
-    AccessInfo*   getAccessInfo(const char *server);
-    Client*       newClient();
-    Client*       getClient(const char *serverAddress,uint serviceType);
+    Client*       newClient(uint protocol);
+    Client*       getClient(const char *serverAddress,uint serverType,uint protocol);
+    bool          getFileList(uint protocol,const char *server,XmlElement& rootElement,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey);
+    void          getFileList_S3(uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
 
-    uint          mProtocol;
+
     ThreadLock    mThreadLock;
     Client_vecmap mClients;
-    AccessMap*    mAccessMap;
 
   public:
 

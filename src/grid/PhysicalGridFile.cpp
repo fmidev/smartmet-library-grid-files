@@ -154,10 +154,18 @@ void PhysicalGridFile::mapToMemory()
       //info.filename = "/demo/T-K.grib";
       info.server = mServer;
 
-      if (info.serverType == 1)
-        mFileSize = getFileSize(mFileName.c_str());
-      else
-        mFileSize = GridFile::getSize();
+      if (mFileSize <= 0)
+      {
+        mFileSize = memoryMapper.getFileSize(mServerType,mProtocol,mServer.c_str(),mFileName.c_str());
+
+        if (mFileSize <= 0)
+        {
+          if (info.serverType == 1)
+            mFileSize = getFileSize(mFileName.c_str());
+          else
+            mFileSize = GridFile::getSize();
+        }
+      }
 
       info.fileSize = mFileSize;
       memoryMapper.map(info);
