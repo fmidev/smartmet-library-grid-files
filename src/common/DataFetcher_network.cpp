@@ -8,13 +8,19 @@
 #include <macgyver/TimeParser.h>
 #include <curl/curl.h>
 
+#include "ShowFunction.h"
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
+
+
 namespace SmartMet
 {
 
 DataFetcher_network::DataFetcher_network()
 {
+  FUNCTION_TRACE
   try
   {
+    mDebugEnabled = false;
   }
   catch (...)
   {
@@ -27,6 +33,7 @@ DataFetcher_network::DataFetcher_network()
 
 DataFetcher_network::~DataFetcher_network()
 {
+  FUNCTION_TRACE
   try
   {
     AutoThreadLock lock(&mThreadLock);
@@ -51,6 +58,7 @@ DataFetcher_network::~DataFetcher_network()
 
 Client* DataFetcher_network::newClient(uint protocol)
 {
+  FUNCTION_TRACE
   try
   {
     switch (protocol)
@@ -74,6 +82,7 @@ Client* DataFetcher_network::newClient(uint protocol)
 
 Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType,uint protocol)
 {
+  FUNCTION_TRACE
   try
   {
     AutoThreadLock lock(&mThreadLock);
@@ -140,6 +149,7 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
 
 int DataFetcher_network::getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
+  FUNCTION_TRACE
   try
   {
     Client *client = nullptr;
@@ -176,6 +186,7 @@ int DataFetcher_network::getData(uint serverType,uint protocol,const char *serve
 
 bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElement& rootElement,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList,std::string& lastKey)
 {
+  FUNCTION_TRACE
   try
   {
     bool truncated = false;
@@ -242,6 +253,7 @@ bool DataFetcher_network::getFileList(uint protocol,const char *server,XmlElemen
 
 void DataFetcher_network::getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
+  FUNCTION_TRACE
   try
   {
     switch (serverType)
@@ -273,6 +285,7 @@ void DataFetcher_network::getFileList(uint serverType,uint protocol,const char *
 
 void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
+  FUNCTION_TRACE
   try
   {
     int dataSize = 1000000;
@@ -309,6 +322,7 @@ void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const 
 
 void DataFetcher_network::getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers)
 {
+  FUNCTION_TRACE
   try
   {
     Client *client = nullptr;
@@ -346,6 +360,7 @@ void DataFetcher_network::getFileHeaders(uint serverType,uint protocol,const cha
 
 long long DataFetcher_network::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
     std::map<std::string,std::string> headers;

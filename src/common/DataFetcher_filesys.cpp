@@ -1,15 +1,21 @@
 #include "DataFetcher_filesys.h"
 #include "GeneralFunctions.h"
 #include "AutoThreadLock.h"
+#include "ShowFunction.h"
 #include <macgyver/Exception.h>
 #include <sys/stat.h>
 #include <dirent.h>
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
+
+
 
 namespace SmartMet
 {
 
 DataFetcher_filesys::DataFetcher_filesys()
 {
+  FUNCTION_TRACE
   mLastChecked = time(0);
 }
 
@@ -18,6 +24,7 @@ DataFetcher_filesys::DataFetcher_filesys()
 
 DataFetcher_filesys::~DataFetcher_filesys()
 {
+  FUNCTION_TRACE
   for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
   {
     fclose(it->second->fileHandle);
@@ -30,13 +37,14 @@ DataFetcher_filesys::~DataFetcher_filesys()
 
 void DataFetcher_filesys::checkFileHandles()
 {
+  FUNCTION_TRACE
   try
   {
     SmartMet::AutoThreadLock lock(&mThreadLock);
-    if ((time(0) - mLastChecked) > 3600)
+    if ((time(0) - mLastChecked) > 600)
     {
       std::vector<std::string> deleteList;
-      time_t old = time(0) - 3600;
+      time_t old = time(0) - 600;
       for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
       {
         if (it->second->lastUsed < old)
@@ -70,11 +78,12 @@ void DataFetcher_filesys::checkFileHandles()
 
 FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
     time_t currentTime = time(0);
 
-    if ((currentTime - mLastChecked) > 3600)
+    if ((currentTime - mLastChecked) > 600)
       checkFileHandles();
 
     auto fh = mFileHandles.find(filename);
@@ -107,6 +116,7 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
 
 int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
+  FUNCTION_TRACE
   try
   {
     FileHandle *fh = getFileHandle(filename);
@@ -133,6 +143,7 @@ int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *serve
 
 void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::string> &filePatterns,std::set<std::string> &dirList,std::vector<FileRec>& fileList)
 {
+  FUNCTION_TRACE
   try
   {
     char *path = realpath(dirName, nullptr);
@@ -226,6 +237,7 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
 
 void DataFetcher_filesys::getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList)
 {
+  FUNCTION_TRACE
   try
   {
     std::set<std::string> dirList;
@@ -241,6 +253,7 @@ void DataFetcher_filesys::getFileList(uint serverType,uint protocol,const char *
 
 long long DataFetcher_filesys::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
     struct stat buf;
@@ -259,6 +272,7 @@ long long DataFetcher_filesys::getFileSize(uint serverType,uint protocol,const c
 
 void DataFetcher_filesys::getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers)
 {
+  FUNCTION_TRACE
   try
   {
   }

@@ -1,6 +1,10 @@
 #include "DataFetcher_filesys.h"
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
+#include "ShowFunction.h"
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
+
 
 namespace SmartMet
 {
@@ -61,6 +65,7 @@ void DataFetcher::setDebugEnabled(bool enabled)
 
 void DataFetcher::setAccessFile(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
     loadAccessFile(filename,mAccessMap);
@@ -77,6 +82,7 @@ void DataFetcher::setAccessFile(const char *filename)
 
 void DataFetcher::loadAccessFile(const char *filename,AccessMap& mAccessMap)
 {
+  FUNCTION_TRACE
   try
   {
     mAccessMap.clear();
@@ -158,6 +164,7 @@ void DataFetcher::loadAccessFile(const char *filename,AccessMap& mAccessMap)
 
 void DataFetcher::addAccessInfo(const char *server,uint authenticationMethod,const char *username,const char *password)
 {
+  FUNCTION_TRACE
   try
   {
     AccessInfo rec;
@@ -179,6 +186,7 @@ void DataFetcher::addAccessInfo(const char *server,uint authenticationMethod,con
 
 DataFetcher::AccessInfo* DataFetcher::getAccessInfo(const char *server)
 {
+  FUNCTION_TRACE
   try
   {
     if (mAccessMap.size() == 0)
@@ -202,6 +210,7 @@ DataFetcher::AccessInfo* DataFetcher::getAccessInfo(const char *server)
 
 void DataFetcher::parseHeaders(char *data,int dataSize,std::map<std::string,std::string>& headers)
 {
+  FUNCTION_TRACE
   try
   {
     if (dataSize <= 0)
@@ -258,6 +267,7 @@ void DataFetcher::parseHeaders(char *data,int dataSize,std::map<std::string,std:
 
 void DataFetcher::splitUrl(const char *urlStr,uint& protocol,std::string& server,std::string& filename)
 {
+  FUNCTION_TRACE
   try
   {
     if (!urlStr)
@@ -299,10 +309,6 @@ void DataFetcher::splitUrl(const char *urlStr,uint& protocol,std::string& server
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
-
-
-
 
 
 

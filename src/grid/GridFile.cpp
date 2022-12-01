@@ -25,8 +25,8 @@ GridFile::GridFile()
   {
     mCheckTime = 0;
     mFileId = 0;
-    mServerType = 1;
-    mProtocol = 0;
+    mMemoryMapInfo.serverType = 1;
+    mMemoryMapInfo.protocol = 0;
     mGroupFlags = 0;
     mProducerId = 0;
     mGenerationId = 0;
@@ -52,10 +52,7 @@ GridFile::GridFile(const GridFile& other)
   FUNCTION_TRACE
   try
   {
-    mFileName = other.mFileName;
-    mServerType = other.mServerType;
-    mProtocol = other.mProtocol;
-    mServer = other.mServer;
+    //mMemoryMapInfo = other.mMemoryMapInfo;
     mFileId = other.mFileId;
     mFileModificationTime = other.mFileModificationTime;
     mDeletionTime = other.mDeletionTime;
@@ -83,8 +80,8 @@ GridFile::GridFile(GridFile *gridFile)
   try
   {
     mCheckTime = 0;
-    mServerType = 1;
-    mProtocol = 0;
+    mMemoryMapInfo.serverType = 1;
+    mMemoryMapInfo.protocol = 0;
     mFileId = 0;
     mGroupFlags = 0;
     mProducerId = 0;
@@ -189,7 +186,7 @@ uchar GridFile::getProtocol() const
   FUNCTION_TRACE
   try
   {
-    return mProtocol;
+    return mMemoryMapInfo.protocol;
   }
   catch (...)
   {
@@ -210,7 +207,7 @@ uchar GridFile::getServerType() const
   FUNCTION_TRACE
   try
   {
-    return mServerType;
+    return mMemoryMapInfo.serverType;
   }
   catch (...)
   {
@@ -231,7 +228,7 @@ std::string GridFile::getServer() const
   FUNCTION_TRACE
   try
   {
-    return mServer;
+    return mMemoryMapInfo.server;
   }
   catch (...)
   {
@@ -421,7 +418,7 @@ char* GridFile::getMemoryPtr()
   FUNCTION_TRACE
   try
   {
-    return nullptr;
+    return mMemoryMapInfo.memoryPtr;
   }
   catch (...)
   {
@@ -836,7 +833,7 @@ void GridFile::setFileName(const std::string& fileName)
   FUNCTION_TRACE
   try
   {
-    mFileName = fileName;
+    mMemoryMapInfo.filename = fileName;
     mFileModificationTime = time(nullptr); //getFileModificationTime(fileName.c_str());
   }
   catch (...)
@@ -877,7 +874,7 @@ void GridFile::setProtocol(uchar protocol)
   FUNCTION_TRACE
   try
   {
-    mProtocol = protocol;
+    mMemoryMapInfo.protocol = protocol;
   }
   catch (...)
   {
@@ -893,7 +890,7 @@ void GridFile::setServerType(uchar serverType)
   FUNCTION_TRACE
   try
   {
-    mServerType = serverType;
+    mMemoryMapInfo.serverType = serverType;
   }
   catch (...)
   {
@@ -909,7 +906,7 @@ void GridFile::setServer(const std::string& server)
   FUNCTION_TRACE
   try
   {
-    mServer = toLowerString(server);
+    mMemoryMapInfo.server = toLowerString(server);
   }
   catch (...)
   {
@@ -1088,7 +1085,7 @@ std::string GridFile::getFileName() const
   FUNCTION_TRACE
   try
   {
-    return mFileName;
+    return mMemoryMapInfo.filename;
   }
   catch (...)
   {

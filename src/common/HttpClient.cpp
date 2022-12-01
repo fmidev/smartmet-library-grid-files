@@ -11,6 +11,8 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
+#include "ShowFunction.h"
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 namespace SmartMet
 {
@@ -18,6 +20,7 @@ namespace SmartMet
 
 HttpClient::HttpClient()
 {
+  FUNCTION_TRACE
   try
   {
     mActive = false;
@@ -34,6 +37,7 @@ HttpClient::HttpClient()
 
 HttpClient::~HttpClient()
 {
+  FUNCTION_TRACE
   if (curl != nullptr)
     curl_easy_cleanup(curl);
 }
@@ -44,6 +48,7 @@ HttpClient::~HttpClient()
 
 int HttpClient::getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr)
 {
+  FUNCTION_TRACE
   try
   {
     if (!curl)
@@ -105,6 +110,7 @@ int HttpClient::getHeaderData(const char *server,const char *filename,int dataSi
 
 int HttpClient::getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
+  FUNCTION_TRACE
   try
   {
     if (!curl)
@@ -124,6 +130,8 @@ int HttpClient::getData(const char *server,const char *filename,std::size_t file
     curl_easy_setopt(curl, CURLOPT_URL,url);
     curl_easy_setopt(curl, CURLOPT_PROXY,"");
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+    curl_easy_setopt(curl, CURLOPT_HEADER, 0L);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,curl_responseProcessing);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 

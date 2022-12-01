@@ -5,6 +5,7 @@
 #include "GeneralFunctions.h"
 #include "DataFetcher_filesys.h"
 #include "DataFetcher_network.h"
+#include "ShowFunction.h"
 
 #include <macgyver/Exception.h>
 #include <linux/userfaultfd.h>
@@ -15,6 +16,9 @@
 #include <signal.h>
 #include <poll.h>
 #include <curl/curl.h>
+
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
 namespace SmartMet
@@ -47,6 +51,7 @@ void* fault_processing_thread(void *arg)
 
 MemoryMapper::MemoryMapper()
 {
+  FUNCTION_TRACE
   try
   {
     mEnabled = false;
@@ -65,6 +70,7 @@ MemoryMapper::MemoryMapper()
     mPageCacheCounter = 0;
     mPageCacheFreedCounter = 0;
     mPageCacheSize = 100000;
+    mPremapEnabled = true;
   }
   catch (...)
   {
@@ -78,6 +84,7 @@ MemoryMapper::MemoryMapper()
 
 MemoryMapper::~MemoryMapper()
 {
+  FUNCTION_TRACE
   mStopRequired = true;
 
   while (mEnabled  &&  mThreadsRunning)
@@ -97,6 +104,7 @@ MemoryMapper::~MemoryMapper()
 
 void MemoryMapper::addMapInfo(MapInfo *mapInfo)
 {
+  FUNCTION_TRACE
   try
   {
 
@@ -138,6 +146,7 @@ void MemoryMapper::addMapInfo(MapInfo *mapInfo)
 
 int MemoryMapper::getClosestIndex(char *address)
 {
+  FUNCTION_TRACE
   try
   {
     int length = mMemoryMappings.size();
@@ -203,8 +212,28 @@ bool MemoryMapper::isEnabled()
 
 
 
+bool MemoryMapper::isPremapEnabled()
+{
+  if (mEnabled)
+    return mPremapEnabled;
+
+  return false;
+}
+
+
+
+
+void MemoryMapper::setPremapEnabled(bool enabled)
+{
+  mPremapEnabled = enabled;
+}
+
+
+
+
 void MemoryMapper::addAccessInfo(const char *server,uint authenticationMethod,const char *username,const char *password)
 {
+  FUNCTION_TRACE
   try
   {
     for (auto it = mDataFetchers.begin(); it != mDataFetchers.end(); ++it)
@@ -224,6 +253,7 @@ void MemoryMapper::addAccessInfo(const char *server,uint authenticationMethod,co
 
 void MemoryMapper::setAccessFile(const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
     mAccessFile = filename;
@@ -240,6 +270,7 @@ void MemoryMapper::setAccessFile(const char *filename)
 
 void MemoryMapper::setEnabled(bool enabled)
 {
+  FUNCTION_TRACE
   try
   {
     mEnabled = enabled;
@@ -278,7 +309,6 @@ void MemoryMapper::setEnabled(bool enabled)
       if (ioctl(mUffd, UFFDIO_API, &uffdio_api) == -1)
         throw Fmi::Exception(BCP,"ioctl-UFFDIO_API");
 
-
       mPageCacheIndex = new long long[mPageCacheSize];
       mPageCache = new char*[mPageCacheSize];
       for (uint t=0; t<mPageCacheSize; t++)
@@ -301,12 +331,44 @@ void MemoryMapper::setEnabled(bool enabled)
 
 void MemoryMapper::map(MapInfo& info)
 {
+  FUNCTION_TRACE
   try
   {
-    if (!mEnabled)
-      throw Fmi::Exception(BCP,"MemoryMapper is disabled!");
-
     AutoWriteLock lock(&mModificationLock);
+
+    info.mappingTime = time(0);
+
+    if (!mEnabled)
+    {
+      // We should use the old memory mapper
+
+      struct stat buf;
+      if (stat(info.filename.c_str(), &buf) == 0)
+      {
+        info.fileSize = (std::size_t)buf.st_size;
+      }
+      else
+      {
+        Fmi::Exception exception(BCP,"The file does not exist!");
+        exception.addParameter("Filename",info.filename);
+        throw exception;
+      }
+
+      if (info.fileSize == 0)
+      {
+        Fmi::Exception exception(BCP,"The file size is zero!");
+        exception.addParameter("Filename",info.filename);
+        throw exception;
+      }
+
+      MappedFileParams params(info.filename);
+      params.flags = boost::iostreams::mapped_file::readonly;
+      params.length = info.fileSize;
+      info.mappedFile.reset(new MappedFile(params));
+      //mFileModificationTime = getFileModificationTime(mFileName.c_str());
+      info.memoryPtr = const_cast<char*>(info.mappedFile->const_data());
+      return;
+    }
 
     info.allocatedSize = (((info.fileSize + 100)/ mPageSize) + 1) * mPageSize;
     info.memoryPtr = (char*)mmap(NULL, info.allocatedSize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
@@ -314,7 +376,7 @@ void MemoryMapper::map(MapInfo& info)
     if (info.memoryPtr == MAP_FAILED)
       throw Fmi::Exception(BCP,"mmap failed");
 
-    //printf("Add %ld %s %lld - %lld  %ld\n",mMemoryMappings.size(),info.filename.c_str(),(long long)info.memoryPtr,(long long)info.memoryPtr+info.allocatedSize,info.allocatedSize);
+    // printf("Add %ld %s %lld - %lld  %ld\n",info.fileSize,info.filename.c_str(),(long long)info.memoryPtr,(long long)info.memoryPtr+info.allocatedSize,info.allocatedSize);
 
     addMapInfo(new MapInfo(info));
     //mMemoryMappings.insert(std::pair<char*,MapInfo>(info.memoryPtr,info));
@@ -340,10 +402,16 @@ void MemoryMapper::map(MapInfo& info)
 
 void MemoryMapper::unmap(MapInfo& info)
 {
+  FUNCTION_TRACE
   try
   {
     if (!mEnabled)
-      throw Fmi::Exception(BCP,"MemoryMapper is disabled!");
+    {
+      if (info.mappedFile)
+        info.mappedFile->close();
+
+      return;
+    }
 
     if (info.memoryPtr != nullptr)
     {
@@ -379,6 +447,7 @@ void MemoryMapper::unmap(MapInfo& info)
 
 MapInfo* MemoryMapper::getMapInfo(char *address)
 {
+  FUNCTION_TRACE
   try
   {
     AutoReadLock lock(&mModificationLock);
@@ -402,13 +471,14 @@ MapInfo* MemoryMapper::getMapInfo(char *address)
 
 void MemoryMapper::premap(char *startAddress,char *endAddress)
 {
+  FUNCTION_TRACE
   try
   {
     if (!mEnabled)
       return;
 
     {
-      AutoWriteLock readLock(&mPageCacheModificationLock);
+      AutoWriteLock writeLock(&mPageCacheModificationLock);
       if (mPremapRequests.find(startAddress) == mPremapRequests.end())
         mPremapRequests.insert(std::pair<char*,char*>(startAddress,endAddress));
       else
@@ -520,8 +590,12 @@ void MemoryMapper::stopFaultHandler()
 
 long long MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {
+  FUNCTION_TRACE
   try
   {
+    if (!mEnabled)
+      return 0;
+
     auto it = mDataFetchers.find(serverType);
     if (it != mDataFetchers.end())
       return it->second->getFileSize(serverType,protocol,server,filename);

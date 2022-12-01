@@ -31,6 +31,7 @@ typedef std::uint32_t GribParamId;
 typedef std::int32_t ParamLevel;
 typedef std::int16_t ParamLevelId;
 typedef float ParamValue;
+typedef ParamValue* ParamValue_ptr;
 #define ParamValueMissing -16777216
 
 typedef std::vector<ParamId> ParamId_vec;
