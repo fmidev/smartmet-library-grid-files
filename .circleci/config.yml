@@ -121,7 +121,7 @@ workflows:
       - test-rhel9:
           requires:
             - build-rhel9
-      - upload-rhel7:
+      - upload-rhel8:
           context: fmi-global
           requires:
             - test-rhel8
