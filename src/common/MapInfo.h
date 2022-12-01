@@ -2,10 +2,19 @@
 
 #include "ThreadLock.h"
 #include <string>
+#include <boost/filesystem.hpp>
+#include <boost/iostreams/device/mapped_file.hpp>
+
+namespace bf = boost::filesystem;
 
 
 namespace SmartMet
 {
+
+typedef boost::iostreams::mapped_file_params MappedFileParams;
+typedef boost::iostreams::mapped_file MappedFile;
+typedef std::unique_ptr<MappedFile> MappedFile_uptr;
+
 
 class MapInfo
 {
@@ -20,22 +29,40 @@ class MapInfo
       allocatedSize = 0;
       memoryPtr = nullptr;
       mappingError = false;
+      mappingTime = 0;
+    }
+
+    MapInfo(const MapInfo& info)
+    {
+      protocol = info.protocol;
+      serverType = info.serverType;
+      server = info.server;
+      fileSize = info.fileSize;
+      filename = info.filename;
+      allocatedSize = info.allocatedSize;
+      memoryPtr = info.memoryPtr;
+      mappingError = info.mappingError;
+      mappingTime = info.mappingTime;
     }
 
     virtual ~MapInfo()
     {
+      if (mappedFile)
+        mappedFile->close();
     }
 
   public:
 
-    uint        protocol;
-    uint        serverType;
-    std::string server;
-    std::string filename;
-    std::size_t fileSize;
-    std::size_t allocatedSize;
-    char*       memoryPtr;
-    bool        mappingError;
+    uint            protocol;
+    uint            serverType;
+    std::string     server;
+    std::string     filename;
+    std::size_t     fileSize;
+    std::size_t     allocatedSize;
+    time_t          mappingTime;
+    char*           memoryPtr;
+    bool            mappingError;
+    MappedFile_uptr mappedFile;
 
   public:
 

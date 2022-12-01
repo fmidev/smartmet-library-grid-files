@@ -24,6 +24,9 @@ class MemoryMapper
     bool      isEnabled();
     void      setEnabled(bool enabled);
 
+    bool      isPremapEnabled();
+    void      setPremapEnabled(bool enabled);
+
     void      addAccessInfo(const char *server,uint authenticationMethod,const char *username,const char *password);
     void      setAccessFile(const char *filename);
 
@@ -74,6 +77,7 @@ class MemoryMapper
     long long                 mPageCacheSize;
     std::map<char*,char*>     mPremapRequests;
     std::string               mAccessFile;
+    bool                      mPremapEnabled;
 };
 
 

@@ -4,14 +4,8 @@
 #include "../netcdf/NetCdfFile.h"
 #include "../querydata/QueryDataFile.h"
 
-#include <boost/filesystem.hpp>
-#include <boost/iostreams/device/mapped_file.hpp>
-
 
 namespace bf = boost::filesystem;
-
-typedef boost::iostreams::mapped_file_params MappedFileParams;
-typedef boost::iostreams::mapped_file MappedFile;
 
 
 namespace SmartMet
@@ -19,7 +13,6 @@ namespace SmartMet
 namespace GRID
 {
 
-typedef std::unique_ptr<MappedFile> MappedFile_uptr;
 typedef std::vector<std::pair<uchar,ulonglong>> MessagePos_vec;
 
 
@@ -73,16 +66,11 @@ class PhysicalGridFile : public GridFile
 
   protected:
 
-    long long             mFileSize;
-    time_t                mMemoryMappingTime;
-    bool                  mIsMemoryMapped;
-    bool                  mIsRead;
-    MappedFile_uptr       mMappedFile;
-    ThreadLock            mMemoryMappingLock;
-    char*                 mMemoryPtr;
-    bool                  mMessagePositionError;
-    NetCDF::NetCdfFile*   mNetCdfFile;
-    QueryData::QueryDataFile*  mQueryDataFile;
+    bool                      mIsRead;
+    ThreadLock                mMemoryMappingLock;
+    bool                      mMessagePositionError;
+    NetCDF::NetCdfFile*       mNetCdfFile;
+    QueryData::QueryDataFile* mQueryDataFile;
 };
 
 

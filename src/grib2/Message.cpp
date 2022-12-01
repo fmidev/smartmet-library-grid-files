@@ -3390,7 +3390,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
       {
         mRequestCounter++;
-        if (!mPremapped)
+        if (!mPremapped  &&  memoryMapper.isPremapEnabled())
           premap();
 
         if (mRepresentationSection->getValueByIndex(idx,value))

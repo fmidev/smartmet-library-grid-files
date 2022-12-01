@@ -1,6 +1,9 @@
 #include "Client.h"
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
+#include "ShowFunction.h"
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
 namespace SmartMet
@@ -9,6 +12,7 @@ namespace SmartMet
 
 Client::Client()
 {
+  FUNCTION_TRACE
   try
   {
     mActive = false;
@@ -72,6 +76,7 @@ void Client::setDebugEnabled(bool enabled)
 
 void Client::setAuthentication(uint authenticationMethod,const char *username,const char *password)
 {
+  FUNCTION_TRACE
   try
   {
     mAuthenticationMethod = authenticationMethod;
@@ -90,6 +95,7 @@ void Client::setAuthentication(uint authenticationMethod,const char *username,co
 
 struct curl_slist* Client::addAuthenticationHeaders(const char *server,const char *filename,struct curl_slist *headerList)
 {
+  FUNCTION_TRACE
   try
   {
     if (mAuthenticationMethod == 1)
@@ -162,9 +168,10 @@ struct curl_slist* Client::addAuthenticationHeaders(const char *server,const cha
 
 size_t curl_responseProcessing(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
+  FUNCTION_TRACE
   try
   {
-    //printf("RECEIVE %ld\n",nmemb);
+    //printf("### RECEIVE %ld\n",nmemb);
     Client::Response *response = (Client::Response*)userdata;
 
     for (size_t t=0; t<nmemb; t++)

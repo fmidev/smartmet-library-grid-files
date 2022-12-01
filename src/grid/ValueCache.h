@@ -3,6 +3,9 @@
 #include "Typedefs.h"
 #include <macgyver/Exception.h>
 #include <macgyver/CacheStats.h>
+#include <boost/filesystem.hpp>
+#include <boost/iostreams/device/mapped_file.hpp>
+#include "../common/GeneralFunctions.h"
 #include "../common/AutoReadLock.h"
 #include "../common/AutoWriteLock.h"
 
@@ -11,6 +14,10 @@
 
 namespace SmartMet
 {
+
+typedef boost::iostreams::mapped_file_params MappedFileParams;
+typedef boost::iostreams::mapped_file MappedFile;
+
 namespace GRID
 {
 
@@ -38,6 +45,102 @@ typedef unsigned long long UInt64;
 typedef uchar *puchar;
 
 
+class ValueCacheEntry
+{
+  public:
+
+    ValueCacheEntry()
+    {
+      mKey = 0;
+      mAccessCounter = 0;
+      mMappedFile = nullptr;
+      mGrid = nullptr;
+      mSize = 0;
+    }
+
+    ValueCacheEntry(uint key,T::ParamValue_vec& values,const char *fname)
+    {
+      mKey =  key;
+      mAccessCounter = 0;
+      mMappedFile = nullptr;
+      mSize = values.size();
+      if (mSize > 0)
+      {
+        if (fname)
+        {
+          mFilename = fname;
+          FILE *file = fopen(fname,"w");
+          if (!file)
+          {
+            Fmi::Exception exception(BCP,"Cannot create a cache file!");
+            exception.addParameter("Cache file",fname);
+            throw exception;
+          }
+
+          T::ParamValue *f = &values[0];
+          fwrite(f,sizeof(T::ParamValue),mSize,file);
+          fclose(file);
+
+          long long fileSize = getFileSize(fname);
+          if (fileSize < 0)
+          {
+            Fmi::Exception exception(BCP,"The file does not exist!");
+            exception.addParameter("Filename",fname);
+            throw exception;
+          }
+
+          if (fileSize == 0)
+          {
+            Fmi::Exception exception(BCP,"The file size is zero!");
+            exception.addParameter("Filename",fname);
+            throw exception;
+          }
+
+          MappedFileParams params(fname);
+          params.flags = boost::iostreams::mapped_file::readonly;
+          params.length = fileSize;
+          mMappedFile = new MappedFile(params);
+          mGrid = (T::ParamValue*)mMappedFile->const_data();
+        }
+        else
+        {
+          mGrid = new T::ParamValue[mSize];
+          memcpy(mGrid,&values[0],mSize*sizeof(T::ParamValue));
+        }
+      }
+    }
+
+    ~ValueCacheEntry()
+    {
+      if (mMappedFile)
+      {
+        mMappedFile->close();
+        remove(mFilename.c_str());
+        delete mMappedFile;
+        mMappedFile = nullptr;
+      }
+      else
+      {
+        if (mGrid)
+        {
+          delete[] mGrid;
+          mGrid = nullptr;
+        }
+      }
+    }
+
+    uint               mKey;
+    UInt64             mAccessCounter;
+    std::string        mFilename;
+    MappedFile*        mMappedFile;
+    T::ParamValue*     mGrid;
+    uint               mSize;
+};
+
+
+typedef ValueCacheEntry* ValueCacheEntry_ptr;
+
+
 class ValueCache
 {
   public:
@@ -50,6 +153,8 @@ class ValueCache
     bool        getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamValue& maxValue);
     void        getCacheStats(Fmi::Cache::CacheStatistics& statistics) const;
     void        init(uint maxLen,UInt64 maxSize);
+    void        init(uint maxLen,UInt64 maxSize,bool fileCacheEnabled);
+    void        setCacheDir(const char *cacheDir);
 
   protected:
 
@@ -69,23 +174,16 @@ class ValueCache
     /*! \brief The counter that is used for generating an access key when a new value vector is stored */
     uint        mKeyCounter;
 
-    /*! \brief An array of the keys used for caching information. */
-    uint*       mKeyList;
+    UInt64      mAccessCounter;
 
-    /*! \brief An array of the access counters . */
-    UInt64*    mAccessCounterList;
-    UInt64     mAccessCounter;
+    bool        mFileCacheEnabled;
 
-    /*! \brief The cached data can be removed if it is not accessed during this time limit (seconds).
-        Usually cached data is removed only if the cache is full and there is a need to cache newer data. */
-    uint       mRemoveLimit;
+    ValueCacheEntry_ptr*    mEntryList;
+    std::string             mCacheDir;
+    Fmi::Cache::CacheStats  mCacheStats;
 
-    /*! \brief The cached value vectors. */
-    T::ParamValue_vec_ptr *mValueList;
+    ModificationLock        mModificationLock;
 
-    Fmi::Cache::CacheStats mCacheStats;
-
-    ModificationLock       mModificationLock;
 
   public:
 
@@ -113,7 +211,9 @@ class ValueCache
         uint idx = key % mMaxLength;
 
         AutoReadLock lock(&mModificationLock);
-        if (mKeyList[idx] != key)
+        ValueCacheEntry_ptr entry = mEntryList[idx];
+
+        if (!entry || entry->mKey != key || !entry->mGrid)
         {
           // The value vector is cached with a different key.
 
@@ -121,28 +221,19 @@ class ValueCache
           return false;
         }
 
-        if (mValueList[idx] == nullptr)
-        {
-          // The value vector is not cache in the memory.
 
-          mCacheStats.misses++;
-          return false;
-        }
-
-
-        std::size_t sz = mValueList[idx]->size();
-        if (index >= sz)
+        if (index >= entry->mSize)
         {
           Fmi::Exception exception(BCP,"Index is out of the range!");
           exception.addParameter("Index",std::to_string(index));
-          exception.addParameter("Size",std::to_string(sz));
+          exception.addParameter("Size",std::to_string(entry->mSize));
           throw exception;
         }
 
-        value = mValueList[idx]->at(index);
+        value = entry->mGrid[index];
 
         // Updating the access time of the current value vector.
-        mAccessCounterList[idx] = mAccessCounter++;
+        entry->mAccessCounter = mAccessCounter++;
         mCacheStats.hits++;
 
         return true;

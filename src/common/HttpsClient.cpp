@@ -11,6 +11,8 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
+#include "ShowFunction.h"
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 
 namespace SmartMet
@@ -19,10 +21,12 @@ namespace SmartMet
 
 HttpsClient::HttpsClient()
 {
+  FUNCTION_TRACE
   try
   {
     mActive = false;
     curl = curl_easy_init();
+    mDebugEnabled = false;
   }
   catch (...)
   {
@@ -35,6 +39,7 @@ HttpsClient::HttpsClient()
 
 HttpsClient::~HttpsClient()
 {
+  FUNCTION_TRACE
   if (curl != nullptr)
     curl_easy_cleanup(curl);
 }
@@ -45,12 +50,13 @@ HttpsClient::~HttpsClient()
 
 int HttpsClient::getHeaderData(const char *server,const char *filename,int dataSize,char *dataPtr)
 {
+  FUNCTION_TRACE
   try
   {
     if (!curl)
       return 0;
 
-    // printf("*** SEND REQUEST %s  : %ld : %d\n",info.filename.c_str(),filePosition,dataSize);
+    //printf("*** SEND HEADER REQUEST %s  : %ld : %ld\n",filename,dataSize,dataPtr);
     Response response;
     response.data = dataPtr;
     response.maxSize = dataSize;
@@ -105,12 +111,13 @@ int HttpsClient::getHeaderData(const char *server,const char *filename,int dataS
 
 int HttpsClient::getData(const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr)
 {
+  FUNCTION_TRACE
   try
   {
     if (!curl)
       return 0;
 
-    // printf("*** SEND REQUEST %s  : %ld : %d\n",info.filename.c_str(),filePosition,dataSize);
+    //printf("*** SEND REQUEST %s  : %ld : %d\n",filename,filePosition,dataSize);
     Response response;
     response.data = dataPtr;
     response.maxSize = dataSize;
@@ -123,6 +130,8 @@ int HttpsClient::getData(const char *server,const char *filename,std::size_t fil
     curl_easy_setopt(curl, CURLOPT_URL,url);
     curl_easy_setopt(curl, CURLOPT_PROXY,"");
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+    curl_easy_setopt(curl, CURLOPT_HEADER, 0L);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,curl_responseProcessing);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
@@ -151,6 +160,7 @@ int HttpsClient::getData(const char *server,const char *filename,std::size_t fil
 
     curl_slist_free_all(headerList);
 
+    //printf("### DATA %u\n",response.dataSize);
     return response.dataSize;
   }
   catch (...)

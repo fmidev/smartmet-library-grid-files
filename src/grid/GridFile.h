@@ -4,6 +4,7 @@
 #include "GridPointValue.h"
 #include "Typedefs.h"
 #include "../common/MemoryReader.h"
+#include "../common/MemoryMapper.h"
 
 #include <memory>
 #include <vector>
@@ -108,16 +109,13 @@ class GridFile
     time_t                mDeletionTime;      // The file should not be accessed after this time
     uint                  mFileId;
     time_t                mFileModificationTime;
-    std::string           mFileName;
     uint                  mGenerationId;
     uint                  mGroupFlags;
     MessageInfo_map       mMessagePositions;
     Message_ptr_map       mMessages;
     uint                  mProducerId;
     bool                  mRequestCounterEnabled;
-    uchar                 mProtocol;
-    uchar                 mServerType;
-    std::string           mServer;
+    MapInfo               mMemoryMapInfo;
     uint                  mSourceId;
     std::set<uint>        mUserList;
 

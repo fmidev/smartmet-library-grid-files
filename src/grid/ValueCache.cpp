@@ -1,8 +1,10 @@
 #include "ValueCache.h"
-#include <macgyver/Exception.h>
 #include "../common/GeneralDefinitions.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/AutoThreadLock.h"
+#include <macgyver/Exception.h>
+#include <sys/stat.h>
+#include <dirent.h>
 
 
 namespace SmartMet
@@ -23,11 +25,10 @@ ValueCache::ValueCache()
   {
     mAccessCounter = 0;
     mKeyCounter = 0;
-    mValueList = nullptr;
-    mKeyList = nullptr;
-    mAccessCounterList = nullptr;
     mMaxSize = 1000;
+    mEntryList = nullptr;
     init(1000,1000);
+    mFileCacheEnabled = false;
 
     mCacheStats.starttime = boost::posix_time::second_clock::universal_time();
     mCacheStats.maxsize = mMaxSize*1000000;
@@ -74,24 +75,7 @@ void ValueCache::init(uint maxLen,UInt64 maxSize)
 {
   try
   {
-    clear();
-    mKeyCounter = 0;
-    mMaxLength = maxLen;
-    mMaxSize = maxSize;
-    mCacheStats.maxsize = mMaxSize*1000000;
-
-
-    AutoWriteLock lock(&mModificationLock);
-    mValueList = new T::ParamValue_vec_ptr[mMaxLength];
-    mKeyList = new uint[mMaxLength];
-    mAccessCounterList = new UInt64[mMaxLength];
-
-    for (uint t=0; t<mMaxLength; t++)
-    {
-      mKeyList[t] = 0;
-      mValueList[t] = nullptr;
-      mAccessCounterList[t] = 0;
-    }
+    init(maxLen,maxSize,false);
   }
   catch (...)
   {
@@ -99,6 +83,77 @@ void ValueCache::init(uint maxLen,UInt64 maxSize)
   }
 }
 
+
+
+
+void ValueCache::init(uint maxLen,UInt64 maxSize,bool fileCacheEnabled)
+{
+  try
+  {
+    clear();
+    mKeyCounter = 0;
+    mMaxLength = maxLen;
+    mMaxSize = maxSize;
+    mCacheStats.maxsize = mMaxSize*1000000;
+    mFileCacheEnabled = fileCacheEnabled;
+
+    AutoWriteLock lock(&mModificationLock);
+
+    mEntryList = new ValueCacheEntry_ptr[mMaxLength];
+    for (uint t=0; t<mMaxLength; t++)
+      mEntryList[t] = nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ValueCache::setCacheDir(const char *cacheDir)
+{
+  try
+  {
+    mCacheDir = cacheDir;
+    char fname[200];
+    sprintf(fname,"%s/GRID_%08u.dat",mCacheDir.c_str(),mKeyCounter);
+
+    DIR *dp = opendir(cacheDir);
+    if (dp == nullptr)
+      return;
+
+    bool ind = true;
+
+    while (ind)
+    {
+      struct dirent *ep = readdir(dp);
+      if (ep != nullptr)
+      {
+        if (ep->d_type == DT_REG)
+        {
+          if (strncmp(ep->d_name,"GRID_",5) == 0)
+          {
+            char fullName[2000];
+            sprintf(fullName, "%s/%s", cacheDir, ep->d_name);
+            remove(fullName);
+          }
+        }
+      }
+      else
+      {
+        ind = false;
+      }
+    }
+    closedir(dp);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -134,22 +189,22 @@ uint ValueCache::getEmpty()
       key++;
       uint i = key % mMaxLength;
 
-      if (mValueList[i] == nullptr)
+      if (mEntryList[i] == nullptr)
         return key;
 
-      if (mAccessCounterList[i] < ac)
+      if (mEntryList[i]->mAccessCounter < ac)
       {
-        ac = mAccessCounterList[i];
+        ac = mEntryList[i]->mAccessCounter;
         idx = i;
         k = key;
       }
     }
 
-    if (mValueList[idx] != nullptr)
+    if (idx != 0xFFFFFFFF &&  mEntryList[idx] != nullptr)
     {
-      mCacheStats.size -= mValueList[idx]->size()* sizeof(T::ParamValue);
-      delete mValueList[idx];
-      mValueList[idx] = nullptr;
+      mCacheStats.size -= mEntryList[idx]->mSize * sizeof(T::ParamValue);
+      delete mEntryList[idx];
+      mEntryList[idx] = nullptr;
     }
 
     return k;
@@ -173,21 +228,21 @@ void ValueCache::deleteOldest()
 
     for (uint t=0; t<mMaxLength; t++)
     {
-      if (mValueList[t] != nullptr)
+      if (mEntryList[t] != nullptr)
       {
-        if (mAccessCounterList[t] < ac)
+        if (mEntryList[t]->mAccessCounter < ac)
         {
-          ac = mAccessCounterList[t];
+          ac = mEntryList[t]->mAccessCounter;
           idx = t;
         }
       }
     }
 
-    if (mValueList[idx] != nullptr)
+    if (idx != 0xFFFFFFFF  &&  mEntryList[idx] != nullptr)
     {
-      mCacheStats.size -= mValueList[idx]->size()* sizeof(T::ParamValue);
-      delete mValueList[idx];
-      mValueList[idx] = nullptr;
+      mCacheStats.size -= mEntryList[idx]->mSize * sizeof(T::ParamValue);
+      delete mEntryList[idx];
+      mEntryList[idx] = nullptr;
     }
   }
   catch (...)
@@ -207,31 +262,21 @@ void ValueCache::clear()
   {
     AutoWriteLock lock(&mModificationLock);
 
-    if (mValueList != nullptr)
+    if (mEntryList != nullptr)
     {
       for (uint t=0; t<mMaxLength; t++)
       {
-        if (mValueList[t] != nullptr)
+        if (mEntryList[t] != nullptr)
         {
-          delete mValueList[t];
-          mValueList[t] = nullptr;
+          delete mEntryList[t];
+          mEntryList[t] = nullptr;
         }
       }
-      delete[] mValueList;
-      mValueList = nullptr;
+      delete[] mEntryList;
+      mEntryList = nullptr;
     }
-
-    if (mKeyList != nullptr)
-    {
-      delete[] mKeyList;
-      mKeyList = nullptr;
-    }
-
-    if (mAccessCounterList)
-    {
-      delete[] mAccessCounterList;
-      mAccessCounterList = nullptr;
-    }
+    mAccessCounter = 0;
+    mKeyCounter = 0;
 
     mCacheStats.size = 0;
     mCacheStats.inserts = 0;
@@ -253,18 +298,17 @@ UInt64 ValueCache::getSizeInBytes()
   {
     UInt64 memorySize = 0;
 
-    if (mValueList != nullptr)
+    if (mEntryList != nullptr)
     {
       for (uint t=0; t<mMaxLength; t++)
       {
-        if (mValueList[t] != nullptr)
+        if (mEntryList[t] != nullptr)
         {
-          UInt64 s = mValueList[t]->size() * sizeof(T::ParamValue);
-          memorySize += s;
+          memorySize += mEntryList[t]->mSize;
         }
       }
     }
-    return memorySize;
+    return memorySize * sizeof(T::ParamValue);
   }
   catch (...)
   {
@@ -310,7 +354,8 @@ uint ValueCache::addValues(T::ParamValue_vec& values)
 {
   try
   {
-    if (values.size() == 0)
+    uint sz = values.size();
+    if (sz == 0)
       return 0;
 
     checkLimits();
@@ -320,17 +365,27 @@ uint ValueCache::addValues(T::ParamValue_vec& values)
     mKeyCounter = getEmpty();
     uint idx = mKeyCounter % mMaxLength;
 
-    if (mValueList[idx] == nullptr)
-      mValueList[idx] = new T::ParamValue_vec();
+    if (mEntryList[idx])
+    {
+      mCacheStats.size -= mEntryList[idx]->mSize * sizeof(T::ParamValue);
+      delete mEntryList[idx];
+      mEntryList[idx] = nullptr;
+    }
+
+    if (mFileCacheEnabled)
+    {
+      char fname[200];
+      sprintf(fname,"%s/GRID_%08u.dat",mCacheDir.c_str(),mKeyCounter);
+      mEntryList[idx] = new ValueCacheEntry(mKeyCounter,values,fname);
+    }
     else
-      mCacheStats.size -= mValueList[idx]->size()* sizeof(T::ParamValue);
+    {
+      mEntryList[idx] = new ValueCacheEntry(mKeyCounter,values,nullptr);
+    }
 
     mCacheStats.inserts++;
-    mCacheStats.size += values.size()* sizeof(T::ParamValue);
-
-    *mValueList[idx] = values;
-    mKeyList[idx] = mKeyCounter;
-    mAccessCounterList[idx] = mAccessCounter++;
+    mCacheStats.size += mEntryList[idx]->mSize * sizeof(T::ParamValue);
+    mEntryList[idx]->mAccessCounter = mAccessCounter++;
 
     return mKeyCounter;
   }
@@ -359,21 +414,25 @@ bool ValueCache::getValues(uint key,T::ParamValue_vec& values)
     uint idx = key % mMaxLength;
 
     AutoReadLock lock(&mModificationLock);
-    if (mKeyList[idx] != key)
-    {
-      mCacheStats.misses++;
-      return false;
-    }
 
-    if (mValueList[idx] == nullptr)
+    ValueCacheEntry_ptr entry = mEntryList[idx];
+
+    if (!entry || entry->mKey != key || !entry->mGrid)
     {
       mCacheStats.misses++;
       return false;
     }
 
     mCacheStats.hits++;
-    values = *mValueList[idx];
-    mAccessCounterList[idx] = mAccessCounter++;
+
+    uint sz = entry->mSize;
+    T::ParamValue *grid = entry->mGrid;
+
+    values.reserve(sz);
+    for (std::size_t t=0; t<sz; t++)
+      values.emplace_back(grid[t]);
+
+    entry->mAccessCounter = mAccessCounter++;
     return true;
   }
   catch (...)
@@ -393,19 +452,15 @@ void ValueCache::deleteValues(uint key)
     uint idx = key % mMaxLength;
 
     AutoWriteLock lock(&mModificationLock);
-    if (mKeyList[idx] != key)
+    ValueCacheEntry_ptr entry = mEntryList[idx];
+
+    if (!entry || entry->mKey != key || !entry->mGrid)
       return;
 
-    if (mValueList[idx] == nullptr)
-      return;
+    mCacheStats.size -= entry->mSize * sizeof(T::ParamValue);
 
-
-    mCacheStats.size -= mValueList[idx]->size()* sizeof(T::ParamValue);
-
-    delete mValueList[idx];
-    mValueList[idx] = nullptr;
-    mKeyList[idx] = 0;
-    mAccessCounterList[idx] = 0;
+    delete mEntryList[idx];
+    mEntryList[idx] = nullptr;
   }
   catch (...)
   {
@@ -435,16 +490,17 @@ bool ValueCache::getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamVal
     uint idx = key % mMaxLength;
 
     AutoReadLock lock(&mModificationLock);
-    if (mValueList[idx] == nullptr  ||  mKeyList[idx] != key)
-    {
-      return false;
-    }
 
-    T::ParamValue_vec *values = mValueList[idx];
-    std::size_t sz = values->size();
+    ValueCacheEntry_ptr entry = mEntryList[idx];
+
+    if (!entry || entry->mKey != key || !entry->mGrid)
+      return false;
+
+    T::ParamValue *values = entry->mGrid;
+    std::size_t sz = entry->mSize;
     for (std::size_t t=0; t < sz; t++)
     {
-      auto val = values->at(t);
+      auto val = values[t];
       if (val != ParamValueMissing)
       {
         if (val > maxValue)
@@ -458,7 +514,7 @@ bool ValueCache::getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamVal
         }
       }
     }
-    mAccessCounterList[idx] = mAccessCounter++;
+    entry ->mAccessCounter = mAccessCounter++;
 
     return true;
   }

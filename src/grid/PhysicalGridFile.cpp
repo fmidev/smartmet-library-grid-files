@@ -3,7 +3,6 @@
 #include "../common/GeneralDefinitions.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
-#include "../common/MemoryMapper.h"
 #include "../identification/GridDef.h"
 #include "../grib1/Message.h"
 #include "../grib2/Message.h"
@@ -38,10 +37,7 @@ PhysicalGridFile::PhysicalGridFile()
   FUNCTION_TRACE
   try
   {
-    mIsMemoryMapped = false;
     mIsRead = false;
-    mMemoryPtr = nullptr;
-    mFileSize = 0;
     mMessagePositionError = false;
     mNetCdfFile = nullptr;
     mQueryDataFile = nullptr;
@@ -64,9 +60,7 @@ PhysicalGridFile::PhysicalGridFile(const PhysicalGridFile& other)
   FUNCTION_TRACE
   try
   {
-    mIsMemoryMapped = false;
     mIsRead = false;
-    mMemoryPtr = nullptr;
     mMessagePositionError = false;
     mNetCdfFile = nullptr;
     mQueryDataFile = nullptr;
@@ -88,8 +82,8 @@ PhysicalGridFile::~PhysicalGridFile()
   FUNCTION_TRACE
   try
   {
-    if (mMappedFile  &&  mIsMemoryMapped)
-      mMappedFile->close();
+    //if (mMappedFile  &&  mIsMemoryMapped)
+    //  mMappedFile->close();
 
     if (mNetCdfFile)
       delete mNetCdfFile;
@@ -97,15 +91,9 @@ PhysicalGridFile::~PhysicalGridFile()
     if (mQueryDataFile)
       delete mQueryDataFile;
 
-    if (memoryMapper.isEnabled())
+    if (isMemoryMapped())
     {
-      MapInfo info;
-      info.protocol = mProtocol;
-      info.server = mServer;
-      info.filename = mFileName;
-      info.fileSize = mFileSize;
-      info.memoryPtr = mMemoryPtr;
-      memoryMapper.unmap(info);
+      memoryMapper.unmap(mMemoryMapInfo);
     }
   }
   catch (...)
@@ -124,7 +112,10 @@ bool PhysicalGridFile::isMemoryMapped() const
   FUNCTION_TRACE
   try
   {
-    return mIsMemoryMapped;
+    if (mMemoryMapInfo.memoryPtr)
+      return true;
+
+    return false;
   }
   catch (...)
   {
@@ -142,61 +133,23 @@ void PhysicalGridFile::mapToMemory()
   try
   {
     AutoThreadLock lock(&mMemoryMappingLock);
-    if (mIsMemoryMapped)
+    if (isMemoryMapped())
       return;
 
-    if (memoryMapper.isEnabled())
+    if (mMemoryMapInfo.fileSize <= 0)
     {
-      MapInfo info;
-      info.protocol = mProtocol;
-      info.filename = mFileName;
-      info.serverType = mServerType;
-      //info.filename = "/demo/T-K.grib";
-      info.server = mServer;
+      //mMemoryMapInfo.fileSize = memoryMapper.getFileSize(mMemoryMapInfo.serverType,mMemoryMapInfo.protocol,mMemoryMapInfo.server.c_str(),mMemoryMapInfo.filename.c_str());
 
-      if (mFileSize <= 0)
+      if (mMemoryMapInfo.fileSize <= 0)
       {
-        mFileSize = memoryMapper.getFileSize(mServerType,mProtocol,mServer.c_str(),mFileName.c_str());
-
-        if (mFileSize <= 0)
-        {
-          if (info.serverType == 1)
-            mFileSize = getFileSize(mFileName.c_str());
-          else
-            mFileSize = GridFile::getSize();
-        }
+        if (mMemoryMapInfo.serverType <= 1)
+          mMemoryMapInfo.fileSize = getFileSize(mMemoryMapInfo.filename.c_str());
+        else
+          mMemoryMapInfo.fileSize = GridFile::getSize();
       }
-
-      info.fileSize = mFileSize;
-      memoryMapper.map(info);
-      mMemoryPtr = info.memoryPtr;
     }
-    else
-    {
-      mFileSize = getFileSize(mFileName.c_str());
-      if (mFileSize < 0)
-      {
-        Fmi::Exception exception(BCP,"The file does not exist!");
-        exception.addParameter("Filename",mFileName);
-        throw exception;
-      }
 
-      if (mFileSize == 0)
-      {
-        Fmi::Exception exception(BCP,"The file size is zero!");
-        exception.addParameter("Filename",mFileName);
-        throw exception;
-      }
-
-      MappedFileParams params(mFileName);
-      params.flags = boost::iostreams::mapped_file::readonly;
-      params.length = mFileSize;
-      mMappedFile.reset(new MappedFile(params));
-      mFileModificationTime = getFileModificationTime(mFileName.c_str());
-      mMemoryPtr = const_cast<char*>(mMappedFile->const_data());
-    }
-    mMemoryMappingTime = time(0);
-    mIsMemoryMapped = true;
+    memoryMapper.map(mMemoryMapInfo);
   }
   catch (...)
   {
@@ -248,13 +201,13 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
       throw exception;
     }
 
-    auto startAddr = mMemoryPtr + messageInfo.mFilePosition;
+    auto startAddr = mMemoryMapInfo.memoryPtr + messageInfo.mFilePosition;
     auto endAddr = startAddr + messageInfo.mMessageSize;
 
 
     if (messageInfo.mMessageType == T::FileTypeValue::NetCdf3 || messageInfo.mMessageType == T::FileTypeValue::NetCdf4)
     {
-      auto startAddr = mMemoryPtr;
+      auto startAddr = mMemoryMapInfo.memoryPtr;
       auto endAddr = startAddr + fsize;
 
       MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
@@ -283,7 +236,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
 
     if (messageInfo.mMessageType == T::FileTypeValue::QueryData)
     {
-      auto startAddr = mMemoryPtr;
+      auto startAddr = mMemoryMapInfo.memoryPtr;
       auto endAddr = startAddr + fsize;
 
       MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
@@ -291,7 +244,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
       if (mMessages.size() == 0)
       {
         memoryReader.setReadPosition(0);
-        mQueryDataFile = new QueryData::QueryDataFile(mFileName.c_str());
+        mQueryDataFile = new QueryData::QueryDataFile(mMemoryMapInfo.filename.c_str());
         QueryData::MessageInfoVec messageInfoList;
         mQueryDataFile->read(messageInfoList);
 
@@ -304,10 +257,12 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
         }
 
         // QueryData file has its own mapping functionality. We do not need double mapping.
+        /*
         if (mMappedFile  &&  mIsMemoryMapped)
         {
           mMappedFile->close();
         }
+        */
       }
       auto msg = mMessages.find(messageIndex);
       if (msg != mMessages.end())
@@ -320,7 +275,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
     uchar fileType = readMessageType(memoryReader);
     if (fileType == 0)
     {
-      MemoryReader memoryReader2(reinterpret_cast<unsigned char*>(mMemoryPtr),reinterpret_cast<unsigned char*>(endAddr));
+      MemoryReader memoryReader2(reinterpret_cast<unsigned char*>(mMemoryMapInfo.memoryPtr),reinterpret_cast<unsigned char*>(endAddr));
       fileType = readMessageType(memoryReader2);
     }
 
@@ -353,7 +308,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
   catch (...)
   {
     Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Filename",mFileName);
+    exception.addParameter("Filename",getFileName());
     throw exception;
   }
 }
@@ -404,7 +359,7 @@ long long PhysicalGridFile::getSize()
     if (!isMemoryMapped())
       mapToMemory();
 
-    return mFileSize;
+    return mMemoryMapInfo.fileSize;
   }
   catch (...)
   {
@@ -420,7 +375,7 @@ void PhysicalGridFile::setSize(long long size)
   FUNCTION_TRACE
   try
   {
-    mFileSize = size;
+    mMemoryMapInfo.fileSize = size;
   }
   catch (...)
   {
@@ -439,7 +394,7 @@ char* PhysicalGridFile::getMemoryPtr()
     if (!isMemoryMapped())
       mapToMemory();
 
-    return mMemoryPtr;
+    return mMemoryMapInfo.memoryPtr;
   }
   catch (...)
   {
@@ -489,7 +444,7 @@ void PhysicalGridFile::read(const std::string& filename,uint maxMessages)
 
     setFileName(filename);
 
-    if (!mIsMemoryMapped)
+    if (!isMemoryMapped())
     {
       mapToMemory();
       /*
@@ -524,9 +479,9 @@ void PhysicalGridFile::read(const std::string& filename,uint maxMessages)
       */
     }
 
-    auto endAddr = mMemoryPtr + mFileSize;
+    auto endAddr = mMemoryMapInfo.memoryPtr + mMemoryMapInfo.fileSize;
 
-    MemoryReader memoryReader(reinterpret_cast<unsigned char*>(mMemoryPtr),reinterpret_cast<unsigned char*>(endAddr));
+    MemoryReader memoryReader(reinterpret_cast<unsigned char*>(mMemoryMapInfo.memoryPtr),reinterpret_cast<unsigned char*>(endAddr));
     read(memoryReader,maxMessages);
   }
   catch (...)
@@ -557,7 +512,7 @@ void PhysicalGridFile::read(MemoryReader& memoryReader)
   catch (...)
   {
     Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Filename",mFileName);
+    exception.addParameter("Filename",getFileName());
     throw exception;
   }
 }
@@ -571,8 +526,6 @@ void PhysicalGridFile::read(MemoryReader& memoryReader,uint maxMessages)
   FUNCTION_TRACE
   try
   {
-    mIsMemoryMapped = true;
-
     memoryReader.setReadPosition(0);
     auto gribs = searchMessageLocations(memoryReader,maxMessages);
 
@@ -633,7 +586,7 @@ void PhysicalGridFile::read(MemoryReader& memoryReader,uint maxMessages)
           if (mMessages.size() == 0)
           {
             memoryReader.setReadPosition(0);
-            mQueryDataFile = new QueryData::QueryDataFile(mFileName.c_str());
+            mQueryDataFile = new QueryData::QueryDataFile(mMemoryMapInfo.filename.c_str());
             QueryData::MessageInfoVec messageInfoList;
             mQueryDataFile->read(messageInfoList);
             uint idx = 0;
@@ -647,11 +600,12 @@ void PhysicalGridFile::read(MemoryReader& memoryReader,uint maxMessages)
             }
 
             // QueryData file has its own mapping functionality. We do not need double mapping.
+            /*
             if (mMappedFile  &&  mIsMemoryMapped)
             {
               mMappedFile->close();
             }
-
+            */
           }
         }
         break;
@@ -661,7 +615,7 @@ void PhysicalGridFile::read(MemoryReader& memoryReader,uint maxMessages)
   catch (...)
   {
     Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Filename",mFileName);
+    exception.addParameter("Filename",getFileName());
     throw exception;
   }
 }
@@ -1005,38 +959,26 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
   FUNCTION_TRACE
   try
   {
-    if (isMemoryMapped()  &&  memoryMapper.isEnabled())
+    if (memoryMapper.isEnabled()  &&  mMemoryMapInfo.mappingError)
     {
-      MapInfo *info = memoryMapper.getMapInfo(mMemoryPtr);
-      if (info && info->mappingError)
+      AutoThreadLock lock(&mMemoryMappingLock);
+
+      // It seems that there have been problems with the current memory map.
+      // We should wait some time before retrying the mapping.
+
+      if ((mMemoryMapInfo.mappingTime + 10) > time(0))
+        return nullptr;
+
+      // We should try to map the file again.
+
+      memoryMapper.unmap(mMemoryMapInfo);
+
+      for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
       {
-        AutoThreadLock lock(&mMemoryMappingLock);
-
-        // It seems that there have been problems with the current memory map.
-        // We should wait some time before retrying the mapping.
-
-        if ((mMemoryMappingTime + 10) > time(0))
-          return nullptr;
-
-        // We should try to map the file again.
-
-        MapInfo mp;
-        mp.protocol = mProtocol;
-        mp.filename = mFileName;
-        mp.fileSize = mFileSize;
-        mp.memoryPtr = mMemoryPtr;
-        memoryMapper.unmap(mp);
-
-        mMemoryPtr = nullptr;
-
-        for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
-        {
-          delete (msg->second);
-        }
-
-        mMessages.clear();
-        mIsMemoryMapped = false;
+        delete (msg->second);
       }
+      mMessages.clear();
+      mMemoryMapInfo.memoryPtr = 0;
     }
 
     if (!isMemoryMapped())
@@ -1088,9 +1030,14 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
     }
     else
     {
-      printf("*** PhysicalGridFile.cpp: Message not found (%s) %lu / %lu /%lu\n",mFileName.c_str(),index,mMessages.size(),mMessagePositions.size());
-      //for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
-      //  printf("** %d\n",it->first);
+      printf("*** PhysicalGridFile.cpp: Message not found (%s) %lu / %lu /%lu\n",mMemoryMapInfo.filename.c_str(),index,mMessages.size(),mMessagePositions.size());
+      if (mMessages.size() != mMessagePositions.size())
+      {
+        mMessages.clear();
+        mMemoryMapInfo.memoryPtr = 0;
+        //for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
+        //  printf("** %d\n",it->first);
+      }
     }
 
     return nullptr;

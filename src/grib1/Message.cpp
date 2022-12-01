@@ -2496,7 +2496,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
       if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
       {
         mRequestCounter++;
-        if (!mPremapped)
+        if (!mPremapped  &&  memoryMapper.isPremapEnabled())
           premap();
 
         if (mDataSection->getValueByIndex(idx,value))
