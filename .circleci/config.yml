@@ -113,18 +113,18 @@ workflows:
   version: 2.1
   build-test:
     jobs:
-      - build-rhel7
+      - build-rhel8
       - build-rhel9
       - test-rhel7:
           requires:
-            - build-rhel7
+            - build-rhel8
       - test-rhel9:
           requires:
             - build-rhel9
       - upload-rhel7:
           context: fmi-global
           requires:
-            - test-rhel7
+            - test-rhel8
       - upload-rhel9:
           context: fmi-global
           requires:
