@@ -356,7 +356,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,char& attrib
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = C_CHAR(val);
+    if (result)
+      attributeValue = C_CHAR(val);
     return result;
   }
   catch (...)
@@ -378,7 +379,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,short& attri
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = C_SHORT(val);
+    if (result)
+      attributeValue = C_SHORT(val);
     return result;
   }
   catch (...)
@@ -400,7 +402,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,int& attribu
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = C_INT(val);
+    if (result)
+      attributeValue = C_INT(val);
     return result;
   }
   catch (...)
@@ -422,7 +425,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,long& attrib
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = C_LONG(val);
+    if (result)
+      attributeValue = C_LONG(val);
     return result;
   }
   catch (...)
@@ -488,7 +492,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned cha
   {
     unsigned long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = C_UCHAR(val);
+    if (result)
+      attributeValue = C_UCHAR(val);
     return result;
   }
   catch (...)
@@ -510,7 +515,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned sho
   {
     unsigned long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = C_USHORT(val);
+    if (result)
+      attributeValue = C_USHORT(val);
     return result;
   }
   catch (...)
@@ -532,7 +538,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned int
   {
     unsigned long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = C_UINT(val);
+    if (result)
+      attributeValue = C_UINT(val);
     return result;
   }
   catch (...)
@@ -554,7 +561,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned lon
   {
     unsigned long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = C_ULONG(val);
+    if (result)
+      attributeValue = C_ULONG(val);
     return result;
   }
   catch (...)
@@ -576,7 +584,8 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned lon
   {
     long long val = 0;
     bool result = getAttributeValue(attributeName,val);
-    attributeValue = C_UINT64(val);
+    if (result)
+      attributeValue = C_UINT64(val);
     return result;
   }
   catch (...)
