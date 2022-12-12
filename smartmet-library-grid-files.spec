@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 22.11.8
+Version: 22.12.12
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -18,10 +18,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-library-newbase-devel >= 22.8.29
-BuildRequires: smartmet-library-spine-devel >= 22.10.26
+BuildRequires: smartmet-library-newbase-devel >= 22.11.14
+BuildRequires: smartmet-library-spine-devel >= 22.12.2
 BuildRequires: smartmet-library-macgyver >= 22.10.20
-BuildRequires: smartmet-library-trax-devel >= 22.10.3
+BuildRequires: smartmet-library-trax-devel >= 22.11.28
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal34-devel
@@ -45,10 +45,10 @@ Requires: gdal34-libs
 Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
-Requires: smartmet-library-newbase >= 22.8.29
+Requires: smartmet-library-newbase >= 22.11.14
 Requires: smartmet-library-macgyver >= 22.10.20
-Requires: smartmet-library-spine >= 22.10.26
-Requires: smartmet-library-trax >= 22.10.3
+Requires: smartmet-library-spine >= 22.12.2
+Requires: smartmet-library-trax >= 22.11.28
 
 %description
 FMI Grid File handling library
@@ -91,6 +91,11 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Dec 12 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.12.12-1.fmi
+- Value of the requested configuration parameter not changed if the parameter is not found
+- Added filesys support for the grid cache
+- Improved memory mapping
+- Added AWS4-HMAC-SHA256 authentication support for the memory mapper
 * Tue Nov  8 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.11.8-1.fmi
 - More improvements to userfaultd based memory mapper
 * Thu Oct 20 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.10.20-1.fmi
