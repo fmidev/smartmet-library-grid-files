@@ -43,4 +43,4 @@ workflows:
       - upload-rhel8:
           context: fmi-global
           requires:
-            - test-rhel8
+            - build-rhel8
