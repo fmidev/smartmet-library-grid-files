@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 22.12.12
+Version: 22.12.19
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -20,8 +20,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 22.11.14
 BuildRequires: smartmet-library-spine-devel >= 22.12.2
-BuildRequires: smartmet-library-macgyver >= 22.10.20
-BuildRequires: smartmet-library-trax-devel >= 22.11.28
+BuildRequires: smartmet-library-macgyver >= 22.12.16
+BuildRequires: smartmet-library-trax-devel >= 22.12.19
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal34-devel
@@ -46,9 +46,9 @@ Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 22.11.14
-Requires: smartmet-library-macgyver >= 22.10.20
+Requires: smartmet-library-macgyver >= 22.12.16
 Requires: smartmet-library-spine >= 22.12.2
-Requires: smartmet-library-trax >= 22.11.28
+Requires: smartmet-library-trax >= 22.12.19
 
 %description
 FMI Grid File handling library
@@ -91,6 +91,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Dec 19 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.12.19-1.fmi
+- Repackaged since Trax ABI changed due to addition of Grid::shell()
 * Mon Dec 12 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.12.12-1.fmi
 - Value of the requested configuration parameter not changed if the parameter is not found
 - Added filesys support for the grid cache
