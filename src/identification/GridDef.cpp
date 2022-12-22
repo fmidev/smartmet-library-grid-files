@@ -2494,8 +2494,8 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           double *lon = new double[sz+1];
           double *lat = new double[sz+1];
 
-          std::shared_ptr<double> rlat(lat);
-          std::shared_ptr<double> rlon(lon);
+          std::shared_ptr<double[]> rlat(lat);
+          std::shared_ptr<double[]> rlon(lon);
 
           double yy = cc[1];
           int c = 0;
@@ -2855,8 +2855,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           double *lon = new double[sz+1];
           double *lat = new double[sz+1];
 
-          std::shared_ptr<double> rlat(lat);
-          std::shared_ptr<double> rlon(lon);
+          std::shared_ptr<double[]> rlat(lat);
+          std::shared_ptr<double[]> rlon(lon);
 
           int c = 0;
           double yy = cc[1];

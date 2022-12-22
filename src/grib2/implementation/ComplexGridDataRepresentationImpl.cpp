@@ -126,22 +126,22 @@ void ComplexGridDataRepresentationImpl::decodeValues(Message *message,T::ParamVa
     // Allocating some memory and making sure that it will be released.
 
     T::ParamValue *value = new T::ParamValue[numOfValues];
-    std::unique_ptr<T::ParamValue> value_delete(value);
+    std::unique_ptr<T::ParamValue[]> value_delete(value);
 
     int *dataValue = new int[numberOfValues];
-    std::unique_ptr<int> dataValue_delete(dataValue);
+    std::unique_ptr<int[]> dataValue_delete(dataValue);
 
     int *groupReference = new int[numberOfGroups];
-    std::unique_ptr<int> groupReference_delete(groupReference);
+    std::unique_ptr<int[]> groupReference_delete(groupReference);
 
     int *groupValueSize = new int[numberOfGroups];
-    std::unique_ptr<int> groupValueSize_delete(groupValueSize);
+    std::unique_ptr<int[]> groupValueSize_delete(groupValueSize);
 
     int  *groupSize = new int[numberOfGroups];
-    std::unique_ptr<int> groupSize_delete(groupSize);
+    std::unique_ptr<int[]> groupSize_delete(groupSize);
 
     int *missingDataValue = new int[numberOfValues];
-    std::unique_ptr<int> missingDataValue_delete(missingDataValue);
+    std::unique_ptr<int[]> missingDataValue_delete(missingDataValue);
 
 /*
 

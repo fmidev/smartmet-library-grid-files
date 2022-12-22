@@ -132,6 +132,9 @@ void PhysicalGridFile::mapToMemory()
   FUNCTION_TRACE
   try
   {
+    if (mDeletionTime != 0  &&  (time(nullptr) + 180) > mDeletionTime)
+      throw Fmi::Exception(BCP,"File is going to be deleted!");
+
     AutoThreadLock lock(&mMemoryMappingLock);
     if (isMemoryMapped())
       return;

@@ -320,8 +320,8 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
     double *x = new double[sz+1];
     double *y = new double[sz+1];
 
-    std::shared_ptr<double> rx(x);
-    std::shared_ptr<double> ry(y);
+    std::shared_ptr<double[]> rx(x);
+    std::shared_ptr<double[]> ry(y);
 
     for (int t=0; t<sz; t++)
     {

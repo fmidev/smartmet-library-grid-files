@@ -2315,6 +2315,63 @@ void Message::getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxV
 
 
 
+T::ParamValue Message::countAverageValue() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    T::ParamValue_vec values;
+    getGridValueVector(values);
+
+    double sum = 0;
+    double count = 0;
+    double totalArea = 0;
+
+    uint w = getGridWidth();
+    uint h = getGridHeight();
+    uint c = 0;
+    for (uint y=0; y<h; y++)
+    {
+      double lat1,lon1,lat2,lon2,lat3,lon3,lat4,lon4;
+      getGridLatLonCoordinatesByGridPoint(0,y,lat1,lon1);
+      getGridLatLonCoordinatesByGridPoint(1,y,lat2,lon2);
+      getGridLatLonCoordinatesByGridPoint(0,y+1,lat3,lon3);
+      getGridLatLonCoordinatesByGridPoint(1,y+1,lat4,lon4);
+
+      double ww = (latlon_distance(lat1,lon1,lat2,lon2) + latlon_distance(lat3,lon3,lat4,lon4))/2;
+      double hh = latlon_distance(lat1,lon1+(lon2-lon1),lat3,lon3+(lon4-lon3));
+      double area = ww*hh;
+
+      for (uint x = 0; x<w; x++)
+      {
+        double val = values[c];
+        if (val != ParamValueMissing)
+        {
+          sum = sum + val*area;
+          totalArea = totalArea + area;
+          count = count + 1;
+        }
+        c++;
+      }
+    }
+
+    if (count > 0)
+      return (sum / totalArea);
+
+    return ParamValueMissing;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method returns all grid data values (also missing values) as the grid
     would be regular. In the case of an irregular grid, the grid rows are filled so that
     the grid looks like a regular grid.
@@ -5261,6 +5318,9 @@ T::ParamValue Message::getGridValueByGridPoint_byInterpolation(double grid_i,dou
 
       case T::AreaInterpolationMethod::External:
         return getGridValueByGridPoint_nearest(grid_i,grid_j,modificationOperation,modificationParameters);
+
+      case 20:
+        return countAverageValue();
 
       default:
         return getGridValueByGridPoint_nearest(grid_i,grid_j,modificationOperation,modificationParameters);

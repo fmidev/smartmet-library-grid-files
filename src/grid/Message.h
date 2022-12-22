@@ -276,6 +276,7 @@ class Message
     virtual void                lockData();
     virtual void                unlockData();
 
+    virtual T::ParamValue       countAverageValue() const;
     virtual bool                isRead();
     virtual void                print(std::ostream& stream,uint level,uint optionFlags) const;
     virtual void                read();
@@ -329,7 +330,6 @@ class Message
 
     /*! \brief  The parameter level. */
     T::ParamLevel               mParameterLevel;
-
 
     /*! \brief  The virtual file id. If the value is bigger that zero, then the virtual message should be used
      * instead of this message
