@@ -1,6 +1,8 @@
 #include "DataFetcher_filesys.h"
 #include "GeneralFunctions.h"
 #include "AutoThreadLock.h"
+#include "AutoWriteLock.h"
+#include "AutoReadLock.h"
 #include "ShowFunction.h"
 #include <macgyver/Exception.h>
 #include <sys/stat.h>
@@ -27,7 +29,9 @@ DataFetcher_filesys::~DataFetcher_filesys()
   FUNCTION_TRACE
   for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
   {
-    fclose(it->second->fileHandle);
+    if (it->second->fileHandle)
+      fclose(it->second->fileHandle);
+
     delete it->second;
   }
 }
@@ -40,15 +44,21 @@ void DataFetcher_filesys::checkFileHandles()
   FUNCTION_TRACE
   try
   {
-    SmartMet::AutoThreadLock lock(&mThreadLock);
-    if ((time(0) - mLastChecked) > 600)
+    if ((time(0) - mLastChecked) > 120 || mFileHandles.size() > 800)
     {
       std::vector<std::string> deleteList;
-      time_t old = time(0) - 600;
+      mLastChecked = time(0);
+      time_t deleteLimit = mLastChecked - 600;
+      if (mFileHandles.size() > 800)
+        deleteLimit = mLastChecked - 20;
+
       for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
       {
-        if (it->second->lastUsed < old)
+        if (it->second->lastUsed < deleteLimit)
         {
+          AutoThreadLock tlock(&it->second->threadLock);
+          fclose(it->second->fileHandle);
+          it->second->fileHandle = NULL;
           deleteList.push_back(it->first);
         }
       }
@@ -58,13 +68,10 @@ void DataFetcher_filesys::checkFileHandles()
         auto itm = mFileHandles.find(*it);
         if (itm != mFileHandles.end())
         {
-          fclose(itm->second->fileHandle);
           delete itm->second;
           mFileHandles.erase(itm);
         }
       }
-
-      mLastChecked = time(0);
     }
   }
   catch (...)
@@ -83,14 +90,34 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
   {
     time_t currentTime = time(0);
 
-    if ((currentTime - mLastChecked) > 600)
+    if ((time(0) - mLastChecked) > 120 || mFileHandles.size() > 800)
+    {
+      AutoWriteLock lock(&mModificationLock);
       checkFileHandles();
+    }
 
+    {
+      AutoReadLock lock(&mModificationLock);
+      auto fh = mFileHandles.find(filename);
+      if (fh != mFileHandles.end())
+      {
+        if (fh->second->fileHandle)
+        {
+          fh->second->lastUsed = currentTime;
+          return fh->second;
+        }
+      }
+    }
+
+    AutoWriteLock lock(&mModificationLock);
     auto fh = mFileHandles.find(filename);
     if (fh != mFileHandles.end())
     {
-      fh->second->lastUsed = currentTime;
-      return fh->second;
+      if (fh->second->fileHandle)
+      {
+        fh->second->lastUsed = currentTime;
+        return fh->second;
+      }
     }
 
     FileHandle *f = new FileHandle;
@@ -127,10 +154,13 @@ int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *serve
       throw exception;
     }
 
-    AutoThreadLock tlock(&fh->threadLock);
-
-    fseek(fh->fileHandle,filePosition,SEEK_SET);
-    return fread(dataPtr,1,dataSize,fh->fileHandle);
+    AutoThreadLock lock(&fh->threadLock);
+    if (fh->fileHandle)
+    {
+      fseek(fh->fileHandle,filePosition,SEEK_SET);
+      return fread(dataPtr,1,dataSize,fh->fileHandle);
+    }
+    return -1;
   }
   catch (...)
   {
