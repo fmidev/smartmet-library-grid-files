@@ -329,8 +329,8 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
     double *x = new double[sz+1];
     double *y = new double[sz+1];
 
-    std::shared_ptr<double[]> rx(x);
-    std::shared_ptr<double[]> ry(y);
+    std::unique_ptr<double[]> rx(x);
+    std::unique_ptr<double[]> ry(y);
 
     for (uint t=0; t<sz; t++)
     {
@@ -552,8 +552,8 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
     double *lat = new double[sz+1];
     double *lon = new double[sz+1];
 
-    std::shared_ptr<double[]> rlat(lat);
-    std::shared_ptr<double[]> rlon(lon);
+    std::unique_ptr<double[]> rlat(lat);
+    std::unique_ptr<double[]> rlon(lon);
 
     latLonCoordinates->reserve(sz);
 
