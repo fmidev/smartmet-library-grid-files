@@ -18,6 +18,8 @@ extern "C"
   #include <math.h>
   #include <png.h>
   #include <setjmp.h>
+  #include <webp/encode.h>
+  #include <webp/mux.h>
 };
 
 
@@ -906,6 +908,73 @@ int png_save(const char *filename,uint *image,int image_width,int image_height)
 }
 
 
+
+
+int webp_anim_save(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,int timeStepMsec)
+{
+  try
+  {
+    WebPAnimEncoderOptions enc_options;
+    WebPAnimEncoderOptionsInit(&enc_options);
+    WebPAnimEncoder* enc = WebPAnimEncoderNew(image_width, image_height, &enc_options);
+
+    int dt = timeStepMsec;
+    int ts = dt;
+    uint sz = image_width * image_height;
+    uint *newImage = new uint[sz];
+
+    for (int t=0; t<numberOfImages; t++)
+    {
+      WebPConfig config;
+      WebPConfigInit(&config);
+      WebPPicture frame;
+
+      WebPPictureInitInternal(&frame, WEBP_ENCODER_ABI_VERSION);
+      frame.width = image_width;
+      frame.height= image_height;
+
+      // Converting RGB colors to WEBP colors
+
+      uint *img = image[t];
+      for (uint i = 0; i < sz; i++)
+      {
+        uint col = img[i];
+        if (col & 0xFF000000)
+          newImage[i] = 0; // Transparent
+        else
+          newImage[i] = 0xFF000000 + ((col & 0xFF0000) >> 16) + (col & 0x00FF00) + ((col & 0xFF) << 16);
+      }
+
+      WebPPictureImportRGBA(&frame,(uint8_t*)newImage,image_width*4);
+      WebPAnimEncoderAdd(enc,&frame,ts, &config);
+      ts = ts + dt;
+    }
+    delete [] newImage;
+
+    WebPData out;
+    out.size = 0;
+    out.bytes = nullptr;
+    WebPAnimEncoderAssemble(enc,&out);
+    WebPAnimEncoderDelete(enc);
+
+    if (out.size &&  out.bytes)
+    {
+      FILE *file = fopen(filename,"w");
+      if (!file)
+      {
+        Fmi::Exception exception (BCP,"Cannot create a file!",nullptr);
+        exception.addParameter("Filename",filename);
+      }
+      fwrite(out.bytes,1,out.size,file);
+      fclose(file);
+    }
+    return 0;
+  }
+  catch (Fmi::Exception& e)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 

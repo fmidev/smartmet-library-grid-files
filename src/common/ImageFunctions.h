@@ -101,6 +101,8 @@ int png_save(const char *filename,uint *image,int image_width,int image_height);
 
 void mergePngFiles(const char *newFile,std::vector<std::string>& fileList);
 
+int webp_anim_save(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,int timeStepMsec);
+
 
 // The function converts RGB color component (Red,Green,Blue) to a single RGB value.
 // An individual color should have a value that is the range 0..255.

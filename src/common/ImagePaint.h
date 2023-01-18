@@ -20,6 +20,7 @@ class ImagePaint
 
     void    setDrawColor(uint _color);
     void    setFillColor(uint _color);
+    uint*   getImage();
     void    paintPixel(int _x,int _y,uint _color);
     void    paintLine(int _x1,int _y1,int _x2,int _y2,uint _color);
     void    paintLine(double _x1,double _y1,double _x2,double _y2,uint _color);

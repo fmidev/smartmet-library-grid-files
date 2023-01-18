@@ -1449,5 +1449,346 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
 
 
 
+bool getLineIntersectionPoint(double x1,double y1,double x2,double y2,double x3,double y3,double x4,double y4,double& x,double& y)
+{
+  try
+  {
+    //printf("getLineIntersectionPoint(%f,%f - %f,%f    %f,%f - %f,%f\n",x1,y1,x2,y2,x3,y3,x4,y4);
+
+    int k1 = (int)(10000*(x2-x1)/(y2-y1));
+    int k2 = (int)(10000*(x4-x3)/(y4-y3));
+    if (k1 == k2)  // No intersection
+      return false;
+
+    double a = (x1*y2-y1*x2);
+    double b = (x3*y4-y3*x4);
+    double c = ((x1-x2)*(y3-y4) - (y1-y2)*(x3-x4));
+
+    x = (a*(x3-x4) - (x1-x2)*b) / c;
+    y = (a*(y3-y4) - (y1-y2)*b) / c;
+
+    //printf("*** getLineIntersectionPoint(%f,%f - %f,%f    %f,%f - %f,%f     %f,%f\n",x1,y1,x2,y2,x3,y3,x4,y4,x,y);
+
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+int findPath(float *direction,uint *image,int width,int height,int maxLength,uint backColor,double x1,double y1,int level,uint cellCount,std::vector<T::Coordinate>& coordinates)
+{
+  try
+  {
+    float PI = 3.14159265358979;
+    if (level == maxLength)
+    {
+      //printf("MAXLEN %u\n\n",level);
+      return cellCount;
+    }
+
+    uint visited = 0xFFFFFFFE;
+    int xx = (int)x1;
+    int yy = (int)y1;
+    double xo = xx;
+    double yo = yy;
+
+    if (xx >= width || yy >= height)
+    {
+      //printf("OUT %u\n\n",level);
+      return cellCount;
+    }
+
+    int idx = yy*width + xx;
+    if (image[idx] != backColor  &&  image[idx] != visited)
+    {
+      //printf("COLLISION %u\n\n",level);
+      return cellCount;
+    }
+
+    // Original angle indicates "the from direction". For example, wind blows
+    // from that direction - not to that direction. Notice also that the starting
+    // point of the angle is different than usual.
+    //
+    //
+    //                      N = 0
+    //                        |   /
+    //                        |  /
+    //                        |a/
+    //       W = 270 ---------+--------- E = 90
+    //                        |
+    //                        |
+    //                        |
+    //                      S=180
+    //
+
+
+    double dat = direction[idx];  // "From direction"
+    if (dat == ParamValueMissing)
+      return cellCount;
+
+    coordinates.push_back(T::Coordinate(x1,y1));
+
+    if (image[idx] != visited)
+      cellCount++;
+
+    image[idx] = 0xFFFFFFFE;
+
+    double a = (dat + 180); // "To direction"
+    if (a > 360)
+      a = a - 360;
+
+    // Defining a line
+
+    double angle = 2*PI * a / 360;  // "To direction" in radians.
+    double step = 10;
+    double x2 = x1 + sin(angle)*step;
+    double y2 = y1 - cos(angle)*step;
+
+    double ix;
+    double iy;
+    bool sec;
+
+  /*
+
+    sec[0] =  getLineIntersectionPoint(x1,y1,x2,y2,xo-0.001,0,xo-0.001,10,ix[0],iy[0]);     // Left
+    sec[1] =  getLineIntersectionPoint(x1,y1,x2,y2,xo+1.001,0,xo+1.001,10,ix[1],iy[1]);     // Right
+    sec[2] =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo-0.001,10,yo-0.001,ix[2],iy[2]);     // Top
+    sec[3] =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo+1.001,10,yo+1.001,ix[3],iy[3]);     // Bottom
+
+    double dist[4];
+    dist[0] = (x1-ix[0])*(x1-ix[0]) + (y1-iy[0])*(y1-iy[0]);
+    dist[1] = (x1-ix[1])*(x1-ix[1]) + (y1-iy[1])*(y1-iy[1]);
+    dist[2] = (x1-ix[2])*(x1-ix[2]) + (y1-iy[2])*(y1-iy[2]);
+    dist[3] = (x1-ix[3])*(x1-ix[3]) + (y1-iy[3])*(y1-iy[3]);
+
+    for (uint t=0; t<4; t++)
+    {
+      printf("-- Intersec %f,%f-%f,%f  %f,%f  %d  angle %f %f  dist %f\n",x1,y1,x2,y2,ix[t],iy[t],sec[t],angle,direction[idx],dist[t]);
+    }
+  */
+
+    if (a >= 0  &&  a < 180)
+    {
+      sec =  getLineIntersectionPoint(x1,y1,x2,y2,xo+1.001,0,xo+1.001,10,ix,iy);
+      if (sec  &&  (int)iy == (int)y1)
+      {
+        // Right
+        //printf("RIGHT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+        return findPath(direction,image,width,height,maxLength,backColor,ix,iy,level+1,cellCount,coordinates);
+      }
+
+      if (a >= 0  &&  a < 90)
+      {
+        // Top
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo-0.001,10,yo-0.001,ix,iy);
+        if (sec  &&  (int)ix == (int)x1)
+        {
+          //printf("UP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+          return findPath(direction,image,width,height,maxLength,backColor,ix,iy,level+1,cellCount,coordinates);
+        }
+      }
+      else
+      {
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo+1.001,10,yo+1.001,ix,iy);
+        if (sec  &&  (int)ix == (int)x1)
+        {
+          //printf("DOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+          return findPath(direction,image,width,height,maxLength,backColor,ix,iy,level+1,cellCount,coordinates);
+        }
+      }
+    }
+    else
+    {
+      sec =  getLineIntersectionPoint(x1,y1,x2,y2,xo-0.001,0,xo-0.001,10,ix,iy);
+      if (sec  &&  (int)iy == (int)y1)
+      {
+        // Left
+        //printf("LEFT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+        return findPath(direction,image,width,height,maxLength,backColor,ix,iy,level+1,cellCount,coordinates);
+      }
+
+      if (a >= 270  &&  a < 360)
+      {
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo-0.001,10,yo-0.001,ix,iy);
+        if (sec  &&  (int)ix == (int)x1)
+        {
+          //printf("XUP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+          return findPath(direction,image,width,height,maxLength,backColor,ix,iy,level+1,cellCount,coordinates);
+        }
+      }
+      else
+      {
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo+1.001,10,yo+1.001,ix,iy);
+        if (sec  &&  (int)ix == (int)x1)
+        {
+          //printf("XDOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix[3],iy[3]);
+          return findPath(direction,image,width,height,maxLength,backColor,ix,iy,level+1,cellCount,coordinates);
+        }
+      }
+    }
+
+    //printf("EXIT %u\n\n",level);
+    return cellCount;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void getStreamlineImage(float *direction,float *value,uint *image,int width,int height,int xStep,int yStep,int minLength,int maxLength,float valueRangeStart,float valueRangeEnd,int startColor,int endColor,uint backColor)
+{
+  try
+  {
+    float valueStep = 255.0 / (valueRangeEnd - valueRangeStart);
+    int colorStep = (endColor - startColor) / maxLength;
+
+    int size = width * height;
+    for (int t=0; t<size; t++)
+    {
+      image[t] = backColor;
+    }
+
+    for (int y=0; y<height; y=y+yStep)
+    {
+      for (int x=0; x<width; x=x+xStep)
+      {
+        std::vector<T::Coordinate> coordinates;
+        int cellCount = findPath(direction,image,width,height,maxLength,backColor,(double)x+0.5,(double)y+0.5,0,0,coordinates);
+
+        float avg = valueRangeStart;
+        float total = 0;
+        uint c = 0;
+        if (cellCount >= minLength  &&  value)
+        {
+          for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+          {
+            int xx = (int)it->x();
+            int yy = (int)it->y();
+            int idx = yy*width + xx;
+
+            float val = value[idx];
+            if (val != ParamValueMissing)
+            {
+              total = total + val;
+              c++;
+            }
+          }
+
+          if (c > 0)
+            avg = total / c;
+        }
+
+
+        c = 0;
+        for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+        {
+          int xx = (int)it->x();
+          int yy = (int)it->y();
+
+          int idx = yy*width + xx;
+          if (idx < size)
+          {
+            if (cellCount < minLength || avg < valueRangeStart)
+            {
+              image[idx] = backColor;
+            }
+            else
+            {
+              float val = valueRangeStart;
+              if (value)
+                val = value[idx];
+
+              // val = avg;
+              if (val == ParamValueMissing || val < valueRangeStart)
+                val = valueRangeStart;
+
+              double hh = valueStep * (val - valueRangeStart);
+              if (hh > 0xFF)
+                hh = 0xFF;
+
+              unsigned char hue = (unsigned char)hh;
+              unsigned char saturation = hue;
+
+              //uint pos = c % maxLength;
+              uchar v = (uchar)(startColor + (c*colorStep));
+              uint col = hsv_to_rgb(hue,saturation,v);
+
+              image[idx] = col;
+            }
+          }
+          c++;
+        }
+      }
+    }
+
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void getStreamlineImage(float *direction,float *value,uint *image,int width,int height,int xStep,int yStep,int minLength,int maxLength)
+{
+  try
+  {
+    int size = width * height;
+    for (int t=0; t<size; t++)
+    {
+      image[t] = 0;
+    }
+
+    for (int y=0; y<height; y=y+yStep)
+    {
+      for (int x=0; x<width; x=x+xStep)
+      {
+        std::vector<T::Coordinate> coordinates;
+        int cellCount = findPath(direction,image,width,height,maxLength,0,(double)x+0.5,(double)y+0.5,0,0,coordinates);
+
+        uint c = 1;
+        for (auto it = coordinates.rbegin(); it != coordinates.rend(); ++it)
+        {
+          int xx = (int)it->x();
+          int yy = (int)it->y();
+
+          int idx = yy*width + xx;
+          if (idx < size)
+          {
+            if (cellCount < minLength)
+            {
+              image[idx] = 0;
+            }
+            else
+            {
+              image[idx] = c;
+            }
+          }
+          c++;
+        }
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 }
 

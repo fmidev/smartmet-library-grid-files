@@ -90,5 +90,28 @@ void getIsobands(
     size_t smooth_degree,
     T::ByteData_vec& contours);
 
-}
+bool getLineIntersectionPoint(
+    double x1,double y1,double x2,double y2,  // Line 1
+    double x3,double y3,double x4,double y4,  // Line 2
+    double& x,double& y);                     // Intesection point
 
+void getStreamlineImage(
+    float *direction,                           // Grid of directions in degrees (size = width x height). For example "wind direction".
+    float *value,                               // Grid of values (size = width x height). For example "wind speed"
+    uint *image,                                // RGB image (size = width x height). Values >= 0xFF000000 mean tranparent pixels).
+    int width,int height,                       // Size of the grids / the image
+    int xStep,int yStep,                        // Counting steps
+    int minLength,int maxLength,                // Min / max line lengths
+    float valueRangeStart,float valueRangeEnd,  // Value range of the "value" grid. Needed for color scaling.
+    int startColor,int endColor,                // Start / end of color gradient (0 .. 255).
+    uint backColor);                            // Backcolor of the image
+
+void getStreamlineImage(
+    float *direction,                           // Grid of directions in degrees (size = width x height). For example "wind direction".
+    float *value,                               // Grid of values (size = width x height). For example "wind speed"
+    uint *image,                                // RGB image (size = width x height). Values >= 0xFF000000 mean tranparent pixels).
+    int width,int height,                       // Size of the grids / the image
+    int xStep,int yStep,                        // Counting steps
+    int minLength,int maxLength);               // Min / max line lengths
+
+}

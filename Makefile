@@ -24,6 +24,8 @@ LIBS += $(REQUIRED_LIBS) \
 	-lpng \
 	-ljpeg \
 	-ljasper \
+  -lwebp \
+  -lwebpmux \
 	-laec \
 	-lz
 

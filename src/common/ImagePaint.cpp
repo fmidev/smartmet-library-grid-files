@@ -66,6 +66,22 @@ ImagePaint::~ImagePaint()
 
 
 
+uint* ImagePaint::getImage()
+{
+  try
+  {
+    return mImage;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 void ImagePaint::setDrawColor(uint _color)
 {
   try
