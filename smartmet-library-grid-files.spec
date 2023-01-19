@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 22.12.22
+Version: 23.1.19
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -19,7 +19,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 22.11.14
-BuildRequires: smartmet-library-spine-devel >= 22.12.2
+BuildRequires: smartmet-library-spine-devel >= 23.1.16
 BuildRequires: smartmet-library-macgyver >= 22.12.16
 BuildRequires: smartmet-library-trax-devel >= 22.12.22
 BuildRequires: %{smartmet_boost}-devel
@@ -47,7 +47,7 @@ Requires: libcurl
 Requires: libjpeg-turbo
 Requires: smartmet-library-newbase >= 22.11.14
 Requires: smartmet-library-macgyver >= 22.12.16
-Requires: smartmet-library-spine >= 22.12.2
+Requires: smartmet-library-spine >= 23.1.16
 Requires: smartmet-library-trax >= 22.12.22
 
 %description
@@ -91,6 +91,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Jan 19 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.1.19-1.fmi
+- Added streamline counting functions and some image functions
 * Thu Dec 22 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.12.22-1.fmi
 - Thread safety fixes
 - Fixed new/delete combinations for some arrays

@@ -3,7 +3,7 @@ LIB = smartmet-$(SUBNAME)
 SPEC = smartmet-library-$(SUBNAME)
 INCDIR = smartmet/$(SUBNAME)
 
-REQUIRES = geos gdal
+REQUIRES = geos gdal webp
 
 # C++11 due to GEOS make_unique problems
 CXX_STD=c++11
@@ -24,8 +24,6 @@ LIBS += $(REQUIRED_LIBS) \
 	-lpng \
 	-ljpeg \
 	-ljasper \
-  -lwebp \
-  -lwebpmux \
 	-laec \
 	-lz
 
