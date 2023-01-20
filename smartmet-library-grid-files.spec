@@ -18,6 +18,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
+BuildRequires: smartmet-utils-devel >= 23.1.19
 BuildRequires: smartmet-library-newbase-devel >= 22.11.14
 BuildRequires: smartmet-library-spine-devel >= 23.1.16
 BuildRequires: smartmet-library-macgyver >= 22.12.16
