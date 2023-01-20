@@ -17,14 +17,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %define smartmet_boost boost
 %endif
 
-%if 0%{?rhel} && 0%{rhel} < 8
-BuildRequires: libwebp13-devel
-Requires: libwebp13
-%else
-BuildRequires: libwebp-devel
-Requires: libwebp
-%endif
-
 BuildRequires: rpm-build
 BuildRequires: smartmet-library-newbase-devel >= 22.11.14
 BuildRequires: smartmet-library-spine-devel >= 23.1.16
@@ -34,6 +26,7 @@ BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal34-devel
 BuildRequires: geos310-devel
+BuildRequires: libwebp13-devel
 BuildRequires: make
 BuildRequires: libaec-devel
 BuildRequires: libcurl-devel
