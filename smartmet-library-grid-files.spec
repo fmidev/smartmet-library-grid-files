@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.1.19
+Version: 23.1.23
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -93,6 +93,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Jan 23 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.1.23-1.fmi
+- Repackage due to new version of libwebp (1.3.0)
+
 * Thu Jan 19 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.1.19-1.fmi
 - Added streamline counting functions and some image functions
 * Thu Dec 22 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.12.22-1.fmi
