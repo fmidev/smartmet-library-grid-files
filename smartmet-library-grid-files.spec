@@ -47,6 +47,7 @@ Requires: gdal34-libs
 Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
+Requires: libwebp13
 Requires: smartmet-library-newbase >= 22.11.14
 Requires: smartmet-library-macgyver >= 22.12.16
 Requires: smartmet-library-spine >= 23.1.16
@@ -84,6 +85,9 @@ Requires: smartmet-library-newbase-devel
 Requires: smartmet-library-spine-devel
 Requires: smartmet-library-macgyver
 Requires: smartmet-library-trax-devel
+Requires: %{smartmet_boost}-devel
+Requires: libcurl-devel
+Requires: gdal34-devel
 
 %description -n %{SPECNAME}-devel
 FMI Grid File library development files
