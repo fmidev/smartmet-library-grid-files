@@ -2487,6 +2487,1400 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& m
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    getGridStreamlinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
+    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
+    if (timeInterpolationMethodStr != nullptr)
+      timeInterpolationMethod = toInt16(timeInterpolationMethodStr);
+
+    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
+    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
+    if (areaInterpolationMethodStr != nullptr)
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
+
+    short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
+    const char *levelInterpolationMethodStr = attributeList.getAttributeValue("grid.levelInterpolationMethod");
+    if (levelInterpolationMethodStr != nullptr)
+      levelInterpolationMethod = toInt16(levelInterpolationMethodStr);
+
+    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
+    const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
+    if (coordinateTypeStr != nullptr)
+      coordinateType = toUInt8(coordinateTypeStr);
+
+    int maxStreamLen = 2048;
+    const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
+    if (maxLengthStr != nullptr)
+      maxStreamLen = toInt32(maxLengthStr);
+
+    int minStreamLen = 5;
+    const char *minLengthStr = attributeList.getAttributeValue("stream.minLength");
+    if (minLengthStr != nullptr)
+      minStreamLen = toInt32(minLengthStr);
+
+    int lineLen = 2048;
+    const char *lineLengthStr = attributeList.getAttributeValue("stream.lineLength");
+    if (lineLengthStr != nullptr)
+      lineLen = toInt32(lineLengthStr);
+
+    int xStep = 20;
+    const char *xStepStr = attributeList.getAttributeValue("stream.xStep");
+    if (xStepStr != nullptr)
+      xStep = toInt32(xStepStr);
+
+    int yStep = 20;
+    const char *yStepStr = attributeList.getAttributeValue("stream.yStep");
+    if (yStepStr != nullptr)
+      yStep = toInt32(yStepStr);
+
+    T::ParamValue_vec gridValues;
+    getGridValueVectorByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,modificationOperation,modificationParameters,gridValues);
+
+    T::Dimensions d = message1.getGridDimensions();
+    T::Coordinate_svec coordinates;
+    T::Coordinate_vec *coordinatePtr = nullptr;
+
+    switch (coordinateType)
+    {
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
+        coordinates = message1.getGridLatLonCoordinates();
+        coordinatePtr = coordinates.get();
+        break;
+
+      case T::CoordinateTypeValue::GRID_COORDINATES:
+        break;
+
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        coordinates = message1.getGridOriginalCoordinates();
+        coordinatePtr = coordinates.get();
+        break;
+    }
+
+    getStreamlines(gridValues,coordinatePtr,d.nx(),d.ny(),minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
+
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("stream.coordinateType",Fmi::to_string(coordinateType));
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    getGridStreamlinesByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
+    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
+
+    if (gridSizeStr != nullptr)
+    {
+      double m = toDouble(gridSizeStr);
+      if (m > 0)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
+      }
+    }
+
+    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
+    {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
+      }
+
+      attributeList.setAttribute("grid.crs",message1.getWKT());
+      attributeList.setAttribute("grid.proj4",message1.getProj4());
+      T::Dimensions  d = message1.getGridDimensions();
+
+      if (llboxStr == nullptr)
+      {
+        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+
+        if (message1.reverseYDirection())
+          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+
+        char tmp[100];
+        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+        {
+          if (x2 < x1  &&  x2 < 0)
+            x2 += 360;
+
+          if (x2 < x1  && x1 >= 180)
+            x1 -= 360;
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          attributeList.setAttribute("grid.llbox",tmp);
+          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
+
+        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
+        {
+          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
+          {
+            if (x2 < x1  &&  x2 < 0)
+              x2 += 360;
+
+            if (x2 < x1  && x1 >= 180)
+              x1 -= 360;
+          }
+
+          if (message1.reverseYDirection())
+          {
+            double tmp = y1;
+            y1 = y2;
+            y2 = tmp;
+          }
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
+        }
+      }
+
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
+    }
+
+    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
+    if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
+    {
+      getGridStreamlinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,streamlines);
+      T::Dimensions  d = message1.getGridDimensions();
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+      return;
+    }
+
+    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
+    const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
+    if (coordinateTypeStr != nullptr)
+      coordinateType = toUInt8(coordinateTypeStr);
+
+    int maxStreamLen = 2048;
+    const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
+    if (maxLengthStr != nullptr)
+      maxStreamLen = toInt32(maxLengthStr);
+
+    int minStreamLen = 5;
+    const char *minLengthStr = attributeList.getAttributeValue("stream.minLength");
+    if (minLengthStr != nullptr)
+      minStreamLen = toInt32(minLengthStr);
+
+    int lineLen = 2048;
+    const char *lineLengthStr = attributeList.getAttributeValue("stream.lineLength");
+    if (lineLengthStr != nullptr)
+      lineLen = toInt32(lineLengthStr);
+
+    int xStep = 20;
+    const char *xStepStr = attributeList.getAttributeValue("stream.xStep");
+    if (xStepStr != nullptr)
+      xStep = toInt32(xStepStr);
+
+    int yStep = 20;
+    const char *yStepStr = attributeList.getAttributeValue("stream.yStep");
+    if (yStepStr != nullptr)
+      yStep = toInt32(yStepStr);
+
+    uint width = 0;
+    uint height = 0;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
+
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    {
+      getGridStreamlinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,streamlines);
+      return;
+    }
+
+    T::ParamValue_vec gridValues;
+    getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
+
+    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
+    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
+    if (timeInterpolationMethodStr != nullptr)
+      timeInterpolationMethod = toInt16(timeInterpolationMethodStr);
+
+    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
+    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
+    if (areaInterpolationMethodStr != nullptr)
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
+
+    T::Coordinate_vec *coordinatePtr = nullptr;
+
+    switch (coordinateType)
+    {
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
+        coordinatePtr = latLonCoordinates.get();
+        break;
+
+      case T::CoordinateTypeValue::GRID_COORDINATES:
+        break;
+
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        coordinatePtr = coordinates.get();
+        break;
+    }
+
+    getStreamlines(gridValues,coordinatePtr,width,height,minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
+
+    attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.proj4",message1.getProj4());
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("stream.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridMetricCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    getGridStreamlinesByLevel(message1,message2,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
+    const char *levelInterpolationMethodStr = attributeList.getAttributeValue("grid.levelInterpolationMethod");
+    if (levelInterpolationMethodStr != nullptr)
+      levelInterpolationMethod = toInt16(levelInterpolationMethodStr);
+
+    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
+    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
+    if (areaInterpolationMethodStr != nullptr)
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
+
+    T::ParamValue_vec gridValues;
+    getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,modificationOperation,modificationParameters,gridValues);
+
+    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
+    const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
+    if (coordinateTypeStr != nullptr)
+      coordinateType = toUInt8(coordinateTypeStr);
+
+    int maxStreamLen = 2048;
+    const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
+    if (maxLengthStr != nullptr)
+      maxStreamLen = toInt32(maxLengthStr);
+
+    int minStreamLen = 5;
+    const char *minLengthStr = attributeList.getAttributeValue("stream.minLength");
+    if (minLengthStr != nullptr)
+      minStreamLen = toInt32(minLengthStr);
+
+    int lineLen = 2048;
+    const char *lineLengthStr = attributeList.getAttributeValue("stream.lineLength");
+    if (lineLengthStr != nullptr)
+      lineLen = toInt32(lineLengthStr);
+
+    int xStep = 20;
+    const char *xStepStr = attributeList.getAttributeValue("stream.xStep");
+    if (xStepStr != nullptr)
+      xStep = toInt32(xStepStr);
+
+    int yStep = 20;
+    const char *yStepStr = attributeList.getAttributeValue("stream.yStep");
+    if (yStepStr != nullptr)
+      yStep = toInt32(yStepStr);
+
+    T::Dimensions d = message1.getGridDimensions();
+    T::Coordinate_svec coordinates;
+    T::Coordinate_vec *coordinatePtr = nullptr;
+
+    switch (coordinateType)
+    {
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
+        coordinates = message1.getGridLatLonCoordinates();
+        coordinatePtr = coordinates.get();
+        break;
+
+      case T::CoordinateTypeValue::GRID_COORDINATES:
+        break;
+
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        coordinates = message1.getGridOriginalCoordinates();
+        coordinatePtr = coordinates.get();
+        break;
+    }
+
+    getStreamlines(gridValues,coordinatePtr,d.nx(),d.ny(),minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
+
+    attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message2.reverseXDirection()));
+    attributeList.setAttribute("stream.coordinateType",Fmi::to_string(coordinateType));
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    getGridStreamlinesByTime(message1,message2,newTime,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+
+    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
+    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
+    if (timeInterpolationMethodStr != nullptr)
+      timeInterpolationMethod = toInt16(timeInterpolationMethodStr);
+
+    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
+    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
+    if (areaInterpolationMethodStr != nullptr)
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
+
+    T::ParamValue_vec gridValues;
+    getGridValueVectorByTime(message1,message2,newTime,timeInterpolationMethod,modificationOperation,modificationParameters,gridValues);
+
+    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
+    const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
+    if (coordinateTypeStr != nullptr)
+      coordinateType = toUInt8(coordinateTypeStr);
+
+    int maxStreamLen = 2048;
+    const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
+    if (maxLengthStr != nullptr)
+      maxStreamLen = toInt32(maxLengthStr);
+
+    int minStreamLen = 5;
+    const char *minLengthStr = attributeList.getAttributeValue("stream.minLength");
+    if (minLengthStr != nullptr)
+      minStreamLen = toInt32(minLengthStr);
+
+    int lineLen = 2048;
+    const char *lineLengthStr = attributeList.getAttributeValue("stream.lineLength");
+    if (lineLengthStr != nullptr)
+      lineLen = toInt32(lineLengthStr);
+
+    int xStep = 20;
+    const char *xStepStr = attributeList.getAttributeValue("stream.xStep");
+    if (xStepStr != nullptr)
+      xStep = toInt32(xStepStr);
+
+    int yStep = 20;
+    const char *yStepStr = attributeList.getAttributeValue("stream.yStep");
+    if (yStepStr != nullptr)
+      yStep = toInt32(yStepStr);
+
+    T::Dimensions d = message1.getGridDimensions();
+    T::Coordinate_svec coordinates;
+    T::Coordinate_vec *coordinatePtr = nullptr;
+
+    switch (coordinateType)
+    {
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
+        coordinates = message1.getGridLatLonCoordinates();
+        coordinatePtr = coordinates.get();
+        break;
+
+      case T::CoordinateTypeValue::GRID_COORDINATES:
+        break;
+
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        coordinates = message1.getGridOriginalCoordinates();
+        coordinatePtr = coordinates.get();
+        break;
+    }
+
+    getStreamlines(gridValues,coordinatePtr,d.nx(),d.ny(),minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
+
+    //attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+    attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message2.reverseXDirection()));
+    attributeList.setAttribute("stream.coordinateType",Fmi::to_string(coordinateType));
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    getGridStreamlinesByLevelAndGeometry(message1,message2,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,int newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
+    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
+
+    if (gridSizeStr != nullptr)
+    {
+      double m = toDouble(gridSizeStr);
+      if (m > 0)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
+      }
+    }
+
+    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
+    {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
+      }
+
+      attributeList.setAttribute("grid.crs",message1.getWKT());
+      attributeList.setAttribute("grid.proj4",message1.getProj4());
+      T::Dimensions  d = message1.getGridDimensions();
+
+      if (llboxStr == nullptr)
+      {
+        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+
+        if (message1.reverseYDirection())
+          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+
+        char tmp[100];
+        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+        {
+          if (x2 < x1  &&  x2 < 0)
+            x2 += 360;
+
+          if (x2 < x1  && x1 >= 180)
+            x1 -= 360;
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          attributeList.setAttribute("grid.llbox",tmp);
+          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
+
+        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
+        {
+          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
+          {
+            if (x2 < x1  &&  x2 < 0)
+              x2 += 360;
+
+            if (x2 < x1  && x1 >= 180)
+              x1 -= 360;
+          }
+
+          if (message1.reverseYDirection())
+          {
+            double tmp = y1;
+            y1 = y2;
+            y2 = tmp;
+          }
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
+        }
+      }
+
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
+    }
+
+    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
+    if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
+    {
+      getGridStreamlinesByLevel(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,streamlines);
+      T::Dimensions  d = message1.getGridDimensions();
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+      return;
+    }
+
+    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
+    const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
+    if (coordinateTypeStr != nullptr)
+      coordinateType = toUInt8(coordinateTypeStr);
+
+    int maxStreamLen = 2048;
+    const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
+    if (maxLengthStr != nullptr)
+      maxStreamLen = toInt32(maxLengthStr);
+
+    int minStreamLen = 5;
+    const char *minLengthStr = attributeList.getAttributeValue("stream.minLength");
+    if (minLengthStr != nullptr)
+      minStreamLen = toInt32(minLengthStr);
+
+    int lineLen = 2048;
+    const char *lineLengthStr = attributeList.getAttributeValue("stream.lineLength");
+    if (lineLengthStr != nullptr)
+      lineLen = toInt32(lineLengthStr);
+
+    int xStep = 20;
+    const char *xStepStr = attributeList.getAttributeValue("stream.xStep");
+    if (xStepStr != nullptr)
+      xStep = toInt32(xStepStr);
+
+    int yStep = 20;
+    const char *yStepStr = attributeList.getAttributeValue("stream.yStep");
+    if (yStepStr != nullptr)
+      yStep = toInt32(yStepStr);
+
+    uint width = 0;
+    uint height = 0;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
+
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    {
+      getGridStreamlinesByLevel(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,streamlines);
+      return;
+    }
+
+    T::ParamValue_vec gridValues;
+    getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
+
+    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
+    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
+    if (timeInterpolationMethodStr != nullptr)
+      timeInterpolationMethod = toInt16(timeInterpolationMethodStr);
+
+    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
+    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
+    if (areaInterpolationMethodStr != nullptr)
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
+
+    T::Coordinate_vec *coordinatePtr = nullptr;
+
+    switch (coordinateType)
+    {
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
+        coordinatePtr = latLonCoordinates.get();
+        break;
+
+      case T::CoordinateTypeValue::GRID_COORDINATES:
+        break;
+
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        coordinatePtr = coordinates.get();
+        break;
+    }
+
+    getStreamlines(gridValues,coordinatePtr,width,height,minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
+
+    attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.proj4",message1.getProj4());
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("stream.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridMetricCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    getGridStreamlinesByTimeAndGeometry(message1,message2,newTime,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    const char *crsStr = attributeList.getAttributeValue("grid.crs");
+    const char *llboxStr = attributeList.getAttributeValue("grid.llbox");
+    const char *centerStr = attributeList.getAttributeValue("grid.center");
+    const char *gridSizeStr = attributeList.getAttributeValue("grid.size");
+
+    if (gridSizeStr != nullptr)
+    {
+      double m = toDouble(gridSizeStr);
+      if (m > 0)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridWidth())*m)));
+        attributeList.setAttribute("grid.height",Fmi::to_string(C_INT(C_DOUBLE(message1.getGridHeight())*m)));
+      }
+    }
+
+    if (crsStr != nullptr &&  strcasecmp(crsStr,"data") == 0)
+    {
+      const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+      const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+      if ((gridWidthStr == nullptr || gridHeightStr == nullptr) &&  centerStr == nullptr)
+      {
+        attributeList.setAttribute("grid.width",Fmi::to_string(message1.getGridWidth()));
+        attributeList.setAttribute("grid.height",Fmi::to_string(message1.getGridHeight()));
+      }
+
+      attributeList.setAttribute("grid.crs",message1.getWKT());
+      attributeList.setAttribute("grid.proj4",message1.getProj4());
+      T::Dimensions  d = message1.getGridDimensions();
+
+      if (llboxStr == nullptr)
+      {
+        double x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+        uint px1 = 0,py1 = 0,px2 = d.nx()-1,py2 = d.ny()-1;
+
+        if (message1.reverseYDirection())
+          px1 = 0,py1 = d.ny()-1,px2 = d.nx()-1,py2 = 0;
+
+        char tmp[100];
+        if (message1.getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  message1.getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
+        {
+          if (x2 < x1  &&  x2 < 0)
+            x2 += 360;
+
+          if (x2 < x1  && x1 >= 180)
+            x1 -= 360;
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          attributeList.setAttribute("grid.llbox",tmp);
+          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
+
+        if (message1.getGridOriginalCoordinatesByGridPoint(0,0,x1,y1)  &&  message1.getGridOriginalCoordinatesByGridPoint(d.nx()-1,d.ny()-1,x2,y2))
+        {
+          if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
+          {
+            if (x2 < x1  &&  x2 < 0)
+              x2 += 360;
+
+            if (x2 < x1  && x1 >= 180)
+              x1 -= 360;
+          }
+
+          if (message1.reverseYDirection())
+          {
+            double tmp = y1;
+            y1 = y2;
+            y2 = tmp;
+          }
+
+          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
+            attributeList.setAttribute("grid.bbox",tmp);
+        }
+      }
+
+      if (llboxStr == nullptr &&  centerStr != nullptr)
+      {
+        // The crop area is defined by a rectangle and its latlon center coordinates.
+
+        std::vector<double> a;
+        splitString(centerStr,',',a);
+        if (a.size() != 2)
+          return;
+
+        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+        {
+          double centerX = a[0];
+          double centerY = a[1];
+
+          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+          char tmp[200];
+          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          attributeList.setAttribute("grid.llbox",tmp);
+        }
+      }
+
+      attributeList.setAttribute("grid.projectionType",Fmi::to_string(message1.getGridProjection()));
+    }
+
+    const char *geometryIdStr = attributeList.getAttributeValue("grid.geometryId");
+    if (geometryIdStr != nullptr  &&  message1.getGridGeometryId() == toInt32(geometryIdStr))
+    {
+      getGridStreamlinesByTime(message1,message2,newTime,attributeList,modificationOperation,modificationParameters,streamlines);
+      T::Dimensions  d = message1.getGridDimensions();
+      attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
+      attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
+      return;
+    }
+
+    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
+    const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
+    if (coordinateTypeStr != nullptr)
+      coordinateType = toUInt8(coordinateTypeStr);
+
+    int maxStreamLen = 2048;
+    const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
+    if (maxLengthStr != nullptr)
+      maxStreamLen = toInt32(maxLengthStr);
+
+    int minStreamLen = 5;
+    const char *minLengthStr = attributeList.getAttributeValue("stream.minLength");
+    if (minLengthStr != nullptr)
+      minStreamLen = toInt32(minLengthStr);
+
+    int lineLen = 2048;
+    const char *lineLengthStr = attributeList.getAttributeValue("stream.lineLength");
+    if (lineLengthStr != nullptr)
+      lineLen = toInt32(lineLengthStr);
+
+    int xStep = 20;
+    const char *xStepStr = attributeList.getAttributeValue("stream.xStep");
+    if (xStepStr != nullptr)
+      xStep = toInt32(xStepStr);
+
+    int yStep = 20;
+    const char *yStepStr = attributeList.getAttributeValue("stream.yStep");
+    if (yStepStr != nullptr)
+      yStep = toInt32(yStepStr);
+
+    uint width = 0;
+    uint height = 0;
+    T::Coordinate_svec coordinates;
+    T::Coordinate_svec latLonCoordinates;
+
+    Identification::gridDef.getGridOriginalCoordinatesByGeometry(attributeList,latLonCoordinates,coordinateType,coordinates,width,height);
+
+    if (!latLonCoordinates || latLonCoordinates->size() == 0)
+    {
+      getGridStreamlinesByTime(message1,message2,newTime,attributeList,modificationOperation,modificationParameters,streamlines);
+      return;
+    }
+
+    T::ParamValue_vec gridValues;
+    getGridValueVectorByTimeAndGeometry(message1,message2,newTime,attributeList,modificationOperation,modificationParameters,gridValues);
+
+    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
+    const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
+    if (timeInterpolationMethodStr != nullptr)
+      timeInterpolationMethod = toInt16(timeInterpolationMethodStr);
+
+    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
+    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
+    if (areaInterpolationMethodStr != nullptr)
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
+
+    T::Coordinate_vec *coordinatePtr = nullptr;
+
+    switch (coordinateType)
+    {
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
+        coordinatePtr = latLonCoordinates.get();
+        break;
+
+      case T::CoordinateTypeValue::GRID_COORDINATES:
+        break;
+
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        coordinatePtr = coordinates.get();
+        break;
+    }
+
+    getStreamlines(gridValues,coordinatePtr,width,height,minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
+
+    attributeList.setAttribute("grid.original.crs",message1.getWKT());
+    attributeList.setAttribute("grid.original.proj4",message1.getProj4());
+    attributeList.setAttribute("grid.original.width",Fmi::to_string(message1.getGridWidth()));
+    attributeList.setAttribute("grid.original.height",Fmi::to_string(message1.getGridHeight()));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("stream.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("grid.width",Fmi::to_string(width));
+    attributeList.setAttribute("grid.height",Fmi::to_string(height));
+
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridMetricCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,int newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& streamlines)
+{
+  try
+  {
+    getGridStreamlinesByLevelAndGrid(message1,message2,newLevel,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,int newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
+{
+  try
+  {
+    short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
+    const char *li = attributeList.getAttributeValue("grid.levelInterpolationMethod");
+    if (li != nullptr)
+      levelInterpolationMethod = toInt16(li);
+
+    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
+    const char *s = attributeList.getAttributeValue("grid.areaInterpolationMethod");
+    if (s != nullptr)
+      areaInterpolationMethod = toInt16(s);
+
+    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
+    const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
+    if (coordinateTypeStr != nullptr)
+      coordinateType = toUInt8(coordinateTypeStr);
+
+    int maxStreamLen = 2048;
+    const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
+    if (maxLengthStr != nullptr)
+      maxStreamLen = toInt32(maxLengthStr);
+
+    int minStreamLen = 5;
+    const char *minLengthStr = attributeList.getAttributeValue("stream.minLength");
+    if (minLengthStr != nullptr)
+      minStreamLen = toInt32(minLengthStr);
+
+    int lineLen = 2048;
+    const char *lineLengthStr = attributeList.getAttributeValue("stream.lineLength");
+    if (lineLengthStr != nullptr)
+      lineLen = toInt32(lineLengthStr);
+
+    int xStep = 20;
+    const char *xStepStr = attributeList.getAttributeValue("stream.xStep");
+    if (xStepStr != nullptr)
+      xStep = toInt32(xStepStr);
+
+    int yStep = 20;
+    const char *yStepStr = attributeList.getAttributeValue("stream.yStep");
+    if (yStepStr != nullptr)
+      yStep = toInt32(yStepStr);
+
+    T::ParamValue_vec gridValues;
+    T::ParamValue_vec values1;
+    T::ParamValue_vec values2;
+
+    message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
+    message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
+    levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,gridValues);
+
+    T::Coordinate_vec *coordinatePtr = nullptr;
+
+    switch (coordinateType)
+    {
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
+        coordinatePtr = &gridLatLonCoordinates;
+        break;
+
+      case T::CoordinateTypeValue::GRID_COORDINATES:
+        break;
+
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        break;
+    }
+
+    attributeList.setAttribute("grid.levelInterpolationMethod",Fmi::to_string(levelInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("stream.coordinateType",Fmi::to_string(coordinateType));
+
+    getStreamlines(gridValues,coordinatePtr,gridWidth,gridHeight,minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& streamlines)
+{
+  try
+  {
+    getGridStreamlinesByTimeAndGrid(message1,message2,newTime,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
+{
+  try
+  {
+    short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
+    const char *ti = attributeList.getAttributeValue("grid.timeInterpolationMethod");
+    if (ti != nullptr)
+      timeInterpolationMethod = toInt16(ti);
+
+    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
+    const char *s = attributeList.getAttributeValue("grid.areaInterpolationMethod");
+    if (s != nullptr)
+      areaInterpolationMethod = toInt16(s);
+
+    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
+    const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
+    if (coordinateTypeStr != nullptr)
+      coordinateType = toUInt8(coordinateTypeStr);
+
+    int maxStreamLen = 2048;
+    const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
+    if (maxLengthStr != nullptr)
+      maxStreamLen = toInt32(maxLengthStr);
+
+    int minStreamLen = 5;
+    const char *minLengthStr = attributeList.getAttributeValue("stream.minLength");
+    if (minLengthStr != nullptr)
+      minStreamLen = toInt32(minLengthStr);
+
+    int lineLen = 2048;
+    const char *lineLengthStr = attributeList.getAttributeValue("stream.lineLength");
+    if (lineLengthStr != nullptr)
+      lineLen = toInt32(lineLengthStr);
+
+    int xStep = 20;
+    const char *xStepStr = attributeList.getAttributeValue("stream.xStep");
+    if (xStepStr != nullptr)
+      xStep = toInt32(xStepStr);
+
+    int yStep = 20;
+    const char *yStepStr = attributeList.getAttributeValue("stream.yStep");
+    if (yStepStr != nullptr)
+      yStep = toInt32(yStepStr);
+
+    T::ParamValue_vec gridValues;
+    T::ParamValue_vec values1;
+    T::ParamValue_vec values2;
+
+    message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
+    message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
+
+    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,gridValues);
+
+    T::Coordinate_vec *coordinatePtr = nullptr;
+
+    switch (coordinateType)
+    {
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
+        coordinatePtr = &gridLatLonCoordinates;
+        break;
+
+      case T::CoordinateTypeValue::GRID_COORDINATES:
+        break;
+
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+        break;
+    }
+
+    attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
+    attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)message1.isRelativeUV()));
+    attributeList.setAttribute("grid.original.global",Fmi::to_string((int)message1.isGridGlobal()));
+    attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)message1.reverseYDirection()));
+    attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)message1.reverseXDirection()));
+    attributeList.setAttribute("stream.coordinateType",Fmi::to_string(coordinateType));
+
+    getStreamlines(gridValues,coordinatePtr,gridWidth,gridHeight,minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    getGridStreamlinesByTimeLevelAndGrid(message1,message2,message3,message4,newTime,newLevel,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,int newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
+{
+  try
+  {
+    T::ParamValue_vec gridValues;
+    getGridValueVectorByTimeLevelAndCoordinateList(message1,message2,message3,message4,newTime,newLevel,T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,attributeList,modificationOperation,modificationParameters,gridValues);
+
+    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
+    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
+    if (areaInterpolationMethodStr != nullptr)
+      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
+
+    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
+    const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
+    if (coordinateTypeStr != nullptr)
+      coordinateType = toUInt8(coordinateTypeStr);
+
+    int maxStreamLen = 2048;
+    const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
+    if (maxLengthStr != nullptr)
+      maxStreamLen = toInt32(maxLengthStr);
+
+    int minStreamLen = 5;
+    const char *minLengthStr = attributeList.getAttributeValue("stream.minLength");
+    if (minLengthStr != nullptr)
+      minStreamLen = toInt32(minLengthStr);
+
+    int lineLen = 2048;
+    const char *lineLengthStr = attributeList.getAttributeValue("stream.lineLength");
+    if (lineLengthStr != nullptr)
+      lineLen = toInt32(lineLengthStr);
+
+    int xStep = 20;
+    const char *xStepStr = attributeList.getAttributeValue("stream.xStep");
+    if (xStepStr != nullptr)
+      xStep = toInt32(xStepStr);
+
+    int yStep = 20;
+    const char *yStepStr = attributeList.getAttributeValue("stream.yStep");
+    if (yStepStr != nullptr)
+      yStep = toInt32(yStepStr);
+
+    getStreamlines(gridValues,&gridLatLonCoordinates,gridWidth,gridHeight,minStreamLen, maxStreamLen,lineLen,xStep,yStep,streamlines);
+
+    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
+    attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
+    attributeList.setAttribute("grid.height",Fmi::to_string(gridHeight));
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
+
+
+
+
 void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message1,const GRID::Message& message2,int level1,int level2,int newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short levelInterpolationMethod,T::ParamValue& value) const
 {
   try

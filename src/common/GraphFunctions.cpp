@@ -6,6 +6,7 @@
 #include "GeneralFunctions.h"
 #include "AutoThreadLock.h"
 #include "ShowFunction.h"
+#include "InterpolationFunctions.h"
 
 #include <trax/Grid.h>
 #include <trax/Contour.h>
@@ -1481,6 +1482,180 @@ bool getLineIntersectionPoint(double x1,double y1,double x2,double y2,double x3,
 
 
 
+int findPath(std::vector<float>& direction,bool *visited,int width,int height,int maxLength,double x1,double y1,int level,uint cellCount,std::vector<T::Coordinate>& coordinates)
+{
+  try
+  {
+    float PI = 3.14159265358979;
+    if (level == maxLength)
+    {
+      //printf("MAXLEN %u\n\n",level);
+      return cellCount;
+    }
+
+    int xx = (int)x1;
+    int yy = (int)y1;
+    double xo = xx;
+    double yo = yy;
+
+    if (xx >= width || yy >= height)
+    {
+      //printf("OUT %u\n\n",level);
+      return cellCount;
+    }
+
+    int idx = yy*width + xx;
+    if (visited[idx])
+    {
+      //printf("COLLISION %u\n\n",level);
+      return cellCount;
+    }
+
+    // Original angle indicates "the from direction". For example, wind blows
+    // from that direction - not to that direction. Notice also that the starting
+    // point of the angle is different than usual.
+    //
+    //
+    //                      N = 0
+    //                        |   /
+    //                        |  /
+    //                        |a/
+    //       W = 270 ---------+--------- E = 90
+    //                        |
+    //                        |
+    //                        |
+    //                      S=180
+    //
+
+
+    double dat = direction[idx];  // "From direction"
+    if (dat == ParamValueMissing)
+      return cellCount;
+
+    coordinates.push_back(T::Coordinate(x1,y1));
+
+    if (!visited[idx])
+      cellCount++;
+
+    visited[idx] = true;
+
+    double a = (dat + 180); // "To direction"
+    if (a > 360)
+      a = a - 360;
+
+    // Defining a line
+
+    double angle = 2*PI * a / 360;  // "To direction" in radians.
+    double step = 10;
+    double x2 = x1 + sin(angle)*step;
+    double y2 = y1 - cos(angle)*step;
+
+    double ix;
+    double iy;
+    bool sec;
+
+  /*
+
+    sec[0] =  getLineIntersectionPoint(x1,y1,x2,y2,xo-0.001,0,xo-0.001,10,ix[0],iy[0]);     // Left
+    sec[1] =  getLineIntersectionPoint(x1,y1,x2,y2,xo+1.001,0,xo+1.001,10,ix[1],iy[1]);     // Right
+    sec[2] =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo-0.001,10,yo-0.001,ix[2],iy[2]);     // Top
+    sec[3] =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo+1.001,10,yo+1.001,ix[3],iy[3]);     // Bottom
+
+    double dist[4];
+    dist[0] = (x1-ix[0])*(x1-ix[0]) + (y1-iy[0])*(y1-iy[0]);
+    dist[1] = (x1-ix[1])*(x1-ix[1]) + (y1-iy[1])*(y1-iy[1]);
+    dist[2] = (x1-ix[2])*(x1-ix[2]) + (y1-iy[2])*(y1-iy[2]);
+    dist[3] = (x1-ix[3])*(x1-ix[3]) + (y1-iy[3])*(y1-iy[3]);
+
+    for (uint t=0; t<4; t++)
+    {
+      printf("-- Intersec %f,%f-%f,%f  %f,%f  %d  angle %f %f  dist %f\n",x1,y1,x2,y2,ix[t],iy[t],sec[t],angle,direction[idx],dist[t]);
+    }
+  */
+
+    if (a >= 0  &&  a < 180)
+    {
+      sec =  getLineIntersectionPoint(x1,y1,x2,y2,xo+1.001,0,xo+1.001,10,ix,iy);
+      if (sec  &&  (int)iy == (int)y1)
+      {
+        // Right
+        //printf("RIGHT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+        return findPath(direction,visited,width,height,maxLength,ix,iy,level+1,cellCount,coordinates);
+      }
+
+      if (a >= 0  &&  a < 90)
+      {
+        // Top
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo-0.001,10,yo-0.001,ix,iy);
+        if (sec  &&  (int)ix == (int)x1)
+        {
+          //printf("UP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+          return findPath(direction,visited,width,height,maxLength,ix,iy,level+1,cellCount,coordinates);
+        }
+      }
+      else
+      {
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo+1.001,10,yo+1.001,ix,iy);
+        if (sec  &&  (int)ix == (int)x1)
+        {
+          //printf("DOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+          return findPath(direction,visited,width,height,maxLength,ix,iy,level+1,cellCount,coordinates);
+        }
+      }
+    }
+    else
+    {
+      sec =  getLineIntersectionPoint(x1,y1,x2,y2,xo-0.001,0,xo-0.001,10,ix,iy);
+      if (sec  &&  (int)iy == (int)y1)
+      {
+        // Left
+        //printf("LEFT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+        return findPath(direction,visited,width,height,maxLength,ix,iy,level+1,cellCount,coordinates);
+      }
+
+      if (a >= 270  &&  a < 360)
+      {
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo-0.001,10,yo-0.001,ix,iy);
+        if (sec  &&  (int)ix == (int)x1)
+        {
+          //printf("XUP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+          return findPath(direction,visited,width,height,maxLength,ix,iy,level+1,cellCount,coordinates);
+        }
+      }
+      else
+      {
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo+1.001,10,yo+1.001,ix,iy);
+        if (sec  &&  (int)ix == (int)x1)
+        {
+          //printf("XDOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix[3],iy[3]);
+          return findPath(direction,visited,width,height,maxLength,ix,iy,level+1,cellCount,coordinates);
+        }
+      }
+    }
+
+    //printf("EXIT %u\n\n",level);
+    return cellCount;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+double diff(double a,double b)
+{
+  if ((int)a == (int)b)
+    return 0;
+
+  if (a < b)
+    return b-a;
+
+  return a-b;
+}
+
+
+
 int findPath(float *direction,uint *image,int width,int height,int maxLength,uint backColor,double x1,double y1,int level,uint cellCount,std::vector<T::Coordinate>& coordinates)
 {
   try
@@ -1537,7 +1712,7 @@ int findPath(float *direction,uint *image,int width,int height,int maxLength,uin
     if (image[idx] != visited)
       cellCount++;
 
-    image[idx] = 0xFFFFFFFE;
+    image[idx] = visited;
 
     double a = (dat + 180); // "To direction"
     if (a > 360)
@@ -1573,10 +1748,15 @@ int findPath(float *direction,uint *image,int width,int height,int maxLength,uin
     }
   */
 
+    double d0 = 0.000001;
+    double d1 = 1.000001;
+    double aa = 0.001;
+
     if (a >= 0  &&  a < 180)
     {
-      sec =  getLineIntersectionPoint(x1,y1,x2,y2,xo+1.001,0,xo+1.001,10,ix,iy);
-      if (sec  &&  (int)iy == (int)y1)
+      sec =  getLineIntersectionPoint(x1,y1,x2,y2,xo+d1,0,xo+d1,10,ix,iy);
+      //printf("** RIGHT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+      if (sec  &&  diff(iy,y1) < aa)
       {
         // Right
         //printf("RIGHT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
@@ -1586,8 +1766,9 @@ int findPath(float *direction,uint *image,int width,int height,int maxLength,uin
       if (a >= 0  &&  a < 90)
       {
         // Top
-        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo-0.001,10,yo-0.001,ix,iy);
-        if (sec  &&  (int)ix == (int)x1)
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo-d0,10,yo-d0,ix,iy);
+        //printf("** UP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+        if (sec  &&  diff(ix,x1) < aa)
         {
           //printf("UP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
           return findPath(direction,image,width,height,maxLength,backColor,ix,iy,level+1,cellCount,coordinates);
@@ -1595,8 +1776,9 @@ int findPath(float *direction,uint *image,int width,int height,int maxLength,uin
       }
       else
       {
-        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo+1.001,10,yo+1.001,ix,iy);
-        if (sec  &&  (int)ix == (int)x1)
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo+d1,10,yo+d1,ix,iy);
+        //printf("** DOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+        if (sec  &&  diff(ix,x1) < aa)
         {
           //printf("DOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
           return findPath(direction,image,width,height,maxLength,backColor,ix,iy,level+1,cellCount,coordinates);
@@ -1605,8 +1787,9 @@ int findPath(float *direction,uint *image,int width,int height,int maxLength,uin
     }
     else
     {
-      sec =  getLineIntersectionPoint(x1,y1,x2,y2,xo-0.001,0,xo-0.001,10,ix,iy);
-      if (sec  &&  (int)iy == (int)y1)
+      sec =  getLineIntersectionPoint(x1,y1,x2,y2,xo-d0,0,xo-d0,10,ix,iy);
+      //printf("** LEFT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+      if (sec  &&  diff(iy,y1) < aa)
       {
         // Left
         //printf("LEFT %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
@@ -1615,8 +1798,9 @@ int findPath(float *direction,uint *image,int width,int height,int maxLength,uin
 
       if (a >= 270  &&  a < 360)
       {
-        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo-0.001,10,yo-0.001,ix,iy);
-        if (sec  &&  (int)ix == (int)x1)
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo-d0,10,yo-d0,ix,iy);
+        //printf("** XUP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+        if (sec  &&  diff(ix,x1) < aa)
         {
           //printf("XUP %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
           return findPath(direction,image,width,height,maxLength,backColor,ix,iy,level+1,cellCount,coordinates);
@@ -1624,16 +1808,17 @@ int findPath(float *direction,uint *image,int width,int height,int maxLength,uin
       }
       else
       {
-        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo+1.001,10,yo+1.001,ix,iy);
-        if (sec  &&  (int)ix == (int)x1)
+        sec =  getLineIntersectionPoint(x1,y1,x2,y2,0,yo+d1,10,yo+d1,ix,iy);
+        //printf("**XDOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
+        if (sec  &&  diff(ix,x1) < aa)
         {
-          //printf("XDOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix[3],iy[3]);
+          //printf("XDOWN %f   %f,%f => %f,%f\n",a,x1,y1,ix,iy);
           return findPath(direction,image,width,height,maxLength,backColor,ix,iy,level+1,cellCount,coordinates);
         }
       }
     }
 
-    //printf("EXIT %u\n\n",level);
+    //printf("EXIT %f  %u\n\n",a,level);
     return cellCount;
   }
   catch (...)
@@ -1787,6 +1972,151 @@ void getStreamlineImage(float *direction,float *value,uint *image,int width,int 
   }
 }
 
+
+
+
+
+void getStreamlines(T::ParamValue_vec& gridValues,std::vector<T::Coordinate> *coordinates,int width,int height,int minStreamLen,int maxStreamLen,int lineLen,int xStep,int yStep,T::ByteData_vec& streamlines)
+{
+  try
+  {
+    int sz = width * height;
+    float *direction = new float[sz];
+    uint *image = new uint[sz];
+
+    for (int t=0; t<sz; t++)
+      image[t] = 0;
+
+    uint idx = 0;
+    for (int y=0; y<height; y++)
+    {
+      uint idx2 = (height-y-1) * width;
+      for (int x=0; x<width; x++)
+      {
+        direction[idx] = gridValues[idx2];
+        idx++;
+        idx2++;
+      }
+    }
+
+    uint dataSize = 100000;
+    uchar data[dataSize];
+
+    for (int y = 0; y <= height; y = y + yStep)
+    {
+      for (int t=0; t<sz; t++)
+        image[t] = 0;
+
+      if (y >= height)
+        y = height -1;
+
+      for (int x = 0; x<= width; x = x + xStep)
+      {
+        if (x >= width)
+          x = width -1;
+
+        std::vector<T::Coordinate> lineCoordinates;
+        int cellCount = findPath(direction,image,width,height,maxStreamLen,0,(double)x+0.5,(double)y+0.5,0,0,lineCoordinates);
+        if (lineCoordinates.size() >= minStreamLen  && cellCount >= minStreamLen)
+        {
+          MemoryWriter memoryWrite(data,dataSize,false);
+
+          int cnt = lineCoordinates.size();
+          for (int t = 0; t<cnt; t = t + lineLen)
+          {
+            int points = lineLen-4;
+            if ((t + points) > cnt)
+               points = cnt - t;
+
+            memoryWrite.write_uint8(0);  // Byte order
+            memoryWrite.write_uint32(2); // WkbLine
+            memoryWrite.write_uint32(points); // Number of points
+
+            for (int a=0; a<points; a++)
+            {
+              int idx = (t+a);
+              double ax = lineCoordinates[idx].x();
+              double ay = lineCoordinates[idx].y();
+
+              if (ay >= height)
+                ay = height-1;
+
+              if (ax >= width)
+                ax = width-1;
+
+              int xx = (int)ax;
+              int yy = (int)ay;
+
+              double dx = ax - (double)xx;
+              double dy = ay - (double)yy;
+
+              int i[4];
+              i[0] = (height-yy-1) * width + xx;
+              i[1] = i[0];
+              i[2] = i[0];
+              i[3] = i[0];
+
+              if ((xx+1) < width)
+              {
+                i[1] = i[0] + 1;
+                i[2] = i[1];
+                if ((yy+1) < height)
+                {
+                  i[3] = i[0] - width;
+                  i[2] = i[1] - width;
+                }
+              }
+
+              double cx = linearInterpolation(dx,dy,0,0,1,1,(*coordinates)[i[0]].x(),(*coordinates)[i[1]].x(),(*coordinates)[i[2]].x(),(*coordinates)[i[3]].x());
+              double cy = linearInterpolation(dx,dy,0,0,1,1,(*coordinates)[i[0]].y(),(*coordinates)[i[1]].y(),(*coordinates)[i[2]].y(),(*coordinates)[i[3]].y());
+              memoryWrite.write_double(cx);
+              memoryWrite.write_double(cy);
+            }
+            uint bytes = memoryWrite.getWritePosition();
+            if (bytes > 0)
+            {
+              std::vector<uchar> wkb;
+
+              wkb.reserve(bytes);
+              for (uint t=0; t<bytes; t++)
+                wkb.emplace_back(data[t]);
+
+              streamlines.emplace_back(wkb);
+               memoryWrite.setWritePosition(0);
+            }
+          }
+
+          uint bytes = memoryWrite.getWritePosition();
+          if (bytes > 0)
+          {
+            std::vector<uchar> wkb;
+            wkb.reserve(bytes);
+            for (uint t=0; t<bytes; t++)
+              wkb.emplace_back(data[t]);
+
+            streamlines.emplace_back(wkb);
+          }
+        }
+        else
+        {
+          for (auto point = lineCoordinates.begin(); point != lineCoordinates.end(); ++point)
+          {
+            int idx = ((int)point->y())*width + (int)point->x();
+            if (idx >= 0 &&  idx < sz)
+              image[idx] = 0;
+          }
+        }
+      }
+    }
+
+    delete [] direction;
+    delete [] image;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 

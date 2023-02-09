@@ -573,6 +573,7 @@ void ImagePaint::paintWkbLine(double _mpx,double _mpy,double _dx,double _dy,Memo
       double x = (_memoryReader.read_double() + _dx);
       double y = (_memoryReader.read_double() + _dy);
 
+      printf(" - LinePoint %f,%f\n",x,y);
       x = x * _mpx;
       y = y*_mpy;
 
@@ -821,6 +822,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryRe
 
       std::uint32_t wkbType = _memoryReader.read_uint32();
 
+      printf("Type:%u\n",wkbType);
       switch (wkbType)
       {
         case 1:

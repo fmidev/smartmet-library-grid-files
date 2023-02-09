@@ -3942,4 +3942,50 @@ void hash_sha256(uchar *input,int inputLen,char *hexHash)
 
 
 
+std::string replaceVariables(const std::string& str,std::map<std::string,std::string>& variables)
+{
+  try
+  {
+    std::string val = str;
+
+    std::size_t p1 = 0;
+    while (p1 != std::string::npos)
+    {
+      p1 = val.find("$(");
+      if (p1 != std::string::npos)
+      {
+        std::size_t p2 = val.find(")",p1+1);
+        if (p2 != std::string::npos)
+        {
+          std::string var = val.substr(p1+2,p2-p1-2);
+          std::string varValue;
+
+          // Searching a value for the variable
+          auto varRec = variables.find(var);
+          if (varRec != variables.end())
+          {
+            std::string newVal = val.substr(0,p1) + varRec->second + val.substr(p2+1);
+            val = newVal;
+          }
+        }
+        else
+        {
+          Fmi::Exception exception(BCP,"Expecting the character ')' at the end of the variable name!");
+          exception.addParameter("Value",str);
+          throw exception;
+        }
+      }
+    }
+
+    return val;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 }  // Namespace SmartMet
