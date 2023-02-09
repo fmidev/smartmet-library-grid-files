@@ -16,8 +16,8 @@ class ModificationLock
 
     ModificationLock()
     {
-      mReadCounter = 0;
-      mWriteCounter = 0;
+      mReadCounter.store(0);
+      mWriteCounter.store(0);
       mLockingEnabled = true;
 
       r1.tv_sec = 0;
@@ -27,8 +27,8 @@ class ModificationLock
 
     ModificationLock(const ModificationLock& modificationLock)
     {
-      mReadCounter = 0;
-      mWriteCounter = 0;
+      mReadCounter.store(0);
+      mWriteCounter.store(0);
       mLockingEnabled = modificationLock.mLockingEnabled;
 
       r1.tv_sec = 0;
@@ -43,8 +43,8 @@ class ModificationLock
 
     void operator=(const ModificationLock& modificationLock)
     {
-      mReadCounter = 0;
-      mWriteCounter = 0;
+      mReadCounter.store(0);
+      mWriteCounter.store(0);
       mLockingEnabled = modificationLock.mLockingEnabled;
 
       r1.tv_sec = 0;
@@ -59,7 +59,7 @@ class ModificationLock
 
       mReadCounter++;
 
-      if (mWriteCounter > 0)
+      if (mWriteCounter.load() > 0)
       {
         mReadCounter--;
         mThreadLock.lock();
@@ -87,7 +87,7 @@ class ModificationLock
       mWriteCounter++;
       while (true)
       {
-        if (mReadCounter == (mWriteCounter-1))
+        if (mReadCounter.load() == (mWriteCounter.load()-1))
           return;
 
         nanosleep(&r1,&r2);
@@ -104,7 +104,7 @@ class ModificationLock
       mThreadLock.lock();
       while (true)
       {
-        if (mReadCounter == mWriteCounter)
+        if (mReadCounter.load() == mWriteCounter.load())
           return;
 
         nanosleep(&r1,&r2);

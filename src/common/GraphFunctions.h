@@ -3,6 +3,7 @@
 #include "Point.h"
 #include "Coordinate.h"
 #include "Typedefs.h"
+#include "../grid/Typedefs.h"
 
 #include <macgyver/Exception.h>
 #include <newbase/NFmiSvgPath.h>
@@ -95,6 +96,27 @@ bool getLineIntersectionPoint(
     double x3,double y3,double x4,double y4,  // Line 2
     double& x,double& y);                     // Intesection point
 
+int findPath(
+    std::vector<float>& direction,
+    bool *visited,
+    int width,int height,
+    int maxLength,
+    double x1,double y1,
+    int level,
+    uint cellCount,
+    std::vector<T::Coordinate>& coordinates);
+
+int findPath(
+    float *direction,
+    uint *image,
+    int width,int height,
+    int maxLength,
+    uint backColor,
+    double x1,double y1,
+    int level,
+    uint cellCount,
+    std::vector<T::Coordinate>& coordinates);
+
 void getStreamlineImage(
     float *direction,                           // Grid of directions in degrees (size = width x height). For example "wind direction".
     float *value,                               // Grid of values (size = width x height). For example "wind speed"
@@ -113,5 +135,20 @@ void getStreamlineImage(
     int width,int height,                       // Size of the grids / the image
     int xStep,int yStep,                        // Counting steps
     int minLength,int maxLength);               // Min / max line lengths
+
+
+void getStreamlines(
+    T::ParamValue_vec& gridValues,
+    std::vector<T::Coordinate> *coordinates,
+    int width,
+    int height,
+    int minStreamLen,
+    int maxStreamLen,
+    int lineLen,
+    int xStep,
+    int yStep,
+    T::ByteData_vec& streamlines);
+
+
 
 }

@@ -222,6 +222,8 @@ int signature_aws_s3_v4(const char *username,
 
 void hash_sha256(uchar *input,int inputLen,char *hexHash);
 
+std::string replaceVariables(const std::string& str,std::map<std::string,std::string>& variables);
+
 
 inline int ptr_compare(char *v1, char *v2)
 {
