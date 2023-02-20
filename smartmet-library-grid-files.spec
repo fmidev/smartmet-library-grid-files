@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.1.24
+Version: 23.2.20
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -19,9 +19,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 23.1.19
-BuildRequires: smartmet-library-newbase-devel >= 22.11.14
-BuildRequires: smartmet-library-spine-devel >= 23.1.16
-BuildRequires: smartmet-library-macgyver >= 22.12.16
+BuildRequires: smartmet-library-newbase-devel >= 23.2.9
+BuildRequires: smartmet-library-spine-devel >= 23.2.8
+BuildRequires: smartmet-library-macgyver >= 23.2.8
 BuildRequires: smartmet-library-trax-devel >= 22.12.22
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -48,9 +48,9 @@ Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13
-Requires: smartmet-library-newbase >= 22.11.14
-Requires: smartmet-library-macgyver >= 22.12.16
-Requires: smartmet-library-spine >= 23.1.16
+Requires: smartmet-library-newbase >= 23.2.9
+Requires: smartmet-library-macgyver >= 23.2.8
+Requires: smartmet-library-spine >= 23.2.8
 Requires: smartmet-library-trax >= 22.12.22
 
 %description
@@ -97,12 +97,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Feb 20 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.2.20-1.fmi
+- Added streamline processing
 * Tue Jan 24 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.1.24-1.fmi
 - Add missing RPM requires
-
 * Mon Jan 23 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.1.23-1.fmi
 - Repackage due to new version of libwebp (1.3.0)
-
 * Thu Jan 19 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.1.19-1.fmi
 - Added streamline counting functions and some image functions
 * Thu Dec 22 2022 Mika Heiskanen <mika.heiskanen@fmi.fi> - 22.12.22-1.fmi
