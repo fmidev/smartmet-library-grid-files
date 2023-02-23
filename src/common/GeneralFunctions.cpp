@@ -3960,11 +3960,26 @@ std::string replaceVariables(const std::string& str,std::map<std::string,std::st
           std::string var = val.substr(p1+2,p2-p1-2);
           std::string varValue;
 
+          // Variable can contain a default value $(variableName=defaultValue)
+
+          std::vector<std::string> partList;
+          splitString(var,'=',partList);
+          if (partList.size() == 2)
+          {
+            var = partList[0];
+            varValue = partList[1];
+          }
+
           // Searching a value for the variable
           auto varRec = variables.find(var);
           if (varRec != variables.end())
           {
             std::string newVal = val.substr(0,p1) + varRec->second + val.substr(p2+1);
+            val = newVal;
+          }
+          else
+          {
+            std::string newVal = val.substr(0,p1) + varValue + val.substr(p2+1);
             val = newVal;
           }
         }
