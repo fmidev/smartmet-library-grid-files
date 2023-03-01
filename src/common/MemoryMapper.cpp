@@ -63,8 +63,8 @@ MemoryMapper::MemoryMapper()
 
     mThreadsRunning = 0;
     mStopRequired = false;
-    mMessageReadCount = 0;
-    mMessageProcessCount = 0;
+    mMessageReadCount.store(0);
+    mMessageProcessCount.store(0);
     mUffd = -1;
     mPageSize = 0;
     mPageCacheCounter = 0;
@@ -685,7 +685,7 @@ void MemoryMapper::faultProcessingThread()
         long long len = 0;
         {
           AutoThreadLock tlock(&mThreadLock);
-          len = mMessageReadCount - mMessageProcessCount;
+          len = mMessageReadCount.load() - mMessageProcessCount.load();
           if (len > 0)
           {
             idx = mMessageProcessCount % mMaxMessages;
@@ -759,7 +759,7 @@ void MemoryMapper::faultProcessingThread()
         else
         {
           sleepCount++;
-          if (sleepCount < 50  &&  mMessageReadCount > 0)
+          if (sleepCount < 50  &&  mMessageReadCount.load() > 0)
             time_usleep(0,500000);
           else
             time_usleep(0,10000000);
@@ -804,11 +804,11 @@ void MemoryMapper::faultHandlerThread()
     {
       try
       {
-        auto len = mMessageReadCount - mMessageProcessCount;
+        auto len = mMessageReadCount.load() - mMessageProcessCount.load();
 
         if (len < mMaxMessages)
         {
-          auto idx = mMessageReadCount % mMaxMessages;
+          auto idx = mMessageReadCount.load() % mMaxMessages;
 
           struct pollfd pollfd;
           pollfd.fd = mUffd;
@@ -833,7 +833,7 @@ void MemoryMapper::faultHandlerThread()
 
             bool found = false;
             auto address = mMessage[idx].arg.pagefault.address;
-            for (auto t = (long long)mMessageProcessCount; t<(long long)mMessageReadCount  &&  !found; t++)
+            for (auto t = (long long)mMessageProcessCount; t<(long long)mMessageReadCount.load()  &&  !found; t++)
             {
               auto i = t % mMaxMessages;
               if (mMessage[i].arg.pagefault.address == address)
