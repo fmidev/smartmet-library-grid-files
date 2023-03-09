@@ -84,14 +84,17 @@ typedef uchar ParamKeyType;
 class ParamKeyTypeValue
 {
   public:
-    static const ParamKeyType UNKNOWN      = 0;
-    static const ParamKeyType FMI_ID       = 1;
-    static const ParamKeyType FMI_NAME     = 2;
-    static const ParamKeyType GRIB_ID      = 3;
-    static const ParamKeyType NEWBASE_ID   = 4;
-    static const ParamKeyType NEWBASE_NAME = 5;
-    static const ParamKeyType NETCDF_NAME  = 6;
-    static const ParamKeyType BUILD_IN     = 100;
+  enum : ParamKeyType
+    {
+     UNKNOWN      = 0,
+     FMI_ID       = 1,
+     FMI_NAME     = 2,
+     GRIB_ID      = 3,
+     NEWBASE_ID   = 4,
+     NEWBASE_NAME = 5,
+     NETCDF_NAME  = 6,
+     BUILD_IN     = 100
+    };
 };
 
 
@@ -115,15 +118,18 @@ typedef uchar FileType;
 class FileTypeValue
 {
   public:
-    static const FileType Unknown   = 0;
-    static const FileType Grib1     = 1;
-    static const FileType Grib2     = 2;
-    static const FileType NetCdf3   = 3;
-    static const FileType NetCdf4   = 4;
-    static const FileType QueryData = 5;
-    static const FileType Grib      = 9;  // Contains Grib1 and Grib2 messages
-    static const FileType Fmig1     = 10;
-    static const FileType Virtual   = 200;
+  enum : FileType
+    {
+     Unknown   = 0,
+     Grib1     = 1,
+     Grib2     = 2,
+     NetCdf3   = 3,
+     NetCdf4   = 4,
+     QueryData = 5,
+     Grib      = 9,  // Contains Grib1 and Grib2 messages
+     Fmig1     = 10,
+     Virtual   = 200
+    };
 };
 
 /*
@@ -144,50 +150,59 @@ class GridLayoutValue
 class AreaInterpolationMethod
 {
   public:
-    static const short Undefined      = -1;
-    static const short None           = 0;     // Numbers 0 - 99 reserved for build-in interpolation types
-    static const short Linear         = 1;
-    static const short Nearest        = 2;
-    static const short Min            = 3;
-    static const short Max            = 4;
-    static const short Landscape      = 9;
-    static const short Forbidden      = 10;    // Requested point needs to match a grid point (or to be very close to it)
-    static const short List           = 500;   // Returns grid corner values
-    static const short ListWithAngles = 501;   // Returns grid corner values and angles
-    static const short External       = 1000;  // Numbers 1000 - 65535 reserved for external interpolation types
+  enum : short
+    {
+     Undefined      = -1,
+     None           = 0,     // Numbers 0 - 99 reserved for build-in interpolation types
+     Linear         = 1,
+     Nearest        = 2,
+     Min            = 3,
+     Max            = 4,
+     Landscape      = 9,
+     Forbidden      = 10,    // Requested point needs to match a grid point (or to be very close to it)
+     List           = 500,   // Returns grid corner values
+     ListWithAngles = 501,   // Returns grid corner values and angles
+     External       = 1000   // Numbers 1000 - 65535 reserved for external interpolation types
+    };
 };
 
 
 class TimeInterpolationMethod
 {
   public:
-    static const short Undefined    = -1;
-    static const short None         = 0;       // Numbers 0 - 999 reserved for build-in interpolation types
-    static const short Linear       = 1;
-    static const short Nearest      = 2;
-    static const short Min          = 3;
-    static const short Max          = 4;
-    static const short Previous     = 6;
-    static const short Next         = 7;
-    static const short Forbidden    = 10;      // Requested time needs to match the grid time (or to be very close to it)
-    static const short External     = 1000;    // Numbers 1000 - 65535 reserved for external interpolation types
+  enum : short
+    {
+     Undefined    = -1,
+     None         = 0,       // Numbers 0 - 999 reserved for build-in interpolation types
+     Linear       = 1,
+     Nearest      = 2,
+     Min          = 3,
+     Max          = 4,
+     Previous     = 6,
+     Next         = 7,
+     Forbidden    = 10,      // Requested time needs to match the grid time (or to be very close to it)
+     External     = 1000     // Numbers 1000 - 65535 reserved for external interpolation types
+    };
 };
 
 
 class LevelInterpolationMethod
 {
   public:
-    static const short Undefined    = -1;
-    static const short None         = 0;       // Numbers 0 - 999 reserved for build-in interpolation types
-    static const short Linear       = 1;
-    static const short Nearest      = 2;
-    static const short Min          = 3;
-    static const short Max          = 4;
-    static const short Logarithmic  = 5;
-    static const short Previous     = 6;
-    static const short Next         = 7;
-    static const short Forbidden    = 10;      // Requested level needs to match the grid level (or to be very close to it)
-    static const short External     = 1000;    // Numbers 1000 - 65535 reserved for external interpolation types
+  enum : short
+    {
+     Undefined    = -1,
+     None         = 0,       // Numbers 0 - 999 reserved for build-in interpolation types
+     Linear       = 1,
+     Nearest      = 2,
+     Min          = 3,
+     Max          = 4,
+     Logarithmic  = 5,
+     Previous     = 6,
+     Next         = 7,
+     Forbidden    = 10,      // Requested level needs to match the grid level (or to be very close to it)
+     External     = 1000     // Numbers 1000 - 65535 reserved for external interpolation types
+    };
 };
 
 
@@ -196,10 +211,13 @@ typedef uchar CoordinateType;
 class CoordinateTypeValue
 {
   public:
-    static const CoordinateType UNKNOWN               = 0;
-    static const CoordinateType LATLON_COORDINATES    = 1;
-    static const CoordinateType GRID_COORDINATES      = 2;
-    static const CoordinateType ORIGINAL_COORDINATES  = 3;
+  enum : CoordinateType
+    {
+     UNKNOWN               = 0,
+     LATLON_COORDINATES    = 1,
+     GRID_COORDINATES      = 2,
+     ORIGINAL_COORDINATES  = 3
+    };
 };
 
 
@@ -209,64 +227,70 @@ typedef ushort GridProjection;
 class GridProjectionValue
 {
   public:
-    static const GridProjection Unknown                             = 0;
-    static const GridProjection LatLon                              = 1;
-    static const GridProjection RotatedLatLon                       = 2;
-    static const GridProjection StretchedLatLon                     = 3;
-    static const GridProjection StretchedRotatedLatLon              = 4;
-    static const GridProjection VariableResolutionLatLon            = 5;
-    static const GridProjection VariableResolutionRotatedLatLon     = 6;
-    static const GridProjection Mercator                            = 7;
-    static const GridProjection TransverseMercator                  = 8;
-    static const GridProjection PolarStereographic                  = 9;
-    static const GridProjection LambertConformal                    = 10;
-    static const GridProjection ObliqueLambertConformal             = 11;
-    static const GridProjection Albers                              = 12;
-    static const GridProjection Gaussian                            = 13;
-    static const GridProjection RotatedGaussian                     = 14;
-    static const GridProjection StretchedGaussian                   = 15;
-    static const GridProjection StretchedRotatedGaussian            = 16;
-    static const GridProjection SphericalHarmonic                   = 17;
-    static const GridProjection RotatedSphericalHarmonic            = 18;
-    static const GridProjection StretchedSphericalHarmonic          = 19;
-    static const GridProjection StretchedRotatedSphericalHarmonic   = 20;
-    static const GridProjection SpaceView                           = 21;
-    static const GridProjection Triangular                          = 22;
-    static const GridProjection Unstructured                        = 23;
-    static const GridProjection EquatorialAzimuthalEquidistant      = 24;
-    static const GridProjection AzimuthRange                        = 25;
-    static const GridProjection IrregularLatLon                     = 26;
-    static const GridProjection LambertAzimuthalEqualArea           = 27;
-    static const GridProjection CrossSection                        = 28;
-    static const GridProjection Hovmoller                           = 29;
-    static const GridProjection TimeSection                         = 30;
-    static const GridProjection GnomonicProjection                  = 31;
-    static const GridProjection SimplePolyconicProjection           = 32;
-    static const GridProjection MillersCylindricalProjection        = 33;
+  enum : GridProjection
+    {
+     Unknown                             = 0,
+     LatLon                              = 1,
+     RotatedLatLon                       = 2,
+     StretchedLatLon                     = 3,
+     StretchedRotatedLatLon              = 4,
+     VariableResolutionLatLon            = 5,
+     VariableResolutionRotatedLatLon     = 6,
+     Mercator                            = 7,
+     TransverseMercator                  = 8,
+     PolarStereographic                  = 9,
+     LambertConformal                    = 10,
+     ObliqueLambertConformal             = 11,
+     Albers                              = 12,
+     Gaussian                            = 13,
+     RotatedGaussian                     = 14,
+     StretchedGaussian                   = 15,
+     StretchedRotatedGaussian            = 16,
+     SphericalHarmonic                   = 17,
+     RotatedSphericalHarmonic            = 18,
+     StretchedSphericalHarmonic          = 19,
+     StretchedRotatedSphericalHarmonic   = 20,
+     SpaceView                           = 21,
+     Triangular                          = 22,
+     Unstructured                        = 23,
+     EquatorialAzimuthalEquidistant      = 24,
+     AzimuthRange                        = 25,
+     IrregularLatLon                     = 26,
+     LambertAzimuthalEqualArea           = 27,
+     CrossSection                        = 28,
+     Hovmoller                           = 29,
+     TimeSection                         = 30,
+     GnomonicProjection                  = 31,
+     SimplePolyconicProjection           = 32,
+     MillersCylindricalProjection        = 33
+    };
 };
 
 
 class CompressionMethod
 {
   public:
-    static const ushort Undefined                                               = 0;
-    static const ushort None                                                    = 1;
+  enum : ushort
+    {
+     Undefined                                               = 0,
+     None                                                    = 1,
 
-    static const ushort GridPointData_SimplePacking                             = 10;
-    static const ushort GridPointData_SimplePackingWithPreprocessing            = 11;
-    static const ushort GridPointData_SimplePackingWithLogarithmicPreprocessing = 12;
-    static const ushort GridPointData_ComplexPacking                            = 13;  // = SecondOrderPacking
-    static const ushort GridPointData_ComplexPackingAndSpatialDifferencing      = 14;
-    static const ushort GridPointData_IEEE_packing                              = 15;
-    static const ushort GridPointData_JPEG_2000                                 = 16;
-    static const ushort GridPointData_PNG                                       = 17;
-    static const ushort GridPointMatrixValues_SimplePacking                     = 30;
+     GridPointData_SimplePacking                             = 10,
+     GridPointData_SimplePackingWithPreprocessing            = 11,
+     GridPointData_SimplePackingWithLogarithmicPreprocessing = 12,
+     GridPointData_ComplexPacking                            = 13,  // = SecondOrderPacking
+     GridPointData_ComplexPackingAndSpatialDifferencing      = 14,
+     GridPointData_IEEE_packing                              = 15,
+     GridPointData_JPEG_2000                                 = 16,
+     GridPointData_PNG                                       = 17,
+     GridPointMatrixValues_SimplePacking                     = 30,
 
-    static const ushort SphericalHarmonics_SimplePacking                        = 40;
-    static const ushort SphericalHarmonics_ComplexPacking                       = 41;
+     SphericalHarmonics_SimplePacking                        = 40,
+     SphericalHarmonics_ComplexPacking                       = 41,
 
-    static const ushort SpectralData_SimplePacking                              = 50;
-    static const ushort SpectralData_ComplexPacking                             = 51;
+     SpectralData_SimplePacking                              = 50,
+     SpectralData_ComplexPacking                             = 51
+    };
 };
 
 

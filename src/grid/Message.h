@@ -356,35 +356,38 @@ class Operation
 {
   public:
 
-    static const uint NONE              = 0;
+  enum : uint
+    {
+     NONE              = 0,
 
-    static const uint GRID_ADD          = 1;
-    static const uint GRID_SUM          = 1;
-    static const uint GRID_DEC          = 2;
-    static const uint GRID_MUL          = 3;
-    static const uint GRID_DIV          = 4;
-    static const uint GRID_HYPOT        = 5;
+     GRID_ADD          = 1,
+     GRID_SUM          = 1,
+     GRID_DEC          = 2,
+     GRID_MUL          = 3,
+     GRID_DIV          = 4,
+     GRID_HYPOT        = 5,
 
-    static const uint ADD               = 1001;
-    static const uint SUM               = 1001;
-    static const uint DEC               = 1002;
-    static const uint MUL               = 1003;
-    static const uint DIV               = 1004;
+     ADD               = 1001,
+     SUM               = 1001,
+     DEC               = 1002,
+     MUL               = 1003,
+     DIV               = 1004,
 
-    static const uint ABS               = 2000;  // value => abs(value)
-    static const uint NEG               = 2001;  // value => -value
-    static const uint ROUND             = 2002;  // value => round(value)
-    static const uint FLOOR             = 2003;  // value => floor(value)
-    static const uint CEIL              = 2004;  // value => ceil(value)
+     ABS               = 2000,  // value => abs(value)
+     NEG               = 2001,  // value => -value
+     ROUND             = 2002,  // value => round(value)
+     FLOOR             = 2003,  // value => floor(value)
+     CEIL              = 2004,  // value => ceil(value)
 
-    static const uint K2C               = 3000;  // Kevin => Celsius
-    static const uint C2K               = 3001;  // Celsus => Kelvin
-    static const uint F2C               = 3002;  // Fahrenheit => Celsius
-    static const uint C2F               = 3003;  // Celsius => Fahrenheit
-    static const uint F2K               = 3004;  // Fahrenheit => Kelvin
-    static const uint K2F               = 3005;  // Kelvin => Fahrenheit
-    static const uint RAD2DEG           = 3006;  // Radians => Degrees
-    static const uint DEG2RAD           = 3007;  // Degrees => Radians
+     K2C               = 3000,  // Kevin => Celsius
+     C2K               = 3001,  // Celsus => Kelvin
+     F2C               = 3002,  // Fahrenheit => Celsius
+     C2F               = 3003,  // Celsius => Fahrenheit
+     F2K               = 3004,  // Fahrenheit => Kelvin
+     K2F               = 3005,  // Kelvin => Fahrenheit
+     RAD2DEG           = 3006,  // Radians => Degrees
+     DEG2RAD           = 3007   // Degrees => Radians
+    };
 
     static void getOperatorNames(std::map<std::string,uint>& names)
     {

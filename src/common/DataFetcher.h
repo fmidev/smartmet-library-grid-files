@@ -25,12 +25,15 @@ class DataFetcher
 
     class ServerType
     {
-      public:
-        static const uint Unknown          = 0;
-        static const uint Filesys          = 1;    // Local file system
-        static const uint S3               = 2;    // S3
-        static const uint THREDDS          = 3;    // THREDDS data server
-        static const uint HTTPD            = 4;    // HTTPD
+    public:
+      enum
+	{
+	 Unknown          = 0,
+	 Filesys          = 1,    // Local file system
+	 S3               = 2,    // S3
+	 THREDDS          = 3,    // THREDDS data server
+	 HTTPD            = 4     // HTTPD
+	};
     };
 
     class AccessInfo

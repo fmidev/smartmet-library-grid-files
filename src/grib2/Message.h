@@ -231,15 +231,18 @@ class Message : public GRID::Message
     class SectionNumber
     {
       public:
-        static const uchar indicator_section       = 0;
-        static const uchar identification_section  = 1;
-        static const uchar local_section           = 2;
-        static const uchar grid_section            = 3;
-        static const uchar product_section         = 4;
-        static const uchar representation_section  = 5;
-        static const uchar bitmap_section          = 6;
-        static const uchar data_section            = 7;
-        static const uchar end_section             = 8;
+        enum
+	  {
+	   indicator_section       = 0,
+	   identification_section  = 1,
+	   local_section           = 2,
+	   grid_section            = 3,
+	   product_section         = 4,
+	   representation_section  = 5,
+	   bitmap_section          = 6,
+	   data_section            = 7,
+	   end_section             = 8
+	  };
     };
 };
 
