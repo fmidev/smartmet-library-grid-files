@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.2.23
+Version: 23.3.9
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -20,8 +20,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 23.1.19
 BuildRequires: smartmet-library-newbase-devel >= 23.2.9
-BuildRequires: smartmet-library-spine-devel >= 23.2.8
-BuildRequires: smartmet-library-macgyver >= 23.2.8
+BuildRequires: smartmet-library-spine-devel >= 23.3.7
+BuildRequires: smartmet-library-macgyver >= 23.3.3
 BuildRequires: smartmet-library-trax-devel >= 22.12.22
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -49,8 +49,8 @@ Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13
 Requires: smartmet-library-newbase >= 23.2.9
-Requires: smartmet-library-macgyver >= 23.2.8
-Requires: smartmet-library-spine >= 23.2.8
+Requires: smartmet-library-macgyver >= 23.3.3
+Requires: smartmet-library-spine >= 23.3.7
 Requires: smartmet-library-trax >= 22.12.22
 
 %description
@@ -97,6 +97,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Mar  9 2023 Mika Heiskanen <mheiskan@rhel8.dev.fmi.fi> - 23.3.9-1.fmi
+- Use enums instead of static ints to make ASAN builds work
 * Thu Feb 23 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.2.23-1.fmi
 - Adding possibility to use default value when replacing variables
 * Mon Feb 20 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.2.20-1.fmi
