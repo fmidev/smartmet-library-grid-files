@@ -735,12 +735,15 @@ int png_load(const char *_filename,CImage& _image)
 
       if (image_channels == 4)
       {
+        ptr[p2+3] = pixel[p1+3];
+        /*
         if (pixel[p1+3] == 0)
         {
           ptr[p2+3] = 0x01;
         }
         else
           ptr[p2+3] = 0;
+          */
       }
 
       p1 = p1 + image_channels;
@@ -883,11 +886,13 @@ int png_save(const char *filename,uint *image,int image_width,int image_height)
 
     for (int x=0; x<image_width; x++)
     {
+      pixel[p1+3] = ptr[p2+3];
+      /*
       if (ptr[p2+3] != 0)
         pixel[p1+3] = 0;
       else
         pixel[p1+3] = 0xFF;
-
+*/
       pixel[p1+2] = ptr[p2+0];
       pixel[p1+1] = ptr[p2+1];
       pixel[p1+0] = ptr[p2+2];
