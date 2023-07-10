@@ -19,14 +19,14 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 23.1.19
-BuildRequires: smartmet-library-newbase-devel >= 23.2.9
-BuildRequires: smartmet-library-spine-devel >= 23.3.7
+BuildRequires: smartmet-library-newbase-devel >= 23.7.10
+BuildRequires: smartmet-library-spine-devel >= 23.7.10
 BuildRequires: smartmet-library-macgyver >= 23.3.3
-BuildRequires: smartmet-library-trax-devel >= 22.12.22
+BuildRequires: smartmet-library-trax-devel >= 23.7.10
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
-BuildRequires: gdal34-devel
-BuildRequires: geos310-devel
+BuildRequires: gdal35-devel
+BuildRequires: geos311-devel
 BuildRequires: libwebp13-devel
 BuildRequires: make
 BuildRequires: libaec-devel
@@ -43,15 +43,15 @@ Requires: %{smartmet_boost}-iostreams
 Requires: %{smartmet_boost}-regex
 Requires: %{smartmet_boost}-system
 Requires: %{smartmet_boost}-thread
-Requires: gdal34-libs
+Requires: gdal35-libs
 Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13
-Requires: smartmet-library-newbase >= 23.2.9
+Requires: smartmet-library-newbase >= 23.7.10
 Requires: smartmet-library-macgyver >= 23.3.3
-Requires: smartmet-library-spine >= 23.3.7
-Requires: smartmet-library-trax >= 22.12.22
+Requires: smartmet-library-spine >= 23.7.10
+Requires: smartmet-library-trax >= 23.7.10
 
 %description
 FMI Grid File handling library
@@ -87,7 +87,7 @@ Requires: smartmet-library-macgyver
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
-Requires: gdal34-devel
+Requires: gdal35-devel
 
 %description -n %{SPECNAME}-devel
 FMI Grid File library development files
