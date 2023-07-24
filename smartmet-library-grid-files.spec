@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.7.10
+Version: 23.7.24
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -22,7 +22,7 @@ BuildRequires: smartmet-utils-devel >= 23.1.19
 BuildRequires: smartmet-library-newbase-devel >= 23.7.10
 BuildRequires: smartmet-library-spine-devel >= 23.7.10
 BuildRequires: smartmet-library-macgyver >= 23.3.3
-BuildRequires: smartmet-library-trax-devel >= 23.7.10
+BuildRequires: smartmet-library-trax-devel >= 23.7.24
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal35-devel
@@ -51,7 +51,7 @@ Requires: libwebp13
 Requires: smartmet-library-newbase >= 23.7.10
 Requires: smartmet-library-macgyver >= 23.3.3
 Requires: smartmet-library-spine >= 23.7.10
-Requires: smartmet-library-trax >= 23.7.10
+Requires: smartmet-library-trax >= 23.7.24
 
 %description
 FMI Grid File handling library
@@ -97,9 +97,10 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Jul 24 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.7.24-1.fmi
+- Trax API now uses float for data values
 * Mon Jul 10 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.7.10-1.fmi
 - Use postgresql 15, gdal 3.5, geos 3.11 and proj-9.0
-
 * Tue Jun  6 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.6.6-1.fmi
 - Minor fix to image rendering
 * Thu Mar  9 2023 Mika Heiskanen <mheiskan@rhel8.dev.fmi.fi> - 23.3.9-1.fmi
