@@ -19,9 +19,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 23.1.19
-BuildRequires: smartmet-library-newbase-devel >= 23.7.10
-BuildRequires: smartmet-library-spine-devel >= 23.7.10
-BuildRequires: smartmet-library-macgyver >= 23.3.3
+BuildRequires: smartmet-library-newbase-devel >= 23.7.28
+BuildRequires: smartmet-library-spine-devel >= 23.7.28
+BuildRequires: smartmet-library-macgyver >= 23.7.28
 BuildRequires: smartmet-library-trax-devel >= 23.7.24
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -48,9 +48,9 @@ Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13
-Requires: smartmet-library-newbase >= 23.7.10
-Requires: smartmet-library-macgyver >= 23.3.3
-Requires: smartmet-library-spine >= 23.7.10
+Requires: smartmet-library-newbase >= 23.7.28
+Requires: smartmet-library-macgyver >= 23.7.28
+Requires: smartmet-library-spine >= 23.7.28
 Requires: smartmet-library-trax >= 23.7.24
 
 %description
