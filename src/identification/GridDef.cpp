@@ -64,6 +64,17 @@ namespace SmartMet
 namespace Identification
 {
 
+namespace
+{
+    std::shared_ptr<OGRCoordinateTransformation> make_ptr(OGRCoordinateTransformation* transformation)
+    {
+        const auto destroy_transformation = [](OGRCoordinateTransformation* transformation) {
+            OCTDestroyCoordinateTransformation(transformation); };
+        return std::shared_ptr<OGRCoordinateTransformation>(
+            transformation, destroy_transformation);
+    }
+}
+
 // This is a global object that contains global configuration information.
 
 GridDef gridDef;
@@ -2421,23 +2432,20 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
         sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
-        OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
-        if (transformation == nullptr)
+        auto transformation = make_ptr(OGRCreateCoordinateTransformation(&sr,&sr_latlon));
+        if (not transformation)
           throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
 
-        OGRCoordinateTransformation *reverseTransformation = nullptr;
+            std::shared_ptr<OGRCoordinateTransformation> reverseTransformation;
 
         if (bboxStr != nullptr)
           cc = aa;
         else
         if (llboxStr != nullptr)
         {
-          reverseTransformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr);
-          if (reverseTransformation == nullptr)
+          reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
+          if (not reverseTransformation)
           {
-            if (transformation != nullptr)
-             OCTDestroyCoordinateTransformation(transformation);
-
             throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
           }
 
@@ -2522,13 +2530,6 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           {
             latLonCoordinates->emplace_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
           }
-
-          if (transformation != nullptr)
-            OCTDestroyCoordinateTransformation(transformation);
-
-          if (reverseTransformation != nullptr)
-            OCTDestroyCoordinateTransformation(reverseTransformation);
-
 
           CoordinateRec rec;
           rec.latlonCoordinates = latLonCoordinates;
@@ -2695,11 +2696,12 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         }
         sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
-        OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sr,&sr_latlon);
+        std::shared_ptr<OGRCoordinateTransformation> transformation =
+            make_ptr(OGRCreateCoordinateTransformation(&sr,&sr_latlon));
         if (transformation == nullptr)
           throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
 
-        OGRCoordinateTransformation *reverseTransformation = nullptr;
+        std::shared_ptr<OGRCoordinateTransformation> reverseTransformation;
 
         bool targetIsLatlon = false;
 
@@ -2708,12 +2710,9 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         else
         if (llboxStr != nullptr)
         {
-          reverseTransformation = OGRCreateCoordinateTransformation(&sr_latlon,&sr);
-          if (reverseTransformation == nullptr)
+            reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
+          if (not reverseTransformation)
           {
-            if (transformation != nullptr)
-             OCTDestroyCoordinateTransformation(transformation);
-
             throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
           }
 
@@ -2879,12 +2878,6 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           {
             latLonCoordinates->emplace_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
           }
-
-          if (transformation != nullptr)
-            OCTDestroyCoordinateTransformation(transformation);
-
-          if (reverseTransformation != nullptr)
-            OCTDestroyCoordinateTransformation(reverseTransformation);
 
           CoordinateRec rec;
           rec.latlonCoordinates = latLonCoordinates;
