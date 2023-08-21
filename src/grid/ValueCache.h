@@ -3,8 +3,8 @@
 #include "Typedefs.h"
 #include <macgyver/Exception.h>
 #include <macgyver/CacheStats.h>
+#include <macgyver/MappedFile.h>
 #include <boost/filesystem.hpp>
-#include <boost/iostreams/device/mapped_file.hpp>
 #include "../common/GeneralFunctions.h"
 #include "../common/AutoReadLock.h"
 #include "../common/AutoWriteLock.h"
@@ -16,7 +16,7 @@ namespace SmartMet
 {
 
 typedef boost::iostreams::mapped_file_params MappedFileParams;
-typedef boost::iostreams::mapped_file MappedFile;
+typedef Fmi::MappedFile MappedFile;
 
 namespace GRID
 {

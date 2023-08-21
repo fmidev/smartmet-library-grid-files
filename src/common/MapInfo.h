@@ -3,7 +3,7 @@
 #include "ThreadLock.h"
 #include <string>
 #include <boost/filesystem.hpp>
-#include <boost/iostreams/device/mapped_file.hpp>
+#include <macgyver/MappedFile.h>
 
 namespace bf = boost::filesystem;
 
@@ -12,7 +12,8 @@ namespace SmartMet
 {
 
 typedef boost::iostreams::mapped_file_params MappedFileParams;
-typedef boost::iostreams::mapped_file MappedFile;
+
+using Fmi::MappedFile;
 typedef std::unique_ptr<MappedFile> MappedFile_uptr;
 
 
