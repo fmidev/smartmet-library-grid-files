@@ -821,7 +821,7 @@ void ImagePaint::paintWkb(double _mpx,double _mpy,double _dx,double _dy,MemoryRe
 
       std::uint32_t wkbType = _memoryReader.read_uint32();
 
-      printf("Type:%u\n",wkbType);
+      //printf("Type:%u\n",wkbType);
       switch (wkbType)
       {
         case 1:
