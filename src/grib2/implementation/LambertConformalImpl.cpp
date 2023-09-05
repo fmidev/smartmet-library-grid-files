@@ -450,8 +450,8 @@ bool LambertConformalImpl::getGridMetricCellSize(double& width,double& height) c
 {
   try
   {
-    width = C_DOUBLE(*mDx) / 1000;
-    height = C_DOUBLE(*mDy) / 1000;
+    width = C_DOUBLE(*mDx) / 1000000;
+    height = C_DOUBLE(*mDy) / 1000000;
     return true;
   }
   catch (...)
