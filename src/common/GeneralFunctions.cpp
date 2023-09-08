@@ -445,8 +445,35 @@ long long getFileSize(const char *filename)
 {
   try
   {
+    if (filename == nullptr)
+      return -1;
+
     struct stat buf;
-    if (stat(filename, &buf) == 0) return (long long)buf.st_size;
+    if (stat(filename, &buf) == 0)
+      return (long long)buf.st_size;
+
+    return -1;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+long long getFileSize(FILE *file)
+{
+  try
+  {
+    if (file == nullptr)
+      return -1;
+
+    int fd = fileno(file);
+
+    struct stat buf;
+    if (fstat(fd, &buf) == 0)
+      return (long long)buf.st_size;
 
     return -1;
   }

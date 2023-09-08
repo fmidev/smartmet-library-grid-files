@@ -73,6 +73,7 @@ void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& 
 time_t toTimeT(boost::posix_time::ptime tim);
 time_t getFileModificationTime(const char *filename);
 long long getFileSize(const char *filename);
+long long getFileSize(FILE *file);
 std::string getAbsoluteFilePath(const std::string& filename);
 std::string getFileDir(const std::string& filename);
 int getInt(const char *str, uint startIdx, uint len);

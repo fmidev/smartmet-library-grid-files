@@ -34,6 +34,11 @@ ModificationLock transformCache2ModificationLock;
 std::unordered_map <std::size_t,T::Coordinate> transformCache2;
 Fmi::Cache::CacheStats transformCache2_stats;
 
+ModificationLock transformCache3ModificationLock;
+std::unordered_map <std::size_t,std::vector<T::Coordinate>> transformCache3;
+Fmi::Cache::CacheStats transformCache3_stats;
+
+
 std::size_t      mPrevHash1[10000] = {0};
 T::Coordinate    mPrevCoordinate1[10000];
 std::size_t      mPrevHash2[10000] = {0};
@@ -67,6 +72,9 @@ GridDefinition::GridDefinition()
 
       transformCache2_stats.maxsize = 1000000;
       transformCache2_stats.starttime = boost::posix_time::second_clock::universal_time();
+
+      transformCache3_stats.maxsize = 1000;
+      transformCache3_stats.starttime = boost::posix_time::second_clock::universal_time();
     }
   }
   catch (...)
@@ -1214,6 +1222,32 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
   try
   {
     uint sz = latlon.size();
+
+    std::size_t hash = 0;
+    uint geomId = getGridGeometryId();
+    if (geomId != 0)
+    {
+      boost::hash_combine(hash,geomId);
+
+      for (uint t=0; t<sz; t++)
+      {
+        auto cc = latlon[t];
+        boost::hash_combine(hash,cc.x());
+        boost::hash_combine(hash,cc.y());
+      }
+
+      AutoReadLock lock(&transformCache3ModificationLock);
+
+      auto it = transformCache3.find(hash);
+      if (it != transformCache3.end())
+      {
+        transformCache3_stats.hits++;
+        points = it->second;
+        return;
+      }
+      transformCache3_stats.misses++;
+    }
+
     points.reserve(sz);
 
     double *x = new double[sz+1];
@@ -1238,6 +1272,20 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
         points.emplace_back(T::Coordinate(i,j));
       else
         points.emplace_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
+    }
+
+    if (hash != 0)
+    {
+      AutoWriteLock lock(&transformCache3ModificationLock);
+      if (transformCache3.size() >= 1000)
+      {
+        transformCache3_stats.size = 0;
+        transformCache3.clear();
+      }
+
+      transformCache3.insert(std::pair<std::size_t,std::vector<T::Coordinate>>(hash,points));
+      transformCache3_stats.inserts++;
+      transformCache3_stats.size++;
     }
   }
   catch (...)
