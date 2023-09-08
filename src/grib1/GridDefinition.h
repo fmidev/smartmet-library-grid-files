@@ -151,6 +151,7 @@ typedef std::map<std::string,GridDef_sptr> GridDef_spmap;
 extern Fmi::Cache::CacheStats coordinateCache_stats;
 extern Fmi::Cache::CacheStats transformCache1_stats;
 extern Fmi::Cache::CacheStats transformCache2_stats;
+extern Fmi::Cache::CacheStats transformCache3_stats;
 
 
 }  // namespace GRID

@@ -143,6 +143,7 @@ typedef std::vector<GridDefinition_sptr> GridDefinition_spvec;
 extern Fmi::Cache::CacheStats coordinateCache_stats;
 extern Fmi::Cache::CacheStats transformCache1_stats;
 extern Fmi::Cache::CacheStats transformCache2_stats;
+extern Fmi::Cache::CacheStats transformCache3_stats;
 
 
 }  // namespace GRIB2
