@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.8.21
+Version: 23.9.11
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,15 +97,16 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Sep 11 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.9.11-1.fmi
+- Adding grid size coordinate cache statistics information
+- Added cache for grid size coordinate conversions.
+- Returning grid metric size in kilometers
 * Mon Aug 21 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.8.21-1.fmi
 - Use Fmi::MappedFile
-
 * Fri Aug  4 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.8.4-1.fmi
 - Fix memory leaks
-
 * Fri Jul 28 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.7.28-1.fmi
 - Repackage due to bulk ABI changes in macgyver/newbase/spine
-
 * Mon Jul 24 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.7.24-1.fmi
 - Trax API now uses float for data values
 * Mon Jul 10 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.7.10-1.fmi
