@@ -163,6 +163,7 @@ void splitString(const char *str,char separator,std::set<double>& partList);
 void splitString(const std::string& str,char separator,std::set<double>& partList);
 void splitString(const char *str,char separator,std::set<int>& partList);
 void splitString(const std::string& str,char separator,std::set<int>& partList);
+void splitNumbers(const char *str,std::vector<std::string>& numbers);
 
 void lineSplit(const char *str,std::vector<std::string> &lines);
 

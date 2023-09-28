@@ -146,6 +146,24 @@ bool GridValueList::getGridValueByIndex(uint index,GridValue& gridValue) const
 
 
 
+bool GridValueList::setGridValueByIndex(uint index,GridValue& gridValue)
+{
+  try
+  {
+    if (index >= mList.size())
+      return false;
+
+    mList[index] = gridValue;
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 bool GridValueList::getGridValueByCoordinates(double x,double y,GridValue& gridValue) const
 {
   try

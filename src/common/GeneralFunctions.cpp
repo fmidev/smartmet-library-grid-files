@@ -2388,6 +2388,34 @@ void splitString(const std::string& str, char separator, std::set<double> &partL
 
 
 
+void splitNumbers(const char *str,std::vector<std::string>& numbers)
+{
+  std::vector<std::string> parts;
+  splitString(str,'/',parts);
+
+  for (auto p = parts.begin(); p != parts.end(); ++p)
+  {
+    std::vector<std::string> nums;
+    splitString(p->c_str(),'-',nums);
+
+    if (nums.size() == 2  &&  nums[0] > " ")
+    {
+      int startp = toInt32(nums[0]);
+      int endp = toInt32(nums[1]);
+      while (startp <= endp)
+      {
+        numbers.emplace_back(Fmi::to_string(startp));
+        startp++;
+      }
+    }
+    else
+    {
+      numbers.emplace_back(*p);
+    }
+  }
+}
+
+
 void lineSplit(const char *str,std::vector<std::string> &lines)
 {
   try

@@ -66,6 +66,7 @@ class GridFile
     virtual uint          getProducerId() const;
     virtual long long     getSize();
     virtual uint          getSourceId() const;
+    virtual size_t        getUserCount();
     virtual void          getUsers(std::set<uint>& userList);
 
     virtual bool          hasDependence(uint fileId);

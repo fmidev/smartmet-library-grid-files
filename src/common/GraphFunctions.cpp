@@ -1988,7 +1988,7 @@ void getStreamlines(T::ParamValue_vec &gridValues,
         int cellCount =
             findPath(direction, image, width, height, maxStreamLen, 0,
                      (double)x + 0.5, (double)y + 0.5, 0, 0, lineCoordinates);
-        if (lineCoordinates.size() >= minStreamLen &&
+        if ((int)lineCoordinates.size() >= minStreamLen &&
             cellCount >= minStreamLen) {
           MemoryWriter memoryWrite(data, dataSize, false);
 

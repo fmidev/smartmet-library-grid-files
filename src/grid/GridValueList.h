@@ -30,6 +30,7 @@ class GridValueList
      T::ParamValue    getMinValue() const;
      T::ParamValue    getAverageValue() const;
      uint             getNumOfValuesInValueRange(T::ParamValue minValue,T::ParamValue maxValue) const;
+     bool             setGridValueByIndex(uint index,GridValue& gridValue);
      void             print(std::ostream& stream,uint level,uint optionFlags) const;
 
   protected:

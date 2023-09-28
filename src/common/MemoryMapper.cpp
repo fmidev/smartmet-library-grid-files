@@ -273,9 +273,8 @@ void MemoryMapper::setEnabled(bool enabled)
   FUNCTION_TRACE
   try
   {
-    mEnabled = enabled;
 
-    if (mEnabled  &&  mUffd < 0)
+    if (enabled  &&  mUffd < 0)
     {
       curl_global_init(CURL_GLOBAL_ALL);
 
@@ -300,14 +299,20 @@ void MemoryMapper::setEnabled(bool enabled)
       mUffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
 
       if (mUffd == -1)
-        throw Fmi::Exception(BCP,"userfaultfd");
+      {
+        printf("### WARNING: Cannot initialize UserFault signal based memory mapping!\n  ** File   : %s (%d)\n  ** Method : %s\n",BCP);
+        return;
+      }
 
       struct uffdio_api uffdio_api;
       uffdio_api.api = UFFD_API;
       uffdio_api.features = 0;
 
       if (ioctl(mUffd, UFFDIO_API, &uffdio_api) == -1)
-        throw Fmi::Exception(BCP,"ioctl-UFFDIO_API");
+      {
+        printf("### WARNING: Cannot initialize UserFault signal based memory mapping (ioctl-UFFDIO_API)!\n  ** File   : %s (%d)\n  ** Method : %s\n",BCP);
+        return;
+      }
 
       mPageCacheIndex = new long long[mPageCacheSize];
       mPageCache = new char*[mPageCacheSize];
@@ -317,6 +322,7 @@ void MemoryMapper::setEnabled(bool enabled)
         mPageCacheIndex[t] = -1;
       }
 
+      mEnabled = enabled;
       startFaultHandler();
     }
   }

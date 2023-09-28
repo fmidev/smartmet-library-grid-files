@@ -547,6 +547,23 @@ void GridFile::getUsers(std::set<uint>& userList)
 
 
 
+size_t GridFile::getUserCount()
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mUserList.size();
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 bool GridFile::hasMessagePositionError() const
 {
   FUNCTION_TRACE
