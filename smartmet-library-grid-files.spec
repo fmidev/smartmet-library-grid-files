@@ -27,7 +27,7 @@ BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal35-devel
 BuildRequires: geos311-devel
-BuildRequires: libwebp13-devel
+BuildRequires: libwebp13-devel >= 1.3.2
 BuildRequires: make
 BuildRequires: libaec-devel
 BuildRequires: libcurl-devel
@@ -47,7 +47,7 @@ Requires: gdal35-libs
 Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
-Requires: libwebp13
+Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 23.8.30
 Requires: smartmet-library-macgyver >= 23.8.31
 Requires: smartmet-library-spine >= 23.8.31
