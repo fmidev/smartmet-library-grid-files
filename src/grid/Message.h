@@ -106,6 +106,7 @@ class Message
     virtual T::Dimensions       getGridDimensions() const;
     virtual T::GeometryId       getGridGeometryId() const;
     virtual std::string         getGridGeometryString() const;
+    virtual std::string         getGridGeometryLine() const;
     virtual T::Hash             getGridHash() const;
 
     virtual void                getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours);

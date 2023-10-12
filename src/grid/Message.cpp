@@ -1885,6 +1885,31 @@ std::string Message::getGridGeometryString() const
 
 
 
+std::string Message::getGridGeometryLine() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::string str = getGridGeometryString();
+    if (str.empty())
+      return str;
+
+    std::string s = ";description";
+    str.replace(str.find(s),s.length(),";0.000000;0.000000;description");
+
+    return str;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
 T::FileType Message::getMessageType() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");

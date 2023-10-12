@@ -1607,9 +1607,13 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
               else
               {
+                char tmp[1000];
+                sprintf(tmp,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;0.000000;0.000000;description",
+                    T::GridProjectionValue::LambertAzimuthalEqualArea,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
+                    startx,starty,fabs(dx),fabs(dy),sm,latitude_of_projection_origin,longitude_of_projection_origin);
                 std::cout << "#### Geometry not found ####\n";
                 std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-                std::cout << projectionString << "\n";
+                std::cout << tmp << "\n";
               }
             }
             else
@@ -1631,9 +1635,13 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
               else
               {
+                char tmp[1000];
+                sprintf(tmp,"%d;id;name;%u;%u;%.6f;%.6f;%.6f;%.6f;%s;0.000000;0.000000;description",
+                  T::GridProjectionValue::LatLon,(int)mXCoordinates.size(),(int)mYCoordinates.size(),
+                  startx,starty,fabs(dx),fabs(dy),sm);
                 std::cout << "#### Geometry not found ####\n";
                 std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
-                std::cout << projectionString << "\n";
+                std::cout << tmp << "\n";
               }
             }
 
