@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.10.3
+Version: 23.10.12
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,6 +97,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Oct 12 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.10.12-1.fmi
+- Fixed geometry addition notice
+
 * Tue Oct  3 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.10.3-1.fmi
 - Repackage to require newer libwebp13 (CVE-2023-4863)
 
