@@ -176,10 +176,23 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
 
     aec_decode_end(&strm);
 
-    long binary_scale_factor = *mPacking.getBinaryScaleFactor();
-    long decimal_scale_factor = *mPacking.getDecimalScaleFactor();
-    double bscale = grib_power(binary_scale_factor,2);
-    double dscale = grib_power(-decimal_scale_factor,10);
+    double R = mPacking.getReferenceValue();
+
+    std::int16_t E = (mPacking.getBinaryScaleFactor() ? *mPacking.getBinaryScaleFactor() : 0);
+
+    // Decimal scale factor D, possibly negative
+    std::int16_t D = (mPacking.getDecimalScaleFactor() ? *mPacking.getDecimalScaleFactor() : 0);
+
+    // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
+
+    const double Efac = std::pow(2.0, E);
+    const double Dfac = std::pow(10, -D);
+
+    const double RDfac = R * Dfac;
+    const double EDfac = Efac * Dfac;
+
+    int bytes = (bits_per_value-1)/8 + 1;
+    int bits = bytes*8;
 
     BitArrayReader bitArrayReader((unsigned char*)dest,strm.total_out*8);
 
@@ -195,9 +208,9 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
       {
         if (bitmapReader.readBit())
         {
-          unsigned int value = 0;
-          bitArrayReader.readBits(bits_per_value,value);
-          double val = (((value*bscale) + reference_value) * dscale);
+          uint value = 0;
+          bitArrayReader.readBits(bits,value);
+          double val = RDfac + value * EDfac;
           decodedValues.emplace_back(val);
         }
         else
@@ -210,9 +223,9 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
     {
       for (std::uint32_t i = 0; i < numOfValues; i++)
       {
-        unsigned int value = 0;
-        bitArrayReader.readBits(bits_per_value,value);
-        double val = (((value*bscale) + reference_value) * dscale);
+        uint value = 0;
+        bitArrayReader.readBits(bits,value);
+        double val = RDfac + value * EDfac;
         decodedValues.emplace_back(val);
       }
     }
