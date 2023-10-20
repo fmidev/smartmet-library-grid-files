@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.10.12
+Version: 23.10.20
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -19,9 +19,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 23.9.6
-BuildRequires: smartmet-library-newbase-devel >= 23.8.30
-BuildRequires: smartmet-library-spine-devel >= 23.8.31
-BuildRequires: smartmet-library-macgyver >= 23.8.31
+BuildRequires: smartmet-library-newbase-devel >= 23.10.11
+BuildRequires: smartmet-library-spine-devel >= 23.10.10
+BuildRequires: smartmet-library-macgyver >= 23.10.10
 BuildRequires: smartmet-library-trax-devel >= 23.8.17
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -48,9 +48,9 @@ Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 23.8.30
-Requires: smartmet-library-macgyver >= 23.8.31
-Requires: smartmet-library-spine >= 23.8.31
+Requires: smartmet-library-newbase >= 23.10.11
+Requires: smartmet-library-macgyver >= 23.10.10
+Requires: smartmet-library-spine >= 23.10.10
 Requires: smartmet-library-trax >= 23.8.17
 
 %description
@@ -81,9 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 23.8.30
+Requires: smartmet-library-newbase-devel >= 23.10.11
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 23.8.31
+Requires: smartmet-library-macgyver >= 23.10.10
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -97,12 +97,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Oct 20 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.10.20-1.fmi
+- Fixed a bug in ccsds packing
 * Thu Oct 12 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.10.12-1.fmi
 - Fixed geometry addition notice
-
 * Tue Oct  3 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.10.3-1.fmi
 - Repackage to require newer libwebp13 (CVE-2023-4863)
-
 * Fri Sep 29 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.9.29-1.fmi
 - Handle UserFault failures more gracefully, just disable our own memory mapping code
 * Mon Sep 11 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.9.11-1.fmi
