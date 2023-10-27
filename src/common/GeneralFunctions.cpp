@@ -1043,7 +1043,7 @@ ulonglong toUInt64(const char *str)
   {
     if (str == nullptr) return 0;
 
-    return static_cast<unsigned long long>(atoll(str));
+    return std::stoull(str);
   }
   catch (...)
   {

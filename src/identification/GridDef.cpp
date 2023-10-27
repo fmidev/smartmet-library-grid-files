@@ -2766,7 +2766,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             {
               // The target projection is latlon
 
-              if (origProjectionType == T::GridProjectionValue::LatLon)
+              if (origProjectionType == T::GridProjectionValue::LatLon || origProjectionType == T::GridProjectionValue::RotatedLatLon)
               {
                 // The source projection is also latlon.
                 if (gridCellWidthDegrStr != nullptr  &&  gridCellHeightDegrStr != nullptr)
