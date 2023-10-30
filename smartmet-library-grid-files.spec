@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.10.20
+Version: 23.10.30
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -20,7 +20,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 23.9.6
 BuildRequires: smartmet-library-newbase-devel >= 23.10.11
-BuildRequires: smartmet-library-spine-devel >= 23.10.10
+BuildRequires: smartmet-library-spine-devel >= 23.10.20
 BuildRequires: smartmet-library-macgyver >= 23.10.10
 BuildRequires: smartmet-library-trax-devel >= 23.8.17
 BuildRequires: %{smartmet_boost}-devel
@@ -50,7 +50,7 @@ Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 23.10.11
 Requires: smartmet-library-macgyver >= 23.10.10
-Requires: smartmet-library-spine >= 23.10.10
+Requires: smartmet-library-spine >= 23.10.20
 Requires: smartmet-library-trax >= 23.8.17
 
 %description
@@ -97,6 +97,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Oct 30 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.10.30-1.fmi
+- Fixed handling of rotated latlon projection
 * Fri Oct 20 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.10.20-1.fmi
 - Fixed a bug in ccsds packing
 * Thu Oct 12 2023 Andris Pavēnis <andris.pavenis@fmi.fi> 23.10.12-1.fmi
