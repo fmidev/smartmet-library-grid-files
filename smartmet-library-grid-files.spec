@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.10.30
+Version: 23.11.2
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,6 +97,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Nov  2 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.2-1.fmi
+- Fixed coordinate conversion prosessing
 * Mon Oct 30 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.10.30-1.fmi
 - Fixed handling of rotated latlon projection
 * Fri Oct 20 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.10.20-1.fmi
