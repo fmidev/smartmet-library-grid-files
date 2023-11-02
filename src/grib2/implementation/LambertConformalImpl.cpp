@@ -7,6 +7,7 @@
 #include "../Properties.h"
 
 #include <iostream>
+#include <boost/functional/hash.hpp>
 
 
 namespace SmartMet
@@ -107,13 +108,7 @@ void LambertConformalImpl::init() const
     double startX = longitudeOfFirstGridPoint;
     double startY = latitudeOfFirstGridPoint;
 
-    auto hash = getGridHash();
-    if (hash == 0 || !getTransformFromCache(hash,latitudeOfFirstGridPoint,longitudeOfFirstGridPoint,startX,startY))
-    {
-      convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
-      if (hash != 0)
-        insertTranformIntoCache(mHash,latitudeOfFirstGridPoint,longitudeOfFirstGridPoint,startX,startY);
-    }
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
 
     mStartX = startX;
     mStartY = startY;
@@ -711,13 +706,14 @@ void LambertConformalImpl::print(std::ostream& stream,uint level,uint optionFlag
       {
         for (int x=0; x < nx; x++)
         {
-          if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
+          //if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
           {
             T::Coordinate coord = coordinateList->at(c);
 
             double lon = coord.x();
             double lat = coord.y();
-            if (convert(&mLatlonSpatialReference,&mSpatialReference,1,&lon,&lat))
+
+            if (getGridLatLonCoordinatesByOriginalCoordinates(coord.x(),coord.y(),lat,lon))
             {
               sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
               stream << space(level+2) << str << "\n";

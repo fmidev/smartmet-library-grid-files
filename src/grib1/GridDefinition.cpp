@@ -782,6 +782,9 @@ bool GridDefinition::getTransformFromCache(std::size_t hash,double lat,double lo
   FUNCTION_TRACE
   try
   {
+    if (hash == 0)
+      return false;
+
     boost::hash_combine(hash,lat);
     boost::hash_combine(hash,lon);
     uint idx = hash % 10000;
@@ -821,6 +824,9 @@ void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double 
   FUNCTION_TRACE
   try
   {
+    if (hash == 0)
+      return;
+
     boost::hash_combine(hash,lat);
     boost::hash_combine(hash,lon);
     uint idx = hash % 10000;

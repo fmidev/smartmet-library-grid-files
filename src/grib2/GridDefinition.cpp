@@ -993,6 +993,7 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid
       return false;
 
     T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
+
     uint c = grid_j * cols + grid_i;
     if (c >= originalCoordinates->size())
       return false;
@@ -1427,7 +1428,7 @@ bool GridDefinition::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint grid_j
 
     double x = 0;
     double y = 0;
-    if (getGridOriginalCoordinatesByGridPosition((double)grid_i,(double)grid_j,x,y))
+    if (getGridOriginalCoordinatesByGridPoint(grid_i,grid_j,x,y))
     {
       if (getGridLatLonCoordinatesByOriginalCoordinates(x,y,lat,lon))
         return true;
@@ -1564,6 +1565,9 @@ bool GridDefinition::getTransformFromCache(std::size_t hash,double lat,double lo
   FUNCTION_TRACE
   try
   {
+    if (hash == 0)
+      return false;
+
     boost::hash_combine(hash,lat);
     boost::hash_combine(hash,lon);
     uint idx = hash % 10000;
@@ -1605,6 +1609,9 @@ void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double 
   FUNCTION_TRACE
   try
   {
+    if (hash == 0)
+      return;
+
     boost::hash_combine(hash,lat);
     boost::hash_combine(hash,lon);
     uint idx = hash % 10000;

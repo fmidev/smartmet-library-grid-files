@@ -3401,8 +3401,6 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modi
     if (y2 >= h)
       y2 = h-1;
 
-    // printf("Points %f,%f,%f,%f\n",x1,y1,x2,y2);
-
     bool gridRectangle = true;
     T::GridValueList valueList;
 
@@ -3415,10 +3413,9 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modi
     double maxY = 0;
     valueList.getGridValueArea(minX,minY,maxX,maxY);
 
-    // printf("ValueAREA %f,%f,%f,%f  %d\n",minX,minY,maxX,maxY,valueList.getLength());
+    int width = C_INT(maxX)-C_INT(minX)+1;
+    int height = C_INT(maxY)-C_INT(minY)+1;
 
-    int width = C_INT(round(maxX-minX+1));
-    int height = C_INT(round(maxY-minY+1));
     uint size = valueList.getLength();
 
     values.reserve(size);

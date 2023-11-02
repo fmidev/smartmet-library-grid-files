@@ -353,13 +353,7 @@ void PolarStereographicImpl::init() const
     double startX = lon;
     double startY = lat;
 
-    auto hash = getGridHash();
-    if (hash == 0 || !getTransformFromCache(hash,lat,lon,startX,startY))
-    {
-      convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
-      if (hash != 0)
-        insertTranformIntoCache(mHash,lat,lon,startX,startY);
-    }
+    convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
 
     mStartX = startX;
     mStartY = startY;
