@@ -2556,7 +2556,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
   FUNCTION_TRACE
   try
   {
-    // attributeList.print(std::cout,0,0);
+    attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *proj4Str = attributeList.getAttributeValue("grid.proj4Str");
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
@@ -2710,7 +2710,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         else
         if (llboxStr != nullptr)
         {
-            reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
+          reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
           if (not reverseTransformation)
           {
             throw Fmi::Exception(BCP,"Cannot create coordinate transformation!");
@@ -2803,8 +2803,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             {
               // The target projection is metric
 
-              width = C_UINT(fabs(diffx) / dxx + 1);
-              height = C_UINT(fabs(diffy) / dyy + 1);
+              width = C_UINT(fabs(diffx) / (dxx*1000) + 1);
+              height = C_UINT(fabs(diffy) / (dyy*1000) + 1);
             }
 
             dx = diffx / C_DOUBLE(width-1);
@@ -2893,6 +2893,8 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       char tmp[100];
       sprintf(tmp,"%f,%f,%f,%f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
       attributeList.setAttribute("grid.llbox",tmp);
+      if (targetIsLatlon)
+        attributeList.setAttribute("grid.bbox",tmp);
     }
     //attributeList.print(std::cout,0,0);
   }
