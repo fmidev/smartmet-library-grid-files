@@ -2556,7 +2556,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
   FUNCTION_TRACE
   try
   {
-    attributeList.print(std::cout,0,0);
+    // attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *proj4Str = attributeList.getAttributeValue("grid.proj4Str");
     const char *originalCrsStr = attributeList.getAttributeValue("grid.original.crs");
