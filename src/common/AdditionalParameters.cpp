@@ -287,8 +287,8 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
     std::string parameterName,
     std::string tag,
     Spine::LocationPtr loc,
-    boost::local_time::local_date_time queryTime,
-    boost::local_time::time_zone_ptr tz,
+    Fmi::LocalDateTime queryTime,
+    Fmi::TimeZonePtr tz,
     int precision,
     std::string& value)
 {
@@ -323,8 +323,8 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
 
     if (param == "localtime")
     {
-      boost::local_time::time_zone_ptr localtz = mTimezones.time_zone_from_string(loc->timezone);
-      boost::local_time::local_date_time lTime(queryTime.utc_time(),localtz);
+      Fmi::TimeZonePtr localtz = mTimezones.time_zone_from_string(loc->timezone);
+      Fmi::LocalDateTime lTime(queryTime.utc_time(),localtz);
       value = mTimeFormatter.format(lTime);
       return true;
     }
@@ -343,8 +343,8 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
 
     if (param == "epochtime")
     {
-      boost::posix_time::ptime time_t_epoch(boost::gregorian::date(1970, 1, 1));
-      boost::posix_time::time_duration diff = queryTime.utc_time() - time_t_epoch;
+      Fmi::DateTime time_t_epoch(Fmi::Date(1970, 1, 1));
+      Fmi::TimeDuration diff = queryTime.utc_time() - time_t_epoch;
       value = Fmi::to_string(diff.total_seconds());
       return true;
     }
@@ -556,7 +556,7 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
 
 
 std::string AdditionalParameters::formatDate(
-    boost::local_time::local_date_time& ldt,
+    Fmi::LocalDateTime& ldt,
     std::locale& llocale,
     const char *fmt)
 {
@@ -580,7 +580,7 @@ std::string AdditionalParameters::formatDate(
 
 
 std::string AdditionalParameters::formatDate(
-    boost::local_time::local_date_time& ldt,
+    Fmi::LocalDateTime& ldt,
     std::locale& llocale,
     std::string fmt)
 {

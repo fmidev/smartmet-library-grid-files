@@ -5,8 +5,8 @@
 
 #include <string>
 #include <set>
-#include <boost/date_time/local_time/local_time.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <macgyver/LocalDateTime.h>
+#include <macgyver/DateTime.h>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
 #include <macgyver/Exception.h>
@@ -57,8 +57,8 @@ time_t      utcTimeToTimeT(const std::string& utcTime);
 time_t      utcTimeToTimeT(const char *utcTime);
 time_t      utcTimeToTimeT(int year,int month,int day,int hour,int minute,int second);
 std::string localTimeFromTimeT(time_t t,const char *tzone);
-boost::posix_time::ptime toTimeStamp(T::TimeString timeStr);
-std::string localTimeToUtc(const std::string& localTime,boost::local_time::time_zone_ptr tz);
+Fmi::DateTime toTimeStamp(T::TimeString timeStr);
+std::string localTimeToUtc(const std::string& localTime,Fmi::TimeZonePtr tz);
 void splitTimeString(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second);
 void splitTimeString(const std::string& timeStr, short &year, uchar &month, uchar &day, uchar &hour, uchar &minute, uchar &second);
 
@@ -70,7 +70,7 @@ time_t timeToValue(uint year,uint month,uint day,uint hour,uint min,uint sec,uin
 void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& min,uint& sec,uint& usec);
 
 
-time_t toTimeT(boost::posix_time::ptime tim);
+time_t toTimeT(Fmi::DateTime tim);
 time_t getFileModificationTime(const char *filename);
 long long getFileSize(const char *filename);
 long long getFileSize(FILE *file);
@@ -129,7 +129,7 @@ std::string toString(T::Int16_opt value);
 std::string toString(T::Int32_opt value);
 std::string toString(T::Int64_opt value);
 
-std::string toString(boost::posix_time::ptime time);
+std::string toString(Fmi::DateTime time);
 
 std::string toLowerString(const char *sourceString);
 std::string toLowerString(const std::string& sourceString);

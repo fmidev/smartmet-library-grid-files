@@ -30,7 +30,7 @@ ValueCache::ValueCache()
     init(1000,1000);
     mFileCacheEnabled = false;
 
-    mCacheStats.starttime = boost::posix_time::second_clock::universal_time();
+    mCacheStats.starttime = Fmi::SecondClock::universal_time();
     mCacheStats.maxsize = mMaxSize*1000000;
     mCacheStats.size = 0;
     mCacheStats.inserts = 0;

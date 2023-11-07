@@ -1034,7 +1034,7 @@ T::ParamValue GridPointValueList::getTimeInterpolatedValue(double x,double y,T::
 
     T::ParamValue value = prevPoint->mValue + diff * valueStep;
 
-    //time_t toTimeT(boost::posix_time::ptime tim);
+    //time_t toTimeT(Fmi::DateTime tim);
     return value;
   }
   catch (...)

@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <macgyver/StringConversion.h>
 #include <macgyver/TimeParser.h>
+#include <macgyver/LocalDateTime.h>
 #include <macgyver/TimeZones.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -577,12 +578,12 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
 
     auto zone = itsTimeZones.time_zone_from_string(tzone);
 
-    boost::posix_time::time_duration td(tm->tm_hour,tm->tm_min,tm->tm_sec,0);
-    boost::gregorian::date d(tm->tm_year + 1900,tm->tm_mon + 1,tm->tm_mday);
-    boost::posix_time::ptime pt(d, td);
+    Fmi::TimeDuration td(tm->tm_hour,tm->tm_min,tm->tm_sec,0);
+    Fmi::Date d(tm->tm_year + 1900,tm->tm_mon + 1,tm->tm_mday);
+    Fmi::DateTime pt(d, td);
 
-    boost::local_time::local_date_time ldt(pt.date(), pt.time_of_day(), zone, boost::local_time::local_date_time::EXCEPTION_ON_ERROR);
-    boost::posix_time::ptime t = ldt.utc_time();
+    Fmi::LocalDateTime ldt(pt.date(), pt.time_of_day(), zone, Fmi::LocalDateTime::EXCEPTION_ON_ERROR);
+    Fmi::DateTime t = ldt.utc_time();
 
     time_t tt = (t - boost::posix_time::from_time_t(0)).total_seconds();
     return tt;
@@ -608,14 +609,14 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
 
     auto zone = itsTimeZones.time_zone_from_string(tzone);
 
-    boost::posix_time::ptime pt(boost::gregorian::date(1970,1,1));
-    pt = pt + boost::posix_time::seconds(static_cast<long>(t));
-    boost::local_time::local_date_time ldt(pt, zone);
-    boost::posix_time::ptime ltp = ldt.local_time();
+    Fmi::DateTime pt(Fmi::Date(1970,1,1));
+    pt = pt + Fmi::Seconds(static_cast<long>(t));
+    Fmi::LocalDateTime ldt(pt, zone);
+    Fmi::DateTime ltp = ldt.local_time();
 
 
     std::tm timetm = boost::gregorian::to_tm(ltp.date());
-    boost::posix_time::time_duration td = ltp.time_of_day();
+    Fmi::TimeDuration td = ltp.time_of_day();
 
     tt->tm_year = timetm.tm_year;
     tt->tm_mon = timetm.tm_mon;
@@ -847,12 +848,12 @@ std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
 
 
 
-std::string localTimeToUtc(const std::string& localTime, boost::local_time::time_zone_ptr tz)
+std::string localTimeToUtc(const std::string& localTime, Fmi::TimeZonePtr tz)
 {
   try
   {
     auto ptime = Fmi::TimeParser::parse_iso(localTime);
-    boost::local_time::local_date_time localTime(ptime, tz);
+    Fmi::LocalDateTime localTime(ptime, tz);
     auto lTime = Fmi::TimeParser::make_time(localTime.date(), localTime.time_of_day(), tz);
     return Fmi::to_iso_string(lTime.utc_time());
   }
@@ -879,7 +880,7 @@ std::string utcTimeToLocalTime(const std::string& utcTime, const char *tzone)
 
 
 
-time_t toTimeT(boost::posix_time::ptime tim)
+time_t toTimeT(Fmi::DateTime tim)
 {
   try
   {
@@ -1590,7 +1591,7 @@ std::string toString(T::Int64_opt value)
 }
 
 
-std::string toString(boost::posix_time::ptime time)
+std::string toString(Fmi::DateTime time)
 {
   try
   {
@@ -1679,7 +1680,7 @@ std::string toUpperString(const std::string& sourceString)
 
 
 
-boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
+Fmi::DateTime toTimeStamp(T::TimeString timeStr)
 {
   try
   {
@@ -1699,10 +1700,10 @@ boost::posix_time::ptime toTimeStamp(T::TimeString timeStr)
     int minute = NUM(s[11])*10 + NUM(s[12]);
     int second = NUM(s[13])*10 + NUM(s[14]);
 
-    return boost::posix_time::ptime(boost::gregorian::date(year, month, day),
-                                      boost::posix_time::hours(hour) +
-                                          boost::posix_time::minutes(minute) +
-                                          boost::posix_time::seconds(second));
+    return Fmi::DateTime(Fmi::Date(year, month, day),
+                                      Fmi::Hours(hour) +
+                                          Fmi::Minutes(minute) +
+                                          Fmi::Seconds(second));
   }
   catch (...)
   {

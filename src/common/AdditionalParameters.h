@@ -42,20 +42,20 @@ class AdditionalParameters
                     std::string parameterName,
                     std::string tag,
                     Spine::LocationPtr loc,
-                    boost::local_time::local_date_time localTime,
-                    boost::local_time::time_zone_ptr tz,
+                    Fmi::LocalDateTime localTime,
+                    Fmi::TimeZonePtr tz,
                     int precision,
                     std::string& value);
 
   private:
 
     std::string formatDate(
-                    boost::local_time::local_date_time& ldt,
+                    Fmi::LocalDateTime& ldt,
                     std::locale& llocale,
                     const char *fmt);
 
     std::string formatDate(
-                    boost::local_time::local_date_time& ldt,
+                    Fmi::LocalDateTime& ldt,
                     std::locale& llocale,
                     std::string fmt);
 

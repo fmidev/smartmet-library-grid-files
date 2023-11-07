@@ -65,16 +65,16 @@ GridDefinition::GridDefinition()
     if (coordinateCache_stats.maxsize == 0)
     {
       coordinateCache_stats.maxsize = 1000000;
-      coordinateCache_stats.starttime = boost::posix_time::second_clock::universal_time();
+      coordinateCache_stats.starttime = Fmi::SecondClock::universal_time();
 
       transformCache1_stats.maxsize = 1000000;
-      transformCache1_stats.starttime = boost::posix_time::second_clock::universal_time();
+      transformCache1_stats.starttime = Fmi::SecondClock::universal_time();
 
       transformCache2_stats.maxsize = 1000000;
-      transformCache2_stats.starttime = boost::posix_time::second_clock::universal_time();
+      transformCache2_stats.starttime = Fmi::SecondClock::universal_time();
 
       transformCache3_stats.maxsize = 1000;
-      transformCache3_stats.starttime = boost::posix_time::second_clock::universal_time();
+      transformCache3_stats.starttime = Fmi::SecondClock::universal_time();
     }
   }
   catch (...)

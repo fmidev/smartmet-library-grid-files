@@ -8,7 +8,7 @@
 #include <vector>
 #include <set>
 #include <boost/optional.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <macgyver/DateTime.h>
 #include <ogr_spatialref.h>
 #include <float.h>
 #include <string>
@@ -41,7 +41,7 @@ typedef ParamValue_vec* ParamValue_vec_ptr;
 typedef std::vector<Coordinate> Coordinate_vec;
 
 typedef std::vector<std::size_t> Index_vec;
-typedef boost::posix_time::ptime TimeStamp;
+typedef Fmi::DateTime TimeStamp;
 typedef std::string TimeString;
 
 typedef OGRSpatialReference SpatialRef;
