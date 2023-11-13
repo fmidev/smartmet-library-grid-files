@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.11.6
+Version: 23.11.13
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,6 +97,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Nov 13 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.13-1.fmi
+- Fixed bbox coordinate calculations for metric grid with latlon center point
 * Mon Nov  6 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.6-1.fmi
 - Fixed grid size calculations
 * Thu Nov  2 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.2-1.fmi
