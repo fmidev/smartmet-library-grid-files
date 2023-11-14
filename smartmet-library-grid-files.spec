@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.11.13
+Version: 23.11.14
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -19,7 +19,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 23.9.6
-BuildRequires: smartmet-library-newbase-devel >= 23.10.11
+BuildRequires: smartmet-library-newbase-devel >= 23.11.14
 BuildRequires: smartmet-library-spine-devel >= 23.10.20
 BuildRequires: smartmet-library-macgyver >= 23.11.8
 BuildRequires: smartmet-library-trax-devel >= 23.8.17
@@ -48,7 +48,7 @@ Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 23.10.11
+Requires: smartmet-library-newbase >= 23.11.14
 Requires: smartmet-library-macgyver >= 23.11.8
 Requires: smartmet-library-spine >= 23.10.20
 Requires: smartmet-library-trax >= 23.8.17
@@ -81,7 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 23.10.11
+Requires: smartmet-library-newbase-devel >= 23.11.14
 Requires: smartmet-library-spine-devel
 Requires: smartmet-library-macgyver >= 23.11.8
 Requires: smartmet-library-trax-devel
@@ -97,6 +97,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Nov 14 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.14-1.fmi
+- Grid center and metric box definition enabled for all projections
 * Mon Nov 13 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.13-1.fmi
 - Fixed bbox coordinate calculations for metric grid with latlon center point
 * Mon Nov  6 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.6-1.fmi
