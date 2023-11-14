@@ -2650,7 +2650,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
     bool targetIsLatlon = false;
 
-    if ((urnStr != nullptr || crsStr != nullptr)  &&  (bboxStr != nullptr ||  llboxStr != nullptr) && ((gridWidthStr != nullptr  &&  gridHeightStr != nullptr) ||  (gridCellWidthStr != nullptr  &&  gridCellHeightStr != nullptr)))
+    if ((urnStr != nullptr || crsStr != nullptr || proj4Str != nullptr)  &&  (bboxStr != nullptr ||  llboxStr != nullptr) && ((gridWidthStr != nullptr  &&  gridHeightStr != nullptr) ||  (gridCellWidthStr != nullptr  &&  gridCellHeightStr != nullptr)))
     {
       // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
 
@@ -2684,17 +2684,17 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
         }
         else
+        if (crsStr != nullptr)
+        {
+          if (sr.SetFromUserInput(crsStr) != OGRERR_NONE)
+            throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
+        }
+        else
         if (proj4Str != nullptr)
         {
           OGRErr err = sr.SetFromUserInput(proj4Str);
           if (err != OGRERR_NONE)
             throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
-        }
-        else
-        if (crsStr != nullptr)
-        {
-          if (sr.SetFromUserInput(crsStr) != OGRERR_NONE)
-            throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
         }
         sr.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 

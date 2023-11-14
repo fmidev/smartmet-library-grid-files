@@ -3181,37 +3181,36 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
         }
       }
 
-      if (llboxStr == nullptr &&  centerStr != nullptr)
-      {
-        // The crop area is defined by a rectangle and its latlon center coordinates.
-
-        std::vector<double> a;
-        splitString(centerStr,',',a);
-        if (a.size() != 2)
-          return;
-
-        const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
-        const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
-
-        if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
-        {
-          double centerX = a[0];
-          double centerY = a[1];
-
-          double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
-          double mHeight = toDouble(metricHeightStr) * 1000; // km => m
-
-          double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
-
-          latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
-
-          char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
-          attributeList.setAttribute("grid.llbox",tmp);
-        }
-      }
-
       attributeList.setAttribute("grid.projectionType",Fmi::to_string(getGridProjection()));
+    }
+
+    if (llboxStr == nullptr &&  centerStr != nullptr)
+    {
+      // The bbox area is defined by a rectangle and its latlon center coordinates.
+
+      std::vector<double> a;
+      splitString(centerStr,',',a);
+      if (a.size() != 2)
+        return;
+
+      const char *metricWidthStr = attributeList.getAttributeValue("grid.metricWidth");
+      const char *metricHeightStr = attributeList.getAttributeValue("grid.metricHeight");
+
+      if (metricWidthStr != nullptr &&  metricHeightStr != nullptr)
+      {
+        double centerX = a[0];
+        double centerY = a[1];
+        double mWidth = toDouble(metricWidthStr) * 1000;   // km => m
+        double mHeight = toDouble(metricHeightStr) * 1000; // km => m
+
+        double lon1 = 0,lat1 = 0,lon2 = 0, lat2 =0;
+
+        latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
+
+        char tmp[200];
+        sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+        attributeList.setAttribute("grid.llbox",tmp);
+      }
     }
 
     attributeList.setAttribute("grid.original.crs",getWKT());
