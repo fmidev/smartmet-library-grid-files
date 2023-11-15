@@ -26,8 +26,6 @@ std::unordered_map<std::size_t,SmartMet::CoordinateConverter> *coordinateConvert
 SmartMet::ModificationLock coordinateConverterCache_modificationLock;
 
 
-
-
 bool convert(const OGRSpatialReference *sr_from,const OGRSpatialReference *sr_to,int nCount,double *x,double *y)
 {
   try

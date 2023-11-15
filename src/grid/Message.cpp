@@ -4746,6 +4746,119 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
     uint cols = d.nx();
     uint rows = d.ny();
 
+    double dd = radius*1000*2;
+
+    switch (coordinateType)
+    {
+      case T::CoordinateTypeValue::UNKNOWN:
+      case T::CoordinateTypeValue::LATLON_COORDINATES:
+      {
+        double lon1,lat1,lon2,lat2;
+        latLon_bboxByCenter(origoX,origoY,dd,dd,lon1,lat1,lon2,lat2);
+
+        std::vector<T::Coordinate> polygonPoints;
+        polygonPoints.emplace_back(T::Coordinate(lon1,lat1));
+        polygonPoints.emplace_back(T::Coordinate(lon2,lat1));
+        polygonPoints.emplace_back(T::Coordinate(lon2,lat2));
+        polygonPoints.emplace_back(T::Coordinate(lon1,lat2));
+
+        T::GridValueList tmpValueList;
+        getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
+
+        uint len = tmpValueList.getLength();
+        for (uint t=0; t<len; t++)
+        {
+          T::GridValue rec;
+          if (tmpValueList.getGridValueByIndex(t,rec))
+          {
+            if (latlon_distance(origoY,origoX,rec.mY,rec.mX) <= radius)
+              valueList.addGridValue(rec);
+          }
+        }
+      }
+      break;
+
+
+      case T::CoordinateTypeValue::GRID_COORDINATES:
+      {
+        std::vector<T::Point> gridPoints;
+
+        getPointsInsideCircle(cols,rows,origoX,origoY,radius,gridPoints);
+        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
+        {
+          T::GridValue rec;
+
+          rec.mX = it->x();
+          rec.mY = it->y();
+          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
+          valueList.addGridValue(rec);
+        }
+      }
+      break;
+
+
+      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
+      {
+        double newOrigoX = 0;
+        double newOrigoY = 0;
+
+        getGridLatLonCoordinatesByOriginalCoordinates(origoX,origoY,newOrigoY,newOrigoX);
+
+        double lon1,lat1,lon2,lat2;
+        latLon_bboxByCenter(newOrigoX,newOrigoY,dd,dd,lon1,lat1,lon2,lat2);
+
+        double xx1 = 0;
+        double yy1 = 0;
+        double xx2 = 0;
+        double yy2 = 0;
+
+        getGridOriginalCoordinatesByLatLonCoordinates(lat1,lon1,xx1,yy1);
+        getGridOriginalCoordinatesByLatLonCoordinates(lat2,lon2,xx2,yy2);
+
+        std::vector<T::Coordinate> polygonPoints;
+        polygonPoints.emplace_back(T::Coordinate(xx1,yy1));
+        polygonPoints.emplace_back(T::Coordinate(xx2,yy1));
+        polygonPoints.emplace_back(T::Coordinate(xx2,yy2));
+        polygonPoints.emplace_back(T::Coordinate(xx1,yy2));
+
+        T::GridValueList tmpValueList;
+        getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
+
+        uint len = tmpValueList.getLength();
+        for (uint t=0; t<len; t++)
+        {
+          T::GridValue rec;
+          tmpValueList.getGridValueByIndex(t,rec);
+
+          double lat = 0;
+          double lon = 0;
+          getGridLatLonCoordinatesByOriginalCoordinates(rec.mY,rec.mX,lat,lon);
+
+          if (latlon_distance(origoY,origoX,lat,lon) <= radius)
+            valueList.addGridValue(rec);
+        }
+      }
+      break;
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+#if 0 // Old version
+
+void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
+{
+  FUNCTION_TRACE
+  try
+  {
+    T::Dimensions d = getGridDimensions();
+    uint cols = d.nx();
+    uint rows = d.ny();
+
     switch (coordinateType)
     {
       case T::CoordinateTypeValue::UNKNOWN:
@@ -4902,6 +5015,8 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
+#endif
 
 
 
