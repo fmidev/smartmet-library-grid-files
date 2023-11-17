@@ -18,7 +18,7 @@ class RotatedLatLonImpl : public RotatedLatLon
     GridDefinition*     createGridDefinition() const;
 
     bool                getGridMetricCellSize(double& width,double& height) const;
-    T::Coordinate_svec  getGridOriginalCoordinates() const;
+    T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const;
     T::Dimensions       getGridDimensions() const;
     std::string         getGridGeometryString() const;
     //T::Coordinate_svec  getGridLatLonCoordinates() const;

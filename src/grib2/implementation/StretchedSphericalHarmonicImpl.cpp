@@ -91,7 +91,7 @@ void StretchedSphericalHarmonicImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec StretchedSphericalHarmonicImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec StretchedSphericalHarmonicImpl::getGridOriginalCoordinatesNoCache() const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

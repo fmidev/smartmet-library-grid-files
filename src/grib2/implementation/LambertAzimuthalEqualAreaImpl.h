@@ -24,7 +24,7 @@ class LambertAzimuthalEqualAreaImpl : public LambertAzimuthalEqualArea
     std::size_t         getGridColumnCount() const;
     std::size_t         getGridRowCount() const;
     std::string         getGridGeometryString() const;
-    T::Coordinate_svec  getGridOriginalCoordinates() const;
+    T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const;
     bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;

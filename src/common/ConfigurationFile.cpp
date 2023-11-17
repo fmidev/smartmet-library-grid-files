@@ -843,7 +843,7 @@ void ConfigurationFile::setAttributeValue(const char *attributeName,std::string&
         return;
       }
     }
-    mAttributeList.emplace_back(T::Attribute(std::string(attributeName),attributeValue));
+    mAttributeList.emplace_back(attributeName,attributeValue);
   }
   catch (...)
   {
@@ -1152,7 +1152,7 @@ void ConfigurationFile::getWords(char *st,unsigned long long *positions,std::vec
         buf[c] = '\0';
         if (c > 0)
         {
-          words.emplace_back(std::string(buf));
+          words.emplace_back(buf);
           wordPositions.emplace_back(positions[a-c]);
         }
         c = 0;
@@ -1169,7 +1169,7 @@ void ConfigurationFile::getWords(char *st,unsigned long long *positions,std::vec
     if (c > 0)
     {
       buf[c] = '\0';
-      words.emplace_back(std::string(buf));
+      words.emplace_back(buf);
       wordPositions.emplace_back(positions[a-c]);
     }
   }

@@ -91,7 +91,7 @@ void CrossSectionImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec CrossSectionImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec CrossSectionImpl::getGridOriginalCoordinatesNoCache() const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

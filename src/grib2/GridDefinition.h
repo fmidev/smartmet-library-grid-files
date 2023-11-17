@@ -48,6 +48,7 @@ class GridDefinition
     virtual bool                getGridMetricCellSize(double& width,double& height) const;
     virtual bool                getGridMetricSize(double& width,double& height) const;
     virtual T::Coordinate_svec  getGridOriginalCoordinates() const;
+    virtual T::Coordinate_svec  getGridOriginalCoordinatesNoCache() const;
     virtual bool                getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     virtual bool                getGridOriginalCoordinatesByLatLonCoordinates(double lat,double lon,double& x,double& y) const;
@@ -140,7 +141,8 @@ typedef std::shared_ptr<GridDefinition> GridDef_sptr;
 typedef std::map<std::string,GridDef_sptr> GridDef_spmap;
 typedef std::vector<GridDefinition_sptr> GridDefinition_spvec;
 
-extern Fmi::Cache::CacheStats coordinateCache_stats;
+extern Fmi::Cache::CacheStats latlonCoordinateCache_stats;
+extern Fmi::Cache::CacheStats originalCoordinateCache_stats;
 extern Fmi::Cache::CacheStats transformCache1_stats;
 extern Fmi::Cache::CacheStats transformCache2_stats;
 extern Fmi::Cache::CacheStats transformCache3_stats;

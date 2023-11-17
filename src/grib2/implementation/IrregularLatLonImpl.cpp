@@ -92,7 +92,7 @@ void IrregularLatLonImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec IrregularLatLonImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec IrregularLatLonImpl::getGridOriginalCoordinatesNoCache() const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

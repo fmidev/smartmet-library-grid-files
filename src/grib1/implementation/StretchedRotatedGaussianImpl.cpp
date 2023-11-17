@@ -91,7 +91,7 @@ void StretchedRotatedGaussianImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec StretchedRotatedGaussianImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec StretchedRotatedGaussianImpl::getGridOriginalCoordinatesNoCache() const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

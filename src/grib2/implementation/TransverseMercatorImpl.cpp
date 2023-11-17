@@ -92,7 +92,7 @@ void TransverseMercatorImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec TransverseMercatorImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec TransverseMercatorImpl::getGridOriginalCoordinatesNoCache() const
 {
   throw Fmi::Exception(BCP, "The method not implemented!");
 }

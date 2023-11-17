@@ -166,7 +166,7 @@ void LambertConformalImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec LambertConformalImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec LambertConformalImpl::getGridOriginalCoordinatesNoCache() const
 {
   try
   {

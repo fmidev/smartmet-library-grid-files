@@ -94,7 +94,7 @@ void GaussianImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec GaussianImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec GaussianImpl::getGridOriginalCoordinatesNoCache() const
 {
   try
   {

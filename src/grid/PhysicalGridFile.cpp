@@ -847,21 +847,21 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
 
       uint len = msg.getTimeStepCount();
       for (uint t=0; t<len; t++)
-        gribs.emplace_back(std::pair<uchar,ulonglong>(T::FileTypeValue::Fmig1,0));
+        gribs.emplace_back(T::FileTypeValue::Fmig1,0);
 
       return gribs;
     }
 
     if (memoryReader.peek_string("CDF"))
     {
-      gribs.emplace_back(std::pair<uchar,ulonglong>(T::FileTypeValue::NetCdf4,0));
+      gribs.emplace_back(T::FileTypeValue::NetCdf4,0);
       return gribs;
     }
 
     const uchar qd[] = {0x40,0x24,0xB0,0xA3,0x51,0};
     if (memoryReader.peek_string((const char*)qd))
     {
-      gribs.emplace_back(std::pair<uchar,ulonglong>(T::FileTypeValue::QueryData,0));
+      gribs.emplace_back(T::FileTypeValue::QueryData,0);
       return gribs;
     }
 
@@ -927,7 +927,7 @@ MessagePos_vec PhysicalGridFile::searchMessageLocations(MemoryReader& memoryRead
       if (valid)
       {
         memoryReader.read_null(totalLength-16);
-        gribs.emplace_back(std::pair<uchar,ulonglong>(edition,(ulonglong)(startPtr-fileStartPtr)));
+        gribs.emplace_back(edition,(ulonglong)(startPtr-fileStartPtr));
         if (gribs.size() >= maxMessages)
           return gribs;
       }

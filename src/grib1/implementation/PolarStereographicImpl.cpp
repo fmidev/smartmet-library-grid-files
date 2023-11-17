@@ -123,7 +123,7 @@ void PolarStereographicImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinatesNoCache() const
 {
   try
   {
@@ -658,7 +658,7 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
     if (optionFlags & GRID::PrintFlag::coordinates)
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
-      T::Coordinate_svec coordinateList = getGridOriginalCoordinates();
+      T::Coordinate_svec coordinateList = getGridOriginalCoordinatesNoCache();
 
       int nx = C_INT(mNx);
       int ny = C_INT(mNy);
