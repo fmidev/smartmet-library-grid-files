@@ -191,7 +191,7 @@ void RotatedLatLonImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec RotatedLatLonImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec RotatedLatLonImpl::getGridOriginalCoordinatesNoCache() const
 {
   try
   {
@@ -367,12 +367,12 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
       if (getGridPointByOriginalCoordinates(x[t],y[t],grid_i,grid_j))
       {
         //printf("%f,%f => %f,%f\n",x[t],y[t],grid_i,grid_j);
-        points.emplace_back(T::Coordinate(grid_i,grid_j));
+        points.emplace_back(grid_i,grid_j);
       }
       else
       {
         //printf("INVALID %f,%f => %f,%f\n",x[t],y[t],grid_i,grid_j);
-        points.emplace_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
+        points.emplace_back(ParamValueMissing,ParamValueMissing);
       }
     }
   }
@@ -1162,7 +1162,7 @@ void RotatedLatLonImpl::print(std::ostream& stream,uint level,uint optionFlags) 
     {
       stream << space(level+1) << "- Coordinates (of the grid corners):\n";
 
-      T::Coordinate_svec coordinateList = getGridOriginalCoordinates();
+      T::Coordinate_svec coordinateList = getGridOriginalCoordinatesNoCache();
 
       // ### Printing coordinates close to the grid corners.
 

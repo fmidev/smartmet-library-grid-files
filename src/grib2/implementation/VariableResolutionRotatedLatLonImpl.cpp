@@ -91,7 +91,7 @@ void VariableResolutionRotatedLatLonImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec VariableResolutionRotatedLatLonImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec VariableResolutionRotatedLatLonImpl::getGridOriginalCoordinatesNoCache() const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

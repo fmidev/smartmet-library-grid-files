@@ -1173,8 +1173,7 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
               splitString(*it,'=',list);
               if (list.size() == 2)
               {
-                std::pair<uint,std::string> rr(stringFactory.create(list[0].c_str()),list[1]);
-                rec.mParameterList.emplace_back(rr);
+                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
               }
             }
           }
@@ -1254,8 +1253,7 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
               splitString(*it,'=',list);
               if (list.size() == 2)
               {
-                std::pair<uint,std::string> rr(stringFactory.create(list[0].c_str()),list[1]);
-                rec.mParameterList.emplace_back(rr);
+                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
               }
             }
           }
@@ -1843,8 +1841,7 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
               splitString(*it,'=',list);
               if (list.size() == 2)
               {
-                std::pair<uint,std::string> rr(stringFactory.create(list[0].c_str()),list[1]);
-                rec.mParameterList.emplace_back(rr);
+                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
               }
             }
           }
@@ -1925,8 +1922,7 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
               splitString(*it,'=',list);
               if (list.size() == 2)
               {
-                std::pair<uint,std::string> rr(stringFactory.create(list[0].c_str()),list[1]);
-                rec.mParameterList.emplace_back(rr);
+                rec.mParameterList.emplace_back(stringFactory.create(list[0].c_str()),list[1]);
               }
             }
           }
@@ -2516,7 +2512,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
               lat[c] = yy;
 
 
-              coordinates->emplace_back(T::Coordinate(xx,yy));
+              coordinates->emplace_back(xx,yy);
 
               xx = xx + dx;
               c++;
@@ -2528,7 +2524,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
           for (int t=0; t<c; t++)
           {
-            latLonCoordinates->emplace_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
+            latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
           }
 
           CoordinateRec rec;
@@ -2877,7 +2873,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           transformation->Transform(c,lon,lat);
           for (int t=0; t<c; t++)
           {
-            latLonCoordinates->emplace_back(T::Coordinate(getLongitude(lon[t]),lat[t]));
+            latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
           }
 
           CoordinateRec rec;
@@ -3206,7 +3202,7 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geo
     {
       for (int lon=-1800; lon < 1800; lon++)
       {
-        latlon.emplace_back(T::Coordinate(C_DOUBLE(lon)/10,C_DOUBLE(lat)));
+        latlon.emplace_back(C_DOUBLE(lon)/10,C_DOUBLE(lat));
       }
     }
 
@@ -3214,7 +3210,7 @@ T::Coordinate_svec GridDef::getGridLatLonCoordinateLinePointsByGeometryId(T::Geo
     {
       for (int lat=-900; lat < 900; lat++)
       {
-        latlon.emplace_back(T::Coordinate(C_DOUBLE(lon),C_DOUBLE(lat)/10));
+        latlon.emplace_back(C_DOUBLE(lon),C_DOUBLE(lat)/10);
       }
     }
 

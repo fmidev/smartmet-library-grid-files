@@ -163,7 +163,7 @@ void LambertAzimuthalEqualAreaImpl::init() const
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec LambertAzimuthalEqualAreaImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec LambertAzimuthalEqualAreaImpl::getGridOriginalCoordinatesNoCache() const
 {
   try
   {
@@ -184,8 +184,7 @@ T::Coordinate_svec LambertAzimuthalEqualAreaImpl::getGridOriginalCoordinates() c
 
       for (uint i=0; i < nx; i++)
       {
-        T::Coordinate coord(x,y);
-        coordinateList->emplace_back(coord);
+        coordinateList->emplace_back(x,y);
         x += mDxx;
       }
       y += mDyy;

@@ -91,7 +91,7 @@ void AlbersImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec AlbersImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec AlbersImpl::getGridOriginalCoordinatesNoCache() const
 {
   throw Fmi::Exception(BCP, "Not implemented!");
 }

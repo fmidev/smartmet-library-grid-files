@@ -92,7 +92,7 @@ void TimeSectionImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec TimeSectionImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec TimeSectionImpl::getGridOriginalCoordinatesNoCache() const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

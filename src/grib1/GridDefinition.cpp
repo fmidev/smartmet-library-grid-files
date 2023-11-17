@@ -19,17 +19,20 @@ namespace SmartMet
 namespace GRIB1
 {
 
-std::unordered_map<uint,T::Coordinate_svec> coordinateCache;
-ModificationLock coordinateCacheModificationLock;
-Fmi::Cache::CacheStats coordinateCache_stats;
+std::unordered_map<uint,T::Coordinate_svec> latlonCoordinateCache;
+ModificationLock latlonCoordinateCache_modificationLock;
+Fmi::Cache::CacheStats latlonCoordinateCache_stats;
 
+ModificationLock originalCoordinateCache_modificationLock;
+std::unordered_map<uint,T::Coordinate_svec> originalCoordinateCache;
+Fmi::Cache::CacheStats originalCoordinateCache_stats;
 
 std::unordered_map <std::size_t,T::Coordinate> transformCache1;
-ModificationLock transformCache1ModificationLock;
+ModificationLock transformCache1_modificationLock;
 Fmi::Cache::CacheStats transformCache1_stats;
 
 std::unordered_map <std::size_t,T::Coordinate> transformCache2;
-ModificationLock transformCache2ModificationLock;
+ModificationLock transformCache2_modificationLock;
 Fmi::Cache::CacheStats transformCache2_stats;
 
 ModificationLock transformCache3ModificationLock;
@@ -56,10 +59,13 @@ GridDefinition::GridDefinition()
     mEarth_semiMajor = 0;
     mEarth_semiMinor = 0;
 
-    if (coordinateCache_stats.maxsize == 0)
+    if (latlonCoordinateCache_stats.maxsize == 0)
     {
-      coordinateCache_stats.maxsize = 1000000;
-      coordinateCache_stats.starttime = Fmi::SecondClock::universal_time();
+      latlonCoordinateCache_stats.maxsize = 10000;
+      latlonCoordinateCache_stats.starttime = Fmi::SecondClock::universal_time();
+
+      originalCoordinateCache_stats.maxsize = 10000;
+      originalCoordinateCache_stats.starttime = Fmi::SecondClock::universal_time();
 
       transformCache1_stats.maxsize = 1000000;
       transformCache1_stats.starttime = Fmi::SecondClock::universal_time();
@@ -377,9 +383,9 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
     {
       double i = 0,j = 0;
       if (getGridPointByOriginalCoordinates(x[t],y[t],i,j))
-        points.emplace_back(T::Coordinate(i,j));
+        points.emplace_back(i,j);
       else
-        points.emplace_back(T::Coordinate(ParamValueMissing,ParamValueMissing));
+        points.emplace_back(ParamValueMissing,ParamValueMissing);
     }
 
     if (hash != 0)
@@ -554,13 +560,57 @@ bool GridDefinition::getGridOriginalCoordinatesByGridPosition(double grid_i,doub
        \return   The grid coordinates.
 */
 
-T::Coordinate_svec GridDefinition::getGridOriginalCoordinates() const
+T::Coordinate_svec GridDefinition::getGridOriginalCoordinatesNoCache() const
 {
   FUNCTION_TRACE
   throw Fmi::Exception(BCP,"Not implemented!");
 }
 
 
+
+
+T::Coordinate_svec GridDefinition::getGridOriginalCoordinates() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    uint geomId = getGridGeometryId();
+    if (geomId != 0)
+    {
+      AutoReadLock lock(&originalCoordinateCache_modificationLock);
+      auto it = originalCoordinateCache.find(geomId);
+      if (it != originalCoordinateCache.end())
+      {
+        originalCoordinateCache_stats.hits++;
+        return it->second;
+      }
+      originalCoordinateCache_stats.misses++;
+    }
+
+    auto originalCoordinates = getGridOriginalCoordinatesNoCache();
+
+    if (geomId != 0)
+    {
+      AutoWriteLock lock(&originalCoordinateCache_modificationLock);
+
+      if (originalCoordinateCache.size() >= originalCoordinateCache_stats.maxsize)
+      {
+        originalCoordinateCache.clear();
+        originalCoordinateCache_stats.size = 0;
+      }
+
+      originalCoordinateCache.insert(std::pair<uint,T::Coordinate_svec>(geomId,originalCoordinates));
+      originalCoordinateCache_stats.inserts++;
+      originalCoordinateCache_stats.size++;
+    }
+
+    return originalCoordinates;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -580,14 +630,14 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {
-      AutoReadLock lock(&coordinateCacheModificationLock);
-      auto it = coordinateCache.find(geomId);
-      if (it != coordinateCache.end())
+      AutoReadLock lock(&latlonCoordinateCache_modificationLock);
+      auto it = latlonCoordinateCache.find(geomId);
+      if (it != latlonCoordinateCache.end())
       {
-        coordinateCache_stats.hits++;
+        latlonCoordinateCache_stats.hits++;
         return it->second;
       }
-      coordinateCache_stats.misses++;
+      latlonCoordinateCache_stats.misses++;
     }
 
     T::Coordinate_svec originalCoordinates = getGridOriginalCoordinates();
@@ -614,15 +664,22 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
 
     for (int t=0; t<sz; t++)
     {
-      latLonCoordinates->emplace_back(T::Coordinate(lon[t],lat[t]));
+      latLonCoordinates->emplace_back(lon[t],lat[t]);
     }
 
     if (geomId != 0)
     {
-      AutoWriteLock lock(&coordinateCacheModificationLock);
-      coordinateCache.insert(std::pair<uint,T::Coordinate_svec>(geomId,latLonCoordinates));
-      coordinateCache_stats.inserts++;
-      coordinateCache_stats.size++;
+      AutoWriteLock lock(&latlonCoordinateCache_modificationLock);
+
+      if (latlonCoordinateCache.size() >= latlonCoordinateCache_stats.maxsize)
+      {
+        latlonCoordinateCache.clear();
+        latlonCoordinateCache_stats.size = 0;
+      }
+
+      latlonCoordinateCache.insert(std::pair<uint,T::Coordinate_svec>(geomId,latLonCoordinates));
+      latlonCoordinateCache_stats.inserts++;
+      latlonCoordinateCache_stats.size++;
     }
 
     return latLonCoordinates;
@@ -730,7 +787,7 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
           return true;
         }
 
-        AutoReadLock lock(&transformCache1ModificationLock);
+        AutoReadLock lock(&transformCache1_modificationLock);
         auto it = transformCache1.find(hash);
         if (it != transformCache1.end())
         {
@@ -750,7 +807,7 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
 
     if (hash != 0)
     {
-      AutoWriteLock lock(&transformCache1ModificationLock);
+      AutoWriteLock lock(&transformCache1_modificationLock);
       if (transformCache1.size() >= 1000000)
       {
         transformCache1.clear();
@@ -789,7 +846,7 @@ bool GridDefinition::getTransformFromCache(std::size_t hash,double lat,double lo
     boost::hash_combine(hash,lon);
     uint idx = hash % 10000;
 
-    AutoReadLock lock(&transformCache1ModificationLock);
+    AutoReadLock lock(&transformCache1_modificationLock);
 
     if (mPrevHash1[idx] == hash)
     {
@@ -832,7 +889,7 @@ void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double 
     uint idx = hash % 10000;
 
     {
-      AutoReadLock lock(&transformCache1ModificationLock);
+      AutoReadLock lock(&transformCache1_modificationLock);
 
       if (mPrevHash1[idx] == hash  &&  x == mPrevCoordinate1[idx].x()  &&  y == mPrevCoordinate1[idx].y())
         return;
@@ -845,7 +902,7 @@ void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double 
 
     if (hash != 0)
     {
-      AutoWriteLock lock(&transformCache1ModificationLock);
+      AutoWriteLock lock(&transformCache1_modificationLock);
       if (transformCache1.size() >= 1000000)
       {
         transformCache1.clear();
@@ -1994,7 +2051,7 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
       idx = hash % 10000;
 
       {
-        AutoReadLock lock(&transformCache2ModificationLock);
+        AutoReadLock lock(&transformCache2_modificationLock);
 
         if (mPrevHash2[idx] == hash)
         {
@@ -2025,7 +2082,7 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
     {
       if (hash != 0)
       {
-        AutoWriteLock lock(&transformCache2ModificationLock);
+        AutoWriteLock lock(&transformCache2_modificationLock);
         if (transformCache2.size() >= 1000000)
         {
           transformCache2.clear();

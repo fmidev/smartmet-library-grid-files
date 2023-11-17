@@ -177,7 +177,7 @@ std::string MercatorImpl::getGridGeometryString() const
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec MercatorImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec MercatorImpl::getGridOriginalCoordinatesNoCache() const
 {
   try
   {
@@ -213,8 +213,7 @@ T::Coordinate_svec MercatorImpl::getGridOriginalCoordinates() const
 
       for (uint i=0; i < ni; i++)
       {
-        T::Coordinate coord(x,y);
-        coordinateList->emplace_back(coord);
+        coordinateList->emplace_back(x,y);
         x += di;
       }
       y += dj;

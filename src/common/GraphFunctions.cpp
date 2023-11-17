@@ -407,7 +407,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
       int y = C_INT((*it) >> 32);
       int x = C_INT((*it) & 0xFFFFFFFF);
 
-      gridPoints.emplace_back(T::Point(x,y));
+      gridPoints.emplace_back(x,y);
     }
 
     AutoThreadLock lock(&pointCacheThreadLock);
@@ -598,7 +598,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
       int y = C_INT((*it) >> 32);
       int x = C_INT((*it) & 0xFFFFFFFF);
 
-      gridPoints.emplace_back(T::Point(x,y));
+      gridPoints.emplace_back(x,y);
     }
 
     AutoThreadLock lock(&pointCacheThreadLock);
@@ -657,7 +657,7 @@ void getPointsInsideCircle(int gridWidth,int gridHeight,double origoX,double ori
         if (r2 <= rr)
         {
           // Point is inside the circle.
-          gridPoints.emplace_back(T::Point(x,y));
+          gridPoints.emplace_back(x,y);
         }
       }
     }
@@ -730,7 +730,7 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,T::Polygon_vec& polygonPat
             polygonPath.emplace_back(polygonPoints);
             polygonPoints.clear();
           }
-          polygonPoints.emplace_back(T::Coordinate(it->itsX,it->itsY));
+          polygonPoints.emplace_back(it->itsX,it->itsY);
           break;
 
         case NFmiSvgPath::kElementClosePath:
@@ -748,7 +748,7 @@ void convertSvgPathToPolygonPath(NFmiSvgPath& svgPath,T::Polygon_vec& polygonPat
           break;
 
         case NFmiSvgPath::kElementLineto:
-          polygonPoints.emplace_back(T::Coordinate(it->itsX,it->itsY));
+          polygonPoints.emplace_back(it->itsX,it->itsY);
           break;
 
         case NFmiSvgPath::kElementNotValid:
@@ -1109,7 +1109,7 @@ T::Coordinate_vec getEnlargedPolygon(T::Coordinate_vec& oldCoordinates,double ar
       T::Coordinate n1(p1.x() + mx,p1.y() + my);
       T::Coordinate n2(p2.x() + mx,p2.y() + my);
 
-      tmpLines.emplace_back(std::pair<T::Coordinate,T::Coordinate>(n1,n2));
+      tmpLines.emplace_back(n1,n2);
     }
 
     int lines = C_INT(tmpLines.size());

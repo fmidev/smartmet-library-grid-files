@@ -203,7 +203,7 @@ bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinatesNoCache() const
 {
   try
   {
@@ -225,8 +225,7 @@ T::Coordinate_svec PolarStereographicImpl::getGridOriginalCoordinates() const
 
       for (uint i=0; i < nx; i++)
       {
-        T::Coordinate coord(x,y);
-        coordinateList->emplace_back(coord);
+        coordinateList->emplace_back(x,y);
         x += mDxx;
       }
       y += mDyy;

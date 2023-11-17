@@ -91,7 +91,7 @@ void TriangularImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec TriangularImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec TriangularImpl::getGridOriginalCoordinatesNoCache() const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

@@ -639,7 +639,7 @@ void ImagePaint::paintWkbRing(double _mpx,double _mpy,double _dx,double _dy,Memo
       }
       else
       {
-        polygonPoints.emplace_back(T::Coordinate(x,y));
+        polygonPoints.emplace_back(x,y);
       }
     }
 
@@ -767,7 +767,7 @@ void ImagePaint::paintWkbMultiPolygon(double _mpx,double _mpy,double _dx,double 
           }
           else
           {
-            polygonPoints.emplace_back(T::Coordinate(x,y));
+            polygonPoints.emplace_back(x,y);
           }
         }
 

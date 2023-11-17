@@ -251,7 +251,7 @@ std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocircl
 
     std::vector<SmartMet::T::Coordinate> coordinates;
     auto cc = startpoint.GetLocation();
-    coordinates.emplace_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
+    coordinates.emplace_back(cc.X(),cc.Y());
 
     std::vector<double> distances;
     distances.emplace_back(0);
@@ -263,11 +263,11 @@ std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocircl
       const bool pacific_view = false;
       auto loc = startpoint.GetLocation(bearing, dist, pacific_view);
       auto cc = loc.GetLocation();
-      coordinates.emplace_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
+      coordinates.emplace_back(cc.X(),cc.Y());
       distances.emplace_back(dist / 1000.0);
     }
     cc = endpoint.GetLocation();
-    coordinates.emplace_back(SmartMet::T::Coordinate(cc.X(),cc.Y()));
+    coordinates.emplace_back(cc.X(),cc.Y());
     distances.emplace_back(distance / 1000.0);
 
     return std::make_pair(coordinates, distances);

@@ -1795,7 +1795,7 @@ void parseLatLonCoordinates(const std::string& latLonCoordinates, std::vector<T:
     {
       for (uint t = 0; t < c; t = t + 2)
       {
-        coordinates.emplace_back(T::Coordinate(toDouble(field[t + 1]), toDouble(field[t])));
+        coordinates.emplace_back(toDouble(field[t + 1]), toDouble(field[t]));
       }
     }
   }
@@ -1919,7 +1919,7 @@ void splitString(const char *str, char separator, std::vector<std::string> &part
       if (*p == separator && !ind)
       {
         buf[c] = '\0';
-        partList.emplace_back(std::string(buf));
+        partList.emplace_back(buf);
         c = 0;
       }
       else
@@ -1932,7 +1932,7 @@ void splitString(const char *str, char separator, std::vector<std::string> &part
     if (c > 0)
     {
       buf[c] = '\0';
-      partList.emplace_back(std::string(buf));
+      partList.emplace_back(buf);
     }
   }
   catch (...)
@@ -2433,7 +2433,7 @@ void lineSplit(const char *str,std::vector<std::string> &lines)
       if (*p == '\n' && !ind)
       {
         buf[c] = '\0';
-        lines.emplace_back(std::string(buf));
+        lines.emplace_back(buf);
         c = 0;
       }
       else
@@ -2446,7 +2446,7 @@ void lineSplit(const char *str,std::vector<std::string> &lines)
     if (c > 0)
     {
       buf[c] = '\0';
-      lines.emplace_back(std::string(buf));
+      lines.emplace_back(buf);
     }
   }
   catch (...)
@@ -2564,7 +2564,7 @@ void getFileList(const char *dirName,
         else if (ep->d_type == DT_REG)
         {
           if (filePatterns.size() == 0 || patternMatch(ep->d_name, filePatterns))
-            fileList.emplace_back(std::pair<std::string, std::string>(path, ep->d_name));
+            fileList.emplace_back(path, ep->d_name);
         }
         else if (ep->d_type == DT_UNKNOWN)
         {
@@ -2579,7 +2579,7 @@ void getFileList(const char *dirName,
             else if (s.st_mode & S_IFREG)
             {
               if (filePatterns.size() == 0 || patternMatch(ep->d_name, filePatterns))
-                fileList.emplace_back(std::pair<std::string, std::string>(path, ep->d_name));
+                fileList.emplace_back(path, ep->d_name);
             }
           }
         }
@@ -2761,7 +2761,7 @@ void parseCoordinates(const std::string& coordinateStr,
       if ((sz % 2) == 0)
       {
         for (size_t t = 0; t < sz; t = t + 2)
-          coordinateList.emplace_back(T::Coordinate(cList[t], cList[t + 1]));
+          coordinateList.emplace_back(cList[t], cList[t + 1]);
       }
       coordinates.emplace_back(coordinateList);
     }
@@ -2935,7 +2935,7 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
         {
           c--;
           for (uint t=0; t<c; t++)
-            fields.emplace_back(std::string(field[t]));
+            fields.emplace_back(field[t]);
 
           records.emplace_back(fields);
         }

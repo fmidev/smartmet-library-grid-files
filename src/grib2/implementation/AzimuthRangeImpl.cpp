@@ -93,7 +93,7 @@ void AzimuthRangeImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec AzimuthRangeImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec AzimuthRangeImpl::getGridOriginalCoordinatesNoCache() const
 {
   throw Fmi::Exception(BCP,"The method not implemented!");
 }

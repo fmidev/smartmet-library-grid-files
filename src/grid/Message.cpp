@@ -4757,10 +4757,10 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         latLon_bboxByCenter(origoX,origoY,dd,dd,lon1,lat1,lon2,lat2);
 
         std::vector<T::Coordinate> polygonPoints;
-        polygonPoints.emplace_back(T::Coordinate(lon1,lat1));
-        polygonPoints.emplace_back(T::Coordinate(lon2,lat1));
-        polygonPoints.emplace_back(T::Coordinate(lon2,lat2));
-        polygonPoints.emplace_back(T::Coordinate(lon1,lat2));
+        polygonPoints.emplace_back(lon1,lat1);
+        polygonPoints.emplace_back(lon2,lat1);
+        polygonPoints.emplace_back(lon2,lat2);
+        polygonPoints.emplace_back(lon1,lat2);
 
         T::GridValueList tmpValueList;
         getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
@@ -4816,10 +4816,10 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         getGridOriginalCoordinatesByLatLonCoordinates(lat2,lon2,xx2,yy2);
 
         std::vector<T::Coordinate> polygonPoints;
-        polygonPoints.emplace_back(T::Coordinate(xx1,yy1));
-        polygonPoints.emplace_back(T::Coordinate(xx2,yy1));
-        polygonPoints.emplace_back(T::Coordinate(xx2,yy2));
-        polygonPoints.emplace_back(T::Coordinate(xx1,yy2));
+        polygonPoints.emplace_back(xx1,yy1);
+        polygonPoints.emplace_back(xx2,yy1);
+        polygonPoints.emplace_back(xx2,yy2);
+        polygonPoints.emplace_back(xx1,yy2);
 
         T::GridValueList tmpValueList;
         getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
@@ -4897,10 +4897,10 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         }
 
         std::vector<T::Coordinate> polygonPoints;
-        polygonPoints.emplace_back(T::Coordinate(x1,y1));
-        polygonPoints.emplace_back(T::Coordinate(x2,y1));
-        polygonPoints.emplace_back(T::Coordinate(x2,y2));
-        polygonPoints.emplace_back(T::Coordinate(x1,y2));
+        polygonPoints.emplace_back(x1,y1);
+        polygonPoints.emplace_back(x2,y1);
+        polygonPoints.emplace_back(x2,y2);
+        polygonPoints.emplace_back(x1,y2);
 
         T::GridValueList tmpValueList;
         getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
@@ -4985,10 +4985,10 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
         getGridOriginalCoordinatesByLatLonCoordinates(y2,x2,xx2,yy2);
 
         std::vector<T::Coordinate> polygonPoints;
-        polygonPoints.emplace_back(T::Coordinate(xx1,yy1));
-        polygonPoints.emplace_back(T::Coordinate(xx2,yy1));
-        polygonPoints.emplace_back(T::Coordinate(xx2,yy2));
-        polygonPoints.emplace_back(T::Coordinate(xx1,yy2));
+        polygonPoints.emplace_back(xx1,yy1);
+        polygonPoints.emplace_back(xx2,yy1);
+        polygonPoints.emplace_back(xx2,yy2);
+        polygonPoints.emplace_back(xx1,yy2);
 
         T::GridValueList tmpValueList;
         getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
@@ -5116,7 +5116,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
           double grid_i = 0;
           double grid_j = 0;
           getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j);
-          newPolygonPoints.emplace_back(T::Coordinate(grid_i,grid_j));
+          newPolygonPoints.emplace_back(grid_i,grid_j);
         }
 
         std::vector<T::Point> gridPoints;
@@ -5175,7 +5175,7 @@ void Message::getGridValueListByPolygon(T::CoordinateType coordinateType,std::ve
           double grid_i = 0;
           double grid_j = 0;
           getGridPointByOriginalCoordinates(it->x(),it->y(),grid_i,grid_j);
-          newPolygonPoints.emplace_back(T::Coordinate(grid_i,grid_j));
+          newPolygonPoints.emplace_back(grid_i,grid_j);
         }
 
         std::vector<T::Point> gridPoints;
@@ -5262,7 +5262,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
             double grid_i = 0;
             double grid_j = 0;
             getGridPointByLatLonCoordinates(it->y(),it->x(),grid_i,grid_j);
-            newPolygonPoints.emplace_back(T::Coordinate(grid_i,grid_j));
+            newPolygonPoints.emplace_back(grid_i,grid_j);
           }
           newPolygonPath.emplace_back(newPolygonPoints);
         }
@@ -5320,7 +5320,7 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
             double grid_i = 0;
             double grid_j = 0;
             getGridPointByOriginalCoordinates(it->x(),it->y(),grid_i,grid_j);
-            newPolygonPoints.emplace_back(T::Coordinate(grid_i,grid_j));
+            newPolygonPoints.emplace_back(grid_i,grid_j);
           }
           newPolygonPath.emplace_back(newPolygonPoints);
         }
@@ -5395,11 +5395,11 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
       // that the requested coordinate rectangle is not necessary a rectangle in the current grid.
 
       std::vector<T::Coordinate> polygonPoints;
-      polygonPoints.emplace_back(T::Coordinate(x1,y1));
-      polygonPoints.emplace_back(T::Coordinate(x2,y1));
-      polygonPoints.emplace_back(T::Coordinate(x2,y2));
-      polygonPoints.emplace_back(T::Coordinate(x1,y2));
-      polygonPoints.emplace_back(T::Coordinate(x1,y1));
+      polygonPoints.emplace_back(x1,y1);
+      polygonPoints.emplace_back(x2,y1);
+      polygonPoints.emplace_back(x2,y2);
+      polygonPoints.emplace_back(x1,y2);
+      polygonPoints.emplace_back(x1,y1);
 
       getGridValueListByPolygon(coordinateType,polygonPoints,valueList);
     }
@@ -5422,11 +5422,11 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
           getGridPointByLatLonCoordinates(y1,x1,gx1,gy1);
           getGridPointByLatLonCoordinates(y2,x2,gx2,gy2);
 
-          polygonPoints.emplace_back(T::Coordinate(gx1,gy1));
-          polygonPoints.emplace_back(T::Coordinate(gx1,gy2));
-          polygonPoints.emplace_back(T::Coordinate(gx2,gy2));
-          polygonPoints.emplace_back(T::Coordinate(gx2,gy1));
-          polygonPoints.emplace_back(T::Coordinate(gx1,gy1));
+          polygonPoints.emplace_back(gx1,gy1);
+          polygonPoints.emplace_back(gx1,gy2);
+          polygonPoints.emplace_back(gx2,gy2);
+          polygonPoints.emplace_back(gx2,gy1);
+          polygonPoints.emplace_back(gx1,gy1);
 
           double lat1 = 0,lon1 = 0;
           double lat2 = 0,lon2 = 0;
@@ -5447,21 +5447,21 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
             double xx2 = x2 + w;
 
             std::vector<T::Coordinate> polygonPoints;
-            polygonPoints.emplace_back(T::Coordinate(xx1,y1));
-            polygonPoints.emplace_back(T::Coordinate(xx1,y2));
-            polygonPoints.emplace_back(T::Coordinate(xx2,y2));
-            polygonPoints.emplace_back(T::Coordinate(xx2,y1));
-            polygonPoints.emplace_back(T::Coordinate(xx1,y1));
+            polygonPoints.emplace_back(xx1,y1);
+            polygonPoints.emplace_back(xx1,y2);
+            polygonPoints.emplace_back(xx2,y2);
+            polygonPoints.emplace_back(xx2,y1);
+            polygonPoints.emplace_back(xx1,y1);
             getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,modificationOperation,modificationParameters,valueList);
           }
           else
           {
             std::vector<T::Coordinate> polygonPoints;
-            polygonPoints.emplace_back(T::Coordinate(x1,y1));
-            polygonPoints.emplace_back(T::Coordinate(x1,y2));
-            polygonPoints.emplace_back(T::Coordinate(x2,y2));
-            polygonPoints.emplace_back(T::Coordinate(x2,y1));
-            polygonPoints.emplace_back(T::Coordinate(x1,y1));
+            polygonPoints.emplace_back(x1,y1);
+            polygonPoints.emplace_back(x1,y2);
+            polygonPoints.emplace_back(x2,y2);
+            polygonPoints.emplace_back(x2,y1);
+            polygonPoints.emplace_back(x1,y1);
             getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,modificationOperation,modificationParameters,valueList);
           }
         }
@@ -5476,11 +5476,11 @@ void Message::getGridValueListByRectangle(T::CoordinateType coordinateType,doubl
           std::vector<T::Coordinate> polygonPoints;
           getGridPointByOriginalCoordinates(x1,y1,gx1,gy1);
           getGridPointByOriginalCoordinates(x2,y2,gx2,gy2);
-          polygonPoints.emplace_back(T::Coordinate(gx1,gy1));
-          polygonPoints.emplace_back(T::Coordinate(gx1,gy2));
-          polygonPoints.emplace_back(T::Coordinate(gx2,gy2));
-          polygonPoints.emplace_back(T::Coordinate(gx2,gy1));
-          polygonPoints.emplace_back(T::Coordinate(gx1,gy1));
+          polygonPoints.emplace_back(gx1,gy1);
+          polygonPoints.emplace_back(gx1,gy2);
+          polygonPoints.emplace_back(gx2,gy2);
+          polygonPoints.emplace_back(gx2,gy1);
+          polygonPoints.emplace_back(gx1,gy1);
           getGridValueListByPolygon(T::CoordinateTypeValue::GRID_COORDINATES,polygonPoints,modificationOperation,modificationParameters,valueList);
         }
         break;
@@ -5974,7 +5974,7 @@ void Message::getGridValueVectorByRectangle(uint grid_i_start,uint grid_j_start,
       for (uint i=grid_i_start; i<= grid_i_end; i++)
       {
         auto val = getGridValueByGridPoint(i,j,modificationOperation,modificationParameters);
-        gridPointValues.emplace_back(T::GridPointValue(getFileId(),getMessageIndex(),i,j,getGridParameterLevel(),tm,val));
+        gridPointValues.emplace_back(getFileId(),getMessageIndex(),i,j,getGridParameterLevel(),tm,val);
       }
     }
   }

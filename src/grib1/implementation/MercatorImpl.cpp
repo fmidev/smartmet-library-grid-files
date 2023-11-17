@@ -176,7 +176,7 @@ std::string MercatorImpl::getGridGeometryString() const
          \return   The grid coordinates.
 */
 
-T::Coordinate_svec MercatorImpl::getGridOriginalCoordinates() const
+T::Coordinate_svec MercatorImpl::getGridOriginalCoordinatesNoCache() const
 {
   try
   {
