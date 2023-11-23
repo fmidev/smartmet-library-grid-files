@@ -156,7 +156,9 @@ void PhysicalGridFile::mapToMemory()
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Filename",getFileName());
+    throw exception;
   }
 }
 
