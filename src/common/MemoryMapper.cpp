@@ -16,6 +16,7 @@
 #include <signal.h>
 #include <poll.h>
 #include <curl/curl.h>
+#include <sys/utsname.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -273,6 +274,22 @@ void MemoryMapper::setEnabled(bool enabled)
   FUNCTION_TRACE
   try
   {
+    if (enabled)
+    {
+      struct utsname systemInfo;
+      if (uname(&systemInfo) != 0)
+      {
+        std::cout << "### WARNING: MemoryMapper::setEnabled(): Error getting system information\n";
+        return;
+      }
+
+      if (systemInfo.release[0] < '4' &&  systemInfo.release[1] == '.')
+      {
+        std::cout << "### WARNING: MemoryMapper::setEnabled(): Cannot enable user fault based memory mapping\n";
+        return;
+      }
+    }
+
 
     if (enabled  &&  mUffd < 0)
     {
