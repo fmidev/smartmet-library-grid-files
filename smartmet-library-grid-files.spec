@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.11.23
+Version: 23.11.28
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,6 +97,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Nov 28 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.28-1.fmi
+- Automatically disable own memory mapper code for kernels prior version 4
 * Thu Nov 23 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.23-1.fmi
 - Name of the memory mapped file added to the exception object
 * Tue Nov 21 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.21-1.fmi
