@@ -136,7 +136,7 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
       {
         double wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
         return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
-          dist_x2 * dist_y2 * val_q12) / wsum);
+          dist_x2 * dist_y1 * val_q12) / wsum);
       }
     }
 
@@ -292,7 +292,7 @@ longlong linearInterpolation(longlong x,longlong y,longlong x1,longlong y1,longl
     {
       longlong wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
       return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
-        dist_x2 * dist_y2 * val_q12) / wsum);
+        dist_x2 * dist_y1 * val_q12) / wsum);
     }
 
     return ParamValueMissing;
