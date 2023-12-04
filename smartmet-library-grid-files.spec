@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.11.28
+Version: 23.12.4
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,6 +97,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Dec  4 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.12.4-1.fmi
+- Bug fix to bilinear interpolation when one grid cell value is missing
 * Tue Nov 28 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.28-1.fmi
 - Automatically disable own memory mapper code for kernels prior version 4
 * Thu Nov 23 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.11.23-1.fmi
