@@ -3237,10 +3237,38 @@ short Message::getForecastType() const
   FUNCTION_TRACE
   try
   {
+    /*
     if (mProductSection == nullptr)
       throw Fmi::Exception(BCP,"The 'mProductSection' attribute points to nullptr!");
 
-    return mProductSection->getForecastType();
+    short ft = mProductSection->getForecastType();
+    if (ft > 0)
+      return ft;
+    */
+
+    if (mIdentificationSection == nullptr)
+      throw Fmi::Exception(BCP,"The 'mIdentificationSection' attribute points to nullptr!");
+
+    T::UInt8_opt pd = mIdentificationSection->getTypeOfProcessedData();
+    switch (*pd)
+    {
+      //case 0: // Analysis products
+      //case 1: // Forecast products
+      //case 2: // Analysis and forecast products
+
+      case 3: // Control forecast products
+        return 4;
+
+      case 4: // Perturbed forecast products
+        return 3;
+
+      //case 5: // Control and perturbed forecast products
+      //case 6: // Processed satellite observations
+      //case 7: // Processed radar observations
+      //case 8: // Event probability
+    }
+
+    return 0;
   }
   catch (...)
   {
