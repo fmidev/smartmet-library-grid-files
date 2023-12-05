@@ -526,7 +526,7 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
     long long pages = endPageIndex - pageIndex + 1;
 
     long long dataSize = pages*mPageSize;
-    char data[dataSize];
+    char *data = new char[dataSize];
     uint p = 0;
 
     int n = getData(*info,fp,dataSize,data);
@@ -557,6 +557,8 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
       }
       //printf("*** PAGE CACHE CLEAR END %ld\n",mPageCacheIndexList.size());
     }
+    if (data)
+      delete [] data;
   }
   catch (...)
   {
