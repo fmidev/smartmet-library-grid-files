@@ -397,7 +397,13 @@ void MemoryMapper::map(MapInfo& info)
     info.memoryPtr = (char*)mmap(NULL, info.allocatedSize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
     if (info.memoryPtr == MAP_FAILED)
-      throw Fmi::Exception(BCP,"mmap failed");
+    {
+      Fmi::Exception exception(BCP,"mmap failed");
+      exception.addParameter("allocatedSize",std::to_string(info.allocatedSize));
+      exception.addParameter("filename",info.filename);
+      exception.addParameter("fileSize",std::to_string(info.fileSize));
+      throw exception;
+    }
 
     // printf("Add %ld %s %lld - %lld  %ld\n",info.fileSize,info.filename.c_str(),(long long)info.memoryPtr,(long long)info.memoryPtr+info.allocatedSize,info.allocatedSize);
 
