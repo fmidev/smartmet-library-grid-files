@@ -398,6 +398,7 @@ void MemoryMapper::map(MapInfo& info)
 
     if (info.memoryPtr == MAP_FAILED)
     {
+      info.memoryPtr = 0;
       Fmi::Exception exception(BCP,"mmap failed");
       exception.addParameter("allocatedSize",std::to_string(info.allocatedSize));
       exception.addParameter("filename",info.filename);
