@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.12.7
+Version: 23.12.12
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -20,7 +20,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 23.9.6
 BuildRequires: smartmet-library-newbase-devel >= 23.11.21
-BuildRequires: smartmet-library-spine-devel >= 23.10.20
+BuildRequires: smartmet-library-spine-devel >= 23.12.5
 BuildRequires: smartmet-library-macgyver >= 23.11.21
 BuildRequires: smartmet-library-trax-devel >= 23.8.17
 BuildRequires: %{smartmet_boost}-devel
@@ -50,7 +50,7 @@ Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 23.11.21
 Requires: smartmet-library-macgyver >= 23.11.21
-Requires: smartmet-library-spine >= 23.10.20
+Requires: smartmet-library-spine >= 23.12.5
 Requires: smartmet-library-trax >= 23.8.17
 
 %description
@@ -97,6 +97,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Dec 12 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.12.12-1.fmi
+- Reset memory pointer after failed memory mapping attempt
 * Thu Dec  7 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.12.7-1.fmi
 - Updated exception information for memory mapping
 * Tue Dec  5 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.12.5-1.fmi
