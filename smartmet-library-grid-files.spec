@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.12.12
+Version: 23.12.18
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,6 +97,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Dec 18 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.12.18-1.fmi
+- Fixed potential deadlock
+- Enabled writing GRIB files
 * Tue Dec 12 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.12.12-1.fmi
 - Reset memory pointer after failed memory mapping attempt
 * Thu Dec  7 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.12.7-1.fmi
