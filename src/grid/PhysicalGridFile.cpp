@@ -362,7 +362,7 @@ long long PhysicalGridFile::getSize()
   try
   {
     if (!isMemoryMapped())
-      mapToMemory();
+      return GridFile::getSize();
 
     return mMemoryMapInfo.fileSize;
   }
