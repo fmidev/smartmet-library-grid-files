@@ -5,6 +5,7 @@
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
 #include "../identification/GridDef.h"
+#include "../common/FileWriter.h"
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -1057,6 +1058,10 @@ void GridFile::write(const std::string& filename)
   FUNCTION_TRACE
   try
   {
+    FileWriter fileWriter;
+    fileWriter.createFile(filename.c_str());
+    write(fileWriter);
+    fileWriter.closeFile();
   }
   catch (...)
   {
@@ -1080,6 +1085,10 @@ void GridFile::write(DataWriter& dataWriter)
   FUNCTION_TRACE
   try
   {
+    for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
+    {
+      msg->second->write(dataWriter);
+    }
   }
   catch (...)
   {
