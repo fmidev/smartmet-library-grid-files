@@ -1,6 +1,7 @@
 #pragma once
 
 #include <pthread.h>
+#include <stdio.h>
 
 namespace SmartMet
 {
@@ -12,7 +13,11 @@ class ThreadLock
 
     ThreadLock()
     {
-      pthread_mutex_init(&threadLock,nullptr);
+      pthread_mutexattr_init(&attr);
+      if (pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK))
+        pthread_mutex_init(&threadLock,nullptr);
+      else
+        pthread_mutex_init(&threadLock,&attr);
     }
 
 
@@ -24,7 +29,8 @@ class ThreadLock
 
     inline void lock()
     {
-      pthread_mutex_lock(&threadLock);
+      if (pthread_mutex_lock(&threadLock))
+        printf("ERROR ThreadLock.h: Possible re-locking trial from the same thread!\n");
     }
 
 
@@ -45,6 +51,7 @@ class ThreadLock
 
   protected:
 
+    pthread_mutexattr_t attr;
     pthread_mutex_t threadLock;
 };
 
