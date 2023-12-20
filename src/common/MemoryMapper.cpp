@@ -403,6 +403,7 @@ void MemoryMapper::map(MapInfo& info)
       exception.addParameter("allocatedSize",std::to_string(info.allocatedSize));
       exception.addParameter("filename",info.filename);
       exception.addParameter("fileSize",std::to_string(info.fileSize));
+      exception.addParameter("errno",std::to_string(errno));
       throw exception;
     }
 
