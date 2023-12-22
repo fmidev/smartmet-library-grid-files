@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 23.12.18
+Version: 23.12.22
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,6 +97,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Dec 22 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.12.22-1.fmi
+- Added double lock detection
+- Added errno information to mmap failures
 * Mon Dec 18 2023 Mika Heiskanen <mika.heiskanen@fmi.fi> - 23.12.18-1.fmi
 - Fixed potential deadlock
 - Enabled writing GRIB files
