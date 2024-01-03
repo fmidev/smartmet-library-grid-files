@@ -1,6 +1,9 @@
 #pragma once
 
+#include "../grid/Typedefs.h"
+
 #include <map>
+#include <vector>
 #include <string>
 
 
@@ -13,12 +16,14 @@ class Property
 {
   public:
 
-                Property();
-    virtual     ~Property();
+                      Property();
+    virtual           ~Property();
 
-    void        addProperty(const char *name,uint id);
-    uint        getPropertyId(const char *name);
-    std::string getPropertyName(uint id);
+    void              addProperty(const char *name,uint id);
+    uint              getPropertyId(const char *name);
+    std::string       getPropertyName(uint id);
+    T::PropertyMap&   getPropertyMap();
+    T::PropertyVec&   getPropertyVector();
 
 
     static const uint FirstProperty                                 = 1000;
@@ -199,7 +204,8 @@ class Property
 
   protected:
 
-    std::map<std::string,uint> propertyMap;
+    T::PropertyMap    propertyMap;
+    T::PropertyVec    propertyVector;
 
 };  // class Property
 

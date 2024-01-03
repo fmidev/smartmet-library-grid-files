@@ -218,6 +218,7 @@ void Property::addProperty(const char *name,uint id)
   try
   {
     propertyMap.insert(std::pair<std::string,uint>(name,id));
+    propertyVector.push_back(std::pair<std::string,uint>(name,id));
   }
   catch (...)
   {
@@ -260,6 +261,39 @@ std::string Property::getPropertyName(uint id)
     }
 
     return "";
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::PropertyMap& Property::getPropertyMap()
+{
+  try
+  {
+    return propertyMap;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+T::PropertyVec& Property::getPropertyVector()
+{
+  try
+  {
+    // Property id vector is used, because the properties should be set in a correct order.
+    return propertyVector;
   }
   catch (...)
   {

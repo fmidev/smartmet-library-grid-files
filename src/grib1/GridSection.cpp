@@ -149,9 +149,6 @@ bool GridSection::getProperty(uint propertyId,long long& value)
   FUNCTION_TRACE
   try
   {
-    if (mGridDefinition)
-      return mGridDefinition->getProperty(propertyId,value);
-
     switch (propertyId)
     {
       case Property::GridSection::NumberOfVerticalCoordinateValues:
@@ -166,6 +163,9 @@ bool GridSection::getProperty(uint propertyId,long long& value)
         value = mDataRepresentationType;
         return true;
     }
+
+    if (mGridDefinition)
+      return mGridDefinition->getProperty(propertyId,value);
 
     return false;
   }
@@ -191,9 +191,6 @@ bool GridSection::setProperty(uint propertyId,long long value)
   FUNCTION_TRACE
   try
   {
-    if (mGridDefinition)
-      return mGridDefinition->setProperty(propertyId,value);
-
     switch (propertyId)
     {
       case Property::GridSection::NumberOfVerticalCoordinateValues:
@@ -208,6 +205,9 @@ bool GridSection::setProperty(uint propertyId,long long value)
         setDataRepresentationType(value);
         return true;
     }
+
+    if (mGridDefinition)
+      return mGridDefinition->setProperty(propertyId,value);
 
     return false;
   }
@@ -233,10 +233,13 @@ bool GridSection::setProperty(uint propertyId,double value)
   FUNCTION_TRACE
   try
   {
+    if (setProperty(propertyId,C_INT64(value)))
+      return true;
+
     if (mGridDefinition)
       return mGridDefinition->setProperty(propertyId,value);
 
-    return setProperty(propertyId,C_INT64(value));
+    return false;
   }
   catch (...)
   {

@@ -51,8 +51,8 @@ class PhysicalGridFile : public GridFile
     virtual void          read(MemoryReader& memoryReader);
     virtual void          read(MemoryReader& memoryReader,uint maxMessages);
 
-    virtual void          write(const std::string& filename);
-    virtual void          write(DataWriter& dataWriter);
+    //virtual void          write(const std::string& filename);
+    //virtual void          write(DataWriter& dataWriter);
 
   private:
 

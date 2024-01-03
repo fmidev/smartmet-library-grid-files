@@ -176,6 +176,16 @@ bool IndicatorSection::getProperty(uint propertyId,long long& value)
 {
   try
   {
+    switch (propertyId)
+    {
+      case Property::IndicatorSection::Discipline:
+        value = *getDiscipline();
+        return true;
+
+      case Property::IndicatorSection::EditionNumber:
+        value = *getEditionNumber();
+        return true;
+    }
     return false;
   }
   catch (...)
@@ -236,12 +246,14 @@ void IndicatorSection::read(MemoryReader& memoryReader)
     memoryReader >> mReserved;
 
     memoryReader >> mDiscipline;
+
     if (missing(mDiscipline))
     {
       Fmi::Exception exception(BCP,"Discipline cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
     }
+
 
     memoryReader >> mEditionNumber;
     if (missing(mEditionNumber))

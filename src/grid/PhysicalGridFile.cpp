@@ -1087,7 +1087,7 @@ std::size_t PhysicalGridFile::getNumberOfMessages()
 
 
 
-
+#if 0
 void PhysicalGridFile::write(const std::string& filename)
 {
   FUNCTION_TRACE
@@ -1123,6 +1123,7 @@ void PhysicalGridFile::write(DataWriter& dataWriter)
     throw exception;
   }
 }
+#endif
 
 
 

@@ -48,6 +48,7 @@ Message::Message()
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
     mForecastTimeT = 0;
+    mDataLocked = false;
   }
   catch (...)
   {
@@ -79,6 +80,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mIsRead = false;
     mFileType = T::FileTypeValue::Grib1;
     mForecastTimeT = messageInfo.mForecastTime;
+    mDataLocked = false;
   }
   catch (...)
   {
@@ -138,6 +140,7 @@ Message::Message(const Message& other)
     mCacheKey = 0;
     mOrigCacheKey = 0;
     mValueDecodingFailed = other.mValueDecodingFailed;
+    mDataLocked = false;
   }
   catch (...)
   {
