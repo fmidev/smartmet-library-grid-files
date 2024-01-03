@@ -394,7 +394,7 @@ void MemoryMapper::map(MapInfo& info)
     }
 
     info.allocatedSize = (((info.fileSize + 100)/ mPageSize) + 1) * mPageSize;
-    info.memoryPtr = (char*)mmap(NULL, info.allocatedSize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    info.memoryPtr = (char*)mmap(NULL, info.allocatedSize, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
     if (info.memoryPtr == MAP_FAILED)
     {
