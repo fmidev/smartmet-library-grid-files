@@ -696,7 +696,7 @@ bool LatLonImpl::getProperty(uint propertyId,long long& value)
         return true;
     }
 
-    return GridDefinition::setProperty(propertyId,value);
+    return GridDefinition::getProperty(propertyId,value);
   }
   catch (...)
   {

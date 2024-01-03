@@ -78,6 +78,8 @@ typedef short ForecastNumber;
 typedef int   GeometryId;
 typedef std::set<T::GeometryId> GeometryId_set;
 
+typedef std::map<std::string,uint> PropertyMap;
+typedef std::vector<std::pair<std::string,uint>> PropertyVec;
 
 typedef uchar ParamKeyType;
 
@@ -97,20 +99,6 @@ class ParamKeyTypeValue
     };
 };
 
-
-/*
-typedef uchar ParamLevelIdType;
-
-class ParamLevelIdTypeValue
-{
-  public:
-    static const ParamLevelIdType ANY       = 0;
-    static const ParamLevelIdType FMI       = 1;
-    static const ParamLevelIdType GRIB1     = 2;
-    static const ParamLevelIdType GRIB2     = 3;
-    static const ParamLevelIdType IGNORE    = 100;
-};
-*/
 
 
 typedef uchar FileType;
@@ -132,19 +120,6 @@ class FileTypeValue
     };
 };
 
-/*
-typedef uchar GridLayout;
-
-class GridLayoutValue
-{
-  public:
-    static const GridLayout Unknown   = 0;
-    static const GridLayout Regular   = 1;
-    static const GridLayout Irregular = 2;
-    static const GridLayout Points    = 3;   // No 'shapeOfEarth'; no coordinate transformations
-    static const GridLayout Data      = 4;   // No coordinates
-};
-*/
 
 
 class AreaInterpolationMethod
@@ -296,7 +271,6 @@ class CompressionMethod
 
 
 std::string get_fileTypeString(FileType fileType);
-//std::string get_gridLayoutString(GridLayout layout);
 std::string get_areaInterpolationMethodString(short interpolationMethod);
 std::string get_timeInterpolationMethodString(short interpolationMethod);
 std::string get_levelInterpolationMethodString(short interpolationMethod);

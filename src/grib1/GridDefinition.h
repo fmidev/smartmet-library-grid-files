@@ -14,6 +14,7 @@
 
 #include <macgyver/CacheStats.h>
 #include <ogr_spatialref.h>
+#include <ogr_srs_api.h>
 #include <map>
 
 
