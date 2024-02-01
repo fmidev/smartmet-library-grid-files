@@ -29,6 +29,7 @@ class LambertConformalImpl : public LambertConformal
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
 
+    void                getProperties(T::PropertySettingVec& properties);
     bool                setProperty(uint propertyId,long long value);
 
     void                initSpatialReference();

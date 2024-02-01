@@ -43,6 +43,7 @@ class ProductDefinition
     virtual uint                        getTemplateNumber() const;
 
     virtual bool                        getProperty(uint propertyId,long long& value);
+    virtual void                        getProperties(T::PropertySettingVec& properties);
     virtual bool                        setProperty(uint propertyId,long long value);
     virtual void                        read(MemoryReader& memoryReader) {}
     virtual void                        write(DataWriter& dataWriter) {}
@@ -68,6 +69,16 @@ class ProductDefinition
     T::TimeString                       countForecastStartTime(T::TimeString referenceTime,const ParameterSettings& parameter) const;
     T::TimeString                       countForecastStartTime(T::TimeString referenceTime,const PostprocSettings& parameter) const;
     T::TimeString                       countForecastEndTime(const StatisticalSettings& stat) const;
+
+    virtual void                        getProperties_ParameterSettings(T::PropertySettingVec& properties);
+    virtual void                        getProperties_HorizontalSettings(T::PropertySettingVec& properties);
+    virtual void                        getProperties_StatisticalSettings(T::PropertySettingVec& properties);
+    virtual void                        getProperties_EpsSettings(T::PropertySettingVec& properties);
+    virtual void                        getProperties_DerivedSettings(T::PropertySettingVec& properties);
+    virtual void                        getProperties_RectangularClusterSettings(T::PropertySettingVec& properties);
+    virtual void                        getProperties_ProbabilitySettings(T::PropertySettingVec& properties);
+    virtual void                        getProperties_PercentileSettings(T::PropertySettingVec& properties);
+    virtual void                        getProperties_CategoricalSettings(T::PropertySettingVec& properties);
 
     virtual bool                        getProperty_ParameterSettings(uint propertyId,long long& value);
     virtual bool                        getProperty_HorizontalSettings(uint propertyId,long long& value);

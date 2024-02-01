@@ -463,6 +463,32 @@ bool LambertConformalImpl::reverseYDirection() const
 
 
 
+void LambertConformalImpl::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    GridDefinition::getProperties(properties);
+
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::Nx,getNx());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::Ny,getNy());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::LatitudeOfFirstGridPoint,getLatitudeOfFirstGridPoint());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::LongitudeOfFirstGridPoint,getLongitudeOfFirstGridPoint());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::LoV,getLoV());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::DxInMetres,getDxInMetres());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::DyInMetres,getDyInMetres());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::ProjectionCentreFlag,getProjectionCentreFlag());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::Latin1,getLatin1());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::Latin2,getLatin2());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::LatitudeOfSouthernPole,getLatitudeOfSouthernPole());
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::LongitudeOfSouthernPole,getLongitudeOfSouthernPole());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
 
 
 /*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
@@ -566,11 +592,17 @@ bool LambertConformalImpl::setProperty(uint propertyId,long long value)
         return true;
 
       case Property::GridSection::LambertConformal::LongitudeOfFirstGridPoint:
-        setLongitudeOfFirstGridPoint(value);
+        if (value >= 0)
+          setLongitudeOfFirstGridPoint(value);
+        else
+          setLongitudeOfFirstGridPoint(value+360000);
         return true;
 
       case Property::GridSection::LambertConformal::LoV:
-        setLoV(value);
+        if (value >= 0)
+          setLoV(value);
+        else
+          setLoV(value+360000000);
         return true;
 
       case Property::GridSection::LambertConformal::DxInMetres:
@@ -598,7 +630,10 @@ bool LambertConformalImpl::setProperty(uint propertyId,long long value)
         return true;
 
       case Property::GridSection::LambertConformal::LongitudeOfSouthernPole:
-        setLongitudeOfSouthernPole(value);
+        if (value >= 0)
+          setLongitudeOfSouthernPole(value);
+        else
+          setLongitudeOfSouthernPole(value+360000);
         return true;
 
     }

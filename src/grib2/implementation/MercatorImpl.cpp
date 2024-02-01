@@ -337,6 +337,55 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
 
 
 
+void MercatorImpl::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    Mercator::getProperties(properties);
+
+    if (getNi())
+      properties.emplace_back((uint)Property::GridSection::Mercator::Ni,*getNi());
+
+    if (getNj())
+      properties.emplace_back((uint)Property::GridSection::Mercator::Nj,*getNj());
+
+    if (getLatitudeOfFirstGridPoint())
+      properties.emplace_back((uint)Property::GridSection::Mercator::LatitudeOfFirstGridPoint,*getLatitudeOfFirstGridPoint());
+
+
+    if (getLongitudeOfFirstGridPoint())
+      properties.emplace_back((uint)Property::GridSection::Mercator::LongitudeOfFirstGridPoint,*getLongitudeOfFirstGridPoint());
+
+    if (getLaD())
+      properties.emplace_back((uint)Property::GridSection::Mercator::LaD,*getLaD());
+
+    if (getLatitudeOfLastGridPoint())
+      properties.emplace_back((uint)Property::GridSection::Mercator::LatitudeOfLastGridPoint,*getLatitudeOfLastGridPoint());
+
+    if (getLongitudeOfLastGridPoint())
+      properties.emplace_back((uint)Property::GridSection::Mercator::LongitudeOfLastGridPoint,*getLongitudeOfLastGridPoint());
+
+    if (getOrientationOfTheGrid())
+      properties.emplace_back((uint)Property::GridSection::Mercator::OrientationOfTheGrid,*getOrientationOfTheGrid());
+
+    if (getDi())
+      properties.emplace_back((uint)Property::GridSection::Mercator::Di,*getDi());
+
+    if (getDj())
+      properties.emplace_back((uint)Property::GridSection::Mercator::Dj,*getDj());
+
+    properties.emplace_back((uint)Property::GridSection::Mercator::ResolutionAndComponentFlags,mResolution.getResolutionAndComponentFlags());
+    properties.emplace_back((uint)Property::GridSection::Mercator::ScanningMode,mScanningMode.getScanningMode());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.

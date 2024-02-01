@@ -31,6 +31,9 @@ class RepresentationDefinition
     virtual bool  getProperty(uint propertyId,long long& value);
     virtual bool  getProperty_Packing(uint propertyId,long long& value);
     virtual bool  getProperty_OriginalValues(uint propertyId,long long& value);
+    virtual void  getProperties(T::PropertySettingVec& properties);
+    virtual void  getProperties_Packing(T::PropertySettingVec& properties);
+    virtual void  getProperties_OriginalValues(T::PropertySettingVec& properties);
 
     virtual bool  setProperty(uint propertyId,long long value);
     virtual bool  setProperty_Packing(uint propertyId,long long value);

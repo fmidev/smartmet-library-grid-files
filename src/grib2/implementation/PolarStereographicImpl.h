@@ -30,6 +30,7 @@ class PolarStereographicImpl : public PolarStereographic
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
 
+    void                getProperties(T::PropertySettingVec& properties);
     bool                setProperty(uint propertyId,long long value);
 
     void                initSpatialReference();

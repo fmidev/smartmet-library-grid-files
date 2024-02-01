@@ -46,6 +46,9 @@ GridSection::GridSection()
     mMessage = nullptr;
     mFilePosition = 0;
     mNumberOfPoints = 0;
+    mNumberOfVerticalCoordinateValues = 0;
+    mPvlLocation = 255;
+    mDataRepresentationType = 0;
   }
   catch (...)
   {
@@ -168,6 +171,27 @@ bool GridSection::getProperty(uint propertyId,long long& value)
       return mGridDefinition->getProperty(propertyId,value);
 
     return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridSection::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    properties.emplace_back((uint)Property::GridSection::NumberOfVerticalCoordinateValues,mNumberOfVerticalCoordinateValues);
+    properties.emplace_back((uint)Property::GridSection::PvlLocation,mPvlLocation);
+    properties.emplace_back((uint)Property::GridSection::DataRepresentationType,mDataRepresentationType);
+
+    if (mGridDefinition)
+      mGridDefinition->getProperties(properties);
   }
   catch (...)
   {
@@ -1593,7 +1617,7 @@ void GridSection::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- numberOfVerticalCoordinateValues = " << toString(mNumberOfVerticalCoordinateValues) << "\n";
     stream << space(level) << "- pvlLocation                      = " << toString(mPvlLocation) << "\n";
     stream << space(level) << "- dataRepresentationType           = " << toString(mDataRepresentationType) << "\n";
-    //stream << space(level) << "- dataRepresentationString         = " << getGridProjectionString() << "\n";
+    stream << space(level) << "- mNumberOfPoints                  = " << toString(mNumberOfPoints) << "\n";
     stream << space(level) << "- numberOfValues                   = " << toString(getGridOriginalValueCount()) << "\n";
 
     if (mGridDefinition)

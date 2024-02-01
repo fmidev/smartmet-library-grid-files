@@ -167,6 +167,65 @@ void LambertConformalImpl::read(MemoryReader& memoryReader)
 
 
 
+void LambertConformalImpl::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    LambertConformal::getProperties(properties);
+
+    if (getNx())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::Nx,*getNx());
+
+    if (getNy())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::Ny,*getNy());
+
+    if (getLatitudeOfFirstGridPoint())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::LatitudeOfFirstGridPoint,*getLatitudeOfFirstGridPoint());
+
+    if (getLongitudeOfFirstGridPoint())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::LongitudeOfFirstGridPoint,*getLongitudeOfFirstGridPoint());
+
+    ResolutionSettings *resolution = getResolution();
+    if (resolution)
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::ResolutionAndComponentFlags,resolution->getResolutionAndComponentFlags());
+
+    if (getLaD())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::LaD,*getLaD());
+
+    if (getLoV())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::LoV,*getLoV());
+
+    if (getDx())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::Dx,*getDx());
+
+    if (getDy())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::Dy,*getDy());
+
+    properties.emplace_back((uint)Property::GridSection::LambertConformal::ProjectionCentreFlag,getProjectionCentreFlag());
+
+    if (getLatin1())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::Latin1,*getLatin1());
+
+    if (getLatin2())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::Latin2,*getLatin2());
+
+    if (getLatitudeOfSouthernPole())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::LatitudeOfSouthernPole,*getLatitudeOfSouthernPole());
+
+    if (getLongitudeOfSouthernPole())
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::LongitudeOfSouthernPole,*getLongitudeOfSouthernPole());
+
+    ScanningModeSettings *scanningMode = getScanningMode() ;
+    if (scanningMode)
+      properties.emplace_back((uint)Property::GridSection::LambertConformal::ScanningMode,scanningMode->getScanningMode());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
 
 
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
@@ -195,7 +254,10 @@ bool LambertConformalImpl::setProperty(uint propertyId,long long value)
         return true;
 
       case Property::GridSection::LambertConformal::LongitudeOfFirstGridPoint:
-        setLongitudeOfFirstGridPoint(value);
+        if (value >= 0)
+          setLongitudeOfFirstGridPoint(value);
+        else
+          setLongitudeOfFirstGridPoint(value+360000000);
         return true;
 
       case Property::GridSection::LambertConformal::ResolutionAndComponentFlags:
@@ -214,7 +276,10 @@ bool LambertConformalImpl::setProperty(uint propertyId,long long value)
         return true;
 
       case Property::GridSection::LambertConformal::LoV:
-        setLoV(value);
+        if (value >= 0)
+          setLoV(value);
+        else
+          setLoV(value+360000000);
         return true;
 
       case Property::GridSection::LambertConformal::Dx:
@@ -242,7 +307,10 @@ bool LambertConformalImpl::setProperty(uint propertyId,long long value)
         return true;
 
       case Property::GridSection::LambertConformal::LongitudeOfSouthernPole:
-        setLongitudeOfSouthernPole(value);
+        if (value >= 0)
+          setLongitudeOfSouthernPole(value);
+        else
+          setLongitudeOfSouthernPole(value+360000000);
         return true;
 
 

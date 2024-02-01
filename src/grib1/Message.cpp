@@ -955,6 +955,36 @@ bool Message::getProperty(const char *propertyName,long long& value)
 
 
 
+void Message::getProperties(T::PropertySettingVec& properties)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mIndicatorSection)
+      mIndicatorSection->getProperties(properties);
+
+    if (mProductSection)
+      mProductSection->getProperties(properties);
+
+    if (mDataSection)
+      mDataSection->getProperties(properties);
+
+    if (mGridSection)
+      mGridSection->getProperties(properties);
+
+    //if (mBitmapSection)
+    //  mBitmapSection->getProperties(properties);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    throw exception;
+  }
+}
+
+
+
+
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.

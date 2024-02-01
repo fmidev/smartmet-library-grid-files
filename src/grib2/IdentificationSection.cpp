@@ -355,6 +355,60 @@ bool IdentificationSection::getProperty(uint propertyId,long long& value)
 
 
 
+void IdentificationSection::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    if (mCentre)
+      properties.emplace_back((uint)Property::IdentificationSection::Centre,*mCentre);
+
+    if (mSubCentre)
+      properties.emplace_back((uint)Property::IdentificationSection::SubCentre,*mSubCentre);
+
+    if (mTablesVersion)
+      properties.emplace_back((uint)Property::IdentificationSection::TablesVersion,*mTablesVersion);
+
+    if (mLocalTablesVersion)
+      properties.emplace_back((uint)Property::IdentificationSection::LocalTablesVersion,*mLocalTablesVersion);
+
+    if (mSignificanceOfReferenceTime)
+      properties.emplace_back((uint)Property::IdentificationSection::SignificanceOfReferenceTime,*mSignificanceOfReferenceTime);
+
+    if (mYear)
+      properties.emplace_back((uint)Property::IdentificationSection::Year,*mYear);
+
+    if (mMonth)
+      properties.emplace_back((uint)Property::IdentificationSection::Month,*mMonth);
+
+    if (mDay)
+      properties.emplace_back((uint)Property::IdentificationSection::Day,*mDay);
+
+    if (mHour)
+      properties.emplace_back((uint)Property::IdentificationSection::Hour,*mHour);
+
+    if (mMinute)
+      properties.emplace_back((uint)Property::IdentificationSection::Minute,*mMinute);
+
+    if (mSecond)
+      properties.emplace_back((uint)Property::IdentificationSection::Second,*mSecond);
+
+    if (mProductionStatusOfProcessedData)
+      properties.emplace_back((uint)Property::IdentificationSection::ProductionStatusOfProcessedData,*mProductionStatusOfProcessedData);
+
+    if (mTypeOfProcessedData)
+      properties.emplace_back((uint)Property::IdentificationSection::TypeOfProcessedData,*mTypeOfProcessedData);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.

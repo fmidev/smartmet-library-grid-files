@@ -3998,6 +3998,14 @@ bool Message::getProperty(const char *propertyName,long long& value)
 
 
 
+void Message::getProperties(T::PropertySettingVec& properties)
+{
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+}
+
+
+
+
 /*! \brief The method is used for setting a value for the property according to the property name.
 
         \param propertyName  The unique name of the requested property.

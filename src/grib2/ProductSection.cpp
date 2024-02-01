@@ -254,6 +254,31 @@ bool ProductSection::getProperty(uint propertyId,long long& value)
 
 
 
+void ProductSection::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    if (mProductDefinitionTemplateNumber)
+      properties.emplace_back((uint)Property::ProductSection::ProductDefinitionTemplateNumber,*mProductDefinitionTemplateNumber);
+
+    if (mNV)
+      properties.emplace_back((uint)Property::ProductSection::NV,*mNV);
+
+    if (mProductDefinition)
+      mProductDefinition->getProperties(properties);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
+
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
@@ -366,11 +391,6 @@ void ProductSection::write(DataWriter& dataWriter)
     if (!mProductDefinition)
       throw Fmi::Exception(BCP,"Missing product definition");
 
-    if (!missing(mNV) && *mNV != 0)
-    {
-      throw Fmi::Exception(BCP,"ProductSection does not support optional coordinates yet");
-    }
-
     mFilePosition = dataWriter.getWritePosition();
     mSectionLength = 0;
     mNumberOfSection = (std::uint8_t)Message::SectionNumber::product_section;
@@ -383,6 +403,14 @@ void ProductSection::write(DataWriter& dataWriter)
     dataWriter << mProductDefinitionTemplateNumber;
 
     mProductDefinition->write(dataWriter);
+
+    if (!missing(mNV) && *mNV > 0  &&  mCoordinates.size() == *mNV)
+    {
+      for (std::uint16_t t=0; t<*mNV; t++)
+      {
+        dataWriter.write_float(mCoordinates[t]);
+      }
+    }
 
     // Updating the section length.
 

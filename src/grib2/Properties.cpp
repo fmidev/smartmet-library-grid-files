@@ -106,6 +106,7 @@ Property::Property()
     addProperty("Grib2.GridSection.Mercator.ScanningMode",GridSection::Mercator::ScanningMode);
 
     addProperty("Grib2.ProductSection.ProductDefinitionTemplateNumber",ProductSection::ProductDefinitionTemplateNumber);
+    addProperty("Grib2.ProductSection.NV",ProductSection::NV);
 
     addProperty("Grib2.ProductSection.ParameterSettings.ParameterCategory",ProductSection::ParameterSettings::ParameterCategory);
     addProperty("Grib2.ProductSection.ParameterSettings.ParameterNumber",ProductSection::ParameterSettings::ParameterNumber);

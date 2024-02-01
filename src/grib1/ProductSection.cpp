@@ -533,6 +533,44 @@ bool ProductSection::getProperty(uint propertyId,long long& value)
 
 
 
+void ProductSection::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    properties.emplace_back((uint)Property::ProductSection::TableVersion,mTableVersion);
+    properties.emplace_back((uint)Property::ProductSection::Centre,mCentre);
+    properties.emplace_back((uint)Property::ProductSection::GeneratingProcessIdentifier,mGeneratingProcessIdentifier);
+    properties.emplace_back((uint)Property::ProductSection::GridDefinitionNumber,mGridDefinitionNumber);
+    properties.emplace_back((uint)Property::ProductSection::SectionFlags,mSectionFlags);
+    properties.emplace_back((uint)Property::ProductSection::IndicatorOfParameter,mIndicatorOfParameter);
+    properties.emplace_back((uint)Property::ProductSection::IndicatorOfTypeOfLevel,mIndicatorOfTypeOfLevel);
+    properties.emplace_back((uint)Property::ProductSection::Level,mLevel);
+    properties.emplace_back((uint)Property::ProductSection::YearOfCentury,mYearOfCentury);
+    properties.emplace_back((uint)Property::ProductSection::Month,mMonth);
+    properties.emplace_back((uint)Property::ProductSection::Day,mDay);
+    properties.emplace_back((uint)Property::ProductSection::Hour,mHour);
+    properties.emplace_back((uint)Property::ProductSection::Minute,mMinute);
+    properties.emplace_back((uint)Property::ProductSection::UnitOfTimeRange,mUnitOfTimeRange);
+    properties.emplace_back((uint)Property::ProductSection::P1,mP1);
+    properties.emplace_back((uint)Property::ProductSection::P2,mP2);
+    properties.emplace_back((uint)Property::ProductSection::TimeRangeIndicator,mTimeRangeIndicator);
+    properties.emplace_back((uint)Property::ProductSection::NumberIncludedInAverage,mNumberIncludedInAverage);
+    properties.emplace_back((uint)Property::ProductSection::NumberMissingFromAveragesOrAccumulations,mNumberMissingFromAveragesOrAccumulations);
+    properties.emplace_back((uint)Property::ProductSection::CenturyOfReferenceTimeOfData,mCenturyOfReferenceTimeOfData);
+    properties.emplace_back((uint)Property::ProductSection::SubCentre,mSubCentre);
+    properties.emplace_back((uint)Property::ProductSection::DecimalScaleFactor,mDecimalScaleFactor);
+    properties.emplace_back((uint)Property::ProductSection::ForecastType,mForecastType);
+    properties.emplace_back((uint)Property::ProductSection::ForecastNumber,mForecastNumber);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
 

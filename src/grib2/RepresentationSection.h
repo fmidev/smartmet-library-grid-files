@@ -77,6 +77,7 @@ class RepresentationSection : public GRID::MessageSection
     void            setRepresentationDefinition(RepresentationDefinition *representationDefinition);
 
     bool            getProperty(uint propertyId,long long& value);
+    void            getProperties(T::PropertySettingVec& properties);
     bool            setProperty(uint propertyId,long long value);
 
     void            read(MemoryReader& memoryReader);

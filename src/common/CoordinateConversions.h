@@ -39,6 +39,7 @@ double latlon_height(double lon, double latitudes);
 
 
 void latLon_bboxByCenter(double centerX,double centerY,double metricWidth,double metricHeight,double& lon1,double& lat1,double& lon2,double& lat2);
+void latLon_bboxByCenter(double centerX,double centerY,double metricDistanceLeft,double metricDistanceBottom,double metricDistanceRight,double metricDistanceTop,double& lon1,double& lat1,double& lon2,double& lat2);
 
 std::pair<std::vector<SmartMet::T::Coordinate>, std::vector<double>> getIsocirclePoints(double lon1, double lat1, double lon2, double lat2, std::size_t steps);
 

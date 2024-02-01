@@ -34,6 +34,29 @@ typedef float ParamValue;
 typedef ParamValue* ParamValue_ptr;
 #define ParamValueMissing -16777216
 
+class PropertySetting
+{
+  public:
+
+    PropertySetting() {propertyId = 0;}
+    PropertySetting(uint id,std::string value) {propertyId = id; propertyValue = value;}
+    PropertySetting(uint id,char value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,uchar value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,short value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,unsigned short value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,int value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,uint value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,long long value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,unsigned long long value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,float value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,double value) {propertyId = id; propertyValue = std::to_string(value);}
+
+    uint        propertyId;
+    std::string propertyValue;
+};
+
+typedef std::vector<PropertySetting> PropertySettingVec;
+
 typedef std::vector<ParamId> ParamId_vec;
 typedef std::vector<ParamLevel> ParamLevel_vec;
 typedef std::vector<ParamValue> ParamValue_vec;

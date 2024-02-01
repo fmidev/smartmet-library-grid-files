@@ -1221,6 +1221,107 @@ bool GridDefinition::getProperty(uint propertyId,double& value)
 
 
 
+void GridDefinition::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    getProperties_gridArea(properties);
+    getProperties_scanningMode(properties);
+    getProperties_resolutionFlags(properties);
+    getProperties_rotation(properties);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridDefinition::getProperties_gridArea(T::PropertySettingVec& properties)
+{
+  try
+  {
+    GridAreaSettings *gridArea = getGridArea();
+    if (gridArea == nullptr)
+      return;
+
+    properties.emplace_back((uint)Property::GridSection::GridArea::LatitudeOfFirstGridPoint,gridArea->getLatitudeOfFirstGridPoint());
+    properties.emplace_back((uint)Property::GridSection::GridArea::LongitudeOfFirstGridPoint,gridArea->getLongitudeOfFirstGridPoint());
+    properties.emplace_back((uint)Property::GridSection::GridArea::LatitudeOfLastGridPoint,gridArea->getLatitudeOfLastGridPoint());
+    properties.emplace_back((uint)Property::GridSection::GridArea::LongitudeOfLastGridPoint,gridArea->getLongitudeOfLastGridPoint());
+
+    auto resolutionFlags = gridArea->getResolutionFlags();
+    if (resolutionFlags)
+      properties.emplace_back((uint)Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags,resolutionFlags->getResolutionAndComponentFlags());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridDefinition::getProperties_scanningMode(T::PropertySettingVec& properties)
+{
+  try
+  {
+    ScanningModeSettings* scanningMode = getScanningMode();
+    if (scanningMode == nullptr)
+      return;
+
+    properties.emplace_back((uint)Property::GridSection::ScanningMode::ScanMode,scanningMode->getScanningMode());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridDefinition::getProperties_resolutionFlags(T::PropertySettingVec& properties)
+{
+  try
+  {
+    ResolutionFlagsSettings *resolutionFlags = getResolutionFlags();
+    if (resolutionFlags == nullptr)
+      return;
+
+    properties.emplace_back((uint)Property::GridSection::ResolutionFlags::ResolutionAndComponentFlags,resolutionFlags->getResolutionAndComponentFlags());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+void GridDefinition::getProperties_rotation(T::PropertySettingVec& properties)
+{
+  try
+  {
+    RotationSettings *rotation = getRotation();
+    if (rotation == nullptr)
+      return;
+
+    properties.emplace_back((uint)Property::GridSection::Rotation::LatitudeOfSouthernPole,rotation->getLatitudeOfSouthernPole());
+    properties.emplace_back((uint)Property::GridSection::Rotation::LongitudeOfSouthernPole,rotation->getLongitudeOfSouthernPole());
+    properties.emplace_back((uint)Property::GridSection::Rotation::AngleOfRotationInDegrees,rotation->getGeography_angleOfRotationInDegrees()*1000);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 
 /*! \brief The method is used for fetching a (long long) value for the GridAreaSettings property according to the property id.
 
@@ -1371,6 +1472,10 @@ bool GridDefinition::getProperty_rotation(uint propertyId,long long& value)
 
       case Property::GridSection::Rotation::LongitudeOfSouthernPole:
         value = rotation->getLongitudeOfSouthernPole();
+        return true;
+
+      case Property::GridSection::Rotation::AngleOfRotationInDegrees:
+        value = rotation->getGeography_angleOfRotationInDegrees()*1000;
         return true;
     }
 
@@ -1651,6 +1756,10 @@ bool GridDefinition::setProperty_rotation(uint propertyId,long long value)
 
       case Property::GridSection::Rotation::LongitudeOfSouthernPole:
         rotation->setLongitudeOfSouthernPole(value);
+        return true;
+
+      case Property::GridSection::Rotation::AngleOfRotationInDegrees:
+        rotation->setGeography_angleOfRotationInDegrees((double)value/1000);
         return true;
     }
 

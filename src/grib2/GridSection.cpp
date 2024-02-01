@@ -227,6 +227,40 @@ bool GridSection::getProperty(uint propertyId,long long& value)
 
 
 
+void GridSection::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+
+    if (mSourceOfGridDefinition)
+      properties.emplace_back((uint)Property::GridSection::SourceOfGridDefinition,*mSourceOfGridDefinition);
+
+    if (mNumberOfGridPoints)
+      properties.emplace_back((uint)Property::GridSection::NumberOfGridPoints,*mNumberOfGridPoints);
+
+    if (mNumberOfOctetsForNumberOfPoints)
+      properties.emplace_back((uint)Property::GridSection::NumberOfOctetsForNumberOfPoints,*mNumberOfOctetsForNumberOfPoints);
+
+    if (mInterpretationOfNumberOfPoints)
+      properties.emplace_back((uint)Property::GridSection::InterpretationOfNumberOfPoints,*mInterpretationOfNumberOfPoints);
+
+    if (mGridDefinitionTemplateNumber)
+      properties.emplace_back((uint)Property::GridSection::GridDefinitionTemplateNumber,*mGridDefinitionTemplateNumber);
+
+    if (mGridDefinition)
+      return mGridDefinition->getProperties(properties);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.

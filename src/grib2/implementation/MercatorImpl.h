@@ -23,6 +23,7 @@ class MercatorImpl : public Mercator
     bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
     bool                getGridMetricCellSize(double& width,double& height) const;
 
+    void                getProperties(T::PropertySettingVec& properties);
     bool                setProperty(uint propertyId,long long value);
 
     void                initSpatialReference();

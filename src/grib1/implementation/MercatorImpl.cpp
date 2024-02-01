@@ -385,6 +385,26 @@ bool MercatorImpl::reverseYDirection() const
 
 
 
+void MercatorImpl::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    GridDefinition::getProperties(properties);
+
+    properties.emplace_back((uint)Property::GridSection::Mercator::Ni,getNi());
+    properties.emplace_back((uint)Property::GridSection::Mercator::Nj,getNj());
+    properties.emplace_back((uint)Property::GridSection::Mercator::Latin,getLatin());
+    properties.emplace_back((uint)Property::GridSection::Mercator::DiInMetres,getDiInMetres());
+    properties.emplace_back((uint)Property::GridSection::Mercator::DjInMetres,getDjInMetres());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 
 /*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
 

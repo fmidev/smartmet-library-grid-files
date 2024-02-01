@@ -164,6 +164,19 @@ bool BitmapSection::getProperty(uint propertyId,long long& value)
 
 
 
+void BitmapSection::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
 

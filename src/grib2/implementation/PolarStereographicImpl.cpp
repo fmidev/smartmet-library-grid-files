@@ -118,6 +118,50 @@ void PolarStereographicImpl::read(MemoryReader& memoryReader)
 
 
 
+void PolarStereographicImpl::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    PolarStereographic::getProperties(properties);
+
+    if (getNx())
+      properties.emplace_back((uint)Property::GridSection::PolarStereographic::Nx,*getNx());
+
+    if (getNy())
+      properties.emplace_back((uint)Property::GridSection::PolarStereographic::Ny,*getNy());
+
+    if (getLatitudeOfFirstGridPoint())
+      properties.emplace_back((uint)Property::GridSection::PolarStereographic::LatitudeOfFirstGridPoint,*getLatitudeOfFirstGridPoint());
+
+    if (getLongitudeOfFirstGridPoint())
+      properties.emplace_back((uint)Property::GridSection::PolarStereographic::LongitudeOfFirstGridPoint,*getLongitudeOfFirstGridPoint());
+
+    properties.emplace_back((uint)Property::GridSection::PolarStereographic::ResolutionAndComponentFlags,getResolutionAndComponentFlags());
+
+    if (getLaD())
+      properties.emplace_back((uint)Property::GridSection::PolarStereographic::LaD,*getLaD());
+
+    if (getOrientationOfTheGrid())
+      properties.emplace_back((uint)Property::GridSection::PolarStereographic::OrientationOfTheGrid,*getOrientationOfTheGrid());
+
+    if (getDx())
+      properties.emplace_back((uint)Property::GridSection::PolarStereographic::Dx,*getDx());
+
+    if (getDy())
+      properties.emplace_back((uint)Property::GridSection::PolarStereographic::Dy,*getDy());
+
+    properties.emplace_back((uint)Property::GridSection::PolarStereographic::ProjectionCentreFlag,getProjectionCentreFlag());
+
+    ScanningModeSettings *scanningMode = getScanningMode() ;
+      properties.emplace_back((uint)Property::GridSection::PolarStereographic::ScanningMode,scanningMode->getScanningMode());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
 
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
 
@@ -145,7 +189,10 @@ bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
         return true;
 
       case Property::GridSection::PolarStereographic::LongitudeOfFirstGridPoint:
-        setLongitudeOfFirstGridPoint(value);
+        if (value >= 0)
+          setLongitudeOfFirstGridPoint(value);
+        else
+          setLongitudeOfFirstGridPoint(value+360000000);
         return true;
 
       case Property::GridSection::PolarStereographic::ResolutionAndComponentFlags:
@@ -157,7 +204,10 @@ bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
         return true;
 
       case Property::GridSection::PolarStereographic::OrientationOfTheGrid:
-        setOrientationOfTheGrid(value);
+        if (value >= 0)
+          setOrientationOfTheGrid(value);
+        else
+          setOrientationOfTheGrid(value+360000000);
         return true;
 
       case Property::GridSection::PolarStereographic::Dx:
