@@ -38,6 +38,8 @@ class DataDefinition
     virtual void            decodeValues(Message *message,T::ParamValue_vec& decodedValues) const;
     virtual void            encodeValues(Message *message,T::ParamValue_vec& values);
 
+    virtual void            getProperties(T::PropertySettingVec& properties);
+
     virtual void            read(MemoryReader& memoryReader);
     virtual void            write(DataWriter& dataWriter);
     virtual void            print(std::ostream& stream,uint level,uint optionFlags) const;

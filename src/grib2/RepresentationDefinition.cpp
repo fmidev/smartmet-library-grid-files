@@ -75,6 +75,72 @@ bool RepresentationDefinition::getProperty(uint propertyId,long long& value)
 
 
 
+void RepresentationDefinition::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    getProperties_Packing(properties);
+    getProperties_OriginalValues(properties);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void RepresentationDefinition::getProperties_Packing(T::PropertySettingVec& properties)
+{
+  try
+  {
+    PackingSettings *packing = getPacking();
+    if (packing == nullptr)
+      return;
+
+    properties.emplace_back((uint)Property::RepresentationSection::Packing::ReferenceValue,packing->getReferenceValue());
+
+    if (packing->getBinaryScaleFactor())
+      properties.emplace_back((uint)Property::RepresentationSection::Packing::BinaryScaleFactor,*packing->getBinaryScaleFactor());
+
+    if (packing->getDecimalScaleFactor())
+      properties.emplace_back((uint)Property::RepresentationSection::Packing::DecimalScaleFactor,*packing->getDecimalScaleFactor());
+
+    if (packing->getBitsPerValue())
+      properties.emplace_back((uint)Property::RepresentationSection::Packing::BitsPerValue,*packing->getBitsPerValue());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void RepresentationDefinition::getProperties_OriginalValues(T::PropertySettingVec& properties)
+{
+  try
+  {
+    OriginalValuesSettings *originalValues = getOriginalValues();
+    if (originalValues == nullptr)
+      return;
+
+    properties.emplace_back((uint)Property::RepresentationSection::OriginalValues::TypeOfOriginalFieldValues,*originalValues->getTypeOfOriginalFieldValues());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 bool RepresentationDefinition::getProperty_Packing(uint propertyId,long long& value)
 {
   try

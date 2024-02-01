@@ -48,6 +48,7 @@ struct MessageInfo
 
 typedef std::map<uint,MessageInfo> MessageInfo_map;
 
+
 class GridFile;
 
 // ====================================================================================
@@ -258,6 +259,8 @@ class Message
 
     virtual bool                getProperty(uint propertyId,long long& value);
     virtual bool                getProperty(const char *propertyName,long long& value);
+
+    virtual void                getProperties(T::PropertySettingVec& properties);
 
     virtual bool                setProperty(uint propertyId,char value);
     virtual bool                setProperty(uint propertyId,short value);

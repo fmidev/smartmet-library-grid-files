@@ -97,6 +97,381 @@ bool ProductDefinition::getProperty(uint propertyId,long long& value)
 
 
 
+void ProductDefinition::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    getProperties_ParameterSettings(properties);
+    getProperties_HorizontalSettings(properties);
+    getProperties_StatisticalSettings(properties);
+    getProperties_EpsSettings(properties);
+    getProperties_DerivedSettings(properties);
+    getProperties_RectangularClusterSettings(properties);
+    getProperties_DerivedSettings(properties);
+    getProperties_PercentileSettings(properties);
+    getProperties_CategoricalSettings(properties);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductDefinition::getProperties_ParameterSettings(T::PropertySettingVec& properties)
+{
+  try
+  {
+    ParameterSettings *p = getParameter();
+    if (p == nullptr)
+      return;
+
+
+    if (p->getParameterCategory())
+      properties.emplace_back((uint)Property::ProductSection::ParameterSettings::ParameterCategory,*p->getParameterCategory());
+
+    if (p->getParameterNumber())
+      properties.emplace_back((uint)Property::ProductSection::ParameterSettings::ParameterNumber,*p->getParameterNumber());
+
+    if (p->getTypeOfGeneratingProcess())
+      properties.emplace_back((uint)Property::ProductSection::ParameterSettings::TypeOfGeneratingProcess,*p->getTypeOfGeneratingProcess());
+
+    if (p->getBackgroundProcess())
+      properties.emplace_back((uint)Property::ProductSection::ParameterSettings::BackgroundProcess,*p->getBackgroundProcess());
+
+    if (p->getGeneratingProcessIdentifier())
+      properties.emplace_back((uint)Property::ProductSection::ParameterSettings::GeneratingProcessIdentifier,*p->getGeneratingProcessIdentifier());
+
+    if (p->getHoursAfterDataCutoff())
+      properties.emplace_back((uint)Property::ProductSection::ParameterSettings::HoursAfterDataCutoff,*p->getHoursAfterDataCutoff());
+
+    if (p->getMinutesAfterDataCutoff())
+      properties.emplace_back((uint)Property::ProductSection::ParameterSettings::MinutesAfterDataCutoff,*p->getMinutesAfterDataCutoff());
+
+    if (p->getIndicatorOfUnitOfTimeRange())
+      properties.emplace_back((uint)Property::ProductSection::ParameterSettings::IndicatorOfUnitOfTimeRange,*p->getIndicatorOfUnitOfTimeRange());
+
+    if (p->getForecastTime())
+      properties.emplace_back((uint)Property::ProductSection::ParameterSettings::ForecastTime,*p->getForecastTime());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductDefinition::getProperties_HorizontalSettings(T::PropertySettingVec& properties)
+{
+  try
+  {
+    HorizontalSettings *h = getHorizontal();
+    if (h == nullptr)
+      return;
+
+    if (h->getTypeOfFirstFixedSurface())
+      properties.emplace_back((uint)Property::ProductSection::HorizontalSettings::TypeOfFirstFixedSurface,*h->getTypeOfFirstFixedSurface());
+
+    if (h->getScaleFactorOfFirstFixedSurface())
+      properties.emplace_back((uint)Property::ProductSection::HorizontalSettings::ScaleFactorOfFirstFixedSurface,*h->getScaleFactorOfFirstFixedSurface());
+
+    if (h->getScaledValueOfFirstFixedSurface())
+      properties.emplace_back((uint)Property::ProductSection::HorizontalSettings::ScaledValueOfFirstFixedSurface,*h->getScaledValueOfFirstFixedSurface());
+
+    if (h->getTypeOfSecondFixedSurface())
+      properties.emplace_back((uint)Property::ProductSection::HorizontalSettings::TypeOfSecondFixedSurface,*h->getTypeOfSecondFixedSurface());
+
+    if (h->getScaleFactorOfSecondFixedSurface())
+      properties.emplace_back((uint)Property::ProductSection::HorizontalSettings::ScaleFactorOfSecondFixedSurface,*h->getScaleFactorOfSecondFixedSurface());
+
+    if (h->getScaledValueOfSecondFixedSurface())
+      properties.emplace_back((uint)Property::ProductSection::HorizontalSettings::ScaledValueOfSecondFixedSurface,*h->getScaledValueOfSecondFixedSurface());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductDefinition::getProperties_StatisticalSettings(T::PropertySettingVec& properties)
+{
+  try
+  {
+    StatisticalSettings *p = getStatistical();
+    if (p == nullptr)
+      return;
+
+    if (p->getYearOfEndOfOverallTimeInterval())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::YearOfEndOfOverallTimeInterval,*p->getYearOfEndOfOverallTimeInterval());
+
+    if (p->getMonthOfEndOfOverallTimeInterval())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::MonthOfEndOfOverallTimeInterval,*p->getMonthOfEndOfOverallTimeInterval());
+
+    if (p->getDayOfEndOfOverallTimeInterval())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::DayOfEndOfOverallTimeInterval,*p->getDayOfEndOfOverallTimeInterval());
+
+    if (p->getHourOfEndOfOverallTimeInterval())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::HourOfEndOfOverallTimeInterval,*p->getHourOfEndOfOverallTimeInterval());
+
+    if (p->getMinuteOfEndOfOverallTimeInterval())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::MinuteOfEndOfOverallTimeInterval,*p->getMinuteOfEndOfOverallTimeInterval());
+
+    if (p->getSecondOfEndOfOverallTimeInterval())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::SecondOfEndOfOverallTimeInterval,*p->getSecondOfEndOfOverallTimeInterval());
+
+    if (p->getNumberOfTimeRange())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::NumberOfTimeRange,*p->getNumberOfTimeRange());
+
+    if (p->getNumberOfMissingInStatisticalProcess())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::NumberOfMissingInStatisticalProcess,*p->getNumberOfMissingInStatisticalProcess());
+
+    if (p->getTypeOfStatisticalProcessing())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::TypeOfStatisticalProcessing,*p->getTypeOfStatisticalProcessing());
+
+    if (p->getTypeOfTimeIncrement())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::TypeOfTimeIncrement,*p->getTypeOfTimeIncrement());
+
+    if (p->getIndicatorOfUnitForTimeRange())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::IndicatorOfUnitForTimeRange,*p->getIndicatorOfUnitForTimeRange());
+
+    if (p->getLengthOfTimeRange())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::LengthOfTimeRange,*p->getLengthOfTimeRange());
+
+    if (p->getIndicatorOfUnitForTimeIncrement())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::IndicatorOfUnitForTimeIncrement,*p->getIndicatorOfUnitForTimeIncrement());
+
+    if (p->getTimeIncrement())
+      properties.emplace_back((uint)Property::ProductSection::StatisticalSettings::TimeIncrement,*p->getTimeIncrement());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductDefinition::getProperties_EpsSettings(T::PropertySettingVec& properties)
+{
+  try
+  {
+    EpsSettings *p = getEps();
+    if (p == nullptr)
+      return;
+
+    if (p->getTypeOfEnsembleForecast())
+      properties.emplace_back((uint)Property::ProductSection::EpsSettings::TypeOfEnsembleForecast,*p->getTypeOfEnsembleForecast());
+
+    if (p->getPerturbationNumber())
+      properties.emplace_back((uint)Property::ProductSection::EpsSettings::PerturbationNumber,*p->getPerturbationNumber());
+
+    if (p->getNumberOfForecastsInEnsemble())
+      properties.emplace_back((uint)Property::ProductSection::EpsSettings::NumberOfForecastsInEnsemble,*p->getNumberOfForecastsInEnsemble());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductDefinition::getProperties_DerivedSettings(T::PropertySettingVec& properties)
+{
+  try
+  {
+    DerivedSettings *p = getDerived();
+    if (p == nullptr)
+      return;
+
+    if (p->getDerivedForecast())
+      properties.emplace_back((uint)Property::ProductSection::DerivedSettings::DerivedForecast,*p->getDerivedForecast());
+
+    if (p->getNumberOfForecastsInEnsemble())
+      properties.emplace_back((uint)Property::ProductSection::DerivedSettings::NumberOfForecastsInEnsemble,*p->getNumberOfForecastsInEnsemble());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductDefinition::getProperties_RectangularClusterSettings(T::PropertySettingVec& properties)
+{
+  try
+  {
+    RectangularClusterSettings *p = getRectangularCluster();
+    if (p == nullptr)
+      return;
+
+    if (p->getClusterIdentifier())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::ClusterIdentifier,*p->getClusterIdentifier());
+
+    if (p->getNH())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::NH,*p->getNH());
+
+    if (p->getNL())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::NL,*p->getNL());
+
+    if (p->getTotalNumberOfClusters())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::TotalNumberOfClusters,*p->getTotalNumberOfClusters());
+
+    if (p->getClusteringMethod())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::ClusteringMethod,*p->getClusteringMethod());
+
+    if (p->getNorthernLatitudeOfClusterDomain())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::NorthernLatitudeOfClusterDomain,*p->getNorthernLatitudeOfClusterDomain());
+
+    if (p->getSouthernLatitudeOfClusterDomain())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::SouthernLatitudeOfClusterDomain,*p->getSouthernLatitudeOfClusterDomain());
+
+    if (p->getEasternLongitudeOfClusterDomain())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::EasternLongitudeOfClusterDomain,*p->getEasternLongitudeOfClusterDomain());
+
+    if (p->getWesternLongitudeOfClusterDomain())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::WesternLongitudeOfClusterDomain,*p->getWesternLongitudeOfClusterDomain());
+
+    if (p->getNumberOfForecastsInTheCluster())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::NumberOfForecastsInTheCluster,*p->getNumberOfForecastsInTheCluster());
+
+    if (p->getScaleFactorOfStandardDeviation())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::ScaleFactorOfStandardDeviation,*p->getScaleFactorOfStandardDeviation());
+
+    if (p->getScaledValueOfStandardDeviation())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::ScaledValueOfStandardDeviation,*p->getScaledValueOfStandardDeviation());
+
+    if (p->getScaleFactorOfDistanceFromEnsembleMean())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::ScaleFactorOfDistanceFromEnsembleMean,*p->getScaleFactorOfDistanceFromEnsembleMean());
+
+    if (p->getScaledValueOfDistanceFromEnsembleMean())
+      properties.emplace_back((uint)Property::ProductSection::RectangularClusterSettings::ScaledValueOfDistanceFromEnsembleMean,*p->getScaledValueOfDistanceFromEnsembleMean());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductDefinition::getProperties_ProbabilitySettings(T::PropertySettingVec& properties)
+{
+  try
+  {
+    ProbabilitySettings *p = getProbability();
+    if (p == nullptr)
+      return;
+
+    if (p->getForecastProbabilityNumber())
+      properties.emplace_back((uint)Property::ProductSection::ProbabilitySettings::ForecastProbabilityNumber,*p->getForecastProbabilityNumber());
+
+    if (p->getTotalNumberOfForecastProbabilities())
+      properties.emplace_back((uint)Property::ProductSection::ProbabilitySettings::TotalNumberOfForecastProbabilities,*p->getTotalNumberOfForecastProbabilities());
+
+    if (p->getProbabilityType())
+      properties.emplace_back((uint)Property::ProductSection::ProbabilitySettings::ProbabilityType,*p->getProbabilityType());
+
+    if (p->getScaleFactorOfLowerLimit())
+      properties.emplace_back((uint)Property::ProductSection::ProbabilitySettings::ScaleFactorOfLowerLimit,*p->getScaleFactorOfLowerLimit());
+
+    if (p->getScaledValueOfLowerLimit())
+      properties.emplace_back((uint)Property::ProductSection::ProbabilitySettings::ScaledValueOfLowerLimit,*p->getScaledValueOfLowerLimit());
+
+    if (p->getScaleFactorOfUpperLimit())
+      properties.emplace_back((uint)Property::ProductSection::ProbabilitySettings::ScaleFactorOfUpperLimit,*p->getScaleFactorOfUpperLimit());
+
+    if (p->getScaledValueOfUpperLimit())
+      properties.emplace_back((uint)Property::ProductSection::ProbabilitySettings::ScaledValueOfUpperLimit,*p->getScaledValueOfUpperLimit());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductDefinition::getProperties_PercentileSettings(T::PropertySettingVec& properties)
+{
+  try
+  {
+    PercentileSettings *p = getPercentile();
+    if (p == nullptr)
+      return;
+
+    if (p->getPercentileValue())
+      properties.emplace_back((uint)Property::ProductSection::PercentileSettings::PercentileValue,*p->getPercentileValue());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void ProductDefinition::getProperties_CategoricalSettings(T::PropertySettingVec& properties)
+{
+  try
+  {
+    CategoricalSettings *p = getCategorical();
+    if (p == nullptr)
+      return;
+
+    if (p->getNumberOfCategories())
+      properties.emplace_back((uint)Property::ProductSection::CategoricalSettings::NumberOfCategories,*p->getNumberOfCategories());
+
+    if (p->getCategoryType())
+      properties.emplace_back((uint)Property::ProductSection::CategoricalSettings::CategoryType,*p->getCategoryType());
+
+    if (p->getCodeFigure())
+      properties.emplace_back((uint)Property::ProductSection::CategoricalSettings::CodeFigure,*p->getCodeFigure());
+
+    if (p->getScaleFactorOfLowerLimit())
+      properties.emplace_back((uint)Property::ProductSection::CategoricalSettings::ScaleFactorOfLowerLimit,*p->getScaleFactorOfLowerLimit());
+
+    if (p->getScaledValueOfLowerLimit())
+      properties.emplace_back((uint)Property::ProductSection::CategoricalSettings::ScaledValueOfLowerLimit,*p->getScaledValueOfLowerLimit());
+
+    if (p->getScaleFactorOfUpperLimit())
+      properties.emplace_back((uint)Property::ProductSection::CategoricalSettings::ScaleFactorOfUpperLimit,*p->getScaleFactorOfUpperLimit());
+
+    if (p->getScaledValueOfUpperLimit())
+      properties.emplace_back((uint)Property::ProductSection::CategoricalSettings::ScaledValueOfUpperLimit,*p->getScaledValueOfUpperLimit());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 
 bool ProductDefinition::getProperty_ParameterSettings(uint propertyId,long long& value)
 {

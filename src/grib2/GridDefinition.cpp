@@ -11,7 +11,7 @@
 #include <map>
 #include <unordered_map>
 #include <iostream>
-
+#include <math.h>
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
@@ -425,6 +425,166 @@ bool GridDefinition::getProperty(uint propertyId,long long& value)
       return true;
 
     return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDefinition::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    getProperties_EarthShape(properties);
+    getProperties_Grid(properties);
+    getProperties_Rotation(properties);
+    getProperties_LatLon(properties);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridDefinition::getProperties_EarthShape(T::PropertySettingVec& properties)
+{
+  try
+  {
+    EarthShapeSettings *earthShape = getEarthShape();
+    if (earthShape == nullptr)
+      return;
+
+    if (earthShape->getShapeOfTheEarth())
+      properties.emplace_back((uint)Property::GridSection::EarthShape::ShapeOfTheEarth,*earthShape->getShapeOfTheEarth());
+
+    if (earthShape->getScaleFactorOfRadiusOfSphericalEarth())
+      properties.emplace_back((uint)Property::GridSection::EarthShape::ScaleFactorOfRadiusOfSphericalEarth,*earthShape->getScaleFactorOfRadiusOfSphericalEarth());
+
+    if (earthShape->getScaledValueOfRadiusOfSphericalEarth())
+      properties.emplace_back((uint)Property::GridSection::EarthShape::ScaledValueOfRadiusOfSphericalEarth,*earthShape->getScaledValueOfRadiusOfSphericalEarth());
+
+    if (earthShape->getScaleFactorOfEarthMajorAxis())
+      properties.emplace_back((uint)Property::GridSection::EarthShape::ScaleFactorOfEarthMajorAxis,*earthShape->getScaleFactorOfEarthMajorAxis());
+
+    if (earthShape->getScaledValueOfEarthMajorAxis())
+      properties.emplace_back((uint)Property::GridSection::EarthShape::ScaledValueOfEarthMajorAxis,*earthShape->getScaledValueOfEarthMajorAxis());
+
+    if (earthShape->getScaleFactorOfEarthMinorAxis())
+      properties.emplace_back((uint)Property::GridSection::EarthShape::ScaleFactorOfEarthMinorAxis,*earthShape->getScaleFactorOfEarthMinorAxis());
+
+    if (earthShape->getScaledValueOfEarthMinorAxis())
+      properties.emplace_back((uint)Property::GridSection::EarthShape::ScaledValueOfEarthMinorAxis,*earthShape->getScaledValueOfEarthMinorAxis());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridDefinition::getProperties_Grid(T::PropertySettingVec& properties)
+{
+  try
+  {
+    LatLonSettings *latlon = getLatLon();
+    if (latlon == nullptr)
+      return;
+
+    GridSettings *grid = latlon->getGrid();
+    if (grid == nullptr)
+      return;
+
+    if (grid->getNi())
+      properties.emplace_back((uint)Property::GridSection::Grid::Ni,*grid->getNi());
+
+    if (grid->getNj())
+      properties.emplace_back((uint)Property::GridSection::Grid::Nj,*grid->getNj());
+
+    if (grid->getBasicAngleOfTheInitialProductionDomain())
+      properties.emplace_back((uint)Property::GridSection::Grid::BasicAngleOfTheInitialProductionDomain,*grid->getBasicAngleOfTheInitialProductionDomain());
+
+    if (grid->getSubdivisionsOfBasicAngle())
+      properties.emplace_back((uint)Property::GridSection::Grid::SubdivisionsOfBasicAngle,*grid->getSubdivisionsOfBasicAngle());
+
+    if (grid->getLatitudeOfFirstGridPoint())
+      properties.emplace_back((uint)Property::GridSection::Grid::LatitudeOfFirstGridPoint,*grid->getLatitudeOfFirstGridPoint());
+
+    if (grid->getLongitudeOfFirstGridPoint())
+      properties.emplace_back((uint)Property::GridSection::Grid::LongitudeOfFirstGridPoint,*grid->getLongitudeOfFirstGridPoint());
+
+    if (grid->getLatitudeOfLastGridPoint())
+      properties.emplace_back((uint)Property::GridSection::Grid::LatitudeOfLastGridPoint,*grid->getLatitudeOfLastGridPoint());
+
+    if (grid->getLongitudeOfLastGridPoint())
+      properties.emplace_back((uint)Property::GridSection::Grid::LongitudeOfLastGridPoint,*grid->getLongitudeOfLastGridPoint());
+
+    ResolutionSettings *resolution = grid->getResolution();
+
+    if (resolution)
+      properties.emplace_back((uint)Property::GridSection::Grid::ResolutionAndComponentFlags,resolution->getResolutionAndComponentFlags());
+
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridDefinition::getProperties_Rotation(T::PropertySettingVec& properties)
+{
+  try
+  {
+    RotationSettings *rotation = getRotation();
+    if (rotation == nullptr)
+      return;
+
+    if (rotation->getLatitudeOfSouthernPole())
+      properties.emplace_back((uint)Property::GridSection::Rotation::LatitudeOfSouthernPole,*rotation->getLatitudeOfSouthernPole());
+
+    if (rotation->getLongitudeOfSouthernPole())
+      properties.emplace_back((uint)Property::GridSection::Rotation::LongitudeOfSouthernPole,*rotation->getLongitudeOfSouthernPole());
+
+    properties.emplace_back((uint)Property::GridSection::Rotation::AngleOfRotation,rotation->getAngleOfRotation());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridDefinition::getProperties_LatLon(T::PropertySettingVec& properties)
+{
+  try
+  {
+    LatLonSettings *latlon = getLatLon();
+    if (latlon == nullptr)
+      return;
+
+    if (latlon->getIDirectionIncrement())
+      properties.emplace_back((uint)Property::GridSection::LatLon::IDirectionIncrement,*latlon->getIDirectionIncrement());
+
+    if (latlon->getJDirectionIncrement())
+      properties.emplace_back((uint)Property::GridSection::LatLon::JDirectionIncrement,*latlon->getJDirectionIncrement());
+
+    ScanningModeSettings *scanningMode = latlon->getScanningMode();
+    if (scanningMode)
+      properties.emplace_back((uint)Property::GridSection::LatLon::ScanningMode,scanningMode->getScanningMode());
   }
   catch (...)
   {
@@ -2050,17 +2210,17 @@ double GridDefinition::getMajorAxis(EarthShapeSettings& earthSettings)
     if (!shape)
       return defaultValue;
 
-    double radius_sf = *earthSettings.getScaleFactorOfRadiusOfSphericalEarth();
+    double radius_sf = pow(10.0,*earthSettings.getScaleFactorOfRadiusOfSphericalEarth());
     double radius_v = *earthSettings.getScaledValueOfRadiusOfSphericalEarth();
 
-    if (radius_sf == 0)
-      radius_sf = 1;
+    //if (radius_sf == 0)
+    //  radius_sf = 1;
 
-    double major_sf = (*earthSettings.getScaleFactorOfEarthMajorAxis());
+    double major_sf = pow(10.0,*earthSettings.getScaleFactorOfEarthMajorAxis());
     double major_v = (*earthSettings.getScaledValueOfEarthMajorAxis());
 
-    if (major_sf == 0)
-      major_sf = 1;
+    //if (major_sf == 0)
+    //  major_sf = 1;
 
     switch (*shape)
     {
@@ -2126,11 +2286,11 @@ double GridDefinition::getMinorAxis(EarthShapeSettings& earthSettings)
     if (!shape)
       return 0;
 
-    double radius_sf = *earthSettings.getScaleFactorOfRadiusOfSphericalEarth();
+    double radius_sf = pow(10,*earthSettings.getScaleFactorOfRadiusOfSphericalEarth());
     double radius_v = *earthSettings.getScaledValueOfRadiusOfSphericalEarth();
 
-    if (radius_sf == 0)
-      radius_sf = 1;
+    //if (radius_sf == 0)
+    //  radius_sf = 1;
 /*
     double major_sf = (*earthSettings.getScaleFactorOfEarthMajorAxis());
     double major_v = (*earthSettings.getScaledValueOfEarthMajorAxis());
@@ -2138,11 +2298,11 @@ double GridDefinition::getMinorAxis(EarthShapeSettings& earthSettings)
     if (major_sf == 0)
       major_sf = 1;
 */
-    double minor_sf = (*earthSettings.getScaleFactorOfEarthMinorAxis());
+    double minor_sf = pow(10,*earthSettings.getScaleFactorOfEarthMinorAxis());
     double minor_v = (*earthSettings.getScaledValueOfEarthMinorAxis());
 
-    if (minor_sf == 0)
-      minor_sf = 1;
+    //if (minor_sf == 0)
+    //  minor_sf = 1;
 
     switch (*shape)
     {
@@ -2216,17 +2376,17 @@ double GridDefinition::getFlattening(EarthShapeSettings& earthSettings)
     if (radius_sf == 0)
       radius_sf = 1;
 */
-    double major_sf = (*earthSettings.getScaleFactorOfEarthMajorAxis());
+    double major_sf = pow(10,*earthSettings.getScaleFactorOfEarthMajorAxis());
     double major_v = (*earthSettings.getScaledValueOfEarthMajorAxis());
 
-    if (major_sf == 0)
-      major_sf = 1;
+    //if (major_sf == 0)
+    //  major_sf = 1;
 
-    double minor_sf = (*earthSettings.getScaleFactorOfEarthMinorAxis());
+    double minor_sf = pow(10,*earthSettings.getScaleFactorOfEarthMinorAxis());
     double minor_v = (*earthSettings.getScaledValueOfEarthMinorAxis());
 
-    if (minor_sf == 0)
-      minor_sf = 1;
+    //if (minor_sf == 0)
+    //  minor_sf = 1;
 
 
     switch (*shape)

@@ -919,6 +919,28 @@ bool RotatedLatLonImpl::reverseYDirection() const
 
 
 
+
+void RotatedLatLonImpl::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    GridDefinition::getProperties(properties);
+
+    properties.emplace_back((uint)Property::GridSection::RotatedLatLon::Ni,getNi());
+    properties.emplace_back((uint)Property::GridSection::RotatedLatLon::Nj,getNj());
+    properties.emplace_back((uint)Property::GridSection::RotatedLatLon::IDirectionIncrement,getIDirectionIncrement());
+    properties.emplace_back((uint)Property::GridSection::RotatedLatLon::JDirectionIncrement,getJDirectionIncrement());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.

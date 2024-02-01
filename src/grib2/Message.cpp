@@ -538,6 +538,46 @@ bool Message::getProperty(const char *propertyName,long long& value)
 
 
 
+void Message::getProperties(T::PropertySettingVec& properties)
+{
+  FUNCTION_TRACE
+  try
+  {
+    if (mIndicatorSection)
+      mIndicatorSection->getProperties(properties);
+
+    if (mIdentificationSection)
+      mIdentificationSection->getProperties(properties);
+
+    if (mLocalSection)
+      mLocalSection->getProperties(properties);
+
+    if (mGridSection)
+      mGridSection->getProperties(properties);
+
+    if (mProductSection)
+      mProductSection->getProperties(properties);
+
+    if (mRepresentationSection)
+      mRepresentationSection->getProperties(properties);
+
+    if (mBitmapSection)
+      mBitmapSection->getProperties(properties);
+
+    if (mDataSection)
+      mDataSection->getProperties(properties);
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    throw exception;
+  }
+}
+
+
+
+
+
 /*! \brief The method can be used for collecting all attributeList details related
     to the current message.
 */
@@ -1043,6 +1083,7 @@ void Message::setGridValues(T::ParamValue_vec& values)
 
     uint size = values.size();
 
+    uint cnt = size;
     for (uint t=0; t<size; t++)
     {
       if (values[t] == ParamValueMissing)
@@ -1056,9 +1097,14 @@ void Message::setGridValues(T::ParamValue_vec& values)
         for (uint a=0; a<size; a++)
         {
           if (values[a] == ParamValueMissing)
+          {
             bmWriter.writeBit(false);
+            cnt--;
+          }
           else
+          {
             bmWriter.writeBit(true);
+          }
         }
 
         mBitmapSection->setBitmapData(bm,bmSize);
@@ -1070,7 +1116,7 @@ void Message::setGridValues(T::ParamValue_vec& values)
     initDataSection();
 
     mRepresentationSection->encodeValues(this,values);
-    mRepresentationSection->setNumberOfValues(values.size());
+    mRepresentationSection->setNumberOfValues(cnt);
   }
   catch (...)
   {

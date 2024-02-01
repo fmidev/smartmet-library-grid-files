@@ -105,6 +105,8 @@ class Message : public GRID::Message
     bool                getProperty(uint propertyId,long long& value);
     bool                getProperty(const char *propertyName,long long& value);
 
+    void                getProperties(T::PropertySettingVec& properties);
+
     bool                setProperty(uint propertyId,long long value);
     bool                setProperty(uint propertyId,double value);
     bool                setProperty(const char *propertyName,long long value);

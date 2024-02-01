@@ -30,6 +30,11 @@ SimplePacking::SimplePacking()
     mReferenceValue = 0;
     mBitsPerValue = 0;
     mInitialized = false;
+    mEfac = 0;
+    mDfac = 0;
+    mRDfac = 0;
+    mEDfac = 0;
+
   }
   catch (...)
   {
@@ -56,6 +61,10 @@ SimplePacking::SimplePacking(const SimplePacking& other)
     mReferenceValue = 0;
     mBitsPerValue = 0;
     mInitialized = false;
+    mEfac = other.mEfac;
+    mDfac = other.mDfac;
+    mRDfac = other.mRDfac;
+    mEDfac = other.mEDfac;
   }
   catch (...)
   {

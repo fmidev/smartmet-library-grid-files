@@ -74,6 +74,7 @@ class GridDefinition
 
     virtual bool                getProperty(uint propertyId,long long& value);
     virtual bool                getProperty(uint propertyId,double& value);
+    virtual void                getProperties(T::PropertySettingVec& properties);
 
     virtual bool                setProperty(uint propertyId,long long value);
     virtual bool                setProperty(uint propertyId,double value);
@@ -109,6 +110,11 @@ class GridDefinition
 
     virtual void                insertTranformIntoCache(std::size_t hash,double lat,double lon,double x,double y) const;
     virtual bool                getTransformFromCache(std::size_t hash,double lat,double lon,double& x,double& y) const;
+
+    virtual void                getProperties_gridArea(T::PropertySettingVec& properties);
+    virtual void                getProperties_scanningMode(T::PropertySettingVec& properties);
+    virtual void                getProperties_resolutionFlags(T::PropertySettingVec& properties);
+    virtual void                getProperties_rotation(T::PropertySettingVec& properties);
 
     virtual bool                getProperty_gridArea(uint propertyId,long long& value);
     virtual bool                getProperty_scanningMode(uint propertyId,long long& value);

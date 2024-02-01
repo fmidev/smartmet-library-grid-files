@@ -174,6 +174,30 @@ bool DataSection::getProperty(uint propertyId,long long& value)
 
 
 
+void DataSection::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    properties.emplace_back((uint)Property::DataSection::Flags,mFlags);
+    properties.emplace_back((uint)Property::DataSection::BinaryScaleFactor,mBinaryScaleFactor);
+    properties.emplace_back((uint)Property::DataSection::ReferenceValue,mReferenceValue);
+    properties.emplace_back((uint)Property::DataSection::BitsPerValue,mBitsPerValue);
+    //properties.emplace_back((uint)Property::DataSection::PackingMethod,mPackingMethod);
+
+    if (mDataDefinition)
+    {
+      //properties.emplace_back((uint)Property::DataSection::PackingMethod,mDataDefinition->getPackingMethod());
+      //mDataDefinition->getProperties(properties);
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.

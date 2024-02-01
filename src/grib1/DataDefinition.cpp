@@ -131,6 +131,13 @@ void DataDefinition::encodeValues(Message *message,T::ParamValue_vec& values)
 
 
 
+void DataDefinition::getProperties(T::PropertySettingVec& properties)
+{
+  throw Fmi::Exception(BCP,"Not implemented!");
+}
+
+
+
 
 /*! \brief The method prints the content of the current object into the given stream.
 

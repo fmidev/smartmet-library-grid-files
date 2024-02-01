@@ -462,6 +462,30 @@ bool PolarStereographicImpl::reverseYDirection() const
 
 
 
+void PolarStereographicImpl::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    GridDefinition::getProperties(properties);
+
+    properties.emplace_back((uint)Property::GridSection::PolarStereographic::Nx,getNx());
+    properties.emplace_back((uint)Property::GridSection::PolarStereographic::Ny,getNy());
+    properties.emplace_back((uint)Property::GridSection::PolarStereographic::LatitudeOfFirstGridPoint,getLatitudeOfFirstGridPoint());
+    properties.emplace_back((uint)Property::GridSection::PolarStereographic::LongitudeOfFirstGridPoint,getLongitudeOfFirstGridPoint());
+    properties.emplace_back((uint)Property::GridSection::PolarStereographic::OrientationOfTheGrid,getOrientationOfTheGrid());
+    properties.emplace_back((uint)Property::GridSection::PolarStereographic::DxInMetres,getDxInMetres());
+    properties.emplace_back((uint)Property::GridSection::PolarStereographic::DyInMetres,getDyInMetres());
+    properties.emplace_back((uint)Property::GridSection::PolarStereographic::ProjectionCentreFlag,getProjectionCentreFlag());
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 
 /*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
 
@@ -548,7 +572,10 @@ bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
         return true;
 
       case Property::GridSection::PolarStereographic::LongitudeOfFirstGridPoint:
-        setLongitudeOfFirstGridPoint(value);
+        if (value >= 0)
+          setLongitudeOfFirstGridPoint(value);
+        else
+          setLongitudeOfFirstGridPoint(value + 360000);
         return true;
 
       case Property::GridSection::PolarStereographic::OrientationOfTheGrid:

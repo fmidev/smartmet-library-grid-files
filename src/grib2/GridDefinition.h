@@ -78,6 +78,7 @@ class GridDefinition
     virtual void                setGridGeometryId(T::GeometryId geometryId);
 
     virtual bool                getProperty(uint propertyId,long long& value);
+    virtual void                getProperties(T::PropertySettingVec& properties);
     virtual bool                setProperty(uint propertyId,long long value);
 
     virtual void                read(MemoryReader& memoryReader);
@@ -92,6 +93,11 @@ class GridDefinition
     virtual void                setEarthSemiMinor(double value);
 
   protected:
+
+    virtual void                getProperties_EarthShape(T::PropertySettingVec& properties);
+    virtual void                getProperties_Grid(T::PropertySettingVec& properties);
+    virtual void                getProperties_Rotation(T::PropertySettingVec& properties);
+    virtual void                getProperties_LatLon(T::PropertySettingVec& properties);
 
     virtual bool                getProperty_EarthShape(uint propertyId,long long& value);
     virtual bool                getProperty_Grid(uint propertyId,long long& value);

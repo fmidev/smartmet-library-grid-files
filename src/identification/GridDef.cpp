@@ -3536,13 +3536,44 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000));
           int latitude = C_INT(round(toDouble(field[6])*1000));
+          int lastLongitude = 0;
+          int lastLatitude = 0;
           int iInc = C_INT(round(toDouble(field[7]) * 1000));
           int jInc = C_INT(round(toDouble(field[8]) * 1000));
           char *scanningMode = field[9];
           double earthSemiMajor = toDouble(field[10]);
           double earthSemiMinor = toDouble(field[11]);
-          int lastLongitude = longitude + ni*iInc - iInc;
-          int lastLatitude = latitude + nj*jInc - jInc;
+
+          GRIB1::LatLonImpl *def1 = new GRIB1::LatLonImpl();
+          GRIB1::GridAreaSettings gridArea;
+          GRIB1::ScanningModeSettings scanningMode1;
+          if (strcasecmp(scanningMode,"+x+y") == 0)
+          {
+            lastLongitude = longitude + ni*iInc - iInc;
+            lastLatitude = latitude + nj*jInc - jInc;
+            scanningMode1.setScanningMode(0x40);
+          }
+          else
+          if (strcasecmp(scanningMode,"-x+y") == 0)
+          {
+            lastLongitude = longitude - ni*iInc + iInc;
+            lastLatitude = latitude + nj*jInc - jInc;
+            scanningMode1.setScanningMode(0x80+0x40);
+          }
+          else
+          if (strcasecmp(scanningMode,"+x-y") == 0)
+          {
+            lastLongitude = longitude + ni*iInc - iInc;
+            lastLatitude = latitude - nj*jInc + jInc;
+            scanningMode1.setScanningMode(0);
+          }
+          else
+          if (strcasecmp(scanningMode,"-x-y") == 0)
+          {
+            lastLongitude = longitude - ni*iInc + iInc;
+            lastLatitude = latitude - nj*jInc + jInc;
+            scanningMode1.setScanningMode(0x80);
+          }
 
           if (lastLongitude > 360000)
             lastLongitude -= 360000;
@@ -3550,9 +3581,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           if (lastLatitude > 90000)
             lastLatitude = 180000 - lastLatitude;
 
-          GRIB1::LatLonImpl *def1 = new GRIB1::LatLonImpl();
-          GRIB1::GridAreaSettings gridArea;
-          GRIB1::ScanningModeSettings scanningMode1;
+          def1->setScanningMode(scanningMode1);
 
           GRIB1::ResolutionFlagsSettings resolutionFlags;
           resolutionFlags.setResolutionAndComponentFlags(128);
@@ -3568,20 +3597,6 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           def1->setNj(nj);
           def1->setIDirectionIncrement(iInc);
           def1->setJDirectionIncrement(jInc);
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode1.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode1.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode1.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode1.setScanningMode(0x80);
-
-          def1->setScanningMode(scanningMode1);
 
           def1->setGridGeometryId(geometryId);
           mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
@@ -3605,17 +3620,50 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000));
           int latitude = C_INT(round(toDouble(field[6])*1000));
+          int lastLongitude = 0;
+          int lastLatitude = 0;
           int iInc = C_INT(round(toDouble(field[7]) * 1000));
           int jInc = C_INT(round(toDouble(field[8]) * 1000));
           char *scanningMode = field[9];
           int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000));
           int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000));
-          int lastLongitude = longitude + ni*iInc - iInc;
-          int lastLatitude = latitude + nj*jInc - jInc;
           int angle = round(toDouble(field[12]));
           double earthSemiMajor = toDouble(field[13]);
           double earthSemiMinor = toDouble(field[14]);
           //std::uint8_t resolutionAndComponentFlags = 48;
+
+          GRIB1::RotatedLatLonImpl *def1 = new GRIB1::RotatedLatLonImpl();
+          GRIB1::GridAreaSettings gridArea;
+          GRIB1::RotationSettings rotation1;
+          GRIB1::ScanningModeSettings scanningMode1;
+
+          if (strcasecmp(scanningMode,"+x+y") == 0)
+          {
+            lastLongitude = longitude + ni*iInc - iInc;
+            lastLatitude = latitude + nj*jInc - jInc;
+            scanningMode1.setScanningMode(0x40);
+          }
+          else
+          if (strcasecmp(scanningMode,"-x+y") == 0)
+          {
+            lastLongitude = longitude - ni*iInc + iInc;
+            lastLatitude = latitude + nj*jInc - jInc;
+            scanningMode1.setScanningMode(0x80+0x40);
+          }
+          else
+          if (strcasecmp(scanningMode,"+x-y") == 0)
+          {
+            lastLongitude = longitude + ni*iInc - iInc;
+            lastLatitude = latitude - nj*jInc + jInc;
+            scanningMode1.setScanningMode(0);
+          }
+          else
+          if (strcasecmp(scanningMode,"-x-y") == 0)
+          {
+            lastLongitude = longitude - ni*iInc + iInc;
+            lastLatitude = latitude - nj*jInc + jInc;
+            scanningMode1.setScanningMode(0x80);
+          }
 
           if (lastLongitude > 360000)
             lastLongitude -= 360000;
@@ -3623,10 +3671,7 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           if (lastLatitude > 90000)
             lastLatitude = 180000 - lastLatitude;
 
-          GRIB1::RotatedLatLonImpl *def1 = new GRIB1::RotatedLatLonImpl();
-          GRIB1::GridAreaSettings gridArea;
-          GRIB1::RotationSettings rotation1;
-          GRIB1::ScanningModeSettings scanningMode1;
+          def1->setScanningMode(scanningMode1);
 
           gridArea.setLatitudeOfFirstGridPoint(latitude);
           gridArea.setLongitudeOfFirstGridPoint(longitude);
@@ -3643,20 +3688,6 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           def1->setGridArea(gridArea);
           def1->setIDirectionIncrement(iInc);
           def1->setJDirectionIncrement(jInc);
-
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode1.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-            scanningMode1.setScanningMode(0x80+0x40);
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-            scanningMode1.setScanningMode(0);
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-            scanningMode1.setScanningMode(0x80);
-
-          def1->setScanningMode(scanningMode1);
 
           def1->setGridGeometryId(geometryId);
           mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
@@ -3695,28 +3726,49 @@ GRIB1::GridDefinition* GridDef::createGrib1GridDefinition(const char *str)
           int nj = toInt32(field[4]);
           int longitude = C_INT(round(toDouble(field[5])*1000));
           int latitude = C_INT(round(toDouble(field[6])*1000));
+          int lastLongitude = 0;
+          int lastLatitude = 0;
           int iInc = C_INT(round(toDouble(field[7])));
           int jInc = C_INT(round(toDouble(field[8])));
           char *scanningMode = field[9];
           int latin = C_INT(round(toDouble(field[10])*1000));
 
-          int lastLongitude = longitude + ni*iInc - iInc;
-          int lastLatitude = latitude + nj*jInc - jInc;
-
           GRIB1::MercatorImpl *def1 = new GRIB1::MercatorImpl();
           GRIB1::ScanningModeSettings scanningMode1;
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
+          {
+            lastLongitude = longitude + ni*iInc - iInc;
+            lastLatitude = latitude + nj*jInc - jInc;
             scanningMode1.setScanningMode(0x40);
+          }
           else
           if (strcasecmp(scanningMode,"-x+y") == 0)
+          {
+            lastLongitude = longitude - ni*iInc + iInc;
+            lastLatitude = latitude + nj*jInc - jInc;
             scanningMode1.setScanningMode(0x80+0x40);
+          }
           else
           if (strcasecmp(scanningMode,"+x-y") == 0)
+          {
+            lastLongitude = longitude + ni*iInc - iInc;
+            lastLatitude = latitude - nj*jInc + jInc;
             scanningMode1.setScanningMode(0);
+          }
           else
           if (strcasecmp(scanningMode,"-x-y") == 0)
+          {
+            lastLongitude = longitude - ni*iInc + iInc;
+            lastLatitude = latitude - nj*jInc + jInc;
             scanningMode1.setScanningMode(0x80);
+          }
+
+          if (lastLongitude > 360000)
+            lastLongitude -= 360000;
+
+          if (lastLatitude > 90000)
+            lastLatitude = 180000 - lastLatitude;
 
           def1->setScanningMode(scanningMode1);
 
@@ -4015,14 +4067,8 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           char *scanningMode = field[9];
           double earthSemiMajor = toDouble(field[10]);
           double earthSemiMinor = toDouble(field[11]);
-          int lastLongitude = longitude + ni*iInc - iInc;
-          int lastLatitude = latitude + nj*jInc - jInc;
-
-          if (lastLongitude > 360000000)
-            lastLongitude -= 360000000;
-
-          if (lastLatitude > 90000000)
-            lastLatitude = 180000000 - lastLatitude;
+          int lastLongitude = 0;
+          int lastLatitude = 0;
 
           GRIB2::LatLonImpl *def2 = new GRIB2::LatLonImpl();
           GRIB2::LatLonSettings latLon;
@@ -4032,6 +4078,42 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           GRIB2::ResolutionSettings resolution;
           resolution.setResolutionAndComponentFlags(48);
           grid.setResolution(resolution);
+
+          if (strcasecmp(scanningMode,"+x+y") == 0)
+          {
+            lastLongitude = longitude + ni*iInc - iInc;
+            lastLatitude = latitude + nj*jInc - jInc;
+            scanningMode2.setScanningMode(0x40);
+          }
+          else
+          if (strcasecmp(scanningMode,"-x+y") == 0)
+          {
+            lastLongitude = longitude - (ni*iInc - iInc);
+            lastLatitude = latitude + nj*jInc - jInc;
+            scanningMode2.setScanningMode(0x80+0x40);
+          }
+          else
+          if (strcasecmp(scanningMode,"+x-y") == 0)
+          {
+            lastLongitude = longitude + ni*iInc - iInc;
+            lastLatitude = latitude - (nj*jInc - jInc);
+            scanningMode2.setScanningMode(0);
+          }
+          else
+          if (strcasecmp(scanningMode,"-x-y") == 0)
+          {
+            lastLongitude = longitude - (ni*iInc - iInc);
+            lastLatitude = latitude - (nj*jInc - jInc);
+            scanningMode2.setScanningMode(0x80);
+          }
+
+          if (lastLongitude > 360000000)
+            lastLongitude -= 360000000;
+
+          if (lastLatitude > 90000000)
+            lastLatitude = 180000000 - lastLatitude;
+
+          latLon.setScanningMode(scanningMode2);
 
           grid.setNi(T::UInt32_opt(ni));
           grid.setNj(T::UInt32_opt(nj));
@@ -4044,29 +4126,6 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
           latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
 
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode2.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-             lastLongitude = longitude - (ni*iInc - iInc);
-             scanningMode2.setScanningMode(0x80+0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            lastLatitude = latitude - (nj*jInc - jInc);
-            scanningMode2.setScanningMode(0);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            lastLongitude = longitude - (ni*iInc - iInc);
-            lastLatitude = latitude - (nj*jInc - jInc);
-            scanningMode2.setScanningMode(0x80);
-          }
-
-          latLon.setScanningMode(scanningMode2);
           def2->setLatLon(latLon);
 
           def2->setGridGeometryId(geometryId);
@@ -4096,12 +4155,46 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           char *scanningMode = field[9];
           int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000000));
           int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000000));
-          int lastLongitude = longitude + ni*iInc - iInc;
-          int lastLatitude = latitude + nj*jInc - jInc;
+          int lastLongitude = 0;
+          int lastLatitude = 0;
           int angle = round(toDouble(field[12]));
           double earthSemiMajor = toDouble(field[13]);
           double earthSemiMinor = toDouble(field[14]);
           //std::uint8_t resolutionAndComponentFlags = 48;
+
+          GRIB2::RotatedLatLonImpl *def2 = new GRIB2::RotatedLatLonImpl();
+          GRIB2::LatLonSettings latLon;
+          GRIB2::ScanningModeSettings scanningMode2;
+          GRIB2::GridSettings grid;
+          GRIB2::RotationSettings rotation2;
+
+          if (strcasecmp(scanningMode,"+x+y") == 0)
+          {
+            lastLongitude = longitude + ni*iInc - iInc;
+            lastLatitude = latitude + nj*jInc - jInc;
+            scanningMode2.setScanningMode(0x40);
+          }
+          else
+          if (strcasecmp(scanningMode,"-x+y") == 0)
+          {
+            lastLongitude = longitude - (ni*iInc - iInc);
+            lastLatitude = latitude + nj*jInc - jInc;
+            scanningMode2.setScanningMode(0x80+0x40);
+          }
+          else
+          if (strcasecmp(scanningMode,"+x-y") == 0)
+          {
+            lastLongitude = longitude + ni*iInc - iInc;
+            lastLatitude = latitude - (nj*jInc - jInc);
+            scanningMode2.setScanningMode(0);
+          }
+          else
+          if (strcasecmp(scanningMode,"-x-y") == 0)
+          {
+            lastLongitude = longitude - (ni*iInc - iInc);
+            lastLatitude = latitude - (nj*jInc - jInc);
+            scanningMode2.setScanningMode(0x80);
+          }
 
           if (lastLongitude > 360000000)
             lastLongitude -= 360000000;
@@ -4109,11 +4202,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           if (lastLatitude > 90000000)
             lastLatitude = 180000000 - lastLatitude;
 
-          GRIB2::RotatedLatLonImpl *def2 = new GRIB2::RotatedLatLonImpl();
-          GRIB2::LatLonSettings latLon;
-          GRIB2::ScanningModeSettings scanningMode2;
-          GRIB2::GridSettings grid;
-          GRIB2::RotationSettings rotation2;
+          latLon.setScanningMode(scanningMode2);
 
           grid.setNi(T::UInt32_opt(ni));
           grid.setNj(T::UInt32_opt(nj));
@@ -4126,29 +4215,6 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           latLon.setIDirectionIncrement(T::UInt32_opt(iInc));
           latLon.setJDirectionIncrement(T::UInt32_opt(jInc));
 
-          if (strcasecmp(scanningMode,"+x+y") == 0)
-            scanningMode2.setScanningMode(0x40);
-          else
-          if (strcasecmp(scanningMode,"-x+y") == 0)
-          {
-            lastLongitude = longitude - (ni*iInc - iInc);
-            scanningMode2.setScanningMode(0x80+0x40);
-          }
-          else
-          if (strcasecmp(scanningMode,"+x-y") == 0)
-          {
-            lastLatitude = latitude - (nj*jInc - jInc);
-            scanningMode2.setScanningMode(0);
-          }
-          else
-          if (strcasecmp(scanningMode,"-x-y") == 0)
-          {
-            lastLongitude = longitude - (ni*iInc - iInc);
-            lastLatitude = latitude - (nj*jInc - jInc);
-            scanningMode2.setScanningMode(0x80);
-          }
-
-          latLon.setScanningMode(scanningMode2);
           def2->setLatLon(latLon);
 
           if (longitudeOfSouthernPole < 0)

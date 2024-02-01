@@ -123,6 +123,20 @@ bool IndicatorSection::getProperty(uint propertyId,long long& value)
 
 
 
+void IndicatorSection::getProperties(T::PropertySettingVec& properties)
+{
+  try
+  {
+    properties.emplace_back((uint)Property::IndicatorSection::EditionNumber,mEditionNumber);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 
 /*! \brief The method is used for setting a (long long) value for the property according to the property id.
 

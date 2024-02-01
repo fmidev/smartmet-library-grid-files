@@ -304,3 +304,27 @@ void latLon_bboxByCenter(double centerX,double centerY,double metricWidth,double
 
 
 
+
+void latLon_bboxByCenter(double centerX,double centerY,double metricDistanceLeft,double metricDistanceBottom,double metricDistanceRight,double metricDistanceTop,double& lon1,double& lat1,double& lon2,double& lat2)
+{
+  try
+  {
+    double dx = latlon_distance(centerY,centerX,centerY,centerX+0.00001)*100000000;
+    double dy = latlon_distance(centerY,centerX,centerY+0.00001,centerX)*100000000;
+
+    // Metric distance in degrees
+    //double ddx = 0.5*metricWidth/dx;
+    //double ddy = 0.5*metricHeight/dy;
+
+    lon1 = centerX - metricDistanceLeft/dx;
+    lat1 = centerY - metricDistanceBottom/dy;
+    lon2 = centerX + metricDistanceRight/dx;
+    lat2 = centerY + metricDistanceTop/dy;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
