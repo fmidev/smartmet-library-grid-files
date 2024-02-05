@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.1.30
+Version: 24.2.5
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -20,7 +20,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 23.9.6
 BuildRequires: smartmet-library-newbase-devel >= 24.1.30
-BuildRequires: smartmet-library-spine-devel >= 23.12.5
+BuildRequires: smartmet-library-spine-devel >= 24.1.30
 BuildRequires: smartmet-library-macgyver >= 24.1.17
 BuildRequires: smartmet-library-trax-devel >= 23.8.17
 BuildRequires: %{smartmet_boost}-devel
@@ -50,7 +50,7 @@ Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 24.1.30
 Requires: smartmet-library-macgyver >= 24.1.17
-Requires: smartmet-library-spine >= 23.12.5
+Requires: smartmet-library-spine >= 24.1.30
 Requires: smartmet-library-trax >= 23.8.17
 
 %description
@@ -97,9 +97,11 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Feb  5 2024 Mika Heiskanen <mheiskan@rhel8.dev.fmi.fi> - 24.2.5-1.fmi
+- Concurrency improvements for loading remove files
+- Improvements to writing GRIB files
 * Tue Jan 30 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> 24.1.30-1.fmi
 - Repackaged due to newbase ABI changes
-
 * Thu Jan  4 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.1.4-1.fmi
 - Minor updates needed for writing GRIB files
 - Removed unnecessary PROT_WRITE flag when using mmap()
