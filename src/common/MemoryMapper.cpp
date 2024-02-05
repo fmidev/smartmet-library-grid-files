@@ -56,8 +56,7 @@ MemoryMapper::MemoryMapper()
   try
   {
     mEnabled = false;
-
-    mMaxProcessingThreads = 10;
+    mMaxProcessingThreads = 30;
     mMaxMessages = 1000;
     mMessage = nullptr;
     mFaultProcessingThread = nullptr;
@@ -68,9 +67,11 @@ MemoryMapper::MemoryMapper()
     mMessageProcessCount.store(0);
     mUffd = -1;
     mPageSize = 0;
+    mPageCache = nullptr;
+    mPageCacheIndex = nullptr;
     mPageCacheCounter = 0;
     mPageCacheFreedCounter = 0;
-    mPageCacheSize = 100000;
+    mPageCacheSize = 400000;
     mPremapEnabled = true;
   }
   catch (...)
@@ -795,7 +796,7 @@ void MemoryMapper::faultProcessingThread()
           if (sleepCount < 50  &&  mMessageReadCount.load() > 0)
             time_usleep(0,500000);
           else
-            time_usleep(0,10000000);
+            time_usleep(0,3000000);
         }
       }
       catch (...)

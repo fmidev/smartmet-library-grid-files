@@ -1051,6 +1051,7 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
   {
     Fmi::Exception exception(BCP,"Operation failed!",nullptr);
     exception.addParameter("Filename",getFileName());
+    exception.addParameter("File size",std::to_string(getSize()));
     throw exception;
   }
 }

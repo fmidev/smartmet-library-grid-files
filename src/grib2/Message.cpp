@@ -1175,6 +1175,7 @@ void Message::read()
     Fmi::Exception exception(BCP,"Message read failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
     exception.addParameter("Message start position",uint64_toHex(mFilePosition));
+    exception.addParameter("Message size",Fmi::to_string(mMessageSize));
     throw exception;
   }
 }
@@ -1426,7 +1427,8 @@ void Message::read(MemoryReader& memoryReader)
   {
     Fmi::Exception exception(BCP,"Message read failed!",nullptr);
     exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    exception.addParameter("Message start position",uint64_toHex(memoryReader.getStartPtr()-memoryReader.getParentPtr()));
+    exception.addParameter("Message size",Fmi::to_string(mMessageSize));
+    exception.addParameter("MessageReader read position",uint64_toHex(memoryReader.getReadPosition()));
     throw exception;
   }
 }

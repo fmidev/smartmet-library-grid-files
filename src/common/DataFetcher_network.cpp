@@ -105,7 +105,7 @@ Client* DataFetcher_network::getClient(const char *serverAddress,uint serverType
         }
       }
 
-      if (convec->second.size() >= 10)
+      if (convec->second.size() >= 100)
         return nullptr;
 
       Client *conn = newClient(protocol);
