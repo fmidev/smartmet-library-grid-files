@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.2.5
+Version: 24.2.6
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,6 +97,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Feb  6 2024 Mika Heiskanen <mheiskan@rhel8.dev.fmi.fi> - 24.2.6-1.fmi
+- Print more information on Boost MappedFile failures
 * Mon Feb  5 2024 Mika Heiskanen <mheiskan@rhel8.dev.fmi.fi> - 24.2.5-1.fmi
 - Concurrency improvements for loading remove files
 - Improvements to writing GRIB files
