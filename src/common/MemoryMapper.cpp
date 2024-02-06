@@ -48,7 +48,21 @@ void* fault_processing_thread(void *arg)
   return nullptr;
 }
 
-
+std::string permission_string(mode_t mode)
+{
+  std::string permissions;
+  permissions += ((mode & S_IRUSR) ? "r" : "-");
+  permissions += ((mode & S_IWUSR) ? "w" : "-");
+  permissions += ((mode & S_IXUSR) ? "x" : "-");
+  permissions += ((mode & S_IRGRP) ? "r" : "-");
+  permissions += ((mode & S_IWGRP) ? "w" : "-");
+  permissions += ((mode & S_IXGRP) ? "x" : "-");
+  permissions += ((mode & S_IROTH) ? "r" : "-");
+  permissions += ((mode & S_IWOTH) ? "w" : "-");
+  permissions += ((mode & S_IXOTH) ? "x" : "-");
+  return permissions;
+}
+  
 
 MemoryMapper::MemoryMapper()
 {
@@ -385,13 +399,25 @@ void MemoryMapper::map(MapInfo& info)
         throw exception;
       }
 
-      MappedFileParams params(info.filename);
-      params.flags = boost::iostreams::mapped_file::readonly;
-      params.length = info.fileSize;
-      info.mappedFile.reset(new MappedFile(params));
-      //mFileModificationTime = getFileModificationTime(mFileName.c_str());
-      info.memoryPtr = const_cast<char*>(info.mappedFile->const_data());
-      return;
+      // Sometimes MappedFile fails even though stat has already succeeded
+      try
+      {
+        MappedFileParams params(info.filename);
+        params.flags = boost::iostreams::mapped_file::readonly;
+        params.length = info.fileSize;
+        info.mappedFile.reset(new MappedFile(params));
+        //mFileModificationTime = getFileModificationTime(mFileName.c_str());
+        info.memoryPtr = const_cast<char*>(info.mappedFile->const_data());
+        return;
+      }
+      catch(...)
+      {
+	Fmi::Exception exception(BCP, "Boost MappedFile call failed", nullptr);
+	exception.addParameter("Permissions", permission_string(buf.st_mode));
+	exception.addParameter("Filesize", std::to_string(buf.st_size));
+        throw exception;
+      }
+       
     }
 
     info.allocatedSize = (((info.fileSize + 100)/ mPageSize) + 1) * mPageSize;
