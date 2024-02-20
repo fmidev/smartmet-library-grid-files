@@ -446,9 +446,12 @@ long long GridFile::getSize()
 
     for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
     {
-      long long fsize = it->second->getFilePosition() + it->second->getMessageSize();
-      if (fileSize < fsize)
-        fileSize = fsize;
+      if (it->second->getFileMemoryPtr() == nullptr)
+      {
+        long long fsize = it->second->getFilePosition() + it->second->getMessageSize();
+        if (fileSize < fsize)
+          fileSize = fsize;
+      }
     }
 
     return fileSize;
@@ -459,6 +462,51 @@ long long GridFile::getSize()
   }
 }
 
+
+
+
+
+long long GridFile::getRequestCounters(RequestCounters& requestCounters)
+{
+  FUNCTION_TRACE
+  try
+  {
+    long long max = 0;
+    for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
+    {
+      unsigned long long key = ((unsigned long long)mFileId << 32) + it->first;
+      long long cnt = it->second->getRequestCounter();
+      if (cnt > max)
+        max = cnt;
+
+      if (cnt > 0)
+        requestCounters.insert(std::pair<unsigned long long,long long>(key,cnt));
+    }
+    return max;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridFile::resetRequestCounters()
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
+      it->second->setRequestCounter((uint)((double)it->second->getRequestCounter()/100.0));
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -585,6 +633,23 @@ bool GridFile::hasMessagePositionError() const
 /*! \brief The method returns 'true' if the current grid file is memory mapped. */
 
 bool GridFile::isMemoryMapped() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+bool GridFile::isNetworkFile() const
 {
   FUNCTION_TRACE
   try
@@ -998,7 +1063,9 @@ Message* GridFile::newMessage(uint messageIndex,MessageInfo& messageInfo)
   try
   {
     if (mMessagePositions.find(messageIndex) == mMessagePositions.end())
+    {
       mMessagePositions.insert(std::pair<uint,MessageInfo>(messageIndex,messageInfo));
+    }
 
     return nullptr;
   }
@@ -1244,7 +1311,8 @@ void GridFile::print(std::ostream& stream,uint level,uint optionFlags) const
 
     for (auto msg = mMessages.begin();  msg != mMessages.end(); ++msg)
     {
-      msg->second->print(stream,level+1,optionFlags);
+      if (msg->second)
+        msg->second->print(stream,level+1,optionFlags);
     }
   }
   catch (...)

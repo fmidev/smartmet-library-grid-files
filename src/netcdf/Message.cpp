@@ -1328,6 +1328,7 @@ bool Message::getGridPointByLatLonCoordinatesNoCache(double lat,double lon,doubl
     if (!mGeometryDef)
       return false;
 
+    //mGeometryDef->print(std::cout,0,0);
     return mGeometryDef->getGridPointByLatLonCoordinatesNoCache(lat,lon,grid_i,grid_j);
   }
   catch (...)
@@ -1538,8 +1539,11 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
       case 3:  // short
       {
-        short *v = (short*)(mDataStartPtr + idx);
-        short val = ntohs(*v);
+        uchar *v = (uchar*)(mDataStartPtr + idx);
+        short val = 0;
+        uchar *vv = (uchar*)&val;
+        vv[0] = v[1];
+        vv[1] = v[0];
         if ((T::ParamValue)val == mMissingValue)
           return ParamValueMissing;
 
@@ -1549,8 +1553,13 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
       case 4:  // int
       {
-        int *v = (int*)(mDataStartPtr + idx);
-        int val = ntohl(*v);
+        uchar *v = (uchar*)(mDataStartPtr + idx);
+        int val = 0;
+        uchar *vv = (uchar*)&val;
+        vv[0] = v[3];
+        vv[1] = v[2];
+        vv[2] = v[1];
+        vv[3] = v[0];
         if ((T::ParamValue)val == mMissingValue)
           return ParamValueMissing;
 
@@ -1560,25 +1569,37 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
       case 5:  // float
       {
-        int *v = (int*)(mDataStartPtr + idx);
-        int vv = ntohl(*v);
-        float *val = (float*)&vv;
-        if ((T::ParamValue)(*val) == mMissingValue)
+        uchar *v = (uchar*)(mDataStartPtr + idx);
+        float val = 0;
+        uchar *vv = (uchar*)&val;
+        vv[0] = v[3];
+        vv[1] = v[2];
+        vv[2] = v[1];
+        vv[3] = v[0];
+        if ((T::ParamValue)(val) == mMissingValue)
           return ParamValueMissing;
 
-        return mScaleFactor*(T::ParamValue)(*val) + mBaseValue;
+        return mScaleFactor*(T::ParamValue)(val) + mBaseValue;
       }
       break;
 
       case 6:  // double
       {
-        long long *v = (long long*)(mDataStartPtr + idx);
-        long long vv = ntohll(*v);
-        double *val = (double*)&vv;
-        if ((T::ParamValue)(*val) == mMissingValue)
+        uchar *v = (uchar*)(mDataStartPtr + idx);
+        double val = 0;
+        uchar *vv = (uchar*)&val;
+        vv[0] = v[7];
+        vv[1] = v[6];
+        vv[2] = v[5];
+        vv[3] = v[4];
+        vv[4] = v[3];
+        vv[5] = v[2];
+        vv[6] = v[1];
+        vv[7] = v[0];
+        if ((T::ParamValue)(val) == mMissingValue)
           return ParamValueMissing;
-
-        return mScaleFactor*(T::ParamValue)(*val) + mBaseValue;
+        //printf("VAL %016x  %f  %f  %f\n",*v,mScaleFactor,val,mBaseValue);
+        return mScaleFactor*(T::ParamValue)(val) + mBaseValue;
       }
       break;
     }
@@ -2045,7 +2066,8 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- WKT                    = " << getWKT() << "\n";
 
 
-    mGeometryDef->print(stream,level,optionFlags);
+    if (mGeometryDef)
+      mGeometryDef->print(stream,level,optionFlags);
 
     if (optionFlags &  GRID::PrintFlag::data)
     {

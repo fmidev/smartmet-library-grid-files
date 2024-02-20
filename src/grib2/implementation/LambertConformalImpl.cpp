@@ -410,6 +410,9 @@ std::string LambertConformalImpl::getGridGeometryString() const
     double sx = getLongitude(C_DOUBLE(*mLongitudeOfSouthernPole) / 1000000);
     double sy = C_DOUBLE(*mLatitudeOfSouthernPole) / 1000000;
 
+    if (!mLatitudeOfSouthernPole)
+      sy = -90.0;
+
     unsigned char scanningMode = mScanningMode.getScanningMode();
 
     char sm[100];
@@ -577,6 +580,8 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
     if (!mNx || !mNy)
       return false;
 
+    init();
+
     double xDiff = (round(x*100) - round(mStartX*100)) / 100;
     double yDiff = (round(y*100) - round(mStartY*100)) / 100;
 
@@ -587,7 +592,10 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
     grid_j = j;
 
     if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(*mNx) ||  j > C_DOUBLE(*mNy))
+    {
+      //printf("out of grid %f,%f   %f %f   %f %f\n",x,y,i,j,C_DOUBLE(*mNx),C_DOUBLE(*mNy));
       return false;
+    }
 
     return true;
   }
@@ -598,6 +606,22 @@ bool LambertConformalImpl::getGridPointByOriginalCoordinates(double x,double y,d
 }
 
 
+
+
+bool LambertConformalImpl::getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const
+{
+  try
+  {
+    // TODO: We should probably do our own implementation instead of using the parent implementation,
+    // which might be slow or does not even work if the spatial reference is not correctly initialized.
+
+    return GridDefinition::getGridPointByLatLonCoordinates(lat,lon,grid_i,grid_j);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 

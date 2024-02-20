@@ -26,6 +26,7 @@ class LambertConformalImpl : public LambertConformal
     std::string         getGridGeometryString() const;
     bool                getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
     bool                getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const;
+    bool                getGridPointByLatLonCoordinates(double lat,double lon,double& grid_i,double& grid_j) const;
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
 

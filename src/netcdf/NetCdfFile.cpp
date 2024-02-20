@@ -1617,6 +1617,80 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               }
             }
             else
+            if (strcasecmp(mappingName.c_str(),"lambert_conformal_conic") == 0)
+            {
+              // ***** PROJECTION: Lambert Conformal *************************************
+
+              projectionId = T::GridProjectionValue::LambertConformal;
+
+              dx = (mXCoordinates[1] - mXCoordinates[0])*1000;
+              dy = (mYCoordinates[1] - mYCoordinates[0])*1000;
+
+              double standard_parallel = 0.0;
+              sprintf(tmp,"%s.standard_parallel",gridMapping.c_str());
+              getProperty(tmp,0,standard_parallel);
+
+              double longitude_of_central_meridian = 0.0;
+              sprintf(tmp,"%s.longitude_of_central_meridian",gridMapping.c_str());
+              getProperty(tmp,0,longitude_of_central_meridian);
+
+
+              double longitude_of_projection_origin = 0.0;
+              sprintf(tmp,"%s.longitude_of_projection_origin",gridMapping.c_str());
+              getProperty(tmp,0,longitude_of_projection_origin);
+
+              double latitude_of_projection_origin = 0.0;
+              sprintf(tmp,"%s.latitude_of_projection_origin",gridMapping.c_str());
+              getProperty(tmp,0,latitude_of_projection_origin);
+
+              double false_easting = 0.0;
+              sprintf(tmp,"%s.false_easting",gridMapping.c_str());
+              getProperty(tmp,0,false_easting);
+
+              double false_northing = 0.0;
+              sprintf(tmp,"%s.false_northing",gridMapping.c_str());
+              getProperty(tmp,0,false_northing);
+
+              double earth_radius = 6371229.0;
+              sprintf(tmp,"%s.earth_radius",gridMapping.c_str());
+              getProperty(tmp,0,earth_radius);
+
+              OGRSpatialReference sp;
+              sp.SetLCC(standard_parallel,longitude_of_central_meridian,latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);
+              sp.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+              sp.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+              OGRCoordinateTransformation *transformation = OGRCreateCoordinateTransformation(&sp,&latlonSp);
+              transformation->Transform(1,&startx,&starty);
+              OCTDestroyCoordinateTransformation(transformation);
+
+              double sx = 0.0;
+              double sy = -90.0;
+
+              //# LAMBERT CONFORMAL : projection,id,name,ni,nj,first_lon,first_lat,di,dj,scanning_mode,orientation,latin1,latin2,south_pole_lon,south_pole_lat,LaD,earthSemiMajor,earthSemiMinor,description
+              sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+                T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
+                sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
+
+              //auto def = Identification::gridDef.getGrib2DefinitionByGeometryId(1093);
+              auto def = Identification::gridDef.getGrib2DefinitionByGeometryString(projectionString);
+              if (def)
+              {
+                geometryId = def->getGridGeometryId();
+              }
+              else
+              {
+                char tmp[1000];
+                sprintf(tmp,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+                  T::GridProjectionValue::LambertConformal,(int)mXCoordinates.size(),(int)mYCoordinates.size(),startx,starty,fabs(dx),fabs(dy),
+                  sm,longitude_of_central_meridian,latitude_of_projection_origin,latitude_of_projection_origin,sx,sy,latitude_of_projection_origin);
+                std::cout << "#### Geometry not found ####\n";
+                std::cout << "** Add the following line into the geometry definition file (=> fill id,name and description fields) :\n\n";
+                std::cout << tmp << "\n";
+              }
+
+            }
+            else
             if (strcasecmp(mappingName.c_str(),"latitude_longitude") == 0 ||
                 (mappingName.empty() &&  strcasecmp(xStandardName.c_str(),"longitude") == 0   &&  strcasecmp(yStandardName.c_str(),"latitude") == 0))
             {

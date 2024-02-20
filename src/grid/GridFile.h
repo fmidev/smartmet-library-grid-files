@@ -27,6 +27,7 @@ namespace GRID
 
 
 typedef std::map<uint,Message*> Message_ptr_map;
+typedef std::map<unsigned long long,long long> RequestCounters;
 
 
 class GridFile
@@ -75,6 +76,7 @@ class GridFile
     virtual bool          isPhysical() const;
     virtual bool          isVirtual() const;
     virtual bool          isMemoryMapped() const;
+    virtual bool          isNetworkFile() const;
 
     virtual void          mapToMemory();
 
@@ -84,6 +86,9 @@ class GridFile
     virtual void          print(std::ostream& stream,uint level,uint optionFlags) const;
 
     virtual void          read(const std::string& filename);
+
+    virtual long long     getRequestCounters(RequestCounters& requestCounters);
+    virtual void          resetRequestCounters();
 
     virtual void          setAccessTime(time_t checkTime);
     virtual void          setCheckTime(time_t checkTime);
@@ -115,7 +120,6 @@ class GridFile
     MessageInfo_map       mMessagePositions;
     Message_ptr_map       mMessages;
     uint                  mProducerId;
-    bool                  mRequestCounterEnabled;
     MapInfo               mMemoryMapInfo;
     uint                  mSourceId;
     std::set<uint>        mUserList;

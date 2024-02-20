@@ -52,6 +52,7 @@ Message::Message()
     mDataLocked = false;
     mFileType = T::FileTypeValue::Grib2;
     mForecastTimeT = 0;
+    mFileMemoryPtr = nullptr;
   }
   catch (...)
   {
@@ -71,6 +72,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mGridFilePtr = gridFile;
     mMessageIndex = messageIndex;
     mFilePosition = messageInfo.mFilePosition;
+    mFileMemoryPtr = messageInfo.mFileMemoryPtr;
     mMessageSize = messageInfo.mMessageSize;
     mFmiParameterId = messageInfo.mFmiParameterId;
     mFmiParameterName = messageInfo.mFmiParameterName;
@@ -106,6 +108,7 @@ Message::Message(const Message& other)
     mGridFilePtr = nullptr;
     mFilePosition = other.mFilePosition;
     mMessageSize = other.mMessageSize;
+    mFileMemoryPtr = nullptr;
     mIsRead = true;
     //mForecastTime = other.mForecastTime;
     mForecastTimeT = other.mForecastTimeT;
@@ -250,10 +253,6 @@ void Message::premap() const
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
-
-
-
 
 
 
@@ -1130,6 +1129,33 @@ void Message::setGridValues(T::ParamValue_vec& values)
 
 
 
+char* Message::getMemoryPtr() const
+{
+  try
+  {
+    if (mGridFilePtr == nullptr)
+    {
+      Fmi::Exception exception(BCP,"No pointer to the grid file!");
+      throw exception;
+    }
+
+    if (mFileMemoryPtr)
+      return mFileMemoryPtr + mFilePosition;
+    else
+      return mGridFilePtr->getMemoryPtr() + mFilePosition;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
+
+
 bool Message::isRead()
 {
   try
@@ -1165,6 +1191,12 @@ void Message::read()
     long s = mGridFilePtr->getSize();
     uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();
     uchar *e = d + s;
+
+    if (mFileMemoryPtr)
+    {
+      d = (uchar*)mFileMemoryPtr;
+      e = d + mFilePosition + mMessageSize;
+    }
 
     MemoryReader memoryReader(d,e);
     memoryReader.setReadPosition(mFilePosition);
@@ -3465,7 +3497,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     {
       if (mRepresentationSection->getDataRepresentationTemplateNumber() == RepresentationSection::Template::GridDataRepresentation)
       {
-        mRequestCounter++;
+        //mRequestCounter++;
         if (!mPremapped  &&  memoryMapper.isPremapEnabled())
           premap();
 

@@ -55,6 +55,7 @@ class Message : public GRID::Message
     bool                hasAttributeValue(const char *attributeName, const char *attributeValue) const;
     uint                getFileId() const;
     T::FileType         getMessageType() const;
+    char*               getMemoryPtr() const;
     uint                getProducerId() const;
     uint                getGenerationId() const;
     T::FilePosition     getFilePosition() const;

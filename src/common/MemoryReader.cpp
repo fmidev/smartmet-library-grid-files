@@ -273,7 +273,12 @@ void MemoryReader::setReadPosition(ulonglong _pos)
   try
   {
     if ((startPtr + _pos) > endPtr)
-      throw Fmi::Exception(BCP,"The value of the '_pos' parameter is out of the range!");
+    {
+      Fmi::Exception exception(BCP,"The value of the '_pos' parameter is out of the range!");
+      exception.addParameter("size",std::to_string(getDataSize()));
+      exception.addParameter("pos",std::to_string(_pos));
+      throw exception;
+    }
 
     readPtr = startPtr + _pos;
   }

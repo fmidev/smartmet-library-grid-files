@@ -40,6 +40,7 @@ Message::Message()
   {
     mFilePosition = 0;
     mMessageSize = 0;
+    mFileMemoryPtr = nullptr;
     mFmiParameterLevelId = 0;
     mGeometryId = 0;
     mCacheKey = 0;
@@ -68,6 +69,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mGridFilePtr = gridFile;
     mMessageIndex = messageIndex;
     mFilePosition = messageInfo.mFilePosition;
+    mFileMemoryPtr = messageInfo.mFileMemoryPtr;
     mMessageSize = messageInfo.mMessageSize;
     mFmiParameterId = messageInfo.mFmiParameterId;
     mFmiParameterName = messageInfo.mFmiParameterName;
@@ -382,6 +384,31 @@ T::FileType Message::getMessageType() const
 
 
 
+char* Message::getMemoryPtr() const
+{
+  try
+  {
+    if (mGridFilePtr == nullptr)
+    {
+      Fmi::Exception exception(BCP,"No pointer to the grib file!");
+      throw exception;
+    }
+
+    if (mFileMemoryPtr)
+      return mFileMemoryPtr + mFilePosition;
+    else
+      return mGridFilePtr->getMemoryPtr() + mFilePosition;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+    throw exception;
+  }
+}
+
+
+
 bool Message::isRead()
 {
   try
@@ -416,6 +443,12 @@ void Message::read()
     long long s = mGridFilePtr->getSize();
     uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();
     uchar *e = d + s;
+
+    if (mFileMemoryPtr)
+    {
+      d = (uchar*)mFileMemoryPtr;
+      e = d + mFilePosition + mMessageSize;
+    }
 
     MemoryReader memoryReader(d,e);
     memoryReader.setReadPosition(mFilePosition);
@@ -2528,7 +2561,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
     {
       if (mDataSection->getPackingMethod() == PackingMethod::SIMPLE_PACKING)
       {
-        mRequestCounter++;
+        //mRequestCounter++;
         if (!mPremapped  &&  memoryMapper.isPremapEnabled())
           premap();
 
