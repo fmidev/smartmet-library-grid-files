@@ -32,6 +32,7 @@ namespace GRID
 struct MessageInfo
 {
   ulonglong          mFilePosition;
+  char*              mFileMemoryPtr;
   uint               mMessageType;
   uint               mMessageSize;
   uint               mProducerId;
@@ -78,8 +79,10 @@ class Message
     virtual uint                getProducerId() const;
     virtual uint                getGenerationId() const;
     virtual uint                getMessageIndex() const;
+    virtual char*               getMemoryPtr() const;
     virtual uint                getMessageSize() const;
     virtual T::FilePosition     getFilePosition() const;
+    virtual char*               getFileMemoryPtr() const;
     virtual T::TimeString       getForecastTime() const;
     virtual time_t              getForecastTimeT() const;
     virtual short               getForecastType() const;
@@ -231,6 +234,10 @@ class Message
     virtual bool                reverseYDirection() const;
     virtual void                premap() const;
 
+    virtual void                incRequestCounter() {mRequestCounter++;}
+    virtual long long           getRequestCounter() {return mRequestCounter;}
+    virtual void                setRequestCounter(long long counter) {mRequestCounter = counter;}
+
     virtual void                modifyGridValueVector(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
 
     virtual void                setMessageIndex(uint index);
@@ -349,10 +356,11 @@ class Message
     uint                        mRowCount;
     uint                        mColumnCount;
     GridFile*                   mGridFilePtr;
+    char*                       mFileMemoryPtr;
     mutable ThreadLock          mThreadLock;
     short                       mDefaultInterpolationMethod;
     mutable bool                mPremapped;
-    mutable uint                mRequestCounter;
+    mutable long long           mRequestCounter;
 };
 
 

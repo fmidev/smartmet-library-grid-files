@@ -55,6 +55,7 @@ Message::Message()
     mMessageSize = 0;
     mGeometryId = 0;
     mGridFilePtr = nullptr;
+    mFileMemoryPtr = nullptr;
     mFmiParameterLevelId = 0;
     mFmiParameterId = 0;
     mNewbaseParameterId = 0;
@@ -92,6 +93,7 @@ Message::Message(const Message& message)
   try
   {
     mGridFilePtr = message.mGridFilePtr;
+    mFileMemoryPtr = message.mFileMemoryPtr;
     mMessageIndex = message.mMessageIndex;
     mMessageSize = message.mMessageSize;
     mGeometryId = message.mGeometryId;
@@ -178,6 +180,13 @@ uint Message::getFileId() const
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
 
+
+
+
+char* Message::getFileMemoryPtr() const
+{
+  return mFileMemoryPtr;
+}
 
 
 
@@ -2556,6 +2565,15 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
+
+
+
+
+char* Message::getMemoryPtr() const
+{
+  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
+}
+
 
 
 

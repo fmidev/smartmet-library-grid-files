@@ -194,6 +194,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
     }
 
     long long fsize = getSize();
+    /*
     if (C_INT64(messageInfo.mFilePosition + messageInfo.mMessageSize) > fsize)
     {
       mMessagePositionError = true;
@@ -205,15 +206,23 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
       exception.addParameter("File size",std::to_string(fsize));
       throw exception;
     }
+    */
 
     auto startAddr = mMemoryMapInfo.memoryPtr + messageInfo.mFilePosition;
     auto endAddr = startAddr + messageInfo.mMessageSize;
+
+    if (messageInfo.mFileMemoryPtr  &&  !mMemoryMapInfo.mappedFile)
+    {
+      startAddr = messageInfo.mFileMemoryPtr + messageInfo.mFilePosition;
+      endAddr = startAddr + messageInfo.mMessageSize;
+    }
 
 
     if (messageInfo.mMessageType == T::FileTypeValue::NetCdf3 || messageInfo.mMessageType == T::FileTypeValue::NetCdf4)
     {
       auto startAddr = mMemoryMapInfo.memoryPtr;
       auto endAddr = startAddr + fsize;
+
 
       MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
 
@@ -352,6 +361,27 @@ bool PhysicalGridFile::isVirtual() const
   }
 }
 
+
+
+
+
+bool PhysicalGridFile::isNetworkFile() const
+{
+  try
+  {
+    if (!memoryMapper.isEnabled())
+      return false;
+
+    if (mMemoryMapInfo.protocol == 0)
+      return false;
+
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -1001,6 +1031,7 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
         //std::cout << "READ " << mFileName << ":" << index << "\n";
         msg->second->read();
       }
+      msg->second->incRequestCounter();
       return msg->second;
     }
 
@@ -1012,7 +1043,7 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
         auto msg = mMessages.find(index);
         if (msg == mMessages.end())
         {
-          //std::cout << "CREATE " << mFileName << ":" << index << "\n";
+          //std::cout << "CREATE " << getFileName() << ":" << index << "\n";
           createMessage(pos->first,pos->second);
         }
         else
@@ -1030,7 +1061,7 @@ GRID::Message* PhysicalGridFile::getMessageByIndex(std::size_t index)
         //std::cout << "READ2 " << mFileName << ":" << index << "\n";
         msg->second->read();
       }
-
+      msg->second->incRequestCounter();
       return msg->second;
     }
     else

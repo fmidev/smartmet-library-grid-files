@@ -39,6 +39,7 @@ class PhysicalGridFile : public GridFile
     virtual bool          isMemoryMapped() const;
     virtual bool          isPhysical() const;
     virtual bool          isVirtual() const;
+    virtual bool          isNetworkFile() const;
 
     virtual bool          hasMessagePositionError() const;
 
