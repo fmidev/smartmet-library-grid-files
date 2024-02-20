@@ -412,9 +412,9 @@ void MemoryMapper::map(MapInfo& info)
       }
       catch(...)
       {
-	Fmi::Exception exception(BCP, "Boost MappedFile call failed", nullptr);
-	exception.addParameter("Permissions", permission_string(buf.st_mode));
-	exception.addParameter("Filesize", std::to_string(buf.st_size));
+        Fmi::Exception exception(BCP, "Boost MappedFile call failed", nullptr);
+        exception.addParameter("Permissions", permission_string(buf.st_mode));
+        exception.addParameter("Filesize", std::to_string(buf.st_size));
         throw exception;
       }
        
@@ -725,6 +725,7 @@ void MemoryMapper::faultProcessingThread()
     if (!mEnabled)
       throw Fmi::Exception(BCP,"MemoryMapper is disabled!");
 
+    uint threadId = mThreadsRunning;
     mThreadsRunning++;
     struct uffdio_copy uffdio_copy;
 
@@ -819,10 +820,17 @@ void MemoryMapper::faultProcessingThread()
         else
         {
           sleepCount++;
-          if (sleepCount < 50  &&  mMessageReadCount.load() > 0)
+          if (sleepCount < 100  &&  mMessageReadCount.load() > 0)
+          {
             time_usleep(0,500000);
+          }
           else
-            time_usleep(0,3000000);
+          {
+            if (threadId < 5)
+              time_usleep(0,10000000);
+            else
+              time_usleep(0,50000000);
+          }
         }
       }
       catch (...)
