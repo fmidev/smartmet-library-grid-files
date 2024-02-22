@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.2.20
+Version: 24.2.22
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,6 +97,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Feb 22 2024 Mika Heiskanen <mheiskan@rhel8.dev.fmi.fi> - 24.2.22-1.fmi
+- Fixed RotatedLatLon scanning mode settings
 * Tue Feb 20 2024 Mika Heiskanen <mheiskan@rhel8.dev.fmi.fi> - 24.2.20-1.fmi
 - Enabled caching grids to disk
 * Tue Feb  6 2024 Mika Heiskanen <mheiskan@rhel8.dev.fmi.fi> - 24.2.6-1.fmi
