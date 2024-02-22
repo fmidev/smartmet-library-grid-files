@@ -2,6 +2,7 @@
 #include "Properties.h"
 #include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
+#include <boost/date_time/gregorian/gregorian.hpp>
 
 
 namespace SmartMet
@@ -1675,20 +1676,20 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
     if (ft < 0)
       forecastTime = -ft;
 
-    Fmi::TimeDuration dt;
+    boost::posix_time::time_duration dt;
 
     switch (*indicator)
     {
       case 0: // m Minute
-        dt = Fmi::TimeDuration(0,forecastTime,0);
+        dt = boost::posix_time::time_duration(0,forecastTime,0);
         break;
 
       case 1: //  h Hour
-        dt = Fmi::TimeDuration(forecastTime,0,0);
+        dt = boost::posix_time::time_duration(forecastTime,0,0);
         break;
 
       case 2: //  D Day
-        dt = Fmi::TimeDuration(24*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(24*forecastTime,0,0);
         break;
 
       case 3: //  M Month
@@ -1699,19 +1700,19 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
         throw Fmi::Exception(BCP, "Not implemented!");
 
       case 10: //  3h 3 hours
-        dt = Fmi::TimeDuration(3*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(3*forecastTime,0,0);
         break;
 
       case 11: //  6h 6 hours
-        dt = Fmi::TimeDuration(6*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(6*forecastTime,0,0);
         break;
 
       case 12: //  12h 12 hours
-        dt = Fmi::TimeDuration(12*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(12*forecastTime,0,0);
         break;
 
       case 13: //  s Second
-        dt = Fmi::TimeDuration(0,0,forecastTime);
+        dt = boost::posix_time::time_duration(0,0,forecastTime);
         break;
     }
 
@@ -1754,20 +1755,20 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
     if (ft < 0)
       forecastTime = -ft;
 
-    Fmi::TimeDuration dt;
+    boost::posix_time::time_duration dt;
 
     switch (*indicator)
     {
       case 0: // m Minute
-        dt = Fmi::TimeDuration(0,forecastTime,0);
+        dt = boost::posix_time::time_duration(0,forecastTime,0);
         break;
 
       case 1: //  h Hour
-        dt = Fmi::TimeDuration(forecastTime,0,0);
+        dt = boost::posix_time::time_duration(forecastTime,0,0);
         break;
 
       case 2: //  D Day
-        dt = Fmi::TimeDuration(24*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(24*forecastTime,0,0);
         break;
 
       case 3: //  M Month
@@ -1778,19 +1779,19 @@ T::TimeString ProductDefinition::countForecastStartTime(T::TimeString referenceT
         throw Fmi::Exception(BCP, "Not implemented!");
 
       case 10: //  3h 3 hours
-        dt = Fmi::TimeDuration(3*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(3*forecastTime,0,0);
         break;
 
       case 11: //  6h 6 hours
-        dt = Fmi::TimeDuration(6*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(6*forecastTime,0,0);
         break;
 
       case 12: //  12h 12 hours
-        dt = Fmi::TimeDuration(12*forecastTime,0,0);
+        dt = boost::posix_time::time_duration(12*forecastTime,0,0);
         break;
 
       case 13: //  s Second
-        dt = Fmi::TimeDuration(0,0,forecastTime);
+        dt = boost::posix_time::time_duration(0,0,forecastTime);
         break;
     }
 
@@ -1816,11 +1817,11 @@ T::TimeString ProductDefinition::countForecastEndTime(const StatisticalSettings&
   try
   {
     return toString(
-        T::TimeStamp(Fmi::Date(
+        T::TimeStamp(boost::gregorian::date(
         *stat.getYearOfEndOfOverallTimeInterval(),
         *stat.getMonthOfEndOfOverallTimeInterval(),
         *stat.getDayOfEndOfOverallTimeInterval()),
-        Fmi::TimeDuration(
+        boost::posix_time::time_duration(
             *stat.getHourOfEndOfOverallTimeInterval(),
             *stat.getMinuteOfEndOfOverallTimeInterval(),
             *stat.getSecondOfEndOfOverallTimeInterval())));

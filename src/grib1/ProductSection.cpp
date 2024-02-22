@@ -1422,44 +1422,44 @@ T::TimeString ProductSection::getForecastTime() const
   {
     T::TimeStamp refTime = toTimeStamp(getReferenceTime());
 
-    Fmi::TimeDuration dd;
+    boost::posix_time::time_duration dd;
 
     switch (mUnitOfTimeRange)
     {
       case 0: // m Minute
-        dd = Fmi::Minutes(1);
+        dd = boost::posix_time::minutes(1);
         break;
 
       case 1: // h Hour
-        dd = Fmi::Hours(1);
+        dd = boost::posix_time::hours(1);
         break;
 
       case 2: // D Day
-        dd = Fmi::Hours(24);
+        dd = boost::posix_time::hours(24);
         break;
 
       case 10: // 3h 3 hours
-        dd = Fmi::Hours(3);
+        dd = boost::posix_time::hours(3);
         break;
 
       case 11: // 6h 6 hours
-        dd = Fmi::Hours(6);
+        dd = boost::posix_time::hours(6);
         break;
 
       case 12: // 12h 12 hours
-        dd = Fmi::Hours(12);
+        dd = boost::posix_time::hours(12);
         break;
 
       case 13: // 15m 15 minutes
-        dd = Fmi::Minutes(15);
+        dd = boost::posix_time::minutes(15);
         break;
 
       case 14: // 30m 30 minutes
-        dd = Fmi::Minutes(30);
+        dd = boost::posix_time::minutes(30);
         break;
 
       case 254: // s Second
-        dd = Fmi::Seconds(1);
+        dd = boost::posix_time::seconds(1);
         break;
 
       case 3: // M Month
