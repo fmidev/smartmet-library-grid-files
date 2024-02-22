@@ -4155,8 +4155,10 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           char *scanningMode = field[9];
           int longitudeOfSouthernPole = C_INT(round(toDouble(field[10])*1000000));
           int latitudeOfSouthernPole = C_INT(round(toDouble(field[11])*1000000));
-          int lastLongitude = 0;
-          int lastLatitude = 0;
+          int lastLongitude = longitude + ni*iInc - iInc;
+          int lastLatitude = latitude + nj*jInc - jInc;
+          //int lastLongitude = 0;
+          //int lastLatitude = 0;
           int angle = round(toDouble(field[12]));
           double earthSemiMajor = toDouble(field[13]);
           double earthSemiMinor = toDouble(field[14]);
@@ -4170,29 +4172,21 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           if (strcasecmp(scanningMode,"+x+y") == 0)
           {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude + nj*jInc - jInc;
             scanningMode2.setScanningMode(0x40);
           }
           else
           if (strcasecmp(scanningMode,"-x+y") == 0)
           {
-            lastLongitude = longitude - (ni*iInc - iInc);
-            lastLatitude = latitude + nj*jInc - jInc;
             scanningMode2.setScanningMode(0x80+0x40);
           }
           else
           if (strcasecmp(scanningMode,"+x-y") == 0)
           {
-            lastLongitude = longitude + ni*iInc - iInc;
-            lastLatitude = latitude - (nj*jInc - jInc);
             scanningMode2.setScanningMode(0);
           }
           else
           if (strcasecmp(scanningMode,"-x-y") == 0)
           {
-            lastLongitude = longitude - (ni*iInc - iInc);
-            lastLatitude = latitude - (nj*jInc - jInc);
             scanningMode2.setScanningMode(0x80);
           }
 
