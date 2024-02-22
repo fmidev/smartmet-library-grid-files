@@ -8,6 +8,7 @@
 #include "ShowFunction.h"
 
 #include <macgyver/Exception.h>
+#include <iostream>
 #include <linux/userfaultfd.h>
 #include <sys/mman.h>
 #include <sys/syscall.h>

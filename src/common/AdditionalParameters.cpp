@@ -2,6 +2,7 @@
 #include "GeneralFunctions.h"
 #include "ShowFunction.h"
 
+#include <boost/cast.hpp>
 #include <macgyver/StringConversion.h>
 #include <macgyver/TimeParser.h>
 #include <macgyver/Astronomy.h>

@@ -1,4 +1,5 @@
 #include "StretchedRotatedSphericalHarmonicImpl.h"
+#include <iostream>
 #include <macgyver/Exception.h>
 
 namespace SmartMet

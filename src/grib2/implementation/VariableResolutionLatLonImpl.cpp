@@ -1,4 +1,5 @@
 #include "VariableResolutionLatLonImpl.h"
+#include <iostream>
 #include <macgyver/Exception.h>
 
 namespace SmartMet

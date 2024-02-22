@@ -1,4 +1,5 @@
 #include "IrregularLatLonImpl.h"
+#include <iostream>
 #include <macgyver/Exception.h>
 #include "../../common/Dimensions.h"
 

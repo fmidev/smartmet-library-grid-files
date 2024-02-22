@@ -1,4 +1,5 @@
 #include "StretchedRotatedGaussianImpl.h"
+#include <iostream>
 #include <macgyver/Exception.h>
 
 namespace SmartMet

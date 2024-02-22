@@ -24,6 +24,7 @@
 #include <geos/version.h>
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
+#include <boost/algorithm/string/replace.hpp>
 #include <boost/functional/hash.hpp>
 
 

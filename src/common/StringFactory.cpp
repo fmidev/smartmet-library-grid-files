@@ -1,6 +1,7 @@
 #include "StringFactory.h"
 #include "AutoWriteLock.h"
 #include "AutoReadLock.h"
+#include <cstring>
 #include <macgyver/Exception.h>
 
 namespace SmartMet

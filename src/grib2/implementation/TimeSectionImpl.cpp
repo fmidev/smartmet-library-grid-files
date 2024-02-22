@@ -1,4 +1,5 @@
 #include "TimeSectionImpl.h"
+#include <iostream>
 #include <macgyver/Exception.h>
 
 namespace SmartMet
