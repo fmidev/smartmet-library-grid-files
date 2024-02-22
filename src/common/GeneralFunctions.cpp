@@ -585,7 +585,7 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
     Fmi::LocalDateTime ldt(pt.date(), pt.time_of_day(), zone, Fmi::LocalDateTime::EXCEPTION_ON_ERROR);
     Fmi::DateTime t = ldt.utc_time();
 
-    time_t tt = (t - boost::posix_time::from_time_t(0)).total_seconds();
+    time_t tt = (t - Fmi::date_time::from_time_t(0)).total_seconds();
     return tt;
   }
   catch (...)
@@ -615,7 +615,7 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
     Fmi::DateTime ltp = ldt.local_time();
 
 
-    std::tm timetm = boost::gregorian::to_tm(ltp.date());
+    std::tm timetm = Fmi::date_time::to_tm(ltp.date());
     Fmi::TimeDuration td = ltp.time_of_day();
 
     tt->tm_year = timetm.tm_year;
@@ -884,7 +884,7 @@ time_t toTimeT(Fmi::DateTime tim)
 {
   try
   {
-    return boost::posix_time::to_time_t(tim);
+    return tim.as_time_t();
   }
   catch (...)
   {

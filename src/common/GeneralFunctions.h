@@ -7,7 +7,6 @@
 #include <set>
 #include <macgyver/LocalDateTime.h>
 #include <macgyver/DateTime.h>
-#include <boost/date_time/gregorian/gregorian.hpp>
 
 #include <macgyver/Exception.h>
 #include <arpa/inet.h>
