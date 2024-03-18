@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.2.23
+Version: 24.3.16
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -18,8 +18,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 23.9.6
-BuildRequires: smartmet-library-newbase-devel >= 24.2.23
+BuildRequires: smartmet-utils-devel >= 24.3.13
+BuildRequires: smartmet-library-newbase-devel >= 24.3.11
 BuildRequires: smartmet-library-spine-devel >= 24.2.8
 BuildRequires: smartmet-library-macgyver >= 24.1.17
 BuildRequires: smartmet-library-trax-devel >= 23.8.17
@@ -48,7 +48,7 @@ Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 24.2.23
+Requires: smartmet-library-newbase >= 24.3.11
 Requires: smartmet-library-macgyver >= 24.1.17
 Requires: smartmet-library-spine >= 24.2.8
 Requires: smartmet-library-trax >= 23.8.17
@@ -81,7 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 24.2.23
+Requires: smartmet-library-newbase-devel >= 24.3.11
 Requires: smartmet-library-spine-devel
 Requires: smartmet-library-macgyver >= 24.1.17
 Requires: smartmet-library-trax-devel
@@ -97,9 +97,10 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Sat Mar 16 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.3.16-1.fmi
+- Fixed cache statistics reset
 * Fri Feb 23 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> 24.2.23-1.fmi
 - Full repackaging
-
 * Thu Feb 22 2024 Mika Heiskanen <mheiskan@rhel8.dev.fmi.fi> - 24.2.22-1.fmi
 - Fixed RotatedLatLon scanning mode settings
 * Tue Feb 20 2024 Mika Heiskanen <mheiskan@rhel8.dev.fmi.fi> - 24.2.20-1.fmi
