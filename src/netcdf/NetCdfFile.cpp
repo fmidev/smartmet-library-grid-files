@@ -1475,6 +1475,15 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               */
             }
 
+            if (mXCoordinates.size() == 0 || mYCoordinates.size() == 0)
+            {
+              Fmi::Exception exception(BCP,"X- or Y-coordinates missing!");
+              exception.addParameter("Number of X-coordinates",std::to_string(mXCoordinates.size()));
+              exception.addParameter("Number of Y-coordinates",std::to_string(mYCoordinates.size()));
+              throw exception;
+            }
+
+
             // ##### Projection ####################################################
 
             std::string mappingName;
