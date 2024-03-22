@@ -846,6 +846,26 @@ std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
   }
 }
 
+Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
+{
+  // Used inteentionally boost::(local|posix_time) here to force update
+  // after macgyver changes (AP)
+  namespace lt = boost::local_time;
+  namespace pt = boost::posix_time;
+  try
+  {
+    lt::local_date_time ldt(localTime.date(), localTime.time_of_day(), tz,
+     lt::local_date_time::NOT_DATE_TIME_ON_ERROR);
+    // Prefer summertime in case of ambiguity or gap
+    if (ldt.is_not_a_date_time())
+      ldt = lt::local_date_time(localTime.date(), localTime.time_of_day(), tz, true);
+    return ldt.utc_time();
+  }
+  catch(const std::exception& e)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
 
 
 std::string localTimeToUtc(const std::string& localTime, Fmi::TimeZonePtr tz)

@@ -58,6 +58,7 @@ time_t      utcTimeToTimeT(int year,int month,int day,int hour,int minute,int se
 std::string localTimeFromTimeT(time_t t,const char *tzone);
 Fmi::DateTime toTimeStamp(T::TimeString timeStr);
 std::string localTimeToUtc(const std::string& localTime,Fmi::TimeZonePtr tz);
+Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz);
 void splitTimeString(const std::string& timeStr,int& year,int& month,int& day,int& hour,int& minute,int& second);
 void splitTimeString(const std::string& timeStr, short &year, uchar &month, uchar &day, uchar &hour, uchar &minute, uchar &second);
 

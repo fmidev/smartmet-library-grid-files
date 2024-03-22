@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.3.20
+Version: 24.3.22
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -97,6 +97,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Mar 22 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.3.22-1.fmi
+- Add method to common/GeneralFunctions
+
 * Wed Mar 20 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.3.20-1.fmi
 - Added safety checks against accessing empty arrays
 * Sat Mar 16 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.3.16-1.fmi
