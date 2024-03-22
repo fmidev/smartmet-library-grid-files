@@ -850,15 +850,14 @@ Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
 {
   // Used inteentionally boost::(local|posix_time) here to force update
   // after macgyver changes (AP)
-  namespace lt = boost::local_time;
-  namespace pt = boost::posix_time;
   try
   {
-    lt::local_date_time ldt(localTime.date(), localTime.time_of_day(), tz,
-     lt::local_date_time::NOT_DATE_TIME_ON_ERROR);
-    // Prefer summertime in case of ambiguity or gap
-    if (ldt.is_not_a_date_time())
-      ldt = lt::local_date_time(localTime.date(), localTime.time_of_day(), tz, true);
+    Fmi::LocalDateTime ldt(
+      localTime.date(),
+      localTime.time_of_day(),
+      tz,
+      Fmi::LocalDateTime::EXCEPTION_ON_ERROR,
+      Fmi::LocalDateTime::Choose::EARLIEST);
     return ldt.utc_time();
   }
   catch(const std::exception& e)
