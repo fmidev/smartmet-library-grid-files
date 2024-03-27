@@ -852,13 +852,8 @@ Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
   // after macgyver changes (AP)
   try
   {
-    Fmi::LocalDateTime ldt(
-      localTime.date(),
-      localTime.time_of_day(),
-      tz,
-      Fmi::LocalDateTime::EXCEPTION_ON_ERROR,
-      Fmi::LocalDateTime::Choose::EARLIEST);
-    return ldt.utc_time();
+    auto lTime = Fmi::TimeParser::make_time(localTime.date(), localTime.time_of_day(), tz);
+    return lTime.utc_time();
   }
   catch(const std::exception& e)
   {

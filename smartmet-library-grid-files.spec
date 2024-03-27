@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.3.22
+Version: 24.3.26
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -20,7 +20,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 24.3.13
 BuildRequires: smartmet-library-newbase-devel >= 24.3.11
-BuildRequires: smartmet-library-spine-devel >= 24.2.8
+BuildRequires: smartmet-library-spine-devel >= 24.3.15
 BuildRequires: smartmet-library-macgyver >= 24.1.17
 BuildRequires: smartmet-library-trax-devel >= 23.8.17
 BuildRequires: %{smartmet_boost}-devel
@@ -50,7 +50,7 @@ Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 24.3.11
 Requires: smartmet-library-macgyver >= 24.1.17
-Requires: smartmet-library-spine >= 24.2.8
+Requires: smartmet-library-spine >= 24.3.15
 Requires: smartmet-library-trax >= 23.8.17
 
 %description
@@ -97,9 +97,10 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Mar 26 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.3.26-1.fmi
+- Fixed localTimeToUtcTime to work for spring time DST changes
 * Fri Mar 22 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.3.22-1.fmi
 - Add method to common/GeneralFunctions
-
 * Wed Mar 20 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.3.20-1.fmi
 - Added safety checks against accessing empty arrays
 * Sat Mar 16 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.3.16-1.fmi
