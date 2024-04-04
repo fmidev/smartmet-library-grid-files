@@ -3,7 +3,6 @@
 #include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../identification/GridDef.h"
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <macgyver/StringConversion.h>
 
 
