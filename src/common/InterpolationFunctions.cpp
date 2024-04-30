@@ -364,7 +364,7 @@ double logarithmicInterpolation(double wantedPosition, double position1, double 
 
 
 
-T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,int level1,int level2,int newLevel,short levelInterpolationMethod)
+T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,double level1,double level2,double newLevel,short levelInterpolationMethod)
 {
   try
   {
@@ -374,9 +374,9 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,int l
     if (level2 == newLevel)
       return value2;
 
-    float diff1 = C_FLOAT(newLevel - level1);
-    float diff2 = C_FLOAT(level2 - newLevel);
-    float levelDiff = C_FLOAT(level2 - level1);
+    double diff1 = newLevel - level1;
+    double diff2 = level2 - newLevel;
+    double levelDiff = level2 - level1;
 
     switch (levelInterpolationMethod)
     {
@@ -441,7 +441,7 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,int l
 
 
 
-void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int level1,int level2,int newLevel,short levelInterpolationMethod,T::ParamValue_vec& values)
+void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,double level1,double level2,double newLevel,short levelInterpolationMethod,T::ParamValue_vec& values)
 {
   try
   {
@@ -457,9 +457,9 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,in
       return;
     }
 
-    float diff1 = C_FLOAT(newLevel - level1);
-    float diff2 = C_FLOAT(level2 - newLevel);
-    float levelDiff = C_FLOAT(level2 - level1);
+    double diff1 = newLevel - level1;
+    double diff2 = level2 - newLevel;
+    double levelDiff = level2 - level1;
 
     uint len1 = values1.size();
     uint len2 = values2.size();
@@ -557,7 +557,7 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,in
 
 
 
-void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int level1,int level2,int newLevel,short levelInterpolationMethod,T::GridValueList& valueList)
+void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,double level1,double level2,double newLevel,short levelInterpolationMethod,T::GridValueList& valueList)
 {
   try
   {
@@ -573,9 +573,9 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,int 
       return;
     }
 
-    float diff1 = C_FLOAT(newLevel - level1);
-    float diff2 = C_FLOAT(level2 - newLevel);
-    float levelDiff = C_FLOAT(level2 - level1);
+    double diff1 = newLevel - level1;
+    double diff2 = level2 - newLevel;
+    double levelDiff = level2 - level1;
 
     uint len1 = values1.getLength();
     uint len2 = values2.getLength();

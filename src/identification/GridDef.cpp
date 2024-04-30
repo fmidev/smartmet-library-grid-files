@@ -1316,18 +1316,21 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
           }
         }
 
-        if (c > 2)
+        if (c > 3)
         {
           LevelDef rec;
 
           if (field[0][0] != '\0')
-            rec. mLevelId = toUInt32(field[0]);
+            rec.mLevelId = toUInt32(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
 
           if (field[2][0] != '\0')
-            rec.mDescription = field[2];
+            rec.mType = toUInt32(field[2]);
+
+          if (field[3][0] != '\0')
+            rec.mDescription = field[3];
 
           mFmi_levelDef_records.emplace_back(rec);
         }

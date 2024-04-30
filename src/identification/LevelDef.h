@@ -11,14 +11,15 @@ namespace Identification
 class LevelDef
 {
   public:
-                    LevelDef();
-    virtual         ~LevelDef();
+                      LevelDef();
+    virtual           ~LevelDef();
 
-    void            print(std::ostream& stream,uint level,uint optionFlags) const;
+    void              print(std::ostream& stream,uint level,uint optionFlags) const;
 
-    uint            mLevelId;
-    std::string     mName;
-    std::string     mDescription;
+    uint              mLevelId;
+    std::string       mName;
+    uchar             mType;
+    std::string       mDescription;
 };
 
 

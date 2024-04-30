@@ -14,6 +14,7 @@ LevelDef::LevelDef()
   try
   {
     mLevelId = 0;
+    mType = 0;
   }
   catch (...)
   {
@@ -47,6 +48,7 @@ void LevelDef::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "LevelDef\n";
     stream << space(level) << "- mLevelId     = " << mLevelId << "\n";
     stream << space(level) << "- mName        = " << mName << "\n";
+    stream << space(level) << "- mType        = " << (int)mType << "\n";
     stream << space(level) << "- mDescription = " << mDescription << "\n";
   }
   catch (...)
