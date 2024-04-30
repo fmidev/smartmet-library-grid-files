@@ -24,6 +24,7 @@
 #include <geos/version.h>
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
+#include <macgyver/Cache.h>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/functional/hash.hpp>
 
@@ -33,19 +34,11 @@
 namespace SmartMet
 {
 
-
-std::vector<std::pair<long long,T::ByteData>> wkbCache;
-ThreadLock wkbCacheThreadLock;
-
-
-#define GRID_POINT_CACHE_SIZE 300
-
-std::vector<T::Point> gridPointsCache[GRID_POINT_CACHE_SIZE];
-std::size_t gridPointCacheHash[GRID_POINT_CACHE_SIZE] = {0};
-uint hashCounter = 0;
-ThreadLock pointCacheThreadLock;
-
 typedef boost::shared_ptr<geos::geom::Geometry> GeometryPtr;
+
+Fmi::Cache::Cache<std::size_t,std::vector<T::Point>> gridPointsCache(300);
+
+
 
 
 
@@ -287,17 +280,11 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
       boost::hash_combine(hash,polygonPoints[t].y());
     }
 
-    for (uint t=0; t<GRID_POINT_CACHE_SIZE; t++)
+    auto it = gridPointsCache.find(hash);
+    if (it)
     {
-      if (gridPointCacheHash[t] == hash)
-      {
-        AutoThreadLock lock(&pointCacheThreadLock);
-        if (gridPointCacheHash[t] == hash)
-        {
-          gridPoints = gridPointsCache[t];
-          return;
-        }
-      }
+      gridPoints = *it;
+      return;
     }
 
     std::set<unsigned long long> cList;
@@ -411,11 +398,7 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
       gridPoints.emplace_back(x,y);
     }
 
-    AutoThreadLock lock(&pointCacheThreadLock);
-    uint idx = hashCounter % GRID_POINT_CACHE_SIZE;
-    gridPointsCache[idx] = gridPoints;
-    gridPointCacheHash[idx] = hash;
-    hashCounter++;;
+    gridPointsCache.insert(hash,gridPoints);
   }
   catch (...)
   {
@@ -448,17 +431,11 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
       }
     }
 
-    for (uint t=0; t<GRID_POINT_CACHE_SIZE; t++)
+    auto it = gridPointsCache.find(hash);
+    if (it)
     {
-      if (gridPointCacheHash[t] == hash)
-      {
-        AutoThreadLock lock(&pointCacheThreadLock);
-        if (gridPointCacheHash[t] == hash)
-        {
-          gridPoints = gridPointsCache[t];
-          return;
-        }
-      }
+      gridPoints = *it;
+      return;
     }
 
     std::set<unsigned long long> cList;
@@ -602,11 +579,7 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
       gridPoints.emplace_back(x,y);
     }
 
-    AutoThreadLock lock(&pointCacheThreadLock);
-    uint idx = hashCounter % GRID_POINT_CACHE_SIZE;
-    gridPointsCache[idx] = gridPoints;
-    gridPointCacheHash[idx] = hash;
-    hashCounter++;;
+    gridPointsCache.insert(hash,gridPoints);
   }
   catch (...)
   {

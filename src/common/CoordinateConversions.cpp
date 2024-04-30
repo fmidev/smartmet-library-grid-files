@@ -7,6 +7,7 @@
 #include "AutoReadLock.h"
 
 #include <macgyver/Exception.h>
+#include <macgyver/Cache.h>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -19,40 +20,22 @@
 #include <newbase/NFmiLocation.h>
 #include <unordered_map>
 
+Fmi::Cache::Cache<std::size_t,SmartMet::CoordinateConverter> coordinateConverterCache(1000000);
 
-
-
-std::unordered_map<std::size_t,SmartMet::CoordinateConverter> *coordinateConverterCache = nullptr;
-SmartMet::ModificationLock coordinateConverterCache_modificationLock;
 
 
 bool convert(const OGRSpatialReference *sr_from,const OGRSpatialReference *sr_to,int nCount,double *x,double *y)
 {
   try
   {
-    if (coordinateConverterCache == nullptr)
-    {
-      SmartMet::AutoWriteLock writeLock(&coordinateConverterCache_modificationLock);
-      if (coordinateConverterCache == nullptr)
-        coordinateConverterCache = new std::unordered_map<std::size_t,SmartMet::CoordinateConverter>;
-    }
-
     std::size_t hash = (std::size_t)sr_from;
     boost::hash_combine(hash, (std::size_t)sr_to);
-
-    {
-      SmartMet::AutoReadLock readLock(&coordinateConverterCache_modificationLock);
-      auto rec = coordinateConverterCache->find(hash);
-      if (rec != coordinateConverterCache->end())
-        return rec->second.convert(nCount,x,y);
-    }
-
-    SmartMet::AutoWriteLock writeLock(&coordinateConverterCache_modificationLock);
-    if (coordinateConverterCache->size() > 1000000)
-      coordinateConverterCache->clear();
+    auto rec = coordinateConverterCache.find(hash);
+    if (rec)
+      return rec->convert(nCount,x,y);
 
     SmartMet::CoordinateConverter tr(sr_from,sr_to);
-    coordinateConverterCache->insert(std::pair<std::size_t,SmartMet::CoordinateConverter>(hash,tr));
+    coordinateConverterCache.insert(hash,tr);
     return tr.convert(nCount,x,y);
   }
   catch (...)
