@@ -110,16 +110,16 @@ class ParamKeyTypeValue
 {
   public:
   enum : ParamKeyType
-    {
-     UNKNOWN      = 0,
-     FMI_ID       = 1,
-     FMI_NAME     = 2,
-     GRIB_ID      = 3,
-     NEWBASE_ID   = 4,
-     NEWBASE_NAME = 5,
-     NETCDF_NAME  = 6,
-     BUILD_IN     = 100
-    };
+  {
+    UNKNOWN      = 0,
+    FMI_ID       = 1,
+    FMI_NAME     = 2,
+    GRIB_ID      = 3,
+    NEWBASE_ID   = 4,
+    NEWBASE_NAME = 5,
+    NETCDF_NAME  = 6,
+    BUILD_IN     = 100
+  };
 };
 
 
@@ -130,38 +130,51 @@ class FileTypeValue
 {
   public:
   enum : FileType
-    {
-     Unknown   = 0,
-     Grib1     = 1,
-     Grib2     = 2,
-     NetCdf3   = 3,
-     NetCdf4   = 4,
-     QueryData = 5,
-     Grib      = 9,  // Contains Grib1 and Grib2 messages
-     Fmig1     = 10,
-     Virtual   = 200
-    };
+  {
+    Unknown   = 0,
+    Grib1     = 1,
+    Grib2     = 2,
+    NetCdf3   = 3,
+    NetCdf4   = 4,
+    QueryData = 5,
+    Grib      = 9,  // Contains Grib1 and Grib2 messages
+    Fmig1     = 10,
+    Virtual   = 200
+  };
 };
 
+
+
+class ParamLevelType
+{
+  public:
+  enum : unsigned char
+  {
+    Undefined      = 0,
+    Linear         = 1,
+    Logarithmic    = 2,
+    Number         = 3
+  };
+};
 
 
 class AreaInterpolationMethod
 {
   public:
   enum : short
-    {
-     Undefined      = -1,
-     None           = 0,     // Numbers 0 - 99 reserved for build-in interpolation types
-     Linear         = 1,
-     Nearest        = 2,
-     Min            = 3,
-     Max            = 4,
-     Landscape      = 9,
-     Forbidden      = 10,    // Requested point needs to match a grid point (or to be very close to it)
-     List           = 500,   // Returns grid corner values
-     ListWithAngles = 501,   // Returns grid corner values and angles
-     External       = 1000   // Numbers 1000 - 65535 reserved for external interpolation types
-    };
+  {
+    Undefined      = -1,
+    None           = 0,     // Numbers 0 - 99 reserved for build-in interpolation types
+    Linear         = 1,
+    Nearest        = 2,
+    Min            = 3,
+    Max            = 4,
+    Landscape      = 9,
+    Forbidden      = 10,    // Requested point needs to match a grid point (or to be very close to it)
+    List           = 500,   // Returns grid corner values
+    ListWithAngles = 501,   // Returns grid corner values and angles
+    External       = 1000   // Numbers 1000 - 65535 reserved for external interpolation types
+  };
 };
 
 
@@ -169,18 +182,18 @@ class TimeInterpolationMethod
 {
   public:
   enum : short
-    {
-     Undefined    = -1,
-     None         = 0,       // Numbers 0 - 999 reserved for build-in interpolation types
-     Linear       = 1,
-     Nearest      = 2,
-     Min          = 3,
-     Max          = 4,
-     Previous     = 6,
-     Next         = 7,
-     Forbidden    = 10,      // Requested time needs to match the grid time (or to be very close to it)
-     External     = 1000     // Numbers 1000 - 65535 reserved for external interpolation types
-    };
+  {
+    Undefined    = -1,
+    None         = 0,       // Numbers 0 - 999 reserved for build-in interpolation types
+    Linear       = 1,
+    Nearest      = 2,
+    Min          = 3,
+    Max          = 4,
+    Previous     = 6,
+    Next         = 7,
+    Forbidden    = 10,      // Requested time needs to match the grid time (or to be very close to it)
+    External     = 1000     // Numbers 1000 - 65535 reserved for external interpolation types
+  };
 };
 
 
@@ -188,19 +201,19 @@ class LevelInterpolationMethod
 {
   public:
   enum : short
-    {
-     Undefined    = -1,
-     None         = 0,       // Numbers 0 - 999 reserved for build-in interpolation types
-     Linear       = 1,
-     Nearest      = 2,
-     Min          = 3,
-     Max          = 4,
-     Logarithmic  = 5,
-     Previous     = 6,
-     Next         = 7,
-     Forbidden    = 10,      // Requested level needs to match the grid level (or to be very close to it)
-     External     = 1000     // Numbers 1000 - 65535 reserved for external interpolation types
-    };
+  {
+    Undefined    = -1,
+    None         = 0,       // Numbers 0 - 999 reserved for build-in interpolation types
+    Linear       = 1,
+    Nearest      = 2,
+    Min          = 3,
+    Max          = 4,
+    Logarithmic  = 5,
+    Previous     = 6,
+    Next         = 7,
+    Forbidden    = 10,      // Requested level needs to match the grid level (or to be very close to it)
+    External     = 1000     // Numbers 1000 - 65535 reserved for external interpolation types
+  };
 };
 
 
@@ -210,12 +223,12 @@ class CoordinateTypeValue
 {
   public:
   enum : CoordinateType
-    {
-     UNKNOWN               = 0,
-     LATLON_COORDINATES    = 1,
-     GRID_COORDINATES      = 2,
-     ORIGINAL_COORDINATES  = 3
-    };
+  {
+    UNKNOWN               = 0,
+    LATLON_COORDINATES    = 1,
+    GRID_COORDINATES      = 2,
+    ORIGINAL_COORDINATES  = 3
+  };
 };
 
 
@@ -226,42 +239,42 @@ class GridProjectionValue
 {
   public:
   enum : GridProjection
-    {
-     Unknown                             = 0,
-     LatLon                              = 1,
-     RotatedLatLon                       = 2,
-     StretchedLatLon                     = 3,
-     StretchedRotatedLatLon              = 4,
-     VariableResolutionLatLon            = 5,
-     VariableResolutionRotatedLatLon     = 6,
-     Mercator                            = 7,
-     TransverseMercator                  = 8,
-     PolarStereographic                  = 9,
-     LambertConformal                    = 10,
-     ObliqueLambertConformal             = 11,
-     Albers                              = 12,
-     Gaussian                            = 13,
-     RotatedGaussian                     = 14,
-     StretchedGaussian                   = 15,
-     StretchedRotatedGaussian            = 16,
-     SphericalHarmonic                   = 17,
-     RotatedSphericalHarmonic            = 18,
-     StretchedSphericalHarmonic          = 19,
-     StretchedRotatedSphericalHarmonic   = 20,
-     SpaceView                           = 21,
-     Triangular                          = 22,
-     Unstructured                        = 23,
-     EquatorialAzimuthalEquidistant      = 24,
-     AzimuthRange                        = 25,
-     IrregularLatLon                     = 26,
-     LambertAzimuthalEqualArea           = 27,
-     CrossSection                        = 28,
-     Hovmoller                           = 29,
-     TimeSection                         = 30,
-     GnomonicProjection                  = 31,
-     SimplePolyconicProjection           = 32,
-     MillersCylindricalProjection        = 33
-    };
+  {
+    Unknown                             = 0,
+    LatLon                              = 1,
+    RotatedLatLon                       = 2,
+    StretchedLatLon                     = 3,
+    StretchedRotatedLatLon              = 4,
+    VariableResolutionLatLon            = 5,
+    VariableResolutionRotatedLatLon     = 6,
+    Mercator                            = 7,
+    TransverseMercator                  = 8,
+    PolarStereographic                  = 9,
+    LambertConformal                    = 10,
+    ObliqueLambertConformal             = 11,
+    Albers                              = 12,
+    Gaussian                            = 13,
+    RotatedGaussian                     = 14,
+    StretchedGaussian                   = 15,
+    StretchedRotatedGaussian            = 16,
+    SphericalHarmonic                   = 17,
+    RotatedSphericalHarmonic            = 18,
+    StretchedSphericalHarmonic          = 19,
+    StretchedRotatedSphericalHarmonic   = 20,
+    SpaceView                           = 21,
+    Triangular                          = 22,
+    Unstructured                        = 23,
+    EquatorialAzimuthalEquidistant      = 24,
+    AzimuthRange                        = 25,
+    IrregularLatLon                     = 26,
+    LambertAzimuthalEqualArea           = 27,
+    CrossSection                        = 28,
+    Hovmoller                           = 29,
+    TimeSection                         = 30,
+    GnomonicProjection                  = 31,
+    SimplePolyconicProjection           = 32,
+    MillersCylindricalProjection        = 33
+  };
 };
 
 
@@ -269,26 +282,26 @@ class CompressionMethod
 {
   public:
   enum : ushort
-    {
-     Undefined                                               = 0,
-     None                                                    = 1,
+  {
+    Undefined                                               = 0,
+    None                                                    = 1,
 
-     GridPointData_SimplePacking                             = 10,
-     GridPointData_SimplePackingWithPreprocessing            = 11,
-     GridPointData_SimplePackingWithLogarithmicPreprocessing = 12,
-     GridPointData_ComplexPacking                            = 13,  // = SecondOrderPacking
-     GridPointData_ComplexPackingAndSpatialDifferencing      = 14,
-     GridPointData_IEEE_packing                              = 15,
-     GridPointData_JPEG_2000                                 = 16,
-     GridPointData_PNG                                       = 17,
-     GridPointMatrixValues_SimplePacking                     = 30,
+    GridPointData_SimplePacking                             = 10,
+    GridPointData_SimplePackingWithPreprocessing            = 11,
+    GridPointData_SimplePackingWithLogarithmicPreprocessing = 12,
+    GridPointData_ComplexPacking                            = 13,  // = SecondOrderPacking
+    GridPointData_ComplexPackingAndSpatialDifferencing      = 14,
+    GridPointData_IEEE_packing                              = 15,
+    GridPointData_JPEG_2000                                 = 16,
+    GridPointData_PNG                                       = 17,
+    GridPointMatrixValues_SimplePacking                     = 30,
 
-     SphericalHarmonics_SimplePacking                        = 40,
-     SphericalHarmonics_ComplexPacking                       = 41,
+    SphericalHarmonics_SimplePacking                        = 40,
+    SphericalHarmonics_ComplexPacking                       = 41,
 
-     SpectralData_SimplePacking                              = 50,
-     SpectralData_ComplexPacking                             = 51
-    };
+    SpectralData_SimplePacking                              = 50,
+    SpectralData_ComplexPacking                             = 51
+  };
 };
 
 
