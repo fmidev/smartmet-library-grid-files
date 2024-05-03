@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.3.26
+Version: 24.5.3
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -19,8 +19,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 24.3.13
-BuildRequires: smartmet-library-newbase-devel >= 24.3.11
-BuildRequires: smartmet-library-spine-devel >= 24.3.15
+BuildRequires: smartmet-library-newbase-devel >= 24.4.24
+BuildRequires: smartmet-library-spine-devel >= 24.4.23
 BuildRequires: smartmet-library-macgyver >= 24.1.17
 BuildRequires: smartmet-library-trax-devel >= 23.8.17
 BuildRequires: %{smartmet_boost}-devel
@@ -48,9 +48,9 @@ Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 24.3.11
+Requires: smartmet-library-newbase >= 24.4.24
 Requires: smartmet-library-macgyver >= 24.1.17
-Requires: smartmet-library-spine >= 24.3.15
+Requires: smartmet-library-spine >= 24.4.23
 Requires: smartmet-library-trax >= 23.8.17
 
 %description
@@ -81,7 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 24.3.11
+Requires: smartmet-library-newbase-devel >= 24.4.24
 Requires: smartmet-library-spine-devel
 Requires: smartmet-library-macgyver >= 24.1.17
 Requires: smartmet-library-trax-devel
@@ -97,6 +97,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri May  3 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.5.3-1.fmi
+- Improved caching
+- Added level type information that defines relationship of level values (linear, logarithmic, just a number)
 * Tue Mar 26 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.3.26-1.fmi
 - Fixed localTimeToUtcTime to work for spring time DST changes
 * Fri Mar 22 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.3.22-1.fmi
