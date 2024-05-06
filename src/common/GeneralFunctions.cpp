@@ -585,7 +585,7 @@ time_t mktime_tz(struct tm *tm, const char *tzone)
     Fmi::LocalDateTime ldt(pt.date(), pt.time_of_day(), zone, Fmi::LocalDateTime::EXCEPTION_ON_ERROR);
     Fmi::DateTime t = ldt.utc_time();
 
-    time_t tt = (t - boost::posix_time::from_time_t(0)).total_seconds();
+    time_t tt = (t - Fmi::date_time::from_time_t(0)).total_seconds();
     return tt;
   }
   catch (...)
@@ -615,7 +615,7 @@ struct tm *localtime_tz(time_t t, struct tm *tt, const char *tzone)
     Fmi::DateTime ltp = ldt.local_time();
 
 
-    std::tm timetm = boost::gregorian::to_tm(ltp.date());
+    std::tm timetm = Fmi::date_time::to_tm(ltp.date());
     Fmi::TimeDuration td = ltp.time_of_day();
 
     tt->tm_year = timetm.tm_year;
@@ -848,6 +848,8 @@ std::string localTimeToUtcTime(const std::string& localTime, const char *tzone)
 
 Fmi::DateTime localTimeToUtc(const Fmi::DateTime& localTime,Fmi::TimeZonePtr tz)
 {
+  // Used inteentionally boost::(local|posix_time) here to force update
+  // after macgyver changes (AP)
   try
   {
     auto lTime = Fmi::TimeParser::make_time(localTime.date(), localTime.time_of_day(), tz);
@@ -865,7 +867,8 @@ std::string localTimeToUtc(const std::string& localTime, Fmi::TimeZonePtr tz)
   try
   {
     auto ptime = Fmi::TimeParser::parse_iso(localTime);
-    auto lTime = Fmi::TimeParser::make_time(ptime.date(), ptime.time_of_day(), tz);
+    Fmi::LocalDateTime localTime(ptime, tz);
+    auto lTime = Fmi::TimeParser::make_time(localTime.date(), localTime.time_of_day(), tz);
     return Fmi::to_iso_string(lTime.utc_time());
   }
   catch (...)
@@ -895,7 +898,7 @@ time_t toTimeT(Fmi::DateTime tim)
 {
   try
   {
-    return boost::posix_time::to_time_t(tim);
+    return tim.as_time_t();
   }
   catch (...)
   {

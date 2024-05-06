@@ -5,7 +5,6 @@
 #include "../common/GeneralFunctions.h"
 
 #include <iostream>
-#include <boost/date_time/gregorian/gregorian.hpp>
 
 
 namespace SmartMet

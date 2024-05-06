@@ -3,7 +3,6 @@
 #include <macgyver/Exception.h>
 #include "../common/GeneralFunctions.h"
 #include "../identification/GridDef.h"
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <macgyver/StringConversion.h>
 
 
@@ -1422,44 +1421,44 @@ T::TimeString ProductSection::getForecastTime() const
   {
     T::TimeStamp refTime = toTimeStamp(getReferenceTime());
 
-    boost::posix_time::time_duration dd;
+    Fmi::TimeDuration dd;
 
     switch (mUnitOfTimeRange)
     {
       case 0: // m Minute
-        dd = boost::posix_time::minutes(1);
+        dd = Fmi::Minutes(1);
         break;
 
       case 1: // h Hour
-        dd = boost::posix_time::hours(1);
+        dd = Fmi::Hours(1);
         break;
 
       case 2: // D Day
-        dd = boost::posix_time::hours(24);
+        dd = Fmi::Hours(24);
         break;
 
       case 10: // 3h 3 hours
-        dd = boost::posix_time::hours(3);
+        dd = Fmi::Hours(3);
         break;
 
       case 11: // 6h 6 hours
-        dd = boost::posix_time::hours(6);
+        dd = Fmi::Hours(6);
         break;
 
       case 12: // 12h 12 hours
-        dd = boost::posix_time::hours(12);
+        dd = Fmi::Hours(12);
         break;
 
       case 13: // 15m 15 minutes
-        dd = boost::posix_time::minutes(15);
+        dd = Fmi::Minutes(15);
         break;
 
       case 14: // 30m 30 minutes
-        dd = boost::posix_time::minutes(30);
+        dd = Fmi::Minutes(30);
         break;
 
       case 254: // s Second
-        dd = boost::posix_time::seconds(1);
+        dd = Fmi::Seconds(1);
         break;
 
       case 3: // M Month

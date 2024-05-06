@@ -312,7 +312,9 @@ bool AdditionalParameters::getParameterValueByLocationAndTime(
 
     if (param == "tz")
     {
-      value = tz->std_zone_abbrev();
+      // FIXME: what should be returned here?
+      value = tz->name();
+      // WAS: value = std_zone_abbrev();
       return true;
     }
 
@@ -564,11 +566,8 @@ std::string AdditionalParameters::formatDate(
   FUNCTION_TRACE
   try
   {
-    typedef boost::date_time::time_facet<boost::local_time::local_date_time, char> tfacet;
-    std::ostringstream os;
-    os.imbue(std::locale(llocale, new tfacet(fmt)));
-    os << ldt;
-    return Fmi::latin1_to_utf8(os.str());
+    const std::string str = Fmi::date_time::format_time(llocale, fmt, ldt);
+    return Fmi::latin1_to_utf8(str);
   }
   catch (...)
   {

@@ -14,7 +14,6 @@ LIBS += $(REQUIRED_LIBS) \
 	-lsmartmet-spine \
 	-lsmartmet-macgyver \
 	-lsmartmet-trax \
-	-lboost_date_time \
 	-lboost_filesystem \
 	-lboost_iostreams \
 	-lboost_thread \
