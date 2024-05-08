@@ -702,29 +702,36 @@ void LatLonImpl::initSpatialReference()
 {
   try
   {
-    // ### Set geographic coordinate system.
-
-    const char *pszGeogName = "UNKNOWN";
-    const char *pszDatumName = "UNKNOWN";
-    const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor = getMajorAxis(mEarthShape);
-    double dfFlattening = getFlattening(mEarthShape);
-    double dfInvFlattening = 0;
-    if (dfFlattening != 0)
-      dfInvFlattening = 1/dfFlattening;
-
-    mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
-    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-
-    // ### Validate the spatial reference.
-
-    auto errorCode = mSpatialReference.Validate();
-    if (errorCode != OGRERR_NONE)
+    mSpatialReference = getSpatialReference();
+    if (!mSpatialReference)
     {
-      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
-      exception.addParameter("ErrorCode",std::to_string(errorCode));
-      throw exception;
+      mSpatialReference.reset(new T::SpatialRef());
+      addSpatialReference(mSpatialReference);
+
+      // ### Set geographic coordinate system.
+
+      const char *pszGeogName = "UNKNOWN";
+      const char *pszDatumName = "UNKNOWN";
+      const char *pszSpheroidName = "UNKNOWN";
+      double dfSemiMajor = getMajorAxis(mEarthShape);
+      double dfFlattening = getFlattening(mEarthShape);
+      double dfInvFlattening = 0;
+      if (dfFlattening != 0)
+        dfInvFlattening = 1/dfFlattening;
+
+      mSpatialReference->SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+      mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+
+      // ### Validate the spatial reference.
+
+      auto errorCode = mSpatialReference->Validate();
+      if (errorCode != OGRERR_NONE)
+      {
+        Fmi::Exception exception(BCP,"The spatial reference is not valid!");
+        exception.addParameter("ErrorCode",std::to_string(errorCode));
+        throw exception;
+      }
     }
 
 

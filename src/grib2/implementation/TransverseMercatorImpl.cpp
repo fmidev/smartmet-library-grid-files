@@ -163,61 +163,68 @@ void TransverseMercatorImpl::initSpatialReference()
 {
   try
   {
-    // ### Check that we have all necessary values needed by this method.
-
-    auto dfCenterLat = mLatitudeOfReferencePoint;
-    if (!dfCenterLat)
-      throw Fmi::Exception(BCP, "The 'latitudeOfReferencePoint' value is missing!");
-
-    auto dfCenterLong = mLongitudeOfReferencePoint;
-    if (!dfCenterLong)
-      throw Fmi::Exception(BCP, "The 'longitudeOfReferencePoint' value is missing!");
-
-    auto dfScale = mScaleFactorAtReferencePoint;
-
-    auto dfFalseEasting = mXR;
-    if (!dfFalseEasting)
-      throw Fmi::Exception(BCP, "The 'xR' value is missing!");
-
-    auto dfFalseNorthing = mYR;
-    if (!dfFalseNorthing)
-      throw Fmi::Exception(BCP, "The 'yR' value is missing!");
-
-    // ### Set geographic coordinate system.
-
-    const char *pszGeogName = "UNKNOWN";
-    const char *pszDatumName = "UNKNOWN";
-    const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor = getMajorAxis(mEarthShape);
-    double dfFlattening = getFlattening(mEarthShape);
-    double dfInvFlattening = 0;
-    if (dfFlattening != 0)
-      dfInvFlattening = 1/dfFlattening;
-
-    mSpatialReference.SetGeogCS(pszGeogName, pszDatumName, pszSpheroidName, dfSemiMajor,
-                                dfInvFlattening);
-
-    // ### Set the projection and the linear units for the projection.
-
-    double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
-    double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
-    double falseEasting = C_DOUBLE(*dfFalseEasting) / 1000;
-    double falseNorthing = C_DOUBLE(*dfFalseNorthing) / 1000;
-    double scale = C_DOUBLE(dfScale);
-
-    mSpatialReference.SetTM(centerLat, centerLon, scale, falseEasting,
-                            falseNorthing);
-    mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-    // ### Validate the spatial reference.
-
-    auto errorCode = mSpatialReference.Validate();
-    if (errorCode != OGRERR_NONE)
+    mSpatialReference = getSpatialReference();
+    if (!mSpatialReference)
     {
-      Fmi::Exception exception(BCP, "The spatial reference is not valid!");
-      exception.addParameter("ErrorCode", std::to_string(errorCode));
-      throw exception;
+      mSpatialReference.reset(new T::SpatialRef());
+      addSpatialReference(mSpatialReference);
+
+      // ### Check that we have all necessary values needed by this method.
+
+      auto dfCenterLat = mLatitudeOfReferencePoint;
+      if (!dfCenterLat)
+        throw Fmi::Exception(BCP, "The 'latitudeOfReferencePoint' value is missing!");
+
+      auto dfCenterLong = mLongitudeOfReferencePoint;
+      if (!dfCenterLong)
+        throw Fmi::Exception(BCP, "The 'longitudeOfReferencePoint' value is missing!");
+
+      auto dfScale = mScaleFactorAtReferencePoint;
+
+      auto dfFalseEasting = mXR;
+      if (!dfFalseEasting)
+        throw Fmi::Exception(BCP, "The 'xR' value is missing!");
+
+      auto dfFalseNorthing = mYR;
+      if (!dfFalseNorthing)
+        throw Fmi::Exception(BCP, "The 'yR' value is missing!");
+
+      // ### Set geographic coordinate system.
+
+      const char *pszGeogName = "UNKNOWN";
+      const char *pszDatumName = "UNKNOWN";
+      const char *pszSpheroidName = "UNKNOWN";
+      double dfSemiMajor = getMajorAxis(mEarthShape);
+      double dfFlattening = getFlattening(mEarthShape);
+      double dfInvFlattening = 0;
+      if (dfFlattening != 0)
+        dfInvFlattening = 1/dfFlattening;
+
+      mSpatialReference->SetGeogCS(pszGeogName, pszDatumName, pszSpheroidName, dfSemiMajor,
+                                  dfInvFlattening);
+
+      // ### Set the projection and the linear units for the projection.
+
+      double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
+      double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
+      double falseEasting = C_DOUBLE(*dfFalseEasting) / 1000;
+      double falseNorthing = C_DOUBLE(*dfFalseNorthing) / 1000;
+      double scale = C_DOUBLE(dfScale);
+
+      mSpatialReference->SetTM(centerLat, centerLon, scale, falseEasting,
+                              falseNorthing);
+      mSpatialReference->SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+      mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+      // ### Validate the spatial reference.
+
+      auto errorCode = mSpatialReference->Validate();
+      if (errorCode != OGRERR_NONE)
+      {
+        Fmi::Exception exception(BCP, "The spatial reference is not valid!");
+        exception.addParameter("ErrorCode", std::to_string(errorCode));
+        throw exception;
+      }
     }
   }
   catch (...)

@@ -20,23 +20,24 @@
 #include <newbase/NFmiLocation.h>
 #include <unordered_map>
 
-Fmi::Cache::Cache<std::size_t,SmartMet::CoordinateConverter> coordinateConverterCache(1000000);
+Fmi::Cache::Cache<std::size_t,std::shared_ptr<SmartMet::CoordinateConverter>> coordinateConverterCache(10000);
 
 
 
-bool convert(const OGRSpatialReference *sr_from,const OGRSpatialReference *sr_to,int nCount,double *x,double *y)
+bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::shared_ptr<OGRSpatialReference> sr_to,int nCount,double *x,double *y)
 {
   try
   {
-    std::size_t hash = (std::size_t)sr_from;
-    boost::hash_combine(hash, (std::size_t)sr_to);
+    std::size_t hash = (std::size_t)sr_from.get();
+    boost::hash_combine(hash, (std::size_t)sr_to.get());
     auto rec = coordinateConverterCache.find(hash);
     if (rec)
-      return rec->convert(nCount,x,y);
+      return (*rec)->convert(nCount,x,y);
 
-    SmartMet::CoordinateConverter tr(sr_from,sr_to);
+    std::shared_ptr<SmartMet::CoordinateConverter> tr(new SmartMet::CoordinateConverter(sr_from.get(),sr_to.get()));
     coordinateConverterCache.insert(hash,tr);
-    return tr.convert(nCount,x,y);
+
+    return tr->convert(nCount,x,y);
   }
   catch (...)
   {

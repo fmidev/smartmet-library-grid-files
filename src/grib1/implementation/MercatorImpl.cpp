@@ -198,7 +198,7 @@ T::Coordinate_svec MercatorImpl::getGridOriginalCoordinatesNoCache() const
     if ((scanningMode & 0x40) == 0)
       dj = -dj;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
+    convert(latlonSpatialReference,mSpatialReference,1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
 
     coordinateList->reserve(ni*nj);
 
@@ -305,7 +305,7 @@ bool MercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& g
     double fX = longitudeOfFirstGridPoint;
     double fY = latitudeOfFirstGridPoint;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&fX,&fY);
+    convert(latlonSpatialReference,mSpatialReference,1,&fX,&fY);
 
     double xDiff = aX - fX;
     double yDiff = aY - fY;
@@ -508,50 +508,57 @@ void MercatorImpl::initSpatialReference()
     // ************* IMPLEMENTATION NOT TESTED *****************
     // *********************************************************
 
-    auto dfCenterLat = mGridArea.getLatitudeOfFirstGridPoint();
-    auto dfCenterLong = mGridArea.getLongitudeOfFirstGridPoint();
-
-    // ### Set geographic coordinate system.
-
-    const char *pszGeogName = "UNKNOWN";
-    const char *pszDatumName = "UNKNOWN";
-    const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor =  6367470;
-    double dfInvFlattening = 0.0;
-
-    ResolutionFlagsSettings *rflags = mGridArea.getResolutionFlags();
-    if (rflags != nullptr)
+    mSpatialReference = getSpatialReference();
+    if (!mSpatialReference)
     {
-      dfSemiMajor = getMajorAxis(rflags->getResolutionAndComponentFlags());
-      double dfFlattening = getFlattening(rflags->getResolutionAndComponentFlags());
-      if (dfFlattening != 0)
-        dfInvFlattening = 1/dfFlattening;
-    }
+      mSpatialReference.reset(new T::SpatialRef());
+      addSpatialReference(mSpatialReference);
 
-    mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+      auto dfCenterLat = mGridArea.getLatitudeOfFirstGridPoint();
+      auto dfCenterLong = mGridArea.getLongitudeOfFirstGridPoint();
+
+      // ### Set geographic coordinate system.
+
+      const char *pszGeogName = "UNKNOWN";
+      const char *pszDatumName = "UNKNOWN";
+      const char *pszSpheroidName = "UNKNOWN";
+      double dfSemiMajor =  6367470;
+      double dfInvFlattening = 0.0;
+
+      ResolutionFlagsSettings *rflags = mGridArea.getResolutionFlags();
+      if (rflags != nullptr)
+      {
+        dfSemiMajor = getMajorAxis(rflags->getResolutionAndComponentFlags());
+        double dfFlattening = getFlattening(rflags->getResolutionAndComponentFlags());
+        if (dfFlattening != 0)
+          dfInvFlattening = 1/dfFlattening;
+      }
+
+      mSpatialReference->SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
 
 
-    // ### Set the projection and the linear units for the projection.
+      // ### Set the projection and the linear units for the projection.
 
-    double centerLat = C_DOUBLE(dfCenterLat) / 1000;
-    double centerLon = C_DOUBLE(dfCenterLong) / 1000;
-    double dfFalseEasting = 0.0;
-    double dfFalseNorthing = 0.0;
-    double latin = C_DOUBLE(mLatin)/1000;
+      double centerLat = C_DOUBLE(dfCenterLat) / 1000;
+      double centerLon = C_DOUBLE(dfCenterLong) / 1000;
+      double dfFalseEasting = 0.0;
+      double dfFalseNorthing = 0.0;
+      double latin = C_DOUBLE(mLatin)/1000;
 
-    //mSpatialReference.SetMercator(centerLat,centerLon,1.0,dfFalseEasting,dfFalseNorthing);
-    mSpatialReference.SetMercator2SP(latin,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
-    mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+      //mSpatialReference->SetMercator(centerLat,centerLon,1.0,dfFalseEasting,dfFalseNorthing);
+      mSpatialReference->SetMercator2SP(latin,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
+      mSpatialReference->SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+      mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
-    // ### Validate the spatial reference.
+      // ### Validate the spatial reference.
 
-    auto errorCode = mSpatialReference.Validate();
-    if (errorCode != OGRERR_NONE)
-    {
-      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
-      exception.addParameter("ErrorCode",std::to_string(errorCode));
-      throw exception;
+      auto errorCode = mSpatialReference->Validate();
+      if (errorCode != OGRERR_NONE)
+      {
+        Fmi::Exception exception(BCP,"The spatial reference is not valid!");
+        exception.addParameter("ErrorCode",std::to_string(errorCode));
+        throw exception;
+      }
     }
   }
   catch (...)
@@ -590,7 +597,7 @@ void MercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
 
             double lon = coord.x();
             double lat = coord.y();
-            if (convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat))
+            if (convert(mSpatialReference,latlonSpatialReference,1,&lon,&lat))
             {
               sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
               stream << space(level+2) << str << "\n";

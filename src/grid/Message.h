@@ -31,7 +31,8 @@ namespace GRID
 
 struct MessageInfo
 {
-  ulonglong          mFilePosition;
+  T::FilePosition    mFilePosition;
+  T::FilePosition    mOriginalFilePosition;
   char*              mFileMemoryPtr;
   uint               mMessageType;
   uint               mMessageSize;
@@ -224,7 +225,7 @@ class Message
     virtual void                getParameterValuesByRectangle(uint grid_i_start,uint grid_j_start,uint grid_i_end,uint grid_j_end,uint modificationOperation,double_vec& modificationParameters,T::GridPointValueList& gridPointValues) const;
     virtual short               getDefaultInterpolationMethod() const;
     virtual T::TimeString       getReferenceTime() const;
-    virtual T::SpatialRef*      getSpatialReference() const;
+    virtual T::SpatialRef_sptr  getSpatialReference() const;
     virtual std::string         getWKT() const;
     virtual std::string         getProj4() const;
     virtual void                initSpatialReference();

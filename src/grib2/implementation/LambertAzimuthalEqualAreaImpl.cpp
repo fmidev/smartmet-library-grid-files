@@ -140,7 +140,7 @@ void LambertAzimuthalEqualAreaImpl::init() const
     double startX = longitudeOfFirstGridPoint;
     double startY = latitudeOfFirstGridPoint;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
+    convert(latlonSpatialReference,mSpatialReference,1,&startX,&startY);
 
     mStartX = startX;
     mStartY = startY;
@@ -503,51 +503,58 @@ void LambertAzimuthalEqualAreaImpl::initSpatialReference()
 {
   try
   {
-    // ### Check that we have all necessary values needed by this method.
-
-    auto dfCenterLat = mStandardParallelInMicrodegrees;
-    if (!dfCenterLat)
-      throw Fmi::Exception(BCP,"The 'standardParallelInMicrodegrees' value is missing!");
-
-    auto dfCenterLong = mCentralLongitudeInMicrodegrees;
-    if (!dfCenterLong)
-      throw Fmi::Exception(BCP,"The 'centralLongitudeInMicrodegrees' value is missing!");
-
-
-    // ### Set geographic coordinate system.
-
-    const char *pszGeogName = "UNKNOWN";
-    const char *pszDatumName = "UNKNOWN";
-    const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor = getMajorAxis(mEarthShape);
-    double dfFlattening = getFlattening(mEarthShape);
-    double dfInvFlattening = 0;
-    if (dfFlattening != 0)
-      dfInvFlattening = 1/dfFlattening;
-
-    mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
-
-
-    // ### Set the projection and the linear units for the projection.
-
-    *dfCenterLat /= 1000000;
-    *dfCenterLong /= 1000000;
-    double dfFalseEasting = 0.0;
-    double dfFalseNorthing = 0.0;
-
-    mSpatialReference.SetLAEA(*dfCenterLat,*dfCenterLong,dfFalseEasting,dfFalseNorthing);
-    mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-
-    // ### Validate the spatial reference.
-
-    auto errorCode = mSpatialReference.Validate();
-    if (errorCode != OGRERR_NONE)
+    mSpatialReference = getSpatialReference();
+    if (!mSpatialReference)
     {
-      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
-      exception.addParameter("ErrorCode",std::to_string(errorCode));
-      throw exception;
+      mSpatialReference.reset(new T::SpatialRef());
+      addSpatialReference(mSpatialReference);
+
+      // ### Check that we have all necessary values needed by this method.
+
+      auto dfCenterLat = mStandardParallelInMicrodegrees;
+      if (!dfCenterLat)
+        throw Fmi::Exception(BCP,"The 'standardParallelInMicrodegrees' value is missing!");
+
+      auto dfCenterLong = mCentralLongitudeInMicrodegrees;
+      if (!dfCenterLong)
+        throw Fmi::Exception(BCP,"The 'centralLongitudeInMicrodegrees' value is missing!");
+
+
+      // ### Set geographic coordinate system.
+
+      const char *pszGeogName = "UNKNOWN";
+      const char *pszDatumName = "UNKNOWN";
+      const char *pszSpheroidName = "UNKNOWN";
+      double dfSemiMajor = getMajorAxis(mEarthShape);
+      double dfFlattening = getFlattening(mEarthShape);
+      double dfInvFlattening = 0;
+      if (dfFlattening != 0)
+        dfInvFlattening = 1/dfFlattening;
+
+      mSpatialReference->SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+
+
+      // ### Set the projection and the linear units for the projection.
+
+      *dfCenterLat /= 1000000;
+      *dfCenterLong /= 1000000;
+      double dfFalseEasting = 0.0;
+      double dfFalseNorthing = 0.0;
+
+      mSpatialReference->SetLAEA(*dfCenterLat,*dfCenterLong,dfFalseEasting,dfFalseNorthing);
+      mSpatialReference->SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+      mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+
+      // ### Validate the spatial reference.
+
+      auto errorCode = mSpatialReference->Validate();
+      if (errorCode != OGRERR_NONE)
+      {
+        Fmi::Exception exception(BCP,"The spatial reference is not valid!");
+        exception.addParameter("ErrorCode",std::to_string(errorCode));
+        throw exception;
+      }
     }
 
     init();

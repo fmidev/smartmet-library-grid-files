@@ -68,6 +68,7 @@ typedef Fmi::DateTime TimeStamp;
 typedef std::string TimeString;
 
 typedef OGRSpatialReference SpatialRef;
+typedef std::shared_ptr<OGRSpatialReference> SpatialRef_sptr;
 typedef unsigned char* Data_ptr;
 
 typedef std::vector<Data_ptr> Data_ptr_vec;

@@ -61,7 +61,7 @@ class GridDefinition
     virtual std::size_t         getGridColumnCount() const;
     virtual std::size_t         getGridRowCount() const;
     virtual uint                getTemplateNumber() const;
-    T::SpatialRef*              getSpatialReference();
+    T::SpatialRef_sptr          getSpatialReference();
     virtual std::string         getWKT();
     virtual std::string         getProj4();
     virtual void                initSpatialReference();
@@ -94,6 +94,8 @@ class GridDefinition
 
   protected:
 
+    virtual void                addSpatialReference(T::SpatialRef_sptr sp);
+
     virtual void                getProperties_EarthShape(T::PropertySettingVec& properties);
     virtual void                getProperties_Grid(T::PropertySettingVec& properties);
     virtual void                getProperties_Rotation(T::PropertySettingVec& properties);
@@ -118,8 +120,7 @@ class GridDefinition
 
 
     /*! \brief The spatial reference. */
-    T::SpatialRef               mSpatialReference;
-    OGRSpatialReference         mLatlonSpatialReference;
+    T::SpatialRef_sptr          mSpatialReference;
 
     double                      mEarth_semiMajor;
     double                      mEarth_semiMinor;
@@ -152,6 +153,8 @@ extern Fmi::Cache::CacheStats originalCoordinateCache_stats;
 extern Fmi::Cache::CacheStats transformCache1_stats;
 extern Fmi::Cache::CacheStats transformCache2_stats;
 extern Fmi::Cache::CacheStats transformCache3_stats;
+
+extern T::SpatialRef_sptr latlonSpatialReference;
 
 
 }  // namespace GRIB2

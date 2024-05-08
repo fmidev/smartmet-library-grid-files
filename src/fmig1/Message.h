@@ -83,7 +83,7 @@ class Message : public GRID::Message
     T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const;
     void                getGridValueVector(T::ParamValue_vec& values) const;
     T::TimeString       getReferenceTime() const;
-    T::SpatialRef*      getSpatialReference() const;
+    T::SpatialRef_sptr  getSpatialReference() const;
     std::string         getWKT() const;
     std::string         getProj4() const;
     bool                isGridGlobal() const;

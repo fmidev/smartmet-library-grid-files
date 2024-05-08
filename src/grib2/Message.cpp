@@ -42,6 +42,7 @@ Message::Message()
   try
   {
     mFilePosition = 0;
+    mOriginalFilePosition = 0;
     mGeometryId = 0;
     mFmiParameterLevelId = 0;
     mCacheKey = 0;
@@ -72,6 +73,7 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mGridFilePtr = gridFile;
     mMessageIndex = messageIndex;
     mFilePosition = messageInfo.mFilePosition;
+    mOriginalFilePosition = messageInfo.mOriginalFilePosition;
     mFileMemoryPtr = messageInfo.mFileMemoryPtr;
     mMessageSize = messageInfo.mMessageSize;
     mFmiParameterId = messageInfo.mFmiParameterId;
@@ -107,6 +109,7 @@ Message::Message(const Message& other)
   {
     mGridFilePtr = nullptr;
     mFilePosition = other.mFilePosition;
+    mOriginalFilePosition = other.mOriginalFilePosition;
     mMessageSize = other.mMessageSize;
     mFileMemoryPtr = nullptr;
     mIsRead = true;
@@ -1198,9 +1201,33 @@ void Message::read()
       e = d + mFilePosition + mMessageSize;
     }
 
-    MemoryReader memoryReader(d,e);
-    memoryReader.setReadPosition(mFilePosition);
-    read(memoryReader);
+    try
+    {
+      MemoryReader memoryReader(d,e);
+      memoryReader.setReadPosition(mFilePosition);
+      read(memoryReader);
+    }
+    catch (...)
+    {
+      if (mFileMemoryPtr)
+      {
+        Fmi::Exception exception(BCP,"Message read from the start-up cache failed!",nullptr);
+        exception.printError();
+
+        mFileMemoryPtr = nullptr;
+        mFilePosition = mOriginalFilePosition;
+        uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();
+        uchar *e = d + s;
+        MemoryReader memoryReader(d,e);
+        memoryReader.setReadPosition(mFilePosition);
+        read(memoryReader);
+      }
+      else
+      {
+        Fmi::Exception exception(BCP,"Message read failed!",nullptr);
+        throw exception;
+      }
+    }
   }
   catch (...)
   {
@@ -1351,10 +1378,10 @@ void Message::read(MemoryReader& memoryReader)
               RepresentationSection *section = new RepresentationSection();
               section->setMessagePtr(this);
               mRepresentationSection.reset(section);
-              auto p1 = memoryReader.getReadPosition();
+              //auto p1 = memoryReader.getReadPosition();
               section->read(memoryReader);
-              auto p2 = memoryReader.getReadPosition();
-              auto len = section->getSectionLength();
+              //auto p2 = memoryReader.getReadPosition();
+              //auto len = section->getSectionLength();
             }
             break;
 
@@ -3195,8 +3222,8 @@ std::string Message::getWKT() const
       return mGridSection->getWKT();
 
     std::string wkt;
-    T::SpatialRef *sr = getSpatialReference();
-    if (sr != nullptr)
+    auto sr = getSpatialReference();
+    if (sr)
     {
       char *out = nullptr;
       sr->exportToWkt(&out);
@@ -3226,8 +3253,8 @@ std::string Message::getProj4() const
       return mGridSection->getProj4();
 
     std::string proj4;
-    T::SpatialRef *sr = getSpatialReference();
-    if (sr != nullptr)
+    auto sr = getSpatialReference();
+    if (sr)
     {
       char *out = nullptr;
       sr->exportToProj4(&out);
@@ -3833,7 +3860,7 @@ void Message::initSpatialReference()
         \return   The pointer to the spatial reference.
 */
 
-T::SpatialRef* Message::getSpatialReference() const
+T::SpatialRef_sptr Message::getSpatialReference() const
 {
   FUNCTION_TRACE
   try
@@ -4071,6 +4098,7 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
   {
     stream << "\n" << space(level) << "########## MESSAGE [" << mMessageIndex << "] ##########\n\n";
     stream << space(level) << "- filePosition             = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
+    stream << space(level) << "- mOriginalFilePosition    = " << toString(mOriginalFilePosition) << " (" << uint64_toHex(mOriginalFilePosition) << ")\n";
     stream << space(level) << "- fileType                 = " << toString(mFileType) << "\n";
     stream << space(level) << "- referenceTime            = " << getReferenceTime() << "\n";
     stream << space(level) << "- forecastTime             = " << getForecastTime() << "\n";

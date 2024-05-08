@@ -159,37 +159,44 @@ void StretchedRotatedGaussianImpl::initSpatialReference()
 {
   try
   {
-    // ### Set geographic coordinate system.
-
-    const char *pszGeogName = "UNKNOWN";
-    const char *pszDatumName = "UNKNOWN";
-    const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor =  6367470;
-    double dfInvFlattening = 0.0;
-
-    ResolutionFlagsSettings *rflags = mGridArea.getResolutionFlags();
-    if (rflags != nullptr)
+    mSpatialReference = getSpatialReference();
+    if (!mSpatialReference)
     {
-      dfSemiMajor = getMajorAxis(rflags->getResolutionAndComponentFlags());
-      double dfFlattening = getFlattening(rflags->getResolutionAndComponentFlags());
-      if (dfFlattening != 0)
-        dfInvFlattening = 1/dfFlattening;
-    }
+      mSpatialReference.reset(new T::SpatialRef());
+      addSpatialReference(mSpatialReference);
 
-    mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+      // ### Set geographic coordinate system.
 
-    mSpatialReference.SetProjParm("latitude_of_origin",(C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000));
-    mSpatialReference.SetProjParm("central_meridian",(C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000));
-    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+      const char *pszGeogName = "UNKNOWN";
+      const char *pszDatumName = "UNKNOWN";
+      const char *pszSpheroidName = "UNKNOWN";
+      double dfSemiMajor =  6367470;
+      double dfInvFlattening = 0.0;
 
-    // ### Validate the spatial reference.
+      ResolutionFlagsSettings *rflags = mGridArea.getResolutionFlags();
+      if (rflags != nullptr)
+      {
+        dfSemiMajor = getMajorAxis(rflags->getResolutionAndComponentFlags());
+        double dfFlattening = getFlattening(rflags->getResolutionAndComponentFlags());
+        if (dfFlattening != 0)
+          dfInvFlattening = 1/dfFlattening;
+      }
 
-    auto errorCode = mSpatialReference.Validate();
-    if (errorCode != OGRERR_NONE)
-    {
-      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
-      exception.addParameter("ErrorCode",std::to_string(errorCode));
-      throw exception;
+      mSpatialReference->SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+
+      mSpatialReference->SetProjParm("latitude_of_origin",(C_DOUBLE(mRotation.getLatitudeOfSouthernPole())/1000));
+      mSpatialReference->SetProjParm("central_meridian",(C_DOUBLE(mRotation.getLongitudeOfSouthernPole())/1000));
+      mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+      // ### Validate the spatial reference.
+
+      auto errorCode = mSpatialReference->Validate();
+      if (errorCode != OGRERR_NONE)
+      {
+        Fmi::Exception exception(BCP,"The spatial reference is not valid!");
+        exception.addParameter("ErrorCode",std::to_string(errorCode));
+        throw exception;
+      }
     }
   }
   catch (...)

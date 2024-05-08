@@ -1626,12 +1626,13 @@ void Message::initSpatialReference()
         \return   The pointer to the spatial reference.
 */
 
-T::SpatialRef* Message::getSpatialReference() const
+T::SpatialRef_sptr Message::getSpatialReference() const
 {
   FUNCTION_TRACE
   try
   {
-    return nullptr;
+    T::SpatialRef_sptr ptr;
+    return ptr;
   }
   catch (...)
   {
@@ -1656,8 +1657,8 @@ std::string Message::getWKT() const
   try
   {
     std::string wkt;
-    T::SpatialRef *sr = getSpatialReference();
-    if (sr != nullptr)
+    auto sr = getSpatialReference();
+    if (sr)
     {
       char *out = nullptr;
       sr->exportToWkt(&out);
@@ -1694,8 +1695,8 @@ std::string Message::getProj4() const
     getGridLatLonCoordinatesByGridPoint(d.nx()-1,d.ny()-1,lat[3],lon[3]);
 
     std::string proj4;
-    T::SpatialRef *sr = getSpatialReference();
-    if (sr != nullptr)
+    auto sr = getSpatialReference();
+    if (sr)
     {
       char *out = nullptr;
       sr->exportToProj4(&out);

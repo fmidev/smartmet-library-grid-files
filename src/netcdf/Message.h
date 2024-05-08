@@ -97,7 +97,7 @@ class Message : public GRID::Message
     void                getGridMinAndMaxValues(T::ParamValue& minValue,T::ParamValue& maxValue) const;
 
     T::TimeString       getReferenceTime() const;
-    T::SpatialRef*      getSpatialReference() const;
+    T::SpatialRef_sptr  getSpatialReference() const;
     std::string         getWKT() const;
     std::string         getProj4() const;
     void                initSpatialReference();

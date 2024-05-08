@@ -135,7 +135,7 @@ T::Coordinate_svec ObliqueLambertConformalImpl::getGridOriginalCoordinatesNoCach
     if ((scanningMode & 0x40) == 0)
       dy = -dy;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
+    convert(latlonSpatialReference,mSpatialReference,1,&longitudeOfFirstGridPoint,&latitudeOfFirstGridPoint);
 
     coordinateList->reserve(nx*ny);
 
@@ -224,50 +224,57 @@ void ObliqueLambertConformalImpl::initSpatialReference()
 {
   try
   {
-    auto dfStdP1 = mLatin1;
-    auto dfStdP2 = mLatin2;
-    auto dfCenterLat = mLatin1;  // ????
-    auto dfCenterLong = mLoV;
-    //auto southPoleLon = mLongitudeOfSouthernPole;
-    //auto southPoleLat = mLatitudeOfSouthernPole;
-
-    // ### Set geographic coordinate system.
-
-    const char *pszGeogName = "UNKNOWN";
-    const char *pszDatumName = "UNKNOWN";
-    const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor = getMajorAxis(mResolutionFlags.getResolutionAndComponentFlags());
-    double dfFlattening = getFlattening(mResolutionFlags.getResolutionAndComponentFlags());
-    double dfInvFlattening = 0.0;
-    if (dfFlattening != 0)
-      dfInvFlattening = 1/dfFlattening;
-
-
-    mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
-
-
-    // ### Set the projection and the linear units for the projection.
-
-    double stdP1 = C_DOUBLE(dfStdP1) / 1000;
-    double stdP2 = C_DOUBLE(dfStdP2) / 1000;
-    double centerLat = C_DOUBLE(dfCenterLat) / 1000;
-    double centerLon = C_DOUBLE(dfCenterLong) / 1000;
-    double dfFalseEasting = 0.0;
-    double dfFalseNorthing = 0.0;
-
-    mSpatialReference.SetLCC(stdP1,stdP2,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
-    mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-
-    // ### Validate the spatial reference.
-
-    auto errorCode = mSpatialReference.Validate();
-    if (errorCode != OGRERR_NONE)
+    mSpatialReference = getSpatialReference();
+    if (!mSpatialReference)
     {
-      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
-      exception.addParameter("ErrorCode",std::to_string(errorCode));
-      throw exception;
+      mSpatialReference.reset(new T::SpatialRef());
+      addSpatialReference(mSpatialReference);
+
+      auto dfStdP1 = mLatin1;
+      auto dfStdP2 = mLatin2;
+      auto dfCenterLat = mLatin1;  // ????
+      auto dfCenterLong = mLoV;
+      //auto southPoleLon = mLongitudeOfSouthernPole;
+      //auto southPoleLat = mLatitudeOfSouthernPole;
+
+      // ### Set geographic coordinate system.
+
+      const char *pszGeogName = "UNKNOWN";
+      const char *pszDatumName = "UNKNOWN";
+      const char *pszSpheroidName = "UNKNOWN";
+      double dfSemiMajor = getMajorAxis(mResolutionFlags.getResolutionAndComponentFlags());
+      double dfFlattening = getFlattening(mResolutionFlags.getResolutionAndComponentFlags());
+      double dfInvFlattening = 0.0;
+      if (dfFlattening != 0)
+        dfInvFlattening = 1/dfFlattening;
+
+
+      mSpatialReference->SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+
+
+      // ### Set the projection and the linear units for the projection.
+
+      double stdP1 = C_DOUBLE(dfStdP1) / 1000;
+      double stdP2 = C_DOUBLE(dfStdP2) / 1000;
+      double centerLat = C_DOUBLE(dfCenterLat) / 1000;
+      double centerLon = C_DOUBLE(dfCenterLong) / 1000;
+      double dfFalseEasting = 0.0;
+      double dfFalseNorthing = 0.0;
+
+      mSpatialReference->SetLCC(stdP1,stdP2,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
+      mSpatialReference->SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+      mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+
+      // ### Validate the spatial reference.
+
+      auto errorCode = mSpatialReference->Validate();
+      if (errorCode != OGRERR_NONE)
+      {
+        Fmi::Exception exception(BCP,"The spatial reference is not valid!");
+        exception.addParameter("ErrorCode",std::to_string(errorCode));
+        throw exception;
+      }
     }
   }
   catch (...)
