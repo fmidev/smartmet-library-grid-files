@@ -353,7 +353,7 @@ void PolarStereographicImpl::init() const
     double startX = lon;
     double startY = lat;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
+    convert(latlonSpatialReference,mSpatialReference,1,&startX,&startY);
 
     mStartX = startX;
     mStartY = startY;
@@ -614,46 +614,53 @@ void PolarStereographicImpl::initSpatialReference()
 {
   try
   {
-    // ### Check that we have all necessary values needed by this method.
-
-    double dfCenterLat = 60000;
-    auto dfCenterLong = mOrientationOfTheGrid;
-
-    // ### Set geographic coordinate system.
-
-    const char *pszGeogName = "UNKNOWN";
-    const char *pszDatumName = "UNKNOWN";
-    const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor = getMajorAxis(mResolutionFlags.getResolutionAndComponentFlags());
-    double dfFlattening = getFlattening(mResolutionFlags.getResolutionAndComponentFlags());
-    double dfInvFlattening = 0.0;
-    if (dfFlattening != 0)
-      dfInvFlattening = 1/dfFlattening;
-
-    mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
-
-
-    // ### Set the projection and the linear units for the projection.
-
-    double centerLat = C_DOUBLE(dfCenterLat) / 1000;
-    double centerLon = C_DOUBLE(dfCenterLong) / 1000;
-    double dfScale = 1.0;
-    double dfFalseEasting = 0.0;
-    double dfFalseNorthing = 0.0;
-
-    mSpatialReference.SetPS(centerLat,centerLon,dfScale,dfFalseEasting,dfFalseNorthing);
-    mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-
-    // ### Validate the spatial reference.
-
-    auto errorCode = mSpatialReference.Validate();
-    if (errorCode != OGRERR_NONE)
+    mSpatialReference = getSpatialReference();
+    if (!mSpatialReference)
     {
-      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
-      exception.addParameter("ErrorCode",std::to_string(errorCode));
-      throw exception;
+      mSpatialReference.reset(new T::SpatialRef());
+      addSpatialReference(mSpatialReference);
+
+      // ### Check that we have all necessary values needed by this method.
+
+      double dfCenterLat = 60000;
+      auto dfCenterLong = mOrientationOfTheGrid;
+
+      // ### Set geographic coordinate system.
+
+      const char *pszGeogName = "UNKNOWN";
+      const char *pszDatumName = "UNKNOWN";
+      const char *pszSpheroidName = "UNKNOWN";
+      double dfSemiMajor = getMajorAxis(mResolutionFlags.getResolutionAndComponentFlags());
+      double dfFlattening = getFlattening(mResolutionFlags.getResolutionAndComponentFlags());
+      double dfInvFlattening = 0.0;
+      if (dfFlattening != 0)
+        dfInvFlattening = 1/dfFlattening;
+
+      mSpatialReference->SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+
+
+      // ### Set the projection and the linear units for the projection.
+
+      double centerLat = C_DOUBLE(dfCenterLat) / 1000;
+      double centerLon = C_DOUBLE(dfCenterLong) / 1000;
+      double dfScale = 1.0;
+      double dfFalseEasting = 0.0;
+      double dfFalseNorthing = 0.0;
+
+      mSpatialReference->SetPS(centerLat,centerLon,dfScale,dfFalseEasting,dfFalseNorthing);
+      mSpatialReference->SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+      mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+
+      // ### Validate the spatial reference.
+
+      auto errorCode = mSpatialReference->Validate();
+      if (errorCode != OGRERR_NONE)
+      {
+        Fmi::Exception exception(BCP,"The spatial reference is not valid!");
+        exception.addParameter("ErrorCode",std::to_string(errorCode));
+        throw exception;
+      }
     }
 
     init();
@@ -702,7 +709,7 @@ void PolarStereographicImpl::print(std::ostream& stream,uint level,uint optionFl
 
             double lon = coord.x();
             double lat = coord.y();
-            if (convert(&mLatlonSpatialReference,&mSpatialReference,1,&lon,&lat))
+            if (convert(latlonSpatialReference,mSpatialReference,1,&lon,&lat))
             {
               sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
               stream << space(level+2) << str << "\n";

@@ -1546,7 +1546,7 @@ void Message::initSpatialReference()
         \return   The pointer to the spatial reference.
 */
 
-T::SpatialRef* Message::getSpatialReference() const
+T::SpatialRef_sptr Message::getSpatialReference() const
 {
   try
   {

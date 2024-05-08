@@ -1432,7 +1432,7 @@ std::string GridSection::getProj4()
         \return   The pointer to the spatial reference.
 */
 
-T::SpatialRef* GridSection::getSpatialReference() const
+T::SpatialRef_sptr GridSection::getSpatialReference() const
 {
   FUNCTION_TRACE
   try

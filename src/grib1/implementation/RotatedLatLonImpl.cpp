@@ -358,7 +358,7 @@ void RotatedLatLonImpl:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& 
       //printf("LATLON %f,%f\n",x[t],y[t]);
     }
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,sz,x,y);
+    convert(latlonSpatialReference,mSpatialReference,sz,x,y);
 
     for (int t=0; t<sz; t++)
     {
@@ -446,7 +446,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPoint(uint grid_i,uint gri
 
     lat = rotated_lat;
     lon = rotated_lon;
-    return convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat);
+    return convert(mSpatialReference,latlonSpatialReference,1,&lon,&lat);
   }
   catch (...)
   {
@@ -517,7 +517,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByGridPosition(double grid_i,dou
     lat = rotated_lat;
     lon = rotated_lon;
 
-    return convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat);
+    return convert(mSpatialReference,latlonSpatialReference,1,&lon,&lat);
   }
   catch (...)
   {
@@ -783,7 +783,7 @@ bool RotatedLatLonImpl::getGridOriginalCoordinatesByLatLonCoordinates(double lat
   {
     y = lat;
     x = lon;
-    return convert(&mLatlonSpatialReference,&mSpatialReference,1,&x,&y);
+    return convert(latlonSpatialReference,mSpatialReference,1,&x,&y);
   }
   catch (...)
   {
@@ -811,7 +811,7 @@ bool RotatedLatLonImpl::getGridLatLonCoordinatesByOriginalCoordinates(double x,d
     lat = y;
     lon = x;
 
-    return convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat);
+    return convert(mSpatialReference,latlonSpatialReference,1,&lon,&lat);
   }
   catch (...)
   {
@@ -1089,60 +1089,67 @@ void RotatedLatLonImpl::initSpatialReference()
   {
     init();
 
-    // ### Set geographic coordinate system.
-
-    const char *pszGeogName = "UNKNOWN";
-    const char *pszDatumName = "UNKNOWN";
-    const char *pszSpheroidName = "UNKNOWN";
-    double angle = C_DOUBLE(mRotation.getGeography_angleOfRotationInDegrees());
-    double dfSemiMajor =  6367470;
-    double dfInvFlattening = 0.0;
-
-    ResolutionFlagsSettings *rflags = mGridArea.getResolutionFlags();
-    if (rflags != nullptr)
+    mSpatialReference = getSpatialReference();
+    if (!mSpatialReference)
     {
-      dfSemiMajor = getMajorAxis(rflags->getResolutionAndComponentFlags());
-      double dfFlattening = getFlattening(rflags->getResolutionAndComponentFlags());
-      if (dfFlattening != 0)
-        dfInvFlattening = 1/dfFlattening;
-    }
+      mSpatialReference.reset(new T::SpatialRef());
+      addSpatialReference(mSpatialReference);
 
-    mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
-    mSpatialReference.SetDerivedGeogCRSWithPoleRotationGRIBConvention("RotatedLatlon",mSouthPoleLat,mSouthPoleLon,angle);
-    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+      // ### Set geographic coordinate system.
 
+      const char *pszGeogName = "UNKNOWN";
+      const char *pszDatumName = "UNKNOWN";
+      const char *pszSpheroidName = "UNKNOWN";
+      double angle = C_DOUBLE(mRotation.getGeography_angleOfRotationInDegrees());
+      double dfSemiMajor =  6367470;
+      double dfInvFlattening = 0.0;
 
-#if 0
-    double npole_lat = -mSouthPoleLat;
-    double npole_lon = 0;
-    double lon_0 = mSouthPoleLon;
+      ResolutionFlagsSettings *rflags = mGridArea.getResolutionFlags();
+      if (rflags != nullptr)
+      {
+        dfSemiMajor = getMajorAxis(rflags->getResolutionAndComponentFlags());
+        double dfFlattening = getFlattening(rflags->getResolutionAndComponentFlags());
+        if (dfFlattening != 0)
+          dfInvFlattening = 1/dfFlattening;
+      }
 
-    char proj[200];
-    sprintf(proj,"+proj=ob_tran +o_proj=longlat +lon_0=%f +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
-        lon_0,npole_lon,npole_lat,dfSemiMajor);
-
-    mProj4 = proj;
-
-    OGRErr err = mSpatialReference.SetFromUserInput(proj);
-    //OGRErr err = mSpatialReference.importFromProj4(proj);
-    if (err != OGRERR_NONE)
-      throw Fmi::Exception(BCP, "Invalid crs '" + std::string(proj) + "'!");
-#endif
+      mSpatialReference->SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+      mSpatialReference->SetDerivedGeogCRSWithPoleRotationGRIBConvention("RotatedLatlon",mSouthPoleLat,mSouthPoleLon,angle);
+      mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
 
 
-    char *out = nullptr;
-    mSpatialReference.exportToProj4(&out);
-    mProj4 = out;
-    CPLFree(out);
+  #if 0
+      double npole_lat = -mSouthPoleLat;
+      double npole_lon = 0;
+      double lon_0 = mSouthPoleLon;
 
-    // ### Validate the spatial reference.
+      char proj[200];
+      sprintf(proj,"+proj=ob_tran +o_proj=longlat +lon_0=%f +o_lon_p=%f +o_lat_p=%f +to_meter=.0174532925199433 +R=%f +wktext +over +towgs84=0,0,0 +no_defs",
+          lon_0,npole_lon,npole_lat,dfSemiMajor);
 
-    auto errorCode = mSpatialReference.Validate();
-    if (errorCode != OGRERR_NONE)
-    {
-      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
-      exception.addParameter("ErrorCode",std::to_string(errorCode));
-      throw exception;
+      mProj4 = proj;
+
+      OGRErr err = mSpatialReference->SetFromUserInput(proj);
+      //OGRErr err = mSpatialReference->importFromProj4(proj);
+      if (err != OGRERR_NONE)
+        throw Fmi::Exception(BCP, "Invalid crs '" + std::string(proj) + "'!");
+  #endif
+
+
+      char *out = nullptr;
+      mSpatialReference->exportToProj4(&out);
+      mProj4 = out;
+      CPLFree(out);
+
+      // ### Validate the spatial reference.
+
+      auto errorCode = mSpatialReference->Validate();
+      if (errorCode != OGRERR_NONE)
+      {
+        Fmi::Exception exception(BCP,"The spatial reference is not valid!");
+        exception.addParameter("ErrorCode",std::to_string(errorCode));
+        throw exception;
+      }
     }
 
 

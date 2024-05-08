@@ -11,6 +11,7 @@
 #include <macgyver/StringConversion.h>
 #include <macgyver/Exception.h>
 #include <macgyver/FastMath.h>
+#include <macgyver/Cache.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -41,6 +42,13 @@ TmpValueCacheRec tmpValueCache[tmpValueCacheSize];
 ThreadLock tmpCacheThreadLock;
 std::vector<double> EMPTY_DOUBLE_VEC;
 std::vector<Message*> EMPTY_MSG_VEC;
+
+
+typedef std::vector<std::vector<T::Coordinate>> PolygonCoordinates;
+typedef std::shared_ptr<PolygonCoordinates> PolygonCoordinates_sptr;
+
+Fmi::Cache::Cache<std::size_t,PolygonCoordinates_sptr> polygonCoordinateCache(10000);
+
 
 
 
@@ -3622,7 +3630,7 @@ void Message::initSpatialReference()
         \return   The pointer to the spatial reference.
 */
 
-T::SpatialRef* Message::getSpatialReference() const
+T::SpatialRef_sptr Message::getSpatialReference() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -5271,6 +5279,21 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
     T::Dimensions d = getGridDimensions();
     uint cols = d.nx();
     uint rows = d.ny();
+
+    /*
+    std::size_t hash = 0;
+    boost::hash_combine(hash,mGeometryId);
+    boost::hash_combine(hash,coordinateType);
+
+    for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
+    {
+      for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
+      {
+        boost::hash_combine(hash,it->x());
+        boost::hash_combine(hash,it->y());
+      }
+    }
+   */
 
     switch (coordinateType)
     {

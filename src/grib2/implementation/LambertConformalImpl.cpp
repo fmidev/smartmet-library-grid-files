@@ -108,7 +108,7 @@ void LambertConformalImpl::init() const
     double startX = longitudeOfFirstGridPoint;
     double startY = latitudeOfFirstGridPoint;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&startX,&startY);
+    convert(latlonSpatialReference,mSpatialReference,1,&startX,&startY);
 
     mStartX = startX;
     mStartY = startY;
@@ -685,73 +685,80 @@ void LambertConformalImpl::initSpatialReference()
 {
   try
   {
-    // ### Check that we have all necessary values needed by this method.
-
-    auto dfStdP1 = mLatin1;
-    if (!dfStdP1)
-      throw Fmi::Exception(BCP,"The 'latin1' value is missing!");
-
-    auto dfStdP2 = mLatin2;
-    if (!dfStdP2)
-      throw Fmi::Exception(BCP,"The 'latin2' value is missing!");
-
-    auto dfCenterLat = mLaD;
-    if (!dfCenterLat)
-      throw Fmi::Exception(BCP,"The 'laD' value is missing!");
-
-    auto dfCenterLong = mLoV;
-    if (!dfCenterLong)
-      throw Fmi::Exception(BCP,"The 'loV' value is missing!");
-
-    auto southPoleLon = mLongitudeOfSouthernPole;
-    auto southPoleLat = mLatitudeOfSouthernPole;
-
-    if (!southPoleLon)
-      southPoleLon = 0;
-
-    if (!southPoleLat)
-      southPoleLat = -90 * 1000000;
-
-    //if ((*southPoleLon != 0) || (*southPoleLat != (-90 * 1000000)))
-    //  throw Fmi::Exception(BCP,"A projection with a rotated pole is not supported!");
-
-
-    // ### Set geographic coordinate system.
-
-    const char *pszGeogName = "UNKNOWN";
-    const char *pszDatumName = "UNKNOWN";
-    const char *pszSpheroidName = "UNKNOWN";
-    double dfSemiMajor = getMajorAxis(mEarthShape);
-    double dfFlattening = getFlattening(mEarthShape);
-    double dfInvFlattening = 0;
-    if (dfFlattening != 0)
-      dfInvFlattening = 1/dfFlattening;
-
-    mSpatialReference.SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
-
-
-    // ### Set the projection and the linear units for the projection.
-
-    double stdP1 = C_DOUBLE(*dfStdP1)/ 1000000;
-    double stdP2 = C_DOUBLE(*dfStdP2)/ 1000000;
-    double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
-    double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
-    double dfFalseEasting = 0.0;
-    double dfFalseNorthing = 0.0;
-
-    mSpatialReference.SetLCC(stdP1,stdP2,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
-    mSpatialReference.SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
-    mSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
-
-
-    // ### Validate the spatial reference.
-
-    auto errorCode = mSpatialReference.Validate();
-    if (errorCode != OGRERR_NONE)
+    mSpatialReference = getSpatialReference();
+    if (!mSpatialReference)
     {
-      Fmi::Exception exception(BCP,"The spatial reference is not valid!");
-      exception.addParameter("ErrorCode",std::to_string(errorCode));
-      throw exception;
+      mSpatialReference.reset(new T::SpatialRef());
+      addSpatialReference(mSpatialReference);
+
+      // ### Check that we have all necessary values needed by this method.
+
+      auto dfStdP1 = mLatin1;
+      if (!dfStdP1)
+        throw Fmi::Exception(BCP,"The 'latin1' value is missing!");
+
+      auto dfStdP2 = mLatin2;
+      if (!dfStdP2)
+        throw Fmi::Exception(BCP,"The 'latin2' value is missing!");
+
+      auto dfCenterLat = mLaD;
+      if (!dfCenterLat)
+        throw Fmi::Exception(BCP,"The 'laD' value is missing!");
+
+      auto dfCenterLong = mLoV;
+      if (!dfCenterLong)
+        throw Fmi::Exception(BCP,"The 'loV' value is missing!");
+
+      auto southPoleLon = mLongitudeOfSouthernPole;
+      auto southPoleLat = mLatitudeOfSouthernPole;
+
+      if (!southPoleLon)
+        southPoleLon = 0;
+
+      if (!southPoleLat)
+        southPoleLat = -90 * 1000000;
+
+      //if ((*southPoleLon != 0) || (*southPoleLat != (-90 * 1000000)))
+      //  throw Fmi::Exception(BCP,"A projection with a rotated pole is not supported!");
+
+
+      // ### Set geographic coordinate system.
+
+      const char *pszGeogName = "UNKNOWN";
+      const char *pszDatumName = "UNKNOWN";
+      const char *pszSpheroidName = "UNKNOWN";
+      double dfSemiMajor = getMajorAxis(mEarthShape);
+      double dfFlattening = getFlattening(mEarthShape);
+      double dfInvFlattening = 0;
+      if (dfFlattening != 0)
+        dfInvFlattening = 1/dfFlattening;
+
+      mSpatialReference->SetGeogCS(pszGeogName,pszDatumName,pszSpheroidName,dfSemiMajor,dfInvFlattening);
+
+
+      // ### Set the projection and the linear units for the projection.
+
+      double stdP1 = C_DOUBLE(*dfStdP1)/ 1000000;
+      double stdP2 = C_DOUBLE(*dfStdP2)/ 1000000;
+      double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
+      double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
+      double dfFalseEasting = 0.0;
+      double dfFalseNorthing = 0.0;
+
+      mSpatialReference->SetLCC(stdP1,stdP2,centerLat,centerLon,dfFalseEasting,dfFalseNorthing);
+      mSpatialReference->SetTargetLinearUnits("PROJCS", SRS_UL_METER, 1.0);
+      mSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+
+      // ### Validate the spatial reference.
+
+      auto errorCode = mSpatialReference->Validate();
+      if (errorCode != OGRERR_NONE)
+      {
+        Fmi::Exception exception(BCP,"The spatial reference is not valid!");
+        exception.addParameter("ErrorCode",std::to_string(errorCode));
+        throw exception;
+      }
     }
 
     init();

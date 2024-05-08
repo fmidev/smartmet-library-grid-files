@@ -79,7 +79,7 @@ class GridDefinition
     virtual bool                setProperty(uint propertyId,long long value);
     virtual bool                setProperty(uint propertyId,double value);
 
-    T::SpatialRef*              getSpatialReference();
+    T::SpatialRef_sptr          getSpatialReference();
     virtual std::string         getWKT();
     virtual std::string         getProj4();
     bool                        isGridGlobal() const;
@@ -103,6 +103,8 @@ class GridDefinition
 
 
    protected:
+
+    virtual void                addSpatialReference(T::SpatialRef_sptr sp);
 
     virtual double              getMajorAxis(uchar resolutionAndComponentFlags);
     virtual double              getMinorAxis(uchar resolutionAndComponentFlags);
@@ -129,8 +131,7 @@ class GridDefinition
     virtual bool                setProperty_rotation(uint propertyId,double value);
 
     /*! \brief The spatial reference. */
-     T::SpatialRef              mSpatialReference;
-     OGRSpatialReference        mLatlonSpatialReference;
+     T::SpatialRef_sptr         mSpatialReference;
 
      double                     mEarth_semiMajor;
      double                     mEarth_semiMinor;
@@ -162,6 +163,7 @@ extern Fmi::Cache::CacheStats transformCache1_stats;
 extern Fmi::Cache::CacheStats transformCache2_stats;
 extern Fmi::Cache::CacheStats transformCache3_stats;
 
+extern T::SpatialRef_sptr latlonSpatialReference;
 
 }  // namespace GRID
 }  // namespace SmartMet

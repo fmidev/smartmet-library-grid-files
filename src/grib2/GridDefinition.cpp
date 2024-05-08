@@ -36,10 +36,11 @@ Fmi::Cache::CacheStats transformCache2_stats;
 Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache2(1000000);
 
 Fmi::Cache::CacheStats transformCache3_stats;
-Fmi::Cache::Cache<std::size_t,std::vector<T::Coordinate>> transformCache3(1000);
+Fmi::Cache::Cache<std::size_t,T::Coordinate_svec> transformCache3(1000);
 
+Fmi::Cache::Cache<std::size_t,T::SpatialRef_sptr> spatialReferenceCache(1000);
 
-
+T::SpatialRef_sptr latlonSpatialReference;
 
 /*! \brief The constructor of the class. */
 
@@ -52,8 +53,15 @@ GridDefinition::GridDefinition()
     mHash = 0;
     mGlobal = false;
     mGeometryId = 0;
-    mLatlonSpatialReference.importFromEPSG(4326);
-    mLatlonSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+
+    if (!latlonSpatialReference)
+    {
+      latlonSpatialReference.reset(new T::SpatialRef());
+      latlonSpatialReference->importFromEPSG(4326);
+      latlonSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+    }
+
     mEarth_semiMajor = 0;
     mEarth_semiMinor = 0;
     if (latlonCoordinateCache_stats.maxsize == 0)
@@ -96,8 +104,13 @@ GridDefinition::GridDefinition(const GridDefinition& other)
     mGridProjection = other.mGridProjection;
     mEarth_semiMajor = other.mEarth_semiMajor;
     mEarth_semiMinor = other.mEarth_semiMinor;
-    mLatlonSpatialReference.importFromEPSG(4326);
-    mLatlonSpatialReference.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+
+    if (!latlonSpatialReference)
+    {
+      latlonSpatialReference.reset(new T::SpatialRef());
+      latlonSpatialReference->importFromEPSG(4326);
+      latlonSpatialReference->SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);
+    }
   }
   catch (...)
   {
@@ -1137,7 +1150,7 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
       lon[t] = cc.x();
     }
 
-    convert(&mSpatialReference,&mLatlonSpatialReference,sz,lon,lat);
+    convert(mSpatialReference,latlonSpatialReference,sz,lon,lat);
 
     for (int t=0; t<sz; t++)
     {
@@ -1432,7 +1445,8 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
       if (it)
       {
         transformCache3_stats.hits++;
-        points = *it;
+        points = *(*it);
+
         return;
       }
       transformCache3_stats.misses++;
@@ -1453,23 +1467,27 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
       y[t] = cc.y();
     }
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,sz,x,y);
+    convert(latlonSpatialReference,mSpatialReference,sz,x,y);
+
+    T::Coordinate_svec vec(new T::Coordinate_vec());
+    vec->reserve(sz);
 
     for (uint t=0; t<sz; t++)
     {
       double i = 0,j = 0;
       if (getGridPointByOriginalCoordinates(x[t],y[t],i,j))
-        points.emplace_back(i,j);
+        vec->emplace_back(i,j);
       else
-        points.emplace_back(ParamValueMissing,ParamValueMissing);
+        vec->emplace_back(ParamValueMissing,ParamValueMissing);
     }
 
     if (hash != 0)
     {
-      transformCache3.insert(hash,points);
+      transformCache3.insert(hash,vec);
       transformCache3_stats.inserts++;
       transformCache3_stats.size++;
     }
+    points = *vec;
   }
   catch (...)
   {
@@ -1498,7 +1516,6 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
   try
   {
     std::size_t hash = 0;
-    uint idx = 0;
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {
@@ -1647,7 +1664,6 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
   try
   {
     std::size_t hash = 0;
-    uint idx = 0;
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {
@@ -1669,7 +1685,7 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
     x = lon;
     y = lat;
 
-    convert(&mLatlonSpatialReference,&mSpatialReference,1,&x,&y);
+    convert(latlonSpatialReference,mSpatialReference,1,&x,&y);
 
     if (hash != 0)
     {
@@ -1760,7 +1776,7 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinatesNoCache(double
     x = lon;
     y = lat;
 
-    return convert(&mLatlonSpatialReference,&mSpatialReference,1,&x,&y);
+    return convert(latlonSpatialReference,mSpatialReference,1,&x,&y);
   }
   catch (...)
   {
@@ -1790,7 +1806,7 @@ bool GridDefinition::getGridLatLonCoordinatesByOriginalCoordinates(double x,doub
     lat = y;
     lon = x;
 
-    return convert(&mSpatialReference,&mLatlonSpatialReference,1,&lon,&lat);
+    return convert(mSpatialReference,latlonSpatialReference,1,&lon,&lat);
   }
   catch (...)
   {
@@ -1808,8 +1824,8 @@ std::string GridDefinition::getWKT()
   try
   {
     std::string wkt;
-    T::SpatialRef *sr = getSpatialReference();
-    if (sr != nullptr)
+    auto sr = getSpatialReference();
+    if (sr)
     {
       char *out = nullptr;
       sr->exportToWkt(&out);
@@ -1845,8 +1861,8 @@ std::string GridDefinition::getProj4()
     getGridLatLonCoordinatesByGridPoint(d.nx()-1,d.ny()-1,lat[3],lon[3]);
 
     std::string proj4;
-    T::SpatialRef *sr = getSpatialReference();
-    if (sr != nullptr)
+    auto sr = getSpatialReference();
+    if (sr)
     {
       char *out = nullptr;
       sr->exportToProj4(&out);
@@ -1874,12 +1890,22 @@ std::string GridDefinition::getProj4()
         \return   The pointer to the spatial reference.
 */
 
-T::SpatialRef* GridDefinition::getSpatialReference()
+T::SpatialRef_sptr GridDefinition::getSpatialReference()
 {
   FUNCTION_TRACE
   try
   {
-    return &mSpatialReference;
+    if (mSpatialReference)
+      return mSpatialReference;
+
+    std::size_t geometryHash = 0;
+    boost::hash_combine(geometryHash,getGridGeometryString());
+
+    auto sp = spatialReferenceCache.find(geometryHash);
+    if (sp)
+      mSpatialReference = *sp;
+
+    return mSpatialReference;
   }
   catch (...)
   {
@@ -1887,6 +1913,29 @@ T::SpatialRef* GridDefinition::getSpatialReference()
   }
 }
 
+
+
+
+
+void GridDefinition::addSpatialReference(T::SpatialRef_sptr sp)
+{
+  FUNCTION_TRACE
+  try
+  {
+    std::size_t geometryHash = 0;
+    boost::hash_combine(geometryHash,getGridGeometryString());
+
+    auto spr = spatialReferenceCache.find(geometryHash);
+    if (spr)
+      return;
+
+    spatialReferenceCache.insert(geometryHash,sp);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 

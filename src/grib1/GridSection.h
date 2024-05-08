@@ -99,7 +99,7 @@ class GridSection : public GRID::MessageSection
     T::GridProjection     getGridProjection() const;
     std::size_t           getGridColumnCount() const;
     std::size_t           getGridRowCount() const;
-    T::SpatialRef*        getSpatialReference() const;
+    T::SpatialRef_sptr     getSpatialReference() const;
     std::string           getWKT();
     std::string           getProj4();
     void                  initSpatialReference();

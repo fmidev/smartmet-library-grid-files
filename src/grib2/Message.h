@@ -94,7 +94,7 @@ class Message : public GRID::Message
     T::ParamValue       getGridValueByGridPoint(uint grid_i,uint grid_j) const;
     void                getGridValueVector(T::ParamValue_vec& values) const;
     T::TimeString       getReferenceTime() const;
-    T::SpatialRef*      getSpatialReference() const;
+    T::SpatialRef_sptr  getSpatialReference() const;
     std::string         getWKT() const;
     std::string         getProj4() const;
     void                initSpatialReference();
@@ -183,6 +183,8 @@ class Message : public GRID::Message
 
     /*! \brief  The message start position in the file. */
     T::FilePosition     mFilePosition;
+
+    T::FilePosition     mOriginalFilePosition;
 
     /*! \brief  A shared pointer to the IndicatorSection object. */
     IndicatorSect_sptr  mIndicatorSection;

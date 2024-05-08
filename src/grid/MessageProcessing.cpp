@@ -3830,10 +3830,10 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message
     if (areaInterpolationMethodStr != nullptr)
       areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
-    T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
-    const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
-    if (coordinateTypeStr != nullptr)
-      coordinateType = toUInt8(coordinateTypeStr);
+    //T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
+    //const char *coordinateTypeStr = attributeList.getAttributeValue("stream.coordinateType");
+    //if (coordinateTypeStr != nullptr)
+    //  coordinateType = toUInt8(coordinateTypeStr);
 
     int maxStreamLen = 2048;
     const char *maxLengthStr = attributeList.getAttributeValue("stream.maxLength");
