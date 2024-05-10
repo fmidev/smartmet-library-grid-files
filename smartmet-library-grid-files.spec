@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.5.6
+Version: 24.5.10
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -96,6 +96,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri May 10 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.5.10-1.fmi
+- Changed spatial references to use shared pointers
+
 * Mon May  6 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.5.6-1.fmi
 - Use Date library (https://github.com/HowardHinnant/date) instead of boost date_time
 
