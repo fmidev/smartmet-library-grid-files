@@ -66,6 +66,7 @@ int HttpClient::getHeaderData(const char *server,const char *filename,int dataSi
 
     curl_easy_setopt(curl, CURLOPT_URL,url);
     curl_easy_setopt(curl, CURLOPT_PROXY,"");
+    curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,curl_responseProcessing);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
@@ -80,6 +81,7 @@ int HttpClient::getHeaderData(const char *server,const char *filename,int dataSi
     }
 
     struct curl_slist *headerList = NULL;
+    headerList = curl_slist_append(headerList, "Range: bytes=0-0");
 
     headerList = addAuthenticationHeaders(server,filename,headerList);
     if (headerList)

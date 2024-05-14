@@ -365,9 +365,14 @@ long long DataFetcher_network::getFileSize(uint serverType,uint protocol,const c
   {
     std::map<std::string,std::string> headers;
     getFileHeaders(serverType,protocol,server,filename,headers);
-    auto it = headers.find("CONTENT-LENGTH");
+    auto it = headers.find("CONTENT-RANGE");
     if (it != headers.end())
-      return atoll(it->second.c_str());
+    {
+      char *p = (char*)it->second.c_str();
+      char *n = strstr(p,"/");
+      if (n)
+        return atoll(n+1);
+    }
 
     return -1;
   }

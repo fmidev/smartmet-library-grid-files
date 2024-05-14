@@ -139,18 +139,7 @@ void PhysicalGridFile::mapToMemory()
     if (isMemoryMapped())
       return;
 
-    if (mMemoryMapInfo.fileSize <= 0)
-    {
-      //mMemoryMapInfo.fileSize = memoryMapper.getFileSize(mMemoryMapInfo.serverType,mMemoryMapInfo.protocol,mMemoryMapInfo.server.c_str(),mMemoryMapInfo.filename.c_str());
-
-      if (mMemoryMapInfo.fileSize <= 0)
-      {
-        if (mMemoryMapInfo.serverType <= 1)
-          mMemoryMapInfo.fileSize = getFileSize(mMemoryMapInfo.filename.c_str());
-        else
-          mMemoryMapInfo.fileSize = GridFile::getSize();
-      }
-    }
+    mMemoryMapInfo.fileSize = memoryMapper.getFileSize(mMemoryMapInfo.serverType,mMemoryMapInfo.protocol,mMemoryMapInfo.server.c_str(),mMemoryMapInfo.filename.c_str());
 
     memoryMapper.map(mMemoryMapInfo);
   }
@@ -194,7 +183,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
     }
 
     long long fsize = getSize();
-    /*
+
     if (C_INT64(messageInfo.mFilePosition + messageInfo.mMessageSize) > fsize)
     {
       mMessagePositionError = true;
@@ -206,7 +195,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
       exception.addParameter("File size",std::to_string(fsize));
       throw exception;
     }
-    */
+
 
     auto startAddr = mMemoryMapInfo.memoryPtr + messageInfo.mFilePosition;
     auto endAddr = startAddr + messageInfo.mMessageSize;
@@ -482,36 +471,6 @@ void PhysicalGridFile::read(const std::string& filename,uint maxMessages)
     if (!isMemoryMapped())
     {
       mapToMemory();
-      /*
-      AutoThreadLock lock(&mMemoryMappingLock);
-
-      if (!mIsMemoryMapped)
-      {
-        mFileSize = getFileSize(mFileName.c_str());
-        if (mFileSize < 0)
-        {
-          Fmi::Exception exception(BCP,"The file does not exist!");
-          exception.addParameter("Filename",mFileName);
-          throw exception;
-        }
-
-        if (mFileSize == 0)
-        {
-          Fmi::Exception exception(BCP,"The file size is zero!");
-          exception.addParameter("Filename",mFileName);
-          throw exception;
-        }
-
-        MappedFileParams params(mFileName);
-        params.flags = boost::iostreams::mapped_file::readonly;
-        params.length = mFileSize;
-        mMappedFile.reset(new MappedFile(params));
-        mIsMemoryMapped = true;
-        mFileModificationTime = getFileModificationTime(mFileName.c_str());
-
-        mMemoryPtr = const_cast<char*>(mMappedFile->const_data());
-      }
-      */
     }
 
     auto endAddr = mMemoryMapInfo.memoryPtr + mMemoryMapInfo.fileSize;

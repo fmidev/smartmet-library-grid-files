@@ -54,7 +54,7 @@ int HttpsClient::getHeaderData(const char *server,const char *filename,int dataS
   try
   {
     if (!curl)
-      return 0;
+      return -1;
 
     //printf("*** SEND HEADER REQUEST %s  : %ld : %ld\n",filename,dataSize,dataPtr);
     Response response;
@@ -68,6 +68,7 @@ int HttpsClient::getHeaderData(const char *server,const char *filename,int dataS
 
     curl_easy_setopt(curl, CURLOPT_URL,url);
     curl_easy_setopt(curl, CURLOPT_PROXY,"");
+    curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,curl_responseProcessing);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
@@ -82,6 +83,7 @@ int HttpsClient::getHeaderData(const char *server,const char *filename,int dataS
     }
 
     struct curl_slist *headerList = NULL;
+    headerList = curl_slist_append(headerList, "Range: bytes=0-0");
 
     headerList = addAuthenticationHeaders(server,filename,headerList);
     if (headerList)
