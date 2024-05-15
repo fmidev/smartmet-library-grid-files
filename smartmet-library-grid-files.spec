@@ -4,7 +4,7 @@
 Summary: grid file handling library
 Name: %{SPECNAME}
 Version: 24.5.15
-Release: 1%{?dist}.fmi
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -96,6 +96,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed May 15 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.5.15-2.fmi
+- Disabled a check which does not work for the startup cache
 * Wed May 15 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.5.15-1.fmi
 - Improved S3 file size detection
 * Fri May 10 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.5.10-1.fmi
