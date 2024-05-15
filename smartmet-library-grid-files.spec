@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.5.10
+Version: 24.5.15
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -18,10 +18,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 24.3.13
+BuildRequires: smartmet-utils-devel >= 24.5.10
 BuildRequires: smartmet-library-newbase-devel >= 24.5.6
 BuildRequires: smartmet-library-spine-devel >= 24.5.6
-BuildRequires: smartmet-library-macgyver >= 24.5.6
+BuildRequires: smartmet-library-macgyver >= 24.5.10
 BuildRequires: smartmet-library-trax-devel >= 23.8.17
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -48,7 +48,7 @@ Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 24.5.6
-Requires: smartmet-library-macgyver >= 24.5.6
+Requires: smartmet-library-macgyver >= 24.5.10
 Requires: smartmet-library-spine >= 24.5.6
 Requires: smartmet-library-trax >= 23.8.17
 
@@ -82,7 +82,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 24.5.6
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 24.5.6
+Requires: smartmet-library-macgyver >= 24.5.10
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -96,12 +96,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed May 15 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.5.15-1.fmi
+- Improved S3 file size detection
 * Fri May 10 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.5.10-1.fmi
 - Changed spatial references to use shared pointers
-
 * Mon May  6 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.5.6-1.fmi
 - Use Date library (https://github.com/HowardHinnant/date) instead of boost date_time
-
 * Fri May  3 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.5.3-1.fmi
 - Improved caching
 - Added level type information that defines relationship of level values (linear, logarithmic, just a number)
