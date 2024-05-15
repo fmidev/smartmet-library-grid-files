@@ -184,6 +184,11 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
 
     long long fsize = getSize();
 
+    /*
+
+    // If the message is in startup-cache, then this checking does not work. We
+    // can fix that later.
+
     if (C_INT64(messageInfo.mFilePosition + messageInfo.mMessageSize) > fsize)
     {
       mMessagePositionError = true;
@@ -195,6 +200,7 @@ GRID::Message* PhysicalGridFile::createMessage(uint messageIndex,GRID::MessageIn
       exception.addParameter("File size",std::to_string(fsize));
       throw exception;
     }
+    */
 
 
     auto startAddr = mMemoryMapInfo.memoryPtr + messageInfo.mFilePosition;
