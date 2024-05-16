@@ -92,7 +92,7 @@ T::ParamLevel Product_49Impl::getGribParameterLevel() const
   try
   {
     if (mHorizontal.getScaledValueOfFirstFixedSurface())
-      return *mHorizontal.getScaledValueOfFirstFixedSurface();
+      return std::round(*mHorizontal.getScaledValueOfFirstFixedSurface() * std::pow(10.0,-(*mHorizontal.getScaleFactorOfFirstFixedSurface())));
 
     return 0;
   }
@@ -115,7 +115,7 @@ T::ParamLevelId Product_49Impl::getGribParameterLevelId() const
 {
   try
   {
-    if (mHorizontal.getScaledValueOfFirstFixedSurface())
+    if (mHorizontal.getTypeOfFirstFixedSurface())
       return *mHorizontal.getTypeOfFirstFixedSurface();
 
     return 0;

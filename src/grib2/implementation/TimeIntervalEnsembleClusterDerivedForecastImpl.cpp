@@ -93,7 +93,7 @@ T::ParamLevel TimeIntervalEnsembleClusterDerivedForecastImpl::getGribParameterLe
   try
   {
     if (mHorizontal.getScaledValueOfFirstFixedSurface())
-      return *mHorizontal.getScaledValueOfFirstFixedSurface();
+      return std::round(*mHorizontal.getScaledValueOfFirstFixedSurface() * std::pow(10.0,-(*mHorizontal.getScaleFactorOfFirstFixedSurface())));
 
     return 0;
   }
@@ -116,7 +116,7 @@ T::ParamLevelId TimeIntervalEnsembleClusterDerivedForecastImpl::getGribParameter
 {
   try
   {
-    if (mHorizontal.getScaledValueOfFirstFixedSurface())
+    if (mHorizontal.getTypeOfFirstFixedSurface())
       return *mHorizontal.getTypeOfFirstFixedSurface();
 
     return 0;
