@@ -139,7 +139,12 @@ void PhysicalGridFile::mapToMemory()
     if (isMemoryMapped())
       return;
 
-    mMemoryMapInfo.fileSize = memoryMapper.getFileSize(mMemoryMapInfo.serverType,mMemoryMapInfo.protocol,mMemoryMapInfo.server.c_str(),mMemoryMapInfo.filename.c_str());
+    long long fs = memoryMapper.getFileSize(mMemoryMapInfo.serverType,mMemoryMapInfo.protocol,mMemoryMapInfo.server.c_str(),mMemoryMapInfo.filename.c_str());
+
+    if (fs <= 0)
+      throw Fmi::Exception(BCP,"File does not exist or its size is 0!");
+
+    mMemoryMapInfo.fileSize = fs;
 
     memoryMapper.map(mMemoryMapInfo);
   }
