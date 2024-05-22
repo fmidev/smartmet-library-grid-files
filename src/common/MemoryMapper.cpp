@@ -655,7 +655,15 @@ long long MemoryMapper::getFileSize(uint serverType,uint protocol,const char *se
   try
   {
     if (!mEnabled)
-      return 0;
+    {
+      // We should use the old memory mapper
+
+      struct stat buf;
+      if (stat(filename, &buf) == 0)
+        return (long long)buf.st_size;
+
+      return -1;
+    }
 
     auto it = mDataFetchers.find(serverType);
     if (it != mDataFetchers.end())
