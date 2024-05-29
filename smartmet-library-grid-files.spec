@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.5.22
+Version: 24.5.29
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -19,10 +19,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 24.5.10
-BuildRequires: smartmet-library-newbase-devel >= 24.5.6
-BuildRequires: smartmet-library-spine-devel >= 24.5.6
-BuildRequires: smartmet-library-macgyver >= 24.5.10
-BuildRequires: smartmet-library-trax-devel >= 23.8.17
+BuildRequires: smartmet-library-newbase-devel >= 24.5.17
+BuildRequires: smartmet-library-spine-devel >= 24.5.27
+BuildRequires: smartmet-library-macgyver >= 24.5.28
+BuildRequires: smartmet-library-trax-devel >= 24.5.24
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal35-devel
@@ -47,10 +47,10 @@ Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 24.5.6
-Requires: smartmet-library-macgyver >= 24.5.10
-Requires: smartmet-library-spine >= 24.5.6
-Requires: smartmet-library-trax >= 23.8.17
+Requires: smartmet-library-newbase >= 24.5.17
+Requires: smartmet-library-macgyver >= 24.5.28
+Requires: smartmet-library-spine >= 24.5.27
+Requires: smartmet-library-trax >= 24.5.24
 
 %description
 FMI Grid File handling library
@@ -80,9 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 24.5.6
+Requires: smartmet-library-newbase-devel >= 24.5.17
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 24.5.10
+Requires: smartmet-library-macgyver >= 24.5.28
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -96,6 +96,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed May 29 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.5.29-1.fmi
+- Repackaged due to Fmi::DateTime changes
 * Wed May 22 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.5.22-1.fmi
 - Improved S3 file size checks
 * Mon May 20 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.5.20-1.fmi
