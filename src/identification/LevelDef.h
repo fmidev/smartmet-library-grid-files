@@ -19,6 +19,7 @@ class LevelDef
     uint              mLevelId;
     std::string       mName;
     uchar             mType;
+    std::string       mUnits;
     std::string       mDescription;
 };
 
