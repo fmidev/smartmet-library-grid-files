@@ -10,10 +10,6 @@
 # 4) ReverseConversionFunction
 #
 
-# Minimum temperature at 2m since previous post-processing
-# MINT2M-C => UNKNOWN
-# MINT2M-C;0;;;
-
 # Precipitation form
 # PRECFORM-N[2] => PrecipitationForm[57]
 PRECFORM-N;PrecipitationForm;;;
@@ -25,38 +21,6 @@ PRECFORM-N;PrecipitationForm2;;;
 # Precipitation form
 # PRECFORM-N[2] => PrecipitationForm4[1386]
 PRECFORM-N;PrecipitationForm4;;;
-
-# Road temperature in C
-# TROAD-C[3] => RoadTemperature[648]
-TROAD-C;RoadTemperature;;;
-
-# Road condition
-# CONDROAD-N[4] => RoadCondition[641]
-CONDROAD-N;RoadCondition;;;
-
-# Probability of dry road
-# PROBDRY[5] => ProbabilityDryRoad[642]
-PROBDRY;ProbabilityDryRoad;;;
-
-# Probability of wet road
-# PROBWET[6] => ProbabilityWetRoad[643]
-PROBWET;ProbabilityWetRoad;;;
-
-# Probability of moist road
-# PROBMST[7] => ProbabilityMoistRoad[644]
-PROBMST;ProbabilityMoistRoad;;;
-
-# Probability of snowy road
-# PROBSNY[8] => ProbabilitySnowyRoad[645]
-PROBSNY;ProbabilitySnowyRoad;;;
-
-# Probability of frosty road
-# PROBFRY[9] => ProbabilityFrostyRoad[646]
-PROBFRY;ProbabilityFrostyRoad;;;
-
-# Probability of icy road
-# PROBICY[10] => ProbabilityIcyRoad[647]
-PROBICY;ProbabilityIcyRoad;;;
 
 # Precipitation type, large scale or convective
 # PRECTYPE-N[11] => PrecipitationType[56]
@@ -74,13 +38,9 @@ RR-5D-MM;Precipitation5d;;;
 # GROWDEV-D[13] => GrowthPeriodDeviationInDays[649]
 GROWDEV-D;GrowthPeriodDeviationInDays;;;
 
-# Loose snow depth in cm
-# LSSN-M100[14] => NEWBASE-PARAMETER[77]
-LSSN-M100;77;;;
-
 # Growth period deviation from normal in percent
-# GROWDEV-PCT[15] => GrowthPeriodDeviationInPrcnt[650]
-GROWDEV-PCT;GrowthPeriodDeviationInPrcnt;;;
+# GROWDEV-PRCNT[15] => GrowthPeriodDeviationInPrcnt[650]
+GROWDEV-PRCNT;GrowthPeriodDeviationInPrcnt;;;
 
 # Growth period precipitation in kgm-2
 # GPPREC-KGM2[16] => GrowthPeriodPrecipitation[651]
@@ -101,10 +61,6 @@ ROADIDX-N;RoadConditionSeverity;;;
 # Low and middle cloud cover
 # NLM-PRCNT[20] => MiddleAndLowCloudCover[271]
 NLM-PRCNT;MiddleAndLowCloudCover;;;
-
-# Road condition, sensor 2
-# CONDROAD2-N[21] => RoadConditionAlternative[657]
-CONDROAD2-N;RoadConditionAlternative;;;
 
 # Ice concentration
 # ICNCT-PRCNT[24] => IceConcentration[384]
@@ -138,25 +94,17 @@ IRIDGE-PRCNT;IceDegreeOfRidging;;;
 # H0C-HPA => UNKNOWN
 # H0C-HPA;0;;;
 
-# Testiparametri LW
-# RADTSTLW => UNKNOWN
-# RADTSTLW;0;;;
-
-# Testiparametri SW
-# RADTSTSW => UNKNOWN
-# RADTSTSW;0;;;
-
 # Specific Humidity over land in kg/kg
-# QOL-KGKG[33] => QOL[241]
-QOL-KGKG;QOL;;;
+# QOL-KGKG => UNKNOWN
+# QOL-KGKG;0;;;
 
 # Temperature over land in Kelvins
-# TOL-K[34] => TOL[240]
-TOL-K;TOL;SUM{$,-273.15};SUM{$,273.15};
+# TOL-K => UNKNOWN
+# TOL-K;0;;;
 
 # Ground frost in volumetric proportion
-# GRFROST-M3M3[35] => GroundFrost[393]
-GRFROST-M3M3;GroundFrost;;;
+# GRFROST-M3M3 => UNKNOWN
+# GRFROST-M3M3;0;;;
 
 # Probability of reaching wind gust speed of 15 m/s in EPS
 # PROB-WG-1[36] => ProbabilityOfGustLimit1[583]
@@ -182,13 +130,13 @@ PROB-WG-3;ProbabilityOfGustLimit3;;;
 # PROB-WG-3[38] => ProbabilityOfGustLimit3[585]
 PROB-WG-3;ProbabilityOfGustLimit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Net long wave radiation, top of athmosphere
+# Net long wave radiation, top of atmosphere
 # RTOPLW-WM2[39] => RadiationNetTopAtmLW[314]
 RTOPLW-WM2;RadiationNetTopAtmLW;;;
 
-# Net short wave radiation, top of athmosphere
-# RTOPSW-WM2[40] => RadiationNetTopAtmSW[313]
-RTOPSW-WM2;RadiationNetTopAtmSW;;;
+# Net short wave radiation, top of atmosphere
+# RTOPSW-WM2 => UNKNOWN
+# RTOPSW-WM2;0;;;
 
 # Time to next Road Maintenance Measure
 # ROADMMT-S[41] => TimeToNextMeasure[638]
@@ -230,25 +178,17 @@ PREC30-KGM2;Precipitation30Days;;;
 # TOTCWV-KGM2[49] => PrecipitableWater[47]
 TOTCWV-KGM2;PrecipitableWater;;;
 
-# Maximum temperature on ambiguous level
-# MAXT-K => UNKNOWN
-# MAXT-K;0;;;
-
-# Minimum temperature on ambiguous level
-# MINT-K => UNKNOWN
-# MINT-K;0;;;
-
-# Cloud ice
+# Specific cloud ice water content: mass of ice per total mass of moist air
 # CLDICE-KGKG[52] => NEWBASE-PARAMETER[277]
 CLDICE-KGKG;277;;;
 
-# Cloud ice
+# Specific cloud ice water content: mass of ice per total mass of moist air
 # CLDICE-KGKG[52] => CloudIce[1199]
 CLDICE-KGKG;CloudIce;;;
 
 # Cloud top temperature
-# TCLDTOP-K => UNKNOWN
-# TCLDTOP-K;0;;;
+# CLDTOP-K => UNKNOWN
+# CLDTOP-K;0;;;
 
 # Water vapour radiation temperature
 # TWVRAD-K => UNKNOWN
@@ -262,14 +202,6 @@ CLDICE-KGKG;CloudIce;;;
 # REFLTY-N => UNKNOWN
 # REFLTY-N;0;;;
 
-# Maximum wind speed
-# MAXWS-MS => MaximumWind
-# MAXWS-MS;MaximumWind;;;
-
-# Minimum wind speed
-# MINWS-MS => UNKNOWN
-# MINWS-MS;0;;;
-
 # Relative humidity, land fraction average
 # RHAVE-PRCNT => UNKNOWN
 # RHAVE-PRCNT;0;;;
@@ -277,10 +209,6 @@ CLDICE-KGKG;CloudIce;;;
 # Dew point temperature, land fraction average
 # TDAVE-K => UNKNOWN
 # TDAVE-K;0;;;
-
-# Level of neutral buoyancy (lnb)
-# LNB-M[62] => LNB[69]
-LNB-M;LNB;;;
 
 # Convective inhibition (cin)
 # CIN-JKG[63] => CIN[66]
@@ -302,29 +230,17 @@ CIN-JKG;SoundingCINMostUnstable;;;
 # N-STDDEV-PRCNT => UNKNOWN
 # N-STDDEV-PRCNT;0;;;
 
-# tendance barometrique
-# TDPS => UNKNOWN
-# TDPS;0;;;
-
 # Temperature of high cloud cover
-# T-NH-K => UNKNOWN
-# T-NH-K;0;;;
+# NH-K => UNKNOWN
+# NH-K;0;;;
 
 # Standard Deviation of high cloud cover
 # NH-STDDEV-PRCNT => UNKNOWN
 # NH-STDDEV-PRCNT;0;;;
 
 # Temperature of low and middle cloud cover
-# T-NLM-K => UNKNOWN
-# T-NLM-K;0;;;
-
-# temperature maximale
-# TMAX => UNKNOWN
-# TMAX;0;;;
-
-# temperature minimale
-# TMIN => UNKNOWN
-# TMIN;0;;;
+# NLM-K => UNKNOWN
+# NLM-K;0;;;
 
 # Standard Deviation of low and middle cloud cover
 # NLMDEV-PRCNT => UNKNOWN
@@ -350,46 +266,6 @@ FSNO-PRCNT;SnowPercentage;;;
 # FSG-PRCNT => UNKNOWN
 # FSG-PRCNT;0;;;
 
-#  Temperature in Celsius, height 1
-# T-H1-C => UNKNOWN
-# T-H1-C;0;;;
-
-#  Temperature in Celsius, height 2
-# T-H2-C => UNKNOWN
-# T-H2-C;0;;;
-
-#  Temperature in Celsius, height 3
-# T-H3-C => UNKNOWN
-# T-H3-C;0;;;
-
-#  Temperature in Celsius, height 4
-# T-H4-C => UNKNOWN
-# T-H4-C;0;;;
-
-#  Temperature in Celsius, height 5
-# T-H5-C => UNKNOWN
-# T-H5-C;0;;;
-
-#  Temperature in Celsius, height 6
-# T-H6-C => UNKNOWN
-# T-H6-C;0;;;
-
-#  Temperature in Celsius, height 7
-# T-H7-C => UNKNOWN
-# T-H7-C;0;;;
-
-#  Temperature in Celsius, height 8
-# T-H8-C => UNKNOWN
-# T-H8-C;0;;;
-
-#  Relative Humidity in percents, height 2
-# RH-H2-PRCNT => UNKNOWN
-# RH-H2-PRCNT;0;;;
-
-#  Relative Humidity in percents height 3
-# RH-H3-PRCNT => UNKNOWN
-# RH-H3-PRCNT;0;;;
-
 # Latent heat flux
 # FLLAT-JM2[88] => LatentHeatFlux[321]
 FLLAT-JM2;LatentHeatFlux;;;
@@ -397,94 +273,6 @@ FLLAT-JM2;LatentHeatFlux;;;
 # Sensible heat flux
 # FLSEN-JM2[89] => SensibleHeatFlux[322]
 FLSEN-JM2;SensibleHeatFlux;;;
-
-#  Relative Humidity in percents, height 4
-# RH-H4-PRCNT => UNKNOWN
-# RH-H4-PRCNT;0;;;
-
-#  Wind speed in m/s, height 1
-# FF-H1-MS => UNKNOWN
-# FF-H1-MS;0;;;
-
-#  Wind speed in m/s, height 2
-# FF-H2-MS => UNKNOWN
-# FF-H2-MS;0;;;
-
-#  Wind speed in m/s, height 3
-# FF-H3-MS => UNKNOWN
-# FF-H3-MS;0;;;
-
-#  Wind speed in m/s, height 4
-# FF-H4-MS => UNKNOWN
-# FF-H4-MS;0;;;
-
-#  Wind Direction in Degrees, height 1
-# DD-H1-D => UNKNOWN
-# DD-H1-D;0;;;
-
-#  Wind Direction in Degrees, height 2
-# DD-H2-D => UNKNOWN
-# DD-H2-D;0;;;
-
-#  Wind Direction in Degrees, height 3
-# DD-H3-D => UNKNOWN
-# DD-H3-D;0;;;
-
-#  Wind Direction in Degrees, height 4
-# DD-H4-D => UNKNOWN
-# DD-H4-D;0;;;
-
-#  Maximum Wind Speed in m/s, height 1
-# FX-H1-MS => UNKNOWN
-# FX-H1-MS;0;;;
-
-#  Maximum Wind Speed in m/s, height 2
-# FX-H2-MS => UNKNOWN
-# FX-H2-MS;0;;;
-
-#  Maximum Wind Speed in m/s, height 3
-# FX-H3-MS => UNKNOWN
-# FX-H3-MS;0;;;
-
-#  Maximum Wind Speed in m/s, height 4
-# FX-H4-MS => UNKNOWN
-# FX-H4-MS;0;;;
-
-# Pressure in hPa , height 1
-# P-H1-HPA => UNKNOWN
-# P-H1-HPA;0;;;
-
-#  Relative Humidity in percents, height 1
-# RH-H1-PRCNT => UNKNOWN
-# RH-H1-PRCNT;0;;;
-
-#  for metars
-# WW1METAR-N => UNKNOWN
-# WW1METAR-N;0;;;
-
-#  for metars
-# WW2METAR-N => UNKNOWN
-# WW2METAR-N;0;;;
-
-#  for metars
-# WW3METAR-N => UNKNOWN
-# WW3METAR-N;0;;;
-
-#  for metars
-# ISCB1-N => UNKNOWN
-# ISCB1-N;0;;;
-
-#  for metars
-# ISCB2-N => UNKNOWN
-# ISCB2-N;0;;;
-
-#  for metars
-# ISCB3-N => UNKNOWN
-# ISCB3-N;0;;;
-
-#  for metars
-# ISCB4-N => UNKNOWN
-# ISCB4-N;0;;;
 
 #  for metars
 # VVERT-M => UNKNOWN
@@ -510,31 +298,17 @@ FLSEN-JM2;SensibleHeatFlux;;;
 # FFWARN-N => UNKNOWN
 # FFWARN-N;0;;;
 
-# concentration dans l'air de polluant 
-# CONCENTAIR => UNKNOWN
-# CONCENTAIR;0;;;
-
-# Total Precipitation over the last 12 hours
-# RAIN12 => UNKNOWN
-# RAIN12;0;;;
-
-# Total Precipitation over the last 6 hours
-# RAIN_6 => UNKNOWN
-# RAIN_6;0;;;
-
 # Maximum Temperature in Celsius
 # TMAX-C[122] => MaximumTemperature[5]
 TMAX-C;MaximumTemperature;;;
-TMAX-C;MaximumTemperature2m;;;
 
 # Minimum Temperature in Celsius
 # TMIN-C[123] => MinimumTemperature[6]
 TMIN-C;MinimumTemperature;;;
-TMIN-C;MinimumTemperature2m;;;
 
 # Ground Temperature in Celcius
-# TG-C => GroundTemperature
-TG-C;GroundTemperature;;;
+# TG-C => UNKNOWN
+# TG-C;0;;;
 
 # Temperature Anomaly in Celsius
 # TANM-C => UNKNOWN
@@ -561,8 +335,8 @@ CB-PRCNT;CbCloudCover;;;
 # CL3-PRCNT;0;;;
 
 # Friction velocity
-# FRVEL-MS[132] => NEWBASE-PARAMETER[225]
-FRVEL-MS;225;;;
+# FRVEL-MS => UNKNOWN
+# FRVEL-MS;0;;;
 
 # 4. Cloud Cover in %
 # CL4-PRCNT => UNKNOWN
@@ -616,10 +390,6 @@ LC-0TO1;LandSeaMask;;;
 # VV-HPAS => UNKNOWN
 # VV-HPAS;0;;;
 
-# Pressure Tendency)
-# PTD-N => UNKNOWN
-# PTD-N;0;;;
-
 # Surface Roughness in Meters
 # SR-M[146] => SurfaceRoughness[283]
 SR-M;SurfaceRoughness;;;
@@ -637,12 +407,8 @@ IC-0TO1;IceConcentration;;;
 IC-0TO1;IceCover;;;
 
 # Forest Cover, 1=Forest, 0=No Forest
-# FC-0TO1[149] => ForestFraction[282]
-FC-0TO1;ForestFraction;;;
-
-# Speed of the Ship in Meters per Second
-# VS_MS => UNKNOWN
-# VS_MS;0;;;
+# FC-0TO1 => UNKNOWN
+# FC-0TO1;0;;;
 
 # Temperature in Kelvins
 # T-K[153] => Temperature[4]
@@ -651,14 +417,6 @@ T-K;Temperature;SUM{$,-273.15};SUM{$,273.15};
 # Temperature in Celsius
 # T-C[154] => Temperature[4]
 T-C;Temperature;;;
-
-# Temperature in Celsius
-# T-C[154] => Temperature[4]
-T-C;Temperature;;;
-
-# Pressure Delta in Pascals)
-# PD-PA => UNKNOWN
-# PD-PA;0;;;
 
 # Geopotential
 # Z-M2S2[158] => GeopHeight[2]
@@ -670,20 +428,11 @@ Z-M2S2;GeopHeight;;;
 
 # Geopotential
 # Z-M2S2[158] => GeomHeight[3]
-Z-M2S2;GeomHeight;MUL{$,0.010200};DIV{$,0.010200};
+Z-M2S2;GeomHeight;MUL{$,0.102000};DIV{$,0.102000};
 
 # Pseudoadiabatic potential temperature in K
 # TPW-K[159] => PseudoAdiabaticPotentialTemperature[9]
 TPW-K;PseudoAdiabaticPotentialTemperature;SUM{$,-273.15};SUM{$,273.15};
-
-
-# Dew point Temperature in 10ths of C
-# TD-C10 => UNKNOWN
-# TD-C10;0;;;
-
-# Dew point Temperature in C
-# TD-C[161] => DewPoint[10]
-TD-C;DewPoint;;;
 
 # Dew point Temperature in C
 # TD-C[161] => DewPoint[10]
@@ -714,8 +463,12 @@ CLDSYM-N;CloudSymbol;;;
 FF-MS;WindSpeedMS;;;
 
 # Wind speed in m/s
-# FF-MS[166] => TotalWindMS[4774]
-FF-MS;TotalWindMS;;;
+# FF-MS[166] => SoundingWindSpeed1500m[4774]
+FF-MS;SoundingWindSpeed1500m;;;
+
+# Wind speed in m/s
+# FF-MS[166] => NEWBASE-PARAMETER[47740]
+FF-MS;47740;;;
 
 # Wind Direction in Degrees
 # DD-D[169] => WindDirection[20]
@@ -733,10 +486,6 @@ V-MS;WindVMS;;;
 # VV-MMS[175] => VerticalVelocityMMS[43]
 VV-MMS;VerticalVelocityMMS;;;
 
-# Vertical Velocity in cb/s
-# VV-CBS => UNKNOWN
-# VV-CBS;0;;;
-
 # Vertical Velocity in pa/s
 # VV-PAS[177] => VelocityPotential[39]
 VV-PAS;VelocityPotential;;;
@@ -744,10 +493,6 @@ VV-PAS;VelocityPotential;;;
 # Vertical Velocity in pa/s
 # VV-PAS[177] => VelocityPotential[39]
 VV-PAS;VelocityPotential;MUL{$,100.000000};DIV{$,100.000000};
-
-# Total precipitation
-# RR-MM10[178] => PrecipitationAmount[50]
-RR-MM10;PrecipitationAmount;;;
 
 # Total precipitation in kg/m2
 # RR-KGM2[179] => PrecipitationAmount[50]
@@ -757,37 +502,21 @@ RR-KGM2;PrecipitationAmount;;;
 # RR-KGM2[179] => PrecipitationAmount[50]
 RR-KGM2;PrecipitationAmount;MUL{$,1000.000000};DIV{$,1000.000000};
 
-# Rain Symbol 2
-# RRSYM2-N => UNKNOWN
-# RRSYM2-N;0;;;
-
-# Rain over the last 6 hours in mm
+# Precipitation over the last 6 hours in mm
 # RR-6-MM[181] => SigWaveLength[179]
 RR-6-MM;SigWaveLength;;;
 
-# Rain over the last 6 hours in mm
+# Precipitation over the last 6 hours in mm
 # RR-6-MM[181] => Precipitation6h[355]
 RR-6-MM;Precipitation6h;;;
 
-# Rain over the last 12 hours in mm
+# Precipitation over the last 12 hours in mm
 # RR-12-MM[182] => Precipitation12h[356]
 RR-12-MM;Precipitation12h;;;
-
-# Large Scale precipitation in 10ths of mm
-# RRL-MM10[183] => PrecipitationLarge[55]
-RRL-MM10;PrecipitationLarge;;;
-
-# Large Scale precipitation in kg/m2
-# RRL-KGM2[184] => PrecipitationLarge[55]
-RRL-KGM2;PrecipitationLarge;;;
 
 # Large Scale precipitation in kg/m2
 # RRL-KGM2[184] => PrecipitationLarge[55]
 RRL-KGM2;PrecipitationLarge;MUL{$,1000.000000};DIV{$,1000.000000};
-
-# Convective precipitation in 10ths of mm
-# RRC-MM10[185] => PrecipitationConv[48]
-RRC-MM10;PrecipitationConv;;;
 
 # Convective precipitation in kg/m2
 # RRC-KGM2[186] => PrecipitationConv[48]
@@ -799,7 +528,7 @@ RRC-KGM2;PrecipitationConv;MUL{$,1000.000000};DIV{$,1000.000000};
 
 # Total Cloud Cover in %
 # N-PRCNT[187] => TotalCloudCover[79]
-# N-PRCNT;TotalCloudCover;;;
+N-PRCNT;TotalCloudCover;;;
 
 # Total Cloud Cover in %
 # N-PRCNT[187] => TotalCloudCover[79]
@@ -817,17 +546,13 @@ KINDEX-N;KIndex;;;
 # HESSAA-N[189] => WeatherSymbol3[338]
 HESSAA-N;WeatherSymbol3;;;
 
-# Precipitation Large Scale in m
+# Large scale precipitation in m
 # RRL-M => UNKNOWN
 # RRL-M;0;;;
 
-# Precipitation Convective in m
+# Convective precipitation in m
 # RRC-M => UNKNOWN
 # RRC-M;0;;;
-
-# Precipitation Snow in meters
-# RRS-M => UNKNOWN
-# RRS-M;0;;;
 
 # Log Surface Pressure
 # LNSP-N[194] => LogNatOfPressure[145]
@@ -889,10 +614,6 @@ RRRC-KGM2;72;;;
 # RRRC-KGM2[201] => PrecipitationRateConv[201]
 RRRC-KGM2;PrecipitationRateConv;;;
 
-# Absolute Vorticity in HZ/10000
-# ABSVO-HZ-5 => UNKNOWN
-# ABSVO-HZ-5;0;;;
-
 # Absolute Vorticity in HZ
 # ABSVO-HZ[203] => VorticityAbsolute[31]
 ABSVO-HZ;VorticityAbsolute;;;
@@ -901,37 +622,21 @@ ABSVO-HZ;VorticityAbsolute;;;
 # FRNTSYM-N[204] => FrontSymbol[333]
 FRNTSYM-N;FrontSymbol;;;
 
-# Present Weather
-# WW-N => UNKNOWN
-# WW-N;0;;;
-
-# Past Weather 1
-# W1-N => UNKNOWN
-# W1-N;0;;;
-
-# Past Weather 2
-# W2-N => UNKNOWN
-# W2-N;0;;;
-
 # Cloud Height in  Meters
 # H-M[209] => CloudHeight[414]
 H-M;CloudHeight;;;
 
 # Low Cloud Type
-# CL-N => UNKNOWN
-# CL-N;0;;;
+# NLT-N => UNKNOWN
+# NLT-N;0;;;
 
 # Medium Cloud Type
-# CM-N => UNKNOWN
-# CM-N;0;;;
+# NMT-N => UNKNOWN
+# NMT-N;0;;;
 
 # High Cloud Type
-# CH-N => UNKNOWN
-# CH-N;0;;;
-
-# Period of Rain Amount in Seconds
-# RRT-S => UNKNOWN
-# RRT-S;0;;;
+# NHT-N => UNKNOWN
+# NHT-N;0;;;
 
 # Maximum Temperature in Kelvins
 # TMAX-K[214] => MaximumTemperature[5]
@@ -941,11 +646,11 @@ TMAX-K;MaximumTemperature;SUM{$,-273.15};SUM{$,273.15};
 # TMAX-K[214] => MaximumTemperature2m[360]
 TMAX-K;MaximumTemperature2m;SUM{$,-273.15};SUM{$,273.15};
 
-# Minimum Temperature in Kelvins
+# Maximum Temperature in Kelvins
 # TMIN-K[215] => MinimumTemperature[6]
 TMIN-K;MinimumTemperature;SUM{$,-273.15};SUM{$,273.15};
 
-# Minimum Temperature in Kelvins
+# Maximum Temperature in Kelvins
 # TMIN-K[215] => MinimumTemperature2m[361]
 TMIN-K;MinimumTemperature2m;SUM{$,-273.15};SUM{$,273.15};
 
@@ -988,14 +693,6 @@ SNL-KGM2;LargeScaleSnow;;;
 # Convective snow accumulation in kg/m2
 # SNC-KGM2[222] => ConvectiveSnow[278]
 SNC-KGM2;ConvectiveSnow;;;
-
-# Large scale snowfall rate in mm/h
-# SNRL-KGM2[223] => SnowWaterRatio[268]
-SNRL-KGM2;SnowWaterRatio;;;
-
-# Convective snowfall rate in mm/h
-# SNRC-KGM2[224] => NEWBASE-PARAMETER[269]
-SNRC-KGM2;269;;;
 
 # Probability of reaching wind gust speed of 30 m/s in EPS
 # PROB-WG-4[225] => ProbabilityOfGustLimit4[586]
@@ -1353,10 +1050,6 @@ PROB-TC-4;ProbabilityOfColdLimit4;MUL{$,100.000000};DIV{$,100.000000};
 # RR-AVE6-MM => UNKNOWN
 # RR-AVE6-MM;0;;;
 
-# Average snow fall 6 hours in EPS
-# SN-AVE6-MM => UNKNOWN
-# SN-AVE6-MM;0;;;
-
 # Probability of reaching precipitation 1 mm in 24 h in EPS
 # PROB-RR24-6[263] => ProbabilityOfPr24Limit6[1076]
 PROB-RR24-6;ProbabilityOfPr24Limit6;;;
@@ -1405,14 +1098,6 @@ NC-PRCNT;ConvectiveCloudCover;;;
 # SAL-PSU[269] => Salinity[62]
 SAL-PSU;Salinity;;;
 
-# Snow depth in m for Hirlam Models
-# SDEP-M[270] => NEWBASE-PARAMETER[138]
-SDEP-M;138;;;
-
-# Snow depth in m on open land
-# SDEPOP-M[271] => VelocityPotentialM2S[139]
-SDEPOP-M;VelocityPotentialM2S;;;
-
 # Cloud top brightness temperature (IR)
 # CTBT-K[272] => CloudTopBrightnessTemperature[364]
 CTBT-K;CloudTopBrightnessTemperature;SUM{$,-273.15};SUM{$,273.15};
@@ -1431,15 +1116,15 @@ CTBT-K;CloudTopBrightnessTemperature;SUM{$,-273.15};SUM{$,273.15};
 
 # Cloud base height
 # CLDBASE-M[276] => CloudBase[500]
-# CLDBASE-M;CloudBase;;;
+CLDBASE-M;CloudBase;;;
 
 # Cloud base height
 # CLDBASE-M[276] => effective_radius_of_stratiform_cloud_graupel_particle[10500]
 CLDBASE-M;effective_radius_of_stratiform_cloud_graupel_particle;;;
 
 # Maximum icing index, 1-4
-# MAXICE-N[277] => MaximumIcingIndex[367]
-MAXICE-N;MaximumIcingIndex;;;
+# MAXICE-N => UNKNOWN
+# MAXICE-N;0;;;
 
 # Sea ice velocity (U) in m/s
 # IVELU-MS[278] => GroundWaterLevel[396]
@@ -1461,69 +1146,9 @@ IVELV-MS;NorthwardIceVelocity;;;
 # IRAFTTHK-CM[280] => RaftIceThickness[1152]
 IRAFTTHK-CM;RaftIceThickness;MUL{$,0.010000};DIV{$,0.010000};
 
-# Road Temperature Derivative Sensor 1
-# T1DER-C => UNKNOWN
-# T1DER-C;0;;;
-
-# Road Temperature Derivative Sensor 2
-# T2DER-C => UNKNOWN
-# T2DER-C;0;;;
-
-# Freezing Point Sensor 1
-# FRPT1-C => UNKNOWN
-# FRPT1-C;0;;;
-
-# Freezing Point Sensor 2
-# FRPT2-C => UNKNOWN
-# FRPT2-C;0;;;
-
-# Road Warning 1
-# ROADWARN1-N => UNKNOWN
-# ROADWARN1-N;0;;;
-
-# Road Warning 2
-# ROADWARN2-N => UNKNOWN
-# ROADWARN2-N;0;;;
-
-# Road Warning 3
-# ROADWARN3-N => UNKNOWN
-# ROADWARN3-N;0;;;
-
 # Dew Point Deficit
 # DPDEF-C => UNKNOWN
 # DPDEF-C;0;;;
-
-# Conductivity Sensor 1
-# CONDTY1-V => UNKNOWN
-# CONDTY1-V;0;;;
-
-# Conductivity Sensor 2
-# CONDTY2-V => UNKNOWN
-# CONDTY2-V;0;;;
-
-# Sensor Fault
-# SENSFT-N => UNKNOWN
-# SENSFT-N;0;;;
-
-# Salt Content grams per m2 Sensor 1
-# SALT1-GM2 => UNKNOWN
-# SALT1-GM2;0;;;
-
-# Salt Content grams per m2 Sensor 2
-# SALT2-GM2 => UNKNOWN
-# SALT2-GM2;0;;;
-
-# Salt Concentration grams per litre Sensor 1
-# SALT1-GL => UNKNOWN
-# SALT1-GL;0;;;
-
-# Salt Concentration grams per litre Sensor 2
-# SALT2-GL => UNKNOWN
-# SALT2-GL;0;;;
-
-# Road Status 3
-# ROADST3-N => UNKNOWN
-# ROADST3-N;0;;;
 
 # Friction Coefficient
 # FRICTION-N[297] => Friction3[93]
@@ -1532,18 +1157,6 @@ FRICTION-N;Friction3;;;
 # Water Content in mm
 # WATERLR-MM => UNKNOWN
 # WATERLR-MM;0;;;
-
-# Snow Content in mm
-# SNOWLR-MM => UNKNOWN
-# SNOWLR-MM;0;;;
-
-# Ice Content in mm
-# ICELR-MM[300] => IceContent[96]
-ICELR-MM;IceContent;;;
-
-# Road Condition Index, County average
-# RDIDX-CO-N[301] => NEWBASE-PARAMETER[97]
-RDIDX-CO-N;97;;;
 
 # Probability of frost
 # PROB-TC-0[302] => FrostProbability[372]
@@ -1589,14 +1202,6 @@ IFF-MS;IceSpeed;;;
 # IDD-D[309] => IceDirection[390]
 IDD-D;IceDirection;;;
 
-# Sea water speed in m/s
-# SFF-MS => UNKNOWN
-# SFF-MS;0;;;
-
-# Sea water Direction in Degrees
-# SDD-D => UNKNOWN
-# SDD-D;0;;;
-
 # Ice mean thickness
 # IMEANTHK-CM => UNKNOWN
 # IMEANTHK-CM;0;;;
@@ -1605,35 +1210,35 @@ IDD-D;IceDirection;;;
 # TP-K[313] => PotentialTemperature[8]
 TP-K;PotentialTemperature;SUM{$,-273.15};SUM{$,273.15};
 
-# Net short wave radiation accumulation
+# Net short wave radiation flux: amount of solar radiation that reaches the surface of the Earth (both direct and diffuse) minus the amount reflected by the Earth's surface (which is governed by the albedo)
 # RNETSWA-JM2[314] => RadiationNetSurfaceSWAccumulation[1162]
 RNETSWA-JM2;RadiationNetSurfaceSWAccumulation;;;
 
-# Diffuse shortwave radiation accumulation
-# RDIFSWA-JM2[315] => RadiationDiffuseAccumulation[1163]
-RDIFSWA-JM2;RadiationDiffuseAccumulation;;;
+# Diffuse shortwave radiation flux
+# RDIFSWA-JM2 => UNKNOWN
+# RDIFSWA-JM2;0;;;
 
-# Net long wave radiation accumulation
+# Net long wave radiation flux
 # RNETLWA-JM2[316] => RadiationNetSurfaceLWAccumulation[1161]
 RNETLWA-JM2;RadiationNetSurfaceLWAccumulation;;;
 
-# Long wave radiation accumulation
+# Long wave radiation flux
 # RADLWA-JM2[317] => RadiationLWAccumulation[1160]
 RADLWA-JM2;RadiationLWAccumulation;;;
 
-# Global radiation accumulation
+# Global (short-wave) radiation flux. Includes both direct and diffuse components
 # RADGLOA-JM2[318] => CrossSectionDirection[117]
 RADGLOA-JM2;CrossSectionDirection;;;
 
-# Global radiation accumulation
+# Global (short-wave) radiation flux. Includes both direct and diffuse components
 # RADGLOA-JM2[318] => RadiationGlobalAccumulation[1159]
 RADGLOA-JM2;RadiationGlobalAccumulation;;;
 
-# Net short wave radiation accumulation, top of atmosphere
+# Net short wave radiation flux, top of atmosphere
 # RTOPSWA-JM2 => UNKNOWN
 # RTOPSWA-JM2;0;;;
 
-# Net long wave radiation accumulation, top of atmosphere
+# Net long wave radiation flux, top of atmosphere
 # RTOPLWA-JM2 => UNKNOWN
 # RTOPLWA-JM2;0;;;
 
@@ -1733,21 +1338,9 @@ TTI-N;47550;;;
 # F0-T-K[334] => TemperatureF0[877]
 F0-T-K;TemperatureF0;SUM{$,-273.15};SUM{$,273.15};
 
-# 0th fractal (ie. minimum) temperature in EPS
-# F0-T-K[334] => TemperatureF0[877]
-F0-T-K;TemperatureF0;SUM{$,-273.15};SUM{$,273.15};
-
 # 10th fractal temperature in EPS
 # F10-T-K[335] => TemperatureF10[876]
 F10-T-K;TemperatureF10;SUM{$,-273.15};SUM{$,273.15};
-
-# 10th fractal temperature in EPS
-# F10-T-K[335] => TemperatureF10[876]
-F10-T-K;TemperatureF10;SUM{$,-273.15};SUM{$,273.15};
-
-# 25th fractal temperature in EPS
-# F25-T-K[336] => TemperatureF25[875]
-F25-T-K;TemperatureF25;SUM{$,-273.15};SUM{$,273.15};
 
 # 25th fractal temperature in EPS
 # F25-T-K[336] => TemperatureF25[875]
@@ -1769,21 +1362,9 @@ F50-T-K;TemperatureF50;SUM{$,-273.15};SUM{$,273.15};
 # F75-T-K[338] => TemperatureF75[873]
 F75-T-K;TemperatureF75;SUM{$,-273.15};SUM{$,273.15};
 
-# 75th fractal temperature in EPS
-# F75-T-K[338] => TemperatureF75[873]
-F75-T-K;TemperatureF75;SUM{$,-273.15};SUM{$,273.15};
-
 # 90th fractal temperature in EPS
 # F90-T-K[339] => TemperatureF90[872]
 F90-T-K;TemperatureF90;SUM{$,-273.15};SUM{$,273.15};
-
-# 90th fractal temperature in EPS
-# F90-T-K[339] => TemperatureF90[872]
-F90-T-K;TemperatureF90;SUM{$,-273.15};SUM{$,273.15};
-
-# 100th fractal (ie. maximum) temperature in EPS
-# F100-T-K[340] => TemperatureF100[871]
-F100-T-K;TemperatureF100;SUM{$,-273.15};SUM{$,273.15};
 
 # 100th fractal (ie. maximum) temperature in EPS
 # F100-T-K[340] => TemperatureF100[871]
@@ -1978,6 +1559,10 @@ EL-HPA;SoundingELPressureMostUnstable;;;
 EL-HPA;47220;;;
 
 # Height of LCL in meters
+# LCL-M[375] => LCL[68]
+LCL-M;LCL;;;
+
+# Height of LCL in meters
 # LCL-M[375] => SoundingLCLHeightSurface[4726]
 LCL-M;SoundingLCLHeightSurface;;;
 
@@ -2058,16 +1643,8 @@ ICINGWARN-N;IcingWarningIndex;;;
 MOL-M;MoninObukhovLength;;;
 
 # Maximum Wind Speed in m/s
-# FX-MS[408] => MaximumWind[416]
-FX-MS;MaximumWind;;;
-
-# Period of Rain Amount in Hours
-# RRT-H => UNKNOWN
-# RRT-H;0;;;
-
-# Direction of the Ship in Degrees
-# DS-D => UNKNOWN
-# DS-D;0;;;
+# FX-MS => UNKNOWN
+# FX-MS;0;;;
 
 # Instantaneous Wind Speed in m/s
 # FFG-MS[411] => WindGust[417]
@@ -2079,15 +1656,7 @@ FFG-MS;HourlyMaximumGust;;;
 
 # Pressure in hPa
 # P-HPA[412] => Pressure[1]
-P-HPA;Pressure;MUL{$,0.010000};DIV{$,0.010000};
-
-# Pressure in hPa
-# P-HPA[412] => Pressure[1]
 P-HPA;Pressure;;;
-
-# Dew Point Temperature at 2m in Celsius
-# TD2M-C => UNKNOWN
-# TD2M-C;0;;;
 
 # Rain On or Off
 # RRON-N => UNKNOWN
@@ -2096,10 +1665,6 @@ P-HPA;Pressure;;;
 # SunShine On or Off
 # SSON-N => UNKNOWN
 # SSON-N;0;;;
-
-# Precipitation Large Scale in mm
-# RRL-MM => UNKNOWN
-# RRL-MM;0;;;
 
 # Radiation amount on Watts per Square Meter
 # RAD-WM2 => UNKNOWN
@@ -2169,17 +1734,9 @@ TSEA-C;TemperatureSeaSurface;;;
 # RADR-WM2 => UNKNOWN
 # RADR-WM2;0;;;
 
-# Pressure Delta in hPa
-# PD-HPA => UNKNOWN
-# PD-HPA;0;;;
-
-# Rain over the last 24 hours in mm
+# Precipitation over the last 24 hours in mm
 # RR-24-MM[437] => Precipitation24h[357]
 RR-24-MM;Precipitation24h;;;
-
-# Cloudiness 0...1
-# N-0TO1[438] => TotalCloudCover[79]
-N-0TO1;TotalCloudCover;;;
 
 # Cloudiness 0...1
 # N-0TO1[438] => TotalCloudCover[79]
@@ -2188,10 +1745,6 @@ N-0TO1;TotalCloudCover;MUL{$,100.000000};DIV{$,100.000000};
 # Precalculated weather symbol
 # HSADE1-N[439] => WeatherSymbol1[336]
 HSADE1-N;WeatherSymbol1;;;
-
-# Precalculated weather symbol
-# HSADE2-N[440] => WeatherSymbol2[337]
-HSADE2-N;WeatherSymbol2;;;
 
 # Total Precipitation rate in kg m-2
 # RRR-KGM2[441] => PrecipitationRate[49]
@@ -2212,10 +1765,6 @@ DF-MS;WindVectorMS;;;
 # Calculated smog appearance
 # SMOGI-N[443] => SmogIndex[195]
 SMOGI-N;SmogIndex;;;
-
-# Battery Voltage (at automatic stations)
-# BATT-V => UNKNOWN
-# BATT-V;0;;;
 
 # Current speed in m/s
 # FCUR-MS => UNKNOWN
@@ -2301,10 +1850,6 @@ LWS-M;SigWaveLength;;;
 # FL-ACCSY-KM => UNKNOWN
 # FL-ACCSY-KM;0;;;
 
-# Parameter needed to contain radar parameter number
-# RADPAR-N => UNKNOWN
-# RADPAR-N;0;;;
-
 # Parameter needed to contain radar level type
 # RADLEVT-N => UNKNOWN
 # RADLEVT-N;0;;;
@@ -2361,10 +1906,6 @@ SW0WDIR-D;WaveDirectionSwell0;;;
 # MAXHGT-KM => UNKNOWN
 # MAXHGT-KM;0;;;
 
-# Code number of the forecaster
-# METCODE-N => UNKNOWN
-# METCODE-N;0;;;
-
 # Layer between two elevation angles
 # MINELEV-D => UNKNOWN
 # MINELEV-D;0;;;
@@ -2373,33 +1914,13 @@ SW0WDIR-D;WaveDirectionSwell0;;;
 # ACCTIM-H => UNKNOWN
 # ACCTIM-H;0;;;
 
-# Threshold dBZ-value
-# MINDBZ => UNKNOWN
-# MINDBZ;0;;;
-
-# Minimum range
-# MINRNG-KM => UNKNOWN
-# MINRNG-KM;0;;;
-
-# Maximum range
-# MAXRNG-KM => UNKNOWN
-# MAXRNG-KM;0;;;
-
 # Number of columns
 # COLNUM-N => UNKNOWN
 # COLNUM-N;0;;;
 
-# Number of rows
-# ROWNUM-N => UNKNOWN
-# ROWNUM-N;0;;;
-
 # Horizontal resolution
 # HORRESOL-M => UNKNOWN
 # HORRESOL-M;0;;;
-
-# Vertical resolution
-# ZRESOL => UNKNOWN
-# ZRESOL;0;;;
 
 # Clutter corrected ceflectivity
 # REFLTY-DBZ[490] => CorrectedReflectivity[126]
@@ -2408,14 +1929,6 @@ REFLTY-DBZ;CorrectedReflectivity;;;
 # Echo top
 # TOPS-KM => UNKNOWN
 # TOPS-KM;0;;;
-
-# Rainfall depth
-# LIQUID-MM => UNKNOWN
-# LIQUID-MM;0;;;
-
-# Raw radar data
-# RAW => UNKNOWN
-# RAW;0;;;
 
 # Wind in the direction of the radar beam
 # RADWIND-MS => UNKNOWN
@@ -2433,7 +1946,7 @@ REFLTY-DBZ;CorrectedReflectivity;;;
 # AZANG-D => UNKNOWN
 # AZANG-D;0;;;
 
-# Net short wave radiation
+# Net short wave radiation: amount of solar radiation that reaches the surface of the Earth (both direct and diffuse) minus the amount reflected by the Earth's surface (which is governed by the albedo)
 # RNETSW-WM2[498] => RadiationNetSurfaceSW[311]
 RNETSW-WM2;RadiationNetSurfaceSW;;;
 
@@ -2449,7 +1962,7 @@ RADLW-WM2;RadiationLW;;;
 # RADSW-WM2[501] => RadiationSW[316]
 RADSW-WM2;RadiationSW;;;
 
-# Global radiation
+# Global (short-wave) radiation. Includes both direct and diffuse components
 # RADGLO-WM2[502] => RadiationGlobal[317]
 RADGLO-WM2;RadiationGlobal;;;
 
@@ -2457,15 +1970,15 @@ RADGLO-WM2;RadiationGlobal;;;
 # FOGSYM-N[503] => FogSymbol[334]
 FOGSYM-N;FogSymbol;;;
 
-# Rain over the last 1 hour in mm
+# Precipitation over the last 1 hour in mm
 # RR-1-MM[504] => Precipitation1h[353]
 RR-1-MM;Precipitation1h;;;
 
-# Rain over the last 2 hours in mm
+# Precipitation over the last 2 hours in mm
 # RR-2-MM => UNKNOWN
 # RR-2-MM;0;;;
 
-# Rain over the last 3 hours in mm
+# Precipitation over the last 3 hours in mm
 # RR-3-MM[506] => Precipitation3h[354]
 RR-3-MM;Precipitation3h;;;
 
@@ -2492,18 +2005,6 @@ SNACC-KGM2;SnowAccumulation;;;
 # Snowfall accumulation  in mm
 # SNACC-KGM2[510] => SnowAccumulation[265]
 SNACC-KGM2;SnowAccumulation;MUL{$,1000.000000};DIV{$,1000.000000};
-
-# Additional latitude information
-# URLAT-D => UNKNOWN
-# URLAT-D;0;;;
-
-# Additional longitude information
-# URLON-D => UNKNOWN
-# URLON-D;0;;;
-
-# Projection type information
-# PROJID-N => UNKNOWN
-# PROJID-N;0;;;
 
 # Grid orientation
 # GRORIENT-D => UNKNOWN
@@ -2537,10 +2038,6 @@ VV-MS;VerticalVelocityMMS;MUL{$,1000.000000};DIV{$,1000.000000};
 # VV-MS[523] => VerticalVelocityMS[143]
 VV-MS;VerticalVelocityMS;;;
 
-# Vertical Velocity in m/s
-# VV-MS[523] => VerticalVelocityMS[143]
-VV-MS;VerticalVelocityMS;MUL{$,1000.000000};DIV{$,1000.000000};
-
 # Model level number
 # MODLEV-N => UNKNOWN
 # MODLEV-N;0;;;
@@ -2549,45 +2046,9 @@ VV-MS;VerticalVelocityMS;MUL{$,1000.000000};DIV{$,1000.000000};
 # STGR-N[526] => StateOfGround[424]
 STGR-N;StateOfGround;;;
 
-# Code number of precipitation, ask Pauli
-# RRCODE-N => UNKNOWN
-# RRCODE-N;0;;;
-
-# Snow depth at 06 UTC in cm
-# SD06-CM => UNKNOWN
-# SD06-CM;0;;;
-
-# Snow depth at 06 UTC in cm
-# SD18-CM => UNKNOWN
-# SD18-CM;0;;;
-
-# Daily mean temperature in Celcius
-# DT-C => UNKNOWN
-# DT-C;0;;;
-
-# Minimum temperature at 06 UTC in celcius
-# TMIN06-C[531] => MinimumTemperature06[428]
-TMIN06-C;MinimumTemperature06;;;
-
-# Maximum temperature at 06 UTC in celcius
-# TMAX06-C[532] => MaximumTemperature06[429]
-TMAX06-C;MaximumTemperature06;;;
-
 # Minimum temperature at ground at 06 UTC in celcius
 # TGMIN06-C[533] => MinimumGroundTemperature06[430]
 TGMIN06-C;MinimumGroundTemperature06;;;
-
-# Minimum temperature at 18 UTC in celcius
-# TMIN18-C[534] => MinimumTemperature18[431]
-TMIN18-C;MinimumTemperature18;;;
-
-# Maximum temperature at 18 UTC in celcius
-# TMAX18-C[535] => MaximumTemperature18[432]
-TMAX18-C;MaximumTemperature18;;;
-
-# Monthly mean temperature in Celcius
-# MT-C => UNKNOWN
-# MT-C;0;;;
 
 # Monthly precipitation in mm
 # MRR-KGM2 => UNKNOWN
@@ -2613,10 +2074,6 @@ TMAX18-C;MaximumTemperature18;;;
 # DRADN-KJM2 => UNKNOWN
 # DRADN-KJM2;0;;;
 
-# Daily precipitation indicator (reliability)
-# DRRIND-N => UNKNOWN
-# DRRIND-N;0;;;
-
 # Total ozone in Dobson units
 # TOZONE-DU => UNKNOWN
 # TOZONE-DU;0;;;
@@ -2632,30 +2089,6 @@ TMAX18-C;MaximumTemperature18;;;
 # Hour and minute of Maximum intensity of UV
 # DUVMAX-HM => UNKNOWN
 # DUVMAX-HM;0;;;
-
-# Sunshine during an hour in 6 min units
-# HSUN-N => UNKNOWN
-# HSUN-N;0;;;
-
-# Hourly global radiation in kJ m-2
-# HRADG-KJM2 => HourlyGlobalRadiation
-HRADG-KJM2;HourlyGlobalRadiation;;;
-
-# Hourly diffuse radiation in kJ m-2
-# HRADD-KJM2 => HourlyDiffuseRadiation
-HRADD-KJM2;HourlyDiffuseRadiation;;;
-
-# Hourly reflected radiation in kJ m-2
-# HRADR-KJM2 => HourlyReflectedRadiation
-HRADR-KJM2;HourlyReflectedRadiation;;;
-
-# Hourly net radiation in kJ m-2
-# HRADN-KJM2 => HourlyNetRadiation
-HRADN-KJM2;HourlyNetRadiation;;;
-
-# Monthly mean precipitation for period 1931-60
-# RR3160-KGM2 => UNKNOWN
-# RR3160-KGM2;0;;;
 
 # Height of 0 C level in meters
 # H0C-M[554] => FreezingLevel[270]
@@ -2673,13 +2106,13 @@ FLMOM-PA;MinimumTemperature06;;;
 # GROWPER-N[557] => GrowthPeriodOnOff[658]
 GROWPER-N;GrowthPeriodOnOff;;;
 
-# Vertical Sounding Significance.
-# SIGNIFICANCE => UNKNOWN
-# SIGNIFICANCE;0;;;
-
 # Convective available potential energy
 # CAPE-JKG[559] => CAPE[59]
 CAPE-JKG;CAPE;;;
+
+# Convective available potential energy
+# CAPE-JKG[559] => NEWBASE-PARAMETER[1470]
+CAPE-JKG;1470;;;
 
 # Convective available potential energy
 # CAPE-JKG[559] => SoundingCAPESurface[4723]
@@ -2721,22 +2154,6 @@ PROBSN-0TO1;SurfaceWaterPhase;;;
 # PROBSN-0TO1[565] => SurfaceWaterPhase[706]
 PROBSN-0TO1;SurfaceWaterPhase;MUL{$,100.000000};DIV{$,100.000000};
 
-# Cloud Cover in 1/8ths of the lowest layer
-# CLN1-N => UNKNOWN
-# CLN1-N;0;;;
-
-# Cloud Cover in 1/8ths of the second layer
-# CLN2-N => UNKNOWN
-# CLN2-N;0;;;
-
-# Cloud Cover in 1/8ths of the third layer
-# CLN3-N => UNKNOWN
-# CLN3-N;0;;;
-
-# Cloud Cover in 1/8ths of the fourth layer
-# CLN4-N => UNKNOWN
-# CLN4-N;0;;;
-
 # Cloud type for the lowest layer
 # CLDTYP1-N => UNKNOWN
 # CLDTYP1-N;0;;;
@@ -2757,10 +2174,6 @@ PROBSN-0TO1;SurfaceWaterPhase;MUL{$,100.000000};DIV{$,100.000000};
 # AVIVIS-M => UNKNOWN
 # AVIVIS-M;0;;;
 
-# Vertical visibility in feet
-# VVERT-FT => UNKNOWN
-# VVERT-FT;0;;;
-
 # Height of the lowest cloud layer in feet
 # CL1-FT => UNKNOWN
 # CL1-FT;0;;;
@@ -2777,10 +2190,6 @@ PROBSN-0TO1;SurfaceWaterPhase;MUL{$,100.000000};DIV{$,100.000000};
 # CL4-FT => UNKNOWN
 # CL4-FT;0;;;
 
-# Metar observation type: manual or auto
-# METTYPE-N => UNKNOWN
-# METTYPE-N;0;;;
-
 # Virtual temperature
 # TVIRT-K[581] => TemperatureVirtual[212]
 TVIRT-K;TemperatureVirtual;SUM{$,-273.15};SUM{$,273.15};
@@ -2794,40 +2203,20 @@ TVIRT-K;TemperatureVirtual;SUM{$,-273.15};SUM{$,273.15};
 CLDCND-KGKG;CloudCondensate;;;
 
 # Growth period precipitation deviation from normal in percent
-# GRPRDEV-PCT[584] => FrostSum[634]
-GRPRDEV-PCT;FrostSum;;;
+# GRPRDEV-PRCNT[584] => FrostSum[634]
+GRPRDEV-PRCNT;FrostSum;;;
 
 # Growth period precipitation deviation from normal in percent
-# GRPRDEV-PCT[584] => GrowthPeriodPrecipitationSumDeviationInPrcnt[1144]
-GRPRDEV-PCT;GrowthPeriodPrecipitationSumDeviationInPrcnt;;;
+# GRPRDEV-PRCNT[584] => GrowthPeriodPrecipitationSumDeviationInPrcnt[1144]
+GRPRDEV-PRCNT;GrowthPeriodPrecipitationSumDeviationInPrcnt;;;
 
 # Forest ground humidity kg in kg
 # HUMFO2-0TO1[585] => GroundHumidityForest[540]
 HUMFO2-0TO1;GroundHumidityForest;;;
 
-# Extreme forecast index for temperature
-# EFI-T[586] => EFITemperature[557]
-EFI-T;EFITemperature;;;
-
-# Extreme forecast index for wind speed
-# EFI-WS[587] => EFIWindSpeed[556]
-EFI-WS;EFIWindSpeed;;;
-
-# Extreme forecast index for wind gusts
-# EFI-WG[588] => EFIWindGust[558]
-EFI-WG;EFIWindGust;;;
-
-# Extreme forecast index for precipitation
-# EFI-RR[589] => EFIPrecipitation[559]
-EFI-RR;EFIPrecipitation;;;
-
 # Graupel rate in mm/h
 # GRR-MMH[590] => PrecipitationRateGraupel[1168]
 GRR-MMH;PrecipitationRateGraupel;;;
-
-# Rain rate in mm/h
-# RRR-MMH => UNKNOWN
-# RRR-MMH;0;;;
 
 # Storm relative helicity
 # HLCY-M2S2[592] => Helicity[67]
@@ -2877,33 +2266,9 @@ SOILWET-M3M3;VolumetricSoilWaterLayer1;;;
 # SOILWET-M3M3[598] => VolumetricSoilWaterLayer2[4807]
 SOILWET-M3M3;VolumetricSoilWaterLayer2;;;
 
-# Pressure on station level
-# PSTL-HPA => UNKNOWN
-# PSTL-HPA;0;;;
-
-# Rain minutes of hour
-# RMM-N => UNKNOWN
-# RMM-N;0;;;
-
 # Hour of UV maximum
 # UVMAXT-H => UNKNOWN
 # UVMAXT-H;0;;;
-
-# Seconds of sun duration in Minute
-# MSUN-S => UNKNOWN
-# MSUN-S;0;;;
-
-# Second temperature sensor
-# T-X1-C => UNKNOWN
-# T-X1-C;0;;;
-
-# Second wind direction sensor
-# DD-X1-D => UNKNOWN
-# DD-X1-D;0;;;
-
-# Second wind speed sensor
-# FF-X1-MS => UNKNOWN
-# FF-X1-MS;0;;;
 
 # Height of -20 C level in meters
 # HM20C-M[606] => HeightMinus20C[28]
@@ -2914,8 +2279,8 @@ HM20C-M;HeightMinus20C;;;
 CANW-KGM2;CanopyWater;;;
 
 # Surface type fraction
-# STFR-0TO1[608] => SurfaceTypeFraction[394]
-STFR-0TO1;SurfaceTypeFraction;;;
+# STFR-0TO1 => UNKNOWN
+# STFR-0TO1;0;;;
 
 # Soil type
 # SOILTY-N[609] => SoilType[395]
@@ -2950,10 +2315,6 @@ ROADWARN-N;RoadWarning;;;
 ALBEDOSLR-0TO1;280;;;
 
 # Graupel precipitation in kg/m2
-# GR-KGM2[617] => WaterAccumulation[267]
-GR-KGM2;WaterAccumulation;;;
-
-# Graupel precipitation in kg/m2
 # GR-KGM2[617] => PrecipitationGraupel[1167]
 GR-KGM2;PrecipitationGraupel;;;
 
@@ -2961,93 +2322,13 @@ GR-KGM2;PrecipitationGraupel;;;
 # CRNK-N => UNKNOWN
 # CRNK-N;0;;;
 
-# Monthly mean temperature for period 1931-60
-# T3160-C => UNKNOWN
-# T3160-C;0;;;
-
-# Monthly mean cloudiness for period 1931-60
-# N3160-PRCNT => UNKNOWN
-# N3160-PRCNT;0;;;
-
-# Mean snow depth on the 15. of the month for period 1931-60
-# SD3160-CM => UNKNOWN
-# SD3160-CM;0;;;
-
-# Monthly mean precipitation for period 1961-90
-# RR6190-KGM2 => UNKNOWN
-# RR6190-KGM2;0;;;
-
-# Monthly mean temperature for period 1961-90
-# T6190-C => UNKNOWN
-# T6190-C;0;;;
-
-# Monthly mean cloudiness for period 1961-90
-# N6190-PRCNT => UNKNOWN
-# N6190-PRCNT;0;;;
-
-# Mean snow depth on the 15. of the month for period 1931-60
-# SD6190-CM => UNKNOWN
-# SD6190-CM;0;;;
-
-# Hourly mean pressure
-# HP-HPA => HourlyPressure
-HP-HPA;HourlyPressure;;;
-
-# Hourly mean temperature
-# HT-C => HourlyTemperature
-HT-C;HourlyTemperature;;;
-
-# Hourly minimum temperature
-# HTMIN-C => HourlyMinimumTemperature
-HTMIN-C;HourlyMinimumTemperature;;;
-
-# Hourly maximum temperature
-# HTMAX-C => HourlyMaximumTemperature
-HTMAX-C;HourlyMaximumTemperature;;;
-
-# Hourly mean relative humidity
-# HRH-PRCNT => HourlyRelativeHumidity
-HRH-PRCNT;HourlyRelativeHumidity;;;
-
-# Hourly mean wind speed
-# HFF-MS => HourlyWindSpeed
-HFF-MS;HourlyWindSpeed;;;
-
-# Hourly minimum wind speed
-# HFFMIN-MS => HourlyMinimumWindSpeed
-HFFMIN-MS;HourlyMinimumWindSpeed;;;
-
-# Hourly maximum wind speed
-# HFFMAX-MS => HourlyMaximumWindSpeed
-HFFMAX-MS;HourlyMaximumWindSpeed;;;
-
-# Hourly maximum wind gust
-# HFFG-MS => HourlyMaximumGust
-HFFG-MS;HourlyMaximumGust;;;
-
-# Hourly mean wind direction
-# HDD-D => HourlyWindDirection
-HDD-D;HourlyWindDirection;;;
-
 # Hourly maximum precipitation rate
-# HRRR-KGM2 => HourlyMaxRainIntensity
-# HRRR-KGM2;HourlyMaxRainIntensity;;;
+# HRRR-KGM2 => UNKNOWN
+# HRRR-KGM2;0;;;
 
-# Weather code of Hourly maximum precipitation rate
-# HWWRRR-N => UNKNOWN
-# HWWRRR-N;0;;;
-
-# Hourly mean sea temperature
-# HTSEA-C => HourlyWaterTemperature
-# HTSEA-C;HourlyWaterTemperature;;;
-
-# The duration of the rain during 1 hour
-# HRRDUR-MIN => UNKNOWN
-# HRRDUR-MIN;0;;;
-
-# Radar producer
-# RADPRO-N => UNKNOWN
-# RADPRO-N;0;;;
+# WMO Present Weather (WW) code
+# WW-N[637] => PresentWeather[408]
+WW-N;PresentWeather;;;
 
 # Turbulence, code 11031 in BUFR
 # TURB-N => UNKNOWN
@@ -3062,20 +2343,12 @@ ICING-N;Icing;;;
 # BTURB-M;0;;;
 
 # Top of turbulence in meters
-# TTURB-M[644] => Pressure[1]
-TTURB-M;Pressure;MUL{$,0.010000};DIV{$,0.010000};
-
-# Phase of flight, code 8004 of BUFR
-# PHFLIG-N => UNKNOWN
-# PHFLIG-N;0;;;
+# TTURB-M => UNKNOWN
+# TTURB-M;0;;;
 
 # Altitude of an object in meters
 # ALTIT-M => UNKNOWN
 # ALTIT-M;0;;;
-
-# Pressure reduced to mean sea level
-# PSEA-HPA => UNKNOWN
-# PSEA-HPA;0;;;
 
 # Water level in centimeters
 # WATLEV-CM[648] => SeaLevel[60]
@@ -3089,19 +2362,11 @@ WATLEV-CM;SeaLevel;;;
 # WATMAX-CM => UNKNOWN
 # WATMAX-CM;0;;;
 
-# Direction of motion of ship or other observing platform
-# SHDIR-D => UNKNOWN
-# SHDIR-D;0;;;
-
-# Speed of motion of ship or other observing platform
-# SHSPEED-MS => UNKNOWN
-# SHSPEED-MS;0;;;
-
 # Kinetic energy of turbulence in J kg-1
 # TKEN-JKG[653] => TurbulentKineticEnergy[301]
 TKEN-JKG;TurbulentKineticEnergy;;;
 
-# Cloud water
+# Specific cloud liquid water content: mass of liquid water per total mass of moist air
 # CLDWAT-KGKG[654] => CloudWater[276]
 CLDWAT-KGKG;CloudWater;;;
 
@@ -3133,86 +2398,9 @@ UFLMOM-NM2;UMomentumFlux;;;
 # PRCWAT-KGM2[661] => PrecipitableWater[47]
 PRCWAT-KGM2;PrecipitableWater;;;
 
-# Specific humidity change due to parameterisation processes
-# HCHPAR-KGM2 => UNKNOWN
-# HCHPAR-KGM2;0;;;
-
-# Cloud water change due to parameterisation processes
-# CWCHPAR-KGM2 => UNKNOWN
-# CWCHPAR-KGM2;0;;;
-
-# Temperature change due to parameterisation processes
-# TCHPAR-KKGM2 => UNKNOWN
-# TCHPAR-KKGM2;0;;;
-
-# Temperature in cluster 1 of EPS
-# T-C1-C[665] => ClusterTemperature1[541]
-T-C1-C;ClusterTemperature1;;;
-
-# Temperature in cluster 2 of EPS
-# T-C2-C[666] => ClusterTemperature2[542]
-T-C2-C;ClusterTemperature2;;;
-
-# Temperature in cluster 3 of EPS
-# T-C3-C[667] => ClusterTemperature3[543]
-T-C3-C;ClusterTemperature3;;;
-
-# Temperature in cluster 4 of EPS
-# T-C4-C[668] => ClusterTemperature4[544]
-T-C4-C;ClusterTemperature4;;;
-
-# Temperature in cluster 5 of EPS
-# T-C5-C[669] => ClusterTemperature5[545]
-T-C5-C;ClusterTemperature5;;;
-
-# Temperature in cluster 6 of EPS
-# T-C6-C[670] => ClusterTemperature6[546]
-T-C6-C;ClusterTemperature6;;;
-
-# Geopotential in cluster 1 of EPS
-# Z-C1-M2S2[671] => ClusterGeopHeight1[547]
-Z-C1-M2S2;ClusterGeopHeight1;;;
-
-# Geopotential in cluster 2 of EPS
-# Z-C2-M2S2[672] => ClusterGeopHeight2[548]
-Z-C2-M2S2;ClusterGeopHeight2;;;
-
-# Geopotential in cluster 3 of EPS
-# Z-C3-M2S2[673] => ClusterGeopHeight3[549]
-Z-C3-M2S2;ClusterGeopHeight3;;;
-
-# Geopotential in cluster 4 of EPS
-# Z-C4-M2S2[674] => ClusterGeopHeight4[550]
-Z-C4-M2S2;ClusterGeopHeight4;;;
-
-# Geopotential in cluster 5 of EPS
-# Z-C5-M2S2[675] => ClusterGeopHeight5[551]
-Z-C5-M2S2;ClusterGeopHeight5;;;
-
-# Geopotential in cluster 6 of EPS
-# Z-C6-M2S2[676] => ClusterGeopHeight6[552]
-Z-C6-M2S2;ClusterGeopHeight6;;;
-
-# Probability of big negative temperature anomaly (-8 K) in EPS
-# ANOM-8-T-K[677] => ProbabilityOfTempLimit1[561]
-ANOM-8-T-K;ProbabilityOfTempLimit1;;;
-
-# Probability of moderate negative temperature anomaly (-4 K) in EPS
-# ANOM-4-T-K[678] => ProbabilityOfTempLimit2[562]
-ANOM-4-T-K;ProbabilityOfTempLimit2;;;
-
-# Probability of moderate positive temperature anomaly (+4 K) in EPS
-# ANOM+4-T-K[679] => ProbabilityOfTempLimit3[563]
-ANOM+4-T-K;ProbabilityOfTempLimit3;;;
-
-# Probability of big positive temperature anomaly (+8 K) in EPS
-# ANOM+8-T-K[680] => ProbabilityOfTempLimit4[564]
-ANOM+8-T-K;ProbabilityOfTempLimit4;;;
-
 # Probability of reaching some precipitation threshold value
 # PROB-RR-1[681] => ProbabilityOfPrecLimit1[571]
-#PROB-RR-1;ProbabilityOfPrecLimit1;MUL{$,100.000000};DIV{$,100.000000};
-PROB-RR-1;ProbabilityOfPrecLimit1;;;
+PROB-RR-1;ProbabilityOfPrecLimit1;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-1[681] => ProbabilityOfPr6Limit1[1061]
@@ -3224,8 +2412,7 @@ PROB-RR-1;ProbabilityOfPr6Limit1;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-2[682] => ProbabilityOfPrecLimit2[572]
-#PROB-RR-2;ProbabilityOfPrecLimit2;MUL{$,100.000000};DIV{$,100.000000};
-PROB-RR-2;ProbabilityOfPrecLimit2;;;
+PROB-RR-2;ProbabilityOfPrecLimit2;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-2[682] => ProbabilityOfPr6Limit2[1062]
@@ -3237,8 +2424,7 @@ PROB-RR-2;ProbabilityOfPr6Limit2;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-3[683] => ProbabilityOfPrecLimit3[573]
-#PROB-RR-3;ProbabilityOfPrecLimit3;MUL{$,100.000000};DIV{$,100.000000};
-PROB-RR-3;ProbabilityOfPrecLimit3;;;
+PROB-RR-3;ProbabilityOfPrecLimit3;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-3[683] => ProbabilityOfPr6Limit3[1063]
@@ -3250,8 +2436,11 @@ PROB-RR-3;ProbabilityOfPr6Limit3;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-4[684] => ProbabilityOfPrecLimit4[574]
-#PROB-RR-4;ProbabilityOfPrecLimit4;MUL{$,100.000000};DIV{$,100.000000};
 PROB-RR-4;ProbabilityOfPrecLimit4;;;
+
+# Probability of reaching some precipitation threshold value
+# PROB-RR-4[684] => ProbabilityOfPrecLimit4[574]
+PROB-RR-4;ProbabilityOfPrecLimit4;MUL{$,100.000000};DIV{$,100.000000};
 
 # Probability of reaching some precipitation threshold value
 # PROB-RR-4[684] => ProbabilityOfPr6Limit4[1064]
@@ -3285,17 +2474,9 @@ HUMFOR-0TO1;ForestGroundHumidity;;;
 # HUMFIE-0TO1[688] => FieldGroundHumidity[536]
 HUMFIE-0TO1;FieldGroundHumidity;;;
 
-# Maximum temperature at 2m since previous post-processing
-# MAXT2M-C => UNKNOWN
-# MAXT2M-C;0;;;
-
-# Cloud water mixing ratio
-# CLOUDWATERMR-KGKG => UNKNOWN
-# CLOUDWATERMR-KGKG;0;;;
-
-# Cloud ice mixing ratio
-# CLOUDICEMR-KGKG => UNKNOWN
-# CLOUDICEMR-KGKG;0;;;
+# Cloud ice mixing ratio: mass of ice per mass of dry air
+# CLOUDICEMR-KGKG[691] => CloudIce[1199]
+CLOUDICEMR-KGKG;CloudIce;MUL{$,1000.000000};DIV{$,1000.000000};
 
 # Rain mixing ratio
 # RAINMR-KGKG[692] => RainWaterMixingRatio[1201]
@@ -3304,10 +2485,6 @@ RAINMR-KGKG;RainWaterMixingRatio;;;
 # Graupel mixing ratio
 # GRAUPMR-KGKG[693] => GraupelMixingRatio[1202]
 GRAUPMR-KGKG;GraupelMixingRatio;;;
-
-# Height of cloud layer in feet
-# CL-FT => UNKNOWN
-# CL-FT;0;;;
 
 # Instant precipitation in kg/m2
 # PRI-KGM2[695] => PrecipitationInstantTotal[1208]
@@ -3327,13 +2504,11 @@ PRECFORM3-N;PrecipitationForm2;;;
 
 # Clear Air Turbulence forecasting index
 # TI-S2[699] => ClearAirTurbulence[1164]
-#TI-S2;ClearAirTurbulence;MUL{$,10000000.000000};DIV{$,10000000.000000};
-TI-S2;ClearAirTurbulence;;;
+TI-S2;ClearAirTurbulence;MUL{$,10000000.000000};DIV{$,10000000.000000};
 
 # Clear Air Turbulence forecasting index 2
 # TI2-S2[700] => ClearAirTurbulence2[1209]
-#TI2-S2;ClearAirTurbulence2;MUL{$,10000000.000000};DIV{$,10000000.000000};
-TI2-S2;ClearAirTurbulence2;;;
+TI2-S2;ClearAirTurbulence2;MUL{$,10000000.000000};DIV{$,10000000.000000};
 
 # Probability of thunderstorms
 # POT-PRCNT[701] => ProbabilityThunderstorm[260]
@@ -3342,10 +2517,6 @@ POT-PRCNT;ProbabilityThunderstorm;;;
 # Probability of thunderstorms
 # POT-PRCNT[701] => ProbabilityThunderstorm2[1218]
 POT-PRCNT;ProbabilityThunderstorm2;;;
-
-# Probability of thunderstorms
-# POT-PRCNT[701] => tendency_of_atmosphere_mass_content_of_gaseous_divalent_mercury_due_to_dry_deposition[12100]
-POT-PRCNT;tendency_of_atmosphere_mass_content_of_gaseous_divalent_mercury_due_to_dry_deposition;;;
 
 # Vertically integrated total water (vapour + cloud water + cloud ice)
 # TCW-KGM2[702] => TotalColumnWater[1210]
@@ -3379,10 +2550,6 @@ TOPL3-N;TopLinkIndex3;;;
 # HICE-M[716] => IceThickness[385]
 HICE-M;IceThickness;;;
 
-# Sea-ice thickness
-# HICE-M[716] => IceThickness[385]
-HICE-M;IceThickness;MUL{$,100.000000};DIV{$,100.000000};
-
 # Sea surface elevation
 # SSH-M[717] => SeaLevel[60]
 SSH-M;SeaLevel;;;
@@ -3410,7 +2577,6 @@ TMIN12H-K;MinimumTemperature;SUM{$,-273.15};SUM{$,273.15};
 # Probability of precipitation
 # POP-PRCNT[750] => PoP[259]
 POP-PRCNT;PoP;;;
-POP-0TO1;PoP;MUL{$,100.000000};DIV{$,100.000000};
 
 # Precipitation type categorical rain, 0 or 1
 # CRAIN-0OR1 => UNKNOWN
@@ -3472,10 +2638,6 @@ F100-CAPE-JKG;CAPEF100;;;
 # SNOWMR-KGKG[767] => SnowMixingRatio[1200]
 SNOWMR-KGKG;SnowMixingRatio;;;
 
-# Height of cloud layer in feet, second parameter
-# CL-2-FT => UNKNOWN
-# CL-2-FT;CloudBase2;;;
-
 # Relative humidity, 0 to 1
 # RH-0TO1[769] => Humidity[13]
 RH-0TO1;Humidity;MUL{$,100.000000};DIV{$,100.000000};
@@ -3499,30 +2661,6 @@ VV2-M;Visibility2;;;
 # Logarithm of Surface Roughness (heat)
 # LSRH-N => UNKNOWN
 # LSRH-N;0;;;
-
-# 20th fractal frost top depth
-# F20-FRST-CM[776] => FL7Cover[776]
-F20-FRST-CM;FL7Cover;;;
-
-# 80th fractal frost top depth
-# F80-FRST-CM[777] => FL7CloudType[777]
-F80-FRST-CM;FL7CloudType;;;
-
-# 20th fractal frost bottom depth
-# F20-FRSB-CM[778] => FL8Base[778]
-F20-FRSB-CM;FL8Base;;;
-
-# 80th fractal frost bottom depth
-# F80-FRSB-CM[779] => FL8Top[779]
-F80-FRSB-CM;FL8Top;;;
-
-# Mean frost top depth
-# MEAN-FRST-CM[780] => FL8Cover[780]
-MEAN-FRST-CM;FL8Cover;;;
-
-# Mean frost bottom depth
-# MEAN-FRSB-CM[781] => FL8CloudType[781]
-MEAN-FRSB-CM;FL8CloudType;;;
 
 # Probability of precipitation form rain
 # PROB-RAIN[782] => ProbabilityOfPrecFormRain[1220]
@@ -4328,7 +3466,7 @@ EFI-T-K--1TO1;EFITemperature;;;
 # EFI-FF-MS--1TO1[978] => EFIWindSpeed[556]
 EFI-FF-MS--1TO1;EFIWindSpeed;;;
 
-# Short wave radiation accumulation
+# Short wave radiation flux
 # RADSWA-JM2[979] => RadiationSWAccumulation[1381]
 RADSWA-JM2;RadiationSWAccumulation;;;
 
@@ -4377,8 +3515,8 @@ O3-UGM3;O3Concentration;;;
 PM2_5-UGM3;PM25Concentration;;;
 
 # Ice thickness in meters
-# ITHK-M[991] => IceThickness[385]
-ITHK-M;IceThickness;MUL{$,100.000000};DIV{$,100.000000};
+# ITHK-M => UNKNOWN
+# ITHK-M;0;;;
 
 # Probability of significant wave height of at least 2m
 # PROB-HWS-1[992] => ProbabilityOfSigWaveHeightLimit1[1240]
@@ -4399,10 +3537,6 @@ PROB-HWS-4;ProbabilityOfSigWaveHeightLimit4;;;
 # Wave principal direction at spectral peak in degrees
 # DPW-D[996] => WaveDirection[167]
 DPW-D;WaveDirection;;;
-
-# Potential precipitation type
-# PPRET-N => UNKNOWN
-# PPRET-N;0;;;
 
 # Potential precipitation type, calculated for all grid points
 # POTPRECT-N[998] => PotentialPrecipitationType[1235]
@@ -4472,7 +3606,7 @@ PROB-CONV-RR3-6;ProbabilityOfConvectivePrecipitationLimit6;MUL{$,100.000000};DIV
 # PROB-TC-5[1024] => ProbabilityOfColdLimit5[1251]
 PROB-TC-5;ProbabilityOfColdLimit5;MUL{$,100.000000};DIV{$,100.000000};
 
-# Convective rain over the last 3 hours in mm
+# Convective precipitation over the last 3 hours in mm
 # RRC-3-MM => UNKNOWN
 # RRC-3-MM;0;;;
 
@@ -4515,10 +3649,6 @@ CLDTOP-FT;CloudTop2;;;
 # Snow density in kg/m3
 # SND-KGM3[1035] => SnowDensity[1227]
 SND-KGM3;SnowDensity;;;
-
-# Height of cloud layer in feet DEVELOPMENT PARAMETER REMOVE LATER
-# CL-DEV-FT[1036] => tendency_of_atmosphere_mass_content_of_propane_due_to_emission_from_maritime_transport[12290]
-CL-DEV-FT;tendency_of_atmosphere_mass_content_of_propane_due_to_emission_from_maritime_transport;;;
 
 # 100th fractal sea level height in EPS
 # F100-WATLEV-CM[1037] => SeaLevelMaximum[65]
@@ -4572,7 +3702,7 @@ CLDTYPE-N;9999;;;
 # CLDTYPE-N[1048] => bedrock_altitude[10328]
 CLDTYPE-N;bedrock_altitude;;;
 
-# Latent heat flux through evaporation
+# Latent heat through evaporation
 # LHE-WM2 => UNKNOWN
 # LHE-WM2;0;;;
 
@@ -4636,10 +3766,6 @@ FFG3H-MS;30417;;;
 # BRVAIFREQ-HZ => UNKNOWN
 # BRVAIFREQ-HZ;0;;;
 
-# Surface albedo for non snow covered areas
-# ALBEDOSURFNOSNOW-0TO1 => UNKNOWN
-# ALBEDOSURFNOSNOW-0TO1;0;;;
-
 # Snow albedo
 # ALBEDOSNOW-0TO1 => UNKNOWN
 # ALBEDOSNOW-0TO1;0;;;
@@ -4659,10 +3785,6 @@ FFG3H-MS;30417;;;
 # Brightness temperature
 # BRTMP-K => UNKNOWN
 # BRTMP-K;0;;;
-
-# Albedo
-# ALBDO-PRCNT => UNKNOWN
-# ALBDO-PRCNT;0;;;
 
 # Convective cloud cover
 # CDCON-0TO1 => UNKNOWN
@@ -4692,14 +3814,6 @@ FFG3H-MS;30417;;;
 # ICINGTOP-M => UNKNOWN
 # ICINGTOP-M;0;;;
 
-# ICAO Standard Atmosphere reference height
-# ICAHT => UNKNOWN
-# ICAHT;0;;;
-
-# Standard deviation of height
-# HSTDV => UNKNOWN
-# HSTDV;0;;;
-
 # Geopotential Height Anomaly
 # GPA-GPM => UNKNOWN
 # GPA-GPM;0;;;
@@ -4712,9 +3826,9 @@ FFG3H-MS;30417;;;
 # ICEG-MS => UNKNOWN
 # ICEG-MS;0;;;
 
-# Ice proportion
-# ICEC-0TO1[1084] => IceConcentration[384]
-ICEC-0TO1;IceConcentration;MUL{$,100.000000};DIV{$,100.000000};
+# Ice concentration (proportion)
+# ICNCT-0TO1[1084] => IceConcentration[384]
+ICNCT-0TO1;IceConcentration;MUL{$,100.000000};DIV{$,100.000000};
 
 # Gravity wave stress U-component
 # UGWD-NM2S => UNKNOWN
@@ -5044,10 +4158,6 @@ PROB-FRPREC;ProbabilityOfFreezingPrecForm;MUL{$,100.000000};DIV{$,100.000000};
 # PROB-LVP-1[1169] => ProbabilityOfLVP[1362]
 PROB-LVP-1;ProbabilityOfLVP;MUL{$,100.000000};DIV{$,100.000000};
 
-# PM25 concentration
-# PM25-UGM3 => UNKNOWN
-# PM25-UGM3;0;;;
-
 # Effective storm relative helicity
 # EHLCY-M2S2 => UNKNOWN
 # EHLCY-M2S2;0;;;
@@ -5157,8 +4267,8 @@ TMIN-24-K;MinimumTemperature24h;SUM{$,-273.15};SUM{$,273.15};
 # F100-TD2M-C;0;;;
 
 # Precipitation form, fourth version
-# PRECFORM4-N[1198] => PrecipitationForm4[1386]
-PRECFORM4-N;PrecipitationForm4;;;
+# PRECFORM4-N => UNKNOWN
+# PRECFORM4-N;0;;;
 
 # Cumulative frost sum over some period of time
 # FROSTSUM-C[1199] => FrostSum[634]
@@ -5484,10 +4594,6 @@ PROB-CSI-2;ProbabilityOfConvectiveSeverityIndexLimit2;MUL{$,100.000000};DIV{$,10
 # PROB-CSI-3[1285] => ProbabilityOfConvectiveSeverityIndexLimit3[1423]
 PROB-CSI-3;ProbabilityOfConvectiveSeverityIndexLimit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Land-Sea mask
-# LSM-0TO1 => UNKNOWN
-# LSM-0TO1;0;;;
-
 # 0th fractal wind gust speed in EPS
 # F0-IFFG-MS[1288] => WindGustF0[1123]
 F0-IFFG-MS;WindGustF0;;;
@@ -5755,7 +4861,6 @@ PROB-FROST-1;FrostProbability;MUL{$,100.000000};DIV{$,100.000000};
 # Probability of severe frost
 # PROB-FROST-2[1359] => SevereFrostProbability[373]
 PROB-FROST-2;SevereFrostProbability;MUL{$,100.000000};DIV{$,100.000000};
-#PROB-FROST-2;SevereFrostProbability;;;
 
 # Probability of reaching POT of 1
 # PROB-POT-1[1360] => NEWBASE-PARAMETER[1447]
@@ -5809,7 +4914,7 @@ F100-RRS-24-MM;SnowAccumulation24hF100;;;
 # INSSS-NM2S => UNKNOWN
 # INSSS-NM2S;0;;;
 
-# Boundary layer dissipation, accumulated
+# Boundary layer dissipation flux
 # BLDIS-JM2 => UNKNOWN
 # BLDIS-JM2;0;;;
 
@@ -5882,20 +4987,20 @@ EVARATE-KGM2S;Evaporation;;;
 # FF-BIASC-MS;0;;;
 
 # Probability of aviation icing category 0
-# PROB-DIW0 => UNKNOWN
-# PROB-DIW0;0;;;
+# PROB-DIW0[1392] => DeIcingClass0Probability[1211]
+PROB-DIW0;DeIcingClass0Probability;;;
 
 # Probability of aviation icing category 1
-# PROB-DIW1 => UNKNOWN
-# PROB-DIW1;0;;;
+# PROB-DIW1[1393] => DeIcingClass1Probability[1212]
+PROB-DIW1;DeIcingClass1Probability;;;
 
 # Probability of aviation icing category 2
-# PROB-DIW2 => UNKNOWN
-# PROB-DIW2;0;;;
+# PROB-DIW2[1394] => DeIcingClass2Probability[1213]
+PROB-DIW2;DeIcingClass2Probability;;;
 
 # Probability of aviation icing category 3
-# PROB-DIW3 => UNKNOWN
-# PROB-DIW3;0;;;
+# PROB-DIW3[1395] => DeIcingClass3Probability[1214]
+PROB-DIW3;DeIcingClass3Probability;;;
 
 # Probability of aviation icing category 4
 # PROB-DIW4 => UNKNOWN
@@ -5993,7 +5098,7 @@ TMIN3H-K;change_over_time_in_sea_water_conservative_temperature;SUM{$,-273.15};S
 # MAE-T-K => UNKNOWN
 # MAE-T-K;0;;;
 
-# Land cover from ESA Globcover2009 project
+# Land cover information using a code table for values
 # LC-N => UNKNOWN
 # LC-N;0;;;
 
@@ -6021,11 +5126,15 @@ CLDTOP-PA;1460;MUL{$,0.010000};DIV{$,0.010000};
 # NWCSAF_EFFCLD-0TO1[1427] => NEWBASE-PARAMETER[1462]
 NWCSAF_EFFCLD-0TO1;1462;MUL{$,100.000000};DIV{$,100.000000};
 
+# NWCSAF effective cloudiness
+# NWCSAF_EFFCLD-0TO1[1427] => product_of_eastward_wind_and_geopotential_height[11462]
+NWCSAF_EFFCLD-0TO1;product_of_eastward_wind_and_geopotential_height;MUL{$,100.000000};DIV{$,100.000000};
+
 # cloud top (CTTH) quality control flag in NWCSAF products
 # NWCSAF_CTTH_QC-N[1428] => NEWBASE-PARAMETER[1461]
 NWCSAF_CTTH_QC-N;1461;;;
 
-# Global radiation clear-sky accumulation
+# Global radiation clear-sky flux
 # RADGLOCA-JM2 => UNKNOWN
 # RADGLOCA-JM2;0;;;
 
@@ -6036,3 +5145,331 @@ RADGLOC-WM2;surface_downwelling_shortwave_flux_assuming_clear_sky;;;
 # Rail traffic condition
 # RAIL-N => UNKNOWN
 # RAIL-N;0;;;
+
+# Surface thermal radiation downward clear-sky
+# RADLWCA-JM2 => UNKNOWN
+# RADLWCA-JM2;0;;;
+
+# Surface thermal radiation downward clear-sky
+# RADLWC-WM2[1433] => RadiationDownLWClearSky[319]
+RADLWC-WM2;RadiationDownLWClearSky;;;
+
+# Rail traffic condition probability
+# RAIL-MEAN-N[1434] => NEWBASE-PARAMETER[4924]
+RAIL-MEAN-N;4924;;;
+
+# Probability of precipitation
+# POP-0TO1[1435] => PoP[259]
+POP-0TO1;PoP;MUL{$,100.000000};DIV{$,100.000000};
+
+# Clear air turbulence
+# CAT-M23S[1436] => NEWBASE-PARAMETER[70]
+CAT-M23S;70;;;
+
+# Soaring flight index
+# SFINDEX-0TO1[1438] => NEWBASE-PARAMETER[1177]
+SFINDEX-0TO1;1177;;;
+
+# Therma bird migration index
+# TBINDEX-0TO1[1439] => NEWBASE-PARAMETER[1178]
+TBINDEX-0TO1;1178;;;
+
+# Significant wave height of first swell in m
+# HWS1-M => UNKNOWN
+# HWS1-M;0;;;
+
+# Significant wave height of second swell in m
+# HWS2-M => UNKNOWN
+# HWS2-M;0;;;
+
+# Significant wave height of third swell in m
+# HWS3-M => UNKNOWN
+# HWS3-M;0;;;
+
+# Mean wave direction of first swell in degrees
+# DW1-D => UNKNOWN
+# DW1-D;0;;;
+
+# Mean wave direction of second swell in degrees
+# DW2-D => UNKNOWN
+# DW2-D;0;;;
+
+# Mean wave direction of third swell in degrees
+# DW3-D => UNKNOWN
+# DW3-D;0;;;
+
+# Maximum probability of thunder in 24 hours
+# POTMAX24H-PRCNT[1446] => NEWBASE-PARAMETER[4925]
+POTMAX24H-PRCNT;4925;;;
+
+# Wind gust speed in m/s, 24h period
+# FFG24H-MS[1447] => NEWBASE-PARAMETER[4927]
+FFG24H-MS;4927;;;
+
+# Wind gust duration of gust over 16 m/s, 24h period
+# FFG-DUR24H-H[1448] => NEWBASE-PARAMETER[4926]
+FFG-DUR24H-H;4926;;;
+
+# Severe thunderstorm potential
+# RAJUILMA-N[1449] => NEWBASE-PARAMETER[4928]
+RAJUILMA-N;4928;;;
+
+# Height of last 0 C level in meters
+# H0C-LAST-M => UNKNOWN
+# H0C-LAST-M;0;;;
+
+# Height of last -20 C level in meters
+# HM20C-LAST-M => UNKNOWN
+# HM20C-LAST-M;0;;;
+
+# Black carbon concentration
+# BC-UGM3[1452] => NEWBASE-PARAMETER[4899]
+BC-UGM3;4899;;;
+
+# Lung deposited surface area (of particles)
+# LDSA-UM2CM3[1453] => NEWBASE-PARAMETER[4898]
+LDSA-UM2CM3;4898;;;
+
+# Bias-corrected Probability of thunderstorms in prcnt
+# POT-BIASC-PRCNT => UNKNOWN
+# POT-BIASC-PRCNT;0;;;
+
+# Mean dewpoint temperature in Kelvins
+# TD-MEAN-K => UNKNOWN
+# TD-MEAN-K;0;;;
+
+# Mean net short wave radiation flux
+# RNETSWA-MEAN-JM2 => UNKNOWN
+# RNETSWA-MEAN-JM2;0;;;
+
+# 100th fractal net short wave radiation flux
+# F100-RNETSWA-JM2 => UNKNOWN
+# F100-RNETSWA-JM2;0;;;
+
+# Standard deviation of dewpoint temperature
+# TD-STDDEV-K => UNKNOWN
+# TD-STDDEV-K;0;;;
+
+# Standard deviation of net short wave radiation flux
+# RNETSWA-STDDEV-JM2 => UNKNOWN
+# RNETSWA-STDDEV-JM2;0;;;
+
+# Atmospheric ice growth
+# ATMICEG-MS[1460] => NEWBASE-PARAMETER[1463]
+ATMICEG-MS;1463;;;
+
+# Low level forecast cloud top height
+# LLF-TOP-FL[1461] => NEWBASE-PARAMETER[1464]
+LLF-TOP-FL;1464;;;
+
+# Probability of potential precipitation form rain
+# PROB-POTRAIN => UNKNOWN
+# PROB-POTRAIN;0;;;
+
+# Probability of potential precipitation form snow
+# PROB-POTSNOW => UNKNOWN
+# PROB-POTSNOW;0;;;
+
+# Probability of potential precipitation form sleet
+# PROB-POTSLEET => UNKNOWN
+# PROB-POTSLEET;0;;;
+
+# Probability of potential precipitation form drizzle
+# PROB-POTDRIZZLE => UNKNOWN
+# PROB-POTDRIZZLE;0;;;
+
+# Probability of potential precipitation form freezing drizzle
+# PROB-POTFRDRZZL => UNKNOWN
+# PROB-POTFRDRZZL;0;;;
+
+# Probability of potential precipitation form freezing rain
+# PROB-POTFRRAIN => UNKNOWN
+# PROB-POTFRRAIN;0;;;
+
+# Cloud water
+# CLDWAT-KGM2 => UNKNOWN
+# CLDWAT-KGM2;0;;;
+
+# Cloud mixing ratio: mass of liquid water per mass of dry air
+# CLOUDMR-KGKG[1469] => CloudWater[276]
+CLOUDMR-KGKG;CloudWater;;;
+
+# Cloud mixing ratio: mass of liquid water per mass of dry air
+# CLOUDMR-KGKG[1469] => CloudWater[276]
+CLOUDMR-KGKG;CloudWater;MUL{$,1000.000000};DIV{$,1000.000000};
+
+# Albedo of bare ground
+# ALBEDOBGRND-PRCNT => UNKNOWN
+# ALBEDOBGRND-PRCNT;0;;;
+
+# Snow albedo
+# ALBEDOSNOW-PRCNT => UNKNOWN
+# ALBEDOSNOW-PRCNT;0;;;
+
+# Probability of atmospheric ice growth
+# PROB-ATMICEG-1[1475] => NEWBASE-PARAMETER[1465]
+PROB-ATMICEG-1;1465;MUL{$,100.000000};DIV{$,100.000000};
+
+# Probability of atmospheric ice growth
+# PROB-ATMICEG-2[1476] => NEWBASE-PARAMETER[1466]
+PROB-ATMICEG-2;1466;MUL{$,100.000000};DIV{$,100.000000};
+
+# Probability of atmospheric ice growth
+# PROB-ATMICEG-3[1477] => NEWBASE-PARAMETER[1467]
+PROB-ATMICEG-3;1467;MUL{$,100.000000};DIV{$,100.000000};
+
+# Probability of atmospheric ice growth
+# PROB-ATMICEG-4[1478] => NEWBASE-PARAMETER[1468]
+PROB-ATMICEG-4;1468;MUL{$,100.000000};DIV{$,100.000000};
+
+# Spectral density of ocean waves in two dimensions
+# 2DFD-M2SRAD => UNKNOWN
+# 2DFD-M2SRAD;0;;;
+
+# Latent heat sublimation
+# LHS-JM2 => UNKNOWN
+# LHS-JM2;0;;;
+
+# Latent heat flux through evaporation
+# LHE-JM2 => UNKNOWN
+# LHE-JM2;0;;;
+
+# Photosynthetically active radiation flux at the surface
+# PARS-JM2 => UNKNOWN
+# PARS-JM2;0;;;
+
+# Vertical maximum of icing index
+# MAXICING-N => UNKNOWN
+# MAXICING-N;0;;;
+
+# Total precipitation in m
+# RR-M => UNKNOWN
+# RR-M;0;;;
+
+# Surface direct shortwave radiation
+# RADSWDIR-JM2 => UNKNOWN
+# RADSWDIR-JM2;0;;;
+
+# Surface direct shortwave radiation
+# RADSWDIR-WM2[1487] => NEWBASE-PARAMETER[1472]
+RADSWDIR-WM2;1472;;;
+
+# Surface instant direct shortwave radiation
+# RADSWDIRINST-WM2 => UNKNOWN
+# RADSWDIRINST-WM2;0;;;
+
+# Bias-corrected wind gust speed
+# FFG-BIASC-MS => UNKNOWN
+# FFG-BIASC-MS;0;;;
+
+# Forest fire PM2_5 concentration
+# FF-PM2_5-UGM[1490] => NEWBASE-PARAMETER[4933]
+FF-PM2_5-UGM;4933;;;
+
+# Forest fire PM2_5 optical column thickness
+# FF-PM2_5-N[1491] => NEWBASE-PARAMETER[4934]
+FF-PM2_5-N;4934;;;
+
+# Lightning strike multiplicity past 3 hours, strikes / time unit / area
+# FL-MPLTY-3-N => UNKNOWN
+# FL-MPLTY-3-N;0;;;
+
+# Lightning strike multiplicity past 6 hours, strikes / time unit / area
+# FL-MPLTY-6-N => UNKNOWN
+# FL-MPLTY-6-N;0;;;
+
+# Lightning strike multiplicity (instant), strikes / area
+# FL-MPLTYI-N => UNKNOWN
+# FL-MPLTYI-N;0;;;
+
+# Updraft helicity
+# UHEL-M2S2[1495] => NEWBASE-PARAMETER[4929]
+UHEL-M2S2;4929;;;
+
+# Snow temperature
+# TSNOW-K[1496] => NEWBASE-PARAMETER[1469]
+TSNOW-K;1469;SUM{$,-273.15};SUM{$,273.15};
+
+# Convective snowfall rate
+# SNRC-KGM2[1497] => ConvectiveSnowFallRate[378]
+SNRC-KGM2;ConvectiveSnowFallRate;;;
+
+# Large scale snowfall rate
+# SNRL-KGM2[1498] => LargeScaleSnowFallRate[379]
+SNRL-KGM2;LargeScaleSnowFallRate;;;
+
+# Water fraction
+# WATFR-0TO1 => UNKNOWN
+# WATFR-0TO1;0;;;
+
+# Probability of Updraft Helicity > 10 m2/s2 in EPS
+# PROB-UHEL-1[1500] => NEWBASE-PARAMETER[4930]
+PROB-UHEL-1;4930;MUL{$,100.000000};DIV{$,100.000000};
+
+# Probability of Updraft Helicity > 25 m2/s2 in EPS
+# PROB-UHEL-2[1501] => NEWBASE-PARAMETER[4931]
+PROB-UHEL-2;4931;MUL{$,100.000000};DIV{$,100.000000};
+
+# Probability of Updraft Helicity > 75 m2/s2 in EPS
+# PROB-UHEL-3[1502] => NEWBASE-PARAMETER[4932]
+PROB-UHEL-3;4932;MUL{$,100.000000};DIV{$,100.000000};
+
+# Fresh water fraction
+# FWF-0TO1[1503] => NEWBASE-PARAMETER[1471]
+FWF-0TO1;1471;;;
+
+# Ozone mass mixing ratio
+# O3-KGKG => UNKNOWN
+# O3-KGKG;0;;;
+
+# Probability of 1h precipitation rreaching some threshold value
+# PROB-RR1-1 => UNKNOWN
+# PROB-RR1-1;0;;;
+
+# Convective rain (liquid water) accumulation
+# RAINC-KGM2 => UNKNOWN
+# RAINC-KGM2;0;;;
+
+# Large scale rain (liquid water) accumulation
+# RAINL-KGM2 => UNKNOWN
+# RAINL-KGM2;0;;;
+
+# Convective rain (liquid water) rate
+# RAINRC-KGM2S => UNKNOWN
+# RAINRC-KGM2S;0;;;
+
+# Large scale rain (liquid water) rate
+# RAINRL-KGM2S => UNKNOWN
+# RAINRL-KGM2S;0;;;
+
+# Large scale rain (liquid water) one-hour accumulation
+# RAINL-1-MM => UNKNOWN
+# RAINL-1-MM;0;;;
+
+# Large scale rain (liquid water) three-hour accumulation
+# RAINL-3-MM => UNKNOWN
+# RAINL-3-MM;0;;;
+
+# Convective rain (liquid water) one-hour accumulation
+# RAINC-1-MM => UNKNOWN
+# RAINC-1-MM;0;;;
+
+# Convective rain (liquid water) three-hour accumulation
+# RAINC-3-MM => UNKNOWN
+# RAINC-3-MM;0;;;
+
+# Atmospheric ice growth mm per hour
+# ATMICEG-MMH[1515] => NEWBASE-PARAMETER[4823]
+ATMICEG-MMH;4823;;;
+
+# Atmospheric ice growth grams per hour
+# ATMICEG-GH[1516] => NEWBASE-PARAMETER[4822]
+ATMICEG-GH;4822;;;
+
+# Temperature of rail tracks
+# T-RAIL-K => UNKNOWN
+# T-RAIL-K;0;;;
+
+# Index for wildfire warnings
+# WILDFIREINDEX-0TO6[1519] => NEWBASE-PARAMETER[1473]
+WILDFIREINDEX-0TO6;1473;;;
