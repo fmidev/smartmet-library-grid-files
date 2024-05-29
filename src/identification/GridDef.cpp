@@ -1332,6 +1332,9 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
           if (field[3][0] != '\0')
             rec.mDescription = field[3];
 
+          if (c > 4  && field[4][0] != '\0')
+            rec.mUnits = field[4];
+
           mFmi_levelDef_records.emplace_back(rec);
         }
       }

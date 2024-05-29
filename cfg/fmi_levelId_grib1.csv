@@ -27,17 +27,13 @@
 5;indicatorOfTypeOfLevel=8;
 
 6;indicatorOfTypeOfLevel=105;
-6;generatingProcessIdentifier=1,centre=86,indicatorOfTypeOfLevel=1;
 6;generatingProcessIdentifier=210,centre=86,indicatorOfTypeOfLevel=163;
-6;generatingProcessIdentifier=230,centre=86,indicatorOfTypeOfLevel=163;
 6;generatingProcessIdentifier=240,centre=86,indicatorOfTypeOfLevel=163;
 
 7;indicatorOfTypeOfLevel=102;
-7;generatingProcessIdentifier=2,centre=88,indicatorOfTypeOfLevel=103;
-7;generatingProcessIdentifier=4,centre=88,indicatorOfTypeOfLevel=103;
 7;generatingProcessIdentifier=0,centre=251,indicatorOfTypeOfLevel=103;
-7;generatingProcessIdentifier=2,centre=251,indicatorOfTypeOfLevel=103;
-7;generatingProcessIdentifier=11,centre=251,indicatorOfTypeOfLevel=103;
+7;generatingProcessIdentifier=1,centre=251,indicatorOfTypeOfLevel=103;
+7;generatingProcessIdentifier=10,centre=251,indicatorOfTypeOfLevel=103;
 
 8;indicatorOfTypeOfLevel=200;
 
@@ -46,7 +42,5 @@
 12;indicatorOfTypeOfLevel=246;
 
 13;indicatorOfTypeOfLevel=106;
-
-14;indicatorOfTypeOfLevel=112;
 
 15;indicatorOfTypeOfLevel=20;

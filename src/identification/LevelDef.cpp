@@ -49,6 +49,7 @@ void LevelDef::print(std::ostream& stream,uint level,uint optionFlags) const
     stream << space(level) << "- mLevelId     = " << mLevelId << "\n";
     stream << space(level) << "- mName        = " << mName << "\n";
     stream << space(level) << "- mType        = " << (int)mType << "\n";
+    stream << space(level) << "- mUnits       = " << mUnits << "\n";
     stream << space(level) << "- mDescription = " << mDescription << "\n";
   }
   catch (...)
