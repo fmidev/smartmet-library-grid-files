@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.5.29
+Version: 24.5.30
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -96,6 +96,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu May 30 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.5.30-1.fmi
+- Added unit information into level types
 * Wed May 29 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.5.29-1.fmi
 - Repackaged due to Fmi::DateTime changes
 * Wed May 22 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.5.22-1.fmi
