@@ -778,6 +778,8 @@ void MemoryMapper::faultProcessingThread()
           AutoReadLock lock(&mModificationLock);
 
           auto address = (char*)mMessage[idx].arg.pagefault.address;
+          mMessage[idx].event = 255;  // This indicates that the message slot is taken for processing. So, other
+                                      // threads should not take it for processing.
 
           int index = getClosestIndex(address);
 
