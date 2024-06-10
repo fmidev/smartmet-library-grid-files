@@ -190,24 +190,24 @@ bool GridDataRepresentationImpl::getValueByIndex(Message *message,uint index,T::
     else
     {
       uint b = mBitsPerValue / 8;
-      //MemoryReader memoryReader(mData,mDataSize);
-      //memoryReader.setReadPosition(index * b);
+      MemoryReader memoryReader(mData,mDataSize);
+      memoryReader.setReadPosition(index * b);
       switch (b)
       {
         case 1:
-          X = read_uint8(mData,mDataSize,index * b);
+          X = memoryReader.read_uint8();
           break;
 
         case 2:
-          X = read_uint16(mData,mDataSize,index * b);
+          X = memoryReader.read_uint16();
           break;
 
         case 3:
-          X = read_uint24(mData,mDataSize,index * b);
+          X = memoryReader.read_uint24();
           break;
 
         case 4:
-          X = read_uint32(mData,mDataSize,index * b);
+          X = memoryReader.read_uint32();
           break;
       }
     }
