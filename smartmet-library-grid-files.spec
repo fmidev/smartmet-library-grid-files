@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.6.7
+Version: 24.6.11
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -96,6 +96,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Tue Jun 11 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.11-1.fmi
+- Improved loading of S3 files
 * Fri Jun  7 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.7-1.fmi
 - Use MemoryReader at all necessary places
 * Thu Jun  6 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.6-1.fmi
