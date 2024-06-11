@@ -72,7 +72,7 @@ MemoryMapper::MemoryMapper()
   {
     mEnabled = false;
     mMaxProcessingThreads = 30;
-    mMaxMessages = 10000;
+    mMaxMessages = 100000;
     mMessage = nullptr;
     mFaultProcessingThread = nullptr;
 
@@ -86,7 +86,7 @@ MemoryMapper::MemoryMapper()
     mPageCacheIndex = nullptr;
     mPageCacheCounter = 0;
     mPageCacheFreedCounter = 0;
-    mPageCacheSize = 500000;
+    mPageCacheSize = 2000000;
     mPremapEnabled = true;
   }
   catch (...)
@@ -530,6 +530,8 @@ MapInfo* MemoryMapper::getMapInfo(char *address)
 
 
 
+long long premapCnt = 0;
+
 
 void MemoryMapper::premap(char *startAddress,char *endAddress)
 {
@@ -548,10 +550,16 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
     }
 
     //printf("PREMAP REQUESTED\n");
-    AutoReadLock lock(&mModificationLock);
+    MapInfo *info = nullptr;
+    int index = 0;
+    {
+      AutoReadLock lock(&mModificationLock);
 
-    int index = getClosestIndex(startAddress);
-    MapInfo *info = mMemoryMappings[index];
+      index = getClosestIndex(startAddress);
+      if (index < mMemoryMappings.size())
+        info = mMemoryMappings[index];
+    }
+
     if (!info || info->memoryPtr > startAddress ||  startAddress > (info->memoryPtr+info->allocatedSize) ||  info->protocol <= 1)
       return;
 
@@ -570,34 +578,60 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
 
     int n = getData(*info,fp,dataSize,data);
 
-    AutoWriteLock writeLock(&mPageCacheModificationLock);
-    for (uint t=0; t<pages; t++)
     {
-      uint idx = mPageCacheCounter % mPageCacheSize;
-      //printf("PREMAP %lld : %lld\n",pageIndex,mPageCacheCounter);
-      memcpy(mPageCache[idx],data+p,mPageSize);
-      mPageCacheIndex[idx] = pageIndex;
-
-      mPageCacheIndexList.insert(std::pair<long long,uint>(pageIndex,idx));
-      p = p + mPageSize;
-      mPageCacheCounter++;
-      pageIndex++;
-    }
-
-    if (mPageCacheIndexList.size() > (std::size_t)mPageCacheSize)
-    {
-      //printf("*** PAGE CACHE CLEAR START %ld\n",mPageCacheIndexList.size());
-      mPageCacheIndexList.clear();
-      mPremapRequests.clear();
-      for (uint t=0; t<mPageCacheSize; t++)
+      AutoWriteLock writeLock(&mPageCacheModificationLock);
+      for (uint t=0; t<pages; t++)
       {
-        if (mPageCacheIndex[t] >= 0)
-          mPageCacheIndexList.insert(std::pair<long long,uint>(mPageCacheIndex[t],t));
+        uint idx = mPageCacheCounter % mPageCacheSize;
+        //printf("PREMAP %lld : %lld\n",pageIndex,mPageCacheCounter);
+        memcpy(mPageCache[idx],data+p,mPageSize);
+        mPageCacheIndex[idx] = pageIndex;
+
+        mPageCacheIndexList.insert(std::pair<long long,uint>(pageIndex,idx));
+        p = p + mPageSize;
+        mPageCacheCounter++;
+        pageIndex++;
       }
-      //printf("*** PAGE CACHE CLEAR END %ld\n",mPageCacheIndexList.size());
+
+      if (data)
+        delete [] data;
     }
-    if (data)
-      delete [] data;
+
+
+    // Pointing addresses so that kernel loads cached memory pages into the memory from the cache.
+
+    uint c = 0;
+    char *addr = startAddress;
+    while (addr < endAddress)
+    {
+      premapCnt += addr[0];
+      addr += mPageSize;
+      /*
+      c++;
+      if ((c % 10) == 0)  // Let's give some time to other threads to send their mapping requests.
+      {
+        //printf("SLEEP %u\n",c);
+        time_usleep(0,1000);
+      }
+      */
+    }
+
+    {
+      AutoWriteLock writeLock(&mPageCacheModificationLock);
+      if (mPageCacheIndexList.size() > (std::size_t)mPageCacheSize)
+      {
+        //printf("*** PAGE CACHE CLEAR START %ld %ld\n",mPageCacheIndexList.size(),mPageCacheSize);
+        mPageCacheIndexList.clear();
+        mPremapRequests.clear();
+        for (uint t=0; t<mPageCacheSize; t++)
+        {
+          if (mPageCacheIndex[t] >= 0)
+            mPageCacheIndexList.insert(std::pair<long long,uint>(mPageCacheIndex[t],t));
+        }
+        //printf("*** PAGE CACHE CLEAR END %ld %ld\n",mPageCacheIndexList.size(),mPageCacheSize);
+      }
+    }
+
   }
   catch (...)
   {
@@ -652,6 +686,7 @@ void MemoryMapper::stopFaultHandler()
 
 
 
+
 long long MemoryMapper::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {
   FUNCTION_TRACE
@@ -679,6 +714,7 @@ long long MemoryMapper::getFileSize(uint serverType,uint protocol,const char *se
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+
 
 
 
@@ -752,6 +788,8 @@ void MemoryMapper::faultProcessingThread()
     /* Loop, handling incoming events on the userfaultfd file descriptor. */
 
     uint sleepCount = 0;
+    long long currentCounter = -1;
+    int ownerId = threadId + 100;  // UFFD_EVENT_PAGEFAULT = 0x12
     while (!mStopRequired)
     {
       try
@@ -761,10 +799,13 @@ void MemoryMapper::faultProcessingThread()
         {
           AutoThreadLock tlock(&mThreadLock);
           len = mMessageReadCount.load() - mMessageProcessCount.load();
-          if (len > 0)
+          if (len > 0  &&  currentCounter < mMessageProcessCount)
           {
             idx = mMessageProcessCount % mMaxMessages;
-            //printf("PROCESS %lld  %lld  %lld\n",(long long)mMessageReadCount,(long long)mMessageProcessCount,len);
+            currentCounter = mMessageProcessCount;
+            if (idx >= 0  &&  mMessage[idx].event == UFFD_EVENT_PAGEFAULT)
+              mMessage[idx].event = ownerId;  // This indicates that the current thread has taken
+                                              // this message for processing.
             mMessageProcessCount++;
           }
         }
@@ -773,13 +814,11 @@ void MemoryMapper::faultProcessingThread()
         if ((mMessageProcessCount % 10000) == 0)
           errorCounter = 0;
 
-        if (idx >= 0  &&  mMessage[idx].event == UFFD_EVENT_PAGEFAULT)
+        if (idx >= 0  &&  mMessage[idx].event == ownerId)
         {
           AutoReadLock lock(&mModificationLock);
 
           auto address = (char*)mMessage[idx].arg.pagefault.address;
-          mMessage[idx].event = 255;  // This indicates that the message slot is taken for processing. So, other
-                                      // threads should not take it for processing.
 
           int index = getClosestIndex(address);
 
@@ -929,6 +968,10 @@ void MemoryMapper::faultHandlerThread()
 
               AutoThreadLock tlock(&mThreadLock);
 
+              // Several threads might request the same memory page at the same time. So
+              // we should check that we are not ready handling the same page request.
+
+              /*
               bool found = false;
               auto address = mMessage[idx].arg.pagefault.address;
               for (auto t = (long long)mMessageProcessCount; t<(long long)mMessageReadCount.load()  &&  !found; t++)
@@ -938,6 +981,7 @@ void MemoryMapper::faultHandlerThread()
                   found = true;
               }
               if (!found)
+              */
                 mMessageReadCount++;
               //else
               //  printf("-------------- PAGE ALREADY IN THE MAPPING LIST\n");
