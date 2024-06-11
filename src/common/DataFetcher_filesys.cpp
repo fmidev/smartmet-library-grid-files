@@ -15,6 +15,9 @@
 namespace SmartMet
 {
 
+#define FILE_HANDLE_LIMIT 10000
+
+
 DataFetcher_filesys::DataFetcher_filesys()
 {
   FUNCTION_TRACE
@@ -44,12 +47,12 @@ void DataFetcher_filesys::checkFileHandles()
   FUNCTION_TRACE
   try
   {
-    if ((time(0) - mLastChecked) > 120 || mFileHandles.size() > 800)
+    if ((time(0) - mLastChecked) > 120 || mFileHandles.size() > FILE_HANDLE_LIMIT)
     {
       std::vector<std::string> deleteList;
       mLastChecked = time(0);
       time_t deleteLimit = mLastChecked - 600;
-      if (mFileHandles.size() > 800)
+      if (mFileHandles.size() > FILE_HANDLE_LIMIT)
         deleteLimit = mLastChecked - 20;
 
       for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
@@ -90,7 +93,7 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
   {
     time_t currentTime = time(0);
 
-    if ((time(0) - mLastChecked) > 120 || mFileHandles.size() > 800)
+    if ((time(0) - mLastChecked) > 120 || mFileHandles.size() > FILE_HANDLE_LIMIT)
     {
       AutoWriteLock lock(&mModificationLock);
       checkFileHandles();
