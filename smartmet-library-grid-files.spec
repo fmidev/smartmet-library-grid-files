@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.6.11
+Version: 24.6.12
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -96,6 +96,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Jun 12 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.12-1.fmi
+- Added thread protection for libaec decompression functions
 * Tue Jun 11 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.11-1.fmi
 - Improved loading of S3 files
 * Fri Jun  7 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.7-1.fmi
