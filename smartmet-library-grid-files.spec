@@ -43,6 +43,7 @@ Requires: %{smartmet_boost}-regex
 Requires: %{smartmet_boost}-system
 Requires: %{smartmet_boost}-thread
 Requires: gdal38-libs
+Requires: geos312
 Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
