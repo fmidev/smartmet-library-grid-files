@@ -752,7 +752,17 @@ int MemoryMapper::getData(MapInfo& info,std::size_t filePosition,int dataSize,ch
 
     auto it = mDataFetchers.find(info.serverType);
     if (it != mDataFetchers.end())
-      return it->second->getData(info.serverType,info.protocol,info.server.c_str(),info.filename.c_str(),filePosition,dataSize,dataPtr);
+    {
+      for (uint t=0; t<5; t++)
+      {
+        int n = it->second->getData(info.serverType,info.protocol,info.server.c_str(),info.filename.c_str(),filePosition,dataSize,dataPtr);
+        if (n == dataSize)
+          return n;
+
+        // It seems that we did not get the requsted data. Let's try again.
+        time_usleep(0,500000);
+      }
+    }
 
     return 0;
   }
