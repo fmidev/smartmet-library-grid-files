@@ -1,5 +1,6 @@
 #include "SpectralGridDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
+#include <macgyver/StringConversion.h>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/BitArrayReader.h"
 #include "../../common/AutoThreadLock.h"
@@ -170,17 +171,43 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
       strm.next_out = (unsigned char*)dest;
       strm.avail_out = numOfValues * sizeof(int32_t);
 
-      if (aec_decode_init(&strm) != AEC_OK)
+      int res = aec_decode_init(&strm);
+      if (res != AEC_OK)
       {
         delete [] dest;
-        throw Fmi::Exception(BCP,"Initialization of the decoder failed!");
+        Fmi::Exception exception(BCP,"Initialization of the decoder failed!");
+        exception.addParameter("result",Fmi::to_string(res));
+        exception.addParameter("numOfValues",Fmi::to_string(numOfValues));
+        exception.addParameter("dataSize",Fmi::to_string(dataSize));
+        exception.addParameter("bitmapSizeInBytes",Fmi::to_string(numOfValues));
+        exception.addParameter("strm.avail_in",Fmi::to_string(strm.avail_in));
+        exception.addParameter("strm.avail_out",Fmi::to_string(strm.avail_out));
+        exception.addParameter("strm.flags",Fmi::to_string(strm.flags));
+        exception.addParameter("strm.bits_per_sample",Fmi::to_string(strm.bits_per_sample));
+        exception.addParameter("strm.block_size",Fmi::to_string(strm.block_size));
+        exception.addParameter("strm.rsi",Fmi::to_string(strm.rsi));
+
+        throw exception;
       }
 
-      if (aec_decode(&strm, AEC_FLUSH) != AEC_OK)
+      res = aec_decode(&strm, AEC_FLUSH);
+      if (res != AEC_OK)
       {
         aec_decode_end(&strm);
         delete [] dest;
-        throw Fmi::Exception(BCP,"Decoding failed!");
+        Fmi::Exception exception(BCP,"Decoding failed!");
+        exception.addParameter("result",Fmi::to_string(res));
+        exception.addParameter("numOfValues",Fmi::to_string(numOfValues));
+        exception.addParameter("dataSize",Fmi::to_string(dataSize));
+        exception.addParameter("bitmapSizeInBytes",Fmi::to_string(numOfValues));
+        exception.addParameter("strm.avail_in",Fmi::to_string(strm.avail_in));
+        exception.addParameter("strm.avail_out",Fmi::to_string(strm.avail_out));
+        exception.addParameter("strm.flags",Fmi::to_string(strm.flags));
+        exception.addParameter("strm.bits_per_sample",Fmi::to_string(strm.bits_per_sample));
+        exception.addParameter("strm.block_size",Fmi::to_string(strm.block_size));
+        exception.addParameter("strm.rsi",Fmi::to_string(strm.rsi));
+
+        throw exception;
       }
 
       outputBytes = strm.total_out;
