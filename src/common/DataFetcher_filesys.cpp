@@ -16,6 +16,7 @@ namespace SmartMet
 {
 
 #define FILE_HANDLE_LIMIT 10000
+#define CHECK_INTERVAL 120
 
 
 DataFetcher_filesys::DataFetcher_filesys()
@@ -47,22 +48,27 @@ void DataFetcher_filesys::checkFileHandles()
   FUNCTION_TRACE
   try
   {
-    if ((time(0) - mLastChecked) > 120 || mFileHandles.size() > FILE_HANDLE_LIMIT)
+    time_t interv = (time(0) - mLastChecked);
+    if (interv > CHECK_INTERVAL || (mFileHandles.size() > FILE_HANDLE_LIMIT  && interv > 10))
     {
+      //printf("CHECK FILES %ld\n",mFileHandles.size());
       std::vector<std::string> deleteList;
       mLastChecked = time(0);
       time_t deleteLimit = mLastChecked - 600;
       if (mFileHandles.size() > FILE_HANDLE_LIMIT)
-        deleteLimit = mLastChecked - 20;
+        deleteLimit = mLastChecked - 30;
 
       for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
       {
         if (it->second->lastUsed < deleteLimit)
         {
-          AutoThreadLock tlock(&it->second->threadLock);
-          fclose(it->second->fileHandle);
-          it->second->fileHandle = NULL;
-          deleteList.push_back(it->first);
+          if (it->second->threadLock.tryLock())
+          {
+            fclose(it->second->fileHandle);
+            it->second->fileHandle = NULL;
+            deleteList.push_back(it->first);
+            it->second->threadLock.unlock();
+          }
         }
       }
 
@@ -93,12 +99,6 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
   {
     time_t currentTime = time(0);
 
-    if ((time(0) - mLastChecked) > 120 || mFileHandles.size() > FILE_HANDLE_LIMIT)
-    {
-      AutoWriteLock lock(&mModificationLock);
-      checkFileHandles();
-    }
-
     {
       AutoReadLock lock(&mModificationLock);
       auto fh = mFileHandles.find(filename);
@@ -110,6 +110,14 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
           return fh->second;
         }
       }
+    }
+
+    time_t interv = (time(0) - mLastChecked);
+
+    if (interv > CHECK_INTERVAL || (mFileHandles.size() > FILE_HANDLE_LIMIT  && interv > 10))
+    {
+      AutoWriteLock lock(&mModificationLock);
+      checkFileHandles();
     }
 
     AutoWriteLock lock(&mModificationLock);
@@ -149,21 +157,42 @@ int DataFetcher_filesys::getData(uint serverType,uint protocol,const char *serve
   FUNCTION_TRACE
   try
   {
-    FileHandle *fh = getFileHandle(filename);
-    if (!fh || !fh->fileHandle)
+    for (uint t=0; t<5; t++)
     {
-      Fmi::Exception exception(BCP,"Cannot get the file handle!");
-      exception.addParameter("filename",filename);
-      throw exception;
+      FileHandle *fh = getFileHandle(filename);
+      if (!fh || !fh->fileHandle)
+      {
+        Fmi::Exception exception(BCP,"Cannot get the file handle!");
+        exception.addParameter("filename",filename);
+        throw exception;
+      }
+
+      AutoThreadLock lock(&fh->threadLock);
+      if (fh->fileHandle)
+      {
+        fseek(fh->fileHandle,filePosition,SEEK_SET);
+        int n = fread(dataPtr,1,dataSize,fh->fileHandle);
+        if (n < dataSize)
+        {
+          if (feof(fh->fileHandle))
+          {
+            // We have reached the ene of the file
+            return dataSize;
+          }
+          else
+          {
+            printf("### WARNING: Cannot read all requested data (%s) filepos = %ld  %d/%d\n",filename,filePosition,n,dataSize);
+          }
+        }
+
+        return n;
+      }
+
+      // We got file handle, but it was closed. Let's try again.
+      time_usleep(0,10000);
     }
 
-    AutoThreadLock lock(&fh->threadLock);
-    if (fh->fileHandle)
-    {
-      fseek(fh->fileHandle,filePosition,SEEK_SET);
-      return fread(dataPtr,1,dataSize,fh->fileHandle);
-    }
-    return -1;
+    return 0;
   }
   catch (...)
   {
