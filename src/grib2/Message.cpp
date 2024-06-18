@@ -226,6 +226,13 @@ void Message::premap() const
   FUNCTION_TRACE
   try
   {
+    if (mGridFilePtr->hasMemoryMapperError())
+    {
+      Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+      exception.addParameter("Filename",mGridFilePtr->getFileName());
+      throw exception;
+    }
+
     if (mPremapped)
       return;
 
@@ -249,6 +256,13 @@ void Message::premap() const
 
       if (bitmap && sz > 0)
         memoryMapper.premap((char*)bitmap,(char*)bitmap+sz-1);
+    }
+
+    if (mGridFilePtr->hasMemoryMapperError())
+    {
+      Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+      exception.addParameter("Filename",mGridFilePtr->getFileName());
+      throw exception;
     }
   }
   catch (...)
@@ -2869,6 +2883,23 @@ T::FilePosition Message::getFilePosition() const
 
 
 
+T::FilePosition Message::getOriginalFilePosition() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mOriginalFilePosition;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns a shared pointer to the BitmapSection object. */
 
 BitmapSect_sptr Message::getBitmapSection() const
@@ -3121,6 +3152,13 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
       premap();
       mRepresentationSection->decodeValues(values);
 
+      if (mGridFilePtr->hasMemoryMapperError())
+      {
+        Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+        exception.addParameter("Filename",mGridFilePtr->getFileName());
+        throw exception;
+      }
+
       if (mRepresentationSection->getDataRepresentationTemplateNumber() != RepresentationSection::Template::GridDataRepresentation || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mCacheKey = GRID::valueCache.addValues(values);
     }
@@ -3128,9 +3166,16 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     {
       Fmi::Exception exception(BCP,"Operation failed!",nullptr);
       exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
+      exception.addParameter("Message size",Fmi::to_string(getMessageSize()));
       exception.addParameter("Filename",mGridFilePtr->getFileName());
-      exception.printError();
+      exception.addParameter("File position",Fmi::to_string(getFilePosition()));
+      exception.addParameter("File size",Fmi::to_string((long)mGridFilePtr->getSize()));
       mValueDecodingFailed = true;
+
+      if (mGridFilePtr->hasMemoryMapperError())
+        throw exception;
+      else
+        exception.printError();
     }
   }
   catch (...)
@@ -3185,6 +3230,14 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     {
       premap();
       mRepresentationSection->decodeValues(values);
+
+      if (mGridFilePtr->hasMemoryMapperError())
+      {
+        Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+        exception.addParameter("Filename",mGridFilePtr->getFileName());
+        throw exception;
+      }
+
       mCacheKey = GRID::valueCache.addValues(values);
       mOrigCacheKey = mCacheKey;
     }
@@ -3192,8 +3245,12 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     {
       Fmi::Exception exception(BCP,"Operation failed!",nullptr);
       exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-      exception.printError();
       mValueDecodingFailed = true;
+
+      if (mGridFilePtr->hasMemoryMapperError())
+        throw exception;
+      else
+        exception.printError();
     }
   }
   catch (...)
@@ -3530,6 +3587,13 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         if (mRepresentationSection->getValueByIndex(idx,value))
         {
+          if (mGridFilePtr->hasMemoryMapperError())
+          {
+            Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+            exception.addParameter("Filename",mGridFilePtr->getFileName());
+            throw exception;
+          }
+
           return value;
         }
       }

@@ -74,6 +74,7 @@ MemoryMapper::MemoryMapper()
     mMaxProcessingThreads = 30;
     mMaxMessages = 100000;
     mMessage = nullptr;
+    mFileHandleLimit = 10000;
     mFaultProcessingThread = nullptr;
 
     mThreadsRunning = 0;
@@ -119,7 +120,7 @@ MemoryMapper::~MemoryMapper()
 
 
 
-void MemoryMapper::addMapInfo(MapInfo *mapInfo)
+void MemoryMapper::addMapInfo(MapInfo_sptr mapInfo)
 {
   FUNCTION_TRACE
   try
@@ -240,6 +241,39 @@ bool MemoryMapper::isPremapEnabled()
 
 
 
+void MemoryMapper::setMaxProcessingThreads(uint maxThreads)
+{
+  mMaxProcessingThreads = maxThreads;
+}
+
+
+
+
+void MemoryMapper::setMaxMessages(uint maxMessages)
+{
+  mMaxMessages = maxMessages;
+}
+
+
+
+
+void MemoryMapper::setPageCacheSize(std::size_t pageCacheSize)
+{
+  mPageCacheSize = pageCacheSize;
+}
+
+
+
+
+
+void MemoryMapper::setFileHandleLimit(std::size_t fileHandleLimit)
+{
+  mFileHandleLimit = fileHandleLimit;
+}
+
+
+
+
 void MemoryMapper::setPremapEnabled(bool enabled)
 {
   mPremapEnabled = enabled;
@@ -319,7 +353,9 @@ void MemoryMapper::setEnabled(bool enabled)
 
       mFaultProcessingThread = new pthread_t[mMaxProcessingThreads];
 
-      DataFetcher_sptr df_filesys(new DataFetcher_filesys);
+      DataFetcher_filesys *fs = new DataFetcher_filesys();
+      fs->setFileHandleLimit(mFileHandleLimit);
+      DataFetcher_sptr df_filesys(fs);
       DataFetcher_sptr df_network(new DataFetcher_network());
 
       if (!mAccessFile.empty())
@@ -371,47 +407,47 @@ void MemoryMapper::setEnabled(bool enabled)
 
 
 
-void MemoryMapper::map(MapInfo& info)
+void MemoryMapper::map(MapInfo_sptr info)
 {
   FUNCTION_TRACE
   try
   {
     AutoWriteLock lock(&mModificationLock);
 
-    info.mappingTime = time(0);
+    info->mappingTime = time(0);
 
     if (!mEnabled)
     {
       // We should use the old memory mapper
 
       struct stat buf;
-      if (stat(info.filename.c_str(), &buf) == 0)
+      if (stat(info->filename.c_str(), &buf) == 0)
       {
-        info.fileSize = (std::size_t)buf.st_size;
+        info->fileSize = (std::size_t)buf.st_size;
       }
       else
       {
         Fmi::Exception exception(BCP,"The file does not exist!");
-        exception.addParameter("Filename",info.filename);
+        exception.addParameter("Filename",info->filename);
         throw exception;
       }
 
-      if (info.fileSize == 0)
+      if (info->fileSize == 0)
       {
         Fmi::Exception exception(BCP,"The file size is zero!");
-        exception.addParameter("Filename",info.filename);
+        exception.addParameter("Filename",info->filename);
         throw exception;
       }
 
       // Sometimes MappedFile fails even though stat has already succeeded
       try
       {
-        MappedFileParams params(info.filename);
+        MappedFileParams params(info->filename);
         params.flags = boost::iostreams::mapped_file::readonly;
-        params.length = info.fileSize;
-        info.mappedFile.reset(new MappedFile(params));
+        params.length = info->fileSize;
+        info->mappedFile.reset(new MappedFile(params));
         //mFileModificationTime = getFileModificationTime(mFileName.c_str());
-        info.memoryPtr = const_cast<char*>(info.mappedFile->const_data());
+        info->memoryPtr = const_cast<char*>(info->mappedFile->const_data());
         return;
       }
       catch(...)
@@ -424,28 +460,28 @@ void MemoryMapper::map(MapInfo& info)
        
     }
 
-    info.allocatedSize = (((info.fileSize + 100)/ mPageSize) + 1) * mPageSize;
-    info.memoryPtr = (char*)mmap(NULL, info.allocatedSize, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    info->allocatedSize = (((info->fileSize + 100)/ mPageSize) + 1) * mPageSize;
+    info->memoryPtr = (char*)mmap(NULL, info->allocatedSize, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
-    if (info.memoryPtr == MAP_FAILED)
+    if (info->memoryPtr == MAP_FAILED)
     {
-      info.memoryPtr = 0;
+      info->memoryPtr = 0;
       Fmi::Exception exception(BCP,"mmap failed");
-      exception.addParameter("allocatedSize",std::to_string(info.allocatedSize));
-      exception.addParameter("filename",info.filename);
-      exception.addParameter("fileSize",std::to_string(info.fileSize));
+      exception.addParameter("allocatedSize",std::to_string(info->allocatedSize));
+      exception.addParameter("filename",info->filename);
+      exception.addParameter("fileSize",std::to_string(info->fileSize));
       exception.addParameter("errno",std::to_string(errno));
       throw exception;
     }
 
     // printf("Add %ld %s %lld - %lld  %ld\n",info.fileSize,info.filename.c_str(),(long long)info.memoryPtr,(long long)info.memoryPtr+info.allocatedSize,info.allocatedSize);
 
-    addMapInfo(new MapInfo(info));
+    addMapInfo(info);
     //mMemoryMappings.insert(std::pair<char*,MapInfo>(info.memoryPtr,info));
 
     struct uffdio_register uffdio_register;
-    uffdio_register.range.start = (unsigned long)info.memoryPtr;
-    uffdio_register.range.len = info.allocatedSize;
+    uffdio_register.range.start = (unsigned long)info->memoryPtr;
+    uffdio_register.range.len = info->allocatedSize;
     uffdio_register.mode = UFFDIO_REGISTER_MODE_MISSING;
 
     if (ioctl(mUffd, UFFDIO_REGISTER, &uffdio_register) == -1)
@@ -462,40 +498,40 @@ void MemoryMapper::map(MapInfo& info)
 
 
 
-void MemoryMapper::unmap(MapInfo& info)
+void MemoryMapper::unmap(MapInfo_sptr info)
 {
   FUNCTION_TRACE
   try
   {
     if (!mEnabled)
     {
-      if (info.mappedFile)
-        info.mappedFile->close();
+      if (info->mappedFile)
+        info->mappedFile->close();
 
       return;
     }
 
-    if (info.memoryPtr != nullptr)
+    if (info->memoryPtr != nullptr)
     {
       {
         AutoWriteLock lock(&mModificationLock);
-        int index = getClosestIndex(info.memoryPtr);
-        if (mMemoryMappings[index]->memoryPtr == info.memoryPtr)
+        int index = getClosestIndex(info->memoryPtr);
+        if (mMemoryMappings[index]->memoryPtr == info->memoryPtr)
         {
           //printf("DELETE MEMORY MAP %s\n",info.filename.c_str());
-          delete mMemoryMappings[index];
+          //delete mMemoryMappings[index];
           mMemoryMappings.erase(mMemoryMappings.begin() + index);
         }
       }
 
       struct uffdio_register uffdio_register;
-      uffdio_register.range.start = (unsigned long)info.memoryPtr;
-      uffdio_register.range.len = info.allocatedSize;
+      uffdio_register.range.start = (unsigned long)info->memoryPtr;
+      uffdio_register.range.len = info->allocatedSize;
       uffdio_register.mode = UFFDIO_REGISTER_MODE_MISSING;
 
       ioctl(mUffd, UFFDIO_UNREGISTER, &uffdio_register);
 
-      munmap(info.memoryPtr,info.allocatedSize);
+      munmap(info->memoryPtr,info->allocatedSize);
     }
   }
   catch (...)
@@ -507,7 +543,7 @@ void MemoryMapper::unmap(MapInfo& info)
 
 
 
-MapInfo* MemoryMapper::getMapInfo(char *address)
+MapInfo_sptr MemoryMapper::getMapInfo(char *address)
 {
   FUNCTION_TRACE
   try
@@ -515,7 +551,7 @@ MapInfo* MemoryMapper::getMapInfo(char *address)
     AutoReadLock lock(&mModificationLock);
 
     int index = getClosestIndex(address);
-    MapInfo *info = mMemoryMappings[index];
+    MapInfo_sptr info = mMemoryMappings[index];
     if (!info || info->memoryPtr != address)
       return nullptr;
 
@@ -550,7 +586,7 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
     }
 
     //printf("PREMAP REQUESTED\n");
-    MapInfo *info = nullptr;
+    MapInfo_sptr info;
     int index = 0;
     {
       AutoReadLock lock(&mModificationLock);
@@ -576,7 +612,7 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
     char *data = new char[dataSize];
     uint p = 0;
 
-    int n = getData(*info,fp,dataSize,data);
+    int n = getData(info,fp,dataSize,data);
 
     {
       AutoWriteLock writeLock(&mPageCacheModificationLock);
@@ -600,7 +636,7 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
 
     // Pointing addresses so that kernel loads cached memory pages into the memory from the cache.
 
-    uint c = 0;
+    //uint c = 0;
     char *addr = startAddress;
     while (addr < endAddress)
     {
@@ -618,12 +654,12 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
 
     {
       AutoWriteLock writeLock(&mPageCacheModificationLock);
-      if (mPageCacheIndexList.size() > (std::size_t)mPageCacheSize)
+      if (mPageCacheIndexList.size() > mPageCacheSize)
       {
         //printf("*** PAGE CACHE CLEAR START %ld %ld\n",mPageCacheIndexList.size(),mPageCacheSize);
         mPageCacheIndexList.clear();
         mPremapRequests.clear();
-        for (uint t=0; t<mPageCacheSize; t++)
+        for (std::size_t t=0; t<mPageCacheSize; t++)
         {
           if (mPageCacheIndex[t] >= 0)
             mPageCacheIndexList.insert(std::pair<long long,uint>(mPageCacheIndex[t],t));
@@ -719,13 +755,13 @@ long long MemoryMapper::getFileSize(uint serverType,uint protocol,const char *se
 
 
 
-int MemoryMapper::getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr)
+int MemoryMapper::getData(MapInfo_sptr info,std::size_t filePosition,int dataSize,char *dataPtr)
 {
   try
   {
     if (dataSize == mPageSize)
     {
-      long long address = (long long)info.memoryPtr + filePosition;
+      long long address = (long long)info->memoryPtr + filePosition;
       long long pageIndex = address / mPageSize;
 
       AutoReadLock readLock(&mPageCacheModificationLock);
@@ -750,12 +786,12 @@ int MemoryMapper::getData(MapInfo& info,std::size_t filePosition,int dataSize,ch
       }
     }
 
-    auto it = mDataFetchers.find(info.serverType);
+    auto it = mDataFetchers.find(info->serverType);
     if (it != mDataFetchers.end())
     {
       for (uint t=0; t<5; t++)
       {
-        int n = it->second->getData(info.serverType,info.protocol,info.server.c_str(),info.filename.c_str(),filePosition,dataSize,dataPtr);
+        int n = it->second->getData(info->serverType,info->protocol,info->server.c_str(),info->filename.c_str(),filePosition,dataSize,dataPtr);
         if (n == dataSize)
           return n;
 
@@ -832,7 +868,7 @@ void MemoryMapper::faultProcessingThread()
 
           int index = getClosestIndex(address);
 
-          MapInfo *info = mMemoryMappings[index];
+          MapInfo_sptr info = mMemoryMappings[index];
 
           //printf("SEARCH %d  %lld  %lld - %lld\n",index,(long long)address,(long long)info->memoryPtr,(long long)(info->memoryPtr + info->allocatedSize));
           if (mMemoryMappings.size() > (std::size_t)index  &&  info->memoryPtr <= address &&
@@ -846,7 +882,7 @@ void MemoryMapper::faultProcessingThread()
               int n = 0;
 
               if (!info->mappingError)
-                n = getData(*info,fp,mPageSize,page);
+                n = getData(info,fp,mPageSize,page);
 
               if (n == 0)
               {
@@ -857,8 +893,8 @@ void MemoryMapper::faultProcessingThread()
                 if (errorCounter == 1)
                   printf("#### WARNING: Memory mapper got no data!\n");
               }
-              else
-                info->mappingError = false;
+              //else
+              //  info->mappingError = false;
             }
             catch (...)
             {
@@ -875,7 +911,7 @@ void MemoryMapper::faultProcessingThread()
             info->mappingError = true;
             errorCounter++;
             if (errorCounter == 1)
-              printf("#### WARNING: Memory mapping not found\n");
+              printf("#### WARNING: Memory mapping not found %lld\n",(long long)mMessageProcessCount);
           }
 
           uffdio_copy.src = (unsigned long)page;

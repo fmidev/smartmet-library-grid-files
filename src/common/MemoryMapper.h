@@ -29,14 +29,19 @@ class MemoryMapper
 
     void      addAccessInfo(const char *server,uint authenticationMethod,const char *username,const char *password);
     void      setAccessFile(const char *filename);
+    void      setMaxProcessingThreads(uint maxThreads);
+    void      setMaxMessages(uint maxMessages);
+    void      setPageCacheSize(std::size_t pageCacheSize);
+    void      setFileHandleLimit(std::size_t fileHandleLimit);
+
 
     long long getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
-    MapInfo*  getMapInfo(char *address);
+    MapInfo_sptr getMapInfo(char *address);
 
     void      premap(char *startAddress,char *endAddress);
 
-    void      map(MapInfo& info);
-    void      unmap(MapInfo& info);
+    void      map(MapInfo_sptr info);
+    void      unmap(MapInfo_sptr info);
 
     void      startFaultHandler();
     void      stopFaultHandler();
@@ -46,15 +51,15 @@ class MemoryMapper
 
   protected:
 
-    void      addMapInfo(MapInfo *mapInfo);
-    int       getData(MapInfo& info,std::size_t filePosition,int dataSize,char *dataPtr);
+    void      addMapInfo(MapInfo_sptr mapInfo);
+    int       getData(MapInfo_sptr info,std::size_t filePosition,int dataSize,char *dataPtr);
     int       getClosestIndex(char *address);
 
 
   protected:
     long                      mUffd;
     int                       mPageSize;
-    std::vector<MapInfo*>     mMemoryMappings;
+    std::vector<MapInfo_sptr> mMemoryMappings;
     ModificationLock          mModificationLock;
     uffd_msg*                 mMessage;
     std::atomic<long long>    mMessageReadCount;
@@ -67,6 +72,7 @@ class MemoryMapper
     DataFetcher_sptr_map      mDataFetchers;
     uint                      mMaxProcessingThreads;
     uint                      mMaxMessages;
+    std::size_t               mFileHandleLimit;
     bool                      mEnabled;
     ModificationLock          mPageCacheModificationLock;
     std::map<long long,uint>  mPageCacheIndexList;
@@ -74,7 +80,7 @@ class MemoryMapper
     long long*                mPageCacheIndex;
     uint                      mPageCacheCounter;
     long long                 mPageCacheFreedCounter;
-    long long                 mPageCacheSize;
+    std::size_t               mPageCacheSize;
     std::map<char*,char*>     mPremapRequests;
     std::string               mAccessFile;
     bool                      mPremapEnabled;

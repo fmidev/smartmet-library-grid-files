@@ -15,7 +15,6 @@
 namespace SmartMet
 {
 
-#define FILE_HANDLE_LIMIT 10000
 #define CHECK_INTERVAL 120
 
 
@@ -23,6 +22,7 @@ DataFetcher_filesys::DataFetcher_filesys()
 {
   FUNCTION_TRACE
   mLastChecked = time(0);
+  mFileHandleLimit = 10000;
 }
 
 
@@ -42,6 +42,21 @@ DataFetcher_filesys::~DataFetcher_filesys()
 
 
 
+void DataFetcher_filesys::setFileHandleLimit(std::size_t fileHandleLimit)
+{
+  FUNCTION_TRACE
+  try
+  {
+    mFileHandleLimit = fileHandleLimit;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 
 void DataFetcher_filesys::checkFileHandles()
 {
@@ -49,13 +64,13 @@ void DataFetcher_filesys::checkFileHandles()
   try
   {
     time_t interv = (time(0) - mLastChecked);
-    if (interv > CHECK_INTERVAL || (mFileHandles.size() > FILE_HANDLE_LIMIT  && interv > 10))
+    if (interv > CHECK_INTERVAL || (mFileHandles.size() > mFileHandleLimit  && interv > 30))
     {
       //printf("CHECK FILES %ld\n",mFileHandles.size());
       std::vector<std::string> deleteList;
       mLastChecked = time(0);
       time_t deleteLimit = mLastChecked - 600;
-      if (mFileHandles.size() > FILE_HANDLE_LIMIT)
+      if (mFileHandles.size() > mFileHandleLimit)
         deleteLimit = mLastChecked - 30;
 
       for (auto it = mFileHandles.begin(); it != mFileHandles.end(); ++it)
@@ -114,7 +129,7 @@ FileHandle* DataFetcher_filesys::getFileHandle(const char *filename)
 
     time_t interv = (time(0) - mLastChecked);
 
-    if (interv > CHECK_INTERVAL || (mFileHandles.size() > FILE_HANDLE_LIMIT  && interv > 10))
+    if (interv > CHECK_INTERVAL || (mFileHandles.size() > mFileHandleLimit  && interv > 30))
     {
       AutoWriteLock lock(&mModificationLock);
       checkFileHandles();

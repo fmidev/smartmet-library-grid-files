@@ -30,6 +30,8 @@ class DataFetcher_filesys : public DataFetcher
     long long         getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
     void              getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers);
 
+    void              setFileHandleLimit(std::size_t fileHandleLimit);
+
   protected:
 
     void              checkFileHandles();
@@ -38,6 +40,7 @@ class DataFetcher_filesys : public DataFetcher
 
     ModificationLock  mModificationLock;
     time_t            mLastChecked;
+    std::size_t       mFileHandleLimit;
 
     std::map<std::string,FileHandle*> mFileHandles;
 };

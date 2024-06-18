@@ -72,6 +72,7 @@ class GridFile
 
     virtual bool          hasDependence(uint fileId);
     virtual bool          hasMessagePositionError() const;
+    virtual bool          hasMemoryMapperError() const;
 
     virtual bool          isPhysical() const;
     virtual bool          isVirtual() const;
@@ -120,7 +121,7 @@ class GridFile
     MessageInfo_map       mMessagePositions;
     Message_ptr_map       mMessages;
     uint                  mProducerId;
-    MapInfo               mMemoryMapInfo;
+    MapInfo_sptr          mMemoryMapInfo;
     uint                  mSourceId;
     std::set<uint>        mUserList;
 

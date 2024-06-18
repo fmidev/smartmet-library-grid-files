@@ -185,6 +185,13 @@ void Message::premap() const
   FUNCTION_TRACE
   try
   {
+    if (mGridFilePtr->hasMemoryMapperError())
+    {
+      Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+      exception.addParameter("Filename",mGridFilePtr->getFileName());
+      throw exception;
+    }
+
     if (mPremapped)
       return;
 
@@ -208,6 +215,13 @@ void Message::premap() const
 
       if (bitmap && sz > 0)
         memoryMapper.premap((char*)bitmap,(char*)bitmap+sz-1);
+    }
+
+    if (mGridFilePtr->hasMemoryMapperError())
+    {
+      Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+      exception.addParameter("Filename",mGridFilePtr->getFileName());
+      throw exception;
     }
   }
   catch (...)
@@ -2182,6 +2196,23 @@ T::FilePosition Message::getFilePosition() const
 
 
 
+T::FilePosition Message::getOriginalFilePosition() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mOriginalFilePosition;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 /*! \brief The method returns a shared pointer to the BitmapSection object. */
 
 BitmapSect_sptr Message::getBitmapSection() const
@@ -2594,6 +2625,12 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
         if (mDataSection->getValueByIndex(idx,value))
         {
+          if (mGridFilePtr->hasMemoryMapperError())
+          {
+            Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+            exception.addParameter("Filename",mGridFilePtr->getFileName());
+            throw exception;
+          }
           return value;
         }
       }
@@ -2715,8 +2752,14 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     try
     {
       premap();
-
       mDataSection->decodeValues(values);
+      if (mGridFilePtr->hasMemoryMapperError())
+      {
+        Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+        exception.addParameter("Filename",mGridFilePtr->getFileName());
+        throw exception;
+      }
+
 
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mOrigCacheKey = GRID::valueCache.addValues(values);
@@ -2762,8 +2805,11 @@ void Message::getGridValueVector(T::ParamValue_vec& values) const
     {
       Fmi::Exception exception(BCP,"Operation failed!",nullptr);
       exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-      exception.printError();
       mValueDecodingFailed = true;
+      if (mGridFilePtr->hasMemoryMapperError())
+        throw exception;
+      else
+        exception.printError();
     }
   }
   catch (...)
@@ -2817,6 +2863,13 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     {
       premap();
       mDataSection->decodeValues(values);
+      if (mGridFilePtr->hasMemoryMapperError())
+      {
+        Fmi::Exception exception(BCP,"Memory mapper has set fail flag for the current file!",nullptr);
+        exception.addParameter("Filename",mGridFilePtr->getFileName());
+        throw exception;
+      }
+
       if (mDataSection->getPackingMethod() != PackingMethod::SIMPLE_PACKING || (mBitmapSection != nullptr  &&  mBitmapSection->getBitmapDataSizeInBytes() > 0))
         mOrigCacheKey = GRID::valueCache.addValues(values);
 
@@ -2827,8 +2880,11 @@ void Message::getGridOriginalValueVector(T::ParamValue_vec& values) const
     {
       Fmi::Exception exception(BCP,"Operation failed!",nullptr);
       exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-      exception.printError();
       mValueDecodingFailed = true;
+      if (mGridFilePtr->hasMemoryMapperError())
+        throw exception;
+      else
+        exception.printError();
     }
   }
   catch (...)
