@@ -83,6 +83,7 @@ class Message
     virtual char*               getMemoryPtr() const;
     virtual uint                getMessageSize() const;
     virtual T::FilePosition     getFilePosition() const;
+    virtual T::FilePosition     getOriginalFilePosition() const;
     virtual char*               getFileMemoryPtr() const;
     virtual T::TimeString       getForecastTime() const;
     virtual time_t              getForecastTimeT() const;
