@@ -3,8 +3,8 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.6.7
-Release: 1%{?dist}.fmi
+Version: 24.6.13
+Release: 2%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -97,6 +97,14 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Jun 13 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.13-2.fmi
+- Improvements to memory mapping local and external files
+* Thu Jun 13 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.13-1.fmi
+- Added more information to error messages on AEC decoding failures
+* Wed Jun 12 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.12-1.fmi
+- Added thread protection for libaec decompression functions
+* Tue Jun 11 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.11-1.fmi
+- Improved loading of S3 files
 * Fri Jun  7 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.7-1.fmi
 - Use MemoryReader at all necessary places
 * Thu Jun  6 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.6-1.fmi

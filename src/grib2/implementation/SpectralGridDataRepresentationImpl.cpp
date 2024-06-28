@@ -1,7 +1,9 @@
 #include "SpectralGridDataRepresentationImpl.h"
 #include <macgyver/Exception.h>
+#include <macgyver/StringConversion.h>
 #include "../../common/GeneralFunctions.h"
 #include "../../common/BitArrayReader.h"
+#include "../../common/AutoThreadLock.h"
 #include "../Message.h"
 
 extern "C"
@@ -14,6 +16,9 @@ namespace SmartMet
 {
 namespace GRIB2
 {
+
+
+ThreadLock AEC_threadLock;
 
 
 /*! \brief The constructor of the class. */
@@ -141,40 +146,74 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
     for (size_t t=0; t<numOfValues; t++)
       dest[t] = 0;
 
-    struct aec_stream strm;
-    strm.bits_per_sample = bits_per_value;
+    std::size_t outputBytes = 0;
 
-    strm.block_size = 32;
-    if (mCcsdsBlockSize)
-      strm.block_size = *mCcsdsBlockSize;
-
-    strm.rsi = 128;
-    if (mCcsdsRsi)
-      strm.rsi = *mCcsdsRsi;
-
-    strm.flags = AEC_DATA_SIGNED | AEC_DATA_PREPROCESS;
-    if (mCcsdsFlags)
-      strm.flags = *mCcsdsFlags;
-
-    strm.next_in = data;
-    strm.avail_in = dataSize;
-    strm.next_out = (unsigned char*)dest;
-    strm.avail_out = numOfValues * sizeof(int32_t);
-
-    if (aec_decode_init(&strm) != AEC_OK)
     {
-      delete [] dest;
-      throw Fmi::Exception(BCP,"Initialization of the decoder failed!");
-    }
+      AutoThreadLock lock(&AEC_threadLock);
 
-    if (aec_decode(&strm, AEC_FLUSH) != AEC_OK)
-    {
+      struct aec_stream strm;
+      strm.bits_per_sample = bits_per_value;
+
+      strm.block_size = 32;
+      if (mCcsdsBlockSize)
+        strm.block_size = *mCcsdsBlockSize;
+
+      strm.rsi = 128;
+      if (mCcsdsRsi)
+        strm.rsi = *mCcsdsRsi;
+
+      strm.flags = AEC_DATA_SIGNED | AEC_DATA_PREPROCESS;
+      if (mCcsdsFlags)
+        strm.flags = *mCcsdsFlags;
+
+      strm.next_in = data;
+      strm.avail_in = dataSize;
+      strm.next_out = (unsigned char*)dest;
+      strm.avail_out = numOfValues * sizeof(int32_t);
+
+      int res = aec_decode_init(&strm);
+      if (res != AEC_OK)
+      {
+        delete [] dest;
+        Fmi::Exception exception(BCP,"Initialization of the decoder failed!");
+        exception.addParameter("result",Fmi::to_string(res));
+        exception.addParameter("numOfValues",Fmi::to_string(numOfValues));
+        exception.addParameter("dataSize",Fmi::to_string(dataSize));
+        exception.addParameter("bitmapSizeInBytes",Fmi::to_string(numOfValues));
+        exception.addParameter("strm.avail_in",Fmi::to_string(strm.avail_in));
+        exception.addParameter("strm.avail_out",Fmi::to_string(strm.avail_out));
+        exception.addParameter("strm.flags",Fmi::to_string(strm.flags));
+        exception.addParameter("strm.bits_per_sample",Fmi::to_string(strm.bits_per_sample));
+        exception.addParameter("strm.block_size",Fmi::to_string(strm.block_size));
+        exception.addParameter("strm.rsi",Fmi::to_string(strm.rsi));
+
+        throw exception;
+      }
+
+      res = aec_decode(&strm, AEC_FLUSH);
+      if (res != AEC_OK)
+      {
+        aec_decode_end(&strm);
+        delete [] dest;
+        Fmi::Exception exception(BCP,"Decoding failed!");
+        exception.addParameter("result",Fmi::to_string(res));
+        exception.addParameter("numOfValues",Fmi::to_string(numOfValues));
+        exception.addParameter("dataSize",Fmi::to_string(dataSize));
+        exception.addParameter("bitmapSizeInBytes",Fmi::to_string(numOfValues));
+        exception.addParameter("strm.avail_in",Fmi::to_string(strm.avail_in));
+        exception.addParameter("strm.avail_out",Fmi::to_string(strm.avail_out));
+        exception.addParameter("strm.flags",Fmi::to_string(strm.flags));
+        exception.addParameter("strm.bits_per_sample",Fmi::to_string(strm.bits_per_sample));
+        exception.addParameter("strm.block_size",Fmi::to_string(strm.block_size));
+        exception.addParameter("strm.rsi",Fmi::to_string(strm.rsi));
+
+        throw exception;
+      }
+
+      outputBytes = strm.total_out;
       aec_decode_end(&strm);
-      delete [] dest;
-      throw Fmi::Exception(BCP,"Decoding failed!");
-    }
 
-    aec_decode_end(&strm);
+    }
 
     double R = mPacking.getReferenceValue();
 
@@ -194,7 +233,7 @@ void SpectralGridDataRepresentationImpl::decodeValues(Message *message,T::ParamV
     int bytes = (bits_per_value-1)/8 + 1;
     int bits = bytes*8;
 
-    BitArrayReader bitArrayReader((unsigned char*)dest,strm.total_out*8);
+    BitArrayReader bitArrayReader((unsigned char*)dest,outputBytes*8);
 
     if (bitmapSizeInBytes > 0)
     {

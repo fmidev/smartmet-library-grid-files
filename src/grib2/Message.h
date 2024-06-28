@@ -48,6 +48,7 @@ class Message : public GRID::Message
     uint                getGenerationId() const;
     char*               getMemoryPtr() const;
     T::FilePosition     getFilePosition() const;
+    T::FilePosition     getOriginalFilePosition() const;
     T::TimeString       getForecastTime() const;
     time_t              getForecastTimeT() const;
     short               getForecastType() const;

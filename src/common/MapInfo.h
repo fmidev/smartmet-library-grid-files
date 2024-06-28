@@ -88,5 +88,7 @@ class MapInfo
     };
 };
 
+typedef std::shared_ptr<MapInfo> MapInfo_sptr;
+
 
 }  // namespace SmartMet
