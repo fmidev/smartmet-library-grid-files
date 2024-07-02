@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <vector>
 #include <set>
-#include <boost/optional.hpp>
+#include <optional>
 #include <macgyver/DateTime.h>
 #include <ogr_spatialref.h>
 #include <float.h>
@@ -82,16 +82,16 @@ typedef std::uint16_t UInt16;
 typedef std::uint32_t UInt32;
 typedef std::uint64_t UInt64;
 
-typedef boost::optional<std::int8_t> Int8_opt;
-typedef boost::optional<std::int16_t> Int16_opt;
-typedef boost::optional<std::int32_t> Int32_opt;
-typedef boost::optional<std::int64_t> Int64_opt;
-typedef boost::optional<std::uint8_t> UInt8_opt;
-typedef boost::optional<std::uint16_t> UInt16_opt;
-typedef boost::optional<std::uint24_t> UInt24_opt;
-typedef boost::optional<std::uint32_t> UInt32_opt;
-typedef boost::optional<std::uint64_t> UInt64_opt;
-typedef boost::optional<std::float_t> Float_opt;
+typedef std::optional<std::int8_t> Int8_opt;
+typedef std::optional<std::int16_t> Int16_opt;
+typedef std::optional<std::int32_t> Int32_opt;
+typedef std::optional<std::int64_t> Int64_opt;
+typedef std::optional<std::uint8_t> UInt8_opt;
+typedef std::optional<std::uint16_t> UInt16_opt;
+typedef std::optional<std::uint24_t> UInt24_opt;
+typedef std::optional<std::uint32_t> UInt32_opt;
+typedef std::optional<std::uint64_t> UInt64_opt;
+typedef std::optional<std::float_t> Float_opt;
 
 typedef std::vector<int> IndexVector;
 

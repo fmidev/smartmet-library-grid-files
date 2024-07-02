@@ -16,7 +16,7 @@
 #include "../grid/Typedefs.h"
 
 #include <boost/filesystem.hpp>
-#include <boost/optional.hpp>
+#include <optional>
 
 
 namespace SmartMet

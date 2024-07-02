@@ -3,7 +3,7 @@
 #include "Coordinate.h"
 
 #include <vector>
-#include <boost/optional.hpp>
+#include <optional>
 #include <ogr_spatialref.h>
 
 bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::shared_ptr<OGRSpatialReference> sr_to,int nCount,double *x,double *y);

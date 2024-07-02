@@ -11,7 +11,7 @@
 #include "../grib1/Message.h"
 
 #include <boost/filesystem.hpp>
-#include <boost/optional.hpp>
+#include <optional>
 
 
 namespace SmartMet
