@@ -37,7 +37,6 @@ BuildRequires: libpng-devel
 BuildRequires: libjasper-devel
 BuildRequires: openssl-devel
 Provides: %{SPECNAME}
-Requires: %{smartmet_boost}-filesystem
 Requires: %{smartmet_boost}-iostreams
 Requires: %{smartmet_boost}-regex
 Requires: %{smartmet_boost}-system

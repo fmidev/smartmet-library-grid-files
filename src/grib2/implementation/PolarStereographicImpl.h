@@ -2,7 +2,7 @@
 
 #include "../../common/Dimensions.h"
 #include "../definition/PolarStereographic.h"
-#include <boost/optional.hpp>
+#include <optional>
 
 namespace SmartMet
 {

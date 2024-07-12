@@ -5,7 +5,7 @@
 #include "../querydata/QueryDataFile.h"
 
 
-namespace bf = boost::filesystem;
+namespace bf = std::filesystem;
 
 
 namespace SmartMet

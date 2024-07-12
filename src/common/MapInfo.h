@@ -2,10 +2,10 @@
 
 #include "ThreadLock.h"
 #include <string>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <macgyver/MappedFile.h>
 
-namespace bf = boost::filesystem;
+namespace bf = std::filesystem;
 
 
 namespace SmartMet

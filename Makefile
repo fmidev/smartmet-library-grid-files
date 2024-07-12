@@ -3,7 +3,7 @@ LIB = smartmet-$(SUBNAME)
 SPEC = smartmet-library-$(SUBNAME)
 INCDIR = smartmet/$(SUBNAME)
 
-REQUIRES = geos gdal webp
+REQUIRES = geos gdal webp filesystem
 
 include $(shell echo $${PREFIX-/usr})/share/smartmet/devel/makefile.inc
 
@@ -14,7 +14,6 @@ LIBS += $(REQUIRED_LIBS) \
 	-lsmartmet-spine \
 	-lsmartmet-macgyver \
 	-lsmartmet-trax \
-	-lboost_filesystem \
 	-lboost_iostreams \
 	-lboost_thread \
 	-lpng \
