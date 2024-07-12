@@ -19,10 +19,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 24.5.10
-BuildRequires: smartmet-library-newbase-devel >= 24.5.17
-BuildRequires: smartmet-library-spine-devel >= 24.5.27
-BuildRequires: smartmet-library-macgyver >= 24.5.28
-BuildRequires: smartmet-library-trax-devel >= 24.5.24
+BuildRequires: smartmet-library-newbase-devel >= 24.7.12
+BuildRequires: smartmet-library-spine-devel >= 24.7.12
+BuildRequires: smartmet-library-macgyver >= 24.7.12
+BuildRequires: smartmet-library-trax-devel >= 24.7.12
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal35-devel
@@ -46,10 +46,10 @@ Requires: libaec
 Requires: libcurl
 Requires: libjpeg-turbo
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 24.5.17
-Requires: smartmet-library-macgyver >= 24.5.28
-Requires: smartmet-library-spine >= 24.5.27
-Requires: smartmet-library-trax >= 24.5.24
+Requires: smartmet-library-newbase >= 24.7.12
+Requires: smartmet-library-macgyver >= 24.7.12
+Requires: smartmet-library-spine >= 24.7.12
+Requires: smartmet-library-trax >= 24.7.12
 
 %description
 FMI Grid File handling library
@@ -79,9 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 24.5.17
+Requires: smartmet-library-newbase-devel >= 24.7.12
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 24.5.28
+Requires: smartmet-library-macgyver >= 24.7.12
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
