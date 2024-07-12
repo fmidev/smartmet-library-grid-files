@@ -3,8 +3,8 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.6.13
-Release: 2%{?dist}.fmi
+Version: 24.7.12
+Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -95,6 +95,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Jul 12 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.7.12-1.fmi
+- Replace many boost library types with C++ standard library ones
+
 * Thu Jun 13 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.13-2.fmi
 - Improvements to memory mapping local and external files
 * Thu Jun 13 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.13-1.fmi
