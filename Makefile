@@ -9,7 +9,9 @@ include $(shell echo $${PREFIX-/usr})/share/smartmet/devel/makefile.inc
 
 DEFINES = -DUNIX -D_REENTRANT -DUSE_UNSTABLE_GEOS_CPP_API
 
-LIBS += $(REQUIRED_LIBS) \
+LIBS += \
+	$(PREFIX_LDFLAGS) \
+	$(REQUIRED_LIBS) \
 	-lsmartmet-newbase \
 	-lsmartmet-spine \
 	-lsmartmet-macgyver \
