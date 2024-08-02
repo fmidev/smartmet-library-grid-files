@@ -20,7 +20,7 @@
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
 #include <boost/filesystem/convenience.hpp>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <set>
 #include <sstream>
 #include <string>
@@ -34,7 +34,7 @@
 #define NUM(a) (a-'0')
 
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 namespace SmartMet
 {

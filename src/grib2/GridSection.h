@@ -7,7 +7,7 @@
 #include "../common/Dimensions.h"
 #include "../common/Coordinate.h"
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <memory>
 #include <vector>
 

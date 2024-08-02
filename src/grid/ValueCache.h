@@ -4,7 +4,7 @@
 #include <macgyver/Exception.h>
 #include <macgyver/CacheStats.h>
 #include <macgyver/MappedFile.h>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include "../common/GeneralFunctions.h"
 #include "../common/AutoReadLock.h"
 #include "../common/AutoWriteLock.h"
