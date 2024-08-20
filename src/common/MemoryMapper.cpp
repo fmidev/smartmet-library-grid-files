@@ -792,8 +792,8 @@ int MemoryMapper::getData(MapInfo_sptr info,std::size_t filePosition,int dataSiz
       for (uint t=0; t<5; t++)
       {
         int n = it->second->getData(info->serverType,info->protocol,info->server.c_str(),info->filename.c_str(),filePosition,dataSize,dataPtr);
-        if (n == dataSize)
-          return n;
+        if (n == dataSize || (filePosition + n) >= info->fileSize)
+          return dataSize;
 
         // It seems that we did not get the requsted data. Let's try again.
         time_usleep(0,500000);
