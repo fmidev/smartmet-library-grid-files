@@ -32,7 +32,6 @@ LIBFILE = libsmartmet-$(SUBNAME).so
 
 vpath %.cpp src \
 			src/common \
-			src/fmig1 \
 			src/grid \
 			src/grib1 \
 			src/grib1/definition \
@@ -46,7 +45,6 @@ vpath %.cpp src \
 
 vpath %.h 	src \
 			src/common \
-			src/fmig1 \
 			src/grid \
 			src/grib1 \
 			src/grib1/definition \
@@ -116,7 +114,6 @@ format:
 install:
 	@mkdir -p $(includedir)/$(INCDIR)
 	@mkdir -p $(includedir)/$(INCDIR)/common
-	@mkdir -p $(includedir)/$(INCDIR)/fmig1
 	@mkdir -p $(includedir)/$(INCDIR)/grid
 	@mkdir -p $(includedir)/$(INCDIR)/grib1
 	@mkdir -p $(includedir)/$(INCDIR)/grib1/definition
@@ -128,7 +125,6 @@ install:
 	@mkdir -p $(includedir)/$(INCDIR)/netcdf
 	@mkdir -p $(includedir)/$(INCDIR)/querydata
 	@cp src/common/*.h $(includedir)/$(INCDIR)/common
-	@cp src/fmig1/*.h $(includedir)/$(INCDIR)/fmig1
 	@cp src/grid/*.h $(includedir)/$(INCDIR)/grid
 	@cp src/grib1/*.h $(includedir)/$(INCDIR)/grib1
 	@cp src/grib1/definition/*.h $(includedir)/$(INCDIR)/grib1/definition
@@ -148,7 +144,6 @@ test:
 objdir:
 	@mkdir -p obj \
 	          obj/common \
-	          obj/fmig1 \
 	          obj/grid \
 	          obj/grib1 \
 	          obj/grib1/definition \

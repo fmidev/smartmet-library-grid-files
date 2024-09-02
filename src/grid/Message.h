@@ -354,7 +354,6 @@ class Message
     /*! \brief  The virtual file id. If the value is bigger that zero, then the virtual message should be used
      * instead of this message
      * */
-    uint                        mVirtualFileId;
     uint                        mRowCount;
     uint                        mColumnCount;
     GridFile*                   mGridFilePtr;

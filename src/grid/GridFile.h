@@ -5,6 +5,8 @@
 #include "Typedefs.h"
 #include "../common/MemoryReader.h"
 #include "../common/MemoryMapper.h"
+#include "../netcdf/NetCdfFile.h"
+#include "../querydata/QueryDataFile.h"
 
 #include <memory>
 #include <vector>
@@ -28,6 +30,7 @@ namespace GRID
 
 typedef std::map<uint,Message*> Message_ptr_map;
 typedef std::map<unsigned long long,long long> RequestCounters;
+typedef std::vector<std::pair<uchar,ulonglong>> MessagePos_vec;
 
 
 class GridFile
@@ -40,11 +43,8 @@ class GridFile
 
     virtual void          addDependence(uint fileId);
     virtual void          addMessage(Message *message);
-    virtual void          addUser(uint fileId);
 
     virtual GridFile*     createGridFile();
-
-    virtual void          deleteUsers();
 
     virtual time_t        getAccessTime() const;
     virtual time_t        getCheckTime() const;
@@ -67,15 +67,10 @@ class GridFile
     virtual uint          getProducerId() const;
     virtual long long     getSize();
     virtual uint          getSourceId() const;
-    virtual size_t        getUserCount();
-    virtual void          getUsers(std::set<uint>& userList);
 
-    virtual bool          hasDependence(uint fileId);
     virtual bool          hasMessagePositionError() const;
     virtual bool          hasMemoryMapperError() const;
 
-    virtual bool          isPhysical() const;
-    virtual bool          isVirtual() const;
     virtual bool          isMemoryMapped() const;
     virtual bool          isNetworkFile() const;
 
@@ -87,6 +82,9 @@ class GridFile
     virtual void          print(std::ostream& stream,uint level,uint optionFlags) const;
 
     virtual void          read(const std::string& filename);
+    virtual void          read(const std::string& filename,uint maxMessages);
+    virtual void          read(MemoryReader& memoryReader);
+    virtual void          read(MemoryReader& memoryReader,uint maxMessages);
 
     virtual long long     getRequestCounters(RequestCounters& requestCounters);
     virtual void          resetRequestCounters();
@@ -109,6 +107,17 @@ class GridFile
     virtual void          write(const std::string& filename);
     virtual void          write(DataWriter& dataWriter);
 
+  private:
+
+    GRID::Message*        createMessage(uint messageIndex,GRID::MessageInfo& messageInfo);
+    long long             countSize();
+    void                  readFmig1Message(MemoryReader& memoryReader, uint messageIndex);
+    void                  readNetCDFMessage(MemoryReader& memoryReader, uint messageIndex);
+    void                  readGrib1Message(MemoryReader& memoryReader, uint messageIndex);
+    void                  readGrib2Message(MemoryReader& memoryReader, uint messageIndex);
+    uchar                 readMessageType(MemoryReader& memoryReader);
+    MessagePos_vec        searchMessageLocations(MemoryReader& memoryReader,uint maxMessages);
+
   protected:
 
     time_t                mAccessTime;
@@ -123,7 +132,12 @@ class GridFile
     uint                  mProducerId;
     MapInfo_sptr          mMemoryMapInfo;
     uint                  mSourceId;
-    std::set<uint>        mUserList;
+
+    bool                      mIsRead;
+    ThreadLock                mMemoryMappingLock;
+    bool                      mMessagePositionError;
+    NetCDF::NetCdfFile*       mNetCdfFile;
+    QueryData::QueryDataFile* mQueryDataFile;
 
 };
 
