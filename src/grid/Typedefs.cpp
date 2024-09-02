@@ -34,9 +34,6 @@ std::string get_fileTypeString(FileType fileType)
 
       case FileTypeValue::QueryData:
         return "QueryData";
-
-      case FileTypeValue::Virtual:
-        return "Virtual";
     }
     return "Undefined";
   }
@@ -45,40 +42,6 @@ std::string get_fileTypeString(FileType fileType)
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
-
-
-
-/*
-std::string get_gridLayoutString(GridLayout layout)
-{
-  try
-  {
-    switch (layout)
-    {
-      case GridLayoutValue::Unknown:
-        return "Unknown";
-
-      case GridLayoutValue::Regular:
-        return "Reqular";
-
-      case GridLayoutValue::Irregular:
-        return "Irregular";
-
-      case GridLayoutValue::Points:
-        return "Points";
-
-      case GridLayoutValue::Data:
-        return "Data";
-    }
-    return "Undefined";
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-*/
 
 
 

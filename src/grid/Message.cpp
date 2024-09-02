@@ -71,7 +71,6 @@ Message::Message()
     mParameterLevel = 0;
     mDefaultInterpolationMethod = T::AreaInterpolationMethod::Nearest;
     mFileType = 0;
-    mVirtualFileId = 0;
     mRowCount = 0;
     mColumnCount = 0;
     mFmiParameterName = 0;
@@ -116,7 +115,6 @@ Message::Message(const Message& message)
     mNewbaseParameterId = message.mNewbaseParameterId;
     mNetCdfParameterName = message.mNetCdfParameterName;
     mNewbaseParameterName = message.mNewbaseParameterName;
-    mVirtualFileId = message.mVirtualFileId;
     mDefaultInterpolationMethod = message.mDefaultInterpolationMethod;
     mFileType = message.mFileType;
     mRowCount = message.mRowCount;
@@ -4889,177 +4887,6 @@ void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double o
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
-
-
-#if 0 // Old version
-
-void Message::getGridValueListByCircle(T::CoordinateType coordinateType,double origoX,double origoY,double radius,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
-{
-  FUNCTION_TRACE
-  try
-  {
-    T::Dimensions d = getGridDimensions();
-    uint cols = d.nx();
-    uint rows = d.ny();
-
-    switch (coordinateType)
-    {
-      case T::CoordinateTypeValue::UNKNOWN:
-      case T::CoordinateTypeValue::LATLON_COORDINATES:
-      {
-        double x1 = origoX;
-        double dist = 0;
-        while (dist < radius)
-        {
-          dist = latlon_distance(origoY,origoX,origoY,x1);
-          x1 = x1 - 0.01;
-        }
-
-        double x2 = origoX;
-        dist = 0;
-        while (dist < radius)
-        {
-          dist = latlon_distance(origoY,origoX,origoY,x2);
-          x2 = x2 + 0.01;
-        }
-
-        double y1 = origoY;
-        dist = 0;
-        while (dist < radius)
-        {
-          dist = latlon_distance(origoY,origoX,y1,origoX);
-          y1 = y1 - 0.01;
-        }
-
-        double y2 = origoY;
-        dist = 0;
-        while (dist < radius)
-        {
-          dist = latlon_distance(origoY,origoX,y2,origoX);
-          y2 = y2 + 0.01;
-        }
-
-        std::vector<T::Coordinate> polygonPoints;
-        polygonPoints.emplace_back(x1,y1);
-        polygonPoints.emplace_back(x2,y1);
-        polygonPoints.emplace_back(x2,y2);
-        polygonPoints.emplace_back(x1,y2);
-
-        T::GridValueList tmpValueList;
-        getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
-
-        uint len = tmpValueList.getLength();
-        for (uint t=0; t<len; t++)
-        {
-          T::GridValue rec;
-          if (tmpValueList.getGridValueByIndex(t,rec))
-          {
-            if (latlon_distance(origoY,origoX,rec.mY,rec.mX) <= radius)
-              valueList.addGridValue(rec);
-          }
-        }
-      }
-      break;
-
-
-      case T::CoordinateTypeValue::GRID_COORDINATES:
-      {
-        std::vector<T::Point> gridPoints;
-
-        getPointsInsideCircle(cols,rows,origoX,origoY,radius,gridPoints);
-        for (auto it=gridPoints.begin(); it != gridPoints.end(); ++it)
-        {
-          T::GridValue rec;
-
-          rec.mX = it->x();
-          rec.mY = it->y();
-          rec.mValue = getGridValueByGridPoint(it->x(),it->y(),modificationOperation,modificationParameters);
-          valueList.addGridValue(rec);
-        }
-      }
-      break;
-
-
-      case T::CoordinateTypeValue::ORIGINAL_COORDINATES:
-      {
-        double newOrigoX = 0;
-        double newOrigoY = 0;
-
-        getGridLatLonCoordinatesByOriginalCoordinates(origoX,origoY,newOrigoY,newOrigoX);
-
-        double x1 = newOrigoX;
-        double dist = 0;
-        while (dist < radius)
-        {
-          dist = latlon_distance(newOrigoY,newOrigoX,newOrigoY,x1);
-          x1 = x1 - 0.01;
-        }
-
-        double x2 = newOrigoX;
-        dist = 0;
-        while (dist < radius)
-        {
-          dist = latlon_distance(newOrigoY,newOrigoX,newOrigoY,x2);
-          x2 = x2 + 0.01;
-        }
-
-        double y1 = newOrigoY;
-        dist = 0;
-        while (dist < radius)
-        {
-          dist = latlon_distance(newOrigoY,newOrigoX,y1,newOrigoX);
-          y1 = y1 - 0.01;
-        }
-
-        double y2 = newOrigoY;
-        dist = 0;
-        while (dist < radius)
-        {
-          dist = latlon_distance(newOrigoY,newOrigoX,y2,newOrigoX);
-          y2 = y2 + 0.01;
-        }
-
-        double xx1 = 0;
-        double yy1 = 0;
-        double xx2 = 0;
-        double yy2 = 0;
-
-        getGridOriginalCoordinatesByLatLonCoordinates(y1,x1,xx1,yy1);
-        getGridOriginalCoordinatesByLatLonCoordinates(y2,x2,xx2,yy2);
-
-        std::vector<T::Coordinate> polygonPoints;
-        polygonPoints.emplace_back(xx1,yy1);
-        polygonPoints.emplace_back(xx2,yy1);
-        polygonPoints.emplace_back(xx2,yy2);
-        polygonPoints.emplace_back(xx1,yy2);
-
-        T::GridValueList tmpValueList;
-        getGridValueListByPolygon(coordinateType,polygonPoints,modificationOperation,modificationParameters,tmpValueList);
-
-        uint len = tmpValueList.getLength();
-        for (uint t=0; t<len; t++)
-        {
-          T::GridValue rec;
-          tmpValueList.getGridValueByIndex(t,rec);
-
-          double lat = 0;
-          double lon = 0;
-          getGridLatLonCoordinatesByOriginalCoordinates(rec.mY,rec.mX,lat,lon);
-
-          if (latlon_distance(origoY,origoX,lat,lon) <= radius)
-            valueList.addGridValue(rec);
-        }
-      }
-      break;
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-#endif
 
 
 
