@@ -588,6 +588,7 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,std::string& pr
       if (prop->second.size() > index)
       {
         propertyValue = prop->second[0];
+        //printf("  *** Property [%s][%s]\n",propertyName.c_str(),propertyValue.c_str());
         return true;
       }
     }
@@ -1096,6 +1097,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
         auto dd = mPropertyList.find(tmp);
         if (dd != mPropertyList.end())
         {
+          //printf("INDEXES [%s] %ld\n",tmp,dd->second.size());
           int timeCount = 0;
           int levelCount = 0;
           int xIndex = 0;
@@ -1111,14 +1113,31 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
           std::string yName;
           std::string xStandardName;
           std::string yStandardName;
+          float xMissingValue = ParamValueMissing;
+          float yMissingValue = ParamValueMissing;
           int projectionId = 0;
           int geometryId = 0;
 
 
-          // printf("(%s[%ld])\n",it->c_str(),dd->second.size());
+           //printf("(%s[%ld])\n",it->c_str(),dd->second.size());
           if (dd->second.size() == 3 || dd->second.size() == 4)
           {
             // This is a grid variable
+
+            std::string coordStr;
+            sprintf(tmp,"%s.coordinates",it->c_str());
+            if (getProperty(tmp,0,coordStr))
+            {
+              std::vector<std::string> coords;
+              splitString(coordStr,' ',coords);
+              //printf("--- coordinates size (%s) %lld\n",tmp,coords.size());
+              if (coords.size() == 2)
+              {
+                yName = coords[0];
+                xName = coords[1];
+                //printf("XNAME [%s] YNAME[%s] [%s]\n",xName.c_str(),yName.c_str(),coordStr.c_str());
+              }
+            }
 
             int paramLevelId = 1;
             uint iii = 0;
@@ -1126,28 +1145,36 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             {
               int i = atoi(itm->c_str());
               int ii = atoi(dl->second[i].c_str());
+              std::string n = dn->second[i].c_str();
+              //printf("DIM [%s][%s][%s]\n",itm->c_str(),dl->second[i].c_str(),dn->second[i].c_str());
+
+              if (strcasecmp(n.c_str(),"x") == 0  &&  !xName.empty())
+                n = xName;
+
+              if (strcasecmp(n.c_str(),"y") == 0  &&  !yName.empty())
+                n = yName;
 
               std::string standardName;
-              sprintf(tmp,"%s.standard_name",dn->second[i].c_str());
+              sprintf(tmp,"%s.standard_name",n.c_str());
               getProperty(tmp,0,standardName);
 
               std::string longName;
-              sprintf(tmp,"%s.long_name",dn->second[i].c_str());
+              sprintf(tmp,"%s.long_name",n.c_str());
               getProperty(tmp,0,longName);
 
               std::string units;
-              sprintf(tmp,"%s.units",dn->second[i].c_str());
+              sprintf(tmp,"%s.units",n.c_str());
               getProperty(tmp,0,units);
 
               std::string axis;
-              sprintf(tmp,"%s.axis",dn->second[i].c_str());
+              sprintf(tmp,"%s.axis",n.c_str());
               getProperty(tmp,0,axis);
 
               std::string positive;
-              sprintf(tmp,"%s.positive",dn->second[i].c_str());
+              sprintf(tmp,"%s.positive",n.c_str());
               getProperty(tmp,0,positive);
 
-              if (strcasecmp(standardName.c_str(),"time") == 0 || strcasecmp(longName.c_str(),"time") == 0 || strcasecmp(axis.c_str(),"T") == 0 || strcasecmp(dn->second[i].c_str(),"time") == 0 || strcasecmp(dn->second[i].c_str(),"time_counter") == 0)
+              if (strcasecmp(standardName.c_str(),"time") == 0 || strcasecmp(longName.c_str(),"time") == 0 || strcasecmp(axis.c_str(),"T") == 0 || strcasecmp(n.c_str(),"time") == 0 || strcasecmp(n.c_str(),"time_counter") == 0)
               {
                 timeCount = ii;
                 timeName = dn->second[i];
@@ -1156,7 +1183,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               if (strcasecmp(axis.c_str(),"Z") == 0 ||
                   strcasecmp(standardName.c_str(),"depth") == 0 || strcasecmp(standardName.c_str(),"height") == 0  || strcasecmp(standardName.c_str(),"level") == 0 ||
                   strcasecmp(longName.c_str(),"depth") == 0 || strcasecmp(longName.c_str(),"height") == 0 || strcasecmp(longName.c_str(),"level") == 0  ||
-                  strcasecmp(dn->second[i].c_str(),"depth") == 0 || strcasecmp(dn->second[i].c_str(),"height") == 0 || strcasecmp(dn->second[i].c_str(),"level") == 0)
+                  strcasecmp(n.c_str(),"depth") == 0 || strcasecmp(n.c_str(),"height") == 0 || strcasecmp(n.c_str(),"level") == 0)
               {
                 levelCount = ii;
                 levelName = dn->second[i];
@@ -1175,21 +1202,21 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               else
               if (strcasecmp(axis.c_str(),"Y") == 0 || strcasecmp(standardName.c_str(),"projection_y_coordinate") == 0 ||
                   strcasecmp(standardName.c_str(),"latitude") == 0 || strcasecmp(longName.c_str(),"latitude") == 0 ||
-                  strcasecmp(dn->second[i].c_str(),"lat") == 0 || strcasecmp(dn->second[i].c_str(),"latitude") == 0)
+                  strcasecmp(n.c_str(),"lat") == 0 || strcasecmp(n.c_str(),"latitude") == 0)
               {
                 yIndex = iii;
                 yCount = ii;
-                yName = dn->second[i];
+                yName = n;
                 yStandardName = standardName;
               }
               else
               if (strcasecmp(axis.c_str(),"X") == 0 || strcasecmp(standardName.c_str(),"projection_x_coordinate") == 0 ||
                   strcasecmp(standardName.c_str(),"longitude") == 0 || strcasecmp(longName.c_str(),"longitude") == 0 ||
-                  strcasecmp(dn->second[i].c_str(),"lon") == 0 || strcasecmp(dn->second[i].c_str(),"longitude") == 0)
+                  strcasecmp(n.c_str(),"lon") == 0 || strcasecmp(n.c_str(),"longitude") == 0)
               {
                 xIndex = iii;
                 xCount = ii;
-                xName = dn->second[i];
+                xName = n;
                 xStandardName = standardName;
               }
 
@@ -1197,7 +1224,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               iii++;
             }
 
-            //printf("%s %s:%d,%s:%d,%s:%d,%s:%d\n",it->c_str(),timeName.c_str(),timeCount,levelName.c_str(),levelCount,yName.c_str(),yCount,yName.c_str(),xCount);
+            //printf("%s %s:%d,%s:%d,%s:%d,%s:%d\n",it->c_str(),timeName.c_str(),timeCount,levelName.c_str(),levelCount,yName.c_str(),yCount,xName.c_str(),xCount);
 
 
             longlong dataStartOffset = 0;
@@ -1222,6 +1249,20 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             {
               sprintf(tmp,"%s._FillValue",it->c_str());
               getProperty(tmp,0,missingValue);
+            }
+
+            sprintf(tmp,"%s.missing_value",xName.c_str());
+            if (!getProperty(tmp,0,xMissingValue))
+            {
+              sprintf(tmp,"%s._FillValue",xName.c_str());
+              getProperty(tmp,0,xMissingValue);
+            }
+
+            sprintf(tmp,"%s.missing_value",yName.c_str());
+            if (!getProperty(tmp,0,yMissingValue))
+            {
+              sprintf(tmp,"%s._FillValue",yName.c_str());
+              getProperty(tmp,0,yMissingValue);
             }
 
             std::string xUnits;
@@ -1426,7 +1467,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               sprintf(tmp,"%s.items",xName.c_str());
               getProperty(tmp,0,itemCount);
 
-              readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor*xScale,mXCoordinates);
+              readValues(memoryReader,type,xCount,offset,baseValue,scaleFactor*xScale,mXCoordinates);
 
               /*
               for (auto v = mXCoordinates.begin(); v != mXCoordinates.end(); ++v)
@@ -1465,7 +1506,22 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               sprintf(tmp,"%s.items",yName.c_str());
               getProperty(tmp,0,itemCount);
 
-              readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor*yScale,mYCoordinates);
+              if (itemCount == yCount)
+              {
+                readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor*yScale,mYCoordinates);
+              }
+              else
+              {
+                if ((itemCount/xCount) == yCount)
+                {
+                  FloatVec coordinates;
+                  readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor*yScale,coordinates);
+                  for (uint t=0; t<itemCount; t=t+xCount)
+                  {
+                    mYCoordinates.push_back(coordinates[t]);
+                  }
+                }
+              }
 
               /*
               for (auto v = mYCoordinates.begin(); v != mYCoordinates.end(); ++v)
@@ -1473,6 +1529,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                 printf("  Y-Coord  %f\n",*v);
               }
               */
+
             }
 
             if (mXCoordinates.size() == 0 || mYCoordinates.size() == 0)
@@ -1495,8 +1552,43 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
             uint xsz = mXCoordinates.size() - 1;
             uint ysz = mYCoordinates.size() - 1;
-            double dx = (mXCoordinates[xsz] - mXCoordinates[0]) / (double)xsz;
-            double dy = (mYCoordinates[ysz] - mYCoordinates[0]) / (double)ysz;
+
+
+            double dx = 0;
+
+            if (mXCoordinates[xsz] != xMissingValue  &&  mXCoordinates[0] != xMissingValue)
+            {
+              dx = (mXCoordinates[xsz] - mXCoordinates[0]) / (double)xsz;
+            }
+            else
+            {
+              for (uint t=0; t<xsz; t++)
+              {
+                if (mXCoordinates[t] != xMissingValue  &&  mXCoordinates[t+1] != xMissingValue)
+                {
+                  dx = (mXCoordinates[t+1] - mXCoordinates[t]);
+                  t = xsz;
+                }
+              }
+            }
+
+            double dy = 0;
+            if (mYCoordinates[ysz] != yMissingValue  &&  mYCoordinates[0] != yMissingValue)
+            {
+              dy = (mYCoordinates[ysz] - mYCoordinates[0]) / (double)ysz;
+            }
+            else
+            {
+              for (uint t=0; t<ysz; t++)
+              {
+                if (mYCoordinates[t] != yMissingValue  &&  mYCoordinates[t+1] != yMissingValue)
+                {
+                  dy = (mYCoordinates[t+1] - mYCoordinates[t]);
+                  //printf("### DY %f - %f = %f  %f\n",mYCoordinates[t+1],mYCoordinates[t],dy,yMissingValue);
+                  t = ysz;
+                }
+              }
+            }
 
             char projectionString[300];
             projectionString[0] = '\0';
