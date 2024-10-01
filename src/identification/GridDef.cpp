@@ -2162,7 +2162,7 @@ void GridDef::loadNetCdfParameterDefinitions(const char *filename)
           if (field[1][0] != '\0')
             rec.mFmiLevelId = field[1];
 
-          if (field[2][0] != '\0')
+          if (c > 2 && field[2][0] != '\0')
             rec.mParameterUnits = field[2];
 
           mNetCdf_parameterDef_records.insert(std::pair<std::string,NetCdfParameterDef>(toUpperString(rec.mParameterName),rec));
