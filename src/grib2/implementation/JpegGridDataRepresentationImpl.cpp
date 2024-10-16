@@ -6,15 +6,17 @@
 #include "../../common/GeneralFunctions.h"
 #include "../Message.h"
 
-#include <jasper/jas_image.h>
-#include <jasper/jas_init.h>
+#ifdef JASPER
+  #include <jasper/jas_image.h>
+  #include <jasper/jas_init.h>
+#else
+#include "openjpeg-2.4/openjpeg.h"
+#endif
 
 //#include <openjpeg-1.5/openjpeg.h>
 #include <cstring>
 #include <iostream>
 #include <memory>
-
-// TODO: See from FreeImage code for how to do this with openjpeg 2
 
 namespace SmartMet
 {
@@ -22,19 +24,22 @@ namespace GRIB2
 {
 /*! \brief The constructor of the class. */
 
-JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl() {}
+JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl()
+{
+}
 
 /*! \brief The copy constructor of the class. */
 
-JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl(
-    const JpegGridDataRepresentationImpl& other)
-    : JpegGridDataRepresentation(other)
+JpegGridDataRepresentationImpl::JpegGridDataRepresentationImpl(const JpegGridDataRepresentationImpl &other) :
+    JpegGridDataRepresentation(other)
 {
 }
 
 /*! \brief The destructor of the class. */
 
-JpegGridDataRepresentationImpl::~JpegGridDataRepresentationImpl() {}
+JpegGridDataRepresentationImpl::~JpegGridDataRepresentationImpl()
+{
+}
 
 /*! \brief The method creates a duplicate of the current object. */
 
@@ -42,7 +47,7 @@ RepresentationDefinition* JpegGridDataRepresentationImpl::createRepresentationDe
 {
   try
   {
-    return (RepresentationDefinition*)new JpegGridDataRepresentationImpl(*this);
+    return (RepresentationDefinition*) new JpegGridDataRepresentationImpl(*this);
   }
   catch (...)
   {
@@ -51,16 +56,16 @@ RepresentationDefinition* JpegGridDataRepresentationImpl::createRepresentationDe
 }
 
 /*! \brief The method reads and initializes all data related to the current object.
-    The purpose of this method is to get access to the read operation that takes place
-    in the parent class (which is automatically generated). This means in practice that
-    we first call the read operation in the parent class. After that we can ensure that
-    the result of the read operation was correct (i.e. attribute values are valid, etc).
-    We can also modify or update some attribute values if needed.
+ The purpose of this method is to get access to the read operation that takes place
+ in the parent class (which is automatically generated). This means in practice that
+ we first call the read operation in the parent class. After that we can ensure that
+ the result of the read operation was correct (i.e. attribute values are valid, etc).
+ We can also modify or update some attribute values if needed.
 
-        \param memoryReader  This object controls the access to the memory mapped file.
-*/
+ \param memoryReader  This object controls the access to the memory mapped file.
+ */
 
-void JpegGridDataRepresentationImpl::read(MemoryReader& memoryReader)
+void JpegGridDataRepresentationImpl::read(MemoryReader &memoryReader)
 {
   try
   {
@@ -72,64 +77,21 @@ void JpegGridDataRepresentationImpl::read(MemoryReader& memoryReader)
   }
 }
 
-void JpegGridDataRepresentationImpl::encodeValues(Message* message, T::ParamValue_vec& values)
+void JpegGridDataRepresentationImpl::encodeValues(Message *message, T::ParamValue_vec &values)
 {
   try
   {
-    // UNDER CONSTRUCTION
-    /*
-        jas_stream_t *output = jas_stream_fopen("/tmp/jasper_test.jpg", "w+b");
-        if (output == nullptr)
-        {
-          Fmi::Exception exception(BCP,"Cannot open output image file!");
-          throw exception;
-        }
-
-        jas_cmprof_t *outprof = jas_cmprof_createfromclrspc(JAS_CLRSPC_SRGB);
-        if (outprof == nullptr)
-        {
-          Fmi::Exception exception(BCP,"Cannot create sRGB profile!");
-          throw exception;
-        }
-
-        jas_image_t *newimage = jas_image_chclrspc(image, outprof, JAS_CMXFORM_INTENT_PER);
-        if (newimage == nullptr)
-        {
-          Fmi::Exception exception(BCP,"Cannot convert to sRGB!");
-          throw exception;
-        }
-
-        jas_image_destroy(image);
-        jas_cmprof_destroy(outprof);
-        image = newimage;
-
-
-        jas_tmr_start(&enctmr);
-        if (jas_image_encode(image, output, cmdopts->outfmt, cmdopts->outopts))
-        {
-          fprintf(stderr, "error: cannot encode image\n");
-          exit(EXIT_FAILURE);
-        }
-
-        jas_stream_flush(output);
-        jas_tmr_stop(&enctmr);
-
-        if (jas_stream_close(output))
-        {
-          Fmi::Exception exception(BCP,"Cannot close output image file!");
-          throw exception;
-        }
-
-        cmdopts_destroy(cmdopts);
-        jas_image_destroy(image);
-        jas_image_clearfmts();
-        */
   }
   catch (...)
   {
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+#ifdef JASPER
+
+
+
 
 void JpegGridDataRepresentationImpl::decodeValues(Message* message,
                                                   T::ParamValue_vec& decodedValues) const
@@ -276,174 +238,120 @@ void JpegGridDataRepresentationImpl::decodeValues(Message* message,
   }
 }
 
-#if 0
+#endif
 
-// **********************************************************************************'
-//
-//   NOTICE: The open-jpeg library is not very stable. It crashes quite often.
-//   That's why we are using jasper -library instead.
-//
-// **********************************************************************************'
+#ifndef JASPER
 
 
 
-/*! \brief Decompression error call back */
 
-void jpeg_error_callback(const char* msg, void* data)
+typedef struct
 {
+  opj_stream_t *stream;
+  OPJ_UINT8 *data;
+  OPJ_SIZE_T dataSize;
+  OPJ_SIZE_T offset;
+} StreamHandle;
+
+
+
+
+static OPJ_SIZE_T readMemoryStream(void *data, OPJ_SIZE_T dataSize, void *handle)
+{
+  StreamHandle *streamHandle = (StreamHandle*)handle;
+  if (streamHandle->offset >= streamHandle->dataSize)
+    return (OPJ_SIZE_T)-1;
+
+  OPJ_SIZE_T n = dataSize;
+
+  if ((streamHandle->offset + dataSize) > streamHandle->dataSize)
+    n = streamHandle->dataSize - streamHandle->offset;
+
+  memcpy(data, streamHandle->data + streamHandle->offset, n);
+  streamHandle->offset += n;
+  return n;
+}
+
+
+
+
+static OPJ_OFF_T moveMemoryStreamOffset(OPJ_OFF_T bytes, void *handle)
+{
+  if (bytes < 0)
+    return -1;
+
+  StreamHandle *streamHandle = (StreamHandle*)handle;
+  OPJ_SIZE_T n = (OPJ_SIZE_T)bytes;
+
+  if ((streamHandle->offset + bytes) > streamHandle->dataSize)
+    n = streamHandle->dataSize - streamHandle->offset;
+
+  streamHandle->offset += n;
+  return (OPJ_OFF_T)n;
+}
+
+
+
+static OPJ_BOOL seekMemoryStream(OPJ_OFF_T position, void *handle)
+{
+  StreamHandle *streamHandle = (StreamHandle*)handle;
+
+  if (position < 0)
+    return OPJ_FALSE;
+
+  if (position > (OPJ_OFF_T) streamHandle->dataSize)
+    return OPJ_FALSE;
+
+  streamHandle->offset = (OPJ_SIZE_T)position;
+  return OPJ_TRUE;
+}
+
+
+
+static void nopMemoryStream(void *handle)
+{
+  OPJ_ARG_NOT_USED(handle);
+}
+
+
+
+static opj_stream_t* createMemoryStream(StreamHandle& streamHandle)
+{
+  if (!(streamHandle.stream = opj_stream_default_create(true)))
+    return (NULL);
+
+  opj_stream_set_read_function(streamHandle.stream, readMemoryStream);
+  opj_stream_set_seek_function(streamHandle.stream, seekMemoryStream);
+  opj_stream_set_skip_function(streamHandle.stream, moveMemoryStreamOffset);
+  opj_stream_set_user_data(streamHandle.stream, &streamHandle, nopMemoryStream);
+  opj_stream_set_user_data_length(streamHandle.stream, streamHandle.dataSize);
+
+  return streamHandle.stream;
+}
+
+
+
+void openjpeg_error_callback(const char *msg, void*)
+{
+  //std::cerr << "OpenJPEG error: " << msg << std::endl;
   throw Fmi::Exception(BCP, "JPEG Error: " + std::string(msg));
 }
 
 
-
-
-
-/*! \brief Decompression error call back */
-
-void jpeg_warning_callback(const char* msg, void* data)
+void openjpeg_warning_callback(const char *msg, void*)
 {
+  //std::cerr << "OpenJPEG warning: " << msg << std::endl;
   throw Fmi::Exception(BCP, "JPEG Warning: " + std::string(msg));
 }
 
 
-
-
-
-/*! \brief Decode raw decompressed JPEG data to actual values */
-
-void decode_raw_jpeg_values(T::ParamValue_vec& values,
-                            opj_image_t* image,
-                            std::size_t numOfValues,
-                            unsigned int nbits,
-                            T::Data_ptr bitmap,
-                            std::size_t bitmapSizeInBytes,
-                            double RDfac,
-                            double EDfac)
+void openjpeg_info_callback(const char *msg, void*)
 {
-  try
-  {
-    T::Data_ptr bmap = bitmap;
-    unsigned char tmp = 0;
-    if (bmap == nullptr)
-      bmap = &tmp;
-
-    BitArrayReader bitmapReader(bmap,bitmapSizeInBytes*8);
-
-#ifdef DEBUG
-    std::cout << "JPEG IMAGE METADATA:\n"
-              << "x0 = " << image->x0 << "\n"
-              << "y0 = " << image->y0 << "\n"
-              << "x1 = " << image->x1 << "\n"
-              << "y1 = " << image->y1 << "\n"
-              << "numcomps = " << image->numcomps << "\n"
-              << "profile_len = " << image->icc_profile_len << "\n";
-
-    std::cout << "color_space = " << static_cast<int>(image->color_space) << " = ";
-    switch (image->color_space)
-    {
-      case CLRSPC_UNKNOWN:
-        std::cout << "UNKNOWN\n";
-        break;
-      case CLRSPC_UNSPECIFIED:
-        std::cout << "UNSPECIFIED\n";
-        break;
-      case CLRSPC_SRGB:
-        std::cout << "SRGB\n";
-        break;
-      case CLRSPC_GRAY:
-        std::cout << "GRAY\n";
-        break;
-      case CLRSPC_SYCC:
-        std::cout << "SYCC\n";
-        break;
-    }
-
-    std::cout << "\nnumOfValues = " << numOfValues << "\n"
-              << "w*h = " << image->x1 * image->y1 << "\n";
-#endif
-
-    if (image->x0 != 0)
-      throw Fmi::Exception(BCP,"Expecting JPEG x0 to be zero in grib data");
-
-    if (image->y0 != 0)
-      throw Fmi::Exception(BCP,"Expecting JPEG y0 to be zero in grib data");
-
-    if (image->numcomps != 1)
-      throw Fmi::Exception(BCP,"Expecting JPEG numcomps to be one in grib data");
-
-    //if (image->icc_profile_len != 0)
-    //  throw Fmi::Exception(BCP,"Expecting JPEG not to have a color profile in grib data");
-
-    std::size_t sz = static_cast<std::size_t>(image->x1 * image->y1);
-    if (numOfValues != sz  &&  (bitmap == nullptr || (bitmapSizeInBytes*8) < sz))
-      throw Fmi::Exception(BCP,"Expecting " + std::to_string(numOfValues) + " JPEG values, got " +
-                               std::to_string(image->x1) + "*" + std::to_string(image->y1) + "=" +
-                               std::to_string(image->x1 * image->y1) + " instead");
-
-    // How many bytes does a single value take. Note: by definition nbits>0, so below is correct
-    // unsigned int nbytes = (nbits - 1) / 8 + 1;
-    // However, in openjpeg v1.5 the output data is int *, hence we do not need to know the number
-    // of
-    // bytes
-
-    // Calculate actual values from the bytes. Here we assume numcomps=1
-    auto comps = image->comps[0];
-
-#ifdef DEBUG
-    std::cout << "\nCOMPONENTS:\n"
-              << "dx = " << comps.dx << "\n"
-              << "dy = " << comps.dy << "\n"
-              << "w = " << comps.w << "\n"
-              << "h = " << comps.h << "\n"
-              << "x0 = " << comps.x0 << "\n"
-              << "y0 = " << comps.y0 << "\n"
-              << "prec = " << comps.prec << "\n"
-              << "bpp = " << comps.bpp << "\n"
-              << "sgnd = " << comps.sgnd << "\n"
-              << "resno_decoded = " << comps.resno_decoded << "\n"
-              << "factor = " << comps.factor << std::endl;
-#endif
-
-    if (bitmap != nullptr)
-    {
-      uint pos = 0;
-      for (std::uint32_t i = 0; i < numOfValues; i++)
-      {
-        if (bitmapReader.readBit())
-        {
-          int X = comps.data[pos];
-          double Y = RDfac + X * EDfac;
-          values.emplace_back(Y);
-          pos++;
-        }
-        else
-        {
-          values.emplace_back(ParamValueMissing);
-        }
-      }
-    }
-    else
-    {
-      for (std::uint32_t i = 0; i < numOfValues; i++)
-      {
-        int X = comps.data[i];
-        double Y = RDfac + X * EDfac;
-        values.emplace_back(Y);
-      }
-    }
-
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP, "Jpeg decoder failed!", nullptr);
-  }
+  //std::cout << "OpenJPEG info: " << msg << std::endl;
 }
 
 
-
-
-
-void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec& decodedValues) const
+void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValue_vec &decodedValues) const
 {
   try
   {
@@ -453,143 +361,155 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     T::Data_ptr bitmap = message->getBitmapDataPtr();
     std::size_t bitmapSizeInBytes = message->getBitmapDataSizeInBytes();
 
-    // The GRIB specs permit using a bitmap, but then suggest that the data should
-    // be of height 1 and width equal to the total number of points. Without sample
-    // data this will not be supported.
-
-    //if (bitmap != nullptr)
-    //  throw Fmi::Exception(BCP,"Bitmap + jpeg2000 encoded grib data not supported");
-
-    // Vector to return
-    decodedValues.clear();
-    decodedValues.reserve(numOfValues);
-
-    if (numOfValues == 0)
+    if (numOfValues == 0 || data == nullptr || dataSize == 0)
       return;
 
-    // Sanity checks
-    auto bits_per_value = mPacking.getBitsPerValue();
-    if (!bits_per_value)
-      throw Fmi::Exception(BCP,"GridDataRepresentation number of bits per value must be > 0");
+    opj_stream_t *stream = nullptr;
+    opj_codec_t *codec = nullptr;
+    opj_image_t *image = nullptr;
 
-    // Number of bits per value
-    const unsigned int nbits = *bits_per_value;
-
-    // Reference value R, IEEE 32-bit floating point value
-    // TODO: GRIB1 USES IBM-FLOATS INSTEAD OF IEEE-754!!!!!
-    double R = mPacking.getReferenceValue();
-
-    // Binary scale factor E, possibly negative
-    std::int16_t E = (mPacking.getBinaryScaleFactor() ? *mPacking.getBinaryScaleFactor() : 0);
-
-    // Decimal scale factor D, possibly negative
-    std::int16_t D = (mPacking.getDecimalScaleFactor() ? *mPacking.getDecimalScaleFactor() : 0);
-
-    // Optimization: (R + X * Efac) * Dfac = RDfac + X * EDFac
-
-    const double Efac = std::pow(2.0, E);
-    const double Dfac = std::pow(10, -D);
-
-    const double RDfac = R * Dfac;
-    const double EDfac = Efac * Dfac;
-
-#ifdef DEBUG
-    std::cout << "JPEG decompression:\n"
-              << "nbits = " << nbits << "\n"
-              << "EDfac = " << EDfac << "\n"
-              << "RDfac = " << RDfac << "\n";
-#endif
-
-
-    if (dataSize == 0)
+    try
     {
-      if (bitmap != nullptr  &&  bitmapSizeInBytes > 0)
+      // ### STREAM INITIALIZATION
+
+      StreamHandle streamHandle;
+      streamHandle.data = (OPJ_UINT8*)data;
+      streamHandle.dataSize = (OPJ_SIZE_T)dataSize;
+      streamHandle.offset = 0;
+      streamHandle.stream = nullptr;
+
+      stream =  createMemoryStream(streamHandle);
+      if (!stream)
+        throw Fmi::Exception(BCP, "Cannot create OpenJPEG stream from memory!");
+
+
+      // ### CODEC INITIALIZATION
+
+      codec = opj_create_decompress(OPJ_CODEC_J2K);
+      if (!codec)
+        throw Fmi::Exception(BCP, "Cannot create OpenJPEG codec!");
+
+      opj_set_info_handler(codec, openjpeg_info_callback, nullptr);
+      opj_set_warning_handler(codec, openjpeg_warning_callback, nullptr);
+      opj_set_error_handler(codec, openjpeg_error_callback, nullptr);
+
+
+      // ### DECODING JPEG-2000
+
+      opj_dparameters_t l_param;
+      memset(&l_param, 0, sizeof(l_param));
+      opj_set_default_decoder_parameters(&l_param);
+      l_param.decod_format = 0;
+
+      if (!opj_setup_decoder(codec, &l_param))
+        throw Fmi::Exception(BCP, "Failed to set up OpenJPEG decoder!");
+
+      if (!opj_read_header(stream, codec, &image))
+        throw Fmi::Exception(BCP, "Cannot read JPEG-2000 header!");
+
+      if (!image)
+        throw Fmi::Exception(BCP, "Image not created!");
+
+      // printf("IMAGE %u,%u,%u,%u  %u  %d\n",image->x0,image->y0,image->x1,image->y1,image->numcomps,l_param.decod_format);
+
+      if (!image->comps)
+        throw Fmi::Exception(BCP, "Image comps points to NULL!");
+
+      // printf("COMPS %u,%u  %u,%u  %u\n",image->comps->w,image->comps->h,image->comps->dx,image->comps->dy,image->comps->prec);
+
+      if (!opj_decode(codec, stream, image))
+        throw Fmi::Exception(BCP, "Cannot decode JPEG-2000!");
+
+      if (!opj_end_decompress(codec, stream))
+        throw Fmi::Exception(BCP, "Cannot finish JPEG-2000 decompression!");
+
+
+      // ### PROCESSING DECODED DATA FOR THE GRIB
+
+      // Get data dimensions
+
+      int width = 0;
+      int height = 0;
+
+      if (image->comps)
       {
-        // There is no data, but there is a bitmap available.
-        BitArrayReader bitmapReader(bitmap,bitmapSizeInBytes*8);
-        for (std::uint32_t i=0; i<numOfValues; i++)
+        width = image->comps->w;
+        height = image->comps->h;
+      }
+
+      // Sanity check for matching value count
+      if (width * height != numOfValues)
+        throw Fmi::Exception(BCP, "Decoded data size does not match expected value count!");
+
+      // Clear the output vector and reserve space
+      decodedValues.clear();
+      decodedValues.reserve(numOfValues);
+
+      // Get reference and scale factors
+      auto bits_per_value = mPacking.getBitsPerValue();
+      if (!bits_per_value)
+        throw Fmi::Exception(BCP, "GridDataRepresentation number of bits per value must be > 0");
+
+      double R = mPacking.getReferenceValue();
+      std::int16_t E = (mPacking.getBinaryScaleFactor() ? *mPacking.getBinaryScaleFactor() : 0);
+      std::int16_t D = (mPacking.getDecimalScaleFactor() ? *mPacking.getDecimalScaleFactor() : 0);
+
+      const double Efac = std::pow(2.0, E);
+      const double Dfac = std::pow(10, -D);
+      const double RDfac = R * Dfac;
+      const double EDfac = Efac * Dfac;
+
+      // Decode and store values based on the presence of a bitmap
+      if (bitmapSizeInBytes > 0)
+      {
+        T::Data_ptr bmap = bitmap;
+        unsigned char tmp = 0;
+        if (bmap == nullptr)
+          bmap = &tmp;
+
+        BitArrayReader bitmapReader(bmap, bitmapSizeInBytes * 8);
+
+        uint pos = 0;
+        for (int t = 0; t < static_cast<int>(numOfValues); t++)
         {
           if (bitmapReader.readBit())
           {
-            decodedValues.emplace_back(R);
+            int X = image->comps->data[pos];
+            double Y = RDfac + X * EDfac;
+            decodedValues.emplace_back(Y);
+            pos++;
           }
           else
           {
             decodedValues.emplace_back(ParamValueMissing);
           }
         }
-        return;
       }
       else
       {
-        // All values are set to "reference_value".
-        for (std::uint32_t i=0; i<numOfValues; i++)
+        for (int t = 0; t < static_cast<int>(numOfValues); t++)
         {
-          decodedValues.emplace_back(R);
+          int X = image->comps->data[t];
+          double Y = RDfac + X * EDfac;
+          decodedValues.emplace_back(Y);
         }
-        return;
       }
-    }
 
-    // Prepare jpeg decompression event manager
-
-    opj_event_mgr_t event_mgr;
-    memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
-    event_mgr.error_handler = jpeg_error_callback;
-    event_mgr.warning_handler = jpeg_warning_callback;
-    event_mgr.info_handler = nullptr;
-
-    // set default decoder
-    opj_dparameters_t parameters;
-    opj_set_default_decoder_parameters(&parameters);
-
-    // Deallocate these in the catch block if necessary
-    opj_image_t* image = nullptr;
-    opj_cio_t* cio = nullptr;
-    opj_dinfo_t* dinfo = nullptr;
-
-    try
-    {
-      dinfo = opj_create_decompress(CODEC_J2K);
-
-      opj_set_event_mgr((opj_common_ptr)dinfo, &event_mgr, nullptr);
-      opj_setup_decoder(dinfo, &parameters);
-
-      // open the jpeg stream
-      // TODO: USE REAL SIZE!
-      const int datalength = (int)(dataSize & 0xFFFFFFFF); // 999999;
-      cio = opj_cio_open((opj_common_ptr)dinfo, const_cast<unsigned char*>(data), datalength);
-
-      // Decode the stream into an image structure
-      image = opj_decode(dinfo, cio);
-
-      if (!image)
-        throw Fmi::Exception(BCP,"Failed to decode JPEG data");
-
-      // Unpack the values
-
-      decode_raw_jpeg_values(decodedValues, image, numOfValues, nbits, bitmap, bitmapSizeInBytes, RDfac, EDfac);
-
-      // close the jpeg stream
-      opj_cio_close(cio);
-      cio = nullptr;
-
-      // free the codec context
-      opj_destroy_decompress(dinfo);
-      dinfo = nullptr;
-
-      // free image data structure
+      opj_stream_destroy(stream);
+      opj_destroy_codec(codec);
       opj_image_destroy(image);
-      image = nullptr;
     }
     catch (...)
     {
-      if (cio)
-        opj_cio_close(cio);
-      if (dinfo)
-        opj_destroy_decompress(dinfo);
+      if (stream)
+        opj_stream_destroy(stream);
+
+      if (codec)
+        opj_destroy_codec(codec);
+
       if (image)
         opj_image_destroy(image);
+
       throw;
     }
   }
@@ -598,6 +518,7 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue
     throw Fmi::Exception(BCP, "JPEG decodeValues failed!", nullptr);
   }
 }
+
 #endif
 
 }  // namespace GRIB2
