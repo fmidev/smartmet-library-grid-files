@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.9.3
+Version: 24.10.16
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -34,7 +34,7 @@ BuildRequires: libcurl-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libjpeg-turbo-devel
 BuildRequires: libpng-devel
-BuildRequires: libjasper-devel
+BuildRequires: openjpeg2-devel
 BuildRequires: openssl-devel
 Provides: %{SPECNAME}
 Requires: %{smartmet_boost}-iostreams
@@ -45,7 +45,7 @@ Requires: gdal38-libs
 Requires: geos312
 Requires: libaec
 Requires: libcurl
-Requires: libjpeg-turbo
+Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 24.8.7
 Requires: smartmet-library-macgyver >= 24.8.7
@@ -96,17 +96,20 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Oct 16 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.10.16-1.fmi
+- Added a possiblity to use locally cached files
+- Use openjpeg2 instead of jasper
+- Removed incorrect sanity check for the grid data size
+- Added a file copy function that notices when the shutdown request is active
+- Avoid possible undefined pointer dereference
 * Tue Sep  3 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.9.3-1.fmi
 - Improved logic related to NetCDF parameter processing
 - Accepting partial page data if it comes from the end of the file
 - Code cleanup
-
 * Wed Aug  7 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.8.7-1.fmi
 - Update to gdal-3.8, geos-3.12, proj-94 and fmt-11
-
 * Fri Jul 12 2024 Andris Pavēnis <andris.pavenis@fmi.fi> 24.7.12-1.fmi
 - Replace many boost library types with C++ standard library ones
-
 * Thu Jun 13 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.13-2.fmi
 - Improvements to memory mapping local and external files
 * Thu Jun 13 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.6.13-1.fmi
