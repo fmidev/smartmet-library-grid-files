@@ -42,7 +42,6 @@ Message::Message()
   try
   {
     mFilePosition = 0;
-    mOriginalFilePosition = 0;
     mGeometryId = 0;
     mFmiParameterLevelId = 0;
     mCacheKey = 0;
@@ -73,7 +72,6 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mGridFilePtr = gridFile;
     mMessageIndex = messageIndex;
     mFilePosition = messageInfo.mFilePosition;
-    mOriginalFilePosition = messageInfo.mOriginalFilePosition;
     mFileMemoryPtr = messageInfo.mFileMemoryPtr;
     mMessageSize = messageInfo.mMessageSize;
     mFmiParameterId = messageInfo.mFmiParameterId;
@@ -109,7 +107,6 @@ Message::Message(const Message& other)
   {
     mGridFilePtr = nullptr;
     mFilePosition = other.mFilePosition;
-    mOriginalFilePosition = other.mOriginalFilePosition;
     mMessageSize = other.mMessageSize;
     mFileMemoryPtr = nullptr;
     mIsRead = true;
@@ -1223,24 +1220,8 @@ void Message::read()
     }
     catch (...)
     {
-      if (mFileMemoryPtr)
-      {
-        Fmi::Exception exception(BCP,"Message read from the start-up cache failed!",nullptr);
-        exception.printError();
-
-        mFileMemoryPtr = nullptr;
-        mFilePosition = mOriginalFilePosition;
-        uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();
-        uchar *e = d + s;
-        MemoryReader memoryReader(d,e);
-        memoryReader.setReadPosition(mFilePosition);
-        read(memoryReader);
-      }
-      else
-      {
-        Fmi::Exception exception(BCP,"Message read failed!",nullptr);
-        throw exception;
-      }
+      Fmi::Exception exception(BCP,"Message read failed!",nullptr);
+      throw exception;
     }
   }
   catch (...)
@@ -2883,23 +2864,6 @@ T::FilePosition Message::getFilePosition() const
 
 
 
-T::FilePosition Message::getOriginalFilePosition() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mOriginalFilePosition;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
 /*! \brief The method returns a shared pointer to the BitmapSection object. */
 
 BitmapSect_sptr Message::getBitmapSection() const
@@ -4162,7 +4126,6 @@ void Message::print(std::ostream& stream,uint level,uint optionFlags) const
   {
     stream << "\n" << space(level) << "########## MESSAGE [" << mMessageIndex << "] ##########\n\n";
     stream << space(level) << "- filePosition             = " << toString(mFilePosition) << " (" << uint64_toHex(mFilePosition) << ")\n";
-    stream << space(level) << "- mOriginalFilePosition    = " << toString(mOriginalFilePosition) << " (" << uint64_toHex(mOriginalFilePosition) << ")\n";
     stream << space(level) << "- fileType                 = " << toString(mFileType) << "\n";
     stream << space(level) << "- referenceTime            = " << getReferenceTime() << "\n";
     stream << space(level) << "- forecastTime             = " << getForecastTime() << "\n";

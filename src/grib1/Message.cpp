@@ -39,7 +39,6 @@ Message::Message()
   try
   {
     mFilePosition = 0;
-    mOriginalFilePosition = 0;
     mMessageSize = 0;
     mFileMemoryPtr = nullptr;
     mFmiParameterLevelId = 0;
@@ -70,7 +69,6 @@ Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& m
     mGridFilePtr = gridFile;
     mMessageIndex = messageIndex;
     mFilePosition = messageInfo.mFilePosition;
-    mOriginalFilePosition = messageInfo.mOriginalFilePosition;
     mFileMemoryPtr = messageInfo.mFileMemoryPtr;
     mMessageSize = messageInfo.mMessageSize;
     mFmiParameterId = messageInfo.mFmiParameterId;
@@ -107,7 +105,6 @@ Message::Message(const Message& other)
     mGridFilePtr = nullptr;
     mIsRead = true;
     mFilePosition = other.mFilePosition;
-    mOriginalFilePosition = other.mOriginalFilePosition;
     mMessageSize = other.mMessageSize;
     mFileType = other.mFileType;
     mForecastTimeT = other.mForecastTimeT;
@@ -475,24 +472,8 @@ void Message::read()
     }
     catch (...)
     {
-      if (mFileMemoryPtr)
-      {
-        Fmi::Exception exception(BCP,"Message read from the start-up cache failed!",nullptr);
-        exception.printError();
-
-        mFileMemoryPtr = nullptr;
-        mFilePosition = mOriginalFilePosition;
-        uchar *d = (uchar*)mGridFilePtr->getMemoryPtr();
-        uchar *e = d + s;
-        MemoryReader memoryReader(d,e);
-        memoryReader.setReadPosition(mFilePosition);
-        read(memoryReader);
-      }
-      else
-      {
-        Fmi::Exception exception(BCP,"Message read failed!",nullptr);
-        throw exception;
-      }
+      Fmi::Exception exception(BCP,"Message read failed!",nullptr);
+      throw exception;
     }
   }
   catch (...)
@@ -2185,23 +2166,6 @@ T::FilePosition Message::getFilePosition() const
   try
   {
     return mFilePosition;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-T::FilePosition Message::getOriginalFilePosition() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mOriginalFilePosition;
   }
   catch (...)
   {

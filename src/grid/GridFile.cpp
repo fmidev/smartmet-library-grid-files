@@ -42,7 +42,7 @@ GridFile::GridFile()
     mMemoryMapInfo.reset(new MapInfo());
     mMemoryMapInfo->serverType = 1;
     mMemoryMapInfo->protocol = 0;
-    mGroupFlags = 0;
+    mFlags = 0;
     mProducerId = 0;
     mGenerationId = 0;
     mAccessTime = 0;
@@ -54,6 +54,7 @@ GridFile::GridFile()
     mMessagePositionError = false;
     mNetCdfFile = nullptr;
     mQueryDataFile = nullptr;
+    mFileModificationTime = 0;
   }
   catch (...)
   {
@@ -76,7 +77,7 @@ GridFile::GridFile(const GridFile& other)
     mFileId = other.mFileId;
     mFileModificationTime = other.mFileModificationTime;
     mDeletionTime = other.mDeletionTime;
-    mGroupFlags = other.mGroupFlags;
+    mFlags = other.mFlags;
     mProducerId = other.mProducerId;
     mGenerationId = other.mGenerationId;
     mSourceId = other.mSourceId;
@@ -108,7 +109,7 @@ GridFile::GridFile(GridFile *gridFile)
     mMemoryMapInfo->serverType = 1;
     mMemoryMapInfo->protocol = 0;
     mFileId = 0;
-    mGroupFlags = 0;
+    mFlags = 0;
     mProducerId = 0;
     mGenerationId = 0;
     mAccessTime = 0;
@@ -118,6 +119,8 @@ GridFile::GridFile(GridFile *gridFile)
     mMessagePositionError = false;
     mNetCdfFile = nullptr;
     mQueryDataFile = nullptr;
+    mDeletionTime = 0;
+    mFileModificationTime = 0;
   }
   catch (...)
   {
@@ -171,8 +174,7 @@ GridFile* GridFile::createGridFile()
 
 
 
-/*! \brief The method returns the file identifier of the current grid file. Usully this identifier is set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method returns the file identifier of the current grid file.
 
       \return  The grid file identifier.
 */
@@ -194,18 +196,17 @@ uint GridFile::getFileId() const
 
 
 
-/*! \brief The method returns the group flags of the current grid file. Usully these flags are set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method returns the group flags of the current grid file.
 
       \return  The grid file group flags.
 */
 
-uint GridFile::getGroupFlags() const
+uint GridFile::getFlags() const
 {
   FUNCTION_TRACE
   try
   {
-    return mGroupFlags;
+    return mFlags;
   }
   catch (...)
   {
@@ -280,8 +281,7 @@ std::string GridFile::getServer() const
 
 
 
-/*! \brief The method returns the producer identifier of the current grid file. Usully this identifier is set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method returns the producer identifier of the current grid file.
 
       \return  The grid producer identifier.
 */
@@ -303,8 +303,7 @@ uint GridFile::getProducerId() const
 
 
 
-/*! \brief The method returns the generation identifier of the current grid file. Usully this identifier is set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method returns the generation identifier of the current grid file.
 
       \return  The grid generation identifier.
 */
@@ -430,8 +429,7 @@ time_t GridFile::getDeletionTime() const
 
 
 
-/*! \brief The method returns the source identifier of the current grid file. Usully this identifier is set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method returns the source identifier of the current grid file.
 
       \return  The grid source identifier.
 */
@@ -690,8 +688,7 @@ void GridFile::setCheckTime(time_t checkTime)
 
 
 
-/*! \brief The method sets the file identifier of the current grid file. Usully this identifier is set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method sets the file identifier of the current grid file.
 
       \param fileId  The grid file identifier.
 */
@@ -759,18 +756,17 @@ void GridFile::setDeletionTime(time_t deletionTime)
 
 
 
-/*! \brief The method sets the group flags of the current grid file. Usully these flags are set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method sets the flags of the current grid file.
 
-      \param groupFlags  The grid file group flags.
+      \param flags  The grid file flags.
 */
 
-void GridFile::setGroupFlags(uint groupFlags)
+void GridFile::setFlags(uint flags)
 {
   FUNCTION_TRACE
   try
   {
-    mGroupFlags = groupFlags;
+    mFlags = flags;
   }
   catch (...)
   {
@@ -782,8 +778,7 @@ void GridFile::setGroupFlags(uint groupFlags)
 
 
 
-/*! \brief The method sets the producer identifier of the current grid file. Usully this identifier is set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method sets the producer identifier of the current grid file.
 
       \param producerID  The grid producer identifier.
 */
@@ -806,8 +801,7 @@ void GridFile::setProducerId(uint producerId)
 
 
 
-/*! \brief The method sets the generation identifier of the current grid file. Usully this identifier is set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method sets the generation identifier of the current grid file.
 
       \param generationId  The grid generation identifier.
 */
@@ -829,10 +823,9 @@ void GridFile::setGenerationId(uint generationId)
 
 
 
-/*! \brief The method sets the file name of the current grid file. Usully this name is set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method sets the filename of the current grid file.
 
-      \param fileName  The grid file name.
+      \param fileName  The grid filename.
 */
 
 void GridFile::setFileName(const std::string& fileName)
@@ -840,7 +833,10 @@ void GridFile::setFileName(const std::string& fileName)
   FUNCTION_TRACE
   try
   {
-    mMemoryMapInfo->filename = fileName;
+    mFileName = fileName;
+    if (mMemoryMapInfo->filename.empty())
+      mMemoryMapInfo->filename = fileName;
+
     mFileModificationTime = time(nullptr); //getFileModificationTime(fileName.c_str());
   }
   catch (...)
@@ -853,8 +849,34 @@ void GridFile::setFileName(const std::string& fileName)
 
 
 
-/*! \brief The method sets the source identifier of the current grid file. Usully this identifier is set
-    when the grid file is registered for example into the Content Server.
+/*! \brief The method sets the filename of the mapped grid file. This might
+ * be different than the original filename. In this case the original file
+ * if probably cached to a local file. If the file is already memory mapped
+ * then we should not change it.
+
+      \param fileName  The mapped grid file.
+*/
+
+void GridFile::setMappingFileName(const std::string& fileName)
+{
+  FUNCTION_TRACE
+  try
+  {
+    AutoThreadLock lock(&mMemoryMappingLock);
+    if (!mMemoryMapInfo->memoryPtr)
+      mMemoryMapInfo->filename = fileName;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+/*! \brief The method sets the source identifier of the current grid file.
 
       \param sourceId  The grid source identifier.
 */
@@ -1069,7 +1091,7 @@ std::string GridFile::getFileName() const
   FUNCTION_TRACE
   try
   {
-    return mMemoryMapInfo->filename;
+    return mFileName;
   }
   catch (...)
   {
@@ -1077,6 +1099,22 @@ std::string GridFile::getFileName() const
   }
 }
 
+
+
+
+
+std::string GridFile::getMappingFileName() const
+{
+  FUNCTION_TRACE
+  try
+  {
+    return mMemoryMapInfo->filename;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -1141,7 +1179,7 @@ GRID::Message* GridFile::createMessage(uint messageIndex,GRID::MessageInfo& mess
 
     long long fsize = getSize();
 
-    if (messageInfo.mFilePosition == messageInfo.mOriginalFilePosition && C_INT64(messageInfo.mFilePosition + messageInfo.mMessageSize) > fsize)
+    if (C_INT64(messageInfo.mFilePosition + messageInfo.mMessageSize) > fsize)
     {
       mMessagePositionError = true;
 
@@ -2043,9 +2081,10 @@ void GridFile::print(std::ostream& stream,uint level,uint optionFlags) const
 
     stream << space(level) << "GridFile\n";
     stream << space(level) << "- fileName         = " << getFileName() << "\n";
+    stream << space(level) << "- fileName         = " << getMappingFileName() << "\n";
     stream << space(level) << "- fileId           = " << mFileId << "\n";
     stream << space(level) << "- deletionTime     = " << getDeletionTimeStr() << "\n";
-    stream << space(level) << "- groupFlags       = " << mGroupFlags << "\n";
+    stream << space(level) << "- flags            = " << mFlags << "\n";
     stream << space(level) << "- producerId       = " << mProducerId << "\n";
     stream << space(level) << "- generationId     = " << mGenerationId << "\n";
     stream << space(level) << "- numberOfMessages = " << messageCount << "\n";

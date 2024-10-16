@@ -344,25 +344,6 @@ T::FilePosition Message::getFilePosition() const
 
 
 
-T::FilePosition Message::getOriginalFilePosition() const
-{
-  FUNCTION_TRACE
-  try
-  {
-    return mFilePosition;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Message index",Fmi::to_string(mMessageIndex));
-    throw exception;
-  }
-}
-
-
-
-
-
 T::FileType Message::getMessageType() const
 {
   FUNCTION_TRACE
