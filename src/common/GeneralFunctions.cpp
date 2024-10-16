@@ -442,6 +442,61 @@ time_t getFileModificationTime(const char *filename)
 
 
 
+void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdownRequested)
+{
+  try
+  {
+    FILE *sFile = fopen(sourceFileName,"r");
+    if (sFile == NULL)
+    {
+      Fmi::Exception exception(BCP, "Cannot open file for reading!", nullptr);
+      exception.addParameter("sourceFileName",sourceFileName);
+      throw exception;
+    }
+
+    FILE *tFile = fopen(targetFileName,"w");
+    if (tFile == NULL)
+    {
+      fclose(sFile);
+      Fmi::Exception exception(BCP, "Cannot open file for writing!", nullptr);
+      exception.addParameter("targetFileName",targetFileName);
+      throw exception;
+    }
+
+    char buf[1000000];
+    while (!feof(sFile)  &&  !shutdownRequested)
+    {
+      int nr = fread(buf,1,1000000,sFile);
+      if (nr > 0 && !shutdownRequested)
+      {
+        int nw = fwrite(buf,1,nr,tFile);
+      }
+    }
+
+    fclose(sFile);
+    fclose(tFile);
+
+    // Checking that the source file and the target file have the same size.
+
+    struct stat s1;
+    struct stat s2;
+    if (stat(sourceFileName, &s1) == 0 && stat(targetFileName, &s2) == 0  &&  s1.st_size == s2.st_size)
+      return;
+
+    Fmi::Exception exception(BCP, "File copy failed!", nullptr);
+    exception.addParameter("sourceFileName",sourceFileName);
+    exception.addParameter("targetFileName",targetFileName);
+    throw exception;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
 long long getFileSize(const char *filename)
 {
   try

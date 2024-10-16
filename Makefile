@@ -20,7 +20,7 @@ LIBS += \
 	-lboost_thread \
 	-lpng \
 	-ljpeg \
-	-ljasper \
+	-lopenjp2 \
 	-laec \
 	-lz
 

@@ -242,15 +242,6 @@ T::FilePosition Message::getFilePosition() const
 
 
 
-T::FilePosition Message::getOriginalFilePosition() const
-{
-  throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
-}
-
-
-
-
-
 uint Message::getMessageIndex() const
 {
   FUNCTION_TRACE

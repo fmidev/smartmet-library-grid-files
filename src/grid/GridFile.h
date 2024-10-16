@@ -52,10 +52,11 @@ class GridFile
     virtual std::string   getDeletionTimeStr() const;
     virtual uint          getFileId() const;
     virtual std::string   getFileName() const;
+    virtual std::string   getMappingFileName() const;
     virtual T::FileType   getFileType() const;
     virtual std::string   getFileTypeString() const;
     virtual uint          getGenerationId() const;
-    virtual uint          getGroupFlags() const;
+    virtual uint          getFlags() const;
     virtual char*         getMemoryPtr();
     virtual Message*      getMessageByIndex(std::size_t index);
     virtual time_t        getModificationTime() const;
@@ -95,8 +96,9 @@ class GridFile
     virtual void          setDeletionTime(const std::string& deletionTime);
     virtual void          setFileId(uint fileId);
     virtual void          setFileName(const std::string& fileName);
+    virtual void          setMappingFileName(const std::string& fileName);
     virtual void          setGenerationId(uint generationId);
-    virtual void          setGroupFlags(uint groupFlags);
+    virtual void          setFlags(uint groupFlags);
     virtual void          setProducerId(uint producerId);
     virtual void          setProtocol(uchar protocol);
     virtual void          setServerType(uchar serverType);
@@ -125,20 +127,29 @@ class GridFile
     time_t                mDeletionTime;      // The file should not be accessed after this time
     uint                  mFileId;
     time_t                mFileModificationTime;
+    std::string           mFileName;
     uint                  mGenerationId;
-    uint                  mGroupFlags;
+    uint                  mFlags;
     MessageInfo_map       mMessagePositions;
     Message_ptr_map       mMessages;
     uint                  mProducerId;
     MapInfo_sptr          mMemoryMapInfo;
     uint                  mSourceId;
+    bool                  mIsRead;
+    ThreadLock            mMemoryMappingLock;
+    bool                  mMessagePositionError;
+    NetCDF::NetCdfFile*   mNetCdfFile;
 
-    bool                      mIsRead;
-    ThreadLock                mMemoryMappingLock;
-    bool                      mMessagePositionError;
-    NetCDF::NetCdfFile*       mNetCdfFile;
     QueryData::QueryDataFile* mQueryDataFile;
 
+  public:
+
+    class Flags
+    {
+      public:
+        static const uint LocalCacheExpected = 1;     // The file shoud be cached locally if possible
+        static const uint LocalCacheReady    = 2;    // The file is cached locally
+    };
 };
 
 

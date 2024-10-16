@@ -72,6 +72,7 @@ void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& 
 
 time_t toTimeT(Fmi::DateTime tim);
 time_t getFileModificationTime(const char *filename);
+void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdownRequested);
 long long getFileSize(const char *filename);
 long long getFileSize(FILE *file);
 std::string getAbsoluteFilePath(const std::string& filename);
