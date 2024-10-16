@@ -437,10 +437,6 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValu
         height = image->comps->h;
       }
 
-      // Sanity check for matching value count
-      if (width * height != numOfValues)
-        throw Fmi::Exception(BCP, "Decoded data size does not match expected value count!");
-
       // Clear the output vector and reserve space
       decodedValues.clear();
       decodedValues.reserve(numOfValues);
