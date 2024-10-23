@@ -175,7 +175,7 @@ void GridDef::init(const char* configFile)
     mConfigurationFile.readFile(configFile);
 
     uint t=0;
-    while (configAttribute[t] != nullptr)
+    while (configAttribute[t])
     {
       if (!mConfigurationFile.findAttribute(configAttribute[t]))
       {
@@ -867,7 +867,7 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1130,7 +1130,7 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1210,7 +1210,7 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1291,7 +1291,7 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1368,7 +1368,7 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1439,7 +1439,7 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1526,7 +1526,7 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1627,7 +1627,7 @@ void GridDef::loadFmiParameterId_netCdf(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1716,7 +1716,7 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1804,7 +1804,7 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1885,7 +1885,7 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1966,7 +1966,7 @@ void GridDef::loadFmiLevelId_newbase(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2057,7 +2057,7 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2127,7 +2127,7 @@ void GridDef::loadNetCdfParameterDefinitions(const char *filename)
 
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2316,12 +2316,18 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
     const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+    const char *gridCountSizeStr = attributeList.getAttributeValue("grid.countSize");
+    const char *gridCellWidthStr = attributeList.getAttributeValue("grid.original.cell.width");
+    const char *gridCellHeightStr = attributeList.getAttributeValue("grid.original.cell.height");
+    const char *gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
+    const char *gridCellHeightDegrStr = attributeList.getAttributeValue("grid.original.cell.height.degrees");
+    const char *gridOriginalProjectionStr = attributeList.getAttributeValue("grid.original.projectionType");
 
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
 
 
-    if (crsStr != nullptr  &&  strcasecmp(crsStr,"crop") == 0)
+    if (crsStr  &&  strcasecmp(crsStr,"crop") == 0)
     {
       if (originalCrsStr == nullptr)
         return;
@@ -2332,7 +2338,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
     // Checking if the geometry is defined by the geometryId
 
     GRIB2::GridDef_sptr def;
-    if (geometryIdStr != nullptr)
+    if (geometryIdStr)
     {
       def = getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
       if (!def)
@@ -2344,7 +2350,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
     // Checking if the geometry is defigned by the geometry string
 
-    if (!def &&  geometryStringStr != nullptr)
+    if (!def &&  geometryStringStr)
     {
       auto defPtr = Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
       if (!defPtr)
@@ -2383,20 +2389,38 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
       }
     }
 
+    bool targetIsLatlon = false;
+    bool countSize = false;
 
-    if ((urnStr != nullptr  || crsStr != nullptr)  &&  (bboxStr != nullptr || llboxStr != nullptr)  &&  gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
+    if (gridCountSizeStr)
+    {
+      bool res = (bool)toInt32(gridCountSizeStr);
+      if (res  &&  gridCellWidthStr  &&  gridCellHeightStr)
+        countSize = true;
+    }
+
+    if (!gridWidthStr &&  !gridHeightStr)
+      countSize = true;
+
+    if ((urnStr  || crsStr )  &&  (bboxStr || llboxStr)  &&  ((gridWidthStr &&  gridHeightStr) ||  (gridCellWidthStr  &&  gridCellHeightStr)))
     {
       // If the geometry id defined by the URN / CRS then we need to the bounding box coordinates and preferred grid width and height.
 
       std::vector<double> aa;
+      std::vector<double> bb;
 
-      if (bboxStr != nullptr)
+      if (bboxStr)
         splitString(bboxStr,',',aa);
-      else
-      if (llboxStr != nullptr)
+
+      if (llboxStr)
       {
-        splitString(llboxStr,',',aa);
+        splitString(llboxStr,',',bb);
+        if (bboxStr == nullptr)
+          aa = bb;
       }
+
+      if (aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
+        targetIsLatlon = true;
 
       if (aa.size() == 4)
       {
@@ -2408,7 +2432,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
         OGRSpatialReference sr;
 
-        if (urnStr != nullptr)
+        if (urnStr)
         {
           std::string urn = urnStr;
           if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
@@ -2418,14 +2442,14 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
             throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
         }
         else
-        if (proj4Str != nullptr)
+        if (proj4Str)
         {
           OGRErr err = sr.SetFromUserInput(proj4Str);
           if (err != OGRERR_NONE)
             throw Fmi::Exception(BCP, "Invalid proj4 '" + std::string(proj4Str) + "'!");
         }
         else
-        if (crsStr != nullptr)
+        if (crsStr)
         {
           OGRErr err = sr.SetFromUserInput(crsStr);
           if (err != OGRERR_NONE)
@@ -2440,10 +2464,10 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
 
             std::shared_ptr<OGRCoordinateTransformation> reverseTransformation;
 
-        if (bboxStr != nullptr)
+        if (bboxStr)
           cc = aa;
         else
-        if (llboxStr != nullptr)
+        if (llboxStr)
         {
           reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
           if (not reverseTransformation)
@@ -2463,19 +2487,109 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           cc.emplace_back(lat1);
           cc.emplace_back(lon2);
           cc.emplace_back(lat2);
+
+          if (lon1 == aa[0]  &&  lat1 == aa[1]  && lon2 == aa[2]  &&  lat2 == aa[3])
+            targetIsLatlon = true;
         }
 
-        width = toUInt32(gridWidthStr);
-        height = toUInt32(gridHeightStr);
 
         double diffx = cc[2] - cc[0];
         double diffy = cc[3] - cc[1];
 
-        double dx = diffx / C_DOUBLE(width-1);
-        double dy = diffy / C_DOUBLE(height-1);
+        double dx = 0;
+        double dy = 0;
 
-        attributeList.setAttribute("grid.cell.width",Fmi::to_string(dx));
-        attributeList.setAttribute("grid.cell.height",Fmi::to_string(dy));
+        if (!countSize  &&  gridWidthStr  &&  gridHeightStr)
+        {
+          width = toUInt32(gridWidthStr);
+          height = toUInt32(gridHeightStr);
+
+          dx = diffx / C_DOUBLE(width-1);
+          dy = diffy / C_DOUBLE(height-1);
+        }
+        else
+        {
+          if (gridCellWidthStr  &&  gridCellHeightStr)
+          {
+            // Trying to define width and height for the new grid.
+
+            // Size of the original grid cell (this might be metric or in degrees)
+            double dxx = toDouble(gridCellWidthStr);
+            double dyy = toDouble(gridCellHeightStr);
+
+            int origProjectionType = 0;
+            if (gridOriginalProjectionStr)
+              origProjectionType = atoi(gridOriginalProjectionStr);
+
+            if (targetIsLatlon)
+            {
+              // The target projection is latlon
+
+              if (origProjectionType == T::GridProjectionValue::LatLon || origProjectionType == T::GridProjectionValue::RotatedLatLon)
+              {
+                // The source projection is also latlon.
+                if (gridCellWidthDegrStr  &&  gridCellHeightDegrStr)
+                {
+                  dxx = toDouble(gridCellWidthDegrStr);
+                  dyy = toDouble(gridCellHeightDegrStr);
+                }
+
+                width = C_UINT(fabs(diffx) / dxx + 1);
+                height = C_UINT(fabs(diffy) / dyy + 1);
+              }
+              else
+              {
+                // The source is metric
+
+                // Counting metric width and height of the target projection
+
+                double longitudes = (cc[2]-cc[0]);
+                double latitudes = (cc[3]-cc[1]);
+
+                double centerLongitude = cc[0] + longitudes/2;
+                double centerLatitude = cc[1] + latitudes/2;
+
+                double w = latlon_width(centerLatitude,longitudes);
+                double h = latlon_height(centerLongitude,latitudes);
+
+                // Width and height (in pixels) for the new grid
+
+                width =  C_UINT(w/dxx);
+                height = C_UINT(h/dyy);
+              }
+            }
+            else
+            {
+              // The target projection is metric
+
+              width = C_UINT(fabs(diffx) / (dxx*1000) + 1);
+              height = C_UINT(fabs(diffy) / (dyy*1000) + 1);
+            }
+
+            dx = diffx / C_DOUBLE(width-1);
+            dy = diffy / C_DOUBLE(height-1);
+          }
+        }
+
+        if (width == 0 || height == 0 || width > 10000 || height > 10000)
+        {
+          Fmi::Exception exception(BCP,"Invalid grid size!");
+          exception.addParameter("width",std::to_string(width));
+          exception.addParameter("height",std::to_string(height));
+          throw exception;
+        }
+
+        if (targetIsLatlon)
+        {
+          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx)));
+          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy)));
+        }
+        else
+        {
+          attributeList.setAttribute("grid.cell.width",Fmi::to_string(fabs(dx/1000)));
+          attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
+        }
+
         std::size_t hash = attributeList.getHash();
 
         {
@@ -2516,7 +2630,6 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
             {
               lon[c] = xx;
               lat[c] = yy;
-
 
               coordinates->emplace_back(xx,yy);
 
@@ -2571,6 +2684,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     const char *geometryStringStr = attributeList.getAttributeValue("grid.geometryString");
     const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
     const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+    const char *gridCountSizeStr = attributeList.getAttributeValue("grid.countSize");
     const char *gridCellWidthStr = attributeList.getAttributeValue("grid.original.cell.width");
     const char *gridCellHeightStr = attributeList.getAttributeValue("grid.original.cell.height");
     const char *gridCellWidthDegrStr = attributeList.getAttributeValue("grid.original.cell.width.degrees");
@@ -2580,7 +2694,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     if (geometryIdStr == nullptr  &&  geometryStringStr == nullptr  &&  urnStr == nullptr  &&  crsStr == nullptr)
       return;
 
-    if (crsStr != nullptr  &&  strcasecmp(crsStr,"crop") == 0)
+    if (crsStr  &&  strcasecmp(crsStr,"crop") == 0)
     {
       if (originalCrsStr == nullptr)
         return;
@@ -2599,7 +2713,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     // Checking if the geometry is defined by the geometryId
 
     GRIB2::GridDef_sptr def;
-    if (geometryIdStr != nullptr)
+    if (geometryIdStr)
     {
       def = getGrib2DefinitionByGeometryId(toInt32(geometryIdStr));
       if (!def)
@@ -2611,7 +2725,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
     // Checking if the geometry is defigned by the geometry string
 
-    if (geometryStringStr != nullptr)
+    if (geometryStringStr)
     {
       auto defPtr =  Identification::gridDef.createGrib2GridDefinition(geometryStringStr);
       if (!defPtr)
@@ -2651,20 +2765,37 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     }
 
     bool targetIsLatlon = false;
+    bool countSize = false;
 
-    if ((urnStr != nullptr || crsStr != nullptr || proj4Str != nullptr)  &&  (bboxStr != nullptr ||  llboxStr != nullptr) && ((gridWidthStr != nullptr  &&  gridHeightStr != nullptr) ||  (gridCellWidthStr != nullptr  &&  gridCellHeightStr != nullptr)))
+    if (gridCountSizeStr)
+    {
+      bool res = (bool)toInt32(gridCountSizeStr);
+      if (res  &&  gridCellWidthStr  &&  gridCellHeightStr)
+        countSize = true;
+    }
+
+    if (!gridWidthStr &&  !gridHeightStr)
+      countSize = true;
+
+    if ((urnStr || crsStr || proj4Str)  &&  (bboxStr ||  llboxStr) && ((gridWidthStr  &&  gridHeightStr) ||  (gridCellWidthStr  &&  gridCellHeightStr)))
     {
       // If the geometry id defined by the URN then we need to the bounding box coordinates and preferred grid width and height.
 
       std::vector<double> aa;
+      std::vector<double> bb;
 
-      if (bboxStr != nullptr)
+      if (bboxStr)
         splitString(bboxStr,',',aa);
-      else
-      if (llboxStr != nullptr)
+
+      if (llboxStr)
       {
-        splitString(llboxStr,',',aa);
+        splitString(llboxStr,',',bb);
+        if (bboxStr == nullptr)
+          aa = bb;
       }
+
+      if (aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
+        targetIsLatlon = true;
 
       if (aa.size() == 4)
       {
@@ -2676,7 +2807,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
         OGRSpatialReference sr;
 
-        if (urnStr != nullptr)
+        if (urnStr)
         {
           std::string urn = urnStr;
           if (strncasecmp(urnStr,"urn:ogc:def:crs:",16) != 0)
@@ -2686,13 +2817,13 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
             throw Fmi::Exception(BCP, "Invalid urn '" + std::string(urnStr) + "'!");
         }
         else
-        if (crsStr != nullptr)
+        if (crsStr)
         {
           if (sr.SetFromUserInput(crsStr) != OGRERR_NONE)
             throw Fmi::Exception(BCP, "Invalid crs '" + std::string(crsStr) + "'!");
         }
         else
-        if (proj4Str != nullptr)
+        if (proj4Str)
         {
           OGRErr err = sr.SetFromUserInput(proj4Str);
           if (err != OGRERR_NONE)
@@ -2708,10 +2839,10 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         std::shared_ptr<OGRCoordinateTransformation> reverseTransformation;
 
 
-        if (bboxStr != nullptr)
+        if (bboxStr)
           cc = aa;
         else
-        if (llboxStr != nullptr)
+        if (llboxStr)
         {
           reverseTransformation = make_ptr(OGRCreateCoordinateTransformation(&sr_latlon,&sr));
           if (not reverseTransformation)
@@ -2743,7 +2874,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         double dx = 0;
         double dy = 0;
 
-        if (gridWidthStr != nullptr  &&  gridHeightStr != nullptr)
+        if (!countSize  &&  gridWidthStr  &&  gridHeightStr)
         {
           width = toUInt32(gridWidthStr);
           height = toUInt32(gridHeightStr);
@@ -2753,7 +2884,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         }
         else
         {
-          if (gridCellWidthStr != nullptr  &&  gridCellHeightStr != nullptr)
+          if (gridCellWidthStr  &&  gridCellHeightStr)
           {
             // Trying to define width and height for the new grid.
 
@@ -2772,7 +2903,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
               if (origProjectionType == T::GridProjectionValue::LatLon || origProjectionType == T::GridProjectionValue::RotatedLatLon)
               {
                 // The source projection is also latlon.
-                if (gridCellWidthDegrStr != nullptr  &&  gridCellHeightDegrStr != nullptr)
+                if (gridCellWidthDegrStr  &&  gridCellHeightDegrStr)
                 {
                   dxx = toDouble(gridCellWidthDegrStr);
                   dyy = toDouble(gridCellHeightDegrStr);
@@ -3452,11 +3583,11 @@ void GridDef::loadGeometryDefinitions(const char *filename)
     uint cnt = 0;
     while (!feof(file))
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (fgets(st,1000,file)  &&  st[0] != '#')
       {
         cnt++;
         GRIB1::GridDefinition *def1 = createGrib1GridDefinition(st);
-        if (def1 != nullptr)
+        if (def1)
         {
           std::string gstr = def1->getGridGeometryString();
           if (mGridDefinitions1.find(gstr) == mGridDefinitions1.end())
@@ -3466,7 +3597,7 @@ void GridDef::loadGeometryDefinitions(const char *filename)
         }
 
         GRIB2::GridDefinition *def2 = createGrib2GridDefinition(st);
-        if (def2 != nullptr)
+        if (def2)
         {
           std::string gstr = def2->getGridGeometryString();
           if (mGridDefinitions2.find(gstr) == mGridDefinitions2.end())
@@ -4822,7 +4953,7 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB1::Message& message)
       return 0;
 
     auto r =  getFmiParameterMappingByGribId(gribId);
-    if (r != nullptr)
+    if (r)
       return r->mFmiParameterId;
 
     return 0;
@@ -4854,7 +4985,7 @@ T::FmiParamId GridDef::getFmiParameterId(GRIB2::Message& message)
       return 0;
 
     auto r =  getFmiParameterMappingByGribId(gribId);
-    if (r != nullptr)
+    if (r)
       return r->mFmiParameterId;
 
     return 0;
@@ -4957,7 +5088,7 @@ T::FmiParamId GridDef::getFmiParameterIdByFmiName(const std::string& fmiParamNam
     AutoReadLock lock(&mModificationLock);
 
     auto p = getFmiParameterDefByName(fmiParamName);
-    if (p != nullptr)
+    if (p)
       return p->mFmiParameterId;
 
     return 0;
@@ -5302,7 +5433,7 @@ bool GridDef::getNewbaseParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiPara
   try
   {
     FmiParamId_newbase_cptr p = getNewbaseParameterMappingByFmiId(fmiParamId);
-    if (p != nullptr)
+    if (p)
     {
       paramMapping = *p;
       return true;
@@ -5324,7 +5455,7 @@ bool GridDef::getNetCdfParameterMappingByFmiId(T::FmiParamId fmiParamId,FmiParam
   try
   {
     FmiParamId_netCdf_cptr p = getNetCdfParameterMappingByFmiId(fmiParamId);
-    if (p != nullptr)
+    if (p)
     {
       paramMapping = *p;
       return true;
