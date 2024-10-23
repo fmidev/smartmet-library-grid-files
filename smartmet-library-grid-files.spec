@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.10.16
+Version: 24.10.23
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -18,10 +18,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 24.8.7
-BuildRequires: smartmet-library-newbase-devel >= 24.8.7
-BuildRequires: smartmet-library-spine-devel >= 24.8.7
-BuildRequires: smartmet-library-macgyver >= 24.8.7
+BuildRequires: smartmet-utils-devel >= 24.9.10
+BuildRequires: smartmet-library-newbase-devel >= 24.10.15
+BuildRequires: smartmet-library-spine-devel >= 24.10.15
+BuildRequires: smartmet-library-macgyver >= 24.10.15
 BuildRequires: smartmet-library-trax-devel >= 24.8.7
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -47,9 +47,9 @@ Requires: libaec
 Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 24.8.7
-Requires: smartmet-library-macgyver >= 24.8.7
-Requires: smartmet-library-spine >= 24.8.7
+Requires: smartmet-library-newbase >= 24.10.15
+Requires: smartmet-library-macgyver >= 24.10.15
+Requires: smartmet-library-spine >= 24.10.15
 Requires: smartmet-library-trax >= 24.8.7
 
 %description
@@ -80,9 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 24.8.7
+Requires: smartmet-library-newbase-devel >= 24.10.15
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 24.8.7
+Requires: smartmet-library-macgyver >= 24.10.15
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -96,6 +96,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Oct 23 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.10.23-1.fmi
+- Enable data resolution based grid sizes for contours
 * Wed Oct 16 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.10.16-1.fmi
 - Added a possiblity to use locally cached files
 - Use openjpeg2 instead of jasper
