@@ -2419,7 +2419,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           aa = bb;
       }
 
-      if (aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
+      if (aa.size() == 4  &&  bb.size() == 4 && aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
         targetIsLatlon = true;
 
       if (aa.size() == 4)
@@ -2794,7 +2794,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           aa = bb;
       }
 
-      if (aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
+      if (aa.size() == 4  &&  bb.size() == 4 && aa[0] == bb[0]  &&  aa[1] == bb[1]  &&  aa[2] == bb[2]  &&  aa[3] == bb[3])
         targetIsLatlon = true;
 
       if (aa.size() == 4)
