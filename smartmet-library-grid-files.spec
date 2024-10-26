@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 24.10.23
+Version: 24.10.26
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -96,6 +96,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Sat Oct 26 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.10.26-1.fmi
+- Safer array comparisons
 * Wed Oct 23 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.10.23-1.fmi
 - Enable data resolution based grid sizes for contours
 * Wed Oct 16 2024 Mika Heiskanen <mika.heiskanen@fmi.fi> - 24.10.16-1.fmi
