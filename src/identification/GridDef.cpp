@@ -2305,6 +2305,7 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
   FUNCTION_TRACE
   try
   {
+    //printf("getGridOriginalCoordinatesByGeometry\n");
     //attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *proj4Str = attributeList.getAttributeValue("grid.proj4");
@@ -2492,7 +2493,6 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
             targetIsLatlon = true;
         }
 
-
         double diffx = cc[2] - cc[0];
         double diffy = cc[3] - cc[1];
 
@@ -2599,6 +2599,9 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           {
             latLonCoordinates = it->second.latlonCoordinates;
             coordinates = it->second.originalCoordinates;
+
+            if (!coordinates &&  latLonCoordinates  &&  targetIsLatlon)
+              coordinates = latLonCoordinates;
           }
         }
 
@@ -2671,6 +2674,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
   FUNCTION_TRACE
   try
   {
+    // printf("getGridLatLonCoordinatesByGeometry\n");
     // attributeList.print(std::cout,0,0);
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
     const char *proj4Str = attributeList.getAttributeValue("grid.proj4Str");
@@ -2734,7 +2738,6 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
       def.reset(defPtr);
       latLonCoordinates = def->getGridLatLonCoordinates();
     }
-
 
     if (def)
     {
@@ -2838,7 +2841,6 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
         std::shared_ptr<OGRCoordinateTransformation> reverseTransformation;
 
-
         if (bboxStr)
           cc = aa;
         else
@@ -2869,8 +2871,6 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
         double diffx = cc[2] - cc[0];
         double diffy = cc[3] - cc[1];
-
-
         double dx = 0;
         double dy = 0;
 
