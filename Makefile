@@ -9,6 +9,9 @@ include $(shell echo $${PREFIX-/usr})/share/smartmet/devel/makefile.inc
 
 DEFINES = -DUNIX -D_REENTRANT -DUSE_UNSTABLE_GEOS_CPP_API
 
+CFLAGS += $(shell pkg-config --cflags libopenjp2)
+OPENJPEG2_LIBS += $(shell pkg-config --libs libopenjp2)
+
 LIBS += \
 	$(PREFIX_LDFLAGS) \
 	$(REQUIRED_LIBS) \
@@ -20,7 +23,7 @@ LIBS += \
 	-lboost_thread \
 	-lpng \
 	-ljpeg \
-	-lopenjp2 \
+	$(OPENJPEG2_LIBS) \
 	-laec \
 	-lz
 

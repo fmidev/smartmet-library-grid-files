@@ -10,7 +10,7 @@
   #include <jasper/jas_image.h>
   #include <jasper/jas_init.h>
 #else
-#include "openjpeg-2.4/openjpeg.h"
+#include "openjpeg.h"
 #endif
 
 //#include <openjpeg-1.5/openjpeg.h>
