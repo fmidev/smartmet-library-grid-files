@@ -3,7 +3,10 @@
 #include "../common/GeneralFunctions.h"
 #include "../common/CoordinateConversions.h"
 #include "../identification/GridDef.h"
+#include "../common/ShowFunction.h"
 #include <macgyver/StringConversion.h>
+
+#define FUNCTION_TRACE FUNCTION_TRACE_OFF
 
 namespace SmartMet
 {
@@ -28,6 +31,7 @@ MessageProcessing::~MessageProcessing()
 
 void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -44,6 +48,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
 
 void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
@@ -140,6 +145,7 @@ void MessageProcessing::getGridIsobandsByLevel(const GRID::Message& message1,con
 
 void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsobandsByTime(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -156,6 +162,7 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
 
 void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
@@ -231,6 +238,7 @@ void MessageProcessing::getGridIsobandsByTime(const GRID::Message& message1,cons
 
 void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsobandsByLevelAndGeometry(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -246,6 +254,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
 void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
@@ -462,6 +471,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
 
 void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsobandsByLevelAndGrid(message1,message2,newLevel,contourLowValues,contourHighValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -478,6 +488,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
 
 void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
+  FUNCTION_TRACE
   try
   {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
@@ -553,6 +564,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGrid(const GRID::Message& messa
 
 void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsobandsByTimeAndGrid(message1,message2,newTime,contourLowValues,contourHighValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -568,6 +580,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
 
 void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
@@ -644,6 +657,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
 
 void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsobandsByTimeAndGeometry(message1,message2,newTime,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -660,6 +674,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
 void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
@@ -876,6 +891,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
 
 void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -892,6 +908,7 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
 
 void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
@@ -973,6 +990,7 @@ void MessageProcessing::getGridIsobandsByTimeAndLevel(const GRID::Message& messa
 
 void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsobandsByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -989,6 +1007,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
 void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
@@ -1205,6 +1224,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
 
 void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsobandsByTimeLevelAndGrid(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -1221,6 +1241,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& m
 
 void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourLowValues,T::ParamValue_vec& contourHighValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamValue_vec gridValues;
@@ -1259,6 +1280,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGrid(const GRID::Message& m
 
 void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -1275,6 +1297,7 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
 
 void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
@@ -1356,6 +1379,7 @@ void MessageProcessing::getGridIsolinesByTimeAndLevel(const GRID::Message& messa
 
 void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsolinesByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -1372,6 +1396,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
 void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
@@ -1594,6 +1619,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
 
 void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsolinesByLevel(message1,message2,newLevel,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -1610,6 +1636,7 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
 
 void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
@@ -1685,6 +1712,7 @@ void MessageProcessing::getGridIsolinesByLevel(const GRID::Message& message1,con
 
 void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsolinesByTime(message1,message2,newTime,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -1701,6 +1729,7 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
 
 void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
 
@@ -1777,6 +1806,7 @@ void MessageProcessing::getGridIsolinesByTime(const GRID::Message& message1,cons
 
 void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsolinesByLevelAndGeometry(message1,message2,newLevel,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -1793,6 +1823,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
 void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
@@ -2015,6 +2046,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
 
 void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsolinesByTimeAndGeometry(message1,message2,newTime,contourValues,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -2031,6 +2063,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
 void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
@@ -2253,6 +2286,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
 
 void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsolinesByLevelAndGrid(message1,message2,newLevel,contourValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -2269,6 +2303,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
 
 void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
+  FUNCTION_TRACE
   try
   {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
@@ -2344,6 +2379,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGrid(const GRID::Message& messa
 
 void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours)
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsolinesByTimeAndGrid(message1,message2,newTime,contourValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -2360,6 +2396,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
 
 void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours)
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
@@ -2435,6 +2472,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
 
 void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridIsolinesByTimeLevelAndGrid(message1,message2,message3,message4,newTime,newLevel,contourValues,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,contours);
@@ -2451,6 +2489,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& m
 
 void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::ParamValue_vec& contourValues,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& contours) const
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamValue_vec gridValues;
@@ -2508,6 +2547,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGrid(const GRID::Message& m
 
 void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridStreamlinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
@@ -2524,6 +2564,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& me
 
 void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
@@ -2620,6 +2661,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndLevel(const GRID::Message& me
 
 void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridStreamlinesByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
@@ -2636,6 +2678,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
 
 void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
@@ -2873,6 +2916,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
 
 void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridStreamlinesByLevel(message1,message2,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
@@ -2889,6 +2933,7 @@ void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,
 
 void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
@@ -2979,6 +3024,7 @@ void MessageProcessing::getGridStreamlinesByLevel(const GRID::Message& message1,
 
 void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridStreamlinesByTime(message1,message2,newTime,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
@@ -2995,6 +3041,7 @@ void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,c
 
 void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
 
@@ -3086,6 +3133,7 @@ void MessageProcessing::getGridStreamlinesByTime(const GRID::Message& message1,c
 
 void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridStreamlinesByLevelAndGeometry(message1,message2,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
@@ -3102,6 +3150,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
 
 void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
@@ -3339,6 +3388,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
 
 void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridStreamlinesByTimeAndGeometry(message1,message2,newTime,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
@@ -3355,6 +3405,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
 
 void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     const char *crsStr = attributeList.getAttributeValue("grid.crs");
@@ -3592,6 +3643,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
 
 void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& streamlines)
 {
+  FUNCTION_TRACE
   try
   {
     getGridStreamlinesByLevelAndGrid(message1,message2,newLevel,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
@@ -3608,6 +3660,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& me
 
 void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,double newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
 {
+  FUNCTION_TRACE
   try
   {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
@@ -3698,6 +3751,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGrid(const GRID::Message& me
 
 void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& streamlines)
 {
+  FUNCTION_TRACE
   try
   {
     getGridStreamlinesByTimeAndGrid(message1,message2,newTime,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
@@ -3714,6 +3768,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& mes
 
 void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines)
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
@@ -3804,6 +3859,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& mes
 
 void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridStreamlinesByTimeLevelAndGrid(message1,message2,message3,message4,newTime,newLevel,gridWidth,gridHeight,gridLatLonCoordinates,attributeList,0,EMPTY_DOUBLE_VEC,streamlines);
@@ -3820,6 +3876,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message
 
 void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,uint gridWidth,uint gridHeight,std::vector<T::Coordinate>& gridLatLonCoordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ByteData_vec& streamlines) const
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamValue_vec gridValues;
@@ -3883,6 +3940,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGrid(const GRID::Message
 
 void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message1,const GRID::Message& message2,int level1,int level2,double newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short levelInterpolationMethod,T::ParamValue& value) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueByLevelAndPoint(message1,message2,level1,level2,newLevel,coordinateType,x,y,areaInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,value);
@@ -3899,6 +3957,7 @@ void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message
 
 void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message1,const GRID::Message& message2,int level1,int level2,double newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamValue value1 = ParamValueMissing;
@@ -3936,6 +3995,7 @@ void MessageProcessing::getGridValueByLevelAndPoint(const GRID::Message& message
 
 void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,T::ParamValue& value) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueByTimeAndPoint(message1,message2,newTime,coordinateType,x,y,areaInterpolationMethod,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,value);
@@ -3952,6 +4012,7 @@ void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1
 
 void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamValue value1 = ParamValueMissing;
@@ -3974,6 +4035,7 @@ void MessageProcessing::getGridValueByTimeAndPoint(const GRID::Message& message1
 
 void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& message1,int level1,const GRID::Message& message2,int level2,const GRID::Message& message3,int level3,const GRID::Message& message4,int level4,time_t newTime,double newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,T::ParamValue& value) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueByTimeLevelAndPoint(message1,level1,message2,level2,message3,level3,message4,level4,newTime,newLevel,coordinateType,x,y,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,value);
@@ -3990,6 +4052,7 @@ void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& mes
 
 void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& message1,int level1,const GRID::Message& message2,int level2,const GRID::Message& message3,int level3,const GRID::Message& message4,int level4,time_t newTime,double newLevel,T::CoordinateType coordinateType,double x,double y,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue& value) const
 {
+  FUNCTION_TRACE
   try
   {
     int prevTimeLevel1 = level1;
@@ -4041,6 +4104,7 @@ void MessageProcessing::getGridValueByTimeLevelAndPoint(const GRID::Message& mes
 
 void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByLevelAndPointList(message1,message2,newLevel,coordinateType,pointList,areaInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4057,6 +4121,7 @@ void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message&
 
 void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4087,6 +4152,7 @@ void MessageProcessing::getGridValueListByLevelAndPointList(const GRID::Message&
 
 void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByLevelAndCircle(message1,message2,newLevel,coordinateType,origoX,origoY,radius,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4103,6 +4169,7 @@ void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& me
 
 void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4125,6 +4192,7 @@ void MessageProcessing::getGridValueListByLevelAndCircle(const GRID::Message& me
 
 void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByTimeAndCircle(message1,message2,newTime,coordinateType,origoX,origoY,radius,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4141,6 +4209,7 @@ void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& mes
 
 void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4163,6 +4232,7 @@ void MessageProcessing::getGridValueListByTimeAndCircle(const GRID::Message& mes
 
 void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByTimeLevelAndCircle(message1,message2,message3,message4,newTime,newLevel,coordinateType,origoX,origoY,radius,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4178,6 +4248,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message
 
 void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,double origoX,double origoY,double radius,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4199,6 +4270,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndCircle(const GRID::Message
 
 void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByTimeAndPointList(message1,message2,newTime,coordinateType,pointList,areaInterpolationMethod,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4215,6 +4287,7 @@ void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& 
 
 void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4237,6 +4310,7 @@ void MessageProcessing::getGridValueListByTimeAndPointList(const GRID::Message& 
 
 void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByLevelAndPolygon(message1,message2,newLevel,coordinateType,polygonPoints,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4253,6 +4327,7 @@ void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& m
 
 void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4275,6 +4350,7 @@ void MessageProcessing::getGridValueListByLevelAndPolygon(const GRID::Message& m
 
 void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByTimeAndPolygon(message1,message2,newTime,coordinateType,polygonPoints,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4291,6 +4367,7 @@ void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& me
 
 void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4313,6 +4390,7 @@ void MessageProcessing::getGridValueListByTimeAndPolygon(const GRID::Message& me
 
 void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByTimeLevelAndPolygon(message1,message2,message3,message4,newTime,newLevel,coordinateType,polygonPoints,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4329,6 +4407,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Messag
 
 void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& polygonPoints,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4351,6 +4430,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygon(const GRID::Messag
 
 void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByLevelAndPolygonPath(message1,message2,newLevel,coordinateType,polygonPath,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4367,6 +4447,7 @@ void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Messag
 
 void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4389,6 +4470,7 @@ void MessageProcessing::getGridValueListByLevelAndPolygonPath(const GRID::Messag
 
 void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByTimeAndPolygonPath(message1,message2,newTime,coordinateType,polygonPath,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4405,6 +4487,7 @@ void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message
 
 void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4427,6 +4510,7 @@ void MessageProcessing::getGridValueListByTimeAndPolygonPath(const GRID::Message
 
 void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByTimeLevelAndPolygonPath(message1,message2,message3,message4,newTime,newLevel,coordinateType,polygonPath,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4443,6 +4527,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Me
 
 void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<std::vector<T::Coordinate>>& polygonPath,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     T::GridValueList values1;
@@ -4465,6 +4550,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndPolygonPath(const GRID::Me
 
 void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueListByTimeLevelAndPointList(message1,message2,message3,message4,newTime,newLevel,coordinateType,pointList,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,valueList);
@@ -4481,6 +4567,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Mess
 
 void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& pointList,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::GridValueList& valueList) const
 {
+  FUNCTION_TRACE
   try
   {
     int prevTimeLevel1 = message1.getGridParameterLevel();
@@ -4523,6 +4610,7 @@ void MessageProcessing::getGridValueListByTimeLevelAndPointList(const GRID::Mess
 
 void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,short levelInterpolationMethod,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,values);
@@ -4539,6 +4627,7 @@ void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,
 
 void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,const GRID::Message& message2,double newLevel,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     int level1 = message1.getGridParameterLevel();
@@ -4569,6 +4658,7 @@ void MessageProcessing::getGridValueVectorByLevel(const GRID::Message& message1,
 
 void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,short timeInterpolationMethod,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueVectorByTime(message1,message2,newTime,timeInterpolationMethod,0,EMPTY_DOUBLE_VEC,values);
@@ -4585,6 +4675,7 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
 
 void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,short timeInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     time_t tt = newTime;
@@ -4625,6 +4716,7 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
 
 void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueVectorByLevelAndCoordinateList(message1,message2,newLevel,coordinateType,coordinates,attributeList,0,EMPTY_DOUBLE_VEC,values);
@@ -4641,6 +4733,7 @@ void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::M
 
 void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
@@ -4680,6 +4773,7 @@ void MessageProcessing::getGridValueVectorByLevelAndCoordinateList(const GRID::M
 
 void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueVectorByTimeAndCoordinateList(message1,message2,newTime,coordinateType,coordinates,attributeList,0,EMPTY_DOUBLE_VEC,values);
@@ -4696,6 +4790,7 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
 
 void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
@@ -4735,6 +4830,7 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
 
 void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,values);
@@ -4751,6 +4847,7 @@ void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message
 
 void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     short levelInterpolationMethod = T::LevelInterpolationMethod::Linear;
@@ -4778,6 +4875,7 @@ void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message
 
 void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueVectorByTimeAndGeometry(message1,message2,newTime,attributeList,0,EMPTY_DOUBLE_VEC,values);
@@ -4794,6 +4892,7 @@ void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message&
 
 void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message& message1,const GRID::Message& message2,time_t newTime,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
@@ -4821,6 +4920,7 @@ void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message&
 
 void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueVectorByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,areaInterpolationMethod,timeInterpolationMethod,levelInterpolationMethod,0,EMPTY_DOUBLE_VEC,values);
@@ -4837,6 +4937,7 @@ void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& me
 
 void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,short areaInterpolationMethod,short timeInterpolationMethod,short levelInterpolationMethod,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     T::ParamValue_vec values1;
@@ -4859,6 +4960,7 @@ void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& me
 
 void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,0,EMPTY_DOUBLE_VEC,values);
@@ -4875,6 +4977,7 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Mes
 
 void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
@@ -4902,6 +5005,7 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Mes
 
 void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     getGridValueVectorByTimeLevelAndCoordinateList(message1,message2,message3,message4,newTime,newLevel,coordinateType,coordinates,attributeList,0,EMPTY_DOUBLE_VEC,values);
@@ -4918,6 +5022,7 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRI
 
 void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRID::Message& message1,const GRID::Message& message2,const GRID::Message& message3,const GRID::Message& message4,time_t newTime,double newLevel,T::CoordinateType coordinateType,std::vector<T::Coordinate>& coordinates,T::AttributeList& attributeList,uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const
 {
+  FUNCTION_TRACE
   try
   {
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;

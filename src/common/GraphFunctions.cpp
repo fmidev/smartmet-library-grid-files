@@ -1201,7 +1201,12 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
   try
   {
     size_t sz = gridData.size();
-    if (sz == 0)
+    size_t requiredSize = width * height;
+    size_t csz = 0;
+    if (coordinates)
+      csz = coordinates->size();
+
+    if (sz == 0 || sz != requiredSize || sz != csz)
       return;
 
     Trax::Contour contourer;
@@ -1269,7 +1274,12 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
   try
   {
     size_t sz = gridData.size();
-    if (sz == 0)
+    size_t requiredSize = width * height;
+    size_t csz = 0;
+    if (coordinates)
+      csz = coordinates->size();
+
+    if (sz == 0 || sz != requiredSize || sz != csz)
       return;
 
     Trax::Contour contourer;
