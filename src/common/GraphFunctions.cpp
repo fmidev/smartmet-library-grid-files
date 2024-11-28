@@ -1210,17 +1210,7 @@ void getIsolines(std::vector<float>& gridData,T::Coordinate_vec *coordinates,int
       return;
 
     Trax::Contour contourer;
-
-    switch (interpolationMethod)
-    {
-      case T::AreaInterpolationMethod::Linear:
-        contourer.interpolation(Trax::InterpolationType::Linear);
-        break;
-
-      default:
-        contourer.interpolation(Trax::InterpolationType::Midpoint);
-        break;
-    }
+    contourer.interpolation((Trax::InterpolationType)interpolationMethod);
 
     TraxGrid grid(&gridData,coordinates,width,height);
 
@@ -1283,17 +1273,7 @@ void getIsobands(std::vector<float>& gridData,std::vector<T::Coordinate> *coordi
       return;
 
     Trax::Contour contourer;
-
-    switch (interpolationMethod)
-    {
-      case T::AreaInterpolationMethod::Linear:
-        contourer.interpolation(Trax::InterpolationType::Linear);
-        break;
-
-      default:
-        contourer.interpolation(Trax::InterpolationType::Midpoint);
-        break;
-    }
+    contourer.interpolation((Trax::InterpolationType)interpolationMethod);
 
     TraxGrid grid(&gridData,coordinates,width,height);
     Trax::IsobandLimits limits;

@@ -467,15 +467,15 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
   FUNCTION_TRACE
   try
   {
-    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
-    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
-    if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
-
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
       coordinateType = toUInt8(coordinateTypeStr);
+
+    short interpolationType = 0;
+    const char *interpolationTypeStr = attributeList.getAttributeValue("contour.interpolation.type");
+    if (interpolationTypeStr != nullptr)
+      interpolationType = toInt16(interpolationTypeStr);
 
     size_t smoothSize = 0;
     const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
@@ -508,9 +508,8 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
         break;
     }
 
-    getIsobands(gridValues,coordinates.get(),d.nx(),d.ny(),contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinates.get(),d.nx(),d.ny(),contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
     attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
@@ -518,6 +517,7 @@ void Message::getGridIsobands(T::ParamValue_vec& contourLowValues,T::ParamValue_
     attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("countour.interpolation.type",Fmi::to_string(interpolationType));
   }
   catch (...)
   {
@@ -670,6 +670,11 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     if (smoothSizeStr != nullptr)
       smoothSize = toSize_t(smoothSizeStr);
 
+    short interpolationType = 0;
+    const char *interpolationTypeStr = attributeList.getAttributeValue("contour.interpolation.type");
+    if (interpolationTypeStr != nullptr)
+      interpolationType = toInt16(interpolationTypeStr);
+
     size_t smoothDegree = 0;
     const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
     if (smoothDegreeStr != nullptr)
@@ -688,6 +693,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
     attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
 
     double wm = 0;
     double hm = 0;
@@ -751,7 +757,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinatePtr,width,height,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
@@ -806,6 +812,11 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
     if (smoothSizeStr != nullptr)
       smoothSize = toSize_t(smoothSizeStr);
 
+    short interpolationType = 0;
+    const char *interpolationTypeStr = attributeList.getAttributeValue("contour.interpolation.type");
+    if (interpolationTypeStr != nullptr)
+      interpolationType = toInt16(interpolationTypeStr);
+
     size_t smoothDegree = 0;
     const char *smoothDegreeStr = attributeList.getAttributeValue("contour.smooth.degree");
     if (smoothDegreeStr != nullptr)
@@ -829,7 +840,7 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
         break;
     }
 
-    getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
+    getIsobands(gridValues,coordinatePtr,gridWidth,gridHeight,contourLowValues,contourHighValues,interpolationType,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
@@ -839,6 +850,7 @@ void Message::getGridIsobandsByGrid(T::ParamValue_vec& contourLowValues,T::Param
     attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
   }
   catch (...)
   {
@@ -872,15 +884,15 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
   FUNCTION_TRACE
   try
   {
-    short areaInterpolationMethod = T::AreaInterpolationMethod::Linear;
-    const char *areaInterpolationMethodStr = attributeList.getAttributeValue("grid.areaInterpolationMethod");
-    if (areaInterpolationMethodStr != nullptr)
-      areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
-
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
       coordinateType = toUInt8(coordinateTypeStr);
+
+    short interpolationType = 0;
+    const char *interpolationTypeStr = attributeList.getAttributeValue("contour.interpolation.type");
+    if (interpolationTypeStr != nullptr)
+      interpolationType = toInt16(interpolationTypeStr);
 
     size_t smoothSize = 0;
     const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
@@ -916,9 +928,8 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,d.nx(),d.ny(),contourValues,interpolationType,smoothSize,smoothDegree,contours);
 
-    attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(d.nx()));
     attributeList.setAttribute("grid.height",Fmi::to_string(d.ny()));
     attributeList.setAttribute("grid.original.relativeUV",Fmi::to_string((int)isRelativeUV()));
@@ -926,7 +937,7 @@ void Message::getGridIsolines(T::ParamValue_vec& contourValues,T::AttributeList&
     attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
-
+    attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
   }
   catch (...)
   {
@@ -1074,6 +1085,11 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     if (areaInterpolationMethodStr != nullptr)
       areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
+    short interpolationType = 0;
+    const char *interpolationTypeStr = attributeList.getAttributeValue("contour.interpolation.type");
+    if (interpolationTypeStr != nullptr)
+      interpolationType = toInt16(interpolationTypeStr);
+
     size_t smoothSize = 0;
     const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
     if (smoothSizeStr != nullptr)
@@ -1097,6 +1113,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
     attributeList.setAttribute("grid.original.global",Fmi::to_string((int)isGridGlobal()));
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("contour.interpolationType",Fmi::to_string(interpolationType));
 
     double wm = 0;
     double hm = 0;
@@ -1160,7 +1177,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,width,height,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,width,height,contourValues,interpolationType,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.width",Fmi::to_string(width));
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
@@ -1210,6 +1227,11 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
     if (coordinateTypeStr != nullptr)
       coordinateType = toUInt8(coordinateTypeStr);
 
+    short interpolationType = 0;
+    const char *interpolationTypeStr = attributeList.getAttributeValue("contour.interpolation.type");
+    if (interpolationTypeStr != nullptr)
+      interpolationType = toInt16(interpolationTypeStr);
+
     size_t smoothSize = 0;
     const char *smoothSizeStr = attributeList.getAttributeValue("contour.smooth.size");
     if (smoothSizeStr != nullptr)
@@ -1239,7 +1261,7 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
         break;
     }
 
-    getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,areaInterpolationMethod,smoothSize,smoothDegree,contours);
+    getIsolines(gridValues,coordinatePtr,gridWidth,gridHeight,contourValues,interpolationType,smoothSize,smoothDegree,contours);
 
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.width",Fmi::to_string(gridWidth));
@@ -1249,6 +1271,7 @@ void Message::getGridIsolinesByGrid(T::ParamValue_vec& contourValues,uint gridWi
     attributeList.setAttribute("grid.original.reverseYDirection",Fmi::to_string((int)reverseYDirection()));
     attributeList.setAttribute("grid.original.reverseXDirection",Fmi::to_string((int)reverseXDirection()));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
+    attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
   }
   catch (...)
   {
