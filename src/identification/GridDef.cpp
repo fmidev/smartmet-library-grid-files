@@ -2566,6 +2566,18 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
               height = C_UINT(fabs(diffy) / (dyy*1000) + 1);
             }
 
+            if (gridWidthStr  &&  gridHeightStr)
+            {
+              uint w = toUInt32(gridWidthStr);
+              uint h = toUInt32(gridHeightStr);
+
+              if (width >= w  ||  height >= h)
+              {
+                width = w;
+                height = h;
+              }
+            }
+
             dx = diffx / C_DOUBLE(width-1);
             dy = diffy / C_DOUBLE(height-1);
           }
@@ -2939,6 +2951,18 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
 
               width = C_UINT(fabs(diffx) / (dxx*1000) + 1);
               height = C_UINT(fabs(diffy) / (dyy*1000) + 1);
+            }
+
+            if (gridWidthStr  &&  gridHeightStr)
+            {
+              uint w = toUInt32(gridWidthStr);
+              uint h = toUInt32(gridHeightStr);
+
+              if (width >= w  ||  height >= h)
+              {
+                width = w;
+                height = h;
+              }
             }
 
             dx = diffx / C_DOUBLE(width-1);
