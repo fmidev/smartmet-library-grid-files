@@ -193,6 +193,8 @@ void GridDef::init(const char* configFile)
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parameterDef",mFmi_parameterDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.levelDef",mFmi_levelDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.forecastTypeDef",mFmi_forecastTypeDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.processingTypeDef",mFmi_processingTypeDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.aggregationDef",mFmi_aggregationDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.geometryDef",mFmi_geometryDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib",mFmi_parametersFromGrib_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromNetCdf",mFmi_parametersFromNetCdf_files);
@@ -394,6 +396,27 @@ void GridDef::updateFmi()
       mFmi_forecastTypeDef_modificationTime = tt;
     }
 
+    tt = getModificationTime(mFmi_processingTypeDef_files);
+    if (tt != mFmi_processingTypeDef_modificationTime)
+    {
+      mFmi_processingTypeDef_records.clear();
+      for (auto it = mFmi_processingTypeDef_files.begin(); it != mFmi_processingTypeDef_files.end(); ++it)
+      {
+        loadFmiProcessingTypeDefinitions(it->c_str());
+      }
+      mFmi_processingTypeDef_modificationTime = tt;
+    }
+
+    tt = getModificationTime(mFmi_aggregationDef_files);
+    if (tt != mFmi_aggregationDef_modificationTime)
+    {
+      mFmi_aggregationDef_records.clear();
+      for (auto it = mFmi_aggregationDef_files.begin(); it != mFmi_aggregationDef_files.end(); ++it)
+      {
+        loadFmiAggregationDefinitions(it->c_str());
+      }
+      mFmi_aggregationDef_modificationTime = tt;
+    }
 
     tt = getModificationTime(mFmi_parametersFromGrib_files);
     if (tt != mFmi_parametersFromGrib_modificationTime)
@@ -1044,6 +1067,56 @@ bool GridDef::getFmiLevelDef(uint levelId,LevelDef& levelDef)
 
 
 
+bool GridDef::getFmiAggregationDef(int aggregationId,AggregationDef& aggregationDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    auto def = getFmiAggregationDef(aggregationId);
+    if (def == nullptr)
+      return false;
+
+    aggregationDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+bool GridDef::getFmiProcessingTypeDef(int processingTypeId,ProcessingTypeDef& processingTypeDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    auto def = getFmiProcessingTypeDef(processingTypeId);
+    if (def == nullptr)
+      return false;
+
+    processingTypeDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 bool GridDef::getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecastTypeDef)
 {
   FUNCTION_TRACE
@@ -1099,6 +1172,28 @@ ForecastTypeDef_cptr GridDef::getFmiForecastTypeDef(int forecastTypeId)
     for (auto it = mFmi_forecastTypeDef_records.begin(); it != mFmi_forecastTypeDef_records.end(); ++it)
     {
       if (it->mForecastTypeId == forecastTypeId)
+        return &(*it);
+    }
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+ProcessingTypeDef_cptr GridDef::getFmiProcessingTypeDef(int processingTypeId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_processingTypeDef_records.begin(); it != mFmi_processingTypeDef_records.end(); ++it)
+    {
+      if (it->mProcessingTypeId == processingTypeId)
         return &(*it);
     }
     return nullptr;
@@ -1398,7 +1493,7 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
           ForecastTypeDef rec;
 
           if (field[0][0] != '\0')
-            rec. mForecastTypeId = toInt32(field[0]);
+            rec.mForecastTypeId = toInt32(field[0]);
 
           if (field[1][0] != '\0')
             rec.mName = field[1];
@@ -1407,6 +1502,148 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
             rec.mDescription = field[2];
 
           mFmi_forecastTypeDef_records.emplace_back(rec);
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::loadFmiProcessingTypeDefinitions(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *file = fopen(filename,"re");
+    if (file == nullptr)
+    {
+      Fmi::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file)  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 2)
+        {
+          ProcessingTypeDef rec;
+
+          if (field[0][0] != '\0')
+            rec.mProcessingTypeId = toInt32(field[0]);
+
+          if (field[1][0] != '\0')
+            rec.mName = field[1];
+
+          if (field[2][0] != '\0')
+            rec.mDescription = field[2];
+
+          mFmi_processingTypeDef_records.emplace_back(rec);
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::loadFmiAggregationDefinitions(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *file = fopen(filename,"re");
+    if (file == nullptr)
+    {
+      Fmi::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file)  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 2)
+        {
+          AggregationDef rec;
+
+          if (field[0][0] != '\0')
+            rec.mAggregationId = toInt32(field[0]);
+
+          if (field[1][0] != '\0')
+            rec.mName = field[1];
+
+          if (field[2][0] != '\0')
+            rec.mDescription = field[2];
+
+          mFmi_aggregationDef_records.emplace_back(rec);
         }
       }
     }
@@ -5194,6 +5431,27 @@ T::FmiParamId GridDef::getFmiParameterIdByGribId(T::GribParamId gribParamId)
       return p->second;
 
     return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+AggregationDef_cptr GridDef::getFmiAggregationDef(int aggregationId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_aggregationDef_records.begin(); it != mFmi_aggregationDef_records.end(); ++it)
+    {
+      if (it->mAggregationId == aggregationId)
+        return &(*it);
+    }
+    return nullptr;
   }
   catch (...)
   {
