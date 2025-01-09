@@ -8,7 +8,9 @@
 #include "FmiParameterId_grib.h"
 #include "FmiParameterId_netCdf.h"
 #include "FmiParameterId_newbase.h"
+#include "AggregationDef.h"
 #include "LevelDef.h"
+#include "ProcessingTypeDef.h"
 #include "ForecastTypeDef.h"
 #include "NetCdfParameterDef.h"
 #include "NewbaseParameterDef.h"
@@ -84,6 +86,7 @@ class GridDef
     bool                getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId,Grib2ParameterDef& paramDef);
     bool                getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef);
 
+    bool                getFmiAggregationDef(int aggregationId,AggregationDef& aggregationDef);
     bool                getFmiLevelDef(uint levelId,LevelDef& levelDef);
     T::ParamLevelId     getFmiLevelId(GRIB1::Message& message);
     T::ParamLevelId     getFmiLevelId(GRIB2::Message& message);
@@ -109,6 +112,7 @@ class GridDef
     std::string         getFmiParameterDescription(GRIB2::Message& message);
     std::string         getFmiParameterUnits(GRIB1::Message& message);
     std::string         getFmiParameterUnits(GRIB2::Message& message);
+    bool                getFmiProcessingTypeDef(int processingTypeId,ProcessingTypeDef& processingTypeDef);
 
     bool                getNetCdfParameterDefByFmiId(T::FmiParamId fmiParamId,NetCdfParameterDef& paramDef);
     bool                getNetCdfParameterDefByName(const std::string& netCdfParamName,NetCdfParameterDef& paramDef);
@@ -167,9 +171,10 @@ class GridDef
     Grib2ParamDef_cptr      getGrib2ParameterDefById(T::GribParamId gribParamId);
     Grib2ParamDef_cptr      getGrib2ParameterDefByFmiId(T::FmiParamId fmiParamId);
 
+    AggregationDef_cptr     getFmiAggregationDef(int aggregationId);
     FmiParamDef_cptr        getFmiParameterDefById(T::FmiParamId fmiParamId);
     LevelDef_cptr           getFmiLevelDef(uint levelId);
-    ForecastTypeDef_cptr    getFmiForecastTypeDef(int forecastType);
+    ForecastTypeDef_cptr    getFmiForecastTypeDef(int forecastTypeId);
     FmiParamDef_cptr        getFmiParameterDefByGribId(T::GribParamId gribParamId);
     FmiParamDef_cptr        getFmiParameterDefByNetCdfName(std::string& netCdfParamName);
     FmiParamDef_cptr        getFmiParameterDefByNewbaseId(T::NewbaseParamId newbaseParamId);
@@ -177,6 +182,7 @@ class GridDef
     FmiParamId_newbase_cptr getFmiParameterMappingByNewbaseId(T::NewbaseParamId newbaseParamId);
     FmiParamId_grib_cptr    getFmiParameterMappingByGribId(T::GribParamId gribParamId);
     FmiParamId_netCdf_cptr  getFmiParameterMappingByNetCdfName(std::string& netCdfParamName);
+    ProcessingTypeDef_cptr  getFmiProcessingTypeDef(int processingTypeId);
 
     NewbaseParamDef_cptr    getNewbaseParameterDefById(T::NewbaseParamId newbaseParamId);
     NewbaseParamDef_cptr    getNewbaseParameterDefByName(const std::string& newbaseParamName);
@@ -190,12 +196,14 @@ class GridDef
     void                    loadGrib1ParameterDefs(const char *filename);
     void                    loadGrib2ParameterDefs(const char *filename);
 
+    void                    loadFmiAggregationDefinitions(const char *filename);
     void                    loadFmiLevelDefinitions(const char *filename);
     void                    loadFmiForecastTypeDefinitions(const char *filename);
     void                    loadFmiParameterDefinitions(const char *filename);
     void                    loadFmiParameterId_grib(const char *filename);
     void                    loadFmiParameterId_netCdf(const char *filename);
     void                    loadFmiParameterId_newbase(const char *filename);
+    void                    loadFmiProcessingTypeDefinitions(const char *filename);
 
     void                    loadNetCdfParameterDefinitions(const char *filename);
     void                    loadNewbaseParameterDefinitions(const char *filename);
@@ -240,6 +248,14 @@ class GridDef
     string_vec              mFmi_forecastTypeDef_files;
     time_t                  mFmi_forecastTypeDef_modificationTime;
     ForecastTypeDef_vec     mFmi_forecastTypeDef_records;
+
+    string_vec              mFmi_aggregationDef_files;
+    time_t                  mFmi_aggregationDef_modificationTime;
+    AggregationDef_vec      mFmi_aggregationDef_records;
+
+    string_vec              mFmi_processingTypeDef_files;
+    time_t                  mFmi_processingTypeDef_modificationTime;
+    ProcessingTypeDef_vec   mFmi_processingTypeDef_records;
 
     string_vec              mFmi_parametersFromGrib_files;
     time_t                  mFmi_parametersFromGrib_modificationTime;
