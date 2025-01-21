@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <optional>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -901,21 +902,39 @@ std::string ConfigurationFile::parseValue(const std::string& value)
         if (p2 != std::string::npos)
         {
           std::string var = val.substr(p1+2,p2-p1-2);
+          std::optional<std::string> defaultVal;
+          std::size_t n1 = var.find('-');
+          if (n1 != std::string::npos)
+          {
+            defaultVal = var.substr(n1+1);
+            var = var.substr(0,n1);
+          }
+
           std::string varValue;
 
           // Searching a value for the variable
           if (!getAttributeValue(var.c_str(),varValue))
           {
             // Variable not defined in the configuration file. Maybe it is an environmental variable.
+            // Use default value if it is defined.
             char *env = getenv(var.c_str());
             if (env == nullptr)
             {
-              Fmi::Exception exception(BCP,"Unknown variable name!");
-              exception.addParameter("VariableName",var);
-              throw exception;
+              if (defaultVal)
+              {
+                varValue = *defaultVal;
+              }
+              else
+              {
+                Fmi::Exception exception(BCP,"Unknown variable name!");
+                exception.addParameter("VariableName",var);
+                throw exception;
+              }
             }
-
-            varValue = env;
+            else
+            {
+              varValue = env;
+            }
           }
 
           std::string newVal = val.substr(0,p1) + varValue + val.substr(p2+1);

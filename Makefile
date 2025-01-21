@@ -106,6 +106,7 @@ clean:
 	rm -f src/*~ src/*/*~ src/*/*/*~
 	rm -rf obj
 	rm -rf $(LIBFILE)
+	$(MAKE) -C test $@
 
 clean-install: 
 	rm -rf $(includedir)/$(INCDIR)/*
