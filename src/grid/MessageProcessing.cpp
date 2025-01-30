@@ -388,6 +388,9 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
       return;
     }
 
+    T::ParamValue_vec gridValues;
+    getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
+
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
@@ -405,9 +408,6 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
       getGridIsobandsByLevel(message1,message2,newLevel,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
-
-    T::ParamValue_vec gridValues;
-    getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short interpolationType = 0;
     const char *interpolationTypeStr = attributeList.getAttributeValue("contour.interpolation.type");
@@ -453,23 +453,6 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
     attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
-
-    double wm = 0;
-    double hm = 0;
-    if (message1.getGridMetricCellSize(wm,hm))
-    {
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
-    else
-    {
-      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-      message1.getGridCellAverageSize(wm,hm);
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
   }
   catch (...)
   {
@@ -820,6 +803,23 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
       return;
     }
 
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridMetricCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
@@ -885,23 +885,6 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
     attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
-
-    double wm = 0;
-    double hm = 0;
-    if (message1.getGridMetricCellSize(wm,hm))
-    {
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
-    else
-    {
-      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-      message1.getGridCellAverageSize(wm,hm);
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
   }
   catch (...)
   {
@@ -1159,6 +1142,9 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
       return;
     }
 
+    T::ParamValue_vec gridValues;
+    getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
+
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
@@ -1176,9 +1162,6 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
       getGridIsobandsByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourLowValues,contourHighValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
-
-    T::ParamValue_vec gridValues;
-    getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short interpolationType = 0;
     const char *interpolationTypeStr = attributeList.getAttributeValue("contour.interpolation.type");
@@ -1224,23 +1207,6 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
     attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
-
-    double wm = 0;
-    double hm = 0;
-    if (message1.getGridMetricCellSize(wm,hm))
-    {
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
-    else
-    {
-      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-      message1.getGridCellAverageSize(wm,hm);
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
   }
   catch (...)
   {
@@ -1554,6 +1520,9 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
       return;
     }
 
+    T::ParamValue_vec gridValues;
+    getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
+
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
@@ -1571,9 +1540,6 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
       getGridIsolinesByTimeAndLevel(message1,message2,message3,message4,newTime,newLevel,contourValues,attributeList,modificationOperation,modificationParameters,contours);
       return;
     }
-
-    T::ParamValue_vec gridValues;
-    getGridValueVectorByTimeLevelAndGeometry(message1,message2,message3,message4,newTime,newLevel,attributeList,modificationOperation,modificationParameters,gridValues);
 
     short timeInterpolationMethod = T::TimeInterpolationMethod::Linear;
     const char *timeInterpolationMethodStr = attributeList.getAttributeValue("grid.timeInterpolationMethod");
@@ -1631,23 +1597,6 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
     attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
-
-    double wm = 0;
-    double hm = 0;
-    if (message1.getGridMetricCellSize(wm,hm))
-    {
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
-    else
-    {
-      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-      message1.getGridCellAverageSize(wm,hm);
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
   }
   catch (...)
   {
@@ -1999,6 +1948,23 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
       return;
     }
 
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridMetricCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
@@ -2076,23 +2042,6 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
     attributeList.setAttribute("contour.interpolation.type",Fmi::to_string(interpolationType));
-
-    double wm = 0;
-    double hm = 0;
-    if (message1.getGridMetricCellSize(wm,hm))
-    {
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
-    else
-    {
-      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-      message1.getGridCellAverageSize(wm,hm);
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
   }
   catch (...)
   {
@@ -2245,6 +2194,24 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
       return;
     }
 
+    double wm = 0;
+    double hm = 0;
+    if (message1.getGridMetricCellSize(wm,hm))
+    {
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+    else
+    {
+      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
+
+      message1.getGridCellAverageSize(wm,hm);
+      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
+      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
+    }
+
+
     T::CoordinateType coordinateType = T::CoordinateTypeValue::LATLON_COORDINATES;
     const char *coordinateTypeStr = attributeList.getAttributeValue("contour.coordinateType");
     if (coordinateTypeStr != nullptr)
@@ -2322,23 +2289,6 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
     attributeList.setAttribute("grid.height",Fmi::to_string(height));
     attributeList.setAttribute("contour.coordinateType",Fmi::to_string(coordinateType));
     attributeList.setAttribute("contour.interpolationt.type",Fmi::to_string(interpolationType));
-
-    double wm = 0;
-    double hm = 0;
-    if (message1.getGridMetricCellSize(wm,hm))
-    {
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
-    else
-    {
-      attributeList.setAttribute("grid.original.cell.width.degrees",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height.degrees",Fmi::to_string(hm));
-
-      message1.getGridCellAverageSize(wm,hm);
-      attributeList.setAttribute("grid.original.cell.width",Fmi::to_string(wm));
-      attributeList.setAttribute("grid.original.cell.height",Fmi::to_string(hm));
-    }
   }
   catch (...)
   {
@@ -4945,7 +4895,15 @@ void MessageProcessing::getGridValueVectorByLevelAndGeometry(const GRID::Message
     message1.getGridValueVectorByGeometry(attributeList,modificationOperation,modificationParameters,values1);
     message2.getGridValueVectorByGeometry(attributeList,modificationOperation,modificationParameters,values2);
 
-    levelInterpolation(values1,values2,message1.getGridParameterLevel(),message2.getGridParameterLevel(),newLevel,levelInterpolationMethod,values);
+    int level1 = message1.getGridParameterLevel();
+    int level2 = message2.getGridParameterLevel();
+
+    // If the levels are using different units (for example hPa and Pa), then we
+    // try to tune levels so that : level1 < newLevel < level2
+
+    tuneLevels(level1,level2,newLevel);
+
+    levelInterpolation(values1,values2,level1,level2,newLevel,levelInterpolationMethod,values);
   }
   catch (...)
   {
