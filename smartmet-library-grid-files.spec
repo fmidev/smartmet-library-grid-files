@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 25.1.9
+Version: 25.1.30
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -20,8 +20,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 24.12.10
 BuildRequires: smartmet-library-newbase-devel >= 24.12.16
-BuildRequires: smartmet-library-spine-devel >= 24.11.27
-BuildRequires: smartmet-library-macgyver >= 24.12.4
+BuildRequires: smartmet-library-spine-devel >= 25.1.17
+BuildRequires: smartmet-library-macgyver >= 25.1.9
 BuildRequires: smartmet-library-trax-devel >= 24.8.7
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -48,8 +48,8 @@ Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 24.12.16
-Requires: smartmet-library-macgyver >= 24.12.4
-Requires: smartmet-library-spine >= 24.11.27
+Requires: smartmet-library-macgyver >= 25.1.9
+Requires: smartmet-library-spine >= 25.1.17
 Requires: smartmet-library-trax >= 24.8.7
 
 %description
@@ -82,7 +82,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 24.12.16
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 24.12.4
+Requires: smartmet-library-macgyver >= 25.1.9
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -96,6 +96,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Jan 30 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.1.30-1.fmi
+- Fixed time and level interpolation used with lower resolution contours
+
 * Thu Jan  9 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.1.9-1.fmi
 - Added definitions for aggregations and processing types
 - Added context info extensions for parameter details
