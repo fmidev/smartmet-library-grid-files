@@ -368,6 +368,13 @@ T::ParamValue levelInterpolation(T::ParamValue value1,T::ParamValue value2,doubl
 {
   try
   {
+    if (levelInterpolationMethod == T::LevelInterpolationMethod::Logarithmic)
+    {
+      double tmpLev = newLevel / 100.0;
+      if ((int)tmpLev >= (int)level1 && (int)tmpLev <= (int)level2)
+        newLevel = tmpLev;
+    }
+
     if (level1 == newLevel)
       return value1;
 
@@ -445,6 +452,13 @@ void levelInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,do
 {
   try
   {
+    if (levelInterpolationMethod == T::LevelInterpolationMethod::Logarithmic)
+    {
+      double tmpLev = newLevel / 100.0;
+      if ((int)tmpLev >= (int)level1 && (int)tmpLev <= (int)level2)
+        newLevel = tmpLev;
+    }
+
     if (level1 == newLevel)
     {
       values = values1;
@@ -561,6 +575,13 @@ void levelInterpolation(T::GridValueList& values1,T::GridValueList& values2,doub
 {
   try
   {
+    if (levelInterpolationMethod == T::LevelInterpolationMethod::Logarithmic)
+    {
+      double tmpLev = newLevel / 100.0;
+      if ((int)tmpLev >= (int)level1 && (int)tmpLev <= (int)level2)
+        newLevel = tmpLev;
+    }
+
     if (level1 == newLevel)
     {
       valueList = values1;
