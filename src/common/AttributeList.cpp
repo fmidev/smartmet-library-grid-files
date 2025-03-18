@@ -29,6 +29,7 @@ AttributeList::AttributeList(const AttributeList& attributeList)
 {
   try
   {
+    mCaseSensitive = attributeList.mCaseSensitive;
     uint size = attributeList.getLength();
     for (uint t=0; t<size; t++)
     {
@@ -78,6 +79,7 @@ AttributeList& AttributeList::operator=(const AttributeList& attributeList)
 
     clear();
 
+    mCaseSensitive = attributeList.mCaseSensitive;
     uint size = attributeList.getLength();
     for (uint t=0; t<size; t++)
     {

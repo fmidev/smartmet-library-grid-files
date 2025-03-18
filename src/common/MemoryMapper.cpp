@@ -1062,4 +1062,30 @@ void MemoryMapper::faultHandlerThread()
 
 
 
+
+void MemoryMapper::getStateAttributes(std::shared_ptr<T::AttributeNode> parent)
+{
+  FUNCTION_TRACE
+  try
+  {
+    const char *bs[] = {"False","True"};
+
+    parent->addAttribute("Enabled",bs[(int)mEnabled]);
+    if (mEnabled)
+    {
+      parent->addAttribute("Premap",bs[mPremapEnabled]);
+      parent->addAttribute("Max threads",mMaxProcessingThreads);
+      parent->addAttribute("Map requests received",mMessageReadCount.load());
+      parent->addAttribute("Map requests processed",mMessageProcessCount.load());
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 }  // namespace SmartMet
