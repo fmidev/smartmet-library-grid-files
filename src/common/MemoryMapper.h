@@ -3,6 +3,7 @@
 #include "ModificationLock.h"
 #include "MapInfo.h"
 #include "DataFetcher_network.h"
+#include "AttributeNode.h"
 
 #include <string>
 #include <vector>
@@ -48,6 +49,8 @@ class MemoryMapper
 
     void      faultHandlerThread();
     void      faultProcessingThread();
+
+    void      getStateAttributes(std::shared_ptr<T::AttributeNode> parent);
 
   protected:
 

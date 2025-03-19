@@ -5,6 +5,7 @@
 #include <macgyver/CacheStats.h>
 #include <macgyver/MappedFile.h>
 #include <filesystem>
+#include "../common/AttributeNode.h"
 #include "../common/GeneralFunctions.h"
 #include "../common/AutoReadLock.h"
 #include "../common/AutoWriteLock.h"
@@ -152,6 +153,7 @@ class ValueCache
     void        deleteValues(uint key);
     bool        getMinAndMaxValues(uint key,T::ParamValue& minValue,T::ParamValue& maxValue);
     void        getCacheStats(Fmi::Cache::CacheStatistics& statistics) const;
+    void        getStateAttributes(std::shared_ptr<T::AttributeNode> parent);
     void        init(uint maxLen,UInt64 maxSize);
     void        init(uint maxLen,UInt64 maxSize,bool fileCacheEnabled);
     void        setCacheDir(const char *cacheDir);

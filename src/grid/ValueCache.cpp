@@ -174,6 +174,30 @@ void ValueCache::getCacheStats(Fmi::Cache::CacheStatistics& statistics) const
 
 
 
+void ValueCache::getStateAttributes(std::shared_ptr<T::AttributeNode> parent)
+{
+  try
+  {
+    if (mFileCacheEnabled)
+    {
+      parent->addAttribute("Type","filesys");
+      parent->addAttribute("Directory",mCacheDir);
+    }
+    else
+      parent->addAttribute("Type","memory");
+
+    parent->addAttribute("Current Size (Mb)",mCacheStats.size / 1000000);
+    parent->addAttribute("Max Size (Mb)",mMaxSize);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
 uint ValueCache::getEmpty()
 {
   try
