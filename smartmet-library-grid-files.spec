@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 25.2.18
+Version: 25.3.19
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -20,7 +20,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 25.2.18
 BuildRequires: smartmet-library-newbase-devel >= 25.2.18
-BuildRequires: smartmet-library-spine-devel >= 25.2.18
+BuildRequires: smartmet-library-spine-devel >= 25.3.3
 BuildRequires: smartmet-library-macgyver >= 25.2.18
 BuildRequires: smartmet-library-trax-devel >= 25.2.18
 BuildRequires: %{smartmet_boost}-devel
@@ -49,7 +49,7 @@ Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 25.2.18
 Requires: smartmet-library-macgyver >= 25.2.18
-Requires: smartmet-library-spine >= 25.2.18
+Requires: smartmet-library-spine >= 25.3.3
 Requires: smartmet-library-trax >= 25.2.18
 
 %description
@@ -96,12 +96,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Mar 19 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.3.19-1.fmi
+- Added possibility to request state information
 * Tue Feb 18 2025 Andris Pavēnis <andris.pavenis@fmi.fi> 25.2.18-1.fmi
 - Update to gdal-3.10, geos-3.13 and proj-9.5
-
 * Thu Jan 30 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.1.30-1.fmi
 - Fixed time and level interpolation used with lower resolution contours
-
 * Thu Jan  9 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.1.9-1.fmi
 - Added definitions for aggregations and processing types
 - Added context info extensions for parameter details
