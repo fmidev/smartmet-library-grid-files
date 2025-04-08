@@ -1,0 +1,13 @@
+# This file define geometry groups that might be used for different purposes
+#
+# FIELDS:
+# 1) geometry group Id
+# 2) group type
+#      0 Undefined
+#      1 Timestep concatenation
+#      2 Same area,highest resolution first
+#      3 Tiles
+# 3) producer name
+# 4) geometry identifiers (separated by ',')
+
+1;1;VIRE;1110,1125

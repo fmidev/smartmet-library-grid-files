@@ -31,3 +31,9 @@
 22;CLIMATOLOGY;Climate normal or climatology
 23;CATEGORIZED;Categorization of continuous variables
 24;PERCENT_CHANGE;Percentage change relative to baseline
+25;EFI;Extreme Forecast Index
+26;PROBBTW;Probability between two values
+27;PROBNEQ;Probability not equal to
+28;PROB;Probability (no threshold information)
+29;PROBBTW_AREA;Probability between to values, using an area aggregation
+30;PROBNEQ_AREA;Probability not equal to, using an area aggregation

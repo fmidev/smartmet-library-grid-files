@@ -106,27 +106,27 @@ IRIDGE-PRCNT;IceDegreeOfRidging;;;
 # GRFROST-M3M3 => UNKNOWN
 # GRFROST-M3M3;0;;;
 
-# Probability of reaching wind gust speed of 15 m/s in EPS
+# Probability of wind gust reaching some threshold value
 # PROB-WG-1[36] => ProbabilityOfGustLimit1[583]
 PROB-WG-1;ProbabilityOfGustLimit1;;;
 
-# Probability of reaching wind gust speed of 15 m/s in EPS
+# Probability of wind gust reaching some threshold value
 # PROB-WG-1[36] => ProbabilityOfGustLimit1[583]
 PROB-WG-1;ProbabilityOfGustLimit1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching wind gust speed of 20 m/s in EPS
+# Probability of wind gust reaching some threshold value
 # PROB-WG-2[37] => ProbabilityOfGustLimit2[584]
 PROB-WG-2;ProbabilityOfGustLimit2;;;
 
-# Probability of reaching wind gust speed of 20 m/s in EPS
+# Probability of wind gust reaching some threshold value
 # PROB-WG-2[37] => ProbabilityOfGustLimit2[584]
 PROB-WG-2;ProbabilityOfGustLimit2;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching wind gust speed of 25 m/s in EPS
+# Probability of wind gust reaching some threshold value
 # PROB-WG-3[38] => ProbabilityOfGustLimit3[585]
 PROB-WG-3;ProbabilityOfGustLimit3;;;
 
-# Probability of reaching wind gust speed of 25 m/s in EPS
+# Probability of wind gust reaching some threshold value
 # PROB-WG-3[38] => ProbabilityOfGustLimit3[585]
 PROB-WG-3;ProbabilityOfGustLimit3;MUL{$,100.000000};DIV{$,100.000000};
 
@@ -213,6 +213,10 @@ CLDICE-KGKG;CloudIce;;;
 # Convective inhibition (cin)
 # CIN-JKG[63] => CIN[66]
 CIN-JKG;CIN;;;
+
+# Convective inhibition (cin)
+# CIN-JKG[63] => NEWBASE-PARAMETER[1528]
+CIN-JKG;1528;;;
 
 # Convective inhibition (cin)
 # CIN-JKG[63] => SoundingCINSurface[4725]
@@ -694,299 +698,299 @@ SNL-KGM2;LargeScaleSnow;;;
 # SNC-KGM2[222] => ConvectiveSnow[278]
 SNC-KGM2;ConvectiveSnow;;;
 
-# Probability of reaching wind gust speed of 30 m/s in EPS
+# Probability of wind gust reaching some threshold value
 # PROB-WG-4[225] => ProbabilityOfGustLimit4[586]
 PROB-WG-4;ProbabilityOfGustLimit4;;;
 
-# Probability of reaching wind gust speed of 30 m/s in EPS
+# Probability of wind gust reaching some threshold value
 # PROB-WG-4[225] => ProbabilityOfGustLimit4[586]
 PROB-WG-4;ProbabilityOfGustLimit4;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching wind gust speed of 35 m/s in EPS
+# Probability of wind gust reaching some threshold value
 # PROB-WG-5[226] => ProbabilityOfGustLimit5[587]
 PROB-WG-5;ProbabilityOfGustLimit5;;;
 
-# Probability of reaching wind gust speed of 35 m/s in EPS
+# Probability of wind gust reaching some threshold value
 # PROB-WG-5[226] => ProbabilityOfGustLimit5[587]
 PROB-WG-5;ProbabilityOfGustLimit5;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching wind speed of 17 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-3[227] => ProbabilityOfWindLimit3[1023]
 PROB-W-3;ProbabilityOfWindLimit3;;;
 
-# Probability of reaching wind speed of 17 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-3[227] => ProbabilityOfWindLimit3[1023]
 PROB-W-3;ProbabilityOfWindLimit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching wind speed of 21 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-4[228] => ProbabilityOfWindLimit4[1024]
 PROB-W-4;ProbabilityOfWindLimit4;;;
 
-# Probability of reaching wind speed of 21 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-4[228] => ProbabilityOfWindLimit4[1024]
 PROB-W-4;ProbabilityOfWindLimit4;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching wind speed of 25 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-5[229] => ProbabilityOfWindLimit5[1025]
 PROB-W-5;ProbabilityOfWindLimit5;;;
 
-# Probability of reaching wind speed of 25 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-5[229] => ProbabilityOfWindLimit5[1025]
 PROB-W-5;ProbabilityOfWindLimit5;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching wind speed of 30 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-6[230] => ProbabilityOfWindLimit6[1026]
 PROB-W-6;ProbabilityOfWindLimit6;;;
 
-# Probability of reaching wind speed of 30 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-6[230] => ProbabilityOfWindLimit6[1026]
 PROB-W-6;ProbabilityOfWindLimit6;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching temperature 25 C in EPS
+# Probability of temperature being higher than given threshold
 # PROB-TW-1[231] => ProbabilityOfHeatLimit1[1041]
 PROB-TW-1;ProbabilityOfHeatLimit1;;;
 
-# Probability of reaching temperature 25 C in EPS
+# Probability of temperature being higher than given threshold
 # PROB-TW-1[231] => ProbabilityOfHeatLimit1[1041]
 PROB-TW-1;ProbabilityOfHeatLimit1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching temperature 27 C in EPS
+# Probability of temperature being higher than given threshold
 # PROB-TW-2[232] => ProbabilityOfHeatLimit2[1042]
 PROB-TW-2;ProbabilityOfHeatLimit2;;;
 
-# Probability of reaching temperature 27 C in EPS
+# Probability of temperature being higher than given threshold
 # PROB-TW-2[232] => ProbabilityOfHeatLimit2[1042]
 PROB-TW-2;ProbabilityOfHeatLimit2;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching temperature 30 C in EPS
+# Probability of temperature being higher than given threshold
 # PROB-TW-3[233] => ProbabilityOfHeatLimit3[1043]
 PROB-TW-3;ProbabilityOfHeatLimit3;;;
 
-# Probability of reaching temperature 30 C in EPS
+# Probability of temperature being higher than given threshold
 # PROB-TW-3[233] => ProbabilityOfHeatLimit3[1043]
 PROB-TW-3;ProbabilityOfHeatLimit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 50 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-1[234] => ProbabilityOfCAPE1[1051]
 PROB-CAPE-1;ProbabilityOfCAPE1;;;
 
-# Probability of reaching CAPE value 50 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-1[234] => ProbabilityOfCAPE1[1051]
 PROB-CAPE-1;ProbabilityOfCAPE1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 50 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-1[234] => ProbabilityOfMUCAPELimit1[1318]
 PROB-CAPE-1;ProbabilityOfMUCAPELimit1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 50 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-1[234] => ProbabilityOfMLCAPELimit1[1325]
 PROB-CAPE-1;ProbabilityOfMLCAPELimit1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 500 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-2[235] => ProbabilityOfCAPE2[1052]
 PROB-CAPE-2;ProbabilityOfCAPE2;;;
 
-# Probability of reaching CAPE value 500 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-2[235] => ProbabilityOfCAPE2[1052]
 PROB-CAPE-2;ProbabilityOfCAPE2;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 500 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-2[235] => ProbabilityOfMUCAPELimit2[1319]
 PROB-CAPE-2;ProbabilityOfMUCAPELimit2;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 500 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-2[235] => ProbabilityOfMLCAPELimit2[1326]
 PROB-CAPE-2;ProbabilityOfMLCAPELimit2;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 1000 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-3[236] => ProbabilityOfCAPE3[1053]
 PROB-CAPE-3;ProbabilityOfCAPE3;;;
 
-# Probability of reaching CAPE value 1000 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-3[236] => ProbabilityOfCAPE3[1053]
 PROB-CAPE-3;ProbabilityOfCAPE3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 1000 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-3[236] => ProbabilityOfMUCAPELimit3[1320]
 PROB-CAPE-3;ProbabilityOfMUCAPELimit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 1000 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-3[236] => ProbabilityOfMLCAPELimit3[1327]
 PROB-CAPE-3;ProbabilityOfMLCAPELimit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 1500 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-4[237] => ProbabilityOfCAPE4[1054]
 PROB-CAPE-4;ProbabilityOfCAPE4;;;
 
-# Probability of reaching CAPE value 1500 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-4[237] => ProbabilityOfCAPE4[1054]
 PROB-CAPE-4;ProbabilityOfCAPE4;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 1500 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-4[237] => ProbabilityOfMUCAPELimit4[1321]
 PROB-CAPE-4;ProbabilityOfMUCAPELimit4;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching CAPE value 1500 in EPS
+# Probability of CAPE reaching some threshold value
 # PROB-CAPE-4[237] => ProbabilityOfMLCAPELimit4[1328]
 PROB-CAPE-4;ProbabilityOfMLCAPELimit4;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching precipitation 30 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-1[238] => ProbabilityOfPr24Limit1[1071]
 PROB-RR24-1;ProbabilityOfPr24Limit1;;;
 
-# Probability of reaching precipitation 30 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-1[238] => ProbabilityOfPr24Limit1[1071]
 PROB-RR24-1;ProbabilityOfPr24Limit1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching precipitation 60 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-2[239] => ProbabilityOfPr24Limit2[1072]
 PROB-RR24-2;ProbabilityOfPr24Limit2;;;
 
-# Probability of reaching precipitation 60 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-2[239] => ProbabilityOfPr24Limit2[1072]
 PROB-RR24-2;ProbabilityOfPr24Limit2;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching precipitation 120 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-3[240] => ProbabilityOfPr24Limit3[1073]
 PROB-RR24-3;ProbabilityOfPr24Limit3;;;
 
-# Probability of reaching precipitation 120 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-3[240] => ProbabilityOfPr24Limit3[1073]
 PROB-RR24-3;ProbabilityOfPr24Limit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching precipitation 70 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-4[241] => ProbabilityOfPr24Limit4[1074]
 PROB-RR24-4;ProbabilityOfPr24Limit4;;;
 
-# Probability of reaching precipitation 70 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-4[241] => ProbabilityOfPr24Limit4[1074]
 PROB-RR24-4;ProbabilityOfPr24Limit4;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching precipitation 120 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-5[242] => ProbabilityOfPr24Limit5[1075]
 PROB-RR24-5;ProbabilityOfPr24Limit5;;;
 
-# Probability of reaching precipitation 120 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-5[242] => ProbabilityOfPr24Limit5[1075]
 PROB-RR24-5;ProbabilityOfPr24Limit5;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 1 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-1[243] => ProbabilityOfSn6Limit1[1081]
 PROB-SN-1;ProbabilityOfSn6Limit1;;;
 
-# Probability of reaching snowfall 1 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-1[243] => ProbabilityOfSn6Limit1[1081]
 PROB-SN-1;ProbabilityOfSn6Limit1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 1 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-1[243] => ProbabilityOfSnLimit1[1363]
 PROB-SN-1;ProbabilityOfSnLimit1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 5 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-2[244] => ProbabilityOfSn6Limit2[1082]
 PROB-SN-2;ProbabilityOfSn6Limit2;;;
 
-# Probability of reaching snowfall 5 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-2[244] => ProbabilityOfSn6Limit2[1082]
 PROB-SN-2;ProbabilityOfSn6Limit2;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 5 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-2[244] => ProbabilityOfSnLimit2[1364]
 PROB-SN-2;ProbabilityOfSnLimit2;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 10 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-3[245] => ProbabilityOfSn6Limit3[1083]
 PROB-SN-3;ProbabilityOfSn6Limit3;;;
 
-# Probability of reaching snowfall 10 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-3[245] => ProbabilityOfSn6Limit3[1083]
 PROB-SN-3;ProbabilityOfSn6Limit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 10 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-3[245] => ProbabilityOfSnLimit3[1365]
 PROB-SN-3;ProbabilityOfSnLimit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 15 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-4[246] => ProbabilityOfSn6Limit4[1084]
 PROB-SN-4;ProbabilityOfSn6Limit4;;;
 
-# Probability of reaching snowfall 15 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-4[246] => ProbabilityOfSn6Limit4[1084]
 PROB-SN-4;ProbabilityOfSn6Limit4;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 15 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-4[246] => ProbabilityOfSnLimit4[1366]
 PROB-SN-4;ProbabilityOfSnLimit4;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 30 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-5[247] => ProbabilityOfSn6Limit5[1085]
 PROB-SN-5;ProbabilityOfSn6Limit5;;;
 
-# Probability of reaching snowfall 30 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-5[247] => ProbabilityOfSn6Limit5[1085]
 PROB-SN-5;ProbabilityOfSn6Limit5;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 30 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-5[247] => ProbabilityOfSnLimit5[1367]
 PROB-SN-5;ProbabilityOfSnLimit5;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 50 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-6[248] => ProbabilityOfSn6Limit6[1086]
 PROB-SN-6;ProbabilityOfSn6Limit6;;;
 
-# Probability of reaching snowfall 50 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-6[248] => ProbabilityOfSn6Limit6[1086]
 PROB-SN-6;ProbabilityOfSn6Limit6;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 50 mm in 6 h in EPS
+# Probability of snowfall reaching some threshold value
 # PROB-SN-6[248] => ProbabilityOfSnLimit6[1368]
 PROB-SN-6;ProbabilityOfSnLimit6;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 1 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-1[249] => ProbabilityOfSn24Limit1[1091]
 PROB-SN24-1;ProbabilityOfSn24Limit1;;;
 
-# Probability of reaching snowfall 1 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-1[249] => ProbabilityOfSn24Limit1[1091]
 PROB-SN24-1;ProbabilityOfSn24Limit1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 5 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-2[250] => ProbabilityOfSn24Limit2[1092]
 PROB-SN24-2;ProbabilityOfSn24Limit2;;;
 
-# Probability of reaching snowfall 5 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-2[250] => ProbabilityOfSn24Limit2[1092]
 PROB-SN24-2;ProbabilityOfSn24Limit2;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 10 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-3[251] => ProbabilityOfSn24Limit3[1093]
 PROB-SN24-3;ProbabilityOfSn24Limit3;;;
 
-# Probability of reaching snowfall 10 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-3[251] => ProbabilityOfSn24Limit3[1093]
 PROB-SN24-3;ProbabilityOfSn24Limit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 15 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-4[252] => ProbabilityOfSn24Limit4[1094]
 PROB-SN24-4;ProbabilityOfSn24Limit4;;;
 
-# Probability of reaching snowfall 15 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-4[252] => ProbabilityOfSn24Limit4[1094]
 PROB-SN24-4;ProbabilityOfSn24Limit4;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 30 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-5[253] => ProbabilityOfSn24Limit5[1095]
 PROB-SN24-5;ProbabilityOfSn24Limit5;;;
 
-# Probability of reaching snowfall 30 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-5[253] => ProbabilityOfSn24Limit5[1095]
 PROB-SN24-5;ProbabilityOfSn24Limit5;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching snowfall 50 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-6[254] => ProbabilityOfSn24Limit6[1096]
 PROB-SN24-6;ProbabilityOfSn24Limit6;;;
 
-# Probability of reaching snowfall 50 mm in 24 h in EPS
+# Probability of snowfall reaching some threshold value in 24h
 # PROB-SN24-6[254] => ProbabilityOfSn24Limit6[1096]
 PROB-SN24-6;ProbabilityOfSn24Limit6;MUL{$,100.000000};DIV{$,100.000000};
 
@@ -1014,35 +1018,35 @@ PROB-RR-6;ProbabilityOfPr6Limit6;;;
 # PROB-RR-6[256] => ProbabilityOfPr6Limit6[1066]
 PROB-RR-6;ProbabilityOfPr6Limit6;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching -15 C in EPS
+# Probability of temperature being lower than given threshold
 # PROB-TC-1[257] => ProbabilityOfColdLimit1[1031]
 PROB-TC-1;ProbabilityOfColdLimit1;;;
 
-# Probability of reaching -15 C in EPS
+# Probability of temperature being lower than given threshold
 # PROB-TC-1[257] => ProbabilityOfColdLimit1[1031]
 PROB-TC-1;ProbabilityOfColdLimit1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching -20 C in EPS
+# Probability of temperature being lower than given threshold
 # PROB-TC-2[258] => ProbabilityOfColdLimit2[1032]
 PROB-TC-2;ProbabilityOfColdLimit2;;;
 
-# Probability of reaching -20 C in EPS
+# Probability of temperature being lower than given threshold
 # PROB-TC-2[258] => ProbabilityOfColdLimit2[1032]
 PROB-TC-2;ProbabilityOfColdLimit2;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching -25 C in EPS
+# Probability of temperature being lower than given threshold
 # PROB-TC-3[259] => ProbabilityOfColdLimit3[1033]
 PROB-TC-3;ProbabilityOfColdLimit3;;;
 
-# Probability of reaching -25 C in EPS
+# Probability of temperature being lower than given threshold
 # PROB-TC-3[259] => ProbabilityOfColdLimit3[1033]
 PROB-TC-3;ProbabilityOfColdLimit3;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching -30 C in EPS
+# Probability of temperature being lower than given threshold
 # PROB-TC-4[260] => ProbabilityOfColdLimit4[1034]
 PROB-TC-4;ProbabilityOfColdLimit4;;;
 
-# Probability of reaching -30 C in EPS
+# Probability of temperature being lower than given threshold
 # PROB-TC-4[260] => ProbabilityOfColdLimit4[1034]
 PROB-TC-4;ProbabilityOfColdLimit4;MUL{$,100.000000};DIV{$,100.000000};
 
@@ -1050,43 +1054,43 @@ PROB-TC-4;ProbabilityOfColdLimit4;MUL{$,100.000000};DIV{$,100.000000};
 # RR-AVE6-MM => UNKNOWN
 # RR-AVE6-MM;0;;;
 
-# Probability of reaching precipitation 1 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-6[263] => ProbabilityOfPr24Limit6[1076]
 PROB-RR24-6;ProbabilityOfPr24Limit6;;;
 
-# Probability of reaching precipitation 1 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-6[263] => ProbabilityOfPr24Limit6[1076]
 PROB-RR24-6;ProbabilityOfPr24Limit6;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching precipitation 5 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-7[264] => ProbabilityOfPr24Limit7[1077]
 PROB-RR24-7;ProbabilityOfPr24Limit7;;;
 
-# Probability of reaching precipitation 5 mm in 24 h in EPS
+# Probability of precipitation reaching some threshold value in 24h
 # PROB-RR24-7[264] => ProbabilityOfPr24Limit7[1077]
 PROB-RR24-7;ProbabilityOfPr24Limit7;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching precipitation 0.3 mm in 12 h in EPS
+# Probability of precipitation reaching some threshold value in 12h
 # PROB-RR12-1[265] => CyanosSumChange[1101]
 PROB-RR12-1;CyanosSumChange;;;
 
-# Probability of reaching precipitation 0.3 mm in 12 h in EPS
+# Probability of precipitation reaching some threshold value in 12h
 # PROB-RR12-1[265] => CyanosSumChange[1101]
 PROB-RR12-1;CyanosSumChange;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching precipitation 4.5 mm in 12 h in EPS
+# Probability of precipitation reaching some threshold value in 12h
 # PROB-RR12-2[266] => CyanosSumChangeP[1102]
 PROB-RR12-2;CyanosSumChangeP;;;
 
-# Probability of reaching precipitation 4.5 mm in 12 h in EPS
+# Probability of precipitation reaching some threshold value in 12h
 # PROB-RR12-2[266] => CyanosSumChangeP[1102]
 PROB-RR12-2;CyanosSumChangeP;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching precipitation 12 mm in 12 h in EPS
+# Probability of precipitation reaching some threshold value in 12h
 # PROB-RR12-3[267] => Reflectivity[1103]
 PROB-RR12-3;Reflectivity;;;
 
-# Probability of reaching precipitation 12 mm in 12 h in EPS
+# Probability of precipitation reaching some threshold value in 12h
 # PROB-RR12-3[267] => Reflectivity[1103]
 PROB-RR12-3;Reflectivity;MUL{$,100.000000};DIV{$,100.000000};
 
@@ -1646,11 +1650,11 @@ MOL-M;MoninObukhovLength;;;
 # FX-MS => UNKNOWN
 # FX-MS;0;;;
 
-# Instantaneous Wind Speed in m/s
+# Wind Gust speed
 # FFG-MS[411] => WindGust[417]
 FFG-MS;WindGust;;;
 
-# Instantaneous Wind Speed in m/s
+# Wind Gust speed
 # FFG-MS[411] => HourlyMaximumGust[467]
 FFG-MS;HourlyMaximumGust;;;
 
@@ -2115,6 +2119,10 @@ CAPE-JKG;CAPE;;;
 CAPE-JKG;1470;;;
 
 # Convective available potential energy
+# CAPE-JKG[559] => NEWBASE-PARAMETER[1527]
+CAPE-JKG;1527;;;
+
+# Convective available potential energy
 # CAPE-JKG[559] => SoundingCAPESurface[4723]
 CAPE-JKG;SoundingCAPESurface;;;
 
@@ -2450,19 +2458,19 @@ PROB-RR-4;ProbabilityOfPr6Limit4;;;
 # PROB-RR-4[684] => ProbabilityOfPr6Limit4[1064]
 PROB-RR-4;ProbabilityOfPr6Limit4;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching wind speed of 10 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-1[685] => ProbabilityOfWindLimit1[581]
 PROB-W-1;ProbabilityOfWindLimit1;;;
 
-# Probability of reaching wind speed of 10 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-1[685] => ProbabilityOfWindLimit1[581]
 PROB-W-1;ProbabilityOfWindLimit1;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching wind speed of 15 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-2[686] => ProbabilityOfWindLimit2[582]
 PROB-W-2;ProbabilityOfWindLimit2;;;
 
-# Probability of reaching wind speed of 15 m/s in EPS
+# Probability of wind speed reaching some threshold value
 # PROB-W-2[686] => ProbabilityOfWindLimit2[582]
 PROB-W-2;ProbabilityOfWindLimit2;MUL{$,100.000000};DIV{$,100.000000};
 
@@ -2522,7 +2530,7 @@ POT-PRCNT;ProbabilityThunderstorm2;;;
 # TCW-KGM2[702] => TotalColumnWater[1210]
 TCW-KGM2;TotalColumnWater;;;
 
-# Maximum 3 second wind at 10 m height as defined by WMO including effects of turbulence and convection
+# Instantaneous Wind Gust speed
 # IFFG-MS[703] => NEWBASE-PARAMETER[20417]
 IFFG-MS;20417;;;
 
@@ -3518,19 +3526,19 @@ PM2_5-UGM3;PM25Concentration;;;
 # ITHK-M => UNKNOWN
 # ITHK-M;0;;;
 
-# Probability of significant wave height of at least 2m
+# Probability of significant wave height being higher than given threshold
 # PROB-HWS-1[992] => ProbabilityOfSigWaveHeightLimit1[1240]
 PROB-HWS-1;ProbabilityOfSigWaveHeightLimit1;;;
 
-# Probability of significant wave height of at least 4m
+# Probability of significant wave height being higher than given threshold
 # PROB-HWS-2[993] => ProbabilityOfSigWaveHeightLimit2[1241]
 PROB-HWS-2;ProbabilityOfSigWaveHeightLimit2;;;
 
-# Probability of significant wave height of at least 6m
+# Probability of significant wave height being higher than given threshold
 # PROB-HWS-3[994] => ProbabilityOfSigWaveHeightLimit3[1242]
 PROB-HWS-3;ProbabilityOfSigWaveHeightLimit3;;;
 
-# Probability of significant wave height of at least 8m
+# Probability of significant wave height being higher than given threshold
 # PROB-HWS-4[995] => ProbabilityOfSigWaveHeightLimit4[1243]
 PROB-HWS-4;ProbabilityOfSigWaveHeightLimit4;;;
 
@@ -3602,7 +3610,7 @@ PROB-CONV-RR3-5;ProbabilityOfConvectivePrecipitationLimit5;MUL{$,100.000000};DIV
 # PROB-CONV-RR3-6[1023] => ProbabilityOfConvectivePrecipitationLimit6[1249]
 PROB-CONV-RR3-6;ProbabilityOfConvectivePrecipitationLimit6;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of cold #5
+# Probability of temperature being lower than given threshold
 # PROB-TC-5[1024] => ProbabilityOfColdLimit5[1251]
 PROB-TC-5;ProbabilityOfColdLimit5;MUL{$,100.000000};DIV{$,100.000000};
 
@@ -3634,7 +3642,7 @@ FFG2-MS;WindGust2;;;
 # FF-MEAN-MS => UNKNOWN
 # FF-MEAN-MS;0;;;
 
-# Probability of reaching temperature 35 C in EPS
+# Probability of temperature being higher than given threshold
 # PROB-TW-4 => UNKNOWN
 # PROB-TW-4;0;;;
 
@@ -3903,16 +3911,16 @@ PROB-RR-7;ProbabilityOfPrecLimit7;MUL{$,100.000000};DIV{$,100.000000};
 # F87.5-RRR-KGM2;0;;;
 
 # 50th fractal precipitation in EPS
-# F50-RRR-KGM2 => UNKNOWN
-# F50-RRR-KGM2;0;;;
+# F50-RRR-KGM2[1101] => TotalPrecipitationF50[894]
+F50-RRR-KGM2;TotalPrecipitationF50;;;
 
 # 12.5th fractal precipitation in EPS
 # F12.5-RRR-KGM2 => UNKNOWN
 # F12.5-RRR-KGM2;0;;;
 
 # 75th fractal precipitation in EPS
-# F75-RRR-KGM2 => UNKNOWN
-# F75-RRR-KGM2;0;;;
+# F75-RRR-KGM2[1103] => TotalPrecipitationF75[893]
+F75-RRR-KGM2;TotalPrecipitationF75;;;
 
 # 25th fractal precipitation in EPS
 # F25-RRR-KGM2 => UNKNOWN
@@ -4194,7 +4202,7 @@ F75-TD-K;5102;SUM{$,-273.15};SUM{$,273.15};
 # F90-TD-K[1179] => NEWBASE-PARAMETER[5103]
 F90-TD-K;5103;SUM{$,-273.15};SUM{$,273.15};
 
-# Probability of old #6
+# Probability of temperature being lower than given threshold
 # PROB-TC-6 => UNKNOWN
 # PROB-TC-6;0;;;
 
@@ -4699,8 +4707,8 @@ F0-NLM-PRCNT;LowAndMiddleCloudCoverF0;;;
 # F100-TOTCWV-KGM2;0;;;
 
 # 90th fractal precipitation in EPS
-# F90-RRR-KGM2 => UNKNOWN
-# F90-RRR-KGM2;0;;;
+# F90-RRR-KGM2[1314] => TotalPrecipitationF90[892]
+F90-RRR-KGM2;TotalPrecipitationF90;;;
 
 # 2.5th fractal precipitation in EPS
 # F2.5-RR-24-MM => UNKNOWN
@@ -4862,15 +4870,15 @@ PROB-FROST-1;FrostProbability;MUL{$,100.000000};DIV{$,100.000000};
 # PROB-FROST-2[1359] => SevereFrostProbability[373]
 PROB-FROST-2;SevereFrostProbability;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching POT of 1
+# Probability of POT reaching some threshold value
 # PROB-POT-1[1360] => NEWBASE-PARAMETER[1447]
 PROB-POT-1;1447;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching POT of 30
+# Probability of POT reaching some threshold value
 # PROB-POT-2[1361] => NEWBASE-PARAMETER[1448]
 PROB-POT-2;1448;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of reaching POT of 60
+# Probability of POT reaching some threshold value
 # PROB-POT-3[1362] => NEWBASE-PARAMETER[1449]
 PROB-POT-3;1449;MUL{$,100.000000};DIV{$,100.000000};
 
@@ -5402,15 +5410,15 @@ SNRL-KGM2;LargeScaleSnowFallRate;;;
 # WATFR-0TO1 => UNKNOWN
 # WATFR-0TO1;0;;;
 
-# Probability of Updraft Helicity > 10 m2/s2 in EPS
+# Probability of Updraft Helicity being higher than given threshold
 # PROB-UHEL-1[1500] => NEWBASE-PARAMETER[4930]
 PROB-UHEL-1;4930;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of Updraft Helicity > 25 m2/s2 in EPS
+# Probability of Updraft Helicity being higher than given threshold
 # PROB-UHEL-2[1501] => NEWBASE-PARAMETER[4931]
 PROB-UHEL-2;4931;MUL{$,100.000000};DIV{$,100.000000};
 
-# Probability of Updraft Helicity > 75 m2/s2 in EPS
+# Probability of Updraft Helicity being higher than given threshold
 # PROB-UHEL-3[1502] => NEWBASE-PARAMETER[4932]
 PROB-UHEL-3;4932;MUL{$,100.000000};DIV{$,100.000000};
 
@@ -5473,3 +5481,155 @@ ATMICEG-GH;4822;;;
 # Index for wildfire warnings
 # WILDFIREINDEX-0TO6[1519] => NEWBASE-PARAMETER[1473]
 WILDFIREINDEX-0TO6;1473;;;
+
+# 0th fractal of ceiling 2 in EPS
+# F0-CEIL-2-M[1520] => NEWBASE-PARAMETER[1520]
+F0-CEIL-2-M;1520;MUL{$,3.280800};DIV{$,3.280800};
+
+# 10th fractal of ceiling 2 in EPS
+# F10-CEIL-2-M[1521] => NEWBASE-PARAMETER[1521]
+F10-CEIL-2-M;1521;MUL{$,3.280800};DIV{$,3.280800};
+
+# 25th fractal of ceiling 2 in EPS
+# F25-CEIL-2-M[1522] => NEWBASE-PARAMETER[1522]
+F25-CEIL-2-M;1522;MUL{$,3.280800};DIV{$,3.280800};
+
+# 50th fractal of ceiling 2 in EPS
+# F50-CEIL-2-M[1523] => NEWBASE-PARAMETER[1523]
+F50-CEIL-2-M;1523;MUL{$,3.280800};DIV{$,3.280800};
+
+# 75th fractal of ceiling 2 in EPS
+# F75-CEIL-2-M[1524] => NEWBASE-PARAMETER[1524]
+F75-CEIL-2-M;1524;MUL{$,3.280800};DIV{$,3.280800};
+
+# 90th fractal of ceiling 2 in EPS
+# F90-CEIL-2-M[1525] => NEWBASE-PARAMETER[1525]
+F90-CEIL-2-M;1525;MUL{$,3.280800};DIV{$,3.280800};
+
+# 100th fractal of ceiling 2 in EPS
+# F100-CEIL-2-M[1526] => NEWBASE-PARAMETER[1526]
+F100-CEIL-2-M;1526;MUL{$,3.280800};DIV{$,3.280800};
+
+# Base of TI2 in flight level
+# TI2-BASE-FL => UNKNOWN
+# TI2-BASE-FL;0;;;
+
+# Top of TI2 in flight level
+# TI2-TOP-FL => UNKNOWN
+# TI2-TOP-FL;0;;;
+
+# Max clear air turbulence in S-2
+# TI2-MAX-S2 => UNKNOWN
+# TI2-MAX-S2;0;;;
+
+# Atmospheric ice growth mm per hour for 3cm cylinder
+# ATMICEG-MMH-3CM => UNKNOWN
+# ATMICEG-MMH-3CM;0;;;
+
+# Atmospheric ice growth grams per hour for 3cm cylinder
+# ATMICEG-GH-3CM => UNKNOWN
+# ATMICEG-GH-3CM;0;;;
+
+# Vegetation fire plume emissions PM2_5 concentration
+# VF-PM2_5-UGM => UNKNOWN
+# VF-PM2_5-UGM;0;;;
+
+# Vegetation fire plume emissions PM10 concentration
+# VF-PM10-UGM => UNKNOWN
+# VF-PM10-UGM;0;;;
+
+# Probability of atmospheric ice growth for 3cm cylinder
+# PROB-ATMICEG-GH-3CM-LIMIT10 => UNKNOWN
+# PROB-ATMICEG-GH-3CM-LIMIT10;0;;;
+
+# Probability of atmospheric ice growth for 3cm cylinder
+# PROB-ATMICEG-GH-3CM-LIMIT100 => UNKNOWN
+# PROB-ATMICEG-GH-3CM-LIMIT100;0;;;
+
+# Probability of atmospheric ice growth for 3cm cylinder
+# PROB-ATMICEG-GH-3CM-LIMIT200 => UNKNOWN
+# PROB-ATMICEG-GH-3CM-LIMIT200;0;;;
+
+# Probability of atmospheric ice growth for 15cm cylinder
+# PROB-ATMICEG-GH-15CM-LIMIT10 => UNKNOWN
+# PROB-ATMICEG-GH-15CM-LIMIT10;0;;;
+
+# Probability of atmospheric ice growth for 15cm cylinder
+# PROB-ATMICEG-GH-15CM-LIMIT100 => UNKNOWN
+# PROB-ATMICEG-GH-15CM-LIMIT100;0;;;
+
+# Probability of atmospheric ice growth for 15cm cylinder
+# PROB-ATMICEG-GH-15CM-LIMIT200 => UNKNOWN
+# PROB-ATMICEG-GH-15CM-LIMIT200;0;;;
+
+# Town fraction
+# TOWNC-0TO1 => UNKNOWN
+# TOWNC-0TO1;0;;;
+
+# Water fraction
+# WATERC-0TO1 => UNKNOWN
+# WATERC-0TO1;0;;;
+
+# Sea fraction
+# SEAC-0TO1 => UNKNOWN
+# SEAC-0TO1;0;;;
+
+# Nature fraction
+# NATUREC-0TO1 => UNKNOWN
+# NATUREC-0TO1;0;;;
+
+# Snow thickness over lakes in meters
+# SDLAKE-M => UNKNOWN
+# SDLAKE-M;0;;;
+
+# Fraction of snow in a grid cell
+# FSNO-0TO1 => UNKNOWN
+# FSNO-0TO1;0;;;
+
+# Particle number concentration in cubic centimeter
+# PNC-NCM3[1560] => NEWBASE-PARAMETER[4897]
+PNC-NCM3;4897;;;
+
+# Mean high cloud amount
+# NH-MEAN-0TO1[1561] => NEWBASE-PARAMETER[689]
+NH-MEAN-0TO1;689;MUL{$,100.000000};DIV{$,100.000000};
+
+# Mean middle cloud amount
+# NM-MEAN-0TO1[1562] => NEWBASE-PARAMETER[686]
+NM-MEAN-0TO1;686;MUL{$,100.000000};DIV{$,100.000000};
+
+# Mean low cloud amount
+# NL-MEAN-0TO1[1563] => NEWBASE-PARAMETER[684]
+NL-MEAN-0TO1;684;MUL{$,100.000000};DIV{$,100.000000};
+
+# Standard deviation of high cloud amount
+# NH-STDDEV-0TO1[1564] => StdDevHighCld[483]
+NH-STDDEV-0TO1;StdDevHighCld;MUL{$,100.000000};DIV{$,100.000000};
+
+# Standard deviation of middle cloud amount
+# NM-STDDEV-0TO1[1565] => NEWBASE-PARAMETER[687]
+NM-STDDEV-0TO1;687;MUL{$,100.000000};DIV{$,100.000000};
+
+# Standard deviation of low cloud amount
+# NL-STDDEV-0TO1[1566] => NEWBASE-PARAMETER[685]
+NL-STDDEV-0TO1;685;MUL{$,100.000000};DIV{$,100.000000};
+
+# Sea water potential temperature in Celsius
+# TSEAP-C => UNKNOWN
+# TSEAP-C;0;;;
+
+# Sea water salinity at sea floor
+# SALB-PSU => UNKNOWN
+# SALB-PSU;0;;;
+
+# Sea water potential temperature at sea floor in Celsius
+# TSEAPB-C => UNKNOWN
+# TSEAPB-C;0;;;
+
+# Ocean mixed layer thickness defined by sigma theta
+# MLOTST-M => UNKNOWN
+# MLOTST-M;0;;;
+
+# FeelsLike temperature
+# FEELSLIKE-K => UNKNOWN
+# FEELSLIKE-K;0;;;
