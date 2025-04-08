@@ -33,3 +33,4 @@
 18;GENERAL;1;Generalized vertical height coordinate;
 19;MIXING_LAYER;1;Mixing layer;
 20;TROPOPAUSE;1;Tropopause;
+21;MUDL;1;Maximum unstable parcel departure level;

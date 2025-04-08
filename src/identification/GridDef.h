@@ -10,6 +10,7 @@
 #include "FmiParameterId_newbase.h"
 #include "AggregationDef.h"
 #include "LevelDef.h"
+#include "FmiGeometryGroupDef.h"
 #include "ProcessingTypeDef.h"
 #include "ForecastTypeDef.h"
 #include "NetCdfParameterDef.h"
@@ -87,6 +88,11 @@ class GridDef
     bool                getGrib2ParameterDefByIndex(uint index,Grib2ParameterDef& paramDef);
 
     bool                getFmiAggregationDef(int aggregationId,AggregationDef& aggregationDef);
+    bool                getFmiGeometryGroupDef(uint geometryGroupId,FmiGeometryGroupDef& geometryGroupDef);
+    bool                getFmiGeometryGroupDef(const char *producerName,uint groupType,FmiGeometryGroupDef& geometryGroupDef);
+    void                getFmiGeometryGroupsByGeometryId(int geometryId,std::vector<uint>& groupIdentifiers);
+    void                getFmiGeometryGroupsByGeometryId(int geometryId,uint groupType,std::vector<uint>& groupIdentifiers);
+    void                getFmiGeometryGroupsByGeometryId(int geometryId,std::set<uint>& groupIdentifiers);
     bool                getFmiLevelDef(uint levelId,LevelDef& levelDef);
     T::ParamLevelId     getFmiLevelId(GRIB1::Message& message);
     T::ParamLevelId     getFmiLevelId(GRIB2::Message& message);
@@ -183,6 +189,8 @@ class GridDef
     FmiParamId_grib_cptr    getFmiParameterMappingByGribId(T::GribParamId gribParamId);
     FmiParamId_netCdf_cptr  getFmiParameterMappingByNetCdfName(std::string& netCdfParamName);
     ProcessingTypeDef_cptr  getFmiProcessingTypeDef(int processingTypeId);
+    FmiGeomGroupDef_cptr    getFmiGeometryGroupDef(uint geometryGroupId);
+    FmiGeomGroupDef_cptr    getFmiGeometryGroupDef(const char *producerName,uint groupType);
 
     NewbaseParamDef_cptr    getNewbaseParameterDefById(T::NewbaseParamId newbaseParamId);
     NewbaseParamDef_cptr    getNewbaseParameterDefByName(const std::string& newbaseParamName);
@@ -199,6 +207,7 @@ class GridDef
     void                    loadFmiAggregationDefinitions(const char *filename);
     void                    loadFmiLevelDefinitions(const char *filename);
     void                    loadFmiForecastTypeDefinitions(const char *filename);
+    void                    loadFmiGeometryGroupDefinitions(const char *filename);
     void                    loadFmiParameterDefinitions(const char *filename);
     void                    loadFmiParameterId_grib(const char *filename);
     void                    loadFmiParameterId_netCdf(const char *filename);
@@ -240,6 +249,10 @@ class GridDef
     string_vec              mFmi_parameterDef_files;
     time_t                  mFmi_parameterDef_modificationTime;
     FmiParamDef_umap        mFmi_parameterDef_records;
+
+    string_vec              mFmi_geometryGroupDef_files;
+    time_t                  mFmi_geometryGroupDef_modificationTime;
+    FmiGeomGroupDef_vec     mFmi_geometryGroupDef_records;
 
     string_vec              mFmi_levelDef_files;
     time_t                  mFmi_levelDef_modificationTime;

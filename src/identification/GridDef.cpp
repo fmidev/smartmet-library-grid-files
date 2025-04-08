@@ -196,6 +196,7 @@ void GridDef::init(const char* configFile)
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.processingTypeDef",mFmi_processingTypeDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.aggregationDef",mFmi_aggregationDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.geometryDef",mFmi_geometryDef_files);
+    mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.geometryGroupDef",mFmi_geometryGroupDef_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromGrib",mFmi_parametersFromGrib_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromNetCdf",mFmi_parametersFromNetCdf_files);
     mConfigurationFile.getAttributeValue("smartmet.library.grid-files.fmi.parametersFromNewbase",mFmi_parametersFromNewbase_files);
@@ -372,6 +373,17 @@ void GridDef::updateFmi()
         loadFmiParameterDefinitions(it->c_str());
       }
       mFmi_parameterDef_modificationTime = tt;
+    }
+
+    tt = getModificationTime(mFmi_geometryGroupDef_files);
+    if (tt != mFmi_geometryGroupDef_modificationTime)
+    {
+      mFmi_geometryGroupDef_records.clear();
+      for (auto it = mFmi_geometryGroupDef_files.begin(); it != mFmi_geometryGroupDef_files.end(); ++it)
+      {
+        loadFmiGeometryGroupDefinitions(it->c_str());
+      }
+      mFmi_geometryGroupDef_modificationTime = tt;
     }
 
     tt = getModificationTime(mFmi_levelDef_files);
@@ -1042,6 +1054,139 @@ GribParamDef_cptr GridDef::getGribParameterDefByName(const std::string& gribPara
 
 
 
+bool GridDef::getFmiGeometryGroupDef(const char *producerName,uint groupType,FmiGeometryGroupDef& geometryGroupDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    auto def = getFmiGeometryGroupDef(producerName,groupType);
+    if (def == nullptr)
+      return false;
+
+    geometryGroupDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+bool GridDef::getFmiGeometryGroupDef(uint geometryGroupId,FmiGeometryGroupDef& geometryGroupDef)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    auto def = getFmiGeometryGroupDef(geometryGroupId);
+    if (def == nullptr)
+      return false;
+
+    geometryGroupDef = *def;
+    return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,uint groupType,std::vector<uint>& groupIdentifiers)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    for (auto it = mFmi_geometryGroupDef_records.begin(); it != mFmi_geometryGroupDef_records.end(); ++it)
+    {
+      if (it->mGroupType == groupType)
+      {
+        for (auto gIt = it->mGeometryIdList.begin(); gIt != it->mGeometryIdList.end(); ++gIt)
+        {
+          if (*gIt == geometryId)
+            groupIdentifiers.push_back(it->mGeometryGroupId);
+        }
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,std::vector<uint>& groupIdentifiers)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    for (auto it = mFmi_geometryGroupDef_records.begin(); it != mFmi_geometryGroupDef_records.end(); ++it)
+    {
+      for (auto gIt = it->mGeometryIdList.begin(); gIt != it->mGeometryIdList.end(); ++gIt)
+      {
+        if (*gIt == geometryId)
+          groupIdentifiers.push_back(it->mGeometryGroupId);
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::getFmiGeometryGroupsByGeometryId(int geometryId,std::set<uint>& groupIdentifiers)
+{
+  FUNCTION_TRACE
+  try
+  {
+    updateCheck();
+    AutoReadLock lock(&mModificationLock);
+
+    for (auto it = mFmi_geometryGroupDef_records.begin(); it != mFmi_geometryGroupDef_records.end(); ++it)
+    {
+      for (auto gIt = it->mGeometryIdList.begin(); gIt != it->mGeometryIdList.end(); ++gIt)
+      {
+        if (*gIt == geometryId)
+          groupIdentifiers.insert(it->mGeometryGroupId);
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
 bool GridDef::getFmiLevelDef(uint levelId,LevelDef& levelDef)
 {
   FUNCTION_TRACE
@@ -1131,6 +1276,50 @@ bool GridDef::getFmiForecastTypeDef(int forecastTypeId,ForecastTypeDef& forecast
 
     forecastTypeDef = *def;
     return true;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+FmiGeomGroupDef_cptr GridDef::getFmiGeometryGroupDef(const char *producerName,uint groupType)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_geometryGroupDef_records.begin(); it != mFmi_geometryGroupDef_records.end(); ++it)
+    {
+      if (it->mGroupType == groupType  &&  strcasecmp(producerName,it->mProducerName.c_str())== 0)
+        return &(*it);
+    }
+    return nullptr;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+FmiGeomGroupDef_cptr GridDef::getFmiGeometryGroupDef(uint geometryGroupId)
+{
+  FUNCTION_TRACE
+  try
+  {
+    for (auto it = mFmi_geometryGroupDef_records.begin(); it != mFmi_geometryGroupDef_records.end(); ++it)
+    {
+      if (it->mGeometryGroupId == geometryGroupId)
+        return &(*it);
+    }
+    return nullptr;
   }
   catch (...)
   {
@@ -1431,6 +1620,80 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
             rec.mUnits = field[4];
 
           mFmi_levelDef_records.emplace_back(rec);
+        }
+      }
+    }
+    fclose(file);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+
+void GridDef::loadFmiGeometryGroupDefinitions(const char *filename)
+{
+  FUNCTION_TRACE
+  try
+  {
+    FILE *file = fopen(filename,"re");
+    if (file == nullptr)
+    {
+      Fmi::Exception exception(BCP,"Cannot open file!");
+      exception.addParameter("Filename",std::string(filename));
+      throw exception;
+    }
+
+    char st[1000];
+
+    while (!feof(file))
+    {
+      if (fgets(st,1000,file)  &&  st[0] != '#')
+      {
+        bool ind = false;
+        char *field[100];
+        uint c = 1;
+        field[0] = st;
+        char *p = st;
+        while (*p != '\0'  &&  c < 100)
+        {
+          if (*p == '"')
+            ind = !ind;
+
+          if ((*p == ';'  || *p == '\n') && !ind)
+          {
+            *p = '\0';
+            p++;
+            field[c] = p;
+            c++;
+          }
+          else
+          {
+            p++;
+          }
+        }
+
+        if (c > 4)
+        {
+          FmiGeometryGroupDef rec;
+
+          if (field[0][0] != '\0')
+            rec.mGeometryGroupId = toUInt32(field[0]);
+
+          if (field[1][0] != '\0')
+            rec.mGroupType = toUInt32(field[1]);
+
+          if (field[2][0] != '\0')
+            rec.mProducerName = field[2];
+
+          if (field[3][0] != '\0')
+            splitString(field[3],',',rec.mGeometryIdList);
+
+          mFmi_geometryGroupDef_records.emplace_back(rec);
         }
       }
     }

@@ -29,6 +29,7 @@
 6;generatingProcessIdentifier=2,centre=78,typeOfFirstFixedSurface=4;
 
 7;typeOfFirstFixedSurface=101;
+7;generatingProcessIdentifier=5,centre=86,typeOfFirstFixedSurface=102;
 7;generatingProcessIdentifier=16,centre=86,typeOfFirstFixedSurface=102;
 7;generatingProcessIdentifier=0,centre=251,typeOfFirstFixedSurface=102;
 7;generatingProcessIdentifier=10,centre=251,typeOfFirstFixedSurface=102;
@@ -52,3 +53,5 @@
 19;typeOfFirstFixedSurface=166;
 
 20;typeOfFirstFixedSurface=7;
+
+21;typeOfFirstFixedSurface=17;
