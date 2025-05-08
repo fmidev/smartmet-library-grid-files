@@ -260,7 +260,7 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
           struct stat s;
           if (stat(fullName, &s) == 0)
           {
-            if (ep->d_type == DT_REG)
+            if (ep->d_type == DT_REG || ep->d_type == DT_LNK)
             {
               if (filePatterns.size() == 0 || patternMatch(fullName,filePatterns))
               {
@@ -279,7 +279,7 @@ void DataFetcher_filesys::getFileList(const char *dirName,std::vector<std::strin
               {
                 getFileList(fullName, filePatterns, dirList, fileList);
               }
-              else if (s.st_mode & S_IFREG)
+              else if ((s.st_mode & S_IFREG)  || (s.st_mode & S_IFLNK))
               {
                 if (filePatterns.size() == 0 || patternMatch(fullName,filePatterns))
                 {
