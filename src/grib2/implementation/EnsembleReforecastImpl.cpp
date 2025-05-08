@@ -93,7 +93,7 @@ T::ParamLevel EnsembleReforecastImpl::getGribParameterLevel() const
   try
   {
     if (mHorizontal.getScaledValueOfFirstFixedSurface())
-      return std::round(*mHorizontal.getScaledValueOfFirstFixedSurface() * std::pow(10.0,-(*mHorizontal.getScaleFactorOfFirstFixedSurface())));
+      return *mHorizontal.getScaledValueOfFirstFixedSurface(); // * std::pow(10.0,*mHorizontal.getScaleFactorOfFirstFixedSurface());
 
     return 0;
   }

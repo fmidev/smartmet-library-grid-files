@@ -1610,7 +1610,7 @@ T::ParamLevel ProductDefinition::getGribParameterLevel() const
   {
     auto horizontal = getHorizontal();
     if (horizontal && horizontal->getScaledValueOfFirstFixedSurface())
-      return std::round(*horizontal->getScaledValueOfFirstFixedSurface() * pow(10.0,-(*horizontal->getScaleFactorOfFirstFixedSurface())));
+      return *horizontal->getScaledValueOfFirstFixedSurface(); // * std::pow(10.0,*mHorizontal.getScaleFactorOfFirstFixedSurface());
 
     return 0;
   }
