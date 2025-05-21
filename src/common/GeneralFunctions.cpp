@@ -2852,7 +2852,7 @@ void tuneLevels(int &level1, int &level2, int newLevel)
   int l1 = level1;
   int l2 = level2;
 
-  while (newLevel > l2)
+  for (int i = 0; (newLevel > l2) && (i < 10); i++)
   {
     l1 = l1 * 10;
     l2 = l2 * 10;
@@ -2864,8 +2864,7 @@ void tuneLevels(int &level1, int &level2, int newLevel)
       return;
     }
   }
-
-  while (newLevel < l1)
+  for (int i = 0; (newLevel < l1) && (l1 > 0) && (i < 10); i++)
   {
     l1 = l1 / 10;
     l2 = l2 / 10;
