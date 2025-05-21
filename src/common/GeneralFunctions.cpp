@@ -2844,6 +2844,9 @@ void parseCoordinates(const std::string& coordinateStr,
 
 void tuneLevels(int &level1, int &level2, int newLevel)
 {
+  if (level1 > level2)
+    level2 = level1;
+
   if (level1 <= newLevel && newLevel <= level2) return;
 
   int l1 = level1;
