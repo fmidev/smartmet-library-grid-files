@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 25.5.22
+Version: 25.5.30
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -21,7 +21,7 @@ BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 25.2.18
 BuildRequires: smartmet-library-newbase-devel >= 25.3.20
 BuildRequires: smartmet-library-spine-devel >= 25.5.13
-BuildRequires: smartmet-library-macgyver >= 25.5.22
+BuildRequires: smartmet-library-macgyver >= 25.5.30
 BuildRequires: smartmet-library-trax-devel >= 25.4.11
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -48,7 +48,7 @@ Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 25.3.20
-Requires: smartmet-library-macgyver >= 25.5.22
+Requires: smartmet-library-macgyver >= 25.5.30
 Requires: smartmet-library-spine >= 25.5.13
 Requires: smartmet-library-trax >= 25.4.11
 
@@ -82,7 +82,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 25.3.20
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 25.5.22
+Requires: smartmet-library-macgyver >= 25.5.30
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -96,6 +96,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri May 30 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.5.30-1.fmi
+- Minor improvements to str->number error reporting
 * Thu May 22 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.5.22-1.fmi
 - Repackaged to hide dark() implementation details
 * Wed May 21 2025 Andris Pavēnis <andris.pavenis@fmi.fi> 25.5.21-1.fmi
