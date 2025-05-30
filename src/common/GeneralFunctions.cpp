@@ -394,11 +394,7 @@ std::string space(uint size)
 {
   try
   {
-    std::stringstream st;
-    for (uint t = 0; t < size; t++)
-      st << "  ";
-
-    return st.str();
+    return std::string(2*size, ' ');
   }
   catch (...)
   {
@@ -988,7 +984,7 @@ char toInt8(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1004,7 +1000,7 @@ short toInt16(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1020,7 +1016,7 @@ int toInt32(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1036,7 +1032,7 @@ long long toInt64(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1052,7 +1048,7 @@ size_t toSize_t(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1068,7 +1064,7 @@ uchar toUInt8(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1084,7 +1080,7 @@ ushort toUInt16(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1100,7 +1096,7 @@ uint toUInt32(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1116,7 +1112,7 @@ ulonglong toUInt64(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1177,7 +1173,7 @@ float toFloat(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1198,7 +1194,7 @@ double toDouble(const char *str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1213,7 +1209,7 @@ char toInt8(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1227,7 +1223,7 @@ short toInt16(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1241,7 +1237,7 @@ int toInt32(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1255,7 +1251,7 @@ long long toInt64(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1269,7 +1265,7 @@ uchar toUInt8(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1283,7 +1279,7 @@ ushort toUInt16(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1297,7 +1293,7 @@ uint toUInt32(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1311,7 +1307,7 @@ ulonglong toUInt64(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1325,7 +1321,7 @@ float toFloat(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1339,7 +1335,7 @@ double toDouble(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
@@ -1353,7 +1349,7 @@ size_t toSize_t(const std::string &str)
   }
   catch (...)
   {
-    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr).addDetail(str);
   }
 }
 
