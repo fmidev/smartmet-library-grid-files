@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 25.5.30
+Version: 25.7.24
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -99,6 +99,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Thu Jul 24 2025 Andris Pavēnis <andris.pavenis@fmi.fi> 25.7.24-1.fmi
+- Fix coordinate transformation implementation for use in cache
+
 * Fri May 30 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.5.30-1.fmi
 - Minor improvements to str->number error reporting
 * Thu May 22 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.5.22-1.fmi
