@@ -8,12 +8,12 @@
 
 #include <macgyver/Exception.h>
 #include <macgyver/Cache.h>
+#include <macgyver/Hash.h>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/functional/hash.hpp>
 #include <ogr_geometry.h>
 #include <ogr_spatialref.h>
 
@@ -28,8 +28,7 @@ bool convert(const std::shared_ptr<OGRSpatialReference> sr_from,const std::share
 {
   try
   {
-    std::size_t hash = (std::size_t)sr_from.get();
-    boost::hash_combine(hash, (std::size_t)sr_to.get());
+    std::size_t hash = Fmi::hash((std::size_t)sr_from.get(), (std::size_t)sr_to.get());
     auto rec = coordinateConverterCache.find(hash);
     if (rec)
       return (*rec)->convert(nCount,x,y);
