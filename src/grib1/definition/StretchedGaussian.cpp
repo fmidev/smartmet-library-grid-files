@@ -9,7 +9,7 @@
 #include "StretchedGaussian.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -199,10 +199,10 @@ void StretchedGaussian::print(std::ostream &stream, uint level, uint optionFlags
 T::Hash StretchedGaussian::countHash() const {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mNi);
-    boost::hash_combine(seed, mNj);
-    boost::hash_combine(seed, mIDirectionIncrement);
-    boost::hash_combine(seed, mN);
+    Fmi::hash_merge(seed, mNi);
+    Fmi::hash_merge(seed, mNj);
+    Fmi::hash_merge(seed, mIDirectionIncrement);
+    Fmi::hash_merge(seed, mN);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

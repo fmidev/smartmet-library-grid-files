@@ -9,7 +9,7 @@
 #include "CrossSection.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -271,25 +271,25 @@ T::Hash CrossSection::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNumberOfHorizontalPoints)
-      boost::hash_combine(seed, *mNumberOfHorizontalPoints);
-    // if (mBasicAngleOfTheInitialProductionDomain) boost::hash_combine(seed,*mBasicAngleOfTheInitialProductionDomain);
-    // if (mSubdivisionsOfBasicAngle) boost::hash_combine(seed,*mSubdivisionsOfBasicAngle);
+      Fmi::hash_merge(seed, *mNumberOfHorizontalPoints);
+    // if (mBasicAngleOfTheInitialProductionDomain) Fmi::hash_merge(seed,*mBasicAngleOfTheInitialProductionDomain);
+    // if (mSubdivisionsOfBasicAngle) Fmi::hash_merge(seed,*mSubdivisionsOfBasicAngle);
     if (mLatitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
-    // if (mLatitudeOfLastGridPoint) boost::hash_combine(seed,*mLatitudeOfLastGridPoint);
-    // if (mLongitudeOfLastGridPoint) boost::hash_combine(seed,*mLongitudeOfLastGridPoint);
+      Fmi::hash_merge(seed, *mLongitudeOfFirstGridPoint);
+    // if (mLatitudeOfLastGridPoint) Fmi::hash_merge(seed,*mLatitudeOfLastGridPoint);
+    // if (mLongitudeOfLastGridPoint) Fmi::hash_merge(seed,*mLongitudeOfLastGridPoint);
     if (mTypeOfHorizontalLine)
-      boost::hash_combine(seed, *mTypeOfHorizontalLine);
+      Fmi::hash_merge(seed, *mTypeOfHorizontalLine);
     if (mNumberOfVerticalPoints)
-      boost::hash_combine(seed, *mNumberOfVerticalPoints);
+      Fmi::hash_merge(seed, *mNumberOfVerticalPoints);
     if (mMeaningOfVerticalCoordinate)
-      boost::hash_combine(seed, *mMeaningOfVerticalCoordinate);
+      Fmi::hash_merge(seed, *mMeaningOfVerticalCoordinate);
     if (mVerticalCoordinate)
-      boost::hash_combine(seed, *mVerticalCoordinate);
+      Fmi::hash_merge(seed, *mVerticalCoordinate);
     if (mNC)
-      boost::hash_combine(seed, *mNC);
+      Fmi::hash_merge(seed, *mNC);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

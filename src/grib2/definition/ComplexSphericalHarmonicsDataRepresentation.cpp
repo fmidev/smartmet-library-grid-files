@@ -9,7 +9,7 @@
 #include "ComplexSphericalHarmonicsDataRepresentation.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -163,11 +163,11 @@ T::Hash ComplexSphericalHarmonicsDataRepresentation::countHash() const {
   try {
     std::size_t seed = 0;
     if (mLaplacianScalingFactor)
-      boost::hash_combine(seed, *mLaplacianScalingFactor);
+      Fmi::hash_merge(seed, *mLaplacianScalingFactor);
     if (mTS)
-      boost::hash_combine(seed, *mTS);
+      Fmi::hash_merge(seed, *mTS);
     if (mUnpackedSubsetPrecision)
-      boost::hash_combine(seed, *mUnpackedSubsetPrecision);
+      Fmi::hash_merge(seed, *mUnpackedSubsetPrecision);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

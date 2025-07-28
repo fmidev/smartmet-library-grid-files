@@ -9,7 +9,7 @@
 #include "LatLonSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -161,9 +161,9 @@ T::Hash LatLonSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mIDirectionIncrement)
-      boost::hash_combine(seed, *mIDirectionIncrement);
+      Fmi::hash_merge(seed, *mIDirectionIncrement);
     if (mJDirectionIncrement)
-      boost::hash_combine(seed, *mJDirectionIncrement);
+      Fmi::hash_merge(seed, *mJDirectionIncrement);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

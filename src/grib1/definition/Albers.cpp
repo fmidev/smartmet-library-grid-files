@@ -9,7 +9,7 @@
 #include "Albers.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -286,18 +286,18 @@ void Albers::print(std::ostream &stream, uint level, uint optionFlags) const {
 T::Hash Albers::countHash() const {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mNx);
-    boost::hash_combine(seed, mNy);
-    boost::hash_combine(seed, mLatitudeOfFirstGridPoint);
-    boost::hash_combine(seed, mLongitudeOfFirstGridPoint);
-    boost::hash_combine(seed, mLoV);
-    boost::hash_combine(seed, mDxInMetres);
-    boost::hash_combine(seed, mDyInMetres);
-    boost::hash_combine(seed, mProjectionCentreFlag);
-    boost::hash_combine(seed, mLatin1);
-    boost::hash_combine(seed, mLatin2);
-    boost::hash_combine(seed, mLatitudeOfSouthernPole);
-    boost::hash_combine(seed, mLongitudeOfSouthernPole);
+    Fmi::hash_merge(seed, mNx);
+    Fmi::hash_merge(seed, mNy);
+    Fmi::hash_merge(seed, mLatitudeOfFirstGridPoint);
+    Fmi::hash_merge(seed, mLongitudeOfFirstGridPoint);
+    Fmi::hash_merge(seed, mLoV);
+    Fmi::hash_merge(seed, mDxInMetres);
+    Fmi::hash_merge(seed, mDyInMetres);
+    Fmi::hash_merge(seed, mProjectionCentreFlag);
+    Fmi::hash_merge(seed, mLatin1);
+    Fmi::hash_merge(seed, mLatin2);
+    Fmi::hash_merge(seed, mLatitudeOfSouthernPole);
+    Fmi::hash_merge(seed, mLongitudeOfSouthernPole);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

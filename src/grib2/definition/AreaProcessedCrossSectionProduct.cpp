@@ -9,7 +9,7 @@
 #include "AreaProcessedCrossSectionProduct.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -196,17 +196,17 @@ T::Hash AreaProcessedCrossSectionProduct::countHash() const {
   try {
     std::size_t seed = 0;
     if (mHorizontalDimensionProcessed)
-      boost::hash_combine(seed, *mHorizontalDimensionProcessed);
+      Fmi::hash_merge(seed, *mHorizontalDimensionProcessed);
     if (mTreatmentOfMissingData)
-      boost::hash_combine(seed, *mTreatmentOfMissingData);
+      Fmi::hash_merge(seed, *mTreatmentOfMissingData);
     if (mTypeOfStatisticalProcessing)
-      boost::hash_combine(seed, *mTypeOfStatisticalProcessing);
+      Fmi::hash_merge(seed, *mTypeOfStatisticalProcessing);
     if (mStartOfRange)
-      boost::hash_combine(seed, *mStartOfRange);
+      Fmi::hash_merge(seed, *mStartOfRange);
     if (mEndOfRange)
-      boost::hash_combine(seed, *mEndOfRange);
+      Fmi::hash_merge(seed, *mEndOfRange);
     if (mNumberOfDataValues)
-      boost::hash_combine(seed, *mNumberOfDataValues);
+      Fmi::hash_merge(seed, *mNumberOfDataValues);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

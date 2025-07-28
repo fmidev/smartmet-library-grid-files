@@ -9,7 +9,7 @@
 #include "StretchedLatLon.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -207,11 +207,11 @@ void StretchedLatLon::print(std::ostream &stream, uint level, uint optionFlags) 
 T::Hash StretchedLatLon::countHash() const {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mNi);
-    boost::hash_combine(seed, mNj);
-    boost::hash_combine(seed, mIDirectionIncrement);
-    boost::hash_combine(seed, mJDirectionIncrement);
-    // boost::hash_combine(seed,mZero);
+    Fmi::hash_merge(seed, mNi);
+    Fmi::hash_merge(seed, mNj);
+    Fmi::hash_merge(seed, mIDirectionIncrement);
+    Fmi::hash_merge(seed, mJDirectionIncrement);
+    // Fmi::hash_merge(seed,mZero);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

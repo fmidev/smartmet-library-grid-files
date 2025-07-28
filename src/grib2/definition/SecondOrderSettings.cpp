@@ -9,7 +9,7 @@
 #include "SecondOrderSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -242,27 +242,27 @@ T::Hash SecondOrderSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mGroupSplitting)
-      boost::hash_combine(seed, *mGroupSplitting);
+      Fmi::hash_merge(seed, *mGroupSplitting);
     if (mMissingValueManagement)
-      boost::hash_combine(seed, *mMissingValueManagement);
+      Fmi::hash_merge(seed, *mMissingValueManagement);
     if (mPrimaryMissingValue)
-      boost::hash_combine(seed, *mPrimaryMissingValue);
+      Fmi::hash_merge(seed, *mPrimaryMissingValue);
     if (mSecondaryMissingValue)
-      boost::hash_combine(seed, *mSecondaryMissingValue);
+      Fmi::hash_merge(seed, *mSecondaryMissingValue);
     if (mNumberOfGroups)
-      boost::hash_combine(seed, *mNumberOfGroups);
+      Fmi::hash_merge(seed, *mNumberOfGroups);
     if (mReferenceOfWidths)
-      boost::hash_combine(seed, *mReferenceOfWidths);
+      Fmi::hash_merge(seed, *mReferenceOfWidths);
     if (mWidthOfWidths)
-      boost::hash_combine(seed, *mWidthOfWidths);
+      Fmi::hash_merge(seed, *mWidthOfWidths);
     if (mReferenceOfLengths)
-      boost::hash_combine(seed, *mReferenceOfLengths);
+      Fmi::hash_merge(seed, *mReferenceOfLengths);
     if (mIncrementOfLengths)
-      boost::hash_combine(seed, *mIncrementOfLengths);
+      Fmi::hash_merge(seed, *mIncrementOfLengths);
     if (mTrueLengthOfLastGroup)
-      boost::hash_combine(seed, *mTrueLengthOfLastGroup);
+      Fmi::hash_merge(seed, *mTrueLengthOfLastGroup);
     if (mWidthOfLengths)
-      boost::hash_combine(seed, *mWidthOfLengths);
+      Fmi::hash_merge(seed, *mWidthOfLengths);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -9,7 +9,7 @@
 #include "PackingSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -165,13 +165,13 @@ void PackingSettings::print(std::ostream &stream, uint level, uint optionFlags) 
 T::Hash PackingSettings::countHash() const {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mReferenceValue);
+    Fmi::hash_merge(seed, mReferenceValue);
     if (mBinaryScaleFactor)
-      boost::hash_combine(seed, *mBinaryScaleFactor);
+      Fmi::hash_merge(seed, *mBinaryScaleFactor);
     if (mDecimalScaleFactor)
-      boost::hash_combine(seed, *mDecimalScaleFactor);
+      Fmi::hash_merge(seed, *mDecimalScaleFactor);
     if (mBitsPerValue)
-      boost::hash_combine(seed, *mBitsPerValue);
+      Fmi::hash_merge(seed, *mBitsPerValue);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

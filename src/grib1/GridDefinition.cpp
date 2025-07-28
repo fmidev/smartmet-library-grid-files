@@ -7,7 +7,7 @@
 #include "../common/AutoWriteLock.h"
 #include "../common/AutoReadLock.h"
 #include "../common/ShowFunction.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <unordered_map>
 
@@ -358,13 +358,13 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {
-      boost::hash_combine(hash,geomId);
+      Fmi::hash_merge(hash,geomId);
 
       for (uint t=0; t<sz; t++)
       {
         auto cc = latlon[t];
-        boost::hash_combine(hash,cc.x());
-        boost::hash_combine(hash,cc.y());
+        Fmi::hash_merge(hash,cc.x());
+        Fmi::hash_merge(hash,cc.y());
       }
 
       auto it = transformCache3.find(hash);
@@ -776,9 +776,9 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {
-      boost::hash_combine(hash,geomId);
-      boost::hash_combine(hash,lat);
-      boost::hash_combine(hash,lon);
+      Fmi::hash_merge(hash,geomId);
+      Fmi::hash_merge(hash,lat);
+      Fmi::hash_merge(hash,lon);
 
       auto it = transformCache1.find(hash);
       if (it)
@@ -823,8 +823,8 @@ bool GridDefinition::getTransformFromCache(std::size_t hash,double lat,double lo
     if (hash == 0)
       return false;
 
-    boost::hash_combine(hash,lat);
-    boost::hash_combine(hash,lon);
+    Fmi::hash_merge(hash,lat);
+    Fmi::hash_merge(hash,lon);
 
     auto it = transformCache1.find(hash);
     if (it)
@@ -853,8 +853,8 @@ void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double 
     if (hash == 0)
       return;
 
-    boost::hash_combine(hash,lat);
-    boost::hash_combine(hash,lon);
+    Fmi::hash_merge(hash,lat);
+    Fmi::hash_merge(hash,lon);
 
     auto it = transformCache1.find(hash);
     if (it  &&  x == it->x() && y == it->y())
@@ -1864,7 +1864,7 @@ T::SpatialRef_sptr GridDefinition::getSpatialReference()
       return mSpatialReference;
 
     std::size_t geometryHash = 0;
-    boost::hash_combine(geometryHash,getGridGeometryString());
+    Fmi::hash_merge(geometryHash,getGridGeometryString());
 
     auto sp = spatialReferenceCache.find(geometryHash);
     if (sp)
@@ -1888,7 +1888,7 @@ void GridDefinition::addSpatialReference(T::SpatialRef_sptr sp)
   try
   {
     std::size_t geometryHash = 0;
-    boost::hash_combine(geometryHash,getGridGeometryString());
+    Fmi::hash_merge(geometryHash,getGridGeometryString());
 
     auto spr = spatialReferenceCache.find(geometryHash);
     if (spr)
@@ -2137,9 +2137,9 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
     uint geomId = getGridGeometryId();
     if (geomId != 0)
     {
-      boost::hash_combine(hash,geomId);
-      boost::hash_combine(hash,lat);
-      boost::hash_combine(hash,lon);
+      Fmi::hash_merge(hash,geomId);
+      Fmi::hash_merge(hash,lat);
+      Fmi::hash_merge(hash,lon);
 
       auto it = transformCache2.find(hash);
       if (it)

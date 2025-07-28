@@ -9,7 +9,7 @@
 #include "ScanningModeSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -132,7 +132,7 @@ void ScanningModeSettings::print(std::ostream &stream, uint level, uint optionFl
 T::Hash ScanningModeSettings::countHash() const {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mScanningMode);
+    Fmi::hash_merge(seed, mScanningMode);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

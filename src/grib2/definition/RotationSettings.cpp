@@ -9,7 +9,7 @@
 #include "RotationSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -155,10 +155,10 @@ T::Hash RotationSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mLatitudeOfSouthernPole)
-      boost::hash_combine(seed, *mLatitudeOfSouthernPole);
+      Fmi::hash_merge(seed, *mLatitudeOfSouthernPole);
     if (mLongitudeOfSouthernPole)
-      boost::hash_combine(seed, *mLongitudeOfSouthernPole);
-    boost::hash_combine(seed, mAngleOfRotation);
+      Fmi::hash_merge(seed, *mLongitudeOfSouthernPole);
+    Fmi::hash_merge(seed, mAngleOfRotation);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

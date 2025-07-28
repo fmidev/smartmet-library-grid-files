@@ -9,7 +9,7 @@
 #include "VariableLatLonSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -205,15 +205,15 @@ T::Hash VariableLatLonSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNi)
-      boost::hash_combine(seed, *mNi);
+      Fmi::hash_merge(seed, *mNi);
     if (mNj)
-      boost::hash_combine(seed, *mNj);
-    // if (mBasicAngleOfTheInitialProductionDomain) boost::hash_combine(seed,*mBasicAngleOfTheInitialProductionDomain);
-    // if (mSubdivisionsOfBasicAngle) boost::hash_combine(seed,*mSubdivisionsOfBasicAngle);
+      Fmi::hash_merge(seed, *mNj);
+    // if (mBasicAngleOfTheInitialProductionDomain) Fmi::hash_merge(seed,*mBasicAngleOfTheInitialProductionDomain);
+    // if (mSubdivisionsOfBasicAngle) Fmi::hash_merge(seed,*mSubdivisionsOfBasicAngle);
     if (mLongitudes)
-      boost::hash_combine(seed, *mLongitudes);
+      Fmi::hash_merge(seed, *mLongitudes);
     if (mLatitudes)
-      boost::hash_combine(seed, *mLatitudes);
+      Fmi::hash_merge(seed, *mLatitudes);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

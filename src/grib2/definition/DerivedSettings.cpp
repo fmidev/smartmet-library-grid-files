@@ -9,7 +9,7 @@
 #include "DerivedSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -143,9 +143,9 @@ T::Hash DerivedSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mDerivedForecast)
-      boost::hash_combine(seed, *mDerivedForecast);
+      Fmi::hash_merge(seed, *mDerivedForecast);
     if (mNumberOfForecastsInEnsemble)
-      boost::hash_combine(seed, *mNumberOfForecastsInEnsemble);
+      Fmi::hash_merge(seed, *mNumberOfForecastsInEnsemble);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -9,7 +9,7 @@
 #include "LambertConformal.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -292,30 +292,30 @@ T::Hash LambertConformal::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNx)
-      boost::hash_combine(seed, *mNx);
+      Fmi::hash_merge(seed, *mNx);
     if (mNy)
-      boost::hash_combine(seed, *mNy);
+      Fmi::hash_merge(seed, *mNy);
     if (mLatitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLongitudeOfFirstGridPoint);
     if (mLaD)
-      boost::hash_combine(seed, *mLaD);
+      Fmi::hash_merge(seed, *mLaD);
     if (mLoV)
-      boost::hash_combine(seed, *mLoV);
+      Fmi::hash_merge(seed, *mLoV);
     if (mDx)
-      boost::hash_combine(seed, *mDx);
+      Fmi::hash_merge(seed, *mDx);
     if (mDy)
-      boost::hash_combine(seed, *mDy);
-    boost::hash_combine(seed, mProjectionCentreFlag);
+      Fmi::hash_merge(seed, *mDy);
+    Fmi::hash_merge(seed, mProjectionCentreFlag);
     if (mLatin1)
-      boost::hash_combine(seed, *mLatin1);
+      Fmi::hash_merge(seed, *mLatin1);
     if (mLatin2)
-      boost::hash_combine(seed, *mLatin2);
+      Fmi::hash_merge(seed, *mLatin2);
     if (mLatitudeOfSouthernPole)
-      boost::hash_combine(seed, *mLatitudeOfSouthernPole);
+      Fmi::hash_merge(seed, *mLatitudeOfSouthernPole);
     if (mLongitudeOfSouthernPole)
-      boost::hash_combine(seed, *mLongitudeOfSouthernPole);
+      Fmi::hash_merge(seed, *mLongitudeOfSouthernPole);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

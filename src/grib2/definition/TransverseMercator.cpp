@@ -9,7 +9,7 @@
 #include "TransverseMercator.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -292,30 +292,30 @@ T::Hash TransverseMercator::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNi)
-      boost::hash_combine(seed, *mNi);
+      Fmi::hash_merge(seed, *mNi);
     if (mNj)
-      boost::hash_combine(seed, *mNj);
+      Fmi::hash_merge(seed, *mNj);
     if (mLatitudeOfReferencePoint)
-      boost::hash_combine(seed, *mLatitudeOfReferencePoint);
+      Fmi::hash_merge(seed, *mLatitudeOfReferencePoint);
     if (mLongitudeOfReferencePoint)
-      boost::hash_combine(seed, *mLongitudeOfReferencePoint);
-    boost::hash_combine(seed, mScaleFactorAtReferencePoint);
+      Fmi::hash_merge(seed, *mLongitudeOfReferencePoint);
+    Fmi::hash_merge(seed, mScaleFactorAtReferencePoint);
     if (mXR)
-      boost::hash_combine(seed, *mXR);
+      Fmi::hash_merge(seed, *mXR);
     if (mYR)
-      boost::hash_combine(seed, *mYR);
+      Fmi::hash_merge(seed, *mYR);
     if (mDi)
-      boost::hash_combine(seed, *mDi);
+      Fmi::hash_merge(seed, *mDi);
     if (mDj)
-      boost::hash_combine(seed, *mDj);
+      Fmi::hash_merge(seed, *mDj);
     if (mX1)
-      boost::hash_combine(seed, *mX1);
+      Fmi::hash_merge(seed, *mX1);
     if (mY1)
-      boost::hash_combine(seed, *mY1);
+      Fmi::hash_merge(seed, *mY1);
     if (mX2)
-      boost::hash_combine(seed, *mX2);
+      Fmi::hash_merge(seed, *mX2);
     if (mY2)
-      boost::hash_combine(seed, *mY2);
+      Fmi::hash_merge(seed, *mY2);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

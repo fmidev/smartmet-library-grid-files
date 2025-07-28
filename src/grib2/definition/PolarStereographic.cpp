@@ -9,7 +9,7 @@
 #include "PolarStereographic.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -251,23 +251,23 @@ T::Hash PolarStereographic::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNx)
-      boost::hash_combine(seed, *mNx);
+      Fmi::hash_merge(seed, *mNx);
     if (mNy)
-      boost::hash_combine(seed, *mNy);
+      Fmi::hash_merge(seed, *mNy);
     if (mLatitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
-    boost::hash_combine(seed, mResolutionAndComponentFlags);
+      Fmi::hash_merge(seed, *mLongitudeOfFirstGridPoint);
+    Fmi::hash_merge(seed, mResolutionAndComponentFlags);
     if (mLaD)
-      boost::hash_combine(seed, *mLaD);
+      Fmi::hash_merge(seed, *mLaD);
     if (mOrientationOfTheGrid)
-      boost::hash_combine(seed, *mOrientationOfTheGrid);
+      Fmi::hash_merge(seed, *mOrientationOfTheGrid);
     if (mDx)
-      boost::hash_combine(seed, *mDx);
+      Fmi::hash_merge(seed, *mDx);
     if (mDy)
-      boost::hash_combine(seed, *mDy);
-    boost::hash_combine(seed, mProjectionCentreFlag);
+      Fmi::hash_merge(seed, *mDy);
+    Fmi::hash_merge(seed, mProjectionCentreFlag);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

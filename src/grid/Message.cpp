@@ -5132,15 +5132,15 @@ void Message::getGridValueListByPolygonPath(T::CoordinateType coordinateType,std
 
     /*
     std::size_t hash = 0;
-    boost::hash_combine(hash,mGeometryId);
-    boost::hash_combine(hash,coordinateType);
+    Fmi::hash_merge(hash,mGeometryId);
+    Fmi::hash_merge(hash,coordinateType);
 
     for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
     {
       for (auto it = polygonPoints->begin(); it != polygonPoints->end(); ++it)
       {
-        boost::hash_combine(hash,it->x());
-        boost::hash_combine(hash,it->y());
+        Fmi::hash_merge(hash,it->x());
+        Fmi::hash_merge(hash,it->y());
       }
     }
    */

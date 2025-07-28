@@ -9,7 +9,7 @@
 #include "EarthShapeSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -198,19 +198,19 @@ T::Hash EarthShapeSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mShapeOfTheEarth)
-      boost::hash_combine(seed, *mShapeOfTheEarth);
+      Fmi::hash_merge(seed, *mShapeOfTheEarth);
     if (mScaleFactorOfRadiusOfSphericalEarth)
-      boost::hash_combine(seed, *mScaleFactorOfRadiusOfSphericalEarth);
+      Fmi::hash_merge(seed, *mScaleFactorOfRadiusOfSphericalEarth);
     if (mScaledValueOfRadiusOfSphericalEarth)
-      boost::hash_combine(seed, *mScaledValueOfRadiusOfSphericalEarth);
+      Fmi::hash_merge(seed, *mScaledValueOfRadiusOfSphericalEarth);
     if (mScaleFactorOfEarthMajorAxis)
-      boost::hash_combine(seed, *mScaleFactorOfEarthMajorAxis);
+      Fmi::hash_merge(seed, *mScaleFactorOfEarthMajorAxis);
     if (mScaledValueOfEarthMajorAxis)
-      boost::hash_combine(seed, *mScaledValueOfEarthMajorAxis);
+      Fmi::hash_merge(seed, *mScaledValueOfEarthMajorAxis);
     if (mScaleFactorOfEarthMinorAxis)
-      boost::hash_combine(seed, *mScaleFactorOfEarthMinorAxis);
+      Fmi::hash_merge(seed, *mScaleFactorOfEarthMinorAxis);
     if (mScaledValueOfEarthMinorAxis)
-      boost::hash_combine(seed, *mScaledValueOfEarthMinorAxis);
+      Fmi::hash_merge(seed, *mScaledValueOfEarthMinorAxis);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -9,7 +9,7 @@
 #include "PercentileSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -132,7 +132,7 @@ T::Hash PercentileSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mPercentileValue)
-      boost::hash_combine(seed, *mPercentileValue);
+      Fmi::hash_merge(seed, *mPercentileValue);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

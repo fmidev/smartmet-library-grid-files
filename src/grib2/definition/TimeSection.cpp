@@ -9,7 +9,7 @@
 #include "TimeSection.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -297,37 +297,37 @@ T::Hash TimeSection::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNumberOfTimeSteps)
-      boost::hash_combine(seed, *mNumberOfTimeSteps);
+      Fmi::hash_merge(seed, *mNumberOfTimeSteps);
     if (mUnitOfOffsetFromReferenceTime)
-      boost::hash_combine(seed, *mUnitOfOffsetFromReferenceTime);
+      Fmi::hash_merge(seed, *mUnitOfOffsetFromReferenceTime);
     if (mOffsetFromReferenceOfFirstTime)
-      boost::hash_combine(seed, *mOffsetFromReferenceOfFirstTime);
+      Fmi::hash_merge(seed, *mOffsetFromReferenceOfFirstTime);
     if (mTypeOfTimeIncrement)
-      boost::hash_combine(seed, *mTypeOfTimeIncrement);
+      Fmi::hash_merge(seed, *mTypeOfTimeIncrement);
     if (mUnitOfTimeIncrement)
-      boost::hash_combine(seed, *mUnitOfTimeIncrement);
+      Fmi::hash_merge(seed, *mUnitOfTimeIncrement);
     if (mTimeIncrement)
-      boost::hash_combine(seed, *mTimeIncrement);
+      Fmi::hash_merge(seed, *mTimeIncrement);
     if (mYear)
-      boost::hash_combine(seed, *mYear);
+      Fmi::hash_merge(seed, *mYear);
     if (mMonth)
-      boost::hash_combine(seed, *mMonth);
+      Fmi::hash_merge(seed, *mMonth);
     if (mDay)
-      boost::hash_combine(seed, *mDay);
+      Fmi::hash_merge(seed, *mDay);
     if (mHour)
-      boost::hash_combine(seed, *mHour);
+      Fmi::hash_merge(seed, *mHour);
     if (mMinute)
-      boost::hash_combine(seed, *mMinute);
+      Fmi::hash_merge(seed, *mMinute);
     if (mSecond)
-      boost::hash_combine(seed, *mSecond);
+      Fmi::hash_merge(seed, *mSecond);
     if (mNumberOfVerticalPoints)
-      boost::hash_combine(seed, *mNumberOfVerticalPoints);
+      Fmi::hash_merge(seed, *mNumberOfVerticalPoints);
     if (mPhysicalMeaningOfVerticalCoordinate)
-      boost::hash_combine(seed, *mPhysicalMeaningOfVerticalCoordinate);
+      Fmi::hash_merge(seed, *mPhysicalMeaningOfVerticalCoordinate);
     if (mVerticalCoordinate)
-      boost::hash_combine(seed, *mVerticalCoordinate);
+      Fmi::hash_merge(seed, *mVerticalCoordinate);
     if (mNC)
-      boost::hash_combine(seed, *mNC);
+      Fmi::hash_merge(seed, *mNC);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

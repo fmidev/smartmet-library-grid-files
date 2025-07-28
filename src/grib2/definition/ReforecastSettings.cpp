@@ -9,7 +9,7 @@
 #include "ReforecastSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -187,17 +187,17 @@ T::Hash ReforecastSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mYearOfModelVersion)
-      boost::hash_combine(seed, *mYearOfModelVersion);
+      Fmi::hash_merge(seed, *mYearOfModelVersion);
     if (mMonthOfModelVersion)
-      boost::hash_combine(seed, *mMonthOfModelVersion);
+      Fmi::hash_merge(seed, *mMonthOfModelVersion);
     if (mDayOfModelVersion)
-      boost::hash_combine(seed, *mDayOfModelVersion);
+      Fmi::hash_merge(seed, *mDayOfModelVersion);
     if (mHourOfModelVersion)
-      boost::hash_combine(seed, *mHourOfModelVersion);
+      Fmi::hash_merge(seed, *mHourOfModelVersion);
     if (mMinuteOfModelVersion)
-      boost::hash_combine(seed, *mMinuteOfModelVersion);
+      Fmi::hash_merge(seed, *mMinuteOfModelVersion);
     if (mSecondOfModelVersion)
-      boost::hash_combine(seed, *mSecondOfModelVersion);
+      Fmi::hash_merge(seed, *mSecondOfModelVersion);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

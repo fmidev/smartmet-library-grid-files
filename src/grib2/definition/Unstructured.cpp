@@ -9,7 +9,7 @@
 #include "Unstructured.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -166,12 +166,12 @@ T::Hash Unstructured::countHash() const {
   try {
     std::size_t seed = 0;
     if (mShapeOfTheEarth)
-      boost::hash_combine(seed, *mShapeOfTheEarth);
+      Fmi::hash_merge(seed, *mShapeOfTheEarth);
     if (mNumberOfGridUsed)
-      boost::hash_combine(seed, *mNumberOfGridUsed);
+      Fmi::hash_merge(seed, *mNumberOfGridUsed);
     if (mNumberOfGridInReference)
-      boost::hash_combine(seed, *mNumberOfGridInReference);
-    boost::hash_combine(seed, mUuidOfHGrid);
+      Fmi::hash_merge(seed, *mNumberOfGridInReference);
+    Fmi::hash_merge(seed, mUuidOfHGrid);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

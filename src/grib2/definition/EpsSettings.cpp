@@ -9,7 +9,7 @@
 #include "EpsSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -154,11 +154,11 @@ T::Hash EpsSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mTypeOfEnsembleForecast)
-      boost::hash_combine(seed, *mTypeOfEnsembleForecast);
+      Fmi::hash_merge(seed, *mTypeOfEnsembleForecast);
     if (mPerturbationNumber)
-      boost::hash_combine(seed, *mPerturbationNumber);
+      Fmi::hash_merge(seed, *mPerturbationNumber);
     if (mNumberOfForecastsInEnsemble)
-      boost::hash_combine(seed, *mNumberOfForecastsInEnsemble);
+      Fmi::hash_merge(seed, *mNumberOfForecastsInEnsemble);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

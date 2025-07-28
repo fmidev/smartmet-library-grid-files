@@ -9,7 +9,7 @@
 #include "PreprocessedGridDataRepresentation.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -153,8 +153,8 @@ T::Hash PreprocessedGridDataRepresentation::countHash() const {
   try {
     std::size_t seed = 0;
     if (mTypeOfPreProcessing)
-      boost::hash_combine(seed, *mTypeOfPreProcessing);
-    boost::hash_combine(seed, mPreProcessingParameter);
+      Fmi::hash_merge(seed, *mTypeOfPreProcessing);
+    Fmi::hash_merge(seed, mPreProcessingParameter);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

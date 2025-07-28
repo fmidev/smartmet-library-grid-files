@@ -9,7 +9,7 @@
 #include "DeprecatedSatelliteProduct.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -231,25 +231,25 @@ T::Hash DeprecatedSatelliteProduct::countHash() const {
   try {
     std::size_t seed = 0;
     if (mParameterCategory)
-      boost::hash_combine(seed, *mParameterCategory);
+      Fmi::hash_merge(seed, *mParameterCategory);
     if (mParameterNumber)
-      boost::hash_combine(seed, *mParameterNumber);
+      Fmi::hash_merge(seed, *mParameterNumber);
     if (mTypeOfGeneratingProcess)
-      boost::hash_combine(seed, *mTypeOfGeneratingProcess);
+      Fmi::hash_merge(seed, *mTypeOfGeneratingProcess);
     if (mObservationGeneratingProcessIdentifier)
-      boost::hash_combine(seed, *mObservationGeneratingProcessIdentifier);
+      Fmi::hash_merge(seed, *mObservationGeneratingProcessIdentifier);
     if (mNB)
-      boost::hash_combine(seed, *mNB);
+      Fmi::hash_merge(seed, *mNB);
     if (mSatelliteSeries)
-      boost::hash_combine(seed, *mSatelliteSeries);
+      Fmi::hash_merge(seed, *mSatelliteSeries);
     if (mSatelliteNumber)
-      boost::hash_combine(seed, *mSatelliteNumber);
+      Fmi::hash_merge(seed, *mSatelliteNumber);
     if (mInstrumentType)
-      boost::hash_combine(seed, *mInstrumentType);
+      Fmi::hash_merge(seed, *mInstrumentType);
     if (mScaleFactorOfCentralWaveNumber)
-      boost::hash_combine(seed, *mScaleFactorOfCentralWaveNumber);
+      Fmi::hash_merge(seed, *mScaleFactorOfCentralWaveNumber);
     if (mScaledValueOfCentralWaveNumber)
-      boost::hash_combine(seed, *mScaledValueOfCentralWaveNumber);
+      Fmi::hash_merge(seed, *mScaledValueOfCentralWaveNumber);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

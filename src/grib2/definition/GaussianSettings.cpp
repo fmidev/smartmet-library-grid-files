@@ -9,7 +9,7 @@
 #include "GaussianSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -161,9 +161,9 @@ T::Hash GaussianSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mIDirectionIncrement)
-      boost::hash_combine(seed, *mIDirectionIncrement);
+      Fmi::hash_merge(seed, *mIDirectionIncrement);
     if (mN)
-      boost::hash_combine(seed, *mN);
+      Fmi::hash_merge(seed, *mN);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

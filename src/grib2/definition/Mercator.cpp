@@ -9,7 +9,7 @@
 #include "Mercator.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -258,23 +258,23 @@ T::Hash Mercator::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNi)
-      boost::hash_combine(seed, *mNi);
+      Fmi::hash_merge(seed, *mNi);
     if (mNj)
-      boost::hash_combine(seed, *mNj);
+      Fmi::hash_merge(seed, *mNj);
     if (mLatitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLongitudeOfFirstGridPoint);
     if (mLaD)
-      boost::hash_combine(seed, *mLaD);
-    // if (mLatitudeOfLastGridPoint) boost::hash_combine(seed,*mLatitudeOfLastGridPoint);
-    // if (mLongitudeOfLastGridPoint) boost::hash_combine(seed,*mLongitudeOfLastGridPoint);
+      Fmi::hash_merge(seed, *mLaD);
+    // if (mLatitudeOfLastGridPoint) Fmi::hash_merge(seed,*mLatitudeOfLastGridPoint);
+    // if (mLongitudeOfLastGridPoint) Fmi::hash_merge(seed,*mLongitudeOfLastGridPoint);
     if (mOrientationOfTheGrid)
-      boost::hash_combine(seed, *mOrientationOfTheGrid);
+      Fmi::hash_merge(seed, *mOrientationOfTheGrid);
     if (mDi)
-      boost::hash_combine(seed, *mDi);
+      Fmi::hash_merge(seed, *mDi);
     if (mDj)
-      boost::hash_combine(seed, *mDj);
+      Fmi::hash_merge(seed, *mDj);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -9,7 +9,7 @@
 #include "CharacterStringProduct.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -154,11 +154,11 @@ T::Hash CharacterStringProduct::countHash() const {
   try {
     std::size_t seed = 0;
     if (mParameterCategory)
-      boost::hash_combine(seed, *mParameterCategory);
+      Fmi::hash_merge(seed, *mParameterCategory);
     if (mParameterNumber)
-      boost::hash_combine(seed, *mParameterNumber);
+      Fmi::hash_merge(seed, *mParameterNumber);
     if (mNumberOfCharacters)
-      boost::hash_combine(seed, *mNumberOfCharacters);
+      Fmi::hash_merge(seed, *mNumberOfCharacters);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

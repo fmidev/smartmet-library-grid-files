@@ -9,7 +9,7 @@
 #include "MatrixDataRepresentation.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -264,27 +264,27 @@ T::Hash MatrixDataRepresentation::countHash() const {
   try {
     std::size_t seed = 0;
     if (mMatrixBitmapsPresent)
-      boost::hash_combine(seed, *mMatrixBitmapsPresent);
+      Fmi::hash_merge(seed, *mMatrixBitmapsPresent);
     if (mNumberOfCodedValues)
-      boost::hash_combine(seed, *mNumberOfCodedValues);
+      Fmi::hash_merge(seed, *mNumberOfCodedValues);
     if (mFirstDimension)
-      boost::hash_combine(seed, *mFirstDimension);
+      Fmi::hash_merge(seed, *mFirstDimension);
     if (mSecondDimension)
-      boost::hash_combine(seed, *mSecondDimension);
+      Fmi::hash_merge(seed, *mSecondDimension);
     if (mFirstDimensionCoordinateValueDefinition)
-      boost::hash_combine(seed, *mFirstDimensionCoordinateValueDefinition);
+      Fmi::hash_merge(seed, *mFirstDimensionCoordinateValueDefinition);
     if (mNC1)
-      boost::hash_combine(seed, *mNC1);
+      Fmi::hash_merge(seed, *mNC1);
     if (mSecondDimensionCoordinateValueDefinition)
-      boost::hash_combine(seed, *mSecondDimensionCoordinateValueDefinition);
+      Fmi::hash_merge(seed, *mSecondDimensionCoordinateValueDefinition);
     if (mNC2)
-      boost::hash_combine(seed, *mNC2);
+      Fmi::hash_merge(seed, *mNC2);
     if (mFirstDimensionPhysicalSignificance)
-      boost::hash_combine(seed, *mFirstDimensionPhysicalSignificance);
+      Fmi::hash_merge(seed, *mFirstDimensionPhysicalSignificance);
     if (mSecondDimensionPhysicalSignificance)
-      boost::hash_combine(seed, *mSecondDimensionPhysicalSignificance);
-    boost::hash_combine(seed, mCoefsFirst);
-    boost::hash_combine(seed, mCoefsSecond);
+      Fmi::hash_merge(seed, *mSecondDimensionPhysicalSignificance);
+    Fmi::hash_merge(seed, mCoefsFirst);
+    Fmi::hash_merge(seed, mCoefsSecond);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

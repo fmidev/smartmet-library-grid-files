@@ -9,7 +9,7 @@
 #include "GridStretchingSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -155,9 +155,9 @@ void GridStretchingSettings::print(std::ostream &stream, uint level, uint option
 T::Hash GridStretchingSettings::countHash() const {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mLatitudeOfStretchingPole);
-    boost::hash_combine(seed, mLongitudeOfStretchingPole);
-    boost::hash_combine(seed, mStretchingFactor);
+    Fmi::hash_merge(seed, mLatitudeOfStretchingPole);
+    Fmi::hash_merge(seed, mLongitudeOfStretchingPole);
+    Fmi::hash_merge(seed, mStretchingFactor);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

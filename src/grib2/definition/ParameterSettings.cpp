@@ -9,7 +9,7 @@
 #include "ParameterSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -220,23 +220,23 @@ T::Hash ParameterSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mParameterCategory)
-      boost::hash_combine(seed, *mParameterCategory);
+      Fmi::hash_merge(seed, *mParameterCategory);
     if (mParameterNumber)
-      boost::hash_combine(seed, *mParameterNumber);
+      Fmi::hash_merge(seed, *mParameterNumber);
     if (mTypeOfGeneratingProcess)
-      boost::hash_combine(seed, *mTypeOfGeneratingProcess);
+      Fmi::hash_merge(seed, *mTypeOfGeneratingProcess);
     if (mBackgroundProcess)
-      boost::hash_combine(seed, *mBackgroundProcess);
+      Fmi::hash_merge(seed, *mBackgroundProcess);
     if (mGeneratingProcessIdentifier)
-      boost::hash_combine(seed, *mGeneratingProcessIdentifier);
+      Fmi::hash_merge(seed, *mGeneratingProcessIdentifier);
     if (mHoursAfterDataCutoff)
-      boost::hash_combine(seed, *mHoursAfterDataCutoff);
+      Fmi::hash_merge(seed, *mHoursAfterDataCutoff);
     if (mMinutesAfterDataCutoff)
-      boost::hash_combine(seed, *mMinutesAfterDataCutoff);
+      Fmi::hash_merge(seed, *mMinutesAfterDataCutoff);
     if (mIndicatorOfUnitOfTimeRange)
-      boost::hash_combine(seed, *mIndicatorOfUnitOfTimeRange);
+      Fmi::hash_merge(seed, *mIndicatorOfUnitOfTimeRange);
     if (mForecastTime)
-      boost::hash_combine(seed, *mForecastTime);
+      Fmi::hash_merge(seed, *mForecastTime);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

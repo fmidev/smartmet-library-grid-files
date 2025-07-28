@@ -9,7 +9,7 @@
 #include "TimeIntervalAggregateForecast.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -181,11 +181,11 @@ T::Hash TimeIntervalAggregateForecast::countHash() const {
   try {
     std::size_t seed = 0;
     if (mStatisticalProcess)
-      boost::hash_combine(seed, *mStatisticalProcess);
+      Fmi::hash_merge(seed, *mStatisticalProcess);
     if (mSpatialProcessing)
-      boost::hash_combine(seed, *mSpatialProcessing);
+      Fmi::hash_merge(seed, *mSpatialProcessing);
     if (mNumberOfPointsUsed)
-      boost::hash_combine(seed, *mNumberOfPointsUsed);
+      Fmi::hash_merge(seed, *mNumberOfPointsUsed);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

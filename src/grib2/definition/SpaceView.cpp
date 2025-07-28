@@ -9,7 +9,7 @@
 #include "SpaceView.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -280,29 +280,29 @@ T::Hash SpaceView::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNx)
-      boost::hash_combine(seed, *mNx);
+      Fmi::hash_merge(seed, *mNx);
     if (mNy)
-      boost::hash_combine(seed, *mNy);
+      Fmi::hash_merge(seed, *mNy);
     if (mLatitudeOfSubSatellitePoint)
-      boost::hash_combine(seed, *mLatitudeOfSubSatellitePoint);
+      Fmi::hash_merge(seed, *mLatitudeOfSubSatellitePoint);
     if (mLongitudeOfSubSatellitePoint)
-      boost::hash_combine(seed, *mLongitudeOfSubSatellitePoint);
+      Fmi::hash_merge(seed, *mLongitudeOfSubSatellitePoint);
     if (mDx)
-      boost::hash_combine(seed, *mDx);
+      Fmi::hash_merge(seed, *mDx);
     if (mDy)
-      boost::hash_combine(seed, *mDy);
+      Fmi::hash_merge(seed, *mDy);
     if (mXp)
-      boost::hash_combine(seed, *mXp);
+      Fmi::hash_merge(seed, *mXp);
     if (mYp)
-      boost::hash_combine(seed, *mYp);
+      Fmi::hash_merge(seed, *mYp);
     if (mOrientationOfTheGrid)
-      boost::hash_combine(seed, *mOrientationOfTheGrid);
+      Fmi::hash_merge(seed, *mOrientationOfTheGrid);
     if (mNr)
-      boost::hash_combine(seed, *mNr);
+      Fmi::hash_merge(seed, *mNr);
     if (mXo)
-      boost::hash_combine(seed, *mXo);
+      Fmi::hash_merge(seed, *mXo);
     if (mYo)
-      boost::hash_combine(seed, *mYo);
+      Fmi::hash_merge(seed, *mYo);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -9,7 +9,7 @@
 #include "HorizontalSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -187,17 +187,17 @@ T::Hash HorizontalSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mTypeOfFirstFixedSurface)
-      boost::hash_combine(seed, *mTypeOfFirstFixedSurface);
+      Fmi::hash_merge(seed, *mTypeOfFirstFixedSurface);
     if (mScaleFactorOfFirstFixedSurface)
-      boost::hash_combine(seed, *mScaleFactorOfFirstFixedSurface);
+      Fmi::hash_merge(seed, *mScaleFactorOfFirstFixedSurface);
     if (mScaledValueOfFirstFixedSurface)
-      boost::hash_combine(seed, *mScaledValueOfFirstFixedSurface);
+      Fmi::hash_merge(seed, *mScaledValueOfFirstFixedSurface);
     if (mTypeOfSecondFixedSurface)
-      boost::hash_combine(seed, *mTypeOfSecondFixedSurface);
+      Fmi::hash_merge(seed, *mTypeOfSecondFixedSurface);
     if (mScaleFactorOfSecondFixedSurface)
-      boost::hash_combine(seed, *mScaleFactorOfSecondFixedSurface);
+      Fmi::hash_merge(seed, *mScaleFactorOfSecondFixedSurface);
     if (mScaledValueOfSecondFixedSurface)
-      boost::hash_combine(seed, *mScaledValueOfSecondFixedSurface);
+      Fmi::hash_merge(seed, *mScaledValueOfSecondFixedSurface);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

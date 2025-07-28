@@ -9,7 +9,7 @@
 #include "ResolutionFlagsSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -132,7 +132,7 @@ void ResolutionFlagsSettings::print(std::ostream &stream, uint level, uint optio
 T::Hash ResolutionFlagsSettings::countHash() const {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mResolutionAndComponentFlags);
+    Fmi::hash_merge(seed, mResolutionAndComponentFlags);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -9,7 +9,7 @@
 #include "Albers.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -292,30 +292,30 @@ T::Hash Albers::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNx)
-      boost::hash_combine(seed, *mNx);
+      Fmi::hash_merge(seed, *mNx);
     if (mNy)
-      boost::hash_combine(seed, *mNy);
+      Fmi::hash_merge(seed, *mNy);
     if (mLatitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLongitudeOfFirstGridPoint);
     if (mLaD)
-      boost::hash_combine(seed, *mLaD);
+      Fmi::hash_merge(seed, *mLaD);
     if (mLoV)
-      boost::hash_combine(seed, *mLoV);
+      Fmi::hash_merge(seed, *mLoV);
     if (mXDirectionGridLength)
-      boost::hash_combine(seed, *mXDirectionGridLength);
+      Fmi::hash_merge(seed, *mXDirectionGridLength);
     if (mYDirectionGridLength)
-      boost::hash_combine(seed, *mYDirectionGridLength);
-    boost::hash_combine(seed, mProjectionCentreFlag);
+      Fmi::hash_merge(seed, *mYDirectionGridLength);
+    Fmi::hash_merge(seed, mProjectionCentreFlag);
     if (mLatin1)
-      boost::hash_combine(seed, *mLatin1);
+      Fmi::hash_merge(seed, *mLatin1);
     if (mLatin2)
-      boost::hash_combine(seed, *mLatin2);
+      Fmi::hash_merge(seed, *mLatin2);
     if (mLatitudeOfTheSouthernPoleOfProjection)
-      boost::hash_combine(seed, *mLatitudeOfTheSouthernPoleOfProjection);
+      Fmi::hash_merge(seed, *mLatitudeOfTheSouthernPoleOfProjection);
     if (mLongitudeOfTheSouthernPoleOfProjection)
-      boost::hash_combine(seed, *mLongitudeOfTheSouthernPoleOfProjection);
+      Fmi::hash_merge(seed, *mLongitudeOfTheSouthernPoleOfProjection);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

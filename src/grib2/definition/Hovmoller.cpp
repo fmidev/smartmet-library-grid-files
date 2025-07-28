@@ -9,7 +9,7 @@
 #include "Hovmoller.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -347,40 +347,40 @@ void Hovmoller::print(std::ostream &stream, uint level, uint optionFlags) const 
 T::Hash Hovmoller::countHash() const {
   try {
     std::size_t seed = 0;
-    // if (mBasicAngleOfTheInitialProductionDomain) boost::hash_combine(seed,*mBasicAngleOfTheInitialProductionDomain);
-    // if (mSubdivisionsOfBasicAngle) boost::hash_combine(seed,*mSubdivisionsOfBasicAngle);
+    // if (mBasicAngleOfTheInitialProductionDomain) Fmi::hash_merge(seed,*mBasicAngleOfTheInitialProductionDomain);
+    // if (mSubdivisionsOfBasicAngle) Fmi::hash_merge(seed,*mSubdivisionsOfBasicAngle);
     if (mLatitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
-    // if (mLatitudeOfLastGridPoint) boost::hash_combine(seed,*mLatitudeOfLastGridPoint);
-    // if (mLongitudeOfLastGridPoint) boost::hash_combine(seed,*mLongitudeOfLastGridPoint);
+      Fmi::hash_merge(seed, *mLongitudeOfFirstGridPoint);
+    // if (mLatitudeOfLastGridPoint) Fmi::hash_merge(seed,*mLatitudeOfLastGridPoint);
+    // if (mLongitudeOfLastGridPoint) Fmi::hash_merge(seed,*mLongitudeOfLastGridPoint);
     if (mTypeOfHorizontalLine)
-      boost::hash_combine(seed, *mTypeOfHorizontalLine);
+      Fmi::hash_merge(seed, *mTypeOfHorizontalLine);
     if (mNumberOfTimeSteps)
-      boost::hash_combine(seed, *mNumberOfTimeSteps);
+      Fmi::hash_merge(seed, *mNumberOfTimeSteps);
     if (mUnitOfOffsetFromReferenceTime)
-      boost::hash_combine(seed, *mUnitOfOffsetFromReferenceTime);
+      Fmi::hash_merge(seed, *mUnitOfOffsetFromReferenceTime);
     if (mOffsetFromReferenceOfFirstTime)
-      boost::hash_combine(seed, *mOffsetFromReferenceOfFirstTime);
+      Fmi::hash_merge(seed, *mOffsetFromReferenceOfFirstTime);
     if (mTypeOfTimeIncrement)
-      boost::hash_combine(seed, *mTypeOfTimeIncrement);
+      Fmi::hash_merge(seed, *mTypeOfTimeIncrement);
     if (mUnitOfTimeIncrement)
-      boost::hash_combine(seed, *mUnitOfTimeIncrement);
+      Fmi::hash_merge(seed, *mUnitOfTimeIncrement);
     if (mTimeIncrement)
-      boost::hash_combine(seed, *mTimeIncrement);
+      Fmi::hash_merge(seed, *mTimeIncrement);
     if (mYear)
-      boost::hash_combine(seed, *mYear);
+      Fmi::hash_merge(seed, *mYear);
     if (mMonth)
-      boost::hash_combine(seed, *mMonth);
+      Fmi::hash_merge(seed, *mMonth);
     if (mDay)
-      boost::hash_combine(seed, *mDay);
+      Fmi::hash_merge(seed, *mDay);
     if (mHour)
-      boost::hash_combine(seed, *mHour);
+      Fmi::hash_merge(seed, *mHour);
     if (mMinute)
-      boost::hash_combine(seed, *mMinute);
+      Fmi::hash_merge(seed, *mMinute);
     if (mSecond)
-      boost::hash_combine(seed, *mSecond);
+      Fmi::hash_merge(seed, *mSecond);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

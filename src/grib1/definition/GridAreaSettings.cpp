@@ -9,9 +9,9 @@
 #include "GridAreaSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
 #include <iostream>
 #include <macgyver/Exception.h>
+#include <macgyver/Hash.h>
 
 namespace SmartMet {
 namespace GRIB1 {
@@ -177,10 +177,9 @@ void GridAreaSettings::print(std::ostream &stream, uint level, uint optionFlags)
 T::Hash GridAreaSettings::countHash() const {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mLatitudeOfFirstGridPoint);
-    boost::hash_combine(seed, mLongitudeOfFirstGridPoint);
-    // boost::hash_combine(seed,mLatitudeOfLastGridPoint);
-    // boost::hash_combine(seed,mLongitudeOfLastGridPoint);
+    Fmi::hash_merge(seed, mLatitudeOfFirstGridPoint, mLongitudeOfFirstGridPoint);
+    //  , mLatitudeOfLastGridPoint
+    //  , mLongitudeOfLastGridPoint);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

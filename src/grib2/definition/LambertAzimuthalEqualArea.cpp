@@ -9,7 +9,7 @@
 #include "LambertAzimuthalEqualArea.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -239,22 +239,22 @@ T::Hash LambertAzimuthalEqualArea::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNumberOfPointsAlongXAxis)
-      boost::hash_combine(seed, *mNumberOfPointsAlongXAxis);
+      Fmi::hash_merge(seed, *mNumberOfPointsAlongXAxis);
     if (mNumberOfPointsAlongYAxis)
-      boost::hash_combine(seed, *mNumberOfPointsAlongYAxis);
+      Fmi::hash_merge(seed, *mNumberOfPointsAlongYAxis);
     if (mLatitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLongitudeOfFirstGridPoint);
     if (mStandardParallelInMicrodegrees)
-      boost::hash_combine(seed, *mStandardParallelInMicrodegrees);
+      Fmi::hash_merge(seed, *mStandardParallelInMicrodegrees);
     if (mCentralLongitudeInMicrodegrees)
-      boost::hash_combine(seed, *mCentralLongitudeInMicrodegrees);
-    boost::hash_combine(seed, mResolutionAndComponentFlags);
+      Fmi::hash_merge(seed, *mCentralLongitudeInMicrodegrees);
+    Fmi::hash_merge(seed, mResolutionAndComponentFlags);
     if (mXDirectionGridLengthInMillimetres)
-      boost::hash_combine(seed, *mXDirectionGridLengthInMillimetres);
+      Fmi::hash_merge(seed, *mXDirectionGridLengthInMillimetres);
     if (mYDirectionGridLengthInMillimetres)
-      boost::hash_combine(seed, *mYDirectionGridLengthInMillimetres);
+      Fmi::hash_merge(seed, *mYDirectionGridLengthInMillimetres);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -26,7 +26,7 @@
 #include <macgyver/FastMath.h>
 #include <macgyver/Cache.h>
 #include <boost/algorithm/string/replace.hpp>
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -271,13 +271,13 @@ void getPointsInsidePolygon(int gridWidth,int gridHeight,T::Coordinate_vec& poly
       return;
 
     std::size_t hash = 0;
-    boost::hash_combine(hash,gridWidth);
-    boost::hash_combine(hash,gridHeight);
+    Fmi::hash_merge(hash,gridWidth);
+    Fmi::hash_merge(hash,gridHeight);
 
     for (uint t=0; t<numOfPoints; t++)
     {
-      boost::hash_combine(hash,polygonPoints[t].x());
-      boost::hash_combine(hash,polygonPoints[t].y());
+      Fmi::hash_merge(hash,polygonPoints[t].x());
+      Fmi::hash_merge(hash,polygonPoints[t].y());
     }
 
     auto it = gridPointsCache.find(hash);
@@ -419,15 +419,15 @@ void getPointsInsidePolygonPath(int gridWidth,int gridHeight,T::Polygon_vec& pol
       return;
 
     std::size_t hash = 0;
-    boost::hash_combine(hash,gridWidth);
-    boost::hash_combine(hash,gridHeight);
+    Fmi::hash_merge(hash,gridWidth);
+    Fmi::hash_merge(hash,gridHeight);
     for (auto polygonPoints = polygonPath.begin(); polygonPoints != polygonPath.end(); ++polygonPoints)
     {
       uint numOfPoints = polygonPoints->size();
       for (uint t=0; t<numOfPoints; t++)
       {
-        boost::hash_combine(hash,(*polygonPoints)[t].x());
-        boost::hash_combine(hash,(*polygonPoints)[t].y());
+        Fmi::hash_merge(hash,(*polygonPoints)[t].x());
+        Fmi::hash_merge(hash,(*polygonPoints)[t].y());
       }
     }
 

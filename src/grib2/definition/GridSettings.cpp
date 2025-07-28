@@ -9,7 +9,7 @@
 #include "GridSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -218,17 +218,17 @@ T::Hash GridSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNi)
-      boost::hash_combine(seed, *mNi);
+      Fmi::hash_merge(seed, *mNi);
     if (mNj)
-      boost::hash_combine(seed, *mNj);
-    // if (mBasicAngleOfTheInitialProductionDomain) boost::hash_combine(seed,*mBasicAngleOfTheInitialProductionDomain);
-    // if (mSubdivisionsOfBasicAngle) boost::hash_combine(seed,*mSubdivisionsOfBasicAngle);
+      Fmi::hash_merge(seed, *mNj);
+    // if (mBasicAngleOfTheInitialProductionDomain) Fmi::hash_merge(seed,*mBasicAngleOfTheInitialProductionDomain);
+    // if (mSubdivisionsOfBasicAngle) Fmi::hash_merge(seed,*mSubdivisionsOfBasicAngle);
     if (mLatitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLatitudeOfFirstGridPoint);
+      Fmi::hash_merge(seed, *mLatitudeOfFirstGridPoint);
     if (mLongitudeOfFirstGridPoint)
-      boost::hash_combine(seed, *mLongitudeOfFirstGridPoint);
-    // if (mLatitudeOfLastGridPoint) boost::hash_combine(seed,*mLatitudeOfLastGridPoint);
-    // if (mLongitudeOfLastGridPoint) boost::hash_combine(seed,*mLongitudeOfLastGridPoint);
+      Fmi::hash_merge(seed, *mLongitudeOfFirstGridPoint);
+    // if (mLatitudeOfLastGridPoint) Fmi::hash_merge(seed,*mLatitudeOfLastGridPoint);
+    // if (mLongitudeOfLastGridPoint) Fmi::hash_merge(seed,*mLongitudeOfLastGridPoint);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -9,7 +9,7 @@
 #include "AzimuthRange.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -218,21 +218,21 @@ T::Hash AzimuthRange::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNumberOfDataBinsAlongRadials)
-      boost::hash_combine(seed, *mNumberOfDataBinsAlongRadials);
+      Fmi::hash_merge(seed, *mNumberOfDataBinsAlongRadials);
     if (mNumberOfRadials)
-      boost::hash_combine(seed, *mNumberOfRadials);
+      Fmi::hash_merge(seed, *mNumberOfRadials);
     if (mLatitudeOfCenterPoint)
-      boost::hash_combine(seed, *mLatitudeOfCenterPoint);
+      Fmi::hash_merge(seed, *mLatitudeOfCenterPoint);
     if (mLongitudeOfCenterPoint)
-      boost::hash_combine(seed, *mLongitudeOfCenterPoint);
+      Fmi::hash_merge(seed, *mLongitudeOfCenterPoint);
     if (mSpacingOfBinsAlongRadials)
-      boost::hash_combine(seed, *mSpacingOfBinsAlongRadials);
+      Fmi::hash_merge(seed, *mSpacingOfBinsAlongRadials);
     if (mOffsetFromOriginToInnerBound)
-      boost::hash_combine(seed, *mOffsetFromOriginToInnerBound);
+      Fmi::hash_merge(seed, *mOffsetFromOriginToInnerBound);
     if (mStartingAzimuth)
-      boost::hash_combine(seed, *mStartingAzimuth);
+      Fmi::hash_merge(seed, *mStartingAzimuth);
     if (mAzimuthalWidth)
-      boost::hash_combine(seed, *mAzimuthalWidth);
+      Fmi::hash_merge(seed, *mAzimuthalWidth);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -9,7 +9,7 @@
 #include "StretchingSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -154,11 +154,11 @@ T::Hash StretchingSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mLatitudeOfThePoleOfStretching)
-      boost::hash_combine(seed, *mLatitudeOfThePoleOfStretching);
+      Fmi::hash_merge(seed, *mLatitudeOfThePoleOfStretching);
     if (mLongitudeOfThePoleOfStretching)
-      boost::hash_combine(seed, *mLongitudeOfThePoleOfStretching);
+      Fmi::hash_merge(seed, *mLongitudeOfThePoleOfStretching);
     if (mStretchingFactorScaled)
-      boost::hash_combine(seed, *mStretchingFactorScaled);
+      Fmi::hash_merge(seed, *mStretchingFactorScaled);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

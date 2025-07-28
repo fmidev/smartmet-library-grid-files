@@ -9,7 +9,7 @@
 #include "OriginalValuesSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -132,7 +132,7 @@ T::Hash OriginalValuesSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mTypeOfOriginalFieldValues)
-      boost::hash_combine(seed, *mTypeOfOriginalFieldValues);
+      Fmi::hash_merge(seed, *mTypeOfOriginalFieldValues);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

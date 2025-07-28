@@ -9,7 +9,7 @@
 #include "EquatorialAzimuthalEquidistant.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -228,20 +228,20 @@ T::Hash EquatorialAzimuthalEquidistant::countHash() const {
   try {
     std::size_t seed = 0;
     if (mNumberOfPointsAlongXAxis)
-      boost::hash_combine(seed, *mNumberOfPointsAlongXAxis);
+      Fmi::hash_merge(seed, *mNumberOfPointsAlongXAxis);
     if (mNumberOfPointsAlongYAxis)
-      boost::hash_combine(seed, *mNumberOfPointsAlongYAxis);
+      Fmi::hash_merge(seed, *mNumberOfPointsAlongYAxis);
     if (mLatitudeOfTangencyPoint)
-      boost::hash_combine(seed, *mLatitudeOfTangencyPoint);
+      Fmi::hash_merge(seed, *mLatitudeOfTangencyPoint);
     if (mLongitudeOfTangencyPoint)
-      boost::hash_combine(seed, *mLongitudeOfTangencyPoint);
-    boost::hash_combine(seed, mResolutionAndComponentFlags);
+      Fmi::hash_merge(seed, *mLongitudeOfTangencyPoint);
+    Fmi::hash_merge(seed, mResolutionAndComponentFlags);
     if (mDx)
-      boost::hash_combine(seed, *mDx);
+      Fmi::hash_merge(seed, *mDx);
     if (mDy)
-      boost::hash_combine(seed, *mDy);
+      Fmi::hash_merge(seed, *mDy);
     if (mProjectionCenterFlag)
-      boost::hash_combine(seed, *mProjectionCenterFlag);
+      Fmi::hash_merge(seed, *mProjectionCenterFlag);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

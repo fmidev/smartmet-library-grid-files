@@ -9,7 +9,7 @@
 #include "Triangular.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -244,25 +244,25 @@ T::Hash Triangular::countHash() const {
   try {
     std::size_t seed = 0;
     if (mN2)
-      boost::hash_combine(seed, *mN2);
+      Fmi::hash_merge(seed, *mN2);
     if (mN3)
-      boost::hash_combine(seed, *mN3);
+      Fmi::hash_merge(seed, *mN3);
     if (mNi)
-      boost::hash_combine(seed, *mNi);
+      Fmi::hash_merge(seed, *mNi);
     if (mNd)
-      boost::hash_combine(seed, *mNd);
+      Fmi::hash_merge(seed, *mNd);
     if (mLatitudeOfThePolePoint)
-      boost::hash_combine(seed, *mLatitudeOfThePolePoint);
+      Fmi::hash_merge(seed, *mLatitudeOfThePolePoint);
     if (mLongitudeOfThePolePoint)
-      boost::hash_combine(seed, *mLongitudeOfThePolePoint);
+      Fmi::hash_merge(seed, *mLongitudeOfThePolePoint);
     if (mLongitudeOfFirstDiamondCenterLine)
-      boost::hash_combine(seed, *mLongitudeOfFirstDiamondCenterLine);
+      Fmi::hash_merge(seed, *mLongitudeOfFirstDiamondCenterLine);
     if (mGridPointPosition)
-      boost::hash_combine(seed, *mGridPointPosition);
-    boost::hash_combine(seed, mNumberingOrderOfDiamonds);
-    boost::hash_combine(seed, mScanningModeForOneDiamond);
+      Fmi::hash_merge(seed, *mGridPointPosition);
+    Fmi::hash_merge(seed, mNumberingOrderOfDiamonds);
+    Fmi::hash_merge(seed, mScanningModeForOneDiamond);
     if (mTotalNumberOfGridPoints)
-      boost::hash_combine(seed, *mTotalNumberOfGridPoints);
+      Fmi::hash_merge(seed, *mTotalNumberOfGridPoints);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

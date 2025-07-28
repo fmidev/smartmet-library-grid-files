@@ -9,7 +9,7 @@
 #include "StatisticalSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -275,33 +275,33 @@ T::Hash StatisticalSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mYearOfEndOfOverallTimeInterval)
-      boost::hash_combine(seed, *mYearOfEndOfOverallTimeInterval);
+      Fmi::hash_merge(seed, *mYearOfEndOfOverallTimeInterval);
     if (mMonthOfEndOfOverallTimeInterval)
-      boost::hash_combine(seed, *mMonthOfEndOfOverallTimeInterval);
+      Fmi::hash_merge(seed, *mMonthOfEndOfOverallTimeInterval);
     if (mDayOfEndOfOverallTimeInterval)
-      boost::hash_combine(seed, *mDayOfEndOfOverallTimeInterval);
+      Fmi::hash_merge(seed, *mDayOfEndOfOverallTimeInterval);
     if (mHourOfEndOfOverallTimeInterval)
-      boost::hash_combine(seed, *mHourOfEndOfOverallTimeInterval);
+      Fmi::hash_merge(seed, *mHourOfEndOfOverallTimeInterval);
     if (mMinuteOfEndOfOverallTimeInterval)
-      boost::hash_combine(seed, *mMinuteOfEndOfOverallTimeInterval);
+      Fmi::hash_merge(seed, *mMinuteOfEndOfOverallTimeInterval);
     if (mSecondOfEndOfOverallTimeInterval)
-      boost::hash_combine(seed, *mSecondOfEndOfOverallTimeInterval);
+      Fmi::hash_merge(seed, *mSecondOfEndOfOverallTimeInterval);
     if (mNumberOfTimeRange)
-      boost::hash_combine(seed, *mNumberOfTimeRange);
+      Fmi::hash_merge(seed, *mNumberOfTimeRange);
     if (mNumberOfMissingInStatisticalProcess)
-      boost::hash_combine(seed, *mNumberOfMissingInStatisticalProcess);
+      Fmi::hash_merge(seed, *mNumberOfMissingInStatisticalProcess);
     if (mTypeOfStatisticalProcessing)
-      boost::hash_combine(seed, *mTypeOfStatisticalProcessing);
+      Fmi::hash_merge(seed, *mTypeOfStatisticalProcessing);
     if (mTypeOfTimeIncrement)
-      boost::hash_combine(seed, *mTypeOfTimeIncrement);
+      Fmi::hash_merge(seed, *mTypeOfTimeIncrement);
     if (mIndicatorOfUnitForTimeRange)
-      boost::hash_combine(seed, *mIndicatorOfUnitForTimeRange);
+      Fmi::hash_merge(seed, *mIndicatorOfUnitForTimeRange);
     if (mLengthOfTimeRange)
-      boost::hash_combine(seed, *mLengthOfTimeRange);
+      Fmi::hash_merge(seed, *mLengthOfTimeRange);
     if (mIndicatorOfUnitForTimeIncrement)
-      boost::hash_combine(seed, *mIndicatorOfUnitForTimeIncrement);
+      Fmi::hash_merge(seed, *mIndicatorOfUnitForTimeIncrement);
     if (mTimeIncrement)
-      boost::hash_combine(seed, *mTimeIncrement);
+      Fmi::hash_merge(seed, *mTimeIncrement);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

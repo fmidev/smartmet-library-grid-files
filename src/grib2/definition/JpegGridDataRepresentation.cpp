@@ -9,7 +9,7 @@
 #include "JpegGridDataRepresentation.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -161,9 +161,9 @@ T::Hash JpegGridDataRepresentation::countHash() const {
   try {
     std::size_t seed = 0;
     if (mTypeOfCompressionUsed)
-      boost::hash_combine(seed, *mTypeOfCompressionUsed);
+      Fmi::hash_merge(seed, *mTypeOfCompressionUsed);
     if (mTargetCompressionRatio)
-      boost::hash_combine(seed, *mTargetCompressionRatio);
+      Fmi::hash_merge(seed, *mTargetCompressionRatio);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

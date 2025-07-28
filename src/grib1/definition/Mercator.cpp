@@ -9,7 +9,7 @@
 #include "Mercator.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -206,11 +206,11 @@ void Mercator::print(std::ostream &stream, uint level, uint optionFlags) const {
 T::Hash Mercator::countHash() const {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mNi);
-    boost::hash_combine(seed, mNj);
-    boost::hash_combine(seed, mLatin);
-    boost::hash_combine(seed, mDiInMetres);
-    boost::hash_combine(seed, mDjInMetres);
+    Fmi::hash_merge(seed, mNi);
+    Fmi::hash_merge(seed, mNj);
+    Fmi::hash_merge(seed, mLatin);
+    Fmi::hash_merge(seed, mDiInMetres);
+    Fmi::hash_merge(seed, mDjInMetres);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

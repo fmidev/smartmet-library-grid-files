@@ -9,7 +9,7 @@
 #include "ProbabilitySettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -198,19 +198,19 @@ T::Hash ProbabilitySettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mForecastProbabilityNumber)
-      boost::hash_combine(seed, *mForecastProbabilityNumber);
+      Fmi::hash_merge(seed, *mForecastProbabilityNumber);
     if (mTotalNumberOfForecastProbabilities)
-      boost::hash_combine(seed, *mTotalNumberOfForecastProbabilities);
+      Fmi::hash_merge(seed, *mTotalNumberOfForecastProbabilities);
     if (mProbabilityType)
-      boost::hash_combine(seed, *mProbabilityType);
+      Fmi::hash_merge(seed, *mProbabilityType);
     if (mScaleFactorOfLowerLimit)
-      boost::hash_combine(seed, *mScaleFactorOfLowerLimit);
+      Fmi::hash_merge(seed, *mScaleFactorOfLowerLimit);
     if (mScaledValueOfLowerLimit)
-      boost::hash_combine(seed, *mScaledValueOfLowerLimit);
+      Fmi::hash_merge(seed, *mScaledValueOfLowerLimit);
     if (mScaleFactorOfUpperLimit)
-      boost::hash_combine(seed, *mScaleFactorOfUpperLimit);
+      Fmi::hash_merge(seed, *mScaleFactorOfUpperLimit);
     if (mScaledValueOfUpperLimit)
-      boost::hash_combine(seed, *mScaledValueOfUpperLimit);
+      Fmi::hash_merge(seed, *mScaledValueOfUpperLimit);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

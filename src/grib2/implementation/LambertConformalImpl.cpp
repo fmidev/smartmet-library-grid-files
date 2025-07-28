@@ -7,7 +7,7 @@
 #include "../Properties.h"
 
 #include <iostream>
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 
 
 namespace SmartMet

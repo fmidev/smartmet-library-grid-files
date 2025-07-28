@@ -9,7 +9,7 @@
 #include "SpectralGridDataRepresentation.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -172,11 +172,11 @@ T::Hash SpectralGridDataRepresentation::countHash() const {
   try {
     std::size_t seed = 0;
     if (mCcsdsFlags)
-      boost::hash_combine(seed, *mCcsdsFlags);
+      Fmi::hash_merge(seed, *mCcsdsFlags);
     if (mCcsdsBlockSize)
-      boost::hash_combine(seed, *mCcsdsBlockSize);
+      Fmi::hash_merge(seed, *mCcsdsBlockSize);
     if (mCcsdsRsi)
-      boost::hash_combine(seed, *mCcsdsRsi);
+      Fmi::hash_merge(seed, *mCcsdsRsi);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

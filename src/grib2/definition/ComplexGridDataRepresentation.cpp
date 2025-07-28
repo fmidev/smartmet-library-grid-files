@@ -9,7 +9,7 @@
 #include "ComplexGridDataRepresentation.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -260,27 +260,27 @@ T::Hash ComplexGridDataRepresentation::countHash() const {
   try {
     std::size_t seed = 0;
     if (mGroupSplittingMethodUsed)
-      boost::hash_combine(seed, *mGroupSplittingMethodUsed);
+      Fmi::hash_merge(seed, *mGroupSplittingMethodUsed);
     if (mMissingValueManagementUsed)
-      boost::hash_combine(seed, *mMissingValueManagementUsed);
+      Fmi::hash_merge(seed, *mMissingValueManagementUsed);
     if (mPrimaryMissingValueSubstitute)
-      boost::hash_combine(seed, *mPrimaryMissingValueSubstitute);
+      Fmi::hash_merge(seed, *mPrimaryMissingValueSubstitute);
     if (mSecondaryMissingValueSubstitute)
-      boost::hash_combine(seed, *mSecondaryMissingValueSubstitute);
+      Fmi::hash_merge(seed, *mSecondaryMissingValueSubstitute);
     if (mNumberOfGroupsOfDataValues)
-      boost::hash_combine(seed, *mNumberOfGroupsOfDataValues);
+      Fmi::hash_merge(seed, *mNumberOfGroupsOfDataValues);
     if (mReferenceForGroupWidths)
-      boost::hash_combine(seed, *mReferenceForGroupWidths);
+      Fmi::hash_merge(seed, *mReferenceForGroupWidths);
     if (mNumberOfBitsUsedForTheGroupWidths)
-      boost::hash_combine(seed, *mNumberOfBitsUsedForTheGroupWidths);
+      Fmi::hash_merge(seed, *mNumberOfBitsUsedForTheGroupWidths);
     if (mReferenceForGroupLengths)
-      boost::hash_combine(seed, *mReferenceForGroupLengths);
+      Fmi::hash_merge(seed, *mReferenceForGroupLengths);
     if (mLengthIncrementForTheGroupLengths)
-      boost::hash_combine(seed, *mLengthIncrementForTheGroupLengths);
+      Fmi::hash_merge(seed, *mLengthIncrementForTheGroupLengths);
     if (mTrueLengthOfLastGroup)
-      boost::hash_combine(seed, *mTrueLengthOfLastGroup);
+      Fmi::hash_merge(seed, *mTrueLengthOfLastGroup);
     if (mNumberOfBitsForScaledGroupLengths)
-      boost::hash_combine(seed, *mNumberOfBitsForScaledGroupLengths);
+      Fmi::hash_merge(seed, *mNumberOfBitsForScaledGroupLengths);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

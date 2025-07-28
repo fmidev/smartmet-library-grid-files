@@ -1,6 +1,6 @@
 #include "Attribute.h"
 #include "GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <macgyver/Exception.h>
 
 
@@ -100,8 +100,8 @@ std::size_t Attribute::getHash()
   try
   {
     std::size_t hash = 0;
-    boost::hash_combine(hash,mName);
-    boost::hash_combine(hash,mValue);
+    Fmi::hash_merge(hash,mName);
+    Fmi::hash_merge(hash,mValue);
 
     return hash;
   }

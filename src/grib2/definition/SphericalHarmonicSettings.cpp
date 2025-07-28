@@ -9,7 +9,7 @@
 #include "SphericalHarmonicSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -176,15 +176,15 @@ T::Hash SphericalHarmonicSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mJ)
-      boost::hash_combine(seed, *mJ);
+      Fmi::hash_merge(seed, *mJ);
     if (mK)
-      boost::hash_combine(seed, *mK);
+      Fmi::hash_merge(seed, *mK);
     if (mM)
-      boost::hash_combine(seed, *mM);
+      Fmi::hash_merge(seed, *mM);
     if (mSpectralType)
-      boost::hash_combine(seed, *mSpectralType);
+      Fmi::hash_merge(seed, *mSpectralType);
     if (mSpectralMode)
-      boost::hash_combine(seed, *mSpectralMode);
+      Fmi::hash_merge(seed, *mSpectralMode);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

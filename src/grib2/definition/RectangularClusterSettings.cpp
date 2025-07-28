@@ -9,7 +9,7 @@
 #include "RectangularClusterSettings.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -275,33 +275,33 @@ T::Hash RectangularClusterSettings::countHash() const {
   try {
     std::size_t seed = 0;
     if (mClusterIdentifier)
-      boost::hash_combine(seed, *mClusterIdentifier);
+      Fmi::hash_merge(seed, *mClusterIdentifier);
     if (mNH)
-      boost::hash_combine(seed, *mNH);
+      Fmi::hash_merge(seed, *mNH);
     if (mNL)
-      boost::hash_combine(seed, *mNL);
+      Fmi::hash_merge(seed, *mNL);
     if (mTotalNumberOfClusters)
-      boost::hash_combine(seed, *mTotalNumberOfClusters);
+      Fmi::hash_merge(seed, *mTotalNumberOfClusters);
     if (mClusteringMethod)
-      boost::hash_combine(seed, *mClusteringMethod);
+      Fmi::hash_merge(seed, *mClusteringMethod);
     if (mNorthernLatitudeOfClusterDomain)
-      boost::hash_combine(seed, *mNorthernLatitudeOfClusterDomain);
+      Fmi::hash_merge(seed, *mNorthernLatitudeOfClusterDomain);
     if (mSouthernLatitudeOfClusterDomain)
-      boost::hash_combine(seed, *mSouthernLatitudeOfClusterDomain);
+      Fmi::hash_merge(seed, *mSouthernLatitudeOfClusterDomain);
     if (mEasternLongitudeOfClusterDomain)
-      boost::hash_combine(seed, *mEasternLongitudeOfClusterDomain);
+      Fmi::hash_merge(seed, *mEasternLongitudeOfClusterDomain);
     if (mWesternLongitudeOfClusterDomain)
-      boost::hash_combine(seed, *mWesternLongitudeOfClusterDomain);
+      Fmi::hash_merge(seed, *mWesternLongitudeOfClusterDomain);
     if (mNumberOfForecastsInTheCluster)
-      boost::hash_combine(seed, *mNumberOfForecastsInTheCluster);
+      Fmi::hash_merge(seed, *mNumberOfForecastsInTheCluster);
     if (mScaleFactorOfStandardDeviation)
-      boost::hash_combine(seed, *mScaleFactorOfStandardDeviation);
+      Fmi::hash_merge(seed, *mScaleFactorOfStandardDeviation);
     if (mScaledValueOfStandardDeviation)
-      boost::hash_combine(seed, *mScaledValueOfStandardDeviation);
+      Fmi::hash_merge(seed, *mScaledValueOfStandardDeviation);
     if (mScaleFactorOfDistanceFromEnsembleMean)
-      boost::hash_combine(seed, *mScaleFactorOfDistanceFromEnsembleMean);
+      Fmi::hash_merge(seed, *mScaleFactorOfDistanceFromEnsembleMean);
     if (mScaledValueOfDistanceFromEnsembleMean)
-      boost::hash_combine(seed, *mScaledValueOfDistanceFromEnsembleMean);
+      Fmi::hash_merge(seed, *mScaledValueOfDistanceFromEnsembleMean);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

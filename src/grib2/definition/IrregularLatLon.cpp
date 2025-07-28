@@ -9,7 +9,7 @@
 #include "IrregularLatLon.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -152,9 +152,9 @@ T::Hash IrregularLatLon::countHash() const {
   try {
     std::size_t seed = 0;
     if (mLatitude)
-      boost::hash_combine(seed, *mLatitude);
+      Fmi::hash_merge(seed, *mLatitude);
     if (mLongitude)
-      boost::hash_combine(seed, *mLongitude);
+      Fmi::hash_merge(seed, *mLongitude);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

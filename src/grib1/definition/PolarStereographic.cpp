@@ -9,7 +9,7 @@
 #include "PolarStereographic.h"
 #include "../../common/GeneralDefinitions.h"
 #include "../../common/GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <iostream>
 #include <macgyver/Exception.h>
 
@@ -238,14 +238,14 @@ void PolarStereographic::print(std::ostream &stream, uint level, uint optionFlag
 T::Hash PolarStereographic::countHash() const {
   try {
     std::size_t seed = 0;
-    boost::hash_combine(seed, mNx);
-    boost::hash_combine(seed, mNy);
-    boost::hash_combine(seed, mLatitudeOfFirstGridPoint);
-    boost::hash_combine(seed, mLongitudeOfFirstGridPoint);
-    boost::hash_combine(seed, mOrientationOfTheGrid);
-    boost::hash_combine(seed, mDxInMetres);
-    boost::hash_combine(seed, mDyInMetres);
-    boost::hash_combine(seed, mProjectionCentreFlag);
+    Fmi::hash_merge(seed, mNx);
+    Fmi::hash_merge(seed, mNy);
+    Fmi::hash_merge(seed, mLatitudeOfFirstGridPoint);
+    Fmi::hash_merge(seed, mLongitudeOfFirstGridPoint);
+    Fmi::hash_merge(seed, mOrientationOfTheGrid);
+    Fmi::hash_merge(seed, mDxInMetres);
+    Fmi::hash_merge(seed, mDyInMetres);
+    Fmi::hash_merge(seed, mProjectionCentreFlag);
     return seed;
   } catch (...) {
     throw Fmi::Exception(BCP, "Operation failed", nullptr);

@@ -1,6 +1,6 @@
 #include "AttributeList.h"
 #include "GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 
 
 namespace SmartMet
@@ -426,7 +426,7 @@ std::size_t AttributeList::getHash()
   {
     std::size_t hash = 0;
     for (auto it = mAttributeVector.begin(); it != mAttributeVector.end(); ++it)
-      boost::hash_combine(hash,(*it)->getHash());
+      Fmi::hash_merge(hash,(*it)->getHash());
 
     return hash;
   }

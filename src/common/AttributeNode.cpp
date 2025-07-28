@@ -1,6 +1,6 @@
 #include "AttributeNode.h"
 #include "GeneralFunctions.h"
-#include <boost/functional/hash.hpp>
+#include <macgyver/Hash.h>
 #include <macgyver/Exception.h>
 
 
