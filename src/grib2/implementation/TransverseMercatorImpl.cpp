@@ -92,11 +92,49 @@ void TransverseMercatorImpl::read(MemoryReader& memoryReader)
          \return   The grid coordinates.
 */
 
+
 T::Coordinate_svec TransverseMercatorImpl::getGridOriginalCoordinatesNoCache() const
 {
-  throw Fmi::Exception(BCP, "The method not implemented!");
-}
+  try
+  {
+    T::Coordinate_svec coordinateList(new T::Coordinate_vec());
 
+    uint ni = *mNi;
+    uint nj = *mNj;
+
+    double di = C_DOUBLE(*mDi) / 100.0;
+    double dj = C_DOUBLE(*mDj) / 100.0;
+
+    unsigned char scanningMode = mScanningMode.getScanningMode();
+    if ((scanningMode & 0x80) != 0)
+      di = -di;
+
+    if ((scanningMode & 0x40) == 0)
+      dj = -dj;
+
+    coordinateList->reserve(ni*nj);
+
+    double y = (*mY1) / 100.0;
+    for (uint j=0; j < nj; j++)
+    {
+      double x = (*mX1) / 100.0;
+
+      for (uint i=0; i < ni; i++)
+      {
+        T::Coordinate coord(x,y);
+        coordinateList->emplace_back(coord);
+        x += di;
+      }
+      y += dj;
+    }
+
+    return coordinateList;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -124,6 +162,52 @@ T::Dimensions TransverseMercatorImpl::getGridDimensions() const
   }
 }
 
+
+
+
+bool TransverseMercatorImpl::getGridPointByOriginalCoordinates(double x,double y,double& grid_i,double& grid_j) const
+{
+  try
+  {
+    if (!mNi || !mNj)
+      return false;
+
+    uint ni = (*mNi);
+    uint nj = (*mNj);
+
+    double di = C_DOUBLE(*mDi) / 100.0;
+    double dj = C_DOUBLE(*mDj) / 100.0;
+
+    unsigned char scanningMode = mScanningMode.getScanningMode();
+    if ((scanningMode & 0x80) != 0)
+      di = -di;
+
+    if ((scanningMode & 0x40) == 0)
+      dj = -dj;
+
+    double fX = (*mX1) / 100.0;
+    double fY = (*mY1) / 100.0;
+
+    double xDiff = x - fX;
+    double yDiff = y - fY;
+
+    double i = xDiff / di;
+    double j = yDiff / dj;
+
+    grid_i = i;
+    grid_j = j;
+
+    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(ni) ||  j > C_DOUBLE(nj))
+      return false;
+
+    return true;
+
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
 
 
 
@@ -155,6 +239,112 @@ bool TransverseMercatorImpl::getGridPointByLatLonCoordinates(double lat,double l
 
 
 
+/*! \brief The method returns 'true' if the grid horizontal values are in the reverse order.
+
+        \return   The method returns 'true' if the grid horizontal values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
+bool TransverseMercatorImpl::reverseXDirection() const
+{
+  try
+  {
+    unsigned char scanMode = mScanningMode.getScanningMode();
+
+    if ((scanMode & 0x80) != 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+/*! \brief The method returns the grid geometry string. This string can be used for comparing
+    geometries in different grid files. For example, is is possible that a GRIB 1 message has
+    the same geometry string as a GRIB 2 message, which means that they have same geometries.
+    This comparison is more reliable than the hash comparison.
+
+        \return   The grid geometry string.
+*/
+
+std::string TransverseMercatorImpl::getGridGeometryString() const
+{
+  try
+  {
+    char buf[1000];
+
+    double rx = getLongitude(C_DOUBLE(*mLongitudeOfReferencePoint) / 1000000);
+    double ry = C_DOUBLE(*mLatitudeOfReferencePoint) / 1000000;
+
+    double dx = C_DOUBLE(*mDi) / 100;
+    double dy = C_DOUBLE(*mDj) / 100;
+
+    unsigned char scanningMode = mScanningMode.getScanningMode();
+
+    char sm[100];
+    char *p = sm;
+    if ((scanningMode & 0x80) != 0)
+    {
+      dx = -dx;
+      p += sprintf(p,"-x");
+    }
+    else
+    {
+      p += sprintf(p,"+x");
+    }
+
+    if ((scanningMode & 0x40) == 0)
+    {
+      dy = -dy;
+      p += sprintf(p,"-y");
+    }
+    else
+    {
+      p += sprintf(p,"+y");
+    }
+
+    sprintf(buf,"%d;id;name;%d;%d;firstLon;firstLat;%.6f;%.6f;%s;%.6f;%.6f;description",
+        T::GridProjectionValue::TransverseMercator,*mNi,*mNj,fabs(dx),fabs(dy),sm,rx,ry);
+
+    return std::string(buf);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+/*! \brief The method returns 'true' if the grid vertical values are in the reverse order.
+
+        \return   The method returns 'true' if the grid vertical values are in the reverse
+                  order. Otherwise it returns 'false'
+*/
+
+bool TransverseMercatorImpl::reverseYDirection() const
+{
+  try
+  {
+    unsigned char scanMode = mScanningMode.getScanningMode();
+
+    if ((scanMode & 0x40) == 0)
+      return true;
+
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
 
 
 /*! \brief The method initializes the spatial reference (mSpatialReference) of the grid. */
@@ -167,7 +357,6 @@ void TransverseMercatorImpl::initSpatialReference()
     if (!mSpatialReference)
     {
       mSpatialReference.reset(new T::SpatialRef());
-      addSpatialReference(mSpatialReference);
 
       // ### Check that we have all necessary values needed by this method.
 
@@ -179,7 +368,8 @@ void TransverseMercatorImpl::initSpatialReference()
       if (!dfCenterLong)
         throw Fmi::Exception(BCP, "The 'longitudeOfReferencePoint' value is missing!");
 
-      auto dfScale = mScaleFactorAtReferencePoint;
+      // auto dfScale = mScaleFactorAtReferencePoint;
+
 
       auto dfFalseEasting = mXR;
       if (!dfFalseEasting)
@@ -188,6 +378,7 @@ void TransverseMercatorImpl::initSpatialReference()
       auto dfFalseNorthing = mYR;
       if (!dfFalseNorthing)
         throw Fmi::Exception(BCP, "The 'yR' value is missing!");
+
 
       // ### Set geographic coordinate system.
 
@@ -207,9 +398,10 @@ void TransverseMercatorImpl::initSpatialReference()
 
       double centerLat = C_DOUBLE(*dfCenterLat) / 1000000;
       double centerLon = C_DOUBLE(*dfCenterLong) / 1000000;
-      double falseEasting = C_DOUBLE(*dfFalseEasting) / 1000;
-      double falseNorthing = C_DOUBLE(*dfFalseNorthing) / 1000;
-      double scale = C_DOUBLE(dfScale);
+      double falseEasting = C_DOUBLE(*dfFalseEasting) / 100;
+      double falseNorthing = C_DOUBLE(*dfFalseNorthing) / 100;
+      //double scale = C_DOUBLE(dfScale);
+      double scale = 0.9996;
 
       mSpatialReference->SetTM(centerLat, centerLon, scale, falseEasting,
                               falseNorthing);
@@ -225,6 +417,7 @@ void TransverseMercatorImpl::initSpatialReference()
         exception.addParameter("ErrorCode", std::to_string(errorCode));
         throw exception;
       }
+      addSpatialReference(mSpatialReference);
     }
   }
   catch (...)

@@ -4911,7 +4911,79 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           break;
 
         case T::GridProjectionValue::TransverseMercator:
-          break;
+        {
+          if (c < 12)
+            return nullptr;
+
+          uint geometryId = toInt32(field[1]);
+          char *geometryName = field[2];
+          int ni = toInt32(field[3]);
+          int nj = toInt32(field[4]);
+          double longitude = toDouble(field[5]);
+          double latitude = toDouble(field[6]);
+          int iInc = C_INT(round(toDouble(field[7]) * 100));
+          int jInc = C_INT(round(toDouble(field[8]) * 100));
+
+          char *scanningMode = field[9];
+          int rx = C_INT(round(toDouble(field[10])*1000000));
+          int ry = C_INT(round(toDouble(field[11])*1000000));
+          double earthSemiMajor = toDouble(field[12]);
+          double earthSemiMinor = toDouble(field[13]);
+
+          GRIB2::TransverseMercatorImpl *def2 = new GRIB2::TransverseMercatorImpl();
+          GRIB2::ScanningModeSettings scanningMode2;
+
+          if (strcasecmp(scanningMode,"+x+y") == 0)
+            scanningMode2.setScanningMode(0x40);
+          else
+          if (strcasecmp(scanningMode,"-x+y") == 0)
+            scanningMode2.setScanningMode(0x80+0x40);
+          else
+          if (strcasecmp(scanningMode,"+x-y") == 0)
+            scanningMode2.setScanningMode(0);
+          else
+          if (strcasecmp(scanningMode,"-x-y") == 0)
+            scanningMode2.setScanningMode(0x80);
+
+          def2->setScanningMode(scanningMode2);
+          def2->setScaleFactorAtReferencePoint(0.9996);
+
+          def2->setNi(T::UInt32_opt(ni));
+          def2->setNj(T::UInt32_opt(nj));
+
+          def2->setLatitudeOfReferencePoint(T::Int32_opt(ry));
+
+          if (rx < 0)
+            rx = rx + 360000000;
+
+          def2->setLongitudeOfReferencePoint(T::UInt32_opt(rx));
+
+          def2->setDi(T::UInt32_opt(iInc));
+          def2->setDj(T::UInt32_opt(jInc));
+          def2->setYR(T::Int32_opt(0));
+          def2->setXR(T::Int32_opt(50000000));
+
+          def2->setGridGeometryId(geometryId);
+          mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
+          def2->setEarthSemiMajor(earthSemiMajor);
+          def2->setEarthSemiMinor(earthSemiMinor);
+          def2->initSpatialReference();
+          def2->countHash();
+
+          double xx = 0,yy = 0;
+          def2->getGridOriginalCoordinatesByLatLonCoordinates(latitude,longitude,xx,yy);
+
+          int x1 = C_INT(round(xx))*100;
+          int y1 = C_INT(round(yy))*100;
+
+          def2->setX1(T::Int32_opt(x1));
+          def2->setY1(T::Int32_opt(y1));
+          def2->setX2(T::Int32_opt(x1 + (ni-1)*iInc));
+          def2->setY2(T::Int32_opt(y1 + (nj-1)*jInc));
+
+          return def2;
+        }
+        break;
 
         case T::GridProjectionValue::PolarStereographic:
         {
