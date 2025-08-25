@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 25.7.24
+Version: 25.8.25
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -99,6 +99,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Aug 25 2025 Andris Pavēnis <andris.pavenis@fmi.fi> 25.8.25-1.fmi
+- Added support for Transverse Mercator projektion (grib2 only)
+
 * Thu Jul 24 2025 Andris Pavēnis <andris.pavenis@fmi.fi> 25.7.24-1.fmi
 - Fix coordinate transformation implementation for use in cache
 
