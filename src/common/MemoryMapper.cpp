@@ -474,6 +474,15 @@ void MemoryMapper::map(MapInfo_sptr info)
       throw exception;
     }
 
+    if (madvise(info->memoryPtr, info->allocatedSize, MADV_DONTDUMP) != 0)
+    {
+      munmap(info->memoryPtr, info->allocatedSize);
+      info->memoryPtr = NULL;
+      info->allocatedSize = 0;
+      throw Fmi::Exception(BCP,"Core dump limitation (madvise) failed!");
+    }
+
+
     // printf("Add %ld %s %lld - %lld  %ld\n",info.fileSize,info.filename.c_str(),(long long)info.memoryPtr,(long long)info.memoryPtr+info.allocatedSize,info.allocatedSize);
 
     addMapInfo(info);
