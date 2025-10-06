@@ -94,12 +94,20 @@ void jpeg_save(const char *filename,uint *image,int image_height,int image_width
 // The function reads a PNG image into the memory.
 
 int png_load(const char *_filename,CImage& _image);
+int png_load(const char *_filename,std::vector<uint>& _image,uint& _width,uint& _height);
 
 // The function writes an image data to the PNG file.
 
 int png_save(const char *filename,uint *image,int image_width,int image_height);
+int png_save(const char *filename,uint *image,int image_width,int image_height,int compressionLevel);
+
+int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height);
+int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height,int compressionLevel);
 
 void mergePngFiles(const char *newFile,std::vector<std::string>& fileList);
+
+uint32_t merge_ARGB(uint32_t top, uint32_t bottom);
+void    merge_ARGB_arrays(uint32_t *top, uint32_t *bottom, uint32_t *newArray,uint32_t size);
 
 int webp_anim_save(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,int timeStepMsec);
 

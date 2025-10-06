@@ -769,6 +769,73 @@ int png_load(const char *_filename,CImage& _image)
 
 
 
+int png_load(const char *_filename,std::vector<uint>& _image,uint& _width,uint& _height)
+{
+  try
+  {
+    if (getFileSize(_filename) <= 0)
+    {
+      Fmi::Exception exception(BCP,"File is empty or missing!");
+      exception.addParameter("Filename",_filename);
+      throw exception;
+    }
+
+    double LUT_exponent = 1.0;
+    double CRT_exponent = 2.2;
+    double display_exponent = LUT_exponent * CRT_exponent;
+    int image_channels = 0;
+    uint image_rowbytes = 0;
+
+    FILE *infile = fopen(_filename, "rbe");
+    if (infile == nullptr)
+      return -1;
+
+    if (readpng_init(infile, &_width, &_height) != 0)
+      return -2;
+
+    uchar *pixel = readpng_get_image(display_exponent, &image_channels,&image_rowbytes);
+    if (pixel == nullptr)
+      return -3;
+
+    int size = _width * _height;
+    _image.reserve(size);
+    int p1 = 0;
+    int p2 = 0;
+
+    uint pix = 0;
+    uchar *ptr = (uchar*)&pix;
+
+    for (int t=0; t<size; t++)
+    {
+      ptr[p2+0] = pixel[p1+2];
+      ptr[p2+1] = pixel[p1+1];
+      ptr[p2+2] = pixel[p1+0];
+
+      if (image_channels == 4)
+      {
+        ptr[p2+3] = pixel[p1+3];
+      }
+
+      p1 = p1 + image_channels;
+      p2 = p2 + 4;
+      _image.push_back(pix);
+    }
+
+    free(pixel);
+
+    readpng_cleanup(0);
+    fclose(infile);
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 struct CImageHandle_png
 {
   png_structp   png_ptr;
@@ -790,7 +857,7 @@ void writepng_version_info(void)
 
 
 
-void* png_writeOpen(const char *_filename,int image_width,int image_height)
+void* png_writeOpen(const char *_filename,int image_width,int image_height,int compressionLevel)
 {
   CImageHandle_png *handle = new CImageHandle_png;
 
@@ -816,7 +883,7 @@ void* png_writeOpen(const char *_filename,int image_width,int image_height)
   }
 
   png_init_io(handle->png_ptr,handle->file);
-  png_set_compression_level(handle->png_ptr, 9 /*Z_BEST_COMPRESSION*/);
+  png_set_compression_level(handle->png_ptr, compressionLevel);
   png_set_IHDR(handle->png_ptr,handle->info_ptr,image_width,image_height,8,PNG_COLOR_TYPE_RGBA,PNG_INTERLACE_NONE,PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
   png_write_info(handle->png_ptr, handle->info_ptr);
   png_set_packing(handle->png_ptr);
@@ -862,21 +929,62 @@ static void writepng_error_handler(png_structp png_ptr, png_const_charp msg)
 
 
 
-
-int png_save(const char *filename,uint *image,int image_width,int image_height)
+void* png_writeOpenMem(char *buffer,int bufferSize,int image_width,int image_height,int compressionLevel)
 {
-  void *handle = png_writeOpen(filename,image_width,image_height);
-  if (handle == nullptr)
+  CImageHandle_png *handle = new CImageHandle_png;
+
+  handle->file = fmemopen(buffer,bufferSize,"w");
+  if (handle->file == nullptr)
   {
-    return -1;
+    delete handle;
+    return nullptr;
   }
 
+  handle->png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr,writepng_error_handler, nullptr);
+  if (!handle->png_ptr)
+  {
+    delete handle;
+    return nullptr;   // out of memory
+  }
+
+  handle->info_ptr = png_create_info_struct(handle->png_ptr);
+  if (!handle->info_ptr)
+  {
+    png_destroy_write_struct(&handle->png_ptr, nullptr);
+    return nullptr;   // out of memory
+  }
+
+  png_init_io(handle->png_ptr,handle->file);
+  png_set_compression_level(handle->png_ptr,compressionLevel);
+  png_set_IHDR(handle->png_ptr,handle->info_ptr,image_width,image_height,8,PNG_COLOR_TYPE_RGBA,PNG_INTERLACE_NONE,PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+  png_write_info(handle->png_ptr, handle->info_ptr);
+  png_set_packing(handle->png_ptr);
+
+  return handle;
+}
+
+
+int png_writeCloseMem(void *_handle)
+{
+  CImageHandle_png *handle = (CImageHandle_png*)_handle;
+  png_write_end(handle->png_ptr, nullptr);
+
+  int sz = ftell(handle->file);
+  fclose(handle->file);
+  delete handle;
+  return sz;
+}
+
+
+int png_save(const char *filename,uint *image,int image_width,int image_height,int compressionLevel)
+{
+  CImageHandle_png *handle = (CImageHandle_png*)png_writeOpen(filename,image_width,image_height,compressionLevel);
+  if (handle == nullptr)
+    return -1;
+
   int psize = sizeof(uint);
-
   int len = image_width * psize;
-
   uchar *pixel = new uchar[len];
-
   uchar *ptr = (uchar*)image;
 
   for (int y=0; y<image_height; y++)
@@ -887,12 +995,6 @@ int png_save(const char *filename,uint *image,int image_width,int image_height)
     for (int x=0; x<image_width; x++)
     {
       pixel[p1+3] = ptr[p2+3];
-      /*
-      if (ptr[p2+3] != 0)
-        pixel[p1+3] = 0;
-      else
-        pixel[p1+3] = 0xFF;
-*/
       pixel[p1+2] = ptr[p2+0];
       pixel[p1+1] = ptr[p2+1];
       pixel[p1+0] = ptr[p2+2];
@@ -900,18 +1002,61 @@ int png_save(const char *filename,uint *image,int image_width,int image_height)
       p1 = p1 + 4;
       p2 = p2 + psize;
     }
-    png_writeImageRow(handle,pixel);
-
+    png_write_row(handle->png_ptr,pixel);
     ptr = (uchar*)image + y * image_width * psize;
   }
 
   delete[] pixel;
-
   png_writeClose(handle);
-
   return 0;
 }
 
+
+
+int png_save(const char *filename,uint *image,int image_width,int image_height)
+{
+  return png_save(filename,image,image_width,image_height,9);
+}
+
+
+int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height,int compressionLevel)
+{
+  CImageHandle_png *handle = (CImageHandle_png*)png_writeOpenMem(buffer,bufferSize,image_width,image_height,compressionLevel);
+  if (handle == nullptr)
+    return -1;
+
+  int psize = sizeof(uint);
+  int len = image_width * psize;
+  uchar *pixel = new uchar[len];
+  uchar *ptr = (uchar*)image;
+
+  for (int y=0; y<image_height; y++)
+  {
+    int p1 = 0;
+    int p2 = 0;
+
+    for (int x=0; x<image_width; x++)
+    {
+      pixel[p1+3] = ptr[p2+3];
+      pixel[p1+2] = ptr[p2+0];
+      pixel[p1+1] = ptr[p2+1];
+      pixel[p1+0] = ptr[p2+2];
+
+      p1 = p1 + 4;
+      p2 = p2 + psize;
+    }
+    png_write_row(handle->png_ptr,pixel);
+    ptr = (uchar*)image + y * image_width * psize;
+  }
+  delete[] pixel;
+  return png_writeCloseMem(handle);
+}
+
+
+int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height)
+{
+  return png_saveMem(buffer,bufferSize,image,image_width,image_height,9);
+}
 
 
 
@@ -982,6 +1127,75 @@ int webp_anim_save(const char *filename,uint **image,int image_width,int image_h
 }
 
 
+#include <stdint.h>
+#include <math.h>
+
+inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
+{
+  float At = ((top >> 24) & 0xFF) / 255.0f;
+  float Rt = ((top >> 16) & 0xFF) / 255.0f;
+  float Gt = ((top >> 8)  & 0xFF) / 255.0f;
+  float Bt = (top         & 0xFF) / 255.0f;
+
+  float Ab = ((bottom >> 24) & 0xFF) / 255.0f;
+  float Rb = ((bottom >> 16) & 0xFF) / 255.0f;
+  float Gb = ((bottom >> 8)  & 0xFF) / 255.0f;
+  float Bb = (bottom         & 0xFF) / 255.0f;
+
+  float Aout = At + Ab * (1.0f - At);
+
+  float Rout = (Rt * At + Rb * Ab * (1.0f - At));
+  float Gout = (Gt * At + Gb * Ab * (1.0f - At));
+  float Bout = (Bt * At + Bb * Ab * (1.0f - At));
+
+  if (Aout > 0.0f)
+  {
+    Rout /= Aout;
+    Gout /= Aout;
+    Bout /= Aout;
+  }
+
+  uint8_t A = (uint8_t)roundf(Aout * 255.0f);
+  uint8_t R = (uint8_t)roundf(Rout * 255.0f);
+  uint8_t G = (uint8_t)roundf(Gout * 255.0f);
+  uint8_t B = (uint8_t)roundf(Bout * 255.0f);
+
+  return (A << 24) | (R << 16) | (G << 8) | B;
+}
+
+
+
+void merge_ARGB_arrays(uint32_t *top, uint32_t *bottom, uint32_t *newArray,uint32_t size)
+{
+  try
+  {
+    if (size == 0)
+    {
+      Fmi::Exception exception(BCP,"Array size is zero!");
+      throw exception;
+    }
+
+    for (uint32_t a = 0; a < size; a++)
+    {
+      uint cc = (top[a] & 0xFF000000);
+      if (cc == 0xFF000000)
+      {
+        newArray[a] = top[a];
+      }
+      else
+      {
+        if (cc > 0)
+          newArray[a] = merge_ARGB(top[a], bottom[a]);
+      }
+    }
+  }
+  catch (Fmi::Exception& e)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
 
 void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
 {
@@ -1025,8 +1239,12 @@ void mergePngFiles(const char *newFile,std::vector<std::string>& fileList)
       for (int a=0; a<sz; a++)
       {
         unsigned long col = img.pixel[a];
-        if ((col & 0xFF000000) == 0)
+        uint cc = col & 0xFF000000;
+        if (cc == 0xFF000000)
           image.pixel[a] = col;
+        else
+        if (cc > 0)
+          image.pixel[a] = merge_ARGB(col, image.pixel[a]);
       }
     }
 
