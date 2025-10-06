@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 25.8.25
+Version: 25.10.6
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -21,11 +21,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 25.2.18
+BuildRequires: smartmet-utils-devel >= 25.8.19
 BuildRequires: smartmet-library-newbase-devel >= 25.3.20
-BuildRequires: smartmet-library-spine-devel >= 25.5.13
-BuildRequires: smartmet-library-macgyver >= 25.7.28
-BuildRequires: smartmet-library-trax-devel >= 25.4.11
+BuildRequires: smartmet-library-spine-devel >= 25.9.16
+BuildRequires: smartmet-library-macgyver >= 25.9.30
+BuildRequires: smartmet-library-trax-devel >= 25.9.29
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal310-devel
@@ -51,9 +51,9 @@ Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 25.3.20
-Requires: smartmet-library-macgyver >= 25.7.28
-Requires: smartmet-library-spine >= 25.5.13
-Requires: smartmet-library-trax >= 25.4.11
+Requires: smartmet-library-macgyver >= 25.9.30
+Requires: smartmet-library-spine >= 25.9.16
+Requires: smartmet-library-trax >= 25.9.29
 
 %description
 FMI Grid File handling library
@@ -85,7 +85,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 25.3.20
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 25.5.30
+Requires: smartmet-library-macgyver >= 25.9.30
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -99,12 +99,13 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Oct  6 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> 25.10.6-1.fmi
+- Improved memory mapping calls
+- Improved image support
 * Mon Aug 25 2025 Andris Pavēnis <andris.pavenis@fmi.fi> 25.8.25-1.fmi
 - Added support for Transverse Mercator projektion (grib2 only)
-
 * Thu Jul 24 2025 Andris Pavēnis <andris.pavenis@fmi.fi> 25.7.24-1.fmi
 - Fix coordinate transformation implementation for use in cache
-
 * Fri May 30 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.5.30-1.fmi
 - Minor improvements to str->number error reporting
 * Thu May 22 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.5.22-1.fmi
