@@ -315,7 +315,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -339,7 +339,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -370,7 +370,7 @@ void MessageProcessing::getGridIsobandsByLevelAndGeometry(const GRID::Message& m
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -730,7 +730,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -754,7 +754,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -785,7 +785,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGeometry(const GRID::Message& me
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -1069,7 +1069,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -1093,7 +1093,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -1124,7 +1124,7 @@ void MessageProcessing::getGridIsobandsByTimeLevelAndGeometry(const GRID::Messag
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -1447,7 +1447,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -1471,7 +1471,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -1502,7 +1502,7 @@ void MessageProcessing::getGridIsolinesByTimeLevelAndGeometry(const GRID::Messag
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -1875,7 +1875,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -1899,7 +1899,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -1930,7 +1930,7 @@ void MessageProcessing::getGridIsolinesByLevelAndGeometry(const GRID::Message& m
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -2121,7 +2121,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -2145,7 +2145,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -2176,7 +2176,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGeometry(const GRID::Message& me
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -2761,7 +2761,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -2785,7 +2785,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -2816,7 +2816,7 @@ void MessageProcessing::getGridStreamlinesByTimeLevelAndGeometry(const GRID::Mes
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -3233,7 +3233,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -3257,7 +3257,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -3288,7 +3288,7 @@ void MessageProcessing::getGridStreamlinesByLevelAndGeometry(const GRID::Message
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -3488,7 +3488,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (message1.getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -3512,7 +3512,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (message1.getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -3543,7 +3543,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGeometry(const GRID::Message&
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }

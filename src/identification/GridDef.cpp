@@ -3549,7 +3549,7 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
     {
       int last = latLonCoordinates->size() - 1;
       char tmp[100];
-      sprintf(tmp,"%f,%f,%f,%f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
+      sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",(*latLonCoordinates)[0].x(),(*latLonCoordinates)[0].y(),(*latLonCoordinates)[last].x(),(*latLonCoordinates)[last].y());
       attributeList.setAttribute("grid.llbox",tmp);
       if (targetIsLatlon)
         attributeList.setAttribute("grid.bbox",tmp);

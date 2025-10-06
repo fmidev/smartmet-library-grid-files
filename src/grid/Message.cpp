@@ -597,7 +597,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -621,7 +621,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -652,7 +652,7 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -1017,7 +1017,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -1041,7 +1041,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -1072,7 +1072,7 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -1447,7 +1447,7 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -1471,7 +1471,7 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -1502,7 +1502,7 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
           latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
           char tmp[200];
-          sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
           attributeList.setAttribute("grid.llbox",tmp);
         }
       }
@@ -3198,7 +3198,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
           if (x2 < x1  && x1 >= 180)
             x1 -= 360;
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (getGridProjection() == T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
@@ -3222,7 +3222,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
             y2 = tmp;
           }
 
-          sprintf(tmp,"%f,%f,%f,%f",x1,y1,x2,y2);
+          sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           if (getGridProjection() != T::GridProjectionValue::LatLon)
             attributeList.setAttribute("grid.bbox",tmp);
         }
@@ -3255,7 +3255,7 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
         latLon_bboxByCenter(centerX,centerY,mWidth,mHeight,lon1,lat1,lon2,lat2);
 
         char tmp[200];
-        sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+        sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
         attributeList.setAttribute("grid.llbox",tmp);
       }
     }
@@ -3409,7 +3409,7 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modi
         getGridPointByLatLonCoordinates(lat2,lon2,x2,y2);
 
         char tmp[200];
-        sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+        sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
         attributeList.setAttribute("grid.crop.llbox",tmp);
       }
     }
@@ -3508,10 +3508,10 @@ void Message::getGridValueVectorByCrop(T::AttributeList& attributeList,uint modi
       getGridOriginalCoordinatesByGridPoint(C_UINT(last->mX) % ww,C_UINT(last->mY),xx2,yy2);
 
       char tmp[200];
-      sprintf(tmp,"%f,%f,%f,%f",lon1,lat1,lon2,lat2);
+      sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",lon1,lat1,lon2,lat2);
       attributeList.setAttribute("grid.crop.llbox",tmp);
 
-      sprintf(tmp,"%f,%f,%f,%f",xx1,yy1,xx2,yy2);
+      sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",xx1,yy1,xx2,yy2);
       attributeList.setAttribute("grid.crop.bbox",tmp);
     }
 
