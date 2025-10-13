@@ -372,7 +372,9 @@ void MemoryMapper::setEnabled(bool enabled)
 
       if (mUffd == -1)
       {
-        printf("### WARNING: Cannot initialize UserFault signal based memory mapping!\n  ** File   : %s (%d)\n  ** Method : %s\n",BCP);
+        printf("### WARNING: Cannot initialize UserFault signal based memory mapping!\n"
+          "  ** File   : %s (%d)\n  ** Method : %s\n  ** Error  : %s\n",
+          BCP, strerror(errno));
         return;
       }
 
@@ -382,7 +384,9 @@ void MemoryMapper::setEnabled(bool enabled)
 
       if (ioctl(mUffd, UFFDIO_API, &uffdio_api) == -1)
       {
-        printf("### WARNING: Cannot initialize UserFault signal based memory mapping (ioctl-UFFDIO_API)!\n  ** File   : %s (%d)\n  ** Method : %s\n",BCP);
+        printf("### WARNING: Cannot initialize UserFault signal based memory mapping (ioctl-UFFDIO_API)!\n"
+          "  ** File   : %s (%d)\n  ** Method : %s\n  ** Error  : %s\n",
+          BCP, strerror(errno));
         return;
       }
 
@@ -470,7 +474,7 @@ void MemoryMapper::map(MapInfo_sptr info)
       exception.addParameter("allocatedSize",std::to_string(info->allocatedSize));
       exception.addParameter("filename",info->filename);
       exception.addParameter("fileSize",std::to_string(info->fileSize));
-      exception.addParameter("errno",std::to_string(errno));
+      exception.addParameter("error",std::strerror(errno));
       throw exception;
     }
 
