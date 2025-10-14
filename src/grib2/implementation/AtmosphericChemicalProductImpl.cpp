@@ -1,5 +1,6 @@
 #include "AtmosphericChemicalProductImpl.h"
 #include <macgyver/Exception.h>
+#include "../../common/GeneralFunctions.h"
 
 
 namespace SmartMet
@@ -83,6 +84,129 @@ void AtmosphericChemicalProductImpl::read(MemoryReader& memoryReader)
 
 
 
+const T::UInt8_opt AtmosphericChemicalProductImpl::getGribParameterCategory() const
+{
+  try
+  {
+    return mParameterChemical.getParameterCategory();
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+const T::UInt8_opt AtmosphericChemicalProductImpl::getGribParameterNumber() const
+{
+  try
+  {
+    return mParameterChemical.getParameterNumber();
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+
+T::UInt8_opt AtmosphericChemicalProductImpl::getGeneratingProcessIdentifier() const
+{
+  try
+  {
+    return mParameterChemical.getGeneratingProcessIdentifier();
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
+
+
+T::TimeString AtmosphericChemicalProductImpl::countForecastStartTime(T::TimeString referenceTime) const
+{
+  try
+  {
+    T::TimeStamp refTime = toTimeStamp(referenceTime);
+    T::TimeStamp tt = refTime;
+
+    auto forecastTimeP = mParameterChemical.getForecastTime();
+    if (!forecastTimeP)
+    {
+      throw Fmi::Exception(BCP, "The 'mParameterChemical.forecastTime' value not defined!");
+    }
+
+    auto indicator = mParameterChemical.getIndicatorOfUnitOfTimeRange();
+    if (!indicator)
+      throw Fmi::Exception(BCP, "The 'mParameterChemical.indicatorOfUnitOfTimeRange' value not defined!");
+
+    int ft = *forecastTimeP;
+    int forecastTime = ft;
+    if (ft < 0)
+      forecastTime = -ft;
+
+    Fmi::TimeDuration dt;
+
+    switch (*indicator)
+    {
+      case 0: // m Minute
+        dt = Fmi::TimeDuration(0,forecastTime,0);
+        break;
+
+      case 1: //  h Hour
+        dt = Fmi::TimeDuration(forecastTime,0,0);
+        break;
+
+      case 2: //  D Day
+        dt = Fmi::TimeDuration(24*forecastTime,0,0);
+        break;
+
+      case 3: //  M Month
+      case 4: //  Y Year
+      case 5: //  10Y Decade (10 years)
+      case 6: //  30Y Normal (30 years)
+      case 7: //  C Century (100 years)
+        throw Fmi::Exception(BCP, "Not implemented!");
+
+      case 10: //  3h 3 hours
+        dt = Fmi::TimeDuration(3*forecastTime,0,0);
+        break;
+
+      case 11: //  6h 6 hours
+        dt = Fmi::TimeDuration(6*forecastTime,0,0);
+        break;
+
+      case 12: //  12h 12 hours
+        dt = Fmi::TimeDuration(12*forecastTime,0,0);
+        break;
+
+      case 13: //  s Second
+        dt = Fmi::TimeDuration(0,0,forecastTime);
+        break;
+    }
+
+    if (ft >= 0)
+      tt = refTime + dt;
+    else
+      tt = refTime - dt;
+
+    return toString(tt);
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
+}
+
+
 /*! \brief The method returns the start time of the current forecast data. In some cases
     the reference time is needed for calculating the actual forecast time.
 
@@ -92,7 +216,27 @@ void AtmosphericChemicalProductImpl::read(MemoryReader& memoryReader)
 
 T::TimeString AtmosphericChemicalProductImpl::getForecastTime(T::TimeString referenceTime) const
 {
-  throw Fmi::Exception(BCP, "Not implemented!");
+  try
+  {
+    std::string t1;
+    std::string t2;
+
+    t1 = countForecastStartTime(referenceTime);
+
+    StatisticalSettings *s = getStatistical();
+    if (s != nullptr)
+    {
+      t2 = countForecastEndTime(*s);
+      if (t2 > t1)
+        return t2;
+    }
+
+    return t1;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
 }
 
 
@@ -106,7 +250,17 @@ T::TimeString AtmosphericChemicalProductImpl::getForecastTime(T::TimeString refe
 
 T::ParamLevel AtmosphericChemicalProductImpl::getGribParameterLevel() const
 {
-  throw Fmi::Exception(BCP, "Not implemented!");
+  try
+  {
+    if (mHorizontal.getScaledValueOfFirstFixedSurface())
+      return *mHorizontal.getScaledValueOfFirstFixedSurface(); // * std::pow(10.0,*mHorizontal.getScaleFactorOfFirstFixedSurface());
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
 }
 
 
@@ -120,7 +274,17 @@ T::ParamLevel AtmosphericChemicalProductImpl::getGribParameterLevel() const
 
 T::ParamLevelId AtmosphericChemicalProductImpl::getGribParameterLevelId() const
 {
-  throw Fmi::Exception(BCP, "Not implemented!");
+  try
+  {
+    if (mHorizontal.getTypeOfFirstFixedSurface())
+      return *mHorizontal.getTypeOfFirstFixedSurface();
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP, "Operation failed!", nullptr);
+  }
 }
 
 

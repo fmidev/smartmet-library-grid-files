@@ -270,9 +270,11 @@ void IndicatorSection::read(MemoryReader& memoryReader)
 
     if (missing(mDiscipline))
     {
+      /*
       Fmi::Exception exception(BCP,"Discipline cannot be missing!");
       exception.addParameter("Read position",uint64_toHex(memoryReader.getGlobalReadPosition()-1));
       throw exception;
+      */
     }
 
 
