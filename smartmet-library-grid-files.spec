@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 25.10.6
+Version: 25.10.15
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -99,6 +99,9 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Oct 15 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.10.15-1.fmi
+- Improved memory mapping error messages
+- Added new product template implementations for aerosol data
 * Mon Oct  6 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> 25.10.6-1.fmi
 - Improved memory mapping calls
 - Improved image support
