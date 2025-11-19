@@ -5,6 +5,8 @@
 #include "ShowFunction.h"
 #include <macgyver/Exception.h>
 #include <gis/OGR.h>
+#include <stdint.h>
+#include <math.h>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -47,8 +49,6 @@ int compare_coordinates(const void *p1, const void *p2)
 
 
 
-
-
 int int_min(int _val1,int _val2)
 {
   if (_val1 < _val2)
@@ -59,94 +59,6 @@ int int_min(int _val1,int _val2)
 
 
 
-
-uint rgb(uint red, uint green, uint blue)
-{
-  try
-  {
-    return (red << 16) + (green << 8) + blue;
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-uint rgb(uchar red, uchar green, uchar blue)
-{
-  try
-  {
-    return rgb(C_UINT(red),C_UINT(green),C_UINT(blue));
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-uint cmyk2rgb(double _c, double _m, double _y, double _k)
-{
-  double r = (255.0 - _c*255) * (1.0 - _k);
-  double g = (255.0 - _m*255) * (1.0 - _k);
-  double b = (255.0 - _y*255) * (1.0 - _k);
-
-  return rgb(C_UINT(r),C_UINT(g),C_UINT(b));
-}
-
-
-
-
-uint hsv_to_rgb(unsigned char hue, unsigned char saturation, unsigned char value)
-{
-  try
-  {
-    if (saturation == 0)
-    {
-      /* color is grayscale */
-      return rgb(value,value,value);
-    }
-
-    /* make hue 0-5 */
-    uint region = hue / 43;
-    /* find remainder part, make it from 0-255 */
-    uint fpart = (hue - (region * 43)) * 6;
-
-    /* calculate temp vars, doing integer multiplication */
-    uint p = (value * (255 - saturation)) >> 8;
-    uint q = (value * (255 - ((saturation * fpart) >> 8))) >> 8;
-    uint t = (value * (255 - ((saturation * (255 - fpart)) >> 8))) >> 8;
-
-    uint val = C_UINT(value);
-
-    /* assign temp vars based on color cone region */
-    switch(region)
-    {
-      case 0:
-        return rgb(val,t,p);
-      case 1:
-        return rgb(q,val,p);
-      case 2:
-        return rgb(p,val,t);
-      case 3:
-        return rgb(p,q,val);
-      case 4:
-        return rgb(t,p,val);
-      default:
-        return rgb(val,p,q);
-    }
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
 
 
 
@@ -1064,14 +976,14 @@ int webp_anim_save(const char *filename,uint **image,int image_width,int image_h
 {
   try
   {
+    // Images must be in RGBA format (=> byte order A,B,G,R)
+
     WebPAnimEncoderOptions enc_options;
     WebPAnimEncoderOptionsInit(&enc_options);
     WebPAnimEncoder* enc = WebPAnimEncoderNew(image_width, image_height, &enc_options);
 
     int dt = timeStepMsec;
     int ts = dt;
-    uint sz = image_width * image_height;
-    uint *newImage = new uint[sz];
 
     for (int t=0; t<numberOfImages; t++)
     {
@@ -1083,23 +995,10 @@ int webp_anim_save(const char *filename,uint **image,int image_width,int image_h
       frame.width = image_width;
       frame.height= image_height;
 
-      // Converting RGB colors to WEBP colors
-
-      uint *img = image[t];
-      for (uint i = 0; i < sz; i++)
-      {
-        uint col = img[i];
-        if (col & 0xFF000000)
-          newImage[i] = 0; // Transparent
-        else
-          newImage[i] = 0xFF000000 + ((col & 0xFF0000) >> 16) + (col & 0x00FF00) + ((col & 0xFF) << 16);
-      }
-
-      WebPPictureImportRGBA(&frame,(uint8_t*)newImage,image_width*4);
+      WebPPictureImportRGBA(&frame,(uint8_t*)image[t],image_width*4);
       WebPAnimEncoderAdd(enc,&frame,ts, &config);
       ts = ts + dt;
     }
-    delete [] newImage;
 
     WebPData out;
     out.size = 0;
@@ -1124,43 +1023,6 @@ int webp_anim_save(const char *filename,uint **image,int image_width,int image_h
   {
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
-}
-
-
-#include <stdint.h>
-#include <math.h>
-
-inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
-{
-  float At = ((top >> 24) & 0xFF) / 255.0f;
-  float Rt = ((top >> 16) & 0xFF) / 255.0f;
-  float Gt = ((top >> 8)  & 0xFF) / 255.0f;
-  float Bt = (top         & 0xFF) / 255.0f;
-
-  float Ab = ((bottom >> 24) & 0xFF) / 255.0f;
-  float Rb = ((bottom >> 16) & 0xFF) / 255.0f;
-  float Gb = ((bottom >> 8)  & 0xFF) / 255.0f;
-  float Bb = (bottom         & 0xFF) / 255.0f;
-
-  float Aout = At + Ab * (1.0f - At);
-
-  float Rout = (Rt * At + Rb * Ab * (1.0f - At));
-  float Gout = (Gt * At + Gb * Ab * (1.0f - At));
-  float Bout = (Bt * At + Bb * Ab * (1.0f - At));
-
-  if (Aout > 0.0f)
-  {
-    Rout /= Aout;
-    Gout /= Aout;
-    Bout /= Aout;
-  }
-
-  uint8_t A = (uint8_t)roundf(Aout * 255.0f);
-  uint8_t R = (uint8_t)roundf(Rout * 255.0f);
-  uint8_t G = (uint8_t)roundf(Gout * 255.0f);
-  uint8_t B = (uint8_t)roundf(Bout * 255.0f);
-
-  return (A << 24) | (R << 16) | (G << 8) | B;
 }
 
 

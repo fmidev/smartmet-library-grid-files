@@ -14,12 +14,14 @@ class ImagePaint
   public:
 
             ImagePaint(int _imageWidth,int _imageHeight,uint _backColor,uint _drawColor,uint _fillColor,bool _rotatedX,bool _rotatedY);
+            ImagePaint(uint *_image,int _imageWidth,int _imageHeight,uint _backColor,uint _drawColor,uint _fillColor,bool _rotatedX,bool _rotatedY);
     virtual ~ImagePaint();
 
     void    countPaintWkbArea(uchar *_wkb,uint _size,double& _minX,double& _minY,double& _maxX,double& _maxY);
 
     void    setDrawColor(uint _color);
     void    setFillColor(uint _color);
+    uint    getPixel(int _x,int _y);
     uint*   getImage();
     void    paintPixel(int _x,int _y,uint _color);
     void    paintLine(int _x1,int _y1,int _x2,int _y2,uint _color);
@@ -49,6 +51,7 @@ class ImagePaint
     int     mImageWidth;
     int     mImageHeight;
     uint    *mImage;
+    bool    mReleaseImage;
     bool    mRotatedX;
     bool    mRotatedY;
     uint    mBackColor;

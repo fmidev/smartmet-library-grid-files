@@ -39,6 +39,8 @@ ImagePaint::ImagePaint(int _imageWidth,int _imageHeight,uint _backColor,uint _dr
     mImage = new uint[sz];
     for (int t=0; t<sz; t++)
       mImage[t] = _backColor;
+
+    mReleaseImage = true;
   }
   catch (...)
   {
@@ -49,11 +51,44 @@ ImagePaint::ImagePaint(int _imageWidth,int _imageHeight,uint _backColor,uint _dr
 
 
 
+ImagePaint::ImagePaint(uint *_image,int _imageWidth,int _imageHeight,uint _backColor,uint _drawColor,uint _fillColor,bool _rotatedX,bool _rotatedY)
+{
+  try
+  {
+    if (_imageWidth <= 0)
+      throw Fmi::Exception(BCP,"Illegal image width!");
+
+    if (_imageHeight <= 0)
+      throw Fmi::Exception(BCP,"Illegal image height!");
+
+    mImageWidth = _imageWidth;
+    mImageHeight = _imageHeight;
+    mRotatedX = _rotatedX;
+    mRotatedY = _rotatedY;
+    mBackColor = _backColor;
+    mDrawColor = _drawColor;
+    mFillColor = _fillColor;
+    mMinX = 0;
+    mMinY = 0;
+    mMaxX = 0;
+    mMaxY = 0;
+    mCountingActive = false;
+    mImage = _image;
+    mReleaseImage = false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 ImagePaint::~ImagePaint()
 {
   try
   {
-    if (mImage != nullptr)
+    if (mReleaseImage  &&  mImage != nullptr)
       delete[] mImage;
   }
   catch (...)
@@ -102,6 +137,31 @@ void ImagePaint::setFillColor(uint _color)
   try
   {
     mFillColor = _color;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+uint ImagePaint::getPixel(int _x,int _y)
+{
+  try
+  {
+    if (_x >= 0  &&  _x < mImageWidth  &&  _y >=0  &&  _y < mImageHeight)
+    {
+      if (mRotatedY)
+        _y = mImageHeight-_y-1;
+
+      if (mRotatedX)
+        _x = mImageWidth-_x-1;
+
+     return mImage[_y*mImageWidth + _x];
+    }
+    return 0;
   }
   catch (...)
   {

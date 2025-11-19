@@ -117,6 +117,18 @@ int findPath(
     uint cellCount,
     std::vector<T::Coordinate>& coordinates);
 
+int findPath(
+    std::vector<float>& direction,
+    uint *image,
+    int width,
+    int height,
+    int maxLength,
+    uint backColor,
+    double x1, double y1,
+    int level,
+    uint cellCount,
+    std::vector<T::Coordinate> &coordinates);
+
 void getStreamlineImage(
     float *direction,                           // Grid of directions in degrees (size = width x height). For example "wind direction".
     float *value,                               // Grid of values (size = width x height). For example "wind speed"
@@ -135,6 +147,18 @@ void getStreamlineImage(
     int width,int height,                       // Size of the grids / the image
     int xStep,int yStep,                        // Counting steps
     int minLength,int maxLength);               // Min / max line lengths
+
+void getStreamlineImage(
+    std::vector<float>& direction,
+    float *value,
+    uint *image,
+    int width,
+    int height,
+    int xStep,
+    int yStep,
+    int minLength,
+    int maxLength);
+
 
 
 void getStreamlines(
