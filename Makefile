@@ -43,6 +43,7 @@ vpath %.cpp src \
 			src/grib2/definition \
 			src/grib2/implementation \
 			src/identification \
+			src/map \
 			src/netcdf \
 			src/querydata
 
@@ -56,6 +57,7 @@ vpath %.h 	src \
 			src/grib2/definition \
 			src/grib2/implementation \
 			src/identification \
+			src/map \
 			src/netcdf \
 			src/querydata
 
@@ -125,6 +127,7 @@ install:
 	@mkdir -p $(includedir)/$(INCDIR)/grib2/definition
 	@mkdir -p $(includedir)/$(INCDIR)/grib2/implementation
 	@mkdir -p $(includedir)/$(INCDIR)/identification
+	@mkdir -p $(includedir)/$(INCDIR)/map
 	@mkdir -p $(includedir)/$(INCDIR)/netcdf
 	@mkdir -p $(includedir)/$(INCDIR)/querydata
 	@cp src/common/*.h $(includedir)/$(INCDIR)/common
@@ -136,6 +139,7 @@ install:
 	@cp src/grib2/definition/*.h $(includedir)/$(INCDIR)/grib2/definition
 	@cp src/grib2/implementation/*.h $(includedir)/$(INCDIR)/grib2/implementation
 	@cp src/identification/*.h $(includedir)/$(INCDIR)/identification	
+	@cp src/map/*.h $(includedir)/$(INCDIR)/map	
 	@cp src/netcdf/*.h $(includedir)/$(INCDIR)/netcdf	
 	@cp src/querydata/*.h $(includedir)/$(INCDIR)/querydata	
 	@mkdir -p $(libdir)
@@ -155,6 +159,7 @@ objdir:
 	          obj/grib2/definition \
 	          obj/grib2/implementation \
 	          obj/identification \
+	          obj/map \
 	          obj/netcdf \
 	          obj/querydata
 
