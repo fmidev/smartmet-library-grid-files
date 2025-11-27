@@ -54,6 +54,7 @@ Requires: smartmet-library-newbase >= 25.3.20
 Requires: smartmet-library-macgyver >= 25.9.30
 Requires: smartmet-library-spine >= 25.9.16
 Requires: smartmet-library-trax >= 25.9.29
+Requires: smartmet-topography-data >= 1.0.0
 
 %description
 FMI Grid File handling library
