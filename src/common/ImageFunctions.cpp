@@ -60,6 +60,43 @@ int int_min(int _val1,int _val2)
 
 
 
+uint argb(const char *colStr)
+{
+  if (!colStr)
+    return 0;
+
+  std::vector<uint> v;
+  splitString(colStr,',',v);
+  uint col = 0;
+  if (v.size() == 1)
+  {
+    // RGB or ARGB in hex format
+
+    int len = strlen(colStr);
+    if (len == 6)
+      col = 0xFF000000 + strtoul(colStr,nullptr,16);
+    else
+    if (len == 8)
+      col = strtoul(colStr,nullptr,16);
+  }
+  else
+  if (v.size() == 3)
+  {
+    // RGB (a,r,g,b)
+    col = 0xFF000000 + (v[0] <<  16) + (v[1] <<  8) + v[2];
+  }
+  else
+  if (v.size() == 4)
+  {
+    // ARGB (a,r,g,b)
+    col = (v[0] <<  24) + (v[1] <<  16) + (v[2] <<  8) + v[3];
+  }
+  return col;
+}
+
+
+
+
 
 
 // ********************************************* JPEG *********************************************************
@@ -880,7 +917,7 @@ int png_writeCloseMem(void *_handle)
 {
   CImageHandle_png *handle = (CImageHandle_png*)_handle;
   png_write_end(handle->png_ptr, nullptr);
-
+  png_destroy_write_struct(&handle->png_ptr, &handle->info_ptr);
   int sz = ftell(handle->file);
   fclose(handle->file);
   delete handle;
@@ -897,12 +934,12 @@ int png_save(const char *filename,uint *image,int image_width,int image_height,i
   int psize = sizeof(uint);
   int len = image_width * psize;
   uchar *pixel = new uchar[len];
-  uchar *ptr = (uchar*)image;
 
   for (int y=0; y<image_height; y++)
   {
     int p1 = 0;
     int p2 = 0;
+    uchar* ptr = (uchar*)image + y * image_width * psize;
 
     for (int x=0; x<image_width; x++)
     {
@@ -915,7 +952,6 @@ int png_save(const char *filename,uint *image,int image_width,int image_height,i
       p2 = p2 + psize;
     }
     png_write_row(handle->png_ptr,pixel);
-    ptr = (uchar*)image + y * image_width * psize;
   }
 
   delete[] pixel;
@@ -931,6 +967,7 @@ int png_save(const char *filename,uint *image,int image_width,int image_height)
 }
 
 
+
 int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height,int compressionLevel)
 {
   CImageHandle_png *handle = (CImageHandle_png*)png_writeOpenMem(buffer,bufferSize,image_width,image_height,compressionLevel);
@@ -940,12 +977,12 @@ int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int imag
   int psize = sizeof(uint);
   int len = image_width * psize;
   uchar *pixel = new uchar[len];
-  uchar *ptr = (uchar*)image;
 
   for (int y=0; y<image_height; y++)
   {
     int p1 = 0;
     int p2 = 0;
+    uchar* ptr = (uchar*)image + y * image_width * psize;
 
     for (int x=0; x<image_width; x++)
     {
@@ -958,11 +995,11 @@ int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int imag
       p2 = p2 + psize;
     }
     png_write_row(handle->png_ptr,pixel);
-    ptr = (uchar*)image + y * image_width * psize;
   }
   delete[] pixel;
   return png_writeCloseMem(handle);
 }
+
 
 
 int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int image_height)
@@ -971,7 +1008,7 @@ int png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int imag
 }
 
 
-
+#if 0
 int webp_anim_save(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,int timeStepMsec)
 {
   try
@@ -997,6 +1034,8 @@ int webp_anim_save(const char *filename,uint **image,int image_width,int image_h
 
       WebPPictureImportRGBA(&frame,(uint8_t*)image[t],image_width*4);
       WebPAnimEncoderAdd(enc,&frame,ts, &config);
+      WebPPictureFree(&frame);
+
       ts = ts + dt;
     }
 
@@ -1013,10 +1052,12 @@ int webp_anim_save(const char *filename,uint **image,int image_width,int image_h
       {
         Fmi::Exception exception (BCP,"Cannot create a file!",nullptr);
         exception.addParameter("Filename",filename);
+        throw exception;
       }
       fwrite(out.bytes,1,out.size,file);
       fclose(file);
     }
+    WebPDataClear(&out);
     return 0;
   }
   catch (Fmi::Exception& e)
@@ -1024,6 +1065,297 @@ int webp_anim_save(const char *filename,uint **image,int image_width,int image_h
     throw Fmi::Exception(BCP,"Operation failed!",nullptr);
   }
 }
+#endif
+
+
+int webp_anim_save(const char *filename,
+                        uint **image,
+                        int image_width,
+                        int image_height,
+                        int numberOfImages,
+                        std::vector<int>& timeStepMsec)
+{
+  // Images must be in RGBA format (=> byte order A,B,G,R)
+
+  WebPAnimEncoder* enc = nullptr;
+  WebPData out;
+  out.bytes = nullptr;
+  out.size = 0;
+
+  FILE* file = nullptr;
+
+  try
+  {
+    WebPAnimEncoderOptions enc_options;
+    WebPAnimEncoderOptionsInit(&enc_options);
+    enc = WebPAnimEncoderNew(image_width, image_height, &enc_options);
+    if (!enc)
+      throw Fmi::Exception(BCP, "WebPAnimEncoderNew failed", nullptr);
+
+    int ts = 0;
+
+    for (int t = 0; t < numberOfImages; t++)
+    {
+      WebPConfig config;
+      WebPConfigInit(&config);
+      config.quality = 90;
+      config.lossless = 0;
+
+      WebPPicture frame;
+      if (!WebPPictureInitInternal(&frame, WEBP_ENCODER_ABI_VERSION))
+        throw Fmi::Exception(BCP, "WebPPictureInit failed", nullptr);
+
+      frame.width  = image_width;
+      frame.height = image_height;
+
+      if (!WebPPictureImportRGBA(&frame,reinterpret_cast<uint8_t*>(image[t]),
+                                 image_width * 4))
+      {
+        WebPPictureFree(&frame);
+        throw Fmi::Exception(BCP, "WebPPictureImportRGBA failed", nullptr);
+      }
+
+      if (!WebPAnimEncoderAdd(enc, &frame, ts, &config))
+      {
+        WebPPictureFree(&frame);
+        throw Fmi::Exception(BCP, "WebPAnimEncoderAdd failed", nullptr);
+      }
+
+      WebPPictureFree(&frame);
+      int dt = 50;
+      if (t < (int)timeStepMsec.size())
+        dt = timeStepMsec[t];
+
+      ts += dt;
+    }
+
+    if (!WebPAnimEncoderAssemble(enc, &out))
+      throw Fmi::Exception(BCP, "WebPAnimEncoderAssemble failed", nullptr);
+
+    file = fopen(filename, "wb");
+    if (!file)
+      throw Fmi::Exception(BCP, "Cannot create a file!", nullptr);
+
+    fwrite(out.bytes, 1, out.size, file);
+    fclose(file);
+    file = nullptr;
+
+    WebPDataClear(&out);
+    WebPAnimEncoderDelete(enc);
+    enc = nullptr;
+
+    return 0;
+  }
+  catch (...)
+  {
+    if (file)
+      fclose(file);
+
+    if (out.bytes)
+      WebPDataClear(&out);
+
+    if (enc)
+      WebPAnimEncoderDelete(enc);
+
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+int webp_anim_save_ARGB(const char *filename,
+                        uint **image,
+                        int image_width,
+                        int image_height,
+                        int numberOfImages,
+                        std::vector<int>& timeStepMsec)
+{
+  WebPAnimEncoder* enc = nullptr;
+  WebPData out;
+  out.bytes = nullptr;
+  out.size = 0;
+
+  FILE* file = nullptr;
+
+  uint* newImage[numberOfImages];
+  for (int i = 0; i < numberOfImages; i++)
+    newImage[i] = nullptr;
+
+  try
+  {
+    WebPAnimEncoderOptions enc_options;
+    WebPAnimEncoderOptionsInit(&enc_options);
+    enc = WebPAnimEncoderNew(image_width, image_height, &enc_options);
+    if (!enc)
+      throw Fmi::Exception(BCP, "WebPAnimEncoderNew failed", nullptr);
+
+    int ts = 0;
+    uint sz = image_width * image_height;
+
+    for (int t = 0; t < numberOfImages; t++)
+    {
+      WebPConfig config;
+      WebPConfigInit(&config);
+      config.quality = 90;
+      config.lossless = 0;
+
+      WebPPicture frame;
+      if (!WebPPictureInitInternal(&frame, WEBP_ENCODER_ABI_VERSION))
+        throw Fmi::Exception(BCP, "WebPPictureInit failed", nullptr);
+
+      frame.width  = image_width;
+      frame.height = image_height;
+
+      newImage[t] = new uint[sz];
+
+      for (uint s = 0; s < sz; s++)
+      {
+        uint oldCol = image[t][s];
+        uint newCol = (oldCol & 0xFF000000) + ((oldCol & 0x00FF0000) >> 16) + (oldCol & 0x0000FF00) +((oldCol & 0x000000FF) << 16);
+        newImage[t][s] = newCol;
+      }
+
+      if (!WebPPictureImportRGBA(&frame,
+                                 reinterpret_cast<uint8_t*>(newImage[t]),
+                                 image_width * 4))
+      {
+        WebPPictureFree(&frame);
+        throw Fmi::Exception(BCP, "WebPPictureImportRGBA failed", nullptr);
+      }
+
+      if (!WebPAnimEncoderAdd(enc, &frame, ts, &config))
+      {
+        WebPPictureFree(&frame);
+        throw Fmi::Exception(BCP, "WebPAnimEncoderAdd failed", nullptr);
+      }
+
+      WebPPictureFree(&frame);
+      int dt = 50;
+      if (t < (int)timeStepMsec.size())
+        dt = timeStepMsec[t];
+
+      ts += dt;
+    }
+
+    if (!WebPAnimEncoderAssemble(enc, &out))
+      throw Fmi::Exception(BCP, "WebPAnimEncoderAssemble failed", nullptr);
+
+    file = fopen(filename, "wb");
+    if (!file)
+      throw Fmi::Exception(BCP, "Cannot create a file!", nullptr);
+
+    fwrite(out.bytes, 1, out.size, file);
+    fclose(file);
+    file = nullptr;
+
+    WebPDataClear(&out);
+    WebPAnimEncoderDelete(enc);
+    enc = nullptr;
+
+    for (int t = 0; t < numberOfImages; t++)
+      delete[] newImage[t];
+
+    return 0;
+  }
+  catch (...)
+  {
+    if (file)
+      fclose(file);
+
+    if (out.bytes)
+      WebPDataClear(&out);
+
+    if (enc)
+      WebPAnimEncoderDelete(enc);
+
+    for (int t = 0; t < numberOfImages; t++)
+      delete[] newImage[t];
+
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+#if 0
+int webp_anim_save_ARGB(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,int timeStepMsec)
+{
+  try
+  {
+    // Images must be in ARGB format (=> byte order A,R,G,B)
+
+    WebPAnimEncoderOptions enc_options;
+    WebPAnimEncoderOptionsInit(&enc_options);
+    WebPAnimEncoder* enc = WebPAnimEncoderNew(image_width, image_height, &enc_options);
+
+    int dt = timeStepMsec;
+    int ts = dt;
+
+    uint sz = image_width * image_height;
+    uint *newImage[numberOfImages];
+    for (int t=0; t<numberOfImages; t++)
+      newImage[numberOfImages] = NULL;
+
+    for (int t=0; t<numberOfImages; t++)
+    {
+      WebPConfig config;
+      WebPConfigInit(&config);
+      config.quality = 90;
+      config.lossless = 0; // 1 = lossless
+
+      WebPPicture frame;
+
+      WebPPictureInitInternal(&frame, WEBP_ENCODER_ABI_VERSION);
+      frame.width = image_width;
+      frame.height= image_height;
+
+      newImage[t] = new uint[sz];
+      for (uint s=0; s<sz;s++)
+      {
+        uint oldCol = image[t][s];
+        uint newCol = (oldCol & 0xFF000000) + ((oldCol & 0xFF0000) >> 16) + (oldCol & 0x00FF00) + ((oldCol & 0xFF) << 16);
+        newImage[t][s] = newCol;
+      }
+
+      WebPPictureImportRGBA(&frame,(uint8_t*)newImage[t],image_width*4);
+      WebPAnimEncoderAdd(enc,&frame,ts, &config);
+      WebPPictureFree(&frame);
+
+      ts = ts + dt;
+    }
+
+    WebPData out;
+    out.size = 0;
+    out.bytes = nullptr;
+    WebPAnimEncoderAssemble(enc,&out);
+    WebPAnimEncoderDelete(enc);
+
+    if (out.size &&  out.bytes)
+    {
+      FILE *file = fopen(filename,"w");
+      if (!file)
+      {
+        Fmi::Exception exception (BCP,"Cannot create a file!",nullptr);
+        exception.addParameter("Filename",filename);
+        throw exception;
+      }
+      fwrite(out.bytes,1,out.size,file);
+      fclose(file);
+    }
+
+    for (int t=0; t<numberOfImages; t++)
+    {
+      delete [] newImage[t];
+    }
+    WebPDataClear(&out);
+    return 0;
+  }
+  catch (Fmi::Exception& e)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+#endif
 
 
 
@@ -1205,7 +1537,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
         imagePaint.countPaintWkbArea(out,gg->WkbSize(),minX,minY,maxX,maxY);
         CPLFree(out);
 
-        printf("PAINT %f %f %f %f\n",minX,minY,maxX,maxY);
+        //printf("PAINT %f %f %f %f\n",minX,minY,maxX,maxY);
 
         if (minX < tminX)
           tminX = minX;
@@ -1221,7 +1553,7 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
       }
     }
 
-    printf("*** PAINT %f %f %f %f\n",tminX,tminY,tmaxX,tmaxY);
+    //printf("*** PAINT %f %f %f %f\n",tminX,tminY,tmaxX,tmaxY);
 
     if (autoscale)
     {

@@ -51,6 +51,13 @@ class CImage
       }
     }
 
+    CImage(int _width,int _height,uint *_pixel)
+    {
+      width = _width;
+      height = _height;
+      pixel = _pixel;
+    }
+
     virtual ~CImage()
     {
       if (pixel != nullptr)
@@ -107,7 +114,8 @@ int  png_saveMem(char *buffer,int bufferSize,uint *image,int image_width,int ima
 void mergePngFiles(const char *newFile,std::vector<std::string>& fileList);
 void merge_ARGB_arrays(uint32_t *top, uint32_t *bottom, uint32_t *newArray,uint32_t size);
 
-int  webp_anim_save(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,int timeStepMsec);
+int  webp_anim_save(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,std::vector<int>& timeStepMsec);
+int  webp_anim_save_ARGB(const char *filename,uint **image,int image_width,int image_height,int numberOfImages,std::vector<int>& timeStepMsec);
 
 
 // The function converts RGB color component (Red,Green,Blue) to a single RGB value.
@@ -124,6 +132,12 @@ void saveGeometryAsJpeg(const char *_filename,int width,int height,uint backgrou
 
 inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
 {
+  if (!(top & 0xFF000000))
+    return bottom;
+
+  if (!(bottom & 0xFF000000))
+    return top;
+
   float At = ((top >> 24) & 0xFF) / 255.0f;
   float Rt = ((top >> 16) & 0xFF) / 255.0f;
   float Gt = ((top >> 8)  & 0xFF) / 255.0f;
@@ -134,11 +148,11 @@ inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
   float Gb = ((bottom >> 8)  & 0xFF) / 255.0f;
   float Bb = (bottom         & 0xFF) / 255.0f;
 
-  float Aout = At + Ab * (1.0f - At);
-
-  float Rout = (Rt * At + Rb * Ab * (1.0f - At));
-  float Gout = (Gt * At + Gb * Ab * (1.0f - At));
-  float Bout = (Bt * At + Bb * Ab * (1.0f - At));
+  float k = Ab*(1.0f - At);
+  float Aout = At + k;
+  float Rout = (Rt * At + Rb * k);
+  float Gout = (Gt * At + Gb * k);
+  float Bout = (Bt * At + Bb * k);
 
   if (Aout > 0.0f)
   {
@@ -147,12 +161,20 @@ inline uint32_t merge_ARGB(uint32_t top, uint32_t bottom)
     Bout /= Aout;
   }
 
-  uint8_t A = (uint8_t)roundf(Aout * 255.0f);
-  uint8_t R = (uint8_t)roundf(Rout * 255.0f);
-  uint8_t G = (uint8_t)roundf(Gout * 255.0f);
-  uint8_t B = (uint8_t)roundf(Bout * 255.0f);
+  uint8_t A = (uint8_t)(Aout * 255.0f + 0.49);
+  uint8_t R = (uint8_t)(Rout * 255.0f + 0.49);
+  uint8_t G = (uint8_t)(Gout * 255.0f + 0.49);
+  uint8_t B = (uint8_t)(Bout * 255.0f + 0.49);
 
   return (A << 24) | (R << 16) | (G << 8) | B;
+}
+
+
+uint argb(const char *colStr);
+
+inline uint argb(std::string& colStr)
+{
+  return argb(colStr.c_str());
 }
 
 
