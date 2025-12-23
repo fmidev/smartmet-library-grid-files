@@ -621,7 +621,7 @@ void MessageProcessing::getGridIsobandsByTimeAndGrid(const GRID::Message& messag
     message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
     message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,gridValues);
+    timeInterpolation(values1,values2,gridWidth,gridHeight,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
 
@@ -2458,7 +2458,7 @@ void MessageProcessing::getGridIsolinesByTimeAndGrid(const GRID::Message& messag
     message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
     message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,gridValues);
+    timeInterpolation(values1,values2,gridWidth,gridHeight,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
 
@@ -3852,7 +3852,7 @@ void MessageProcessing::getGridStreamlinesByTimeAndGrid(const GRID::Message& mes
     message1.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values1);
     message2.getGridValueVectorByCoordinateList(T::CoordinateTypeValue::LATLON_COORDINATES,gridLatLonCoordinates,areaInterpolationMethod,modificationOperation,modificationParameters,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,gridValues);
+    timeInterpolation(values1,values2,gridWidth,gridHeight,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,gridValues);
 
     T::Coordinate_vec *coordinatePtr = nullptr;
 
@@ -4736,7 +4736,8 @@ void MessageProcessing::getGridValueVectorByTime(const GRID::Message& message1,c
     message1.getGridValueVectorWithCaching(modificationOperation,modificationParameters,values1);
     message2.getGridValueVectorWithCaching(modificationOperation,modificationParameters,values2);
 
-    timeInterpolation(values1,values2,t1,t2,tt,timeInterpolationMethod,values);
+    auto d = message1.getGridDimensions();
+    timeInterpolation(values1,values2,d.nx(),d.ny(),t1,t2,tt,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -4837,6 +4838,18 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
     if (areaInterpolationMethodStr != nullptr)
       areaInterpolationMethod = toInt16(areaInterpolationMethodStr);
 
+    auto d = message1.getGridDimensions();
+    uint gridWidth = d.nx();
+    uint gridHeight = d.ny();
+
+    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+    if (gridWidthStr != nullptr)
+      gridWidth = atoi(gridWidthStr);
+
+    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+    if (gridHeightStr != nullptr)
+      gridHeight = atoi(gridHeightStr);
+
     attributeList.setAttribute("grid.areaInterpolationMethod",Fmi::to_string(areaInterpolationMethod));
     attributeList.setAttribute("grid.timeInterpolationMethod",Fmi::to_string(timeInterpolationMethod));
     attributeList.setAttribute("grid.coordinateType",Fmi::to_string(coordinateType));
@@ -4850,7 +4863,7 @@ void MessageProcessing::getGridValueVectorByTimeAndCoordinateList(const GRID::Me
     T::ParamValue_vec gridValues2;
     message2.getGridValueVectorByCoordinateList(coordinateType,coordinates,areaInterpolationMethod,modificationOperation,modificationParameters,gridValues2);
 
-    timeInterpolation(gridValues1,gridValues2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,values);
+    timeInterpolation(gridValues1,gridValues2,gridWidth,gridHeight,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -4948,7 +4961,19 @@ void MessageProcessing::getGridValueVectorByTimeAndGeometry(const GRID::Message&
     message1.getGridValueVectorByGeometry(attributeList,modificationOperation,modificationParameters,values1);
     message2.getGridValueVectorByGeometry(attributeList,modificationOperation,modificationParameters,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,values);
+    auto d = message1.getGridDimensions();
+    uint gridWidth = d.nx();
+    uint gridHeight = d.ny();
+
+    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+    if (gridWidthStr != nullptr)
+      gridWidth = atoi(gridWidthStr);
+
+    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+    if (gridHeightStr != nullptr)
+      gridHeight = atoi(gridHeightStr);
+
+    timeInterpolation(values1,values2,gridWidth,gridHeight,message1.getForecastTimeT(),message2.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -4988,7 +5013,8 @@ void MessageProcessing::getGridValueVectorByTimeAndLevel(const GRID::Message& me
     getGridValueVectorByLevel(message1,message2,newLevel,levelInterpolationMethod,modificationOperation,modificationParameters,values1);
     getGridValueVectorByLevel(message3,message4,newLevel,levelInterpolationMethod,modificationOperation,modificationParameters,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
+    auto d = message1.getGridDimensions();
+    timeInterpolation(values1,values2,d.nx(),d.ny(),message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -5033,7 +5059,19 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndGeometry(const GRID::Mes
     getGridValueVectorByLevelAndGeometry(message1,message2,newLevel,attributeList,modificationOperation,modificationParameters,values1);
     getGridValueVectorByLevelAndGeometry(message3,message4,newLevel,attributeList,modificationOperation,modificationParameters,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
+    auto d = message1.getGridDimensions();
+    uint gridWidth = d.nx();
+    uint gridHeight = d.ny();
+
+    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+    if (gridWidthStr != nullptr)
+      gridWidth = atoi(gridWidthStr);
+
+    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+    if (gridHeightStr != nullptr)
+      gridHeight = atoi(gridHeightStr);
+
+    timeInterpolation(values1,values2,gridWidth,gridHeight,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
   catch (...)
   {
@@ -5078,7 +5116,19 @@ void MessageProcessing::getGridValueVectorByTimeLevelAndCoordinateList(const GRI
     getGridValueVectorByLevelAndCoordinateList(message1,message2,newLevel,coordinateType,coordinates,attributeList,modificationOperation,modificationParameters,values1);
     getGridValueVectorByLevelAndCoordinateList(message3,message4,newLevel,coordinateType,coordinates,attributeList,modificationOperation,modificationParameters,values2);
 
-    timeInterpolation(values1,values2,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
+    auto d = message1.getGridDimensions();
+    uint gridWidth = d.nx();
+    uint gridHeight = d.ny();
+
+    const char *gridWidthStr = attributeList.getAttributeValue("grid.width");
+    if (gridWidthStr != nullptr)
+      gridWidth = atoi(gridWidthStr);
+
+    const char *gridHeightStr = attributeList.getAttributeValue("grid.height");
+    if (gridHeightStr != nullptr)
+      gridHeight = atoi(gridHeightStr);
+
+    timeInterpolation(values1,values2,gridWidth,gridHeight,message1.getForecastTimeT(),message3.getForecastTimeT(),newTime,timeInterpolationMethod,values);
   }
   catch (...)
   {

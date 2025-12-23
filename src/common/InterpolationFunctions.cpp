@@ -1,4 +1,5 @@
 #include "InterpolationFunctions.h"
+#include "TransferInterpolation.h"
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
 
@@ -831,7 +832,7 @@ T::ParamValue timeInterpolation(T::ParamValue value1,T::ParamValue& value2,time_
 
 
 
-void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues)
+void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int width,int height,std::string time1,std::string time2,std::string newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues)
 {
   try
   {
@@ -839,7 +840,7 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
     time_t t1 = utcTimeToTimeT(time1);
     time_t t2 = utcTimeToTimeT(time2);
 
-    timeInterpolation(values1,values2,t1,t2,tt,timeInterpolationMethod,newValues);
+    timeInterpolation(values1,values2,width,height,t1,t2,tt,timeInterpolationMethod,newValues);
   }
   catch (...)
   {
@@ -851,29 +852,17 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,std
 
 
 
-void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues)
+void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int width,int height,time_t t1,time_t t2,time_t newTime,short timeInterpolationMethod,T::ParamValue_vec& newValues)
 {
   try
   {
     if (values1.size() != values2.size())
       throw Fmi::Exception(BCP,"Value vectors are not the same size!");
 
-    if (t1 == newTime)
-    {
-      newValues = values1;
-      return;
-    }
-
-    if (t2 == newTime)
-    {
-      newValues = values2;
-      return;
-    }
-
-
     double timeDiff = C_DOUBLE(t2 - t1);
     double diff1 = C_DOUBLE(newTime - t1);
     double diff2 = C_DOUBLE(t2 - newTime);
+    double tp = diff1/timeDiff;
 
     uint sz = values1.size();
     newValues.reserve(sz);
@@ -962,6 +951,10 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,tim
       case T::TimeInterpolationMethod::Next:
         newValues = values2;
         return;
+
+      case 15:
+        newValues = transferInterpolation(values1,values2,width,height,tp);
+        break;
 
       default:
         throw Fmi::Exception(BCP,"Unsupported or unknown intepolation method!");
