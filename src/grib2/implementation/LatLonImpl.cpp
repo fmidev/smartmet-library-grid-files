@@ -627,7 +627,19 @@ bool LatLonImpl::getGridPointByOriginalCoordinates(double x,double y,double& gri
     grid_i = i;
     grid_j = j;
 
-    if (i < 0 ||  j < 0  ||  i >= C_DOUBLE(mNi) ||  j >= C_DOUBLE(mNj))
+    if (i < 0 && (int)(i*100000) == 0)
+      i = 0;
+
+    if (i >= C_DOUBLE(mNi) && (int)((i-mNi)*100000) == 0)
+      i = C_DOUBLE(mNi)-0.000001;
+
+    if (j < 0 && (int)(j*100000) == 0)
+      j = 0;
+
+    if (j >= C_DOUBLE(mNj) && (int)((i-mNj)*100000) == 0)
+      j = C_DOUBLE(mNj)-0.000001;
+
+    if (i < 0 || j < 0 || i >= C_DOUBLE(mNi) ||  j >= C_DOUBLE(mNj))
       return false;
 
     return true;
