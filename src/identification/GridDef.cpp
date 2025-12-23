@@ -1,5 +1,6 @@
 #include "GridDef.h"
 #include <macgyver/Exception.h>
+#include <macgyver/Cache.h>
 #include "../common/GeneralFunctions.h"
 #include "../common/ShowFunction.h"
 #include "../common/CoordinateConversions.h"
@@ -78,6 +79,17 @@ namespace
 // This is a global object that contains global configuration information.
 
 GridDef gridDef;
+
+/*
+struct CoordinateRec
+{
+  public:
+    T::Coordinate_svec latlonCoordinates;
+    T::Coordinate_svec originalCoordinates;
+};
+
+Fmi::Cache::Cache<std::size_t,CoordinateRec> coordinateVecCache(400);
+*/
 
 
 /*! \brief The constructor of the class. */
@@ -3102,20 +3114,18 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
           attributeList.setAttribute("grid.cell.height",Fmi::to_string(fabs(dy/1000)));
         }
 
+        /*
         std::size_t hash = attributeList.getHash();
-
+        auto it = coordinateVecCache.find(hash);
+        if (it)
         {
-          AutoReadLock lock(&mCoordinateCacheModificationLock);
-          auto it = mCoordinateCache.find(hash);
-          if (it != mCoordinateCache.end())
-          {
-            latLonCoordinates = it->second.latlonCoordinates;
-            coordinates = it->second.originalCoordinates;
+          latLonCoordinates = it->latlonCoordinates;
+          coordinates = it->originalCoordinates;
 
-            if (!coordinates &&  latLonCoordinates  &&  targetIsLatlon)
-              coordinates = latLonCoordinates;
-          }
+          if (!coordinates &&  latLonCoordinates  &&  targetIsLatlon)
+            coordinates = latLonCoordinates;
         }
+        */
 
         if (!latLonCoordinates || latLonCoordinates->size() == 0)
         {
@@ -3161,12 +3171,13 @@ void GridDef::getGridOriginalCoordinatesByGeometry(T::AttributeList& attributeLi
             latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
           }
 
+          /*
           CoordinateRec rec;
           rec.latlonCoordinates = latLonCoordinates;
           rec.originalCoordinates = coordinates;
-
-          AutoWriteLock lock(&mCoordinateCacheModificationLock);
-          mCoordinateCache.insert(std::pair<std::size_t,CoordinateRec>(hash,rec));
+          coordinateVecCache.insert(hash,rec);
+          printf("COORDCACHE %ld\n",coordinateVecCache.size());
+          */
         }
       }
     }
@@ -3490,15 +3501,12 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
         }
 
 
+        /*
         std::size_t hash = attributeList.getHash();
-        {
-          AutoReadLock lock(&mCoordinateCacheModificationLock);
-          auto it = mCoordinateCache.find(hash);
-          if (it != mCoordinateCache.end())
-          {
-            latLonCoordinates = it->second.latlonCoordinates;
-          }
-        }
+        auto it = coordinateVecCache.find(hash);
+        if (it)
+          latLonCoordinates = it->latlonCoordinates;
+         */
 
         if (!latLonCoordinates || latLonCoordinates->size() == 0)
         {
@@ -3536,11 +3544,12 @@ void GridDef::getGridLatLonCoordinatesByGeometry(T::AttributeList& attributeList
           {
             latLonCoordinates->emplace_back(getLongitude(lon[t]),lat[t]);
           }
-
+/*
           CoordinateRec rec;
           rec.latlonCoordinates = latLonCoordinates;
-          AutoWriteLock lock(&mCoordinateCacheModificationLock);
-          mCoordinateCache.insert(std::pair<std::size_t,CoordinateRec>(hash,rec));
+          coordinateVecCache.insert(hash,rec);
+          printf("COORDCACHE %ld\n",coordinateVecCache.size());
+*/
         }
       }
     }

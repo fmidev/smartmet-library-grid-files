@@ -37,15 +37,6 @@ namespace SmartMet
 namespace Identification
 {
 
-struct CoordinateRec
-{
-  public:
-    T::Coordinate_svec latlonCoordinates;
-    T::Coordinate_svec originalCoordinates;
-};
-
-typedef std::unordered_map<std::size_t,CoordinateRec> CoordinateCache;
-typedef std::unordered_map<std::size_t,CoordinateRec>::iterator CoordinateCacheIterator;
 typedef std::unordered_map<uint,std::string> GeometryNames;
 typedef std::unordered_map<uint,uint> IdMap;
 typedef std::unordered_map<std::string,uint> StringIdMap;
@@ -312,9 +303,6 @@ class GridDef
     string_vec              mNetCdf_parameterDef_files;
     time_t                  mNetCdf_parameterDef_modificationTime;
     NetCdfParamDef_umap     mNetCdf_parameterDef_records;
-
-    CoordinateCache         mCoordinateCache;
-    ModificationLock        mCoordinateCacheModificationLock;
 
     GeometryNames           mGeometryNames;
 };

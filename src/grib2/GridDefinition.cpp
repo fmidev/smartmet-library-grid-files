@@ -22,11 +22,14 @@ namespace SmartMet
 namespace GRIB2
 {
 
+#define COORDINATE_VEC_CACHE_SIZE 1000
+#define TRANSFORM_VEC_CACHE_SIZE 400
+
 Fmi::Cache::CacheStats latlonCoordinateCache_stats;
-Fmi::Cache::Cache<uint,T::Coordinate_svec> latlonCoordinateCache(10000);
+Fmi::Cache::Cache<uint,T::Coordinate_svec> latlonCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
 
 Fmi::Cache::CacheStats originalCoordinateCache_stats;
-Fmi::Cache::Cache<uint,T::Coordinate_svec> originalCoordinateCache(10000);
+Fmi::Cache::Cache<uint,T::Coordinate_svec> originalCoordinateCache(COORDINATE_VEC_CACHE_SIZE);
 
 
 Fmi::Cache::CacheStats transformCache1_stats;
@@ -36,7 +39,7 @@ Fmi::Cache::CacheStats transformCache2_stats;
 Fmi::Cache::Cache<std::size_t,T::Coordinate> transformCache2(1000000);
 
 Fmi::Cache::CacheStats transformCache3_stats;
-Fmi::Cache::Cache<std::size_t,T::Coordinate_svec> transformCache3(1000);
+Fmi::Cache::Cache<std::size_t,T::Coordinate_svec> transformCache3(TRANSFORM_VEC_CACHE_SIZE);
 
 Fmi::Cache::Cache<std::size_t,T::SpatialRef_sptr> spatialReferenceCache(1000);
 
@@ -66,10 +69,10 @@ GridDefinition::GridDefinition()
     mEarth_semiMinor = 0;
     if (latlonCoordinateCache_stats.maxsize == 0)
     {
-      latlonCoordinateCache_stats.maxsize = 10000;
+      latlonCoordinateCache_stats.maxsize = COORDINATE_VEC_CACHE_SIZE;
       latlonCoordinateCache_stats.starttime = Fmi::SecondClock::universal_time();
 
-      originalCoordinateCache_stats.maxsize = 10000;
+      originalCoordinateCache_stats.maxsize = COORDINATE_VEC_CACHE_SIZE;
       originalCoordinateCache_stats.starttime = Fmi::SecondClock::universal_time();
 
       transformCache1_stats.maxsize = 1000000;
@@ -78,7 +81,7 @@ GridDefinition::GridDefinition()
       transformCache2_stats.maxsize = 1000000;
       transformCache2_stats.starttime = Fmi::SecondClock::universal_time();
 
-      transformCache3_stats.maxsize = 1000;
+      transformCache3_stats.maxsize = TRANSFORM_VEC_CACHE_SIZE;
       transformCache3_stats.starttime = Fmi::SecondClock::universal_time();
     }
   }
@@ -1082,7 +1085,7 @@ T::Coordinate_svec GridDefinition::getGridOriginalCoordinates() const
     {
       originalCoordinateCache.insert(geomId,originalCoordinates);
       originalCoordinateCache_stats.inserts++;
-      originalCoordinateCache_stats.size++;
+      originalCoordinateCache_stats.size = originalCoordinateCache.size();
     }
 
     return originalCoordinates;
@@ -1161,7 +1164,7 @@ T::Coordinate_svec GridDefinition::getGridLatLonCoordinates() const
     {
       latlonCoordinateCache.insert(geomId,latLonCoordinates);
       latlonCoordinateCache_stats.inserts++;
-      latlonCoordinateCache_stats.size++;
+      latlonCoordinateCache_stats.size = latlonCoordinateCache.size();
     }
 
     return latLonCoordinates;
@@ -1485,7 +1488,7 @@ void GridDefinition:: getGridPointListByLatLonCoordinates(T::Coordinate_vec& lat
     {
       transformCache3.insert(hash,vec);
       transformCache3_stats.inserts++;
-      transformCache3_stats.size++;
+      transformCache3_stats.size = transformCache3.size();
     }
     points = *vec;
   }
@@ -1544,7 +1547,7 @@ bool GridDefinition::getGridPointByLatLonCoordinates(double lat,double lon,doubl
       {
         transformCache2.insert(hash,T::Coordinate(grid_i,grid_j));
         transformCache2_stats.inserts++;
-        transformCache2_stats.size++;
+        transformCache2_stats.size = transformCache2.size();
       }
       return true;
     }
@@ -1691,7 +1694,7 @@ bool GridDefinition::getGridOriginalCoordinatesByLatLonCoordinates(double lat,do
     {
       transformCache1.insert(hash,T::Coordinate(x,y));
       transformCache1_stats.inserts++;
-      transformCache1_stats.size++;
+      transformCache1_stats.size = transformCache1.size();
     }
 
     return true;
@@ -1755,7 +1758,7 @@ void GridDefinition::insertTranformIntoCache(std::size_t hash,double lat,double 
     {
       transformCache1.insert(hash,T::Coordinate(x,y));
       transformCache1_stats.inserts++;
-      transformCache1_stats.size++;
+      transformCache1_stats.size = transformCache1.size();
     }
   }
   catch (...)
