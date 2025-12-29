@@ -3,8 +3,8 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 25.11.27
-Release: 2%{?dist}.fmi
+Version: 25.12.29
+Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
 URL: https://github.com/fmidev/smartmet-library-grid-files
@@ -21,10 +21,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 25.8.19
+BuildRequires: smartmet-utils-devel >= 25.11.27
 BuildRequires: smartmet-library-newbase-devel >= 25.3.20
-BuildRequires: smartmet-library-spine-devel >= 25.9.16
-BuildRequires: smartmet-library-macgyver >= 25.9.30
+BuildRequires: smartmet-library-spine-devel >= 25.12.12
+BuildRequires: smartmet-library-macgyver >= 25.12.2
 BuildRequires: smartmet-library-trax-devel >= 25.9.29
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
@@ -51,8 +51,8 @@ Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 25.3.20
-Requires: smartmet-library-macgyver >= 25.9.30
-Requires: smartmet-library-spine >= 25.9.16
+Requires: smartmet-library-macgyver >= 25.12.2
+Requires: smartmet-library-spine >= 25.12.12
 Requires: smartmet-library-trax >= 25.9.29
 Requires: smartmet-topography-data >= 1.0.0
 
@@ -86,7 +86,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 25.3.20
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 25.9.30
+Requires: smartmet-library-macgyver >= 25.12.2
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -100,9 +100,13 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Mon Dec 29 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> 25.12.29-1.fmi
+- New interpolation methods
+- New image processing functions
+- Improved coordinate caching
+- Added error margins to grid border tests to avoid unnecessary errors
 * Thu Nov 27 2025 Andris Pavēnis <andris.pavenis@fmi.fi> 25.11.27-2.fmi
 - Added support of topography information
-
 * Wed Oct 15 2025 Mika Heiskanen <mika.heiskanen@fmi.fi> - 25.10.15-1.fmi
 - Improved memory mapping error messages
 - Added new product template implementations for aerosol data
