@@ -28,7 +28,7 @@ BuildRequires: smartmet-library-macgyver >= 25.12.2
 BuildRequires: smartmet-library-trax-devel >= 25.9.29
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
-BuildRequires: gdal310-devel
+BuildRequires: gdal312-devel
 BuildRequires: geos313-devel
 BuildRequires: libwebp13-devel >= 1.3.2
 BuildRequires: make
@@ -44,7 +44,7 @@ Requires: %{smartmet_boost}-iostreams
 Requires: %{smartmet_boost}-regex
 Requires: %{smartmet_boost}-system
 Requires: %{smartmet_boost}-thread
-Requires: gdal310-libs
+Requires: gdal312-libs
 Requires: geos313
 Requires: libaec
 Requires: libcurl
@@ -90,7 +90,7 @@ Requires: smartmet-library-macgyver >= 25.12.2
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
-Requires: gdal310-devel
+Requires: gdal312-devel
 
 %description -n %{SPECNAME}-devel
 FMI Grid File library development files
