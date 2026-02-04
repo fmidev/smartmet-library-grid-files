@@ -21,14 +21,14 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %endif
 
 BuildRequires: rpm-build
-BuildRequires: smartmet-utils-devel >= 25.11.27
-BuildRequires: smartmet-library-newbase-devel >= 25.3.20
-BuildRequires: smartmet-library-spine-devel >= 25.12.12
-BuildRequires: smartmet-library-macgyver >= 25.12.2
-BuildRequires: smartmet-library-trax-devel >= 25.9.29
+BuildRequires: smartmet-utils-devel >= 26.2.4
+BuildRequires: smartmet-library-newbase-devel >= 26.2.4
+BuildRequires: smartmet-library-spine-devel >= 26.2.4
+BuildRequires: smartmet-library-macgyver >= 26.2.4
+BuildRequires: smartmet-library-trax-devel >= 26.2.4
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
-BuildRequires: gdal310-devel
+BuildRequires: gdal312-devel
 BuildRequires: geos313-devel
 BuildRequires: libwebp13-devel >= 1.3.2
 BuildRequires: make
@@ -44,16 +44,16 @@ Requires: %{smartmet_boost}-iostreams
 Requires: %{smartmet_boost}-regex
 Requires: %{smartmet_boost}-system
 Requires: %{smartmet_boost}-thread
-Requires: gdal310-libs
+Requires: gdal312-libs
 Requires: geos313
 Requires: libaec
 Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
-Requires: smartmet-library-newbase >= 25.3.20
-Requires: smartmet-library-macgyver >= 25.12.2
-Requires: smartmet-library-spine >= 25.12.12
-Requires: smartmet-library-trax >= 25.9.29
+Requires: smartmet-library-newbase >= 26.2.4
+Requires: smartmet-library-macgyver >= 26.2.4
+Requires: smartmet-library-spine >= 26.2.4
+Requires: smartmet-library-trax >= 26.2.4
 Requires: smartmet-topography-data >= 1.0.0
 
 %description
@@ -84,13 +84,13 @@ rm -rf $RPM_BUILD_ROOT
 Summary: FMI Grid File library development files
 Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
-Requires: smartmet-library-newbase-devel >= 25.3.20
+Requires: smartmet-library-newbase-devel >= 26.2.4
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 25.12.2
+Requires: smartmet-library-macgyver >= 26.2.4
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
-Requires: gdal310-devel
+Requires: gdal312-devel
 
 %description -n %{SPECNAME}-devel
 FMI Grid File library development files
