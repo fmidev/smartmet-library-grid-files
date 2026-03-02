@@ -103,9 +103,9 @@ MemoryMapper::MemoryMapper()
 MemoryMapper::~MemoryMapper()
 {
   FUNCTION_TRACE
-  mStopRequired = true;
+  mStopRequired.store(true);
 
-  while (mEnabled  &&  mThreadsRunning)
+  while (mEnabled.load()  &&  mThreadsRunning.load())
     time_usleep(0,100);
 
   if (mMessage)
@@ -224,7 +224,7 @@ int MemoryMapper::getClosestIndex(char *address)
 
 bool MemoryMapper::isEnabled()
 {
-  return mEnabled;
+  return mEnabled.load();
 }
 
 
@@ -232,7 +232,7 @@ bool MemoryMapper::isEnabled()
 
 bool MemoryMapper::isPremapEnabled()
 {
-  if (mEnabled)
+  if (mEnabled.load())
     return mPremapEnabled;
 
   return false;
@@ -398,7 +398,7 @@ void MemoryMapper::setEnabled(bool enabled)
         mPageCacheIndex[t] = -1;
       }
 
-      mEnabled = enabled;
+      mEnabled.store(enabled);
       startFaultHandler();
     }
   }
@@ -420,7 +420,7 @@ void MemoryMapper::map(MapInfo_sptr info)
 
     info->mappingTime = time(0);
 
-    if (!mEnabled)
+    if (!mEnabled.load())
     {
       // We should use the old memory mapper
 
@@ -516,7 +516,7 @@ void MemoryMapper::unmap(MapInfo_sptr info)
   FUNCTION_TRACE
   try
   {
-    if (!mEnabled)
+    if (!mEnabled.load())
     {
       if (info->mappedFile)
         info->mappedFile->close();
@@ -529,7 +529,7 @@ void MemoryMapper::unmap(MapInfo_sptr info)
       {
         AutoWriteLock lock(&mModificationLock);
         int index = getClosestIndex(info->memoryPtr);
-        if (mMemoryMappings[index]->memoryPtr == info->memoryPtr)
+        if (index >= 0 && (std::size_t)index < mMemoryMappings.size() && mMemoryMappings[index]->memoryPtr == info->memoryPtr)
         {
           //printf("DELETE MEMORY MAP %s\n",info.filename.c_str());
           //delete mMemoryMappings[index];
@@ -564,6 +564,9 @@ MapInfo_sptr MemoryMapper::getMapInfo(char *address)
     AutoReadLock lock(&mModificationLock);
 
     int index = getClosestIndex(address);
+    if (index < 0 || (std::size_t)index >= mMemoryMappings.size())
+      return nullptr;
+
     MapInfo_sptr info = mMemoryMappings[index];
     if (!info || info->memoryPtr != address)
       return nullptr;
@@ -587,7 +590,7 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
   FUNCTION_TRACE
   try
   {
-    if (!mEnabled)
+    if (!mEnabled.load())
       return;
 
     {
@@ -696,7 +699,7 @@ void MemoryMapper::startFaultHandler()
 {
   try
   {
-    if (!mEnabled)
+    if (!mEnabled.load())
       throw Fmi::Exception(BCP,"MemoryMapper is disabled!");
 
     pthread_create(&mFaultHandlerThread, nullptr, fault_handler_thread,this);
@@ -718,10 +721,10 @@ void MemoryMapper::stopFaultHandler()
 {
   try
   {
-    if (!mEnabled)
+    if (!mEnabled.load())
       return;
 
-    mStopRequired = true;
+    mStopRequired.store(true);
 
     while (mThreadsRunning)
       time_usleep(0,100);
@@ -741,7 +744,7 @@ long long MemoryMapper::getFileSize(uint serverType,uint protocol,const char *se
   FUNCTION_TRACE
   try
   {
-    if (!mEnabled)
+    if (!mEnabled.load())
     {
       // We should use the old memory mapper
 
@@ -829,13 +832,12 @@ void MemoryMapper::faultProcessingThread()
 {
   try
   {
-    if (!mEnabled)
+    if (!mEnabled.load())
       throw Fmi::Exception(BCP,"MemoryMapper is disabled!");
 
     uint errorCounter = 0;
 
-    uint threadId = mThreadsRunning;
-    mThreadsRunning++;
+    uint threadId = mThreadsRunning.fetch_add(1);
     struct uffdio_copy uffdio_copy;
 
     /* Create a page that will be copied into the faulting region. */
@@ -849,7 +851,7 @@ void MemoryMapper::faultProcessingThread()
     uint sleepCount = 0;
     long long currentCounter = -1;
     int ownerId = threadId + 100;  // UFFD_EVENT_PAGEFAULT = 0x12
-    while (!mStopRequired)
+    while (!mStopRequired.load())
     {
       try
       {
@@ -858,14 +860,18 @@ void MemoryMapper::faultProcessingThread()
         {
           AutoThreadLock tlock(&mThreadLock);
           len = mMessageReadCount.load() - mMessageProcessCount.load();
-          if (len > 0  &&  currentCounter < mMessageProcessCount)
+          if (len > 0  &&  currentCounter < mMessageProcessCount.load())
           {
-            idx = mMessageProcessCount % mMaxMessages;
-            currentCounter = mMessageProcessCount;
-            if (idx >= 0  &&  mMessage[idx].event == UFFD_EVENT_PAGEFAULT)
-              mMessage[idx].event = ownerId;  // This indicates that the current thread has taken
-                                              // this message for processing.
-            mMessageProcessCount++;
+            long long processCount = mMessageProcessCount.load();
+            int candidateIdx = processCount % mMaxMessages;
+            currentCounter = processCount;
+            if (candidateIdx >= 0  &&  mMessage[candidateIdx].event == UFFD_EVENT_PAGEFAULT)
+            {
+              mMessage[candidateIdx].event = ownerId;  // This indicates that the current thread has taken
+                                                       // this message for processing.
+              idx = candidateIdx;
+              mMessageProcessCount++;
+            }
           }
         }
 
@@ -880,11 +886,13 @@ void MemoryMapper::faultProcessingThread()
           auto address = (char*)mMessage[idx].arg.pagefault.address;
 
           int index = getClosestIndex(address);
-
-          MapInfo_sptr info = mMemoryMappings[index];
+          MapInfo_sptr info;
 
           //printf("SEARCH %d  %lld  %lld - %lld\n",index,(long long)address,(long long)info->memoryPtr,(long long)(info->memoryPtr + info->allocatedSize));
-          if (mMemoryMappings.size() > (std::size_t)index  &&  info->memoryPtr <= address &&
+          if (index >= 0  &&  mMemoryMappings.size() > (std::size_t)index)
+            info = mMemoryMappings[index];
+
+          if (info && info->memoryPtr <= address &&
               (info->memoryPtr + info->allocatedSize) > address)
           {
             //printf("FOUND %lld => %lld (%s)\n",(long long)address,(long long)info->memoryPtr,info->filename.c_str());
@@ -921,7 +929,8 @@ void MemoryMapper::faultProcessingThread()
           {
             //printf("***** MAPPING NOT FOUND\n");
             memset(page,0,mPageSize);
-            info->mappingError = true;
+            if (info)
+              info->mappingError = true;
             errorCounter++;
             if (errorCounter == 1)
               printf("#### WARNING: Memory mapping not found %lld\n",(long long)mMessageProcessCount);
@@ -965,7 +974,7 @@ void MemoryMapper::faultProcessingThread()
         exception.printError();
       }
     }
-    mThreadsRunning--;
+    mThreadsRunning.fetch_sub(1);
     //std::cout << "THREADS RUNNING " << mThreadsRunning << "\n";
   }
   catch (...)
@@ -981,10 +990,10 @@ void MemoryMapper::faultHandlerThread()
 {
   try
   {
-    if (!mEnabled)
+    if (!mEnabled.load())
       throw Fmi::Exception(BCP,"MemoryMapper is disabled!");
 
-    mThreadsRunning++;
+    mThreadsRunning.fetch_add(1);
 
     /* Create a page that will be copied into the faulting region. */
 
@@ -994,7 +1003,7 @@ void MemoryMapper::faultHandlerThread()
 
     /* Loop, handling incoming events on the userfaultfd file descriptor. */
 
-    while (!mStopRequired)
+    while (!mStopRequired.load())
     {
       try
       {
@@ -1064,7 +1073,7 @@ void MemoryMapper::faultHandlerThread()
         // exception.printError();
       }
     }
-    mThreadsRunning--;
+    mThreadsRunning.fetch_sub(1);
     //std::cout << "THREADS RUNNING " << mThreadsRunning << "\n";
   }
   catch (...)
@@ -1083,8 +1092,8 @@ void MemoryMapper::getStateAttributes(std::shared_ptr<T::AttributeNode> parent)
   {
     const char *bs[] = {"False","True"};
 
-    parent->addAttribute("Enabled",bs[(int)mEnabled]);
-    if (mEnabled)
+    parent->addAttribute("Enabled",bs[(int)mEnabled.load()]);
+    if (mEnabled.load())
     {
       parent->addAttribute("Premap",bs[mPremapEnabled]);
       parent->addAttribute("Max threads",mMaxProcessingThreads);

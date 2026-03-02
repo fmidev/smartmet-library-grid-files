@@ -70,13 +70,13 @@ class MemoryMapper
     std::atomic<uint>         mThreadsRunning;
     pthread_t                 mFaultHandlerThread;
     pthread_t*                mFaultProcessingThread;
-    bool                      mStopRequired;
+    std::atomic<bool>         mStopRequired;
     ThreadLock                mThreadLock;
     DataFetcher_sptr_map      mDataFetchers;
     uint                      mMaxProcessingThreads;
     uint                      mMaxMessages;
     std::size_t               mFileHandleLimit;
-    bool                      mEnabled;
+    std::atomic<bool>         mEnabled;
     ModificationLock          mPageCacheModificationLock;
     std::map<long long,uint>  mPageCacheIndexList;
     char**                    mPageCache;
