@@ -76,6 +76,8 @@ MemoryMapper::MemoryMapper()
     mMessage = nullptr;
     mFileHandleLimit = 10000;
     mFaultProcessingThread = nullptr;
+    mFaultHandlerThreadCreated = false;
+    mFaultProcessingThreadCreated = nullptr;
 
     mThreadsRunning = 0;
     mStopRequired = false;
@@ -103,16 +105,35 @@ MemoryMapper::MemoryMapper()
 MemoryMapper::~MemoryMapper()
 {
   FUNCTION_TRACE
-  mStopRequired.store(true);
-
-  while (mEnabled.load()  &&  mThreadsRunning.load())
-    time_usleep(0,100);
+  if (mEnabled.load())
+    stopFaultHandler();
+  else
+    mStopRequired.store(true);
 
   if (mMessage)
     delete [] mMessage;
 
   if (mFaultProcessingThread)
     delete [] mFaultProcessingThread;
+
+  if (mFaultProcessingThreadCreated)
+    delete [] mFaultProcessingThreadCreated;
+
+  if (mPageCache)
+  {
+    for (std::size_t t=0; t<mPageCacheSize; t++)
+    {
+      if (mPageCache[t])
+        munmap(mPageCache[t],mPageSize);
+    }
+    delete [] mPageCache;
+  }
+
+  if (mPageCacheIndex)
+    delete [] mPageCacheIndex;
+
+  if (mUffd >= 0)
+    close(mUffd);
 
   curl_global_cleanup();
 }
@@ -352,6 +373,9 @@ void MemoryMapper::setEnabled(bool enabled)
         mMessage[t].event = 0;
 
       mFaultProcessingThread = new pthread_t[mMaxProcessingThreads];
+      mFaultProcessingThreadCreated = new bool[mMaxProcessingThreads];
+      for (uint t=0; t<mMaxProcessingThreads; t++)
+        mFaultProcessingThreadCreated[t] = false;
 
       DataFetcher_filesys *fs = new DataFetcher_filesys();
       fs->setFileHandleLimit(mFileHandleLimit);
@@ -394,7 +418,38 @@ void MemoryMapper::setEnabled(bool enabled)
       mPageCache = new char*[mPageCacheSize];
       for (uint t=0; t<mPageCacheSize; t++)
       {
-        mPageCache[t] = new char[mPageSize];
+        mPageCache[t] = (char*)mmap(NULL, mPageSize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        if (mPageCache[t] == MAP_FAILED)
+        {
+          mPageCache[t] = nullptr;
+          for (uint i=0; i<t; i++)
+          {
+            if (mPageCache[i])
+              munmap(mPageCache[i],mPageSize);
+          }
+          delete [] mPageCache;
+          mPageCache = nullptr;
+          delete [] mPageCacheIndex;
+          mPageCacheIndex = nullptr;
+          throw Fmi::Exception(BCP,"Memory map creation for page cache failed!");
+        }
+
+        if (madvise(mPageCache[t], mPageSize, MADV_DONTDUMP) != 0)
+        {
+          munmap(mPageCache[t],mPageSize);
+          mPageCache[t] = nullptr;
+          for (uint i=0; i<t; i++)
+          {
+            if (mPageCache[i])
+              munmap(mPageCache[i],mPageSize);
+          }
+          delete [] mPageCache;
+          mPageCache = nullptr;
+          delete [] mPageCacheIndex;
+          mPageCacheIndex = nullptr;
+          throw Fmi::Exception(BCP,"Core dump limitation (madvise) for page cache failed!");
+        }
+
         mPageCacheIndex[t] = -1;
       }
 
@@ -625,28 +680,28 @@ void MemoryMapper::premap(char *startAddress,char *endAddress)
     long long pages = endPageIndex - pageIndex + 1;
 
     long long dataSize = pages*mPageSize;
-    char *data = new char[dataSize];
+    std::vector<char> data(dataSize);
     uint p = 0;
 
-    int n = getData(info,fp,dataSize,data);
+    int n = getData(info,fp,dataSize,data.data());
 
     {
       AutoWriteLock writeLock(&mPageCacheModificationLock);
       for (uint t=0; t<pages; t++)
       {
         uint idx = mPageCacheCounter % mPageCacheSize;
-        //printf("PREMAP %lld : %lld\n",pageIndex,mPageCacheCounter);
-        memcpy(mPageCache[idx],data+p,mPageSize);
-        mPageCacheIndex[idx] = pageIndex;
+        long long oldPageIndex = mPageCacheIndex[idx];
+        if (oldPageIndex >= 0)
+          mPageCacheIndexList.erase(oldPageIndex);
 
-        mPageCacheIndexList.insert(std::pair<long long,uint>(pageIndex,idx));
+        //printf("PREMAP %lld : %lld\n",pageIndex,mPageCacheCounter);
+        memcpy(mPageCache[idx],data.data()+p,mPageSize);
+        mPageCacheIndex[idx] = pageIndex;
+        mPageCacheIndexList[pageIndex] = idx;
         p = p + mPageSize;
         mPageCacheCounter++;
         pageIndex++;
       }
-
-      if (data)
-        delete [] data;
     }
 
 
@@ -702,10 +757,16 @@ void MemoryMapper::startFaultHandler()
     if (!mEnabled.load())
       throw Fmi::Exception(BCP,"MemoryMapper is disabled!");
 
-    pthread_create(&mFaultHandlerThread, nullptr, fault_handler_thread,this);
+    mStopRequired.store(false);
+
+    if (pthread_create(&mFaultHandlerThread, nullptr, fault_handler_thread,this) == 0)
+      mFaultHandlerThreadCreated = true;
 
     for (uint t=0; t<mMaxProcessingThreads; t++)
-      pthread_create(&mFaultProcessingThread[t], nullptr, fault_processing_thread,this);
+    {
+      if (pthread_create(&mFaultProcessingThread[t], nullptr, fault_processing_thread,this) == 0)
+        mFaultProcessingThreadCreated[t] = true;
+    }
   }
   catch (...)
   {
@@ -726,8 +787,25 @@ void MemoryMapper::stopFaultHandler()
 
     mStopRequired.store(true);
 
-    while (mThreadsRunning)
-      time_usleep(0,100);
+    if (mFaultHandlerThreadCreated)
+    {
+      pthread_join(mFaultHandlerThread,nullptr);
+      mFaultHandlerThreadCreated = false;
+    }
+
+    if (mFaultProcessingThreadCreated)
+    {
+      for (uint t=0; t<mMaxProcessingThreads; t++)
+      {
+        if (mFaultProcessingThreadCreated[t])
+        {
+          pthread_join(mFaultProcessingThread[t],nullptr);
+          mFaultProcessingThreadCreated[t] = false;
+        }
+      }
+    }
+
+    mEnabled.store(false);
   }
   catch (...)
   {
@@ -792,6 +870,7 @@ int MemoryMapper::getData(MapInfo_sptr info,std::size_t filePosition,int dataSiz
           //printf("-- Load from precache %lld %u\n",pageIndex,idx);
 
           mPageCacheIndex[idx] = -1;
+          mPageCacheIndexList.erase(it);
           mPageCacheFreedCounter++;
           return mPageSize;
         }
@@ -974,6 +1053,7 @@ void MemoryMapper::faultProcessingThread()
         exception.printError();
       }
     }
+    munmap(page,mPageSize);
     mThreadsRunning.fetch_sub(1);
     //std::cout << "THREADS RUNNING " << mThreadsRunning << "\n";
   }
@@ -1073,6 +1153,7 @@ void MemoryMapper::faultHandlerThread()
         // exception.printError();
       }
     }
+    munmap(page,mPageSize);
     mThreadsRunning.fetch_sub(1);
     //std::cout << "THREADS RUNNING " << mThreadsRunning << "\n";
   }

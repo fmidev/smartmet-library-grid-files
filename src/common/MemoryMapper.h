@@ -69,7 +69,9 @@ class MemoryMapper
     std::atomic<long long>    mMessageProcessCount;
     std::atomic<uint>         mThreadsRunning;
     pthread_t                 mFaultHandlerThread;
+    bool                      mFaultHandlerThreadCreated;
     pthread_t*                mFaultProcessingThread;
+    bool*                     mFaultProcessingThreadCreated;
     std::atomic<bool>         mStopRequired;
     ThreadLock                mThreadLock;
     DataFetcher_sptr_map      mDataFetchers;
