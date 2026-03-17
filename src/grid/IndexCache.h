@@ -20,19 +20,19 @@ class IndexCache
               IndexCache();
     virtual   ~IndexCache();
 
-    void      addIndexVector(long long hash,T::IndexVector& indexVector);
-    bool      getIndexVector(long long hash,T::IndexVector& indexVector);
-    bool      findIndexVector(long long hash);
-    bool      getIndex(long long hash,uint pos,int& index);
-    int       getClosestIndexByHash(long long hash);
-    int       getClosestIndexByHashNoLock(long long hash);
+    void      addIndexVector(Int64 hash,T::IndexVector& indexVector);
+    bool      getIndexVector(Int64 hash,T::IndexVector& indexVector);
+    bool      findIndexVector(Int64 hash);
+    bool      getIndex(Int64 hash,uint pos,int& index);
+    int       getClosestIndexByHash(Int64 hash);
+    int       getClosestIndexByHashNoLock(Int64 hash);
 
   protected:
 
     void      removeOldest();
 
     std::vector<T::IndexVector> mVector;
-    std::vector<long long>      mHashVector;
+    std::vector<Int64>      mHashVector;
     std::vector<time_t>         mTimeVector;
     ModificationLock            mModificationLock;
     uint                        mMaxSize;

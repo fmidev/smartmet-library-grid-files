@@ -437,7 +437,7 @@ GridPointValue* GridPointValueList::getGridPointValueByIndexNoCheck(uint index)
 
 
 
-GridPointValue* GridPointValueList::getGridPointValueByFileMessageAndPoint(uint fileId,uint messageIndex,double x,double y)
+GridPointValue* GridPointValueList::getGridPointValueByFileMessageAndPoint(T::FileId fileId,T::MessageIndex messageIndex,double x,double y)
 {
   try
   {

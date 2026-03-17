@@ -10,22 +10,22 @@ namespace SmartMet
 class MemoryWriter : public DataWriter
 {
   public:
-                MemoryWriter(uchar *_data,ulonglong _dataSize,bool _dataRelease);
+                MemoryWriter(uchar *_data,UInt64 _dataSize,bool _dataRelease);
     virtual     ~MemoryWriter();
 
     uchar*      getDataPtr();
-    ulonglong   getWritePosition();
-    ulonglong   getMaxWritePosition();
-    void        setWritePosition(ulonglong _pos);
-    void        write_data(void *_data,ulonglong _size);
+    UInt64      getWritePosition();
+    UInt64      getMaxWritePosition();
+    void        setWritePosition(UInt64 _pos);
+    void        write_data(void *_data,UInt64 _size);
 
   protected:
 
     uchar       *mData;
-    ulonglong   mDataSize;
+    UInt64      mDataSize;
     bool        mDataRelease;
-    ulonglong   mWritePosition;
-    ulonglong   mMaxWritePosition;
+    UInt64      mWritePosition;
+    UInt64      mMaxWritePosition;
 };
 
 

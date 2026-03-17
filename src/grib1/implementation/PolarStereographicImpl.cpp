@@ -487,14 +487,14 @@ void PolarStereographicImpl::getProperties(T::PropertySettingVec& properties)
 
 
 
-/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool PolarStereographicImpl::getProperty(uint propertyId,long long& value)
+bool PolarStereographicImpl::getProperty(uint propertyId,Int64& value)
 {
   try
   {
@@ -546,14 +546,14 @@ bool PolarStereographicImpl::getProperty(uint propertyId,long long& value)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool PolarStereographicImpl::setProperty(uint propertyId,long long value)
+bool PolarStereographicImpl::setProperty(uint propertyId,Int64 value)
 {
   try
   {

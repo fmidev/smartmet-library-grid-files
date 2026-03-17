@@ -65,9 +65,9 @@ class DataSection : public GRID::MessageSection
     void            setData(T::Data_ptr data,std::size_t size);
     void            setMessagePtr(Message *message);
 
-    bool            getProperty(uint propertyId,long long& value);
+    bool            getProperty(uint propertyId,Int64& value);
     void            getProperties(T::PropertySettingVec& properties);
-    bool            setProperty(uint propertyId,long long value);
+    bool            setProperty(uint propertyId,Int64 value);
 
     void            read(MemoryReader& memoryReader);
     void            write(DataWriter& dataWriter);

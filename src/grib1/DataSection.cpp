@@ -129,14 +129,14 @@ void DataSection::setMessagePtr(Message *message)
 
 
 
-/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool DataSection::getProperty(uint propertyId,long long& value)
+bool DataSection::getProperty(uint propertyId,Int64& value)
 {
   try
   {
@@ -198,14 +198,14 @@ void DataSection::getProperties(T::PropertySettingVec& properties)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool DataSection::setProperty(uint propertyId,long long value)
+bool DataSection::setProperty(uint propertyId,Int64 value)
 {
   try
   {
@@ -537,7 +537,7 @@ void DataSection::write(DataWriter& dataWriter)
 
     // Updata the section length
 
-    ulonglong fPos = dataWriter.getWritePosition();
+    UInt64 fPos = dataWriter.getWritePosition();
     mSectionLength = fPos - mFilePosition;
     dataWriter.setWritePosition(mFilePosition);
     dataWriter.write_uint24(mSectionLength);

@@ -72,8 +72,8 @@ class ProductSection : public GRID::MessageSection
     T::ParamLevelId       getGribParameterLevelId() const;
     const T::UInt8_opt    getGribParameterNumber() const;
     T::UInt8_opt          getGeneratingProcessIdentifier() const;
-    short                 getForecastType() const;
-    short                 getForecastNumber() const;
+    T::ForecastType       getForecastType() const;
+    T::ForecastNumber     getForecastNumber() const;
     std::uint8_t          getNumberOfSection() const;
     T::UInt16_opt         getNV() const;
     ProductDefinition*    getProductDefinition() const;
@@ -84,9 +84,9 @@ class ProductSection : public GRID::MessageSection
     void                  setProductDefinition(std::uint16_t productTemplateId);
     void                  setMessagePtr(Message *message);
 
-    bool                  getProperty(uint propertyId,long long& value);
+    bool                  getProperty(uint propertyId,Int64& value);
     void                  getProperties(T::PropertySettingVec& properties);
-    bool                  setProperty(uint propertyId,long long value);
+    bool                  setProperty(uint propertyId,Int64 value);
 
     void                  read(MemoryReader& memoryReader);
     void                  write(DataWriter& dataWriter);

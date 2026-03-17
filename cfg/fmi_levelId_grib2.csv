@@ -17,6 +17,7 @@
 #
 
 1;typeOfFirstFixedSurface=1;
+1;generatingProcessIdentifier=103,centre=86,typeOfFirstFixedSurface=103;
 
 2;typeOfFirstFixedSurface=100;
 
@@ -30,6 +31,8 @@
 
 7;typeOfFirstFixedSurface=101;
 7;generatingProcessIdentifier=5,centre=86,typeOfFirstFixedSurface=102;
+7;generatingProcessIdentifier=6,centre=86,typeOfFirstFixedSurface=102;
+7;generatingProcessIdentifier=7,centre=86,typeOfFirstFixedSurface=102;
 7;generatingProcessIdentifier=16,centre=86,typeOfFirstFixedSurface=102;
 7;generatingProcessIdentifier=0,centre=251,typeOfFirstFixedSurface=102;
 7;generatingProcessIdentifier=10,centre=251,typeOfFirstFixedSurface=102;
@@ -45,8 +48,6 @@
 12;typeOfFirstFixedSurface=246;
 
 15;typeOfFirstFixedSurface=20;
-
-16;typeOfFirstFixedSurface=6;
 
 18;typeOfFirstFixedSurface=150;
 

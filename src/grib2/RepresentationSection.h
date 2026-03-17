@@ -76,9 +76,9 @@ class RepresentationSection : public GRID::MessageSection
     void            setRepresentationDefinition(std::uint16_t templateNumber);
     void            setRepresentationDefinition(RepresentationDefinition *representationDefinition);
 
-    bool            getProperty(uint propertyId,long long& value);
+    bool            getProperty(uint propertyId,Int64& value);
     void            getProperties(T::PropertySettingVec& properties);
-    bool            setProperty(uint propertyId,long long value);
+    bool            setProperty(uint propertyId,Int64 value);
 
     void            read(MemoryReader& memoryReader);
     void            write(DataWriter& dataWriter);

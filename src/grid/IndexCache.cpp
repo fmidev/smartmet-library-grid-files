@@ -44,7 +44,7 @@ IndexCache::~IndexCache()
 
 
 
-void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
+void IndexCache::addIndexVector(Int64 hash,T::IndexVector& indexVector)
 {
   try
   {
@@ -96,7 +96,7 @@ void IndexCache::addIndexVector(long long hash,T::IndexVector& indexVector)
 
 
 
-bool IndexCache::getIndexVector(long long hash,T::IndexVector& indexVector)
+bool IndexCache::getIndexVector(Int64 hash,T::IndexVector& indexVector)
 {
   try
   {
@@ -123,7 +123,7 @@ bool IndexCache::getIndexVector(long long hash,T::IndexVector& indexVector)
 
 
 
-bool IndexCache::findIndexVector(long long hash)
+bool IndexCache::findIndexVector(Int64 hash)
 {
   try
   {
@@ -148,7 +148,7 @@ bool IndexCache::findIndexVector(long long hash)
 
 
 
-bool IndexCache::getIndex(long long hash,uint pos,int& index)
+bool IndexCache::getIndex(Int64 hash,uint pos,int& index)
 {
   try
   {
@@ -176,7 +176,7 @@ bool IndexCache::getIndex(long long hash,uint pos,int& index)
 
 
 
-int IndexCache::getClosestIndexByHash(long long hash)
+int IndexCache::getClosestIndexByHash(Int64 hash)
 {
   try
   {
@@ -192,7 +192,7 @@ int IndexCache::getClosestIndexByHash(long long hash)
 
 
 
-int IndexCache::getClosestIndexByHashNoLock(long long hash)
+int IndexCache::getClosestIndexByHashNoLock(Int64 hash)
 {
   try
   {
@@ -205,7 +205,7 @@ int IndexCache::getClosestIndexByHashNoLock(long long hash)
     while (low <= high)
     {
       int mid = low + (high-low) / 2;
-      long long hh = mHashVector[mid];
+      Int64 hh = mHashVector[mid];
 
       if (hash == hh)
         return mid;
@@ -222,7 +222,7 @@ int IndexCache::getClosestIndexByHashNoLock(long long hash)
 
     while (low >= 0)
     {
-      long long hh = mHashVector[low];
+      Int64 hh = mHashVector[low];
       if (hh < hash)
         return low;
       low--;

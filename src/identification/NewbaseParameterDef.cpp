@@ -51,8 +51,9 @@ void NewbaseParameterDef::print(std::ostream& stream,uint level,uint optionFlags
   try
   {
     stream << space(level) << "ParameterDefinition_newbase\n";
-    stream << space(level) << "- mNewbaseParameterId     = " << mNewbaseParameterId << "\n";
-    stream << space(level) << "- mParameterName          = " << mParameterName << "\n";
+    stream << space(level) << "- mNewbaseParameterId  = " << mNewbaseParameterId << "\n";
+    stream << space(level) << "- mParameterName       = " << mParameterName << "\n";
+    stream << space(level) << "- mFmiName             = " << mFmiName << "\n";
   }
   catch (...)
   {

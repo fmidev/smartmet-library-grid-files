@@ -60,16 +60,16 @@ class BitmapSection : public GRID::MessageSection
     T::UInt8_opt    getBitMapIndicator() const;
     T::Data_ptr     getBitmapDataPtr() const;
     std::size_t     getBitmapDataSizeInBytes() const;
-    long long       getHash();
+    Int64       getHash();
     void            getIndexVector(uint numOfValues,T::IndexVector& indexVector);
 
     void            setBitMapIndicator(uchar ind);
     void            setBitmapData(T::Data_ptr data,std::size_t size);
     void            setMessagePtr(Message *message);
 
-    bool            getProperty(uint propertyId,long long& value);
+    bool            getProperty(uint propertyId,Int64& value);
     void            getProperties(T::PropertySettingVec& properties);
-    bool            setProperty(uint propertyId,long long value);
+    bool            setProperty(uint propertyId,Int64 value);
 
     void            read(MemoryReader& memoryReader);
     void            write(DataWriter& dataWriter);
@@ -83,7 +83,7 @@ class BitmapSection : public GRID::MessageSection
     /*! \brief The pointer to the bitmap. */
     T::Data_ptr     mBitmapDataPtr;
 
-    long long       mHash;
+    Int64       mHash;
 
     /*! \brief The section start position in the file. */
     T::FilePosition mFilePosition;

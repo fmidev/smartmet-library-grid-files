@@ -23,16 +23,32 @@ namespace T
 {
 
 typedef std::size_t Hash;
+typedef std::uint32_t ProducerId;
+typedef std::uint64_t GenerationId;
+typedef std::uint64_t FileId;
 typedef std::uint64_t FilePosition;
-typedef std::string ParamId;
+typedef std::string   ParamId;
 typedef std::uint32_t NewbaseParamId;
 typedef std::uint32_t FmiParamId;
 typedef std::uint32_t GribParamId;
-typedef std::int32_t ParamLevel;
-typedef std::int16_t ParamLevelId;
+typedef std::int32_t  ParamLevel;
+typedef std::int16_t  ParamLevelId;
+typedef std::int16_t  ForecastType;
+typedef std::int16_t  ForecastNumber;
+typedef std::int32_t  GeometryId;
+
+
+typedef std::uint32_t StorageId;
+typedef std::uint32_t SourceId;
+typedef std::uint32_t MessageIndex;
+typedef std::uint64_t EventId;
+
+
 typedef float ParamValue;
 typedef ParamValue* ParamValue_ptr;
 #define ParamValueMissing -16777216
+
+
 
 class PropertySetting
 {
@@ -46,8 +62,8 @@ class PropertySetting
     PropertySetting(uint id,unsigned short value) {propertyId = id; propertyValue = std::to_string(value);}
     PropertySetting(uint id,int value) {propertyId = id; propertyValue = std::to_string(value);}
     PropertySetting(uint id,uint value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,long long value) {propertyId = id; propertyValue = std::to_string(value);}
-    PropertySetting(uint id,unsigned long long value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,Int64 value) {propertyId = id; propertyValue = std::to_string(value);}
+    PropertySetting(uint id,UInt64 value) {propertyId = id; propertyValue = std::to_string(value);}
     PropertySetting(uint id,float value) {propertyId = id; propertyValue = std::to_string(value);}
     PropertySetting(uint id,double value) {propertyId = id; propertyValue = std::to_string(value);}
 
@@ -73,33 +89,10 @@ typedef unsigned char* Data_ptr;
 
 typedef std::vector<Data_ptr> Data_ptr_vec;
 
-typedef std::int8_t Int8;
-typedef std::int16_t Int16;
-typedef std::int32_t Int32;
-typedef std::int64_t Int64;
-typedef std::uint8_t UInt8;
-typedef std::uint16_t UInt16;
-typedef std::uint32_t UInt32;
-typedef std::uint64_t UInt64;
-
-typedef std::optional<std::int8_t> Int8_opt;
-typedef std::optional<std::int16_t> Int16_opt;
-typedef std::optional<std::int32_t> Int32_opt;
-typedef std::optional<std::int64_t> Int64_opt;
-typedef std::optional<std::uint8_t> UInt8_opt;
-typedef std::optional<std::uint16_t> UInt16_opt;
-typedef std::optional<std::uint24_t> UInt24_opt;
-typedef std::optional<std::uint32_t> UInt32_opt;
-typedef std::optional<std::uint64_t> UInt64_opt;
-typedef std::optional<std::float_t> Float_opt;
-
 typedef std::vector<int> IndexVector;
 
-typedef unsigned long long SessionId;
+typedef std::uint64_t SessionId;
 
-typedef short ForecastType;
-typedef short ForecastNumber;
-typedef int   GeometryId;
 typedef std::set<T::GeometryId> GeometryId_set;
 
 typedef std::map<std::string,uint> PropertyMap;
@@ -191,6 +184,7 @@ class TimeInterpolationMethod
     Previous     = 6,
     Next         = 7,
     Forbidden    = 10,      // Requested time needs to match the grid time (or to be very close to it)
+    Transfer     = 15,
     External     = 1000     // Numbers 1000 - 65535 reserved for external interpolation types
   };
 };

@@ -65,7 +65,7 @@ class BitmapSection : public GRID::MessageSection
 
     T::Data_ptr     getBitmapDataPtr() const;
     std::size_t     getBitmapDataSizeInBytes() const;
-    long long       getHash();
+    Int64       getHash();
     void            getIndexVector(uint numOfValues,T::IndexVector& indexVector);
 
     void            setNumberOfUnusedBits(std::uint8_t unusedBits);
@@ -104,7 +104,7 @@ class BitmapSection : public GRID::MessageSection
     /*! \brief The bitmap size in bytes. */
     std::size_t     mBitmapDataSizeInBytes;
 
-    long long       mHash;
+    Int64       mHash;
 };
 
 

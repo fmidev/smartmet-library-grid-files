@@ -106,7 +106,7 @@ Message::Message(const Message& message)
 
 
 
-Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,uint messageIndex,NetCDF::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,T::MessageIndex messageIndex,NetCDF::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -250,7 +250,7 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
       \return  The grid file identifier.
 */
 
-uint Message::getFileId() const
+T::FileId Message::getFileId() const
 {
   FUNCTION_TRACE
   try
@@ -275,7 +275,7 @@ uint Message::getFileId() const
       \return  The grid producer identifier.
 */
 
-uint Message::getProducerId() const
+T::ProducerId Message::getProducerId() const
 {
   FUNCTION_TRACE
   try
@@ -300,7 +300,7 @@ uint Message::getProducerId() const
       \return  The grid generation identifier.
 */
 
-uint Message::getGenerationId() const
+T::GenerationId Message::getGenerationId() const
 {
   FUNCTION_TRACE
   try
@@ -1511,7 +1511,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
     int typeSize[] = {0,1,1,2,4,4,8};
 
-    ulonglong idx = (grid_j*mColumnMultiplier+grid_i*mRowMultiplier)*typeSize[mDataType];
+    UInt64 idx = (grid_j*mColumnMultiplier+grid_i*mRowMultiplier)*typeSize[mDataType];
     if (idx >= (mMessageSize + typeSize[mDataType]))
       return ParamValueMissing;
 
@@ -1866,7 +1866,7 @@ bool Message::reverseYDirection() const
         \return   The forecast type.
 */
 
-short Message::getForecastType() const
+T::ForecastType Message::getForecastType() const
 {
   try
   {
@@ -1889,7 +1889,7 @@ short Message::getForecastType() const
         \return   The forecast number.
 */
 
-short Message::getForecastNumber() const
+T::ForecastNumber Message::getForecastNumber() const
 {
   try
   {
@@ -1958,7 +1958,7 @@ void Message::read()
       throw exception;
     }
 
-    long long s = mGridFilePtr->getSize();
+    Int64 s = mGridFilePtr->getSize();
 
     mDataStartPtr = (uchar*)mGridFilePtr->getMemoryPtr();
     mDataEndPtr = mDataStartPtr + s;

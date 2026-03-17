@@ -8,7 +8,7 @@ namespace SmartMet
 
 /*! \brief The constructor of the class. */
 
-BitArrayReader::BitArrayReader(const unsigned char *data,ulonglong numberOfBits)
+BitArrayReader::BitArrayReader(const unsigned char *data,UInt64 numberOfBits)
 {
   try
   {
@@ -48,7 +48,7 @@ BitArrayReader::~BitArrayReader()
 
 /*! \brief The method returns the size of the bit array/stream counted in bits. */
 
-ulonglong BitArrayReader::getNumberOfBits()
+UInt64 BitArrayReader::getNumberOfBits()
 {
   try
   {
@@ -68,7 +68,7 @@ ulonglong BitArrayReader::getNumberOfBits()
     The position is counted in bits from the beginning of the bit array/stream.
 */
 
-ulonglong BitArrayReader::getReadPosition()
+UInt64 BitArrayReader::getReadPosition()
 {
   try
   {
@@ -88,7 +88,7 @@ ulonglong BitArrayReader::getReadPosition()
     The position is counted in bits from the beginning of the bit array/stream.
 */
 
-void BitArrayReader::setReadPosition(ulonglong _readPosition)
+void BitArrayReader::setReadPosition(UInt64 _readPosition)
 {
   try
   {
@@ -134,8 +134,8 @@ bool BitArrayReader::readBit()
       throw exception;
     }
 
-    ulonglong byt = mReadPosition / 8;
-    ulonglong bit = 7 - (mReadPosition % 8);
+    UInt64 byt = mReadPosition / 8;
+    UInt64 bit = 7 - (mReadPosition % 8);
 
     mReadPosition++;
 
@@ -170,8 +170,8 @@ bool BitArrayReader::readBitNoCheck()
 {
   try
   {
-    ulonglong byt = mReadPosition / 8;
-    ulonglong bit = 7 - (mReadPosition % 8);
+    UInt64 byt = mReadPosition / 8;
+    UInt64 bit = 7 - (mReadPosition % 8);
 
     mReadPosition++;
 
@@ -296,7 +296,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,unsigned int& value)
         \param value          The result value of the read bits.
 */
 
-void BitArrayReader::readBits(unsigned int numberOfBits,ulonglong& value)
+void BitArrayReader::readBits(unsigned int numberOfBits,UInt64& value)
 {
   try
   {
@@ -305,7 +305,7 @@ void BitArrayReader::readBits(unsigned int numberOfBits,ulonglong& value)
 
     if (numberOfBits > 64)
     {
-      Fmi::Exception exception(BCP,"Cannot read more than 64 bits into 'ulonglong'!");
+      Fmi::Exception exception(BCP,"Cannot read more than 64 bits into 'UInt64'!");
       exception.addParameter("Requested bits",std::to_string(numberOfBits));
       throw exception;
     }

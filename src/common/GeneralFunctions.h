@@ -17,10 +17,10 @@ namespace SmartMet
 
 typedef std::vector<float> FloatVec;
 
-std::string uint64_toHex(unsigned long long value);
+std::string uint64_toHex(UInt64 value);
 double int_power(double x, int y);
 double grib_power(long s,long n);
-unsigned long long getTime();
+UInt64 getTime();
 /*
 int num_compare(char& v1,char& v2);
 int num_compare(uchar& v1,uchar& v2);
@@ -28,8 +28,8 @@ int num_compare(short& v1,short& v2);
 int num_compare(ushort& v1,ushort& v2);
 int num_compare(int& v1,int& v2);
 int num_compare(uint& v1,uint& v2);
-int num_compare(unsigned long long& v1,unsigned long long& v2);
-int num_compare(long long& v1,long long& v2);
+int num_compare(UInt64& v1,UInt64& v2);
+int num_compare(Int64& v1,Int64& v2);
 int num_compare(float& v1,float& v2);
 int num_compare(double& v1,double& v2);
 int time_compare(time_t v1,time_t v2);
@@ -73,12 +73,12 @@ void valueToTime(time_t value,uint& year,uint& month,uint& day,uint& hour,uint& 
 time_t toTimeT(Fmi::DateTime tim);
 time_t getFileModificationTime(const char *filename);
 void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdownRequested);
-long long getFileSize(const char *filename);
-long long getFileSize(FILE *file);
+Int64 getFileSize(const char *filename);
+Int64 getFileSize(FILE *file);
 std::string getAbsoluteFilePath(const std::string& filename);
 std::string getFileDir(const std::string& filename);
 int getInt(const char *str, uint startIdx, uint len);
-long long getCsvInt64Field(const char *csv,uint fieldIndex);
+Int64 getCsvInt64Field(const char *csv,uint fieldIndex);
 int getCsvCompare(const char *csv,uint fieldIndex,const char *value);
 int getCsvCaseCompare(const char *csv,uint fieldIndex,const char *value);
 
@@ -87,11 +87,11 @@ std::string space(uint size);
 char        toInt8(const char *str);
 short       toInt16(const char *str);
 int         toInt32(const char *str);
-long long   toInt64(const char *str);
+Int64       toInt64(const char *str);
 uchar       toUInt8(const char *str);
 ushort      toUInt16(const char *str);
 uint        toUInt32(const char *str);
-ulonglong   toUInt64(const char *str);
+UInt64      toUInt64(const char *str);
 float       toFloat(const char *str);
 double      toDouble(const char *str);
 size_t      toSize_t(const char *str);
@@ -99,11 +99,11 @@ size_t      toSize_t(const char *str);
 char        toInt8(const std::string& str);
 short       toInt16(const std::string& str);
 int         toInt32(const std::string& str);
-long long   toInt64(const std::string& str);
+Int64       toInt64(const std::string& str);
 uchar       toUInt8(const std::string& str);
 ushort      toUInt16(const std::string& str);
 uint        toUInt32(const std::string& str);
-ulonglong   toUInt64(const std::string& str);
+UInt64      toUInt64(const std::string& str);
 float       toFloat(const std::string& str);
 double      toDouble(const std::string& str);
 size_t      toSize_t(const std::string& str);
@@ -187,18 +187,18 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
 void readEofLines(const char *filename,uint numberOfLines,std::vector<std::string>& lines);
 
 
-std::uint8_t  read_uint8(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::uint16_t read_uint16(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::uint32_t read_uint24(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::uint32_t read_uint32(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::uint64_t read_uint64(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::int8_t   read_int8(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::int16_t  read_int16(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::int32_t  read_int24(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::int32_t  read_int32(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::float_t  read_float(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::double_t read_double(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
-std::float_t  read_ibmFloat(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos);
+std::uint8_t  read_uint8(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::uint16_t read_uint16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::uint32_t read_uint24(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::uint32_t read_uint32(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::uint64_t read_uint64(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::int8_t   read_int8(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::int16_t  read_int16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::int32_t  read_int24(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::int32_t  read_int32(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::float_t  read_float(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::double_t read_double(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
+std::float_t  read_ibmFloat(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos);
 
 
 void    jdnToGregorian(double jd,int& year, int& month, int& day);
@@ -242,7 +242,7 @@ inline int ptr_compare(char *v1, char *v2)
 
 
 
-inline int num_compare(uint& v1, uint& v2)
+inline int num_compare(uint v1, uint v2)
 {
   if (v1 == v2)
     return 0;
@@ -255,7 +255,7 @@ inline int num_compare(uint& v1, uint& v2)
 
 
 
-inline int num_compare(char& v1, char& v2)
+inline int num_compare(char v1, char v2)
 {
   if (v1 == v2)
     return 0;
@@ -268,7 +268,7 @@ inline int num_compare(char& v1, char& v2)
 
 
 
-inline int num_compare(uchar& v1, uchar& v2)
+inline int num_compare(uchar v1, uchar v2)
 {
   if (v1 == v2)
     return 0;
@@ -281,7 +281,7 @@ inline int num_compare(uchar& v1, uchar& v2)
 
 
 
-inline int num_compare(short& v1, short& v2)
+inline int num_compare(short v1, short v2)
 {
   if (v1 == v2)
     return 0;
@@ -294,7 +294,7 @@ inline int num_compare(short& v1, short& v2)
 
 
 
-inline int num_compare(ushort& v1, ushort& v2)
+inline int num_compare(ushort v1, ushort v2)
 {
   if (v1 == v2)
     return 0;
@@ -307,7 +307,7 @@ inline int num_compare(ushort& v1, ushort& v2)
 
 
 
-inline int num_compare(int& v1, int& v2)
+inline int num_compare(int v1, int v2)
 {
   if (v1 == v2)
     return 0;
@@ -320,7 +320,7 @@ inline int num_compare(int& v1, int& v2)
 
 
 
-inline int num_compare(unsigned long long& v1, unsigned long long& v2)
+inline int num_compare(UInt64 v1, UInt64 v2)
 {
   if (v1 == v2)
     return 0;
@@ -333,7 +333,7 @@ inline int num_compare(unsigned long long& v1, unsigned long long& v2)
 
 
 
-inline int num_compare(long long& v1, long long& v2)
+inline int num_compare(Int64 v1, Int64 v2)
 {
   if (v1 == v2)
     return 0;
@@ -346,7 +346,7 @@ inline int num_compare(long long& v1, long long& v2)
 
 
 
-inline int num_compare(float& v1, float& v2)
+inline int num_compare(float v1, float v2)
 {
   if (v1 == v2)
     return 0;
@@ -359,7 +359,7 @@ inline int num_compare(float& v1, float& v2)
 
 
 
-inline int num_compare(double& v1, double& v2)
+inline int num_compare(double v1, double v2)
 {
   if (v1 == v2)
     return 0;
@@ -385,12 +385,12 @@ inline int time_compare(time_t v1, time_t v2)
 
 
 
-inline long long htonll(long long value)
+inline Int64 htonll(Int64 value)
 {
   static const int num = 42;
 
   if (*reinterpret_cast<const char*>(&num) == num)
-    return ((long long)htonl((value & 0xFFFFFFFF) << 32) | htonl(value >> 32));
+    return ((Int64)htonl((value & 0xFFFFFFFF) << 32) | htonl(value >> 32));
 
   return value;
 }
@@ -398,12 +398,12 @@ inline long long htonll(long long value)
 
 
 
-inline long long ntohll(long long value)
+inline Int64 ntohll(Int64 value)
 {
   static const int num = 42;
 
   if (*reinterpret_cast<const char*>(&num) == num)
-    return ((long long)ntohl((value & 0xFFFFFFFF) << 32) | ntohl(value >> 32));
+    return ((Int64)ntohl((value & 0xFFFFFFFF) << 32) | ntohl(value >> 32));
 
   return value;
 }

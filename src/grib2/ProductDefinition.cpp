@@ -47,14 +47,14 @@ ProductDefinition* ProductDefinition::createProductDefinition() const
 
 
 
-/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool ProductDefinition::getProperty(uint propertyId,long long& value)
+bool ProductDefinition::getProperty(uint propertyId,Int64& value)
 {
   try
   {
@@ -472,7 +472,7 @@ void ProductDefinition::getProperties_CategoricalSettings(T::PropertySettingVec&
 
 
 
-bool ProductDefinition::getProperty_ParameterSettings(uint propertyId,long long& value)
+bool ProductDefinition::getProperty_ParameterSettings(uint propertyId,Int64& value)
 {
   try
   {
@@ -531,7 +531,7 @@ bool ProductDefinition::getProperty_ParameterSettings(uint propertyId,long long&
 
 
 
-bool ProductDefinition::getProperty_HorizontalSettings(uint propertyId,long long& value)
+bool ProductDefinition::getProperty_HorizontalSettings(uint propertyId,Int64& value)
 {
   try
   {
@@ -578,7 +578,7 @@ bool ProductDefinition::getProperty_HorizontalSettings(uint propertyId,long long
 
 
 
-bool ProductDefinition::getProperty_StatisticalSettings(uint propertyId,long long& value)
+bool ProductDefinition::getProperty_StatisticalSettings(uint propertyId,Int64& value)
 {
   try
   {
@@ -657,7 +657,7 @@ bool ProductDefinition::getProperty_StatisticalSettings(uint propertyId,long lon
 
 
 
-bool ProductDefinition::getProperty_EpsSettings(uint propertyId,long long& value)
+bool ProductDefinition::getProperty_EpsSettings(uint propertyId,Int64& value)
 {
   try
   {
@@ -692,7 +692,7 @@ bool ProductDefinition::getProperty_EpsSettings(uint propertyId,long long& value
 
 
 
-bool ProductDefinition::getProperty_DerivedSettings(uint propertyId,long long& value)
+bool ProductDefinition::getProperty_DerivedSettings(uint propertyId,Int64& value)
 {
   try
   {
@@ -723,7 +723,7 @@ bool ProductDefinition::getProperty_DerivedSettings(uint propertyId,long long& v
 
 
 
-bool ProductDefinition::getProperty_RectangularClusterSettings(uint propertyId,long long& value)
+bool ProductDefinition::getProperty_RectangularClusterSettings(uint propertyId,Int64& value)
 {
   try
   {
@@ -802,7 +802,7 @@ bool ProductDefinition::getProperty_RectangularClusterSettings(uint propertyId,l
 
 
 
-bool ProductDefinition::getProperty_ProbabilitySettings(uint propertyId,long long& value)
+bool ProductDefinition::getProperty_ProbabilitySettings(uint propertyId,Int64& value)
 {
   try
   {
@@ -853,7 +853,7 @@ bool ProductDefinition::getProperty_ProbabilitySettings(uint propertyId,long lon
 
 
 
-bool ProductDefinition::getProperty_PercentileSettings(uint propertyId,long long& value)
+bool ProductDefinition::getProperty_PercentileSettings(uint propertyId,Int64& value)
 {
   try
   {
@@ -880,7 +880,7 @@ bool ProductDefinition::getProperty_PercentileSettings(uint propertyId,long long
 
 
 
-bool ProductDefinition::getProperty_CategoricalSettings(uint propertyId,long long& value)
+bool ProductDefinition::getProperty_CategoricalSettings(uint propertyId,Int64& value)
 {
   try
   {
@@ -931,14 +931,14 @@ bool ProductDefinition::getProperty_CategoricalSettings(uint propertyId,long lon
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool ProductDefinition::setProperty(uint propertyId,long long value)
+bool ProductDefinition::setProperty(uint propertyId,Int64 value)
 {
   try
   {
@@ -981,7 +981,7 @@ bool ProductDefinition::setProperty(uint propertyId,long long value)
 
 
 
-bool ProductDefinition::setProperty_ParameterSettings(uint propertyId,long long value)
+bool ProductDefinition::setProperty_ParameterSettings(uint propertyId,Int64 value)
 {
   try
   {
@@ -1040,7 +1040,7 @@ bool ProductDefinition::setProperty_ParameterSettings(uint propertyId,long long 
 
 
 
-bool ProductDefinition::setProperty_HorizontalSettings(uint propertyId,long long value)
+bool ProductDefinition::setProperty_HorizontalSettings(uint propertyId,Int64 value)
 {
   try
   {
@@ -1087,7 +1087,7 @@ bool ProductDefinition::setProperty_HorizontalSettings(uint propertyId,long long
 
 
 
-bool ProductDefinition::setProperty_StatisticalSettings(uint propertyId,long long value)
+bool ProductDefinition::setProperty_StatisticalSettings(uint propertyId,Int64 value)
 {
   try
   {
@@ -1166,7 +1166,7 @@ bool ProductDefinition::setProperty_StatisticalSettings(uint propertyId,long lon
 
 
 
-bool ProductDefinition::setProperty_EpsSettings(uint propertyId,long long value)
+bool ProductDefinition::setProperty_EpsSettings(uint propertyId,Int64 value)
 {
   try
   {
@@ -1201,7 +1201,7 @@ bool ProductDefinition::setProperty_EpsSettings(uint propertyId,long long value)
 
 
 
-bool ProductDefinition::setProperty_DerivedSettings(uint propertyId,long long value)
+bool ProductDefinition::setProperty_DerivedSettings(uint propertyId,Int64 value)
 {
   try
   {
@@ -1232,7 +1232,7 @@ bool ProductDefinition::setProperty_DerivedSettings(uint propertyId,long long va
 
 
 
-bool ProductDefinition::setProperty_RectangularClusterSettings(uint propertyId,long long value)
+bool ProductDefinition::setProperty_RectangularClusterSettings(uint propertyId,Int64 value)
 {
   try
   {
@@ -1311,7 +1311,7 @@ bool ProductDefinition::setProperty_RectangularClusterSettings(uint propertyId,l
 
 
 
-bool ProductDefinition::setProperty_ProbabilitySettings(uint propertyId,long long value)
+bool ProductDefinition::setProperty_ProbabilitySettings(uint propertyId,Int64 value)
 {
   try
   {
@@ -1362,7 +1362,7 @@ bool ProductDefinition::setProperty_ProbabilitySettings(uint propertyId,long lon
 
 
 
-bool ProductDefinition::setProperty_PercentileSettings(uint propertyId,long long value)
+bool ProductDefinition::setProperty_PercentileSettings(uint propertyId,Int64 value)
 {
   try
   {
@@ -1389,7 +1389,7 @@ bool ProductDefinition::setProperty_PercentileSettings(uint propertyId,long long
 
 
 
-bool ProductDefinition::setProperty_CategoricalSettings(uint propertyId,long long value)
+bool ProductDefinition::setProperty_CategoricalSettings(uint propertyId,Int64 value)
 {
   try
   {

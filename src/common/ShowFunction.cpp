@@ -34,7 +34,7 @@ ShowFunction::ShowFunction(const char *_file,uint _line,const char *_function)
 
 ShowFunction::~ShowFunction()
 {
-  unsigned long long endTime = getTime();
+  UInt64 endTime = getTime();
   globalTraceLevel--;
 
   if (globalTraceLog != nullptr)

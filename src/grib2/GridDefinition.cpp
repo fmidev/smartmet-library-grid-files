@@ -406,14 +406,14 @@ void GridDefinition::setGridGeometryId(T::GeometryId geometryId)
 
 
 
-/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool GridDefinition::getProperty(uint propertyId,long long& value)
+bool GridDefinition::getProperty(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -602,7 +602,7 @@ void GridDefinition::getProperties_LatLon(T::PropertySettingVec& properties)
 
 
 
-bool GridDefinition::getProperty_EarthShape(uint propertyId,long long& value)
+bool GridDefinition::getProperty_EarthShape(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -654,7 +654,7 @@ bool GridDefinition::getProperty_EarthShape(uint propertyId,long long& value)
 
 
 
-bool GridDefinition::getProperty_Grid(uint propertyId,long long& value)
+bool GridDefinition::getProperty_Grid(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -725,7 +725,7 @@ bool GridDefinition::getProperty_Grid(uint propertyId,long long& value)
 
 
 
-bool GridDefinition::getProperty_Rotation(uint propertyId,long long& value)
+bool GridDefinition::getProperty_Rotation(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -761,7 +761,7 @@ bool GridDefinition::getProperty_Rotation(uint propertyId,long long& value)
 
 
 
-bool GridDefinition::getProperty_LatLon(uint propertyId,long long& value)
+bool GridDefinition::getProperty_LatLon(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -805,14 +805,14 @@ bool GridDefinition::getProperty_LatLon(uint propertyId,long long& value)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool GridDefinition::setProperty(uint propertyId,long long value)
+bool GridDefinition::setProperty(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -841,7 +841,7 @@ bool GridDefinition::setProperty(uint propertyId,long long value)
 
 
 
-bool GridDefinition::setProperty_EarthShape(uint propertyId,long long value)
+bool GridDefinition::setProperty_EarthShape(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -893,7 +893,7 @@ bool GridDefinition::setProperty_EarthShape(uint propertyId,long long value)
 
 
 
-bool GridDefinition::setProperty_Grid(uint propertyId,long long value)
+bool GridDefinition::setProperty_Grid(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -965,7 +965,7 @@ bool GridDefinition::setProperty_Grid(uint propertyId,long long value)
 
 
 
-bool GridDefinition::setProperty_Rotation(uint propertyId,long long value)
+bool GridDefinition::setProperty_Rotation(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -1001,7 +1001,7 @@ bool GridDefinition::setProperty_Rotation(uint propertyId,long long value)
 
 
 
-bool GridDefinition::setProperty_LatLon(uint propertyId,long long value)
+bool GridDefinition::setProperty_LatLon(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try

@@ -46,14 +46,14 @@ RepresentationDefinition* RepresentationDefinition::createRepresentationDefiniti
 
 
 
-/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool RepresentationDefinition::getProperty(uint propertyId,long long& value)
+bool RepresentationDefinition::getProperty(uint propertyId,Int64& value)
 {
   try
   {
@@ -141,7 +141,7 @@ void RepresentationDefinition::getProperties_OriginalValues(T::PropertySettingVe
 
 
 
-bool RepresentationDefinition::getProperty_Packing(uint propertyId,long long& value)
+bool RepresentationDefinition::getProperty_Packing(uint propertyId,Int64& value)
 {
   try
   {
@@ -183,7 +183,7 @@ bool RepresentationDefinition::getProperty_Packing(uint propertyId,long long& va
 
 
 
-bool RepresentationDefinition::getProperty_OriginalValues(uint propertyId,long long& value)
+bool RepresentationDefinition::getProperty_OriginalValues(uint propertyId,Int64& value)
 {
   try
   {
@@ -210,14 +210,14 @@ bool RepresentationDefinition::getProperty_OriginalValues(uint propertyId,long l
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool RepresentationDefinition::setProperty(uint propertyId,long long value)
+bool RepresentationDefinition::setProperty(uint propertyId,Int64 value)
 {
   try
   {
@@ -239,7 +239,7 @@ bool RepresentationDefinition::setProperty(uint propertyId,long long value)
 
 
 
-bool RepresentationDefinition::setProperty_Packing(uint propertyId,long long value)
+bool RepresentationDefinition::setProperty_Packing(uint propertyId,Int64 value)
 {
   try
   {
@@ -278,7 +278,7 @@ bool RepresentationDefinition::setProperty_Packing(uint propertyId,long long val
 
 
 
-bool RepresentationDefinition::setProperty_OriginalValues(uint propertyId,long long value)
+bool RepresentationDefinition::setProperty_OriginalValues(uint propertyId,Int64 value)
 {
   try
   {

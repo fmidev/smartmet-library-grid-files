@@ -1,5 +1,7 @@
 #include "TransverseMercatorImpl.h"
 #include <macgyver/Exception.h>
+#include "../../grid/PrintOptions.h"
+#include "../../common/GeneralFunctions.h"
 
 namespace SmartMet
 {
@@ -12,6 +14,9 @@ namespace GRIB2
 TransverseMercatorImpl::TransverseMercatorImpl()
 {
   mGridProjection = T::GridProjectionValue::TransverseMercator;
+  mLongitude = 0;
+  mLatitude = 0;
+
 }
 
 
@@ -23,6 +28,8 @@ TransverseMercatorImpl::TransverseMercatorImpl()
 TransverseMercatorImpl::TransverseMercatorImpl(const TransverseMercatorImpl& other)
 :TransverseMercator(other)
 {
+  mLongitude = other.mLongitude;
+  mLatitude = other.mLatitude;
 }
 
 
@@ -284,6 +291,9 @@ std::string TransverseMercatorImpl::getGridGeometryString() const
     double dx = C_DOUBLE(*mDi) / 100;
     double dy = C_DOUBLE(*mDj) / 100;
 
+    double false_northing = C_DOUBLE(*mYR) / 100;
+    double false_eastening = C_DOUBLE(*mXR) / 100;
+
     unsigned char scanningMode = mScanningMode.getScanningMode();
 
     char sm[100];
@@ -308,8 +318,9 @@ std::string TransverseMercatorImpl::getGridGeometryString() const
       p += sprintf(p,"+y");
     }
 
-    sprintf(buf,"%d;id;name;%d;%d;firstLon;firstLat;%.6f;%.6f;%s;%.6f;%.6f;description",
-        T::GridProjectionValue::TransverseMercator,*mNi,*mNj,fabs(dx),fabs(dy),sm,rx,ry);
+    sprintf(buf,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;%.6f;%.6f;%.6f;%.6f;%.6f;%.6f;description",
+        T::GridProjectionValue::TransverseMercator,*mNi,*mNj,mLongitude,mLatitude,fabs(dx),fabs(dy),sm,rx,ry,
+        false_eastening,false_northing,mEarth_semiMajor,mEarth_semiMinor);
 
     return std::string(buf);
   }
@@ -417,6 +428,7 @@ void TransverseMercatorImpl::initSpatialReference()
         exception.addParameter("ErrorCode", std::to_string(errorCode));
         throw exception;
       }
+
       addSpatialReference(mSpatialReference);
     }
   }
@@ -425,6 +437,69 @@ void TransverseMercatorImpl::initSpatialReference()
     throw Fmi::Exception(BCP, "Operation failed!", nullptr);
   }
 }
+
+
+
+
+/*! \brief The method prints the content of the current object into the given stream.
+
+        \param ostream      The output stream.
+        \param level        The print level (used when printing multi-level structures).
+        \param optionFlags  The printing options expressed in flag-bits.
+*/
+
+void TransverseMercatorImpl::print(std::ostream& stream,uint level,uint optionFlags) const
+{
+  try
+  {
+    //TransverseMercator::print(stream,level,optionFlags);
+
+    stream << space(level+1) << "TransverseMercatorImpl\n";
+
+    if (optionFlags & GRID::PrintFlag::coordinates)
+    {
+      stream << space(level+1) << "- Coordinates (of the grid corners):\n";
+      T::Coordinate_svec coordinateList = getGridOriginalCoordinates();
+
+      // ### Printing coordinates close to the grid corners.
+
+      if (!mNi || !mNj)
+        return;
+
+      int nx = C_INT(*mNi);
+      int ny = C_INT(*mNj);
+
+      char str[200];
+      uint c = 0;
+      for (int y=0; y < ny; y++)
+      {
+        for (int x=0; x < nx; x++)
+        {
+          if ((y < 3  ||  y >= ny-3)  &&  (x < 3  ||  x >= nx-3))
+          {
+            T::Coordinate coord = coordinateList->at(c);
+
+            double lon = coord.x();
+            double lat = coord.y();
+            sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
+            stream << space(level+2) << str << "\n";
+            if (convert(mSpatialReference,latlonSpatialReference,1,&lon,&lat))
+            {
+              sprintf(str,"* [%03d,%03d] %f,%f => %f,%f",x,y,coord.x(),coord.y(),lon,lat);
+              stream << space(level+2) << str << "\n";
+            }
+          }
+          c++;
+        }
+      }
+    }
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
 
 
 }

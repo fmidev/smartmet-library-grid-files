@@ -358,7 +358,7 @@ void DataFetcher_network::getFileHeaders(uint serverType,uint protocol,const cha
 
 
 
-long long DataFetcher_network::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
+Int64 DataFetcher_network::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {
   FUNCTION_TRACE
   try

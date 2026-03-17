@@ -10,6 +10,8 @@
 #include <vector>
 #include <iostream>
 
+#include "Typedefs.h"
+
 
 namespace SmartMet
 {
@@ -29,15 +31,21 @@ class Session
     void        setAttribute(const char *name,double value);
     void        setAttribute(const char *name,int value);
     void        setAttribute(const char *name,uint value);
+    void        setAttribute(const char *name,Int64 value);
+    void        setAttribute(const char *name,UInt64 value);
     void        setAttribute(const char *name,const char *value);
     void        setAttribute(const char *name,std::string& value);
     const char* getAttribute(const char *name);
     double      getDoubleAttribute(const char *name);
     int         getIntAttribute(const char *name);
     uint        getUIntAttribute(const char *name);
+    Int64       getInt64Attribute(const char *name);
+    UInt64      getUInt64Attribute(const char *name);
     bool        getAttribute(const char *name,std::string& value);
     bool        getAttribute(const char *name,int& value);
     bool        getAttribute(const char *name,uint& value);
+    bool        getAttribute(const char *name,Int64& value);
+    bool        getAttribute(const char *name,UInt64& value);
     bool        getAttribute(const char *name,double& value);
     void        deleteAttribute(const char *name);
     std::string getUrlParameter();

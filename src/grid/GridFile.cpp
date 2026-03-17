@@ -179,7 +179,7 @@ GridFile* GridFile::createGridFile()
       \return  The grid file identifier.
 */
 
-uint GridFile::getFileId() const
+T::FileId GridFile::getFileId() const
 {
   FUNCTION_TRACE
   try
@@ -286,7 +286,7 @@ std::string GridFile::getServer() const
       \return  The grid producer identifier.
 */
 
-uint GridFile::getProducerId() const
+T::ProducerId GridFile::getProducerId() const
 {
   FUNCTION_TRACE
   try
@@ -308,7 +308,7 @@ uint GridFile::getProducerId() const
       \return  The grid generation identifier.
 */
 
-uint GridFile::getGenerationId() const
+T::GenerationId GridFile::getGenerationId() const
 {
   FUNCTION_TRACE
   try
@@ -434,7 +434,7 @@ time_t GridFile::getDeletionTime() const
       \return  The grid source identifier.
 */
 
-uint GridFile::getSourceId() const
+T::SourceId GridFile::getSourceId() const
 {
   FUNCTION_TRACE
   try
@@ -451,15 +451,15 @@ uint GridFile::getSourceId() const
 
 
 
-long long GridFile::countSize()
+Int64 GridFile::countSize()
 {
   FUNCTION_TRACE
   try
   {
-    long long fileSize = 0;
+    Int64 fileSize = 0;
     for (auto it = mMessagePositions.begin(); it != mMessagePositions.end(); ++it)
     {
-      long long fsize = it->second.mFilePosition + it->second.mMessageSize;
+      Int64 fsize = it->second.mFilePosition + it->second.mMessageSize;
       if (fileSize < fsize)
         fileSize = fsize;
     }
@@ -468,7 +468,7 @@ long long GridFile::countSize()
     {
       if (it->second->getFileMemoryPtr() == nullptr)
       {
-        long long fsize = it->second->getFilePosition() + it->second->getMessageSize();
+        Int64 fsize = it->second->getFilePosition() + it->second->getMessageSize();
         if (fileSize < fsize)
           fileSize = fsize;
       }
@@ -486,21 +486,21 @@ long long GridFile::countSize()
 
 
 
-long long GridFile::getRequestCounters(RequestCounters& requestCounters)
+Int64 GridFile::getRequestCounters(RequestCounters& requestCounters)
 {
   FUNCTION_TRACE
   try
   {
-    long long max = 0;
+    Int64 max = 0;
     for (auto it = mMessages.begin(); it != mMessages.end(); ++it)
     {
-      unsigned long long key = ((unsigned long long)mFileId << 32) + it->first;
-      long long cnt = it->second->getRequestCounter();
+      UInt64 key = ((UInt64)mFileId << 24) + it->first;
+      Int64 cnt = it->second->getRequestCounter();
       if (cnt > max)
         max = cnt;
 
       if (cnt > 0)
-        requestCounters.insert(std::pair<unsigned long long,long long>(key,cnt));
+        requestCounters.insert(std::pair<UInt64,Int64>(key,cnt));
     }
     return max;
   }
@@ -531,7 +531,7 @@ void GridFile::resetRequestCounters()
 
 
 
-void GridFile::addDependence(uint fileId)
+void GridFile::addDependence(T::FileId fileId)
 {
   FUNCTION_TRACE
   try
@@ -620,7 +620,7 @@ void GridFile::mapToMemory()
     if (isMemoryMapped())
       return;
 
-    long long fs = memoryMapper.getFileSize(mMemoryMapInfo->serverType,mMemoryMapInfo->protocol,mMemoryMapInfo->server.c_str(),mMemoryMapInfo->filename.c_str());
+    Int64 fs = memoryMapper.getFileSize(mMemoryMapInfo->serverType,mMemoryMapInfo->protocol,mMemoryMapInfo->server.c_str(),mMemoryMapInfo->filename.c_str());
 
     if (fs < 0)
       throw Fmi::Exception(BCP,"Cannot get correct file size. Maybe the file does not exist!");
@@ -693,7 +693,7 @@ void GridFile::setCheckTime(time_t checkTime)
       \param fileId  The grid file identifier.
 */
 
-void GridFile::setFileId(uint fileId)
+void GridFile::setFileId(T::FileId fileId)
 {
   FUNCTION_TRACE
   try
@@ -783,7 +783,7 @@ void GridFile::setFlags(uint flags)
       \param producerID  The grid producer identifier.
 */
 
-void GridFile::setProducerId(uint producerId)
+void GridFile::setProducerId(T::ProducerId producerId)
 {
   FUNCTION_TRACE
   try
@@ -806,7 +806,7 @@ void GridFile::setProducerId(uint producerId)
       \param generationId  The grid generation identifier.
 */
 
-void GridFile::setGenerationId(uint generationId)
+void GridFile::setGenerationId(T::GenerationId generationId)
 {
   FUNCTION_TRACE
   try
@@ -881,7 +881,7 @@ void GridFile::setMappingFileName(const std::string& fileName)
       \param sourceId  The grid source identifier.
 */
 
-void GridFile::setSourceId(uint sourceId)
+void GridFile::setSourceId(T::SourceId sourceId)
 {
   FUNCTION_TRACE
   try
@@ -988,7 +988,7 @@ Message* GridFile::newMessage(T::FileType fileType)
 
 
 
-Message* GridFile::newMessage(uint messageIndex,MessageInfo& messageInfo)
+Message* GridFile::newMessage(T::MessageIndex messageIndex,MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -1165,7 +1165,7 @@ std::string GridFile::getFileTypeString() const
 
 
 
-GRID::Message* GridFile::createMessage(uint messageIndex,GRID::MessageInfo& messageInfo)
+GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -1177,7 +1177,7 @@ GRID::Message* GridFile::createMessage(uint messageIndex,GRID::MessageInfo& mess
       throw exception;
     }
 
-    long long fsize = getSize();
+    Int64 fsize = getSize();
 
     if (C_INT64(messageInfo.mFilePosition + messageInfo.mMessageSize) > fsize)
     {
@@ -1329,7 +1329,7 @@ bool GridFile::isNetworkFile() const
 
 
 
-long long GridFile::getSize()
+Int64 GridFile::getSize()
 {
   FUNCTION_TRACE
   try
@@ -1348,7 +1348,7 @@ long long GridFile::getSize()
 
 
 
-void GridFile::setSize(long long size)
+void GridFile::setSize(Int64 size)
 {
   FUNCTION_TRACE
   try
@@ -1576,7 +1576,7 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
         \param messageIndex  Index of the message
 */
 
-void GridFile::readGrib1Message(MemoryReader& memoryReader, uint messageIndex)
+void GridFile::readGrib1Message(MemoryReader& memoryReader, T::MessageIndex messageIndex)
 {
   FUNCTION_TRACE
   try
@@ -1604,7 +1604,7 @@ void GridFile::readGrib1Message(MemoryReader& memoryReader, uint messageIndex)
         \param messageIndex  Index of the message
 */
 
-void GridFile::readNetCDFMessage(MemoryReader& memoryReader, uint messageIndex)
+void GridFile::readNetCDFMessage(MemoryReader& memoryReader, T::MessageIndex messageIndex)
 {
   FUNCTION_TRACE
   try
@@ -1656,7 +1656,7 @@ void GridFile::readNetCDFMessage(MemoryReader& memoryReader, uint messageIndex)
  */
 // ----------------------------------------------------------------------
 
-void GridFile::readGrib2Message(MemoryReader& memoryReader, uint messageIndex)
+void GridFile::readGrib2Message(MemoryReader& memoryReader, T::MessageIndex messageIndex)
 {
   FUNCTION_TRACE
   try
@@ -1827,7 +1827,7 @@ MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint 
       if (valid)
       {
         memoryReader.read_null(totalLength-16);
-        gribs.emplace_back(edition,(ulonglong)(startPtr-fileStartPtr));
+        gribs.emplace_back(edition,(UInt64)(startPtr-fileStartPtr));
         if (gribs.size() >= maxMessages)
           return gribs;
       }

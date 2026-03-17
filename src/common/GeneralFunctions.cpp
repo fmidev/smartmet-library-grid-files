@@ -41,12 +41,12 @@ namespace SmartMet
 Fmi::TimeZones itsTimeZones;
 
 
-std::string uint64_toHex(unsigned long long value)
+std::string uint64_toHex(UInt64 value)
 {
   try
   {
     char st[25];
-    sprintf(st, "0x%llX", value);
+    sprintf(st, "0x%lX", value);
     return std::string(st);
   }
   catch (...)
@@ -152,7 +152,7 @@ int num_compare(int& v1, int& v2)
   }
 }
 
-int num_compare(unsigned long long& v1, unsigned long long& v2)
+int num_compare(UInt64& v1, UInt64& v2)
 {
   try
   {
@@ -168,7 +168,7 @@ int num_compare(unsigned long long& v1, unsigned long long& v2)
   }
 }
 
-int num_compare(long long& v1, long long& v2)
+int num_compare(Int64& v1, Int64& v2)
 {
   try
   {
@@ -404,7 +404,7 @@ std::string space(uint size)
 
 
 
-unsigned long long getTime()
+UInt64 getTime()
 {
   try
   {
@@ -492,7 +492,7 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
 
 
 
-long long getFileSize(const char *filename)
+Int64 getFileSize(const char *filename)
 {
   try
   {
@@ -501,7 +501,7 @@ long long getFileSize(const char *filename)
 
     struct stat buf;
     if (stat(filename, &buf) == 0)
-      return (long long)buf.st_size;
+      return (Int64)buf.st_size;
 
     return -1;
   }
@@ -513,7 +513,7 @@ long long getFileSize(const char *filename)
 
 
 
-long long getFileSize(FILE *file)
+Int64 getFileSize(FILE *file)
 {
   try
   {
@@ -524,7 +524,7 @@ long long getFileSize(FILE *file)
 
     struct stat buf;
     if (fstat(fd, &buf) == 0)
-      return (long long)buf.st_size;
+      return (Int64)buf.st_size;
 
     return -1;
   }
@@ -563,7 +563,7 @@ uint stringToId(const char *str, uint len)
   {
     if (str == nullptr) return 0;
 
-    unsigned long long id = 0;
+    UInt64 id = 0;
     uint idx = 0;
 
     while (str[idx] != '\0' && idx < len)
@@ -978,7 +978,7 @@ char toInt8(const char *str)
 {
   try
   {
-    if (str == nullptr) return 0;
+    if (str == nullptr || str[0] == '\0') return 0;
 
     return static_cast<char>(atoll(str));
   }
@@ -994,7 +994,7 @@ short toInt16(const char *str)
 {
   try
   {
-    if (str == nullptr) return 0;
+    if (str == nullptr || str[0] == '\0') return 0;
 
     return static_cast<short>(atoll(str));
   }
@@ -1010,7 +1010,7 @@ int toInt32(const char *str)
 {
   try
   {
-    if (str == nullptr) return 0;
+    if (str == nullptr || str[0] == '\0') return 0;
 
     return static_cast<int>(atoll(str));
   }
@@ -1022,11 +1022,11 @@ int toInt32(const char *str)
 
 
 
-long long toInt64(const char *str)
+Int64 toInt64(const char *str)
 {
   try
   {
-    if (str == nullptr) return 0;
+    if (str == nullptr || str[0] == '\0') return 0;
 
     return atoll(str);
   }
@@ -1042,7 +1042,7 @@ size_t toSize_t(const char *str)
 {
   try
   {
-    if (str == nullptr) return 0;
+    if (str == nullptr || str[0] == '\0') return 0;
 
     return static_cast<size_t>(atoll(str));
   }
@@ -1058,7 +1058,7 @@ uchar toUInt8(const char *str)
 {
   try
   {
-    if (str == nullptr) return 0;
+    if (str == nullptr || str[0] == '\0') return 0;
 
     return static_cast<uchar>(atoll(str));
   }
@@ -1074,7 +1074,7 @@ ushort toUInt16(const char *str)
 {
   try
   {
-    if (str == nullptr) return 0;
+    if (str == nullptr || str[0] == '\0') return 0;
 
     return static_cast<ushort>(atoll(str));
   }
@@ -1090,7 +1090,7 @@ uint toUInt32(const char *str)
 {
   try
   {
-    if (str == nullptr) return 0;
+    if (str == nullptr || str[0] == '\0') return 0;
 
     return static_cast<uint>(atoll(str));
   }
@@ -1102,11 +1102,11 @@ uint toUInt32(const char *str)
 
 
 
-ulonglong toUInt64(const char *str)
+UInt64 toUInt64(const char *str)
 {
   try
   {
-    if (str == nullptr) return 0;
+    if (str == nullptr || str[0] == '\0') return 0;
 
     return std::stoull(str);
   }
@@ -1243,7 +1243,7 @@ int toInt32(const std::string &str)
 
 
 
-long long toInt64(const std::string &str)
+Int64 toInt64(const std::string &str)
 {
   try
   {
@@ -1299,7 +1299,7 @@ uint toUInt32(const std::string &str)
 
 
 
-ulonglong toUInt64(const std::string &str)
+UInt64 toUInt64(const std::string &str)
 {
   try
   {
@@ -2908,7 +2908,7 @@ std::string fileToBase64(const char *filename)
 {
   try
   {
-    long long size = getFileSize(filename);
+    Int64 size = getFileSize(filename);
     if (size <= 0)
     {
       Fmi::Exception exception(BCP, "Invalid file size!");
@@ -3076,7 +3076,7 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
 
 
 
-std::uint8_t read_uint8(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::uint8_t read_uint8(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3104,7 +3104,7 @@ std::uint8_t read_uint8(unsigned char *dataPtr,ulonglong dataSize,ulonglong read
 
 
 
-std::uint16_t read_uint16(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::uint16_t read_uint16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3134,7 +3134,7 @@ std::uint16_t read_uint16(unsigned char *dataPtr,ulonglong dataSize,ulonglong re
 
 
 
-std::uint32_t read_uint24(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::uint32_t read_uint24(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3165,7 +3165,7 @@ std::uint32_t read_uint24(unsigned char *dataPtr,ulonglong dataSize,ulonglong re
 
 
 
-std::uint32_t read_uint32(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::uint32_t read_uint32(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3198,7 +3198,7 @@ std::uint32_t read_uint32(unsigned char *dataPtr,ulonglong dataSize,ulonglong re
 
 
 
-std::uint64_t read_uint64(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::uint64_t read_uint64(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3213,15 +3213,15 @@ std::uint64_t read_uint64(unsigned char *dataPtr,ulonglong dataSize,ulonglong re
 
     unsigned char* rPtr = dataPtr + readPos;
 
-    ulonglong a = rPtr[0];
-    ulonglong b = rPtr[1];
-    ulonglong c = rPtr[2];
-    ulonglong d = rPtr[3];
-    ulonglong e = rPtr[4];
-    ulonglong f = rPtr[5];
-    ulonglong g = rPtr[6];
-    ulonglong h = rPtr[7];
-    ulonglong val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
+    UInt64 a = rPtr[0];
+    UInt64 b = rPtr[1];
+    UInt64 c = rPtr[2];
+    UInt64 d = rPtr[3];
+    UInt64 e = rPtr[4];
+    UInt64 f = rPtr[5];
+    UInt64 g = rPtr[6];
+    UInt64 h = rPtr[7];
+    UInt64 val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
 
     return val;
   }
@@ -3235,7 +3235,7 @@ std::uint64_t read_uint64(unsigned char *dataPtr,ulonglong dataSize,ulonglong re
 
 
 
-std::int8_t read_int8(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::int8_t read_int8(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3264,7 +3264,7 @@ std::int8_t read_int8(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPo
 
 
 
-std::int16_t read_int16(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::int16_t read_int16(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3295,7 +3295,7 @@ std::int16_t read_int16(unsigned char *dataPtr,ulonglong dataSize,ulonglong read
 
 
 
-std::int32_t read_int24(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::int32_t read_int24(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3328,7 +3328,7 @@ std::int32_t read_int24(unsigned char *dataPtr,ulonglong dataSize,ulonglong read
 
 
 
-std::int32_t read_int32(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::int32_t read_int32(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3360,7 +3360,7 @@ std::int32_t read_int32(unsigned char *dataPtr,ulonglong dataSize,ulonglong read
 
 
 
-std::float_t read_float(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::float_t read_float(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3396,7 +3396,7 @@ std::float_t read_float(unsigned char *dataPtr,ulonglong dataSize,ulonglong read
 
 
 
-std::double_t read_double(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::double_t read_double(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3435,7 +3435,7 @@ std::double_t read_double(unsigned char *dataPtr,ulonglong dataSize,ulonglong re
 
 
 
-std::float_t read_ibmFloat(unsigned char *dataPtr,ulonglong dataSize,ulonglong readPos)
+std::float_t read_ibmFloat(unsigned char *dataPtr,UInt64 dataSize,UInt64 readPos)
 {
   try
   {
@@ -3795,13 +3795,13 @@ int getClosestIndex(FloatVec& values,float value)
 
 
 
-long long getCsvInt64Field(const char *csv,uint fieldIndex)
+Int64 getCsvInt64Field(const char *csv,uint fieldIndex)
 {
   try
   {
     const char *p = csv;
     uint cnt = 0;
-    long long val = 0;
+    Int64 val = 0;
     bool neg = false;
     while (true)
     {

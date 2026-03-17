@@ -38,7 +38,6 @@ QueryDataFile::QueryDataFile(const char *filename)
   {
     mFilename = filename;
     mQueryDataFile = new NFmiQueryData(mFilename,true);
-
     mFastQueryInfo = new NFmiFastQueryInfo(mQueryDataFile);
   }
   catch (...)
@@ -80,7 +79,14 @@ uint QueryDataFile::getGeometryId()
     return 0;
   }
 
-  unsigned long classid = area->ClassId();
+  const auto &sr = *area->SpatialReference();
+
+  OGRErr err = OGRERR_NONE;
+  double false_eastening = sr.GetNormProjParm(SRS_PP_FALSE_EASTING,0,&err);
+  double false_northing = sr.GetNormProjParm(SRS_PP_FALSE_NORTHING,0,&err);
+
+
+  UInt64 classid = area->ClassId();
   const auto rect = area->WorldRect();
 
   std::vector<std::string> fmiArea;
@@ -117,6 +123,27 @@ uint QueryDataFile::getGeometryId()
 
     case kNFmiGnomonicArea:
       break;
+
+    case kNFmiYKJArea:
+    case kNFmiGdalArea:
+    {
+      sprintf(projectionString,"%d;id;name;%d;%d;%.6f;%.6f;%.6f;%.6f;%s;27.000000;0.000000;%.6f;%.6f;%.6f;%.6f;description",
+          T::GridProjectionValue::TransverseMercator,
+          cols,
+          rows,
+          area->BottomLeftLatLon().X(),
+          area->BottomLeftLatLon().Y(),
+          fabs(dx),
+          fabs(dy),
+          sm,
+          false_eastening,
+          false_northing,
+          sr.GetSemiMajor(),
+          sr.GetSemiMinor()
+          );
+    }
+    //std::cout << projectionString << "\n";
+    break;
 
     case kNFmiStereographicArea:
     {
@@ -163,9 +190,6 @@ uint QueryDataFile::getGeometryId()
       break;
 
     case kNFmiPKJArea:
-      break;
-
-    case kNFmiYKJArea:
       break;
 
     case kNFmiLatLonArea:
@@ -232,8 +256,10 @@ uint QueryDataFile::getGeometryId()
     }
     else
     {
-      std::cout << "** Add the following geometry into the geometry definition file (=> fill id,name and description fields) :\n\n";
-      std::cout << "MISSING GEOMETRY: " << projectionString << "\n";
+      std::cout << "** MISSING GEOMETRY **\n";
+      std::cout << "Add the following geometry into the geometry definition\n";
+      std::cout << "file (=> fill id,name and description fields) :\n\n";
+      std::cout << projectionString << "\n\n";
       return 0;
     }
   }
@@ -302,6 +328,9 @@ void QueryDataFile::read(MessageInfoVec& messageInfoList)
   try
   {
     const NFmiGrid *grid = mFastQueryInfo->Grid();
+    if (!grid)
+      return;
+
     int cols = grid->XNumber();
     int rows = grid->YNumber();
     int geometryId = getGeometryId();
@@ -317,6 +346,8 @@ void QueryDataFile::read(MessageInfoVec& messageInfoList)
 
         int levelId = Identification::gridDef.getFmiLevelIdByNewbaseLevelId(lev.LevelTypeId());
         int level = lev.LevelValue();
+        if (level == 32700)
+          level = 0;
 
         bool tInd = mFastQueryInfo->FirstTime();
         while (tInd)

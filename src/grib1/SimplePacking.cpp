@@ -558,7 +558,7 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
     if (!bitsPerValue)
     {
       T::ParamValue diff = maxValue - minValue;
-      ulonglong valuesInRange = diff / std::pow(2.0, E);
+      UInt64 valuesInRange = diff / std::pow(2.0, E);
 
       while (C_UINT64(1 << bits) < valuesInRange)
         bits++;
@@ -597,7 +597,7 @@ void SimplePacking::encodeValues(Message *message,T::ParamValue_vec& values)
         double Y = *it;
         double X = (Y - RDfac) / EDfac;
 
-        ulonglong v = C_UINT64(round(X));
+        UInt64 v = C_UINT64(round(X));
         bitArrayWriter.writeBits(bits,v);
       }
     }

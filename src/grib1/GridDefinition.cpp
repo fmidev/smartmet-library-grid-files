@@ -1085,14 +1085,14 @@ RotationSettings* GridDefinition::getRotation() const
 
 
 
-/*! \brief The method is used for fetching a (long long) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool GridDefinition::getProperty(uint propertyId,long long& value)
+bool GridDefinition::getProperty(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -1136,7 +1136,7 @@ bool GridDefinition::getProperty(uint propertyId,double& value)
     if (getProperty_rotation(propertyId,value))
       return true;
 
-    long long val = 0;
+    Int64 val = 0;
     if (getProperty_gridArea(propertyId,val))
     {
       value = val;
@@ -1274,14 +1274,14 @@ void GridDefinition::getProperties_rotation(T::PropertySettingVec& properties)
 
 
 
-/*! \brief The method is used for fetching a (long long) value for the GridAreaSettings property according to the property id.
+/*! \brief The method is used for fetching a (Int64) value for the GridAreaSettings property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool GridDefinition::getProperty_gridArea(uint propertyId,long long& value)
+bool GridDefinition::getProperty_gridArea(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -1329,14 +1329,14 @@ bool GridDefinition::getProperty_gridArea(uint propertyId,long long& value)
 
 
 
-/*! \brief The method is used for fetching a (long long) value for the ScanningModeSettings property according to the property id.
+/*! \brief The method is used for fetching a (Int64) value for the ScanningModeSettings property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool GridDefinition::getProperty_scanningMode(uint propertyId,long long& value)
+bool GridDefinition::getProperty_scanningMode(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -1364,14 +1364,14 @@ bool GridDefinition::getProperty_scanningMode(uint propertyId,long long& value)
 
 
 
-/*! \brief The method is used for fetching a (long long) value for the ResolutionFlagsSettings property according to the property id.
+/*! \brief The method is used for fetching a (Int64) value for the ResolutionFlagsSettings property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool GridDefinition::getProperty_resolutionFlags(uint propertyId,long long& value)
+bool GridDefinition::getProperty_resolutionFlags(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -1399,14 +1399,14 @@ bool GridDefinition::getProperty_resolutionFlags(uint propertyId,long long& valu
 
 
 
-/*! \brief The method is used for fetching a (long long) value for the RotationSettings property according to the property id.
+/*! \brief The method is used for fetching a (Int64) value for the RotationSettings property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool GridDefinition::getProperty_rotation(uint propertyId,long long& value)
+bool GridDefinition::getProperty_rotation(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -1486,14 +1486,14 @@ bool GridDefinition::getProperty_rotation(uint propertyId,double& value)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool GridDefinition::setProperty(uint propertyId,long long value)
+bool GridDefinition::setProperty(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -1558,14 +1558,14 @@ bool GridDefinition::setProperty(uint propertyId,double value)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the GridAreaSettings property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the GridAreaSettings property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool GridDefinition::setProperty_gridArea(uint propertyId,long long value)
+bool GridDefinition::setProperty_gridArea(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -1613,14 +1613,14 @@ bool GridDefinition::setProperty_gridArea(uint propertyId,long long value)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the ScanningModeSettings property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the ScanningModeSettings property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool GridDefinition::setProperty_scanningMode(uint propertyId,long long value)
+bool GridDefinition::setProperty_scanningMode(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -1648,14 +1648,14 @@ bool GridDefinition::setProperty_scanningMode(uint propertyId,long long value)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the ResolutionFlagsSettings property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the ResolutionFlagsSettings property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool GridDefinition::setProperty_resolutionFlags(uint propertyId,long long value)
+bool GridDefinition::setProperty_resolutionFlags(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -1683,14 +1683,14 @@ bool GridDefinition::setProperty_resolutionFlags(uint propertyId,long long value
 
 
 
-/*! \brief The method is used for setting a (long long) value for the RotationSettings property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the RotationSettings property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool GridDefinition::setProperty_rotation(uint propertyId,long long value)
+bool GridDefinition::setProperty_rotation(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try

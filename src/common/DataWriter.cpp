@@ -31,7 +31,7 @@ DataWriter::~DataWriter()
 
 
 
-ulonglong DataWriter::getWritePosition()
+UInt64 DataWriter::getWritePosition()
 {
   throw Fmi::Exception(BCP,"Not implemented!",nullptr);
 }
@@ -40,7 +40,7 @@ ulonglong DataWriter::getWritePosition()
 
 
 
-ulonglong DataWriter::getMaxWritePosition()
+UInt64 DataWriter::getMaxWritePosition()
 {
   throw Fmi::Exception(BCP,"Not implemented!",nullptr);
 }
@@ -65,7 +65,7 @@ void DataWriter::setLittleEndian(bool _littleEndian)
 
 
 
-void DataWriter::setWritePosition(ulonglong _pos)
+void DataWriter::setWritePosition(UInt64 _pos)
 {
   throw Fmi::Exception(BCP,"Not implemented!",nullptr);
 }
@@ -74,7 +74,7 @@ void DataWriter::setWritePosition(ulonglong _pos)
 
 
 
-void DataWriter::write_data(void *_data,ulonglong _size)
+void DataWriter::write_data(void *_data,UInt64 _size)
 {
   throw Fmi::Exception(BCP,"Not implemented!",nullptr);
 }

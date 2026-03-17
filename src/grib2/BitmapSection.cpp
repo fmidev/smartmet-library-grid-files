@@ -142,14 +142,14 @@ void BitmapSection::setMessagePtr(Message *message)
 
 
 
-/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool BitmapSection::getProperty(uint propertyId,long long& value)
+bool BitmapSection::getProperty(uint propertyId,Int64& value)
 {
   try
   {
@@ -178,14 +178,14 @@ void BitmapSection::getProperties(T::PropertySettingVec& properties)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool BitmapSection::setProperty(uint propertyId,long long value)
+bool BitmapSection::setProperty(uint propertyId,Int64 value)
 {
   try
   {
@@ -468,7 +468,7 @@ std::size_t BitmapSection::getBitmapDataSizeInBytes() const
 
 
 
-long long BitmapSection::getHash()
+Int64 BitmapSection::getHash()
 {
   try
   {
@@ -476,7 +476,7 @@ long long BitmapSection::getHash()
       return mHash;
 
     for (std::size_t t=0; t<mBitmapDataSizeInBytes; t++)
-      mHash += (long long)(t+ mBitmapDataPtr[t] * t);
+      mHash += (Int64)(t+ mBitmapDataPtr[t] * t);
 
     return mHash;
   }

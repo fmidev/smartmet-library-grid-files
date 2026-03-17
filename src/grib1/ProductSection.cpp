@@ -412,14 +412,14 @@ void ProductSection::setMessagePtr(Message *message)
 
 
 
-/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool ProductSection::getProperty(uint propertyId,long long& value)
+bool ProductSection::getProperty(uint propertyId,Int64& value)
 {
   try
   {
@@ -571,14 +571,14 @@ void ProductSection::getProperties(T::PropertySettingVec& properties)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool ProductSection::setProperty(uint propertyId,long long value)
+bool ProductSection::setProperty(uint propertyId,Int64 value)
 {
   try
   {
@@ -847,7 +847,7 @@ void ProductSection::write(DataWriter& dataWriter)
 
     if (mDataPtr != nullptr  &&  mDataSize > 0)
     {
-      ulonglong fPos = dataWriter.getWritePosition();
+      UInt64 fPos = dataWriter.getWritePosition();
       dataWriter.write_nTimes(0xFF,40-(fPos-mFilePosition));
       dataWriter.write_data(mDataPtr,mDataSize);
     }
@@ -1373,7 +1373,7 @@ T::TimeString ProductSection::getReferenceTime() const
         \return   The forecast type.
 */
 
-short ProductSection::getForecastType() const
+T::ForecastType ProductSection::getForecastType() const
 {
   try
   {
@@ -1394,7 +1394,7 @@ short ProductSection::getForecastType() const
         \return   The forecast number.
 */
 
-short ProductSection::getForecastNumber() const
+T::ForecastNumber ProductSection::getForecastNumber() const
 {
   try
   {

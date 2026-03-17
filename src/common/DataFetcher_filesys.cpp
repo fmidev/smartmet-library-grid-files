@@ -328,14 +328,14 @@ void DataFetcher_filesys::getFileList(uint serverType,uint protocol,const char *
 
 
 
-long long DataFetcher_filesys::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
+Int64 DataFetcher_filesys::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {
   FUNCTION_TRACE
   try
   {
     struct stat buf;
     if (stat(filename, &buf) == 0)
-      return (long long)buf.st_size;
+      return (Int64)buf.st_size;
 
     return -1;
   }

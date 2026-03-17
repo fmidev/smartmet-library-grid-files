@@ -37,7 +37,7 @@ namespace GRID
 */
 // ====================================================================================
 
-typedef unsigned long long UInt64;
+typedef UInt64 UInt64;
 
 #ifndef uchar
   typedef unsigned char uchar;
@@ -82,7 +82,7 @@ class ValueCacheEntry
           fwrite(f,sizeof(T::ParamValue),mSize,file);
           fclose(file);
 
-          long long fileSize = getFileSize(fname);
+          Int64 fileSize = getFileSize(fname);
           if (fileSize < 0)
           {
             Fmi::Exception exception(BCP,"The file does not exist!");

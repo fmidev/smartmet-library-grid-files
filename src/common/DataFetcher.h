@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "Typedefs.h"
+
 namespace SmartMet
 {
 
@@ -54,7 +56,7 @@ class DataFetcher
     virtual AccessInfo* getAccessInfo(const char *server);
     virtual int         getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr);
     virtual void        getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
-    virtual long long   getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
+    virtual Int64       getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
     virtual void        getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers);
     virtual void        setDebugEnabled(bool enabled);
     virtual void        setAccessFile(const char *filename);

@@ -111,15 +111,15 @@ class GridSection : public GRID::MessageSection
     void                  setGridGeometryId(T::GeometryId geometryId);
     void                  setMessagePtr(Message *message);
 
-    bool                  getProperty(uint propertyId,long long& value);
+    bool                  getProperty(uint propertyId,Int64& value);
     void                  getProperties(T::PropertySettingVec& properties);
 
-    bool                  setProperty(uint propertyId,long long value);
+    bool                  setProperty(uint propertyId,Int64 value);
     bool                  setProperty(uint propertyId,double value);
 
-    void                  setNumberOfVerticalCoordinateValues(long long value);
-    void                  setPvlLocation(long long value);
-    void                  setDataRepresentationType(long long value);
+    void                  setNumberOfVerticalCoordinateValues(Int64 value);
+    void                  setPvlLocation(Int64 value);
+    void                  setDataRepresentationType(Int64 value);
 
     void                  read(MemoryReader& memoryReader);
     void                  write(DataWriter& dataWriter);

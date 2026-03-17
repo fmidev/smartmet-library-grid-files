@@ -428,13 +428,13 @@ void JpegGridDataRepresentationImpl::decodeValues(Message *message, T::ParamValu
 
       // Get data dimensions
 
-      int width = 0;
-      int height = 0;
+      //int width = 0;
+      //int height = 0;
 
       if (image->comps)
       {
-        width = image->comps->w;
-        height = image->comps->h;
+        //width = image->comps->w;
+        //height = image->comps->h;
       }
 
       // Clear the output vector and reserve space

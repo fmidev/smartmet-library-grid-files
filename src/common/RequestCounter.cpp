@@ -108,7 +108,7 @@ TopList RequestCounter::getTopRequestCounters()
 
 
 
-ulonglong RequestCounter::getTotalRequests()
+UInt64 RequestCounter::getTotalRequests()
 {
   FUNCTION_TRACE
   try
@@ -142,7 +142,7 @@ void RequestCounter::resetTotalRequests()
 
 
 
-void RequestCounter::incCounter(ulonglong key)
+void RequestCounter::incCounter(UInt64 key)
 {
   FUNCTION_TRACE
   try
@@ -157,7 +157,7 @@ void RequestCounter::incCounter(ulonglong key)
     auto cnt = mRequestCounters.find(key);
     if (cnt == mRequestCounters.end())
     {
-      mRequestCounters.insert(std::pair<ulonglong,uint>(key,1));
+      mRequestCounters.insert(std::pair<UInt64,uint>(key,1));
     }
     else
     {
@@ -278,7 +278,7 @@ HitCounter RequestCounter::getGeometryHitCounters(uint geometryId)
 
 
 
-uint RequestCounter::getCounter(ulonglong key)
+uint RequestCounter::getCounter(UInt64 key)
 {
   FUNCTION_TRACE
   try
@@ -352,7 +352,7 @@ void RequestCounter::updateTopCounters()
 
     for (auto it = mRequestCounters.begin(); it != mRequestCounters.end(); ++it)
     {
-      mTopRequestCounters.insert(std::pair<uint,ulonglong>(it->second,it->first));
+      mTopRequestCounters.insert(std::pair<uint,UInt64>(it->second,it->first));
     }
   }
   catch (...)

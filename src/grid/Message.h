@@ -35,8 +35,8 @@ struct MessageInfo
   char*              mFileMemoryPtr;
   uint               mMessageType;
   uint               mMessageSize;
-  uint               mProducerId;
-  uint               mGenerationId;
+  T::ProducerId      mProducerId;
+  T::GenerationId    mGenerationId;
   T::FmiParamId      mFmiParameterId;
   uint               mFmiParameterName;
   T::ParamLevelId    mFmiParameterLevelId;
@@ -74,19 +74,19 @@ class Message
     virtual void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     virtual bool                getAttributeValue(const char *attributeName, std::string& attributeValue) const;
     virtual bool                hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-    virtual uint                getFileId() const;
+    virtual T::FileId           getFileId() const;
     virtual T::FileType         getMessageType() const;
-    virtual uint                getProducerId() const;
-    virtual uint                getGenerationId() const;
-    virtual uint                getMessageIndex() const;
+    virtual T::ProducerId       getProducerId() const;
+    virtual T::GenerationId     getGenerationId() const;
+    virtual T::MessageIndex     getMessageIndex() const;
     virtual char*               getMemoryPtr() const;
     virtual uint                getMessageSize() const;
     virtual T::FilePosition     getFilePosition() const;
     virtual char*               getFileMemoryPtr() const;
     virtual T::TimeString       getForecastTime() const;
     virtual time_t              getForecastTimeT() const;
-    virtual short               getForecastType() const;
-    virtual short               getForecastNumber() const;
+    virtual T::ForecastType     getForecastType() const;
+    virtual T::ForecastNumber   getForecastNumber() const;
 
     virtual T::FmiParamId       getFmiParameterId() const;
     virtual T::ParamLevelId     getFmiParameterLevelId() const;
@@ -235,8 +235,8 @@ class Message
     virtual void                premap() const;
 
     virtual void                incRequestCounter() {mRequestCounter++;}
-    virtual long long           getRequestCounter() {return mRequestCounter;}
-    virtual void                setRequestCounter(long long counter) {mRequestCounter = counter;}
+    virtual Int64               getRequestCounter() {return mRequestCounter;}
+    virtual void                setRequestCounter(Int64 counter) {mRequestCounter = counter;}
 
     virtual void                modifyGridValueVector(uint modificationOperation,double_vec& modificationParameters,T::ParamValue_vec& values) const;
 
@@ -264,31 +264,29 @@ class Message
 
     // Grib 2 specific settings
 
-    virtual bool                getProperty(uint propertyId,long long& value);
-    virtual bool                getProperty(const char *propertyName,long long& value);
+    virtual bool                getProperty(uint propertyId,Int64& value);
+    virtual bool                getProperty(const char *propertyName,Int64& value);
 
     virtual void                getProperties(T::PropertySettingVec& properties);
 
     virtual bool                setProperty(uint propertyId,char value);
     virtual bool                setProperty(uint propertyId,short value);
     virtual bool                setProperty(uint propertyId,int value);
-    virtual bool                setProperty(uint propertyId,long value);
     virtual bool                setProperty(uint propertyId,unsigned char value);
     virtual bool                setProperty(uint propertyId,unsigned short value);
     virtual bool                setProperty(uint propertyId,unsigned int value);
-    virtual bool                setProperty(uint propertyId,unsigned long value);
-    virtual bool                setProperty(uint propertyId,long long value);
+    virtual bool                setProperty(uint propertyId,UInt64 value);
+    virtual bool                setProperty(uint propertyId,Int64 value);
     virtual bool                setProperty(uint propertyId,double value);
 
     virtual bool                setProperty(const char *propertyName,char value);
     virtual bool                setProperty(const char *propertyName,short value);
     virtual bool                setProperty(const char *propertyName,int value);
-    virtual bool                setProperty(const char *propertyName,long value);
     virtual bool                setProperty(const char *propertyName,unsigned char value);
     virtual bool                setProperty(const char *propertyName,unsigned short value);
     virtual bool                setProperty(const char *propertyName,unsigned int value);
-    virtual bool                setProperty(const char *propertyName,unsigned long value);
-    virtual bool                setProperty(const char *propertyName,long long value);
+    virtual bool                setProperty(const char *propertyName,UInt64 value);
+    virtual bool                setProperty(const char *propertyName,Int64 value);
     virtual bool                setProperty(const char *propertyName,double value);
 
     virtual void                lockData();
@@ -305,7 +303,7 @@ class Message
   protected:
 
     /*! \brief  The index of the message in the file. */
-    uint                        mMessageIndex;
+    T::MessageIndex             mMessageIndex;
 
     /*! \brief  The size of the message in bytes. */
     uint                        mMessageSize;
@@ -341,7 +339,7 @@ class Message
     uint                        mGribParameterUnits;
 
     /*! \brief  The file type. */
-    uchar                       mFileType;
+    T::FileType                 mFileType;
 
     /*! \brief  The fmi parameter level identifier. */
     T::ParamLevelId             mFmiParameterLevelId;
@@ -359,7 +357,7 @@ class Message
     mutable ThreadLock          mThreadLock;
     short                       mDefaultInterpolationMethod;
     mutable bool                mPremapped;
-    mutable long long           mRequestCounter;
+    mutable Int64               mRequestCounter;
 };
 
 

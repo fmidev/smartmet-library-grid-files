@@ -7,7 +7,7 @@
 namespace SmartMet
 {
 
-typedef long long longlong;
+typedef Int64 Int64;
 
 double linearInterpolation(double wantedPosition, double position1, double position2, double value1, double value2)
 {
@@ -196,17 +196,17 @@ double linearInterpolation(double x,double y,double x1,double y1,double x2,doubl
 
 
 
-longlong linearInterpolation(longlong x,longlong y,longlong x1,longlong y1,longlong x2,longlong y2,longlong val_q11,longlong val_q21,longlong val_q22,longlong val_q12)
+Int64 linearInterpolation(Int64 x,Int64 y,Int64 x1,Int64 y1,Int64 x2,Int64 y2,Int64 val_q11,Int64 val_q21,Int64 val_q22,Int64 val_q12)
 {
   try
   {
-    longlong XParamValueMissing = 0x7FFFFFFFFFFFFFFF;
+    Int64 XParamValueMissing = 0x7FFFFFFFFFFFFFFF;
     // https://en.wikipedia.org/wiki/Bilinear_interpolation
 
-    longlong dist_x1 = x-x1;
-    longlong dist_x2 = x2-x;
-    longlong dist_y1 = y-y1;
-    longlong dist_y2 = y2-y;
+    Int64 dist_x1 = x-x1;
+    Int64 dist_x2 = x2-x;
+    Int64 dist_y1 = y-y1;
+    Int64 dist_y2 = y2-y;
 
 
     // Bilinear interpolation
@@ -216,8 +216,8 @@ longlong linearInterpolation(longlong x,longlong y,longlong x1,longlong y1,longl
     {
       // All corners have a value.
 
-      longlong fy1 = dist_x2*val_q11 + dist_x1*val_q21;
-      longlong fy2 = dist_x2*val_q12 + dist_x1*val_q22;
+      Int64 fy1 = dist_x2*val_q11 + dist_x1*val_q21;
+      Int64 fy2 = dist_x2*val_q12 + dist_x1*val_q22;
       return (dist_y2*fy1 + dist_y1*fy2);
     }
 
@@ -267,7 +267,7 @@ longlong linearInterpolation(longlong x,longlong y,longlong x1,longlong y1,longl
     if (val_q11 == ParamValueMissing && val_q21 != ParamValueMissing  &&
         val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
     {
-      longlong wsum = (dist_x2 * dist_y1 + dist_x1 * dist_y1 + dist_x1 * dist_y2);
+      Int64 wsum = (dist_x2 * dist_y1 + dist_x1 * dist_y1 + dist_x1 * dist_y2);
       return ((dist_x1 * dist_y2 * val_q21 + dist_x2 * dist_y1 * val_q12 +
           dist_x1 * dist_y1 * val_q22) / wsum);
     }
@@ -275,7 +275,7 @@ longlong linearInterpolation(longlong x,longlong y,longlong x1,longlong y1,longl
     if (val_q11 != ParamValueMissing && val_q21 == ParamValueMissing  &&
         val_q12 != ParamValueMissing &&  val_q22 != ParamValueMissing)
     {
-      longlong wsum = (dist_x2 * dist_y2 + dist_x2 * dist_y1 + dist_x1 * dist_y1);
+      Int64 wsum = (dist_x2 * dist_y2 + dist_x2 * dist_y1 + dist_x1 * dist_y1);
       return ((dist_x2 * dist_y2 * val_q11 + dist_x2 * dist_y1 * val_q12 +
           dist_x1 * dist_y1 * val_q22) / wsum);
     }
@@ -283,7 +283,7 @@ longlong linearInterpolation(longlong x,longlong y,longlong x1,longlong y1,longl
     if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
         val_q12 == ParamValueMissing &&  val_q22 != ParamValueMissing)
     {
-      longlong wsum = (dist_x1 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
+      Int64 wsum = (dist_x1 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
       return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
         dist_x1 * dist_y1 * val_q22) / wsum);
     }
@@ -291,7 +291,7 @@ longlong linearInterpolation(longlong x,longlong y,longlong x1,longlong y1,longl
     if (val_q11 != ParamValueMissing && val_q21 != ParamValueMissing  &&
         val_q12 != ParamValueMissing &&  val_q22 == ParamValueMissing)
     {
-      longlong wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
+      Int64 wsum = (dist_x2 * dist_y1 + dist_x2 * dist_y2 + dist_x1 * dist_y2);
       return ((dist_x2 * dist_y2 * val_q11 + dist_x1 * dist_y2 * val_q21 +
         dist_x2 * dist_y1 * val_q12) / wsum);
     }
@@ -313,18 +313,18 @@ double linearInterpolation2(double x,double y,double x1,double y1,double x2,doub
       val_q12 == ParamValueMissing &&  val_q22 == ParamValueMissing)
     return ParamValueMissing;
 
-  longlong ax = (longlong)(x*1000000);
-  longlong ay = (longlong)(y*1000000);
-  longlong ax1 = (longlong)(x1*1000000);
-  longlong ay1 = (longlong)(y1*1000000);
-  longlong ax2 = (longlong)(x2*1000000);
-  longlong ay2 = (longlong)(y2*1000000);
-  longlong aval_q11 = (longlong)(val_q11*1000000);
-  longlong aval_q21 = (longlong)(val_q21*1000000);
-  longlong aval_q22 = (longlong)(val_q22*1000000);
-  longlong aval_q12 = (longlong)(val_q12*1000000);
+  Int64 ax = (Int64)(x*1000000);
+  Int64 ay = (Int64)(y*1000000);
+  Int64 ax1 = (Int64)(x1*1000000);
+  Int64 ay1 = (Int64)(y1*1000000);
+  Int64 ax2 = (Int64)(x2*1000000);
+  Int64 ay2 = (Int64)(y2*1000000);
+  Int64 aval_q11 = (Int64)(val_q11*1000000);
+  Int64 aval_q21 = (Int64)(val_q21*1000000);
+  Int64 aval_q22 = (Int64)(val_q22*1000000);
+  Int64 aval_q12 = (Int64)(val_q12*1000000);
 
-  longlong res = linearInterpolation(ax,ay,ax1,ay1,ax2,ay2,aval_q11,aval_q21,aval_q22,aval_q12);
+  Int64 res = linearInterpolation(ax,ay,ax1,ay1,ax2,ay2,aval_q11,aval_q21,aval_q22,aval_q12);
 
   if (res != 0x7FFFFFFFFFFFFFFF)
     return (double)res / 1000000;
@@ -952,7 +952,7 @@ void timeInterpolation(T::ParamValue_vec& values1,T::ParamValue_vec& values2,int
         newValues = values2;
         return;
 
-      case 15:
+      case T::TimeInterpolationMethod::Transfer:
         newValues = transferInterpolation(values1,values2,width,height,tp);
         break;
 

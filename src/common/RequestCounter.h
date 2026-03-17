@@ -18,8 +18,8 @@ namespace SmartMet
 
 typedef std::unordered_map<uint,uint> HitCounter;
 typedef std::map<uint,HitCounter> GeometryHitCounter;
-typedef std::unordered_map<ulonglong,uint> KeyCounter;
-typedef std::multimap<uint,ulonglong> TopList;
+typedef std::unordered_map<UInt64,uint> KeyCounter;
+typedef std::multimap<uint,UInt64> TopList;
 
 
 
@@ -32,14 +32,14 @@ class RequestCounter
 
     void                clearCounters();
     void                clearTopIndexes();
-    ulonglong           getTotalRequests();
+    UInt64              getTotalRequests();
     void                resetTotalRequests();
     void                saveGeometryHitCounters(const char *filename);
     void                loadGeometryHitCounters(const char *filename);
-    void                incCounter(ulonglong key);
+    void                incCounter(UInt64 key);
     void                incGeometryHitCounter(uint geometryId,uint index);
     bool                isCountingEnabled();
-    uint                getCounter(ulonglong key);
+    uint                getCounter(UInt64 key);
     TopList             getTopRequestCounters();
     HitCounter          getGeometryHitCounters(uint geometryId);
     void                multiplyCounters(double multiplier);
@@ -50,7 +50,7 @@ class RequestCounter
 
     void                setGeometryHitCounter(uint geometryId,uint index,uint count);
 
-    ulonglong           mTotalRequests;
+    UInt64              mTotalRequests;
     TopList             mTopRequestCounters;
     bool                mCountingEnabled;
     ThreadLock          mThreadLock;

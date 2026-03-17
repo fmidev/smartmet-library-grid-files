@@ -35,9 +35,9 @@ class LatLonImpl : public LatLon
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
 
-    bool                getProperty(uint propertyId,long long& value);
+    bool                getProperty(uint propertyId,Int64& value);
     void                getProperties(T::PropertySettingVec& properties);
-    bool                setProperty(uint propertyId,long long value);
+    bool                setProperty(uint propertyId,Int64 value);
 
     void                initSpatialReference();
     void                print(std::ostream& stream,uint level,uint optionFlags) const;

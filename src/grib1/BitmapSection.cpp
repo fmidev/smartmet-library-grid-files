@@ -323,7 +323,7 @@ std::size_t BitmapSection::getBitmapDataSizeInBytes() const
 
 
 
-long long BitmapSection::getHash()
+Int64 BitmapSection::getHash()
 {
   try
   {
@@ -331,7 +331,7 @@ long long BitmapSection::getHash()
       return mHash;
 
     for (std::size_t t=0; t<mBitmapDataSizeInBytes; t++)
-      mHash += (long long)(t + mBitmapDataPtr[t] * t);
+      mHash += (Int64)(t + mBitmapDataPtr[t] * t);
 
     return mHash;
   }

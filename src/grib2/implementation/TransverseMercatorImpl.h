@@ -26,7 +26,11 @@ class TransverseMercatorImpl : public TransverseMercator
     bool                reverseYDirection() const;
 
     void                initSpatialReference();
+    void                print(std::ostream& stream,uint level,uint optionFlags) const;
     void                read(MemoryReader& memoryReader);
+
+    double              mLongitude;
+    double              mLatitude;
 };
 
 

@@ -29,8 +29,8 @@ namespace GRID
 
 
 typedef std::map<uint,Message*> Message_ptr_map;
-typedef std::map<unsigned long long,long long> RequestCounters;
-typedef std::vector<std::pair<uchar,ulonglong>> MessagePos_vec;
+typedef std::map<UInt64,Int64> RequestCounters;
+typedef std::vector<std::pair<uchar,UInt64>> MessagePos_vec;
 
 
 class GridFile
@@ -41,7 +41,7 @@ class GridFile
                           GridFile(GridFile *gridFile);
     virtual               ~GridFile();
 
-    virtual void          addDependence(uint fileId);
+    virtual void          addDependence(T::FileId fileId);
     virtual void          addMessage(Message *message);
 
     virtual GridFile*     createGridFile();
@@ -50,12 +50,12 @@ class GridFile
     virtual time_t        getCheckTime() const;
     virtual time_t        getDeletionTime() const;
     virtual std::string   getDeletionTimeStr() const;
-    virtual uint          getFileId() const;
+    virtual T::FileId     getFileId() const;
     virtual std::string   getFileName() const;
     virtual std::string   getMappingFileName() const;
     virtual T::FileType   getFileType() const;
     virtual std::string   getFileTypeString() const;
-    virtual uint          getGenerationId() const;
+    virtual T::GenerationId getGenerationId() const;
     virtual uint          getFlags() const;
     virtual char*         getMemoryPtr();
     virtual Message*      getMessageByIndex(std::size_t index);
@@ -65,9 +65,9 @@ class GridFile
     virtual uchar         getServerType() const;
     virtual std::string   getServer() const;
 
-    virtual uint          getProducerId() const;
-    virtual long long     getSize();
-    virtual uint          getSourceId() const;
+    virtual T::ProducerId getProducerId() const;
+    virtual Int64         getSize();
+    virtual T::SourceId   getSourceId() const;
 
     virtual bool          hasMessagePositionError() const;
     virtual bool          hasMemoryMapperError() const;
@@ -78,7 +78,7 @@ class GridFile
     virtual void          mapToMemory();
 
     virtual Message*      newMessage(T::FileType fileType);
-    virtual Message*      newMessage(uint messageIndex,MessageInfo& messageInfo);
+    virtual Message*      newMessage(T::MessageIndex messageIndex,MessageInfo& messageInfo);
 
     virtual void          print(std::ostream& stream,uint level,uint optionFlags) const;
 
@@ -87,36 +87,36 @@ class GridFile
     virtual void          read(MemoryReader& memoryReader);
     virtual void          read(MemoryReader& memoryReader,uint maxMessages);
 
-    virtual long long     getRequestCounters(RequestCounters& requestCounters);
+    virtual Int64         getRequestCounters(RequestCounters& requestCounters);
     virtual void          resetRequestCounters();
 
     virtual void          setAccessTime(time_t checkTime);
     virtual void          setCheckTime(time_t checkTime);
     virtual void          setDeletionTime(time_t deletionTime);
     virtual void          setDeletionTime(const std::string& deletionTime);
-    virtual void          setFileId(uint fileId);
+    virtual void          setFileId(T::FileId fileId);
     virtual void          setFileName(const std::string& fileName);
     virtual void          setMappingFileName(const std::string& fileName);
-    virtual void          setGenerationId(uint generationId);
+    virtual void          setGenerationId(T::GenerationId generationId);
     virtual void          setFlags(uint groupFlags);
-    virtual void          setProducerId(uint producerId);
+    virtual void          setProducerId(T::ProducerId producerId);
     virtual void          setProtocol(uchar protocol);
     virtual void          setServerType(uchar serverType);
     virtual void          setServer(const std::string& server);
-    virtual void          setSize(long long size);
-    virtual void          setSourceId(uint sourceId);
+    virtual void          setSize(Int64 size);
+    virtual void          setSourceId(T::SourceId sourceId);
 
     virtual void          write(const std::string& filename);
     virtual void          write(DataWriter& dataWriter);
 
   private:
 
-    GRID::Message*        createMessage(uint messageIndex,GRID::MessageInfo& messageInfo);
-    long long             countSize();
-    void                  readFmig1Message(MemoryReader& memoryReader, uint messageIndex);
-    void                  readNetCDFMessage(MemoryReader& memoryReader, uint messageIndex);
-    void                  readGrib1Message(MemoryReader& memoryReader, uint messageIndex);
-    void                  readGrib2Message(MemoryReader& memoryReader, uint messageIndex);
+    GRID::Message*        createMessage(T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo);
+    Int64                 countSize();
+    void                  readFmig1Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
+    void                  readNetCDFMessage(MemoryReader& memoryReader, T::MessageIndex messageIndex);
+    void                  readGrib1Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
+    void                  readGrib2Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
     uchar                 readMessageType(MemoryReader& memoryReader);
     MessagePos_vec        searchMessageLocations(MemoryReader& memoryReader,uint maxMessages);
 
@@ -125,16 +125,16 @@ class GridFile
     time_t                mAccessTime;
     time_t                mCheckTime;
     time_t                mDeletionTime;      // The file should not be accessed after this time
-    uint                  mFileId;
+    T::FileId             mFileId;
     time_t                mFileModificationTime;
     std::string           mFileName;
-    uint                  mGenerationId;
+    T::GenerationId       mGenerationId;
     uint                  mFlags;
     MessageInfo_map       mMessagePositions;
     Message_ptr_map       mMessages;
-    uint                  mProducerId;
+    T::ProducerId         mProducerId;
     MapInfo_sptr          mMemoryMapInfo;
-    uint                  mSourceId;
+    T::SourceId           mSourceId;
     bool                  mIsRead;
     ThreadLock            mMemoryMappingLock;
     bool                  mMessagePositionError;

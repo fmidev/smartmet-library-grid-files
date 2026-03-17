@@ -139,6 +139,48 @@ void Session::setAttribute(const char *name,uint value)
 
 
 
+void Session::setAttribute(const char *name,Int64 value)
+{
+  try
+  {
+    // printf("SETATTR [%s][%u]\n",name,value);
+    auto attr = attributes.find(name);
+    if (attr != attributes.end())
+    {
+      attr->second = std::to_string(value);
+      return;
+    }
+    attributes.insert(std::pair<std::string,std::string>(std::string(name),std::to_string(value)));
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+void Session::setAttribute(const char *name,UInt64 value)
+{
+  try
+  {
+    // printf("SETATTR [%s][%u]\n",name,value);
+    auto attr = attributes.find(name);
+    if (attr != attributes.end())
+    {
+      attr->second = std::to_string(value);
+      return;
+    }
+    attributes.insert(std::pair<std::string,std::string>(std::string(name),std::to_string(value)));
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
 void Session::setAttribute(const char *name,std::string& value)
 {
   try
@@ -295,6 +337,43 @@ uint Session::getUIntAttribute(const char *name)
 
 
 
+Int64 Session::getInt64Attribute(const char *name)
+{
+  try
+  {
+    auto attr = attributes.find(name);
+    if (attr != attributes.end())
+      return toInt64(attr->second);
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+
+UInt64 Session::getUInt64Attribute(const char *name)
+{
+  try
+  {
+    auto attr = attributes.find(name);
+    if (attr != attributes.end())
+      return toUInt64(attr->second);
+
+    return 0;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
 double Session::getDoubleAttribute(const char *name)
 {
   try
@@ -341,6 +420,46 @@ bool Session::getAttribute(const char *name,uint& value)
     if (attr != attributes.end())
     {
       value = toUInt32(attr->second);
+      return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+bool Session::getAttribute(const char *name,Int64& value)
+{
+  try
+  {
+    auto attr = attributes.find(name);
+    if (attr != attributes.end())
+    {
+      value = toInt64(attr->second);
+      return true;
+    }
+    return false;
+  }
+  catch (...)
+  {
+    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
+  }
+}
+
+
+
+bool Session::getAttribute(const char *name,UInt64& value)
+{
+  try
+  {
+    auto attr = attributes.find(name);
+    if (attr != attributes.end())
+    {
+      value = toUInt64(attr->second);
       return true;
     }
     return false;

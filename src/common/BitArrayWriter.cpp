@@ -5,7 +5,7 @@ namespace SmartMet
 
 
 
-BitArrayWriter::BitArrayWriter(unsigned char *data,ulonglong numberOfBits)
+BitArrayWriter::BitArrayWriter(unsigned char *data,UInt64 numberOfBits)
 {
   try
   {
@@ -41,7 +41,7 @@ BitArrayWriter::~BitArrayWriter()
 
 
 
-ulonglong BitArrayWriter::getNumberOfBits()
+UInt64 BitArrayWriter::getNumberOfBits()
 {
   try
   {
@@ -57,7 +57,7 @@ ulonglong BitArrayWriter::getNumberOfBits()
 
 
 
-ulonglong BitArrayWriter::getWritePosition()
+UInt64 BitArrayWriter::getWritePosition()
 {
   try
   {
@@ -74,7 +74,7 @@ ulonglong BitArrayWriter::getWritePosition()
 
 
 
-void BitArrayWriter::setWritePosition(ulonglong writePosition)
+void BitArrayWriter::setWritePosition(UInt64 writePosition)
 {
   try
   {
@@ -125,7 +125,7 @@ void BitArrayWriter:: writeBit(bool bitOn)
 
 
 
-void BitArrayWriter::writeBits(unsigned int numberOfBits,ulonglong value)
+void BitArrayWriter::writeBits(unsigned int numberOfBits,UInt64 value)
 {
   try
   {
@@ -150,7 +150,7 @@ void BitArrayWriter::writeBits(unsigned int numberOfBits,ulonglong value)
 
     for (unsigned int i=0; i<numberOfBits; i++)
     {
-      ulonglong m = 1 << (numberOfBits-i-1);
+      UInt64 m = 1 << (numberOfBits-i-1);
       if ((value & m) != 0)
         writeBitNoCheck(true);
       else
@@ -171,8 +171,8 @@ void BitArrayWriter::writeBitNoCheck(bool bitOn)
 {
   try
   {
-    ulonglong byt = mWritePosition / 8;
-    ulonglong bit = 7 - (mWritePosition % 8);
+    UInt64 byt = mWritePosition / 8;
+    UInt64 bit = 7 - (mWritePosition % 8);
 
     mWritePosition++;
 
