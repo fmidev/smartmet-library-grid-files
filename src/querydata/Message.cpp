@@ -90,7 +90,7 @@ Message::Message(const Message& message)
 
 
 
-Message::Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,uint messageIndex,QueryData::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,T::MessageIndex messageIndex,QueryData::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -118,15 +118,34 @@ Message::Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,uint mess
     if (mGeometryId != 0)
       mGeometryDef = Identification::gridDef.getGrib2DefinitionByGeometryId(mGeometryId);
 
-    mFmiParameterId = Identification::gridDef.getFmiParameterIdByNewbaseId(mNewbaseParameterId);
-    if (mFmiParameterId == 0)
+    Identification::NewbaseParameterDef nbDef;
+    Identification::FmiParameterDef fmiDef;
+
+    if (Identification::gridDef.getNewbaseParameterDefById(mNewbaseParameterId,nbDef))
     {
-      printf("**** MISSING DIRECT PARAMETER MAPPING: Newbase-Id (%d) => FMI-Id ****\n",mNewbaseParameterId);
-      printf("(We cannot name the parameter with FMI-NAME if the mapping requires conversion)\n");
+      if (Identification::gridDef.getFmiParameterDefByName(nbDef.mFmiName,fmiDef))
+        mFmiParameterId = fmiDef.mFmiParameterId;
     }
 
-    Identification::FmiParameterDef fmiDef;
-    if (mFmiParameterId != 0  &&  Identification::gridDef.getFmiParameterDefById(mFmiParameterId,fmiDef))
+    if (mFmiParameterId == 0)
+      mFmiParameterId = Identification::gridDef.getFmiParameterIdByNewbaseId(mNewbaseParameterId);
+
+    if (mFmiParameterId == 0)
+    {
+      //printf("**** MISSING DIRECT PARAMETER MAPPING: Newbase-Id (%d) => FMI-Id ****\n",mNewbaseParameterId);
+      //printf("(We cannot name the parameter with FMI-NAME if the mapping requires conversion)\n");
+
+      // Let's use newbase parameter names instead (this is not usually a good solution, because
+      // there might be the same parameter with FMI-NAME. So there should always be a mapping from
+      // newbase-Id => FMI-ID, but we can temporarily use Newbase names if this mapping does not exist.
+
+      mFmiParameterId = mNewbaseParameterId+1000000;
+    }
+
+    if (fmiDef.mFmiParameterId == 0  &&  mFmiParameterId != 0)
+      Identification::gridDef.getFmiParameterDefById(mFmiParameterId,fmiDef);
+
+    if (fmiDef.mFmiParameterId)
     {
       mFmiParameterId = fmiDef.mFmiParameterId;
       mFmiParameterName = stringFactory.create(fmiDef.mParameterName);
@@ -210,7 +229,7 @@ void Message::getAttributeList(const std::string& prefix,T::AttributeList& attri
       \return  The grid file identifier.
 */
 
-uint Message::getFileId() const
+T::FileId Message::getFileId() const
 {
   FUNCTION_TRACE
   try
@@ -235,7 +254,7 @@ uint Message::getFileId() const
       \return  The grid producer identifier.
 */
 
-uint Message::getProducerId() const
+T::ProducerId Message::getProducerId() const
 {
   FUNCTION_TRACE
   try
@@ -260,7 +279,7 @@ uint Message::getProducerId() const
       \return  The grid generation identifier.
 */
 
-uint Message::getGenerationId() const
+T::GenerationId Message::getGenerationId() const
 {
   FUNCTION_TRACE
   try
@@ -1337,7 +1356,7 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
     int typeSize[] = {0,1,1,2,4,4,8};
 
-    ulonglong idx = (grid_j*mColumnMultiplier+grid_i*mRowMultiplier)*typeSize[mDataType];
+    UInt64 idx = (grid_j*mColumnMultiplier+grid_i*mRowMultiplier)*typeSize[mDataType];
     if (idx >= (mMessageSize + typeSize[mDataType]))
       return ParamValueMissing;
 
@@ -1399,8 +1418,8 @@ T::ParamValue Message::getGridValueByGridPoint(uint grid_i,uint grid_j) const
 
       case 6:  // double
       {
-        long long *v = (long long*)(mDataStartPtr + idx);
-        long long vv = ntohll(*v);
+        Int64 *v = (Int64*)(mDataStartPtr + idx);
+        Int64 vv = ntohll(*v);
         double *val = (double*)&vv;
         if ((T::ParamValue)(*val) == mMissingValue)
           return ParamValueMissing;
@@ -1673,7 +1692,7 @@ bool Message::reverseYDirection() const
         \return   The forecast type.
 */
 
-short Message::getForecastType() const
+T::ForecastType Message::getForecastType() const
 {
   try
   {
@@ -1696,7 +1715,7 @@ short Message::getForecastType() const
         \return   The forecast number.
 */
 
-short Message::getForecastNumber() const
+T::ForecastNumber Message::getForecastNumber() const
 {
   try
   {
@@ -1765,7 +1784,7 @@ void Message::read()
       throw exception;
     }
 
-    long long s = mGridFilePtr->getSize();
+    Int64 s = mGridFilePtr->getSize();
 
     mDataStartPtr = (uchar*)mGridFilePtr->getMemoryPtr();
     mDataEndPtr = mDataStartPtr + s;

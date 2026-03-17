@@ -329,7 +329,7 @@ uint Log::getSize()
 {
   try
   {
-    long long size = getFileSize(filename.c_str());
+    Int64 size = getFileSize(filename.c_str());
     if (size > 0)
       return C_UINT(size);
 

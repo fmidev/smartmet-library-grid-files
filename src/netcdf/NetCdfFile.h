@@ -30,18 +30,18 @@ class NetCdfFile
     void        insertProperty(std::string propertyName,std::string propertyValue);
     void        insertProperty(std::string propertyName,int propertyValue);
     void        insertProperty(std::string propertyName,uint propertyValue);
-    void        insertProperty(std::string propertyName,longlong propertyValue);
+    void        insertProperty(std::string propertyName,Int64 propertyValue);
     void        insertProperty(std::string propertyName,double propertyValue);
     void        readAttribute(MemoryReader& memoryReader,std::string& attrName,std::vector<std::string>& attrValues);
     void        readPropertyList(MemoryReader& memoryReader);
-    void        readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<char>& values);
-    void        readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<uchar>& values);
-    void        readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<short>& values);
-    void        readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<int>& values);
-    void        readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<float>& values);
-    void        readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<double>& values);
-    void        readValues(MemoryReader& memoryReader,uint type,uint items,ulonglong offset,float baseValue,float scaleFactor,std::vector<float>& values);
-    void        readValues(MemoryReader& memoryReader,uint type,uint items,ulonglong offset,double baseValue,double scaleFactor,std::vector<double>& values);
+    void        readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<char>& values);
+    void        readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<uchar>& values);
+    void        readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<short>& values);
+    void        readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<int>& values);
+    void        readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<float>& values);
+    void        readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<double>& values);
+    void        readValues(MemoryReader& memoryReader,uint type,uint items,UInt64 offset,float baseValue,float scaleFactor,std::vector<float>& values);
+    void        readValues(MemoryReader& memoryReader,uint type,uint items,UInt64 offset,double baseValue,double scaleFactor,std::vector<double>& values);
 /*
     bool        getGridOriginalCoordinatesByGridPoint(uint grid_i,uint grid_j,double& x,double& y) const;
     bool        getGridOriginalCoordinatesByGridPosition(double grid_i,double grid_j,double& x,double& y) const;
@@ -51,7 +51,7 @@ class NetCdfFile
     bool        getProperty(std::string propertyName,uint index,std::string& propertyValue);
     bool        getProperty(std::string propertyName,uint index,int& propertyValue);
     bool        getProperty(std::string propertyName,uint index,uint& propertyValue);
-    bool        getProperty(std::string propertyName,uint index,longlong& propertyValue);
+    bool        getProperty(std::string propertyName,uint index,Int64& propertyValue);
     bool        getProperty(std::string propertyName,uint index,float& propertyValue);
     bool        getProperty(std::string propertyName,uint index,double& propertyValue);
 

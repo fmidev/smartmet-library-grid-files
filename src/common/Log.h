@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ThreadLock.h"
+#include "Typedefs.h"
 
 #include <stdio.h>
 #include <string>
@@ -8,9 +9,6 @@
 
 namespace SmartMet
 {
-
-typedef unsigned int uint;
-typedef unsigned long long UInt64;
 
 class Log
 {

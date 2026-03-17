@@ -160,8 +160,8 @@ void ConfigurationFile::readFile(const std::string& filename)
 
     char st[MAX_CONFIG_FILE_SIZE];
     char newst[MAX_CONFIG_FILE_SIZE];
-    unsigned long long positions[MAX_CONFIG_FILE_SIZE];
-    unsigned long long newpositions[MAX_CONFIG_FILE_SIZE];
+    UInt64 positions[MAX_CONFIG_FILE_SIZE];
+    UInt64 newpositions[MAX_CONFIG_FILE_SIZE];
     int n = fread(st,1,MAX_CONFIG_FILE_SIZE,file);
     fclose(file);
 
@@ -173,7 +173,7 @@ void ConfigurationFile::readFile(const std::string& filename)
       removeComments(st,positions,newst,newpositions,n);
 
       std::vector<std::string> wordList;
-      std::vector<unsigned long long> wordPositions;
+      std::vector<UInt64> wordPositions;
 
       getWords(newst,newpositions,wordList,wordPositions);
       int len = wordList.size();
@@ -354,7 +354,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,char& attrib
   FUNCTION_TRACE
   try
   {
-    long long val = 0;
+    Int64 val = 0;
     bool result = getAttributeValue(attributeName,val);
     if (result)
       attributeValue = C_CHAR(val);
@@ -377,7 +377,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,short& attri
   FUNCTION_TRACE
   try
   {
-    long long val = 0;
+    Int64 val = 0;
     bool result = getAttributeValue(attributeName,val);
     if (result)
       attributeValue = C_SHORT(val);
@@ -400,7 +400,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,int& attribu
   FUNCTION_TRACE
   try
   {
-    long long val = 0;
+    Int64 val = 0;
     bool result = getAttributeValue(attributeName,val);
     if (result)
       attributeValue = C_INT(val);
@@ -418,30 +418,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,int& attribu
 
 
 
-bool ConfigurationFile::getAttributeValue(const char *attributeName,long& attributeValue)
-{
-  FUNCTION_TRACE
-  try
-  {
-    long long val = 0;
-    bool result = getAttributeValue(attributeName,val);
-    if (result)
-      attributeValue = C_LONG(val);
-    return result;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Configuration file",mFilename);
-    throw exception;
-  }
-}
-
-
-
-
-
-bool ConfigurationFile::getAttributeValue(const char *attributeName,long long& attributeValue)
+bool ConfigurationFile::getAttributeValue(const char *attributeName,Int64& attributeValue)
 {
   FUNCTION_TRACE
   try
@@ -490,7 +467,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned cha
   FUNCTION_TRACE
   try
   {
-    unsigned long long val = 0;
+    UInt64 val = 0;
     bool result = getAttributeValue(attributeName,val);
     if (result)
       attributeValue = C_UCHAR(val);
@@ -513,7 +490,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned sho
   FUNCTION_TRACE
   try
   {
-    unsigned long long val = 0;
+    UInt64 val = 0;
     bool result = getAttributeValue(attributeName,val);
     if (result)
       attributeValue = C_USHORT(val);
@@ -536,7 +513,7 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned int
   FUNCTION_TRACE
   try
   {
-    unsigned long long val = 0;
+    UInt64 val = 0;
     bool result = getAttributeValue(attributeName,val);
     if (result)
       attributeValue = C_UINT(val);
@@ -554,35 +531,12 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned int
 
 
 
-bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned long& attributeValue)
+bool ConfigurationFile::getAttributeValue(const char *attributeName,UInt64& attributeValue)
 {
   FUNCTION_TRACE
   try
   {
-    unsigned long long val = 0;
-    bool result = getAttributeValue(attributeName,val);
-    if (result)
-      attributeValue = C_ULONG(val);
-    return result;
-  }
-  catch (...)
-  {
-    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
-    exception.addParameter("Configuration file",mFilename);
-    throw exception;
-  }
-}
-
-
-
-
-
-bool ConfigurationFile::getAttributeValue(const char *attributeName,unsigned long long& attributeValue)
-{
-  FUNCTION_TRACE
-  try
-  {
-    long long val = 0;
+    Int64 val = 0;
     bool result = getAttributeValue(attributeName,val);
     if (result)
       attributeValue = C_UINT64(val);
@@ -691,6 +645,62 @@ bool ConfigurationFile::getAttributeValue(const char *attributeName,std::vector<
   }
 }
 
+
+
+
+
+uint ConfigurationFile::getArraySize(const char *attributeName)
+{
+  FUNCTION_TRACE
+  try
+  {
+    int idx = -1;
+    bool exists = false;
+    uint len = strlen(attributeName);
+    for (auto attr = mAttributeList.begin(); attr != mAttributeList.end(); ++attr)
+    {
+      if (strncasecmp(attr->mName.c_str(),attributeName,len) == 0)
+      {
+        if (attr->mName.length() == len)
+        {
+          // Attribute exists, but its value is not an array.
+          return 0;
+        }
+
+        if (attr->mName.length() >= (len+2)  &&  attr->mName[len] == '['  &&  attr->mName[len+1] == ']')
+        {
+          exists = true;
+        }
+        else
+        if (attr->mName[len] == '.')
+        {
+          std::string itm;
+
+          std::size_t p = attr->mName.find(".",len+1);
+          if (p != std::string::npos)
+            itm = attr->mName.substr(len+1,p-len-1);
+          else
+            itm = attr->mName.substr(len+1);
+
+          int i = atoi(itm.c_str());
+          if (i > idx)
+            idx = i;
+        }
+      }
+    }
+
+    if (exists)
+      return idx+1;
+
+    return 0;
+  }
+  catch (...)
+  {
+    Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+    exception.addParameter("Configuration file",mFilename);
+    throw exception;
+  }
+}
 
 
 
@@ -1004,7 +1014,7 @@ std::string ConfigurationFile::parseConstValue(const std::string& value)
 
 
 
-void ConfigurationFile::removeComments(char *st,unsigned long long *positions,char *newst,unsigned long long *newpositions,int len)
+void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UInt64 *newpositions,int len)
 {
   FUNCTION_TRACE
   try
@@ -1104,13 +1114,13 @@ void ConfigurationFile::removeComments(char *st,unsigned long long *positions,ch
 
 
 
-void ConfigurationFile::setPositions(char *st,unsigned long long *positions,int len)
+void ConfigurationFile::setPositions(char *st,UInt64 *positions,int len)
 {
   FUNCTION_TRACE
   try
   {
-    unsigned long long row = 1;
-    unsigned long long col = 1;
+    UInt64 row = 1;
+    UInt64 col = 1;
 
     for (int t=0; t<len; t++)
     {
@@ -1133,7 +1143,7 @@ void ConfigurationFile::setPositions(char *st,unsigned long long *positions,int 
 
 
 
-void ConfigurationFile::getWords(char *st,unsigned long long *positions,std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions)
+void ConfigurationFile::getWords(char *st,UInt64 *positions,std::vector<std::string>& words,std::vector<UInt64>& wordPositions)
 {
   FUNCTION_TRACE
   try
@@ -1184,7 +1194,7 @@ void ConfigurationFile::getWords(char *st,unsigned long long *positions,std::vec
 
 
 
-int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,const std::string& path)
+int ConfigurationFile::readValue(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path)
 {
   FUNCTION_TRACE
   try
@@ -1368,7 +1378,7 @@ void ConfigurationFile::removeAttributes(const char *pattern)
 
 
 
-int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,const std::string& path,int index)
+int ConfigurationFile::readAttribute(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path,int index)
 {
   FUNCTION_TRACE
   try

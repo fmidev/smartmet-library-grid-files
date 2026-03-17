@@ -42,9 +42,9 @@ class ProductDefinition
     virtual T::UInt8_opt                getGeneratingProcessIdentifier() const;
     virtual uint                        getTemplateNumber() const;
 
-    virtual bool                        getProperty(uint propertyId,long long& value);
+    virtual bool                        getProperty(uint propertyId,Int64& value);
     virtual void                        getProperties(T::PropertySettingVec& properties);
-    virtual bool                        setProperty(uint propertyId,long long value);
+    virtual bool                        setProperty(uint propertyId,Int64 value);
     virtual void                        read(MemoryReader& memoryReader) {}
     virtual void                        write(DataWriter& dataWriter) {}
     virtual void                        print(std::ostream& stream,uint level,uint optionFlags) const;
@@ -80,25 +80,25 @@ class ProductDefinition
     virtual void                        getProperties_PercentileSettings(T::PropertySettingVec& properties);
     virtual void                        getProperties_CategoricalSettings(T::PropertySettingVec& properties);
 
-    virtual bool                        getProperty_ParameterSettings(uint propertyId,long long& value);
-    virtual bool                        getProperty_HorizontalSettings(uint propertyId,long long& value);
-    virtual bool                        getProperty_StatisticalSettings(uint propertyId,long long& value);
-    virtual bool                        getProperty_EpsSettings(uint propertyId,long long& value);
-    virtual bool                        getProperty_DerivedSettings(uint propertyId,long long& value);
-    virtual bool                        getProperty_RectangularClusterSettings(uint propertyId,long long& value);
-    virtual bool                        getProperty_ProbabilitySettings(uint propertyId,long long& value);
-    virtual bool                        getProperty_PercentileSettings(uint propertyId,long long& value);
-    virtual bool                        getProperty_CategoricalSettings(uint propertyId,long long& value);
+    virtual bool                        getProperty_ParameterSettings(uint propertyId,Int64& value);
+    virtual bool                        getProperty_HorizontalSettings(uint propertyId,Int64& value);
+    virtual bool                        getProperty_StatisticalSettings(uint propertyId,Int64& value);
+    virtual bool                        getProperty_EpsSettings(uint propertyId,Int64& value);
+    virtual bool                        getProperty_DerivedSettings(uint propertyId,Int64& value);
+    virtual bool                        getProperty_RectangularClusterSettings(uint propertyId,Int64& value);
+    virtual bool                        getProperty_ProbabilitySettings(uint propertyId,Int64& value);
+    virtual bool                        getProperty_PercentileSettings(uint propertyId,Int64& value);
+    virtual bool                        getProperty_CategoricalSettings(uint propertyId,Int64& value);
 
-    virtual bool                        setProperty_ParameterSettings(uint propertyId,long long value);
-    virtual bool                        setProperty_HorizontalSettings(uint propertyId,long long value);
-    virtual bool                        setProperty_StatisticalSettings(uint propertyId,long long value);
-    virtual bool                        setProperty_EpsSettings(uint propertyId,long long value);
-    virtual bool                        setProperty_DerivedSettings(uint propertyId,long long value);
-    virtual bool                        setProperty_RectangularClusterSettings(uint propertyId,long long value);
-    virtual bool                        setProperty_ProbabilitySettings(uint propertyId,long long value);
-    virtual bool                        setProperty_PercentileSettings(uint propertyId,long long value);
-    virtual bool                        setProperty_CategoricalSettings(uint propertyId,long long value);
+    virtual bool                        setProperty_ParameterSettings(uint propertyId,Int64 value);
+    virtual bool                        setProperty_HorizontalSettings(uint propertyId,Int64 value);
+    virtual bool                        setProperty_StatisticalSettings(uint propertyId,Int64 value);
+    virtual bool                        setProperty_EpsSettings(uint propertyId,Int64 value);
+    virtual bool                        setProperty_DerivedSettings(uint propertyId,Int64 value);
+    virtual bool                        setProperty_RectangularClusterSettings(uint propertyId,Int64 value);
+    virtual bool                        setProperty_ProbabilitySettings(uint propertyId,Int64 value);
+    virtual bool                        setProperty_PercentileSettings(uint propertyId,Int64 value);
+    virtual bool                        setProperty_CategoricalSettings(uint propertyId,Int64 value);
 
 };
 

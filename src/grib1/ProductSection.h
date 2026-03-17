@@ -110,8 +110,8 @@ class ProductSection : public GRID::MessageSection
     std::uint16_t     getDecimalScaleFactor() const;
     T::TimeString     getReferenceTime() const;
     T::TimeString     getForecastTime() const;
-    short             getForecastType() const;
-    short             getForecastNumber() const;
+    T::ForecastType   getForecastType() const;
+    T::ForecastNumber getForecastNumber() const;
 
     void              setTableVersion(std::uint8_t tableVersion);
     void              setCentre(std::uint8_t centre);
@@ -139,10 +139,10 @@ class ProductSection : public GRID::MessageSection
     void              setForecastNumber(short forecastNuber);
     void              setMessagePtr(Message *message);
 
-    bool              getProperty(uint propertyId,long long& value);
+    bool              getProperty(uint propertyId,Int64& value);
     void              getProperties(T::PropertySettingVec& properties);
 
-    bool              setProperty(uint propertyId,long long value);
+    bool              setProperty(uint propertyId,Int64 value);
     bool              setProperty(uint propertyId,double value);
 
     void              read(MemoryReader& memoryReader);

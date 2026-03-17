@@ -10,33 +10,33 @@ namespace SmartMet
 class MemoryReader
 {
   public:
-                        MemoryReader(unsigned char *_startPtr,ulonglong _size);
-                        MemoryReader(unsigned char *_startPtr,ulonglong _size,bool _dataRelease);
+                        MemoryReader(unsigned char *_startPtr,UInt64 _size);
+                        MemoryReader(unsigned char *_startPtr,UInt64 _size,bool _dataRelease);
                         MemoryReader(unsigned char *_startPtr,unsigned char *_endPtr);
     virtual             ~MemoryReader();
 
-    ulonglong           getDataSize();
+    UInt64              getDataSize();
     unsigned char*      getStartPtr();
     unsigned char*      getEndPtr();
     unsigned char*      getReadPtr();
     void                setReadPtr(unsigned char *_readPtr);
-    ulonglong           getReadPosition();
-    ulonglong           getGlobalReadPosition();
-    void                setReadPosition(ulonglong _pos);
+    UInt64              getReadPosition();
+    UInt64              getGlobalReadPosition();
+    void                setReadPosition(UInt64 _pos);
     void                setParentPtr(unsigned char *_parentPtr);
     unsigned char*      getParentPtr();
     void                setLittleEndian(bool _littleEndian);
     void                setNetworkByteOrder(bool _networkByteOrder);
 
-    unsigned char       getByte(ulonglong _pos);
+    unsigned char       getByte(UInt64 _pos);
     unsigned char       getByte(unsigned char *_posPtr);
 
     bool                peek_string(const char *_str);
     int                 search_string(const char *_str);
 
     bool                read_string(uchar _endChar,char *_str,uint _maxLen);
-    void                read_data(unsigned char *_data,ulonglong _size);
-    void                read_null(ulonglong _size);
+    void                read_data(unsigned char *_data,UInt64 _size);
+    void                read_null(UInt64 _size);
 
     MemoryReader&       operator>>(std::uint8_t& _value);
     MemoryReader&       operator>>(std::uint16_t& _value);

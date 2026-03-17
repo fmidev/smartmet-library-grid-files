@@ -33,9 +33,9 @@ uint tmpValueCachePos = 0;
 struct TmpValueCacheRec
 {
     T::ParamValue_vec values;
-    unsigned long long hash;
-    uint fileId;
-    uint messageIndex;
+    UInt64 hash;
+    T::FileId fileId;
+    T::MessageIndex messageIndex;
 };
 
 TmpValueCacheRec tmpValueCache[tmpValueCacheSize];
@@ -181,7 +181,7 @@ bool Message::hasAttributeValue(const char *attributeName, const char *attribute
       \return  The grid file identifier.
 */
 
-uint Message::getFileId() const
+T::FileId Message::getFileId() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -203,7 +203,7 @@ char* Message::getFileMemoryPtr() const
       \return  The grid producer identifier.
 */
 
-uint Message::getProducerId() const
+T::ProducerId Message::getProducerId() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -218,7 +218,7 @@ uint Message::getProducerId() const
       \return  The grid generation identifier.
 */
 
-uint Message::getGenerationId() const
+T::GenerationId Message::getGenerationId() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -242,7 +242,7 @@ T::FilePosition Message::getFilePosition() const
 
 
 
-uint Message::getMessageIndex() const
+T::MessageIndex Message::getMessageIndex() const
 {
   FUNCTION_TRACE
   try
@@ -3554,8 +3554,8 @@ void Message::getGridValueVectorWithCaching(T::ParamValue_vec& values) const
   {
     AutoThreadLock lock(&mThreadLock);
 
-    uint fileId = getFileId();
-    uint messageIndex = getMessageIndex();
+    T::FileId fileId = getFileId();
+    T::MessageIndex messageIndex = getMessageIndex();
 
     // ### Seaching data from the temporary cache
     if (fileId > 0)
@@ -3748,7 +3748,7 @@ bool Message::reverseYDirection() const
         \return   The forecast type.
 */
 
-short Message::getForecastType() const
+T::ForecastType Message::getForecastType() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -3762,7 +3762,7 @@ short Message::getForecastType() const
         \return   The forecast number.
 */
 
-short Message::getForecastNumber() const
+T::ForecastNumber Message::getForecastNumber() const
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -3868,30 +3868,6 @@ bool Message::setProperty(uint propertyId,int value)
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(uint propertyId,long value)
-{
-  FUNCTION_TRACE
-  try
-  {
-    return setProperty(propertyId,C_INT64(value));
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method is used for setting a value for the property according to the property id.
-
-        \param propertyId  The (numeric) identifier of the requested property.
-        \param value       The value of the property to be set.
-        \return            The method returns true if the value of the requested property was set.
-*/
-
 bool Message::setProperty(uint propertyId,unsigned char value)
 {
   FUNCTION_TRACE
@@ -3964,7 +3940,7 @@ bool Message::setProperty(uint propertyId,unsigned int value)
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(uint propertyId,unsigned long value)
+bool Message::setProperty(uint propertyId,UInt64 value)
 {
   FUNCTION_TRACE
   try
@@ -3981,14 +3957,14 @@ bool Message::setProperty(uint propertyId,unsigned long value)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(uint propertyId,long long value)
+bool Message::setProperty(uint propertyId,Int64 value)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -4013,14 +3989,14 @@ bool Message::setProperty(uint propertyId,double value)
 
 
 
-/*! \brief The method is used for fetching a (long long) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool Message::getProperty(uint propertyId,long long& value)
+bool Message::getProperty(uint propertyId,Int64& value)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -4029,14 +4005,14 @@ bool Message::getProperty(uint propertyId,long long& value)
 
 
 
-/*! \brief The method is used for fetching a (long long) value for the property according to the property name.
+/*! \brief The method is used for fetching a (Int64) value for the property according to the property name.
 
         \param propertyName  The unique name of the requested property.
         \param value         The value of the requested property is returned in this parameter.
         \return              The method returns true if the value of the requested property was found.
 */
 
-bool Message::getProperty(const char *propertyName,long long& value)
+bool Message::getProperty(const char *propertyName,Int64& value)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -4132,30 +4108,6 @@ bool Message::setProperty(const char *propertyName,int value)
         \return              The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(const char *propertyName,long value)
-{
-  FUNCTION_TRACE
-  try
-  {
-    return setProperty(propertyName,C_INT64(value));
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Operation failed!",nullptr);
-  }
-}
-
-
-
-
-
-/*! \brief The method is used for setting a value for the property according to the property name.
-
-        \param propertyName  The unique name of the requested property.
-        \param value         The value of the property to be set.
-        \return              The method returns true if the value of the requested property was set.
-*/
-
 bool Message::setProperty(const char *propertyName,unsigned char value)
 {
   FUNCTION_TRACE
@@ -4228,7 +4180,7 @@ bool Message::setProperty(const char *propertyName,unsigned int value)
         \return              The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(const char *propertyName,unsigned long value)
+bool Message::setProperty(const char *propertyName,UInt64 value)
 {
   FUNCTION_TRACE
   try
@@ -4245,14 +4197,14 @@ bool Message::setProperty(const char *propertyName,unsigned long value)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property name.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property name.
 
         \param propertyName  The unique name of the requested property.
         \param value         The value of the property to be set.
         \return              The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(const char *propertyName,long long value)
+bool Message::setProperty(const char *propertyName,Int64 value)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in the child class!");
 }
@@ -5437,13 +5389,13 @@ void Message::getGridValueVectorByCoordinateList(T::CoordinateType coordinateTyp
 
     // ### Counting a hash value for the coordinates
 
-    unsigned long long hash = (C_UINT64(coordinateType) << 60) + (C_UINT64(areaInterpolationMethod) << 54);
+    UInt64 hash = (C_UINT64(coordinateType) << 60) + (C_UINT64(areaInterpolationMethod) << 54);
     uint sz = coordinates.size();
     for (uint t=0; t<sz; t++)
       hash += C_UINT64(coordinates[t].x()*100000+t) + C_UINT64(coordinates[t].y()*100000+t);
 
-    uint fileId = getFileId();
-    uint messageIndex = getMessageIndex();
+    T::FileId fileId = getFileId();
+    T::MessageIndex messageIndex = getMessageIndex();
 
     // ### Seaching data from the temporary cache
     {

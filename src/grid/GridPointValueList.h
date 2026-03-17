@@ -28,7 +28,7 @@ class GridPointValueList
      GridPointValue*      getGridPointValueByIndex(uint index);
      GridPointValue*      getGridPointValueByIndexNoCheck(uint index);
      GridPointValue*      getGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time);
-     GridPointValue*      getGridPointValueByFileMessageAndPoint(uint fileId,uint messageIndex,double x,double y);
+     GridPointValue*      getGridPointValueByFileMessageAndPoint(T::FileId fileId,T::MessageIndex messageIndex,double x,double y);
      GridPointValue*      getPreviousGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time);
      GridPointValue*      getNextGridPointValueByPointAndTime(double x,double y,T::ParamLevel level,time_t time);
      void                 getGridPointValueListByPoint(double x,double y,T::ParamLevel level,GridPointValueList& gridPointValueList);

@@ -24,7 +24,7 @@ class MercatorImpl : public Mercator
     bool                getGridMetricCellSize(double& width,double& height) const;
 
     void                getProperties(T::PropertySettingVec& properties);
-    bool                setProperty(uint propertyId,long long value);
+    bool                setProperty(uint propertyId,Int64 value);
 
     void                initSpatialReference();
     void                print(std::ostream& stream,uint level,uint optionFlags) const;

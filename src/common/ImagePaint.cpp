@@ -313,7 +313,7 @@ void ImagePaint::paintPolygon(std::vector<T::Coordinate>& polygonPoints,uint _dr
     if (mCountingActive)
       return;
 
-    std::set<unsigned long long> cList;
+    std::set<UInt64> cList;
     uint numOfPoints = polygonPoints.size();
     if (numOfPoints == 0)
       return;
@@ -436,7 +436,7 @@ void ImagePaint::paintPolygonPath(std::vector<std::vector<T::Coordinate>>& polyg
     if (polygonPath.size() == 0)
       return;
 
-    std::set<unsigned long long> cList;
+    std::set<UInt64> cList;
 
     int minY = mImageHeight-1;
     int maxY = 0;

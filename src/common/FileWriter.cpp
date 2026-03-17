@@ -83,7 +83,7 @@ void FileWriter::closeFile()
 
 
 
-ulonglong FileWriter::getWritePosition()
+UInt64 FileWriter::getWritePosition()
 {
   try
   {
@@ -102,7 +102,7 @@ ulonglong FileWriter::getWritePosition()
 
 
 
-ulonglong FileWriter::getMaxWritePosition()
+UInt64 FileWriter::getMaxWritePosition()
 {
   try
   {
@@ -121,7 +121,7 @@ ulonglong FileWriter::getMaxWritePosition()
 
 
 
-void FileWriter::setWritePosition(ulonglong _pos)
+void FileWriter::setWritePosition(UInt64 _pos)
 {
   try
   {
@@ -140,7 +140,7 @@ void FileWriter::setWritePosition(ulonglong _pos)
 
 
 
-void FileWriter::write_data(void *_data,ulonglong _size)
+void FileWriter::write_data(void *_data,UInt64 _size)
 {
   try
   {

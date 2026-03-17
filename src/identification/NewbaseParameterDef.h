@@ -20,11 +20,12 @@ class NewbaseParameterDef
 
     T::NewbaseParamId mNewbaseParameterId;
     std::string       mParameterName;
+    std::string       mFmiName;
 };
 
 typedef const NewbaseParameterDef* NewbaseParamDef_cptr;
 typedef std::vector<NewbaseParameterDef> NewbaseParamDef_vec;
-typedef std::unordered_map<uint,NewbaseParameterDef> NewbaseParamDef_umap;
+typedef std::map<uint,NewbaseParameterDef> NewbaseParamDef_umap;
 
 
 }

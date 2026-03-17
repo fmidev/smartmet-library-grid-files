@@ -13,13 +13,13 @@ class DataWriter
                       DataWriter();
     virtual           ~DataWriter();
 
-    virtual ulonglong getWritePosition();
-    virtual ulonglong getMaxWritePosition();
+    virtual UInt64 getWritePosition();
+    virtual UInt64 getMaxWritePosition();
 
     virtual void      setLittleEndian(bool _littleEndian);
-    virtual void      setWritePosition(ulonglong _pos);
+    virtual void      setWritePosition(UInt64 _pos);
 
-    virtual void      write_data(void *_data,ulonglong _size);
+    virtual void      write_data(void *_data,UInt64 _size);
     virtual void      write_nTimes(uchar _val,uint _size);
 
     virtual void      write_uint8(std::uint8_t _value);

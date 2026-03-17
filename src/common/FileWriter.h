@@ -15,16 +15,16 @@ class FileWriter : public DataWriter
 
     void        createFile(const char *_filename);
     void        closeFile();
-    ulonglong   getWritePosition();
-    ulonglong   getMaxWritePosition();
-    void        setWritePosition(ulonglong _pos);
-    void        write_data(void *_data,ulonglong _size);
+    UInt64      getWritePosition();
+    UInt64      getMaxWritePosition();
+    void        setWritePosition(UInt64 _pos);
+    void        write_data(void *_data,UInt64 _size);
 
   protected:
 
     std::string mFilename;
     FILE*       mFileHandle;
-    ulonglong   mMaxFilePosition;
+    UInt64      mMaxFilePosition;
 };
 
 

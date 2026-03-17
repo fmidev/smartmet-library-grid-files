@@ -85,10 +85,10 @@ class DataSection : public GRID::MessageSection
     void              setDataDefinition(DataDefinition *dataDefinition);
     void              setMessagePtr(Message *message);
 
-    bool              getProperty(uint propertyId,long long& value);
+    bool              getProperty(uint propertyId,Int64& value);
     void              getProperties(T::PropertySettingVec& properties);
 
-    bool              setProperty(uint propertyId,long long value);
+    bool              setProperty(uint propertyId,Int64 value);
     bool              setProperty(uint propertyId,double value);
 
     void              read(MemoryReader& memoryReader);

@@ -152,7 +152,7 @@ static int compare_points(const void *p1, const void *p2)
 
 
 
-void addLine(double x1, double y1, double x2, double y2, std::set<unsigned long long> &cList)
+void addLine(double x1, double y1, double x2, double y2, std::set<UInt64> &cList)
 {
   try
   {
@@ -176,7 +176,7 @@ void addLine(double x1, double y1, double x2, double y2, std::set<unsigned long 
 
       for (int y = yStart; y <= yEnd; y++)
       {
-        unsigned long long p = (((unsigned long long) y) << 32) + (unsigned long long) x1;
+        UInt64 p = (((UInt64) y) << 32) + (UInt64) x1;
         //if (cList.find(p) == cList.end())
         cList.insert(p);
       }
@@ -201,7 +201,7 @@ void addLine(double x1, double y1, double x2, double y2, std::set<unsigned long 
 
       for (int x = xStart; x <= xEnd; x++)
       {
-        unsigned long long p = (((unsigned long long) round(y1)) << 32) + (unsigned long long) x;
+        UInt64 p = (((UInt64) round(y1)) << 32) + (UInt64) x;
         //if (cList.find(p) == cList.end())
         cList.insert(p);
       }
@@ -227,7 +227,7 @@ void addLine(double x1, double y1, double x2, double y2, std::set<unsigned long 
 
       if ((xx - C_INT(xx)) == 0)
       {
-        unsigned long long p = (((unsigned long long)y) << 32) + (unsigned long long)xx;
+        UInt64 p = (((UInt64)y) << 32) + (UInt64)xx;
         //if (cList.find(p) == cList.end())
         cList.insert(p);
       }
@@ -266,7 +266,7 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
       return;
     }
 
-    std::set<unsigned long long> cList;
+    std::set<UInt64> cList;
 
     // It the last polygon point is not same than the first point, then we should add it to the list.
 
@@ -359,7 +359,7 @@ void getPointsInsidePolygon(int gridWidth, int gridHeight, T::Coordinate_vec &po
 
           for (int x = xStart; x <= xEnd; x++)
           {
-            unsigned long long p = (C_UINT64(y)<< 32) + (unsigned long long)x;
+            UInt64 p = (C_UINT64(y)<< 32) + (UInt64)x;
             //if (cList.find(p) == cList.end())
             cList.insert(p);
           }
@@ -414,7 +414,7 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
       return;
     }
 
-    std::set<unsigned long long> cList;
+    std::set<UInt64> cList;
 
     int minY = gridHeight - 1;
     int maxY = 0;
@@ -537,7 +537,7 @@ void getPointsInsidePolygonPath(int gridWidth, int gridHeight, T::Polygon_vec &p
 
           for (int x = xStart; x <= xEnd; x++)
           {
-            unsigned long long p = (C_UINT64(y)<< 32) + x;
+            UInt64 p = (C_UINT64(y)<< 32) + x;
             //if (cList.find(p) == cList.end())
             cList.insert(p);
           }

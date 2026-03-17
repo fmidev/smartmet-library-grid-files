@@ -25,7 +25,7 @@ DataFetcher::~DataFetcher()
 
 
 
-long long DataFetcher::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
+Int64 DataFetcher::getFileSize(uint serverType,uint protocol,const char *server,const char *filename)
 {
   throw Fmi::Exception(BCP,"This method should be implemented in child classes!");
 }

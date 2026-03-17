@@ -28,16 +28,16 @@ class RepresentationDefinition
     virtual uint  getTemplateNumber() const;
     virtual bool  getValueByIndex(Message *message,uint index,T::ParamValue& value) const;
 
-    virtual bool  getProperty(uint propertyId,long long& value);
-    virtual bool  getProperty_Packing(uint propertyId,long long& value);
-    virtual bool  getProperty_OriginalValues(uint propertyId,long long& value);
+    virtual bool  getProperty(uint propertyId,Int64& value);
+    virtual bool  getProperty_Packing(uint propertyId,Int64& value);
+    virtual bool  getProperty_OriginalValues(uint propertyId,Int64& value);
     virtual void  getProperties(T::PropertySettingVec& properties);
     virtual void  getProperties_Packing(T::PropertySettingVec& properties);
     virtual void  getProperties_OriginalValues(T::PropertySettingVec& properties);
 
-    virtual bool  setProperty(uint propertyId,long long value);
-    virtual bool  setProperty_Packing(uint propertyId,long long value);
-    virtual bool  setProperty_OriginalValues(uint propertyId,long long value);
+    virtual bool  setProperty(uint propertyId,Int64 value);
+    virtual bool  setProperty_Packing(uint propertyId,Int64 value);
+    virtual bool  setProperty_OriginalValues(uint propertyId,Int64 value);
 
     virtual void  read(MemoryReader& memoryReader);
     virtual void  write(DataWriter& dataWriter);

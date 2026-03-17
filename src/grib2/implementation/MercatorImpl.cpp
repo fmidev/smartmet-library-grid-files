@@ -386,14 +386,14 @@ void MercatorImpl::getProperties(T::PropertySettingVec& properties)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool MercatorImpl::setProperty(uint propertyId,long long value)
+bool MercatorImpl::setProperty(uint propertyId,Int64 value)
 {
   try
   {

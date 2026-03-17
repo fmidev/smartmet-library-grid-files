@@ -9,7 +9,7 @@ namespace SmartMet
 
 /*! \brief The constructor of the class. */
 
-MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size)
+MemoryReader::MemoryReader(unsigned char *_startPtr,UInt64 _size)
 {
   try
   {
@@ -39,7 +39,7 @@ MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size)
 
 /*! \brief The constructor of the class. */
 
-MemoryReader::MemoryReader(unsigned char *_startPtr,ulonglong _size,bool _dataRelease)
+MemoryReader::MemoryReader(unsigned char *_startPtr,UInt64 _size,bool _dataRelease)
 {
   try
   {
@@ -120,7 +120,7 @@ MemoryReader::~MemoryReader()
 
 
 
-ulonglong MemoryReader::getDataSize()
+UInt64 MemoryReader::getDataSize()
 {
   try
   {
@@ -236,7 +236,7 @@ void MemoryReader::setReadPtr(unsigned char *_readPtr)
 
 
 
-ulonglong MemoryReader::getReadPosition()
+UInt64 MemoryReader::getReadPosition()
 {
   try
   {
@@ -252,7 +252,7 @@ ulonglong MemoryReader::getReadPosition()
 
 
 
-ulonglong MemoryReader::getGlobalReadPosition()
+UInt64 MemoryReader::getGlobalReadPosition()
 {
   try
   {
@@ -268,7 +268,7 @@ ulonglong MemoryReader::getGlobalReadPosition()
 
 
 
-void MemoryReader::setReadPosition(ulonglong _pos)
+void MemoryReader::setReadPosition(UInt64 _pos)
 {
   try
   {
@@ -324,7 +324,7 @@ void MemoryReader::setNetworkByteOrder(bool _networkByteOrder)
 
 
 
-unsigned char MemoryReader::getByte(ulonglong _pos)
+unsigned char MemoryReader::getByte(UInt64 _pos)
 {
   try
   {
@@ -374,7 +374,7 @@ bool MemoryReader::peek_string(const char *_str)
     if (_str == nullptr)
       throw Fmi::Exception(BCP,"The '_str' parameter points to nullptr!");
 
-    ulonglong len = strlen(_str);
+    UInt64 len = strlen(_str);
     if ((readPtr + len) > endPtr)
       return false;
 
@@ -639,15 +639,15 @@ std::uint64_t MemoryReader::read_uint64()
       throw exception;
     }
 
-    ulonglong a = readPtr[0];
-    ulonglong b = readPtr[1];
-    ulonglong c = readPtr[2];
-    ulonglong d = readPtr[3];
-    ulonglong e = readPtr[4];
-    ulonglong f = readPtr[5];
-    ulonglong g = readPtr[6];
-    ulonglong h = readPtr[7];
-    ulonglong val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
+    UInt64 a = readPtr[0];
+    UInt64 b = readPtr[1];
+    UInt64 c = readPtr[2];
+    UInt64 d = readPtr[3];
+    UInt64 e = readPtr[4];
+    UInt64 f = readPtr[5];
+    UInt64 g = readPtr[6];
+    UInt64 h = readPtr[7];
+    UInt64 val =  (a << 56 | b << 48 | c << 40 | d << 32 | e << 24 | f << 16 | g << 8 | h);
     if (littleEndian)
       val =  (h << 56 | g << 48 | f << 40 | e << 32 | d << 24 | c << 16 | b << 8 | a);
 
@@ -1138,7 +1138,7 @@ T::UInt64_opt MemoryReader::read_UInt64_opt()
       throw exception;
     }
 
-    ulonglong val = read_uint64();
+    UInt64 val = read_uint64();
     if (val != 0xFFFFFFFFFFFFFFFF)
       return val;
 
@@ -1355,7 +1355,7 @@ T::Float_opt MemoryReader::read_Float_opt()
 
 
 
-void MemoryReader::read_data(unsigned char *_data,ulonglong _size)
+void MemoryReader::read_data(unsigned char *_data,UInt64 _size)
 {
   try
   {
@@ -1385,7 +1385,7 @@ void MemoryReader::read_data(unsigned char *_data,ulonglong _size)
 
 
 
-void MemoryReader::read_null(ulonglong _size)
+void MemoryReader::read_null(UInt64 _size)
 {
   try
   {

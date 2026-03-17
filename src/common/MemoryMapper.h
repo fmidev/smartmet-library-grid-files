@@ -36,7 +36,7 @@ class MemoryMapper
     void      setFileHandleLimit(std::size_t fileHandleLimit);
 
 
-    long long getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
+    Int64 getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
     MapInfo_sptr getMapInfo(char *address);
 
     void      premap(char *startAddress,char *endAddress);
@@ -65,8 +65,8 @@ class MemoryMapper
     std::vector<MapInfo_sptr> mMemoryMappings;
     ModificationLock          mModificationLock;
     uffd_msg*                 mMessage;
-    std::atomic<long long>    mMessageReadCount;
-    std::atomic<long long>    mMessageProcessCount;
+    std::atomic<Int64>    mMessageReadCount;
+    std::atomic<Int64>    mMessageProcessCount;
     std::atomic<uint>         mThreadsRunning;
     pthread_t                 mFaultHandlerThread;
     pthread_t*                mFaultProcessingThread;
@@ -78,11 +78,11 @@ class MemoryMapper
     std::size_t               mFileHandleLimit;
     bool                      mEnabled;
     ModificationLock          mPageCacheModificationLock;
-    std::map<long long,uint>  mPageCacheIndexList;
+    std::map<Int64,uint>  mPageCacheIndexList;
     char**                    mPageCache;
-    long long*                mPageCacheIndex;
+    Int64*                mPageCacheIndex;
     uint                      mPageCacheCounter;
-    long long                 mPageCacheFreedCounter;
+    Int64                 mPageCacheFreedCounter;
     std::size_t               mPageCacheSize;
     std::map<char*,char*>     mPremapRequests;
     std::string               mAccessFile;

@@ -62,7 +62,7 @@ GridPointValue::GridPointValue(const GridPointValue& gridPointValue)
         \param level        The level of the parameter.
  */
 
-GridPointValue::GridPointValue(uint fileId,uint messageIndex,double x,double y,T::ParamLevel level,time_t valueTime,T::ParamValue value)
+GridPointValue::GridPointValue(T::FileId fileId,T::MessageIndex messageIndex,double x,double y,T::ParamLevel level,time_t valueTime,T::ParamValue value)
 {
   try
   {

@@ -140,14 +140,14 @@ void GridSection::getAttributeList(const std::string& prefix,T::AttributeList& a
 
 
 
-/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool GridSection::getProperty(uint propertyId,long long& value)
+bool GridSection::getProperty(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -203,14 +203,14 @@ void GridSection::getProperties(T::PropertySettingVec& properties)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool GridSection::setProperty(uint propertyId,long long value)
+bool GridSection::setProperty(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -275,7 +275,7 @@ bool GridSection::setProperty(uint propertyId,double value)
 
 
 
-void GridSection::setNumberOfVerticalCoordinateValues(long long value)
+void GridSection::setNumberOfVerticalCoordinateValues(Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -292,7 +292,7 @@ void GridSection::setNumberOfVerticalCoordinateValues(long long value)
 
 
 
-void GridSection::setPvlLocation(long long value)
+void GridSection::setPvlLocation(Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -309,7 +309,7 @@ void GridSection::setPvlLocation(long long value)
 
 
 
-void GridSection::setDataRepresentationType(long long value)
+void GridSection::setDataRepresentationType(Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -495,7 +495,7 @@ void GridSection::write(DataWriter& dataWriter)
 
     // Updata the section length
 
-    ulonglong fPos = dataWriter.getWritePosition();
+    UInt64 fPos = dataWriter.getWritePosition();
     mSectionLength = fPos - mFilePosition;
     dataWriter.setWritePosition(mFilePosition);
     dataWriter.write_uint24(mSectionLength);

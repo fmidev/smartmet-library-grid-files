@@ -64,7 +64,7 @@ Message::Message()
 
 
 
-Message::Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& messageInfo)
+Message::Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo)
 {
   FUNCTION_TRACE
   try
@@ -272,14 +272,14 @@ void Message::premap() const
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property id.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the property to be set.
         \return            The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(uint propertyId,long long value)
+bool Message::setProperty(uint propertyId,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -374,14 +374,14 @@ bool Message::setProperty(uint propertyId,double value)
 
 
 
-/*! \brief The method is used for setting a (long long) value for the property according to the property name.
+/*! \brief The method is used for setting a (Int64) value for the property according to the property name.
 
         \param propertyName  The unique name of the requested property.
         \param value         The value of the property to be set.
         \return              The method returns true if the value of the requested property was set.
 */
 
-bool Message::setProperty(const char *propertyName,long long value)
+bool Message::setProperty(const char *propertyName,Int64 value)
 {
   FUNCTION_TRACE
   try
@@ -442,14 +442,14 @@ bool Message::setProperty(const char *propertyName,double value)
 
 
 
-/*! \brief The method is used for fetching a (long long ) value for the property according to the property id.
+/*! \brief The method is used for fetching a (Int64 ) value for the property according to the property id.
 
         \param propertyId  The (numeric) identifier of the requested property.
         \param value       The value of the requested property is returned in this parameter.
         \return            The method returns true if the value of the requested property was found.
 */
 
-bool Message::getProperty(uint propertyId,long long& value)
+bool Message::getProperty(uint propertyId,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -517,14 +517,14 @@ bool Message::getProperty(uint propertyId,long long& value)
 
 
 
-/*! \brief The method is used for fetching a (long long) value for the property according to the property name.
+/*! \brief The method is used for fetching a (Int64) value for the property according to the property name.
 
         \param propertyName  The unique name of the requested property.
         \param value         The value of the requested property is returned in this parameter.
         \return              The method returns true if the value of the requested property was found.
 */
 
-bool Message::getProperty(const char *propertyName,long long& value)
+bool Message::getProperty(const char *propertyName,Int64& value)
 {
   FUNCTION_TRACE
   try
@@ -1300,7 +1300,7 @@ void Message::read(MemoryReader& memoryReader)
         // Update for the next iteration
         last_idx = idx;
 
-        unsigned long long rPos = memoryReader.getGlobalReadPosition();
+        UInt64 rPos = memoryReader.getGlobalReadPosition();
 
         try
         {
@@ -1531,8 +1531,8 @@ void Message::write(DataWriter& dataWriter)
     {
       // ### Updating indicator section
 
-      ulonglong fpos1 = mIndicatorSection->getFilePosition();
-      ulonglong fpos2 = dataWriter.getWritePosition();
+      UInt64 fpos1 = mIndicatorSection->getFilePosition();
+      UInt64 fpos2 = dataWriter.getWritePosition();
       mIndicatorSection->setTotalLength(fpos2-fpos1);
       dataWriter.setWritePosition(fpos1);
       mIndicatorSection->write(dataWriter);
@@ -2768,7 +2768,7 @@ void Message::getGridProjectionAttributes(const std::string& prefix,T::Attribute
       \return  The grid file identifier.
 */
 
-uint Message::getFileId() const
+T::FileId Message::getFileId() const
 {
   FUNCTION_TRACE
   try
@@ -2794,7 +2794,7 @@ uint Message::getFileId() const
       \return  The grid producer identifier.
 */
 
-uint Message::getProducerId() const
+T::ProducerId Message::getProducerId() const
 {
   FUNCTION_TRACE
   try
@@ -2820,7 +2820,7 @@ uint Message::getProducerId() const
       \return  The grid generation identifier.
 */
 
-uint Message::getGenerationId() const
+T::GenerationId Message::getGenerationId() const
 {
   FUNCTION_TRACE
   try
@@ -3360,7 +3360,7 @@ T::ParamLevelId Message::getGridParameterLevelId() const
         \return   The forecast type.
 */
 
-short Message::getForecastType() const
+T::ForecastType Message::getForecastType() const
 {
   FUNCTION_TRACE
   try
@@ -3415,7 +3415,7 @@ short Message::getForecastType() const
         \return   The forecast number.
 */
 
-short Message::getForecastNumber() const
+T::ForecastNumber Message::getForecastNumber() const
 {
   FUNCTION_TRACE
   try

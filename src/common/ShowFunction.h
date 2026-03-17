@@ -18,7 +18,7 @@ class ShowFunction
     std::string   function;
     std::string   filename;
     uint          line;
-    ulonglong     startTime;
+    UInt64        startTime;
 
 };
 

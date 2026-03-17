@@ -12,16 +12,16 @@ namespace QueryData
 
 struct MessageInfo
 {
-  uint               mColumns;
-  uint               mRows;
-  unsigned long      mParameterIndex;
-  unsigned long      mLevelIndex;
-  unsigned long      mTimeIndex;
-  uint               mNewbaseId;
-  int                mParameterLevelId;
-  int                mParameterLevel;
-  time_t             mForecastTimeT;
-  int                mGeometryId;
+  uint        mColumns;
+  uint        mRows;
+  UInt64      mParameterIndex;
+  UInt64      mLevelIndex;
+  UInt64      mTimeIndex;
+  uint        mNewbaseId;
+  int         mParameterLevelId;
+  int         mParameterLevel;
+  time_t      mForecastTimeT;
+  int         mGeometryId;
 };
 
 
@@ -36,19 +36,19 @@ class Message : public GRID::Message
 
                         Message();
                         Message(const Message& message);
-                        Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,uint messageIndex,QueryData::MessageInfo& messageInfo);
+                        Message(GRID::GridFile *gridFile,QueryDataFile *queryDataFile,T::MessageIndex messageIndex,QueryData::MessageInfo& messageInfo);
     virtual             ~Message();
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
-    uint                getFileId() const;
+    T::FileId           getFileId() const;
     T::FileType         getMessageType() const;
-    uint                getProducerId() const;
-    uint                getGenerationId() const;
+    T::ProducerId       getProducerId() const;
+    T::GenerationId     getGenerationId() const;
     T::FilePosition     getFilePosition() const;
     T::TimeString       getForecastTime() const;
     time_t              getForecastTimeT() const;
-    short               getForecastType() const;
-    short               getForecastNumber() const;
+    T::ForecastType     getForecastType() const;
+    T::ForecastNumber   getForecastNumber() const;
 
     void                getGridCellAverageSize(double& width,double& height) const;
     T::Dimensions       getGridDimensions() const;
@@ -113,9 +113,9 @@ class Message : public GRID::Message
     GRID::GridFile*     mGridFile;
     uint                mColumns;
     uint                mRows;
-    unsigned long       mParameterIndex;
-    unsigned long       mLevelIndex;
-    unsigned long       mTimeIndex;
+    UInt64              mParameterIndex;
+    UInt64              mLevelIndex;
+    UInt64              mTimeIndex;
     int                 mParameterLevelId;
     int                 mParameterLevel;
     int                 mGeometryId;

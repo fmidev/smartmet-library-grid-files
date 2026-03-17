@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Attribute.h"
-#include <macgyver/Exception.h>
+#include "Typedefs.h"
 
+#include <macgyver/Exception.h>
 #include <set>
 
 
@@ -29,13 +30,11 @@ class ConfigurationFile
     bool          getAttributeValue(const char *attributeName,char& attributeValue);
     bool          getAttributeValue(const char *attributeName,short& attributeValue);
     bool          getAttributeValue(const char *attributeName,int& attributeValue);
-    bool          getAttributeValue(const char *attributeName,long& attributeValue);
-    bool          getAttributeValue(const char *attributeName,long long& attributeValue);
+    bool          getAttributeValue(const char *attributeName,Int64& attributeValue);
     bool          getAttributeValue(const char *attributeName,unsigned char& attributeValue);
     bool          getAttributeValue(const char *attributeName,unsigned short& attributeValue);
     bool          getAttributeValue(const char *attributeName,unsigned int& attributeValue);
-    bool          getAttributeValue(const char *attributeName,unsigned long& attributeValue);
-    bool          getAttributeValue(const char *attributeName,unsigned long long& attributeValue);
+    bool          getAttributeValue(const char *attributeName,UInt64& attributeValue);
 
     bool          getAttributeValue(const char *attributeName,std::string& attributeValue);
     bool          getAttributeValue(const char *attributeName,std::vector<std::string>& attributeValueVec);
@@ -43,6 +42,7 @@ class ConfigurationFile
     bool          getAttributeFields(const char *attributeName,std::set<std::string>& attributeFields);
     bool          getSubAttributes(const char *attributeName,std::vector<std::string>& attributeNames);
     std::string   getFilename();
+    uint          getArraySize(const char *attributeName);
 
     void          setAttributeValue(const char *attributeName,std::string& attributeValue);
 
@@ -57,11 +57,11 @@ class ConfigurationFile
     std::string   parseValue(const std::string& value);
     std::string   parseConstValue(const std::string& value);
 
-    void          removeComments(char *st,unsigned long long *positions,char *newst,unsigned long long *newpositions,int len);
-    void          setPositions(char *st,unsigned long long *positions,int len);
-    void          getWords(char *st,unsigned long long *positions,std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions);
-    int           readValue(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,const std::string& path);
-    int           readAttribute(std::vector<std::string>& words,std::vector<unsigned long long>& wordPositions,int len,int pos,const std::string& path,int index);
+    void          removeComments(char *st,UInt64 *positions,char *newst,UInt64 *newpositions,int len);
+    void          setPositions(char *st,UInt64 *positions,int len);
+    void          getWords(char *st,UInt64 *positions,std::vector<std::string>& words,std::vector<UInt64>& wordPositions);
+    int           readValue(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path);
+    int           readAttribute(std::vector<std::string>& words,std::vector<UInt64>& wordPositions,int len,int pos,const std::string& path,int index);
 
   public:
 

@@ -47,19 +47,19 @@ class Message : public GRID::Message
 
                         Message();
                         Message(const Message& message);
-                        Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,uint messageIndex,NetCDF::MessageInfo& messageInfo);
+                        Message(GRID::GridFile *gridFile,NetCdfFile *netCdfFile,T::MessageIndex messageIndex,NetCDF::MessageInfo& messageInfo);
     virtual             ~Message();
 
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
-    uint                getFileId() const;
+    T::FileId           getFileId() const;
     T::FileType         getMessageType() const;
-    uint                getProducerId() const;
-    uint                getGenerationId() const;
+    T::ProducerId       getProducerId() const;
+    T::GenerationId     getGenerationId() const;
     T::FilePosition     getFilePosition() const;
     T::TimeString       getForecastTime() const;
     time_t              getForecastTimeT() const;
-    short               getForecastType() const;
-    short               getForecastNumber() const;
+    T::ForecastType     getForecastType() const;
+    T::ForecastNumber   getForecastNumber() const;
 
     void                getGridCellAverageSize(double& width,double& height) const;
     T::Dimensions       getGridDimensions() const;

@@ -28,7 +28,7 @@ class DataFetcher_network : public DataFetcher
 
     int           getData(uint serverType,uint protocol,const char *server,const char *filename,std::size_t filePosition,int dataSize,char *dataPtr);
     void          getFileList(uint serverType,uint protocol,const char *server,const char *dir,std::vector<std::string> &filePatterns,std::vector<FileRec>& fileList);
-    long long     getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
+    Int64     getFileSize(uint serverType,uint protocol,const char *server,const char *filename);
     void          getFileHeaders(uint serverType,uint protocol,const char *server,const char *filename,std::map<std::string,std::string>& headers);
 
   protected:

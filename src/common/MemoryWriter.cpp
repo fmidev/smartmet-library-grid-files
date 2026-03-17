@@ -5,7 +5,7 @@ namespace SmartMet
 {
 
 
-MemoryWriter::MemoryWriter(uchar *_data,ulonglong _dataSize,bool _dataRelease)
+MemoryWriter::MemoryWriter(uchar *_data,UInt64 _dataSize,bool _dataRelease)
 {
   try
   {
@@ -50,7 +50,7 @@ MemoryWriter::~MemoryWriter()
 
 
 
-ulonglong MemoryWriter::getWritePosition()
+UInt64 MemoryWriter::getWritePosition()
 {
   try
   {
@@ -65,7 +65,7 @@ ulonglong MemoryWriter::getWritePosition()
 
 
 
-ulonglong MemoryWriter::getMaxWritePosition()
+UInt64 MemoryWriter::getMaxWritePosition()
 {
   try
   {
@@ -80,7 +80,7 @@ ulonglong MemoryWriter::getMaxWritePosition()
 
 
 
-void MemoryWriter::setWritePosition(ulonglong _pos)
+void MemoryWriter::setWritePosition(UInt64 _pos)
 {
   try
   {
@@ -115,7 +115,7 @@ uchar* MemoryWriter::getDataPtr()
 
 
 
-void MemoryWriter::write_data(void *_data,ulonglong _size)
+void MemoryWriter::write_data(void *_data,UInt64 _size)
 {
   try
   {
@@ -123,7 +123,7 @@ void MemoryWriter::write_data(void *_data,ulonglong _size)
     if ((mWritePosition + _size) >= mDataSize)
       throw Fmi::Exception(BCP,"Trying to write data to outsize of the buffer!");
 
-    for (ulonglong t=0; t< _size; t++)
+    for (UInt64 t=0; t< _size; t++)
       mData[mWritePosition + t] = d[t];
 
     mWritePosition += _size;

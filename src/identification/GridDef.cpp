@@ -2604,6 +2604,9 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
           if (field[1][0] != '\0')
             rec.mParameterName = field[1];
 
+          if (c > 2  &&  field[2][0] != '\0')
+            rec.mFmiName = field[2];
+
           mNewbase_parameterDef_records.insert(std::pair<uint,NewbaseParameterDef>(rec.mNewbaseParameterId,rec));
           std::string key = toUpperString(rec.mParameterName);
           mNewbaseNameToId.insert(std::pair<std::string,uint>(key,rec.mNewbaseParameterId));
@@ -4921,7 +4924,7 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
         case T::GridProjectionValue::TransverseMercator:
         {
-          if (c < 12)
+          if (c < 16)
             return nullptr;
 
           uint geometryId = toInt32(field[1]);
@@ -4936,8 +4939,11 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           char *scanningMode = field[9];
           int rx = C_INT(round(toDouble(field[10])*1000000));
           int ry = C_INT(round(toDouble(field[11])*1000000));
-          double earthSemiMajor = toDouble(field[12]);
-          double earthSemiMinor = toDouble(field[13]);
+          int false_eastening = C_INT(round(toDouble(field[12]) * 100));
+          int false_northing = C_INT(round(toDouble(field[13]) * 100));
+          double earthSemiMajor = toDouble(field[14]);
+          double earthSemiMinor = toDouble(field[15]);
+
 
           GRIB2::TransverseMercatorImpl *def2 = new GRIB2::TransverseMercatorImpl();
           GRIB2::ScanningModeSettings scanningMode2;
@@ -4969,8 +4975,9 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
 
           def2->setDi(T::UInt32_opt(iInc));
           def2->setDj(T::UInt32_opt(jInc));
-          def2->setYR(T::Int32_opt(0));
-          def2->setXR(T::Int32_opt(50000000));
+          def2->setYR(T::Int32_opt(false_northing));
+          //def2->setXR(T::Int32_opt(50000000));
+          def2->setXR(T::Int32_opt(false_eastening));
 
           def2->setGridGeometryId(geometryId);
           mGeometryNames.insert(std::pair<uint,std::string>(geometryId,geometryName));
@@ -4989,6 +4996,13 @@ GRIB2::GridDefinition* GridDef::createGrib2GridDefinition(const char *str)
           def2->setY1(T::Int32_opt(y1));
           def2->setX2(T::Int32_opt(x1 + (ni-1)*iInc));
           def2->setY2(T::Int32_opt(y1 + (nj-1)*jInc));
+
+          def2->mLongitude = longitude;
+          def2->mLatitude = latitude;
+
+          // def2->print(std::cout,0,0);
+          // std::string gs = def2->getGridGeometryString();
+          // printf("GS [%s]\n",gs.c_str());
 
           return def2;
         }

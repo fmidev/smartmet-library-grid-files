@@ -266,7 +266,7 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
 
 
 
-void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<char>& values)
+void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<char>& values)
 {
   try
   {
@@ -289,7 +289,7 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offs
 
 
 
-void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<uchar>& values)
+void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<uchar>& values)
 {
   try
   {
@@ -312,7 +312,7 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offs
 
 
 
-void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<short>& values)
+void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<short>& values)
 {
   try
   {
@@ -335,7 +335,7 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offs
 
 
 
-void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<int>& values)
+void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<int>& values)
 {
   try
   {
@@ -360,7 +360,7 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offs
 
 
 
-void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<float>& values)
+void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<float>& values)
 {
   try
   {
@@ -383,7 +383,7 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offs
 
 
 
-void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offset,std::vector<double>& values)
+void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,UInt64 offset,std::vector<double>& values)
 {
   try
   {
@@ -406,7 +406,7 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint items,ulonglong offs
 
 
 
-void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,ulonglong offset,float baseValue,float scaleFactor,std::vector<float>& values)
+void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt64 offset,float baseValue,float scaleFactor,std::vector<float>& values)
 {
   try
   {
@@ -491,7 +491,7 @@ void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,ulon
 
 
 
-void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,ulonglong offset,double baseValue,double scaleFactor,std::vector<double>& values)
+void NetCdfFile::readValues(MemoryReader& memoryReader,uint type,uint items,UInt64 offset,double baseValue,double scaleFactor,std::vector<double>& values)
 {
   try
   {
@@ -657,7 +657,7 @@ bool NetCdfFile::getProperty(std::string propertyName,uint index,uint& propertyV
 
 
 
-bool NetCdfFile::getProperty(std::string propertyName,uint index,longlong& propertyValue)
+bool NetCdfFile::getProperty(std::string propertyName,uint index,Int64& propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -809,7 +809,7 @@ void NetCdfFile::insertProperty(std::string propertyName,uint propertyValue)
 
 
 
-void NetCdfFile::insertProperty(std::string propertyName,longlong propertyValue)
+void NetCdfFile::insertProperty(std::string propertyName,Int64 propertyValue)
 {
   FUNCTION_TRACE
   try
@@ -1038,7 +1038,7 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       uint vSize = 0;
       memoryReader >> vSize;
 
-      longlong offset = 0;
+      Int64 offset = 0;
 
       if (version == 1)
         offset = memoryReader.read_uint32();
@@ -1227,7 +1227,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             //printf("%s %s:%d,%s:%d,%s:%d,%s:%d\n",it->c_str(),timeName.c_str(),timeCount,levelName.c_str(),levelCount,yName.c_str(),yCount,xName.c_str(),xCount);
 
 
-            longlong dataStartOffset = 0;
+            Int64 dataStartOffset = 0;
             sprintf(tmp,"%s.offset",it->c_str());
             getProperty(tmp,0,dataStartOffset);
 
@@ -1341,7 +1341,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
             uint type = 0;
             uint size = 0;
-            longlong offset = 0;
+            Int64 offset = 0;
             uint itemCount = 0;
             double scaleFactor = 1;
             double baseValue = 0;
@@ -1506,13 +1506,13 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               sprintf(tmp,"%s.items",yName.c_str());
               getProperty(tmp,0,itemCount);
 
-              if (itemCount == yCount)
+              if ((int)itemCount == yCount)
               {
                 readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor*yScale,mYCoordinates);
               }
               else
               {
-                if ((itemCount/xCount) == yCount)
+                if (((int)itemCount/xCount) == yCount)
                 {
                   FloatVec coordinates;
                   readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor*yScale,coordinates);

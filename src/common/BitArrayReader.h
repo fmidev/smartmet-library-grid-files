@@ -21,16 +21,16 @@ namespace SmartMet
 class BitArrayReader
 {
   public:
-               BitArrayReader(const unsigned char *data,ulonglong numberOfBits);
+               BitArrayReader(const unsigned char *data,UInt64 numberOfBits);
     virtual    ~BitArrayReader();
 
-    ulonglong  getNumberOfBits();
-    ulonglong  getReadPosition();
-    void       setReadPosition(ulonglong readPosition);
+    UInt64     getNumberOfBits();
+    UInt64     getReadPosition();
+    void       setReadPosition(UInt64 readPosition);
     //bool       readBit();
     void       readBits(unsigned int numberOfBits,int& value);
     // void       readBits(unsigned int numberOfBits,unsigned int& value);
-    void       readBits(unsigned int numberOfBits,ulonglong& value);
+    void       readBits(unsigned int numberOfBits,UInt64& value);
     void       readBits(unsigned int numberOfBits,int *_array,unsigned int arraySize);
 
   protected:
@@ -38,10 +38,10 @@ class BitArrayReader
     //bool       readBitNoCheck();
 
     /*! \brief The size of the bit array/stream. */
-    ulonglong  mNumberOfBits;
+    UInt64     mNumberOfBits;
 
     /*! \brief The current read position of the bit array/stream. */
-    ulonglong  mReadPosition;
+    UInt64     mReadPosition;
 
     /*! \brief The pointer to the beginning of the bit array/stream. */
     const unsigned char*  mData;
@@ -63,8 +63,8 @@ class BitArrayReader
           throw exception;
         }
 
-        ulonglong byt = mReadPosition / 8;
-        ulonglong bit = 7 - (mReadPosition % 8);
+        UInt64 byt = mReadPosition / 8;
+        UInt64 bit = 7 - (mReadPosition % 8);
 
         mReadPosition++;
 
@@ -83,8 +83,8 @@ class BitArrayReader
     {
       try
       {
-        ulonglong byt = mReadPosition / 8;
-        ulonglong bit = 7 - (mReadPosition % 8);
+        UInt64 byt = mReadPosition / 8;
+        UInt64 bit = 7 - (mReadPosition % 8);
 
         mReadPosition++;
 

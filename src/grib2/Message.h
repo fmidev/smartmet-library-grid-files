@@ -33,7 +33,7 @@ class Message : public GRID::Message
   public:
 
                         Message();
-                        Message(GRID::GridFile *gridFile,uint messageIndex,GRID::MessageInfo& messageInfo);
+                        Message(GRID::GridFile *gridFile,T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo);
                         Message(const Message& other);
     virtual             ~Message();
 
@@ -42,16 +42,16 @@ class Message : public GRID::Message
     void                getAttributeList(const std::string& prefix,T::AttributeList& attributeList) const;
     bool                getAttributeValue(const char *attributeName, std::string& attributeValue) const;
     bool                hasAttributeValue(const char *attributeName, const char *attributeValue) const;
-    uint                getFileId() const;
+    T::FileId           getFileId() const;
     T::FileType         getMessageType() const;
-    uint                getProducerId() const;
-    uint                getGenerationId() const;
+    T::ProducerId       getProducerId() const;
+    T::GenerationId     getGenerationId() const;
     char*               getMemoryPtr() const;
     T::FilePosition     getFilePosition() const;
     T::TimeString       getForecastTime() const;
     time_t              getForecastTimeT() const;
-    short               getForecastType() const;
-    short               getForecastNumber() const;
+    T::ForecastType     getForecastType() const;
+    T::ForecastNumber   getForecastNumber() const;
 
     uint                getGribVersion() const;
     uint                getGribCentre() const;
@@ -103,14 +103,14 @@ class Message : public GRID::Message
     bool                reverseXDirection() const;
     bool                reverseYDirection() const;
 
-    bool                getProperty(uint propertyId,long long& value);
-    bool                getProperty(const char *propertyName,long long& value);
+    bool                getProperty(uint propertyId,Int64& value);
+    bool                getProperty(const char *propertyName,Int64& value);
 
     void                getProperties(T::PropertySettingVec& properties);
 
-    bool                setProperty(uint propertyId,long long value);
+    bool                setProperty(uint propertyId,Int64 value);
     bool                setProperty(uint propertyId,double value);
-    bool                setProperty(const char *propertyName,long long value);
+    bool                setProperty(const char *propertyName,Int64 value);
     bool                setProperty(const char *propertyName,double value);
 
     void                setGridGeometryId(T::GeometryId geometryId);

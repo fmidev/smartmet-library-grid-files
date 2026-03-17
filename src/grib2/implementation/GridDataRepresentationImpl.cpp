@@ -292,7 +292,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
       {
         for (std::uint32_t i = 0; i < numOfValues; i++)
         {
-          ulonglong X = 0;
+          UInt64 X = 0;
           bitArrayReader.readBits(nbits,X);
 
           // Output the caclulated value
@@ -310,7 +310,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
           }
           else
           {
-            ulonglong X = 0;
+            UInt64 X = 0;
             try
             {
               bitArrayReader.readBits(nbits,X);
@@ -340,7 +340,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
           {
             for (std::uint32_t i = 0; i < numOfValues; i++)
             {
-              ulonglong X = memoryReader.read_uint8();
+              UInt64 X = memoryReader.read_uint8();
               double Y = RDfac + X * EDfac;
               decodedValues.emplace_back(Y);
             }
@@ -355,7 +355,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
               }
               else
               {
-                ulonglong X = memoryReader.read_uint8();
+                UInt64 X = memoryReader.read_uint8();
                 double Y = RDfac + X * EDfac;
                 decodedValues.emplace_back(Y);
               }
@@ -368,7 +368,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
           {
             for (std::uint32_t i = 0; i < numOfValues; i++)
             {
-              ulonglong X = memoryReader.read_uint16();
+              UInt64 X = memoryReader.read_uint16();
               double Y = RDfac + X * EDfac;
               decodedValues.emplace_back(Y);
             }
@@ -383,7 +383,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
               }
               else
               {
-                ulonglong X = memoryReader.read_uint16();
+                UInt64 X = memoryReader.read_uint16();
                 double Y = RDfac + X * EDfac;
                 decodedValues.emplace_back(Y);
               }
@@ -396,7 +396,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
           {
             for (std::uint32_t i = 0; i < numOfValues; i++)
             {
-              ulonglong X = memoryReader.read_uint24();
+              UInt64 X = memoryReader.read_uint24();
               double Y = RDfac + X * EDfac;
               decodedValues.emplace_back(Y);
             }
@@ -411,7 +411,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
               }
               else
               {
-                ulonglong X = memoryReader.read_uint24();
+                UInt64 X = memoryReader.read_uint24();
                 double Y = RDfac + X * EDfac;
                 decodedValues.emplace_back(Y);
               }
@@ -424,7 +424,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
           {
             for (std::uint32_t i = 0; i < numOfValues; i++)
             {
-              ulonglong X = memoryReader.read_uint32();
+              UInt64 X = memoryReader.read_uint32();
               double Y = RDfac + X * EDfac;
               decodedValues.emplace_back(Y);
             }
@@ -439,7 +439,7 @@ void GridDataRepresentationImpl::decodeValues(Message *message,T::ParamValue_vec
               }
               else
               {
-                ulonglong X = memoryReader.read_uint32();
+                UInt64 X = memoryReader.read_uint32();
                 double Y = RDfac + X * EDfac;
                 decodedValues.emplace_back(Y);
               }
@@ -515,7 +515,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
     if (!bitsPerValue)
     {
       T::ParamValue diff = maxValue - minValue;
-      ulonglong valuesInRange = diff / std::pow(2.0, E);
+      UInt64 valuesInRange = diff / std::pow(2.0, E);
 
       while (C_UINT64(1 << bits) < valuesInRange)
         bits++;
@@ -554,7 +554,7 @@ void GridDataRepresentationImpl::encodeValues(Message *message,T::ParamValue_vec
         float Y = *it;
         float X = (Y - RDfac) / EDfac;
 
-        ulonglong v = C_UINT64(round(X));
+        UInt64 v = C_UINT64(round(X));
         bitArrayWriter.writeBits(bits,v);
       }
     }

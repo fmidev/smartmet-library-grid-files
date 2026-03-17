@@ -77,9 +77,9 @@ class GridDefinition
 
     virtual void                setGridGeometryId(T::GeometryId geometryId);
 
-    virtual bool                getProperty(uint propertyId,long long& value);
+    virtual bool                getProperty(uint propertyId,Int64& value);
     virtual void                getProperties(T::PropertySettingVec& properties);
-    virtual bool                setProperty(uint propertyId,long long value);
+    virtual bool                setProperty(uint propertyId,Int64 value);
 
     virtual void                read(MemoryReader& memoryReader);
     virtual void                write(DataWriter& dataWriter);
@@ -101,15 +101,15 @@ class GridDefinition
     virtual void                getProperties_Rotation(T::PropertySettingVec& properties);
     virtual void                getProperties_LatLon(T::PropertySettingVec& properties);
 
-    virtual bool                getProperty_EarthShape(uint propertyId,long long& value);
-    virtual bool                getProperty_Grid(uint propertyId,long long& value);
-    virtual bool                getProperty_Rotation(uint propertyId,long long& value);
-    virtual bool                getProperty_LatLon(uint propertyId,long long& value);
+    virtual bool                getProperty_EarthShape(uint propertyId,Int64& value);
+    virtual bool                getProperty_Grid(uint propertyId,Int64& value);
+    virtual bool                getProperty_Rotation(uint propertyId,Int64& value);
+    virtual bool                getProperty_LatLon(uint propertyId,Int64& value);
 
-    virtual bool                setProperty_EarthShape(uint propertyId,long long value);
-    virtual bool                setProperty_Grid(uint propertyId,long long value);
-    virtual bool                setProperty_Rotation(uint propertyId,long long value);
-    virtual bool                setProperty_LatLon(uint propertyId,long long value);
+    virtual bool                setProperty_EarthShape(uint propertyId,Int64 value);
+    virtual bool                setProperty_Grid(uint propertyId,Int64 value);
+    virtual bool                setProperty_Rotation(uint propertyId,Int64 value);
+    virtual bool                setProperty_LatLon(uint propertyId,Int64 value);
 
     virtual double              getMajorAxis(EarthShapeSettings& earthSettings);
     virtual double              getMinorAxis(EarthShapeSettings& earthSettings);
