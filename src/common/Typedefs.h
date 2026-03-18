@@ -6,6 +6,7 @@
 #include <array>
 #include <cstdint>
 #include <cmath>
+#include <optional>
 
 namespace std
 {
