@@ -1,5 +1,7 @@
-Grid Files Library
-====================
+# smartmet-library-grid-files
+
+Part of [SmartMet Server](https://github.com/fmidev/smartmet-library-spine). See the [SmartMet Server documentation](https://github.com/fmidev/smartmet-library-spine) for an overview of the ecosystem.
+
 ## Introduction
 
 This library is used by the SmartMet Server grid support. The library offers a common service interface in order to access different kinds of grid files. At the moment, the library supports GRIB-1, GRIB-2, NetCDF and QueryData files.
