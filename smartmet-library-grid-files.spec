@@ -23,7 +23,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 26.2.4
 BuildRequires: smartmet-library-newbase-devel >= 26.2.4
-BuildRequires: smartmet-library-spine-devel >= 26.3.13
+BuildRequires: smartmet-library-spine-devel >= 26.4.13
 BuildRequires: smartmet-library-macgyver >= 26.4.13
 BuildRequires: smartmet-library-trax-devel >= 26.4.13
 BuildRequires: %{smartmet_boost}-devel
@@ -52,7 +52,7 @@ Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 26.2.4
 Requires: smartmet-library-macgyver >= 26.4.13
-Requires: smartmet-library-spine >= 26.3.13
+Requires: smartmet-library-spine >= 26.4.13
 Requires: smartmet-library-trax >= 26.4.13
 Requires: smartmet-topography-data >= 1.0.0
 
