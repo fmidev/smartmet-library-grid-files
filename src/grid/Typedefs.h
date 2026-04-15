@@ -131,6 +131,7 @@ class FileTypeValue
     NetCdf3   = 3,
     NetCdf4   = 4,
     QueryData = 5,
+    GeoTiff   = 6,
     Grib      = 9   // Contains Grib1 and Grib2 messages
   };
 };
