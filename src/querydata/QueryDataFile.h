@@ -19,7 +19,31 @@ class QueryDataFile
 
     void                read(MessageInfoVec& messageInfoList);
     void                print(std::ostream& stream,uint level,uint optionFlags) const;
-    T::ParamValue       getGridValue(uint paramIndex,uint levelIndex,uint timeIndex,uint grid_i,uint grid_j) const;
+    //T::ParamValue       getGridValue(uint paramIndex,uint levelIndex,uint timeIndex,uint grid_i,uint grid_j) const;
+
+    inline T::ParamValue getGridValue(uint paramIndex,uint levelIndex,uint timeIndex,uint grid_i,uint grid_j) const
+    {
+      try
+      {
+        if (mFastQueryInfo == nullptr)
+          return ParamValueMissing;
+
+        std::size_t locationIndex = mFastQueryInfo->PeekLocationIndex(grid_i,grid_j);
+        std::size_t idx = mFastQueryInfo->Index(paramIndex,locationIndex,levelIndex,timeIndex);
+
+        float val = mFastQueryInfo->PeekValue(idx);
+        if (val == 32700.0)
+          return ParamValueMissing;
+
+        return val;
+      }
+      catch (...)
+      {
+        Fmi::Exception exception(BCP,"Operation failed!",nullptr);
+        throw exception;
+      }
+    }
+
 
   protected:
 

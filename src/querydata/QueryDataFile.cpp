@@ -295,7 +295,7 @@ uint QueryDataFile::getGeometryId()
 
 
 
-
+/*
 T::ParamValue QueryDataFile::getGridValue(uint paramIndex,uint levelIndex,uint timeIndex,uint grid_i,uint grid_j) const
 {
   FUNCTION_TRACE
@@ -319,7 +319,7 @@ T::ParamValue QueryDataFile::getGridValue(uint paramIndex,uint levelIndex,uint t
     throw exception;
   }
 }
-
+*/
 
 
 

@@ -34,6 +34,9 @@ std::string get_fileTypeString(FileType fileType)
 
       case FileTypeValue::QueryData:
         return "QueryData";
+
+      case FileTypeValue::GeoTiff:
+        return "GeoTiff";
     }
     return "Undefined";
   }
