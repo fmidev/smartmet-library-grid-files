@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.4.13
+Version: 26.4.17
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -100,11 +100,12 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Fri Apr 17 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.4.17-1.fmi
+- Added limited GeoTiff support
 * Mon Apr 13 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> 26.4.13-1.fmi
 - Repackaged due to API changes
 * Wed Mar 18 2026 Andris Pavēnis <andris.pavenis@fmi.fi> 26.3.18-2.fmi
 - Fix RockyLinux 9 and 10 build (missing include)
-
 * Wed Mar 18 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.3.18-1.fmi
 - Enable multiple data sources
 * Wed Feb  4 2026 Andris Pavēnis <andris.pavenis@fmi.fi> 26.2.4-1.fmi
