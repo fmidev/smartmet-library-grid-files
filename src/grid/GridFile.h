@@ -6,6 +6,7 @@
 #include "../common/MemoryReader.h"
 #include "../common/MemoryMapper.h"
 #include "../netcdf/NetCdfFile.h"
+#include "../geotiff/GeoTiffFile.h"
 #include "../querydata/QueryDataFile.h"
 
 #include <memory>
@@ -114,7 +115,6 @@ class GridFile
     GRID::Message*        createMessage(T::MessageIndex messageIndex,GRID::MessageInfo& messageInfo);
     Int64                 countSize();
     void                  readFmig1Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
-    void                  readNetCDFMessage(MemoryReader& memoryReader, T::MessageIndex messageIndex);
     void                  readGrib1Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
     void                  readGrib2Message(MemoryReader& memoryReader, T::MessageIndex messageIndex);
     uchar                 readMessageType(MemoryReader& memoryReader);
@@ -139,6 +139,7 @@ class GridFile
     ThreadLock            mMemoryMappingLock;
     bool                  mMessagePositionError;
     NetCDF::NetCdfFile*   mNetCdfFile;
+    GeoTiff::GeoTiffFile* mGeoTiffFile;
 
     QueryData::QueryDataFile* mQueryDataFile;
 

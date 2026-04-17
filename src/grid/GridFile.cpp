@@ -54,6 +54,7 @@ GridFile::GridFile()
     mMessagePositionError = false;
     mNetCdfFile = nullptr;
     mQueryDataFile = nullptr;
+    mGeoTiffFile = nullptr;
     mFileModificationTime = 0;
   }
   catch (...)
@@ -88,6 +89,7 @@ GridFile::GridFile(const GridFile& other)
     mMessagePositionError = false;
     mNetCdfFile = nullptr;
     mQueryDataFile = nullptr;
+    mGeoTiffFile = nullptr;
   }
   catch (...)
   {
@@ -119,6 +121,7 @@ GridFile::GridFile(GridFile *gridFile)
     mMessagePositionError = false;
     mNetCdfFile = nullptr;
     mQueryDataFile = nullptr;
+    mGeoTiffFile = nullptr;
     mDeletionTime = 0;
     mFileModificationTime = 0;
   }
@@ -148,6 +151,9 @@ GridFile::~GridFile()
 
     if (mQueryDataFile)
       delete mQueryDataFile;
+
+    if (mGeoTiffFile)
+      delete mGeoTiffFile;
 
     if (isMemoryMapped())
     {
@@ -1253,14 +1259,35 @@ GRID::Message* GridFile::createMessage(T::MessageIndex messageIndex,GRID::Messag
           mMessages.insert(std::pair<uint,Message*>(idx,message));
           idx++;
         }
+      }
+      auto msg = mMessages.find(messageIndex);
+      if (msg != mMessages.end())
+        return msg->second;
 
-        // QueryData file has its own mapping functionality. We do not need double mapping.
-        /*
-        if (mMappedFile  &&  mIsMemoryMapped)
+      return nullptr;
+    }
+
+    if (messageInfo.mMessageType == T::FileTypeValue::GeoTiff)
+    {
+      auto startAddr = mMemoryMapInfo->memoryPtr;
+      auto endAddr = startAddr + fsize;
+
+      MemoryReader memoryReader(reinterpret_cast<unsigned char*>(startAddr),reinterpret_cast<unsigned char*>(endAddr));
+
+      if (mMessages.size() == 0)
+      {
+        memoryReader.setReadPosition(0);
+        mGeoTiffFile = new GeoTiff::GeoTiffFile(mMemoryMapInfo->filename.c_str());
+        GeoTiff::MessageInfoVec messageInfoList;
+        mGeoTiffFile->read(memoryReader,messageInfoList);
+
+        uint idx = 0;
+        for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
         {
-          mMappedFile->close();
+          GeoTiff::Message *message = new GeoTiff::Message(this,mGeoTiffFile,idx,*it);
+          mMessages.insert(std::pair<uint,Message*>(idx,message));
+          idx++;
         }
-        */
       }
       auto msg = mMessages.find(messageIndex);
       if (msg != mMessages.end())
@@ -1542,14 +1569,27 @@ void GridFile::read(MemoryReader& memoryReader,uint maxMessages)
               if (mMessages.size() >= maxMessages)
                 return;
             }
+          }
+        }
+        break;
 
-            // QueryData file has its own mapping functionality. We do not need double mapping.
-            /*
-            if (mMappedFile  &&  mIsMemoryMapped)
+        case T::FileTypeValue::GeoTiff:
+        {
+          if (mMessages.size() == 0)
+          {
+            memoryReader.setReadPosition(0);
+            mGeoTiffFile = new GeoTiff::GeoTiffFile(mMemoryMapInfo->filename.c_str());
+            GeoTiff::MessageInfoVec messageInfoList;
+            mGeoTiffFile->read(memoryReader,messageInfoList);
+            uint idx = 0;
+            for (auto it = messageInfoList.begin();it != messageInfoList.end(); ++it)
             {
-              mMappedFile->close();
+              GeoTiff::Message *message = new GeoTiff::Message(this,mGeoTiffFile,idx,*it);
+              mMessages.insert(std::pair<uint,Message*>(idx,message));
+              idx++;
+              if (mMessages.size() >= maxMessages)
+                return;
             }
-            */
           }
         }
         break;
@@ -1593,40 +1633,6 @@ void GridFile::readGrib1Message(MemoryReader& memoryReader, T::MessageIndex mess
   }
 }
 
-
-
-
-/*! \brief This method is used in order to read a single message from the NetCDF file. The new
-    message object will be greated and added to the message list. Notice that this method
-    is a private and it is called internally during the file reading.
-
-        \param memoryReader  This object controls the access to the memory mapped file.
-        \param messageIndex  Index of the message
-*/
-
-void GridFile::readNetCDFMessage(MemoryReader& memoryReader, T::MessageIndex messageIndex)
-{
-  FUNCTION_TRACE
-  try
-  {
-
-    NetCDF::NetCdfFile *netCdf = new NetCDF::NetCdfFile();
-    NetCDF::MessageInfoVec messageInfoList;
-    netCdf->read(memoryReader,messageInfoList);
-    /*
-
-    NetCDF::Message *message = new NetCDF::Message();
-    message->setGridFilePtr(this);
-    message->setMessageIndex(messageIndex);
-    mMessages.insert(std::pair<uint,Message*>(messageIndex,message));
-    message->read(memoryReader);
-    */
-  }
-  catch (...)
-  {
-    throw Fmi::Exception(BCP,"Message addition failed!",nullptr);
-  }
-}
 
 
 
@@ -1762,6 +1768,14 @@ MessagePos_vec GridFile::searchMessageLocations(MemoryReader& memoryReader,uint 
     if (memoryReader.peek_string((const char*)qd))
     {
       gribs.emplace_back(T::FileTypeValue::QueryData,0);
+      return gribs;
+    }
+
+    const uchar geoTiff1[] = {0x49,0x49,0};
+    const uchar geoTiff2[] = {0x4D,0x4D,0};
+    if (memoryReader.peek_string((const char*)geoTiff1) || memoryReader.peek_string((const char*)geoTiff2))
+    {
+      gribs.emplace_back(T::FileTypeValue::GeoTiff,0);
       return gribs;
     }
 
@@ -2054,6 +2068,13 @@ uchar GridFile::readMessageType(MemoryReader& memoryReader)
       return T::FileTypeValue::QueryData;
     }
 
+    if ((d[0] == 0x49 &&  d[1] == 0x49)  ||  (d[0] == 0x4D  &&  d[1] == 0x4D))
+    {
+      // This is a GeoTiff file.
+      return T::FileTypeValue::GeoTiff;
+    }
+
+
     return T::FileTypeValue::Unknown;
   }
   catch (...)
@@ -2081,13 +2102,23 @@ void GridFile::print(std::ostream& stream,uint level,uint optionFlags) const
 
     stream << space(level) << "GridFile\n";
     stream << space(level) << "- fileName         = " << getFileName() << "\n";
-    stream << space(level) << "- fileName         = " << getMappingFileName() << "\n";
+    stream << space(level) << "- mappingFileName  = " << getMappingFileName() << "\n";
     stream << space(level) << "- fileId           = " << mFileId << "\n";
     stream << space(level) << "- deletionTime     = " << getDeletionTimeStr() << "\n";
     stream << space(level) << "- flags            = " << mFlags << "\n";
     stream << space(level) << "- producerId       = " << mProducerId << "\n";
     stream << space(level) << "- generationId     = " << mGenerationId << "\n";
     stream << space(level) << "- numberOfMessages = " << messageCount << "\n";
+
+    if ( mNetCdfFile)
+      stream << space(level) << "- type             = NetCDF\n";
+
+    if (mGeoTiffFile)
+      stream << space(level) << "- type             = GeoTiff\n";
+
+    if (mQueryDataFile)
+      stream << space(level) << "- type             = QueryData\n";
+
 
     if (optionFlags & GRID::PrintFlag::no_messages)
       return;
