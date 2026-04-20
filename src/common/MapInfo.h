@@ -71,20 +71,20 @@ class MapInfo
     {
       public:
 
-        static const uint None  = 0;
-        static const uint HTTP  = 1;
-        static const uint HTTPS = 2;
+        constexpr static const uint None  = 0;
+        constexpr static const uint HTTP  = 1;
+        constexpr static const uint HTTPS = 2;
     };
 
     class ServerType
     {
       public:
 
-        static const uint None     = 0;
-        static const uint Filesys  = 1;
-        static const uint S3       = 2;
-        static const uint THREDDS  = 3;
-        static const uint HTTPD    = 4;
+        constexpr static const uint None     = 0;
+        constexpr static const uint Filesys  = 1;
+        constexpr static const uint S3       = 2;
+        constexpr static const uint THREDDS  = 3;
+        constexpr static const uint HTTPD    = 4;
     };
 };
 

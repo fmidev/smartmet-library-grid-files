@@ -47,8 +47,8 @@ class DataFetcher_network : public DataFetcher
     class Protocol
     {
       public:
-        static const uint HTTP  = 1;
-        static const uint HTTPS = 2;
+        constexpr static const uint HTTP  = 1;
+        constexpr static const uint HTTPS = 2;
     };
 };
 

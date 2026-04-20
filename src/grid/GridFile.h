@@ -148,8 +148,8 @@ class GridFile
     class Flags
     {
       public:
-        static const uint LocalCacheExpected = 1;     // The file shoud be cached locally if possible
-        static const uint LocalCacheReady    = 2;    // The file is cached locally
+        constexpr static const uint LocalCacheExpected = 1;     // The file shoud be cached locally if possible
+        constexpr static const uint LocalCacheReady    = 2;    // The file is cached locally
     };
 };
 
