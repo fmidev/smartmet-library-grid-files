@@ -117,19 +117,19 @@ class RepresentationSection : public GRID::MessageSection
     {
       public:
 
-        const static std::uint16_t GridDataRepresentation = 0;
-        const static std::uint16_t MatrixDataRepresentation = 1;
-        const static std::uint16_t ComplexGridDataRepresentation = 2;
-        const static std::uint16_t ComplexDifferenceGridDataRepresentation = 3;
-        const static std::uint16_t FloatingPointGridDataRepresentation = 4;
-        const static std::uint16_t PreprocessedGridDataRepresentation = 6;
-        const static std::uint16_t JpegGridDataRepresentation = 40;
-        const static std::uint16_t PngGridDataRepresentation = 41;
-        const static std::uint16_t SpectralGridDataRepresentation = 42;
-        const static std::uint16_t SpectralDataRepresentation = 50;
-        const static std::uint16_t SphericalHarmonicsDataRepresentation = 51;
-        const static std::uint16_t LogarithmicGridDataRepresentation = 61;
-        const static std::uint16_t ComplexSphericalHarmonicsDataRepresentation = 50000;
+        constexpr static std::uint16_t GridDataRepresentation = 0;
+        constexpr static std::uint16_t MatrixDataRepresentation = 1;
+        constexpr static std::uint16_t ComplexGridDataRepresentation = 2;
+        constexpr static std::uint16_t ComplexDifferenceGridDataRepresentation = 3;
+        constexpr static std::uint16_t FloatingPointGridDataRepresentation = 4;
+        constexpr static std::uint16_t PreprocessedGridDataRepresentation = 6;
+        constexpr static std::uint16_t JpegGridDataRepresentation = 40;
+        constexpr static std::uint16_t PngGridDataRepresentation = 41;
+        constexpr static std::uint16_t SpectralGridDataRepresentation = 42;
+        constexpr static std::uint16_t SpectralDataRepresentation = 50;
+        constexpr static std::uint16_t SphericalHarmonicsDataRepresentation = 51;
+        constexpr static std::uint16_t LogarithmicGridDataRepresentation = 61;
+        constexpr static std::uint16_t ComplexSphericalHarmonicsDataRepresentation = 50000;
     };
 
 };
