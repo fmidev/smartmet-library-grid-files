@@ -26,363 +26,363 @@ class Property
     T::PropertyVec&   getPropertyVector();
 
 
-    constexpr static const uint FirstProperty                       = 2000;
+    constexpr static uint FirstProperty                       = 2000;
 
     class IndicatorSection
     {
       public:
-        constexpr static const uint FirstProperty                     = Property::FirstProperty;
-        constexpr static const uint Discipline                        = FirstProperty + 0;
-        constexpr static const uint EditionNumber                     = FirstProperty + 1;
-        constexpr static const uint LastProperty                      = FirstProperty + 1;
+        constexpr static uint FirstProperty                     = Property::FirstProperty;
+        constexpr static uint Discipline                        = FirstProperty + 0;
+        constexpr static uint EditionNumber                     = FirstProperty + 1;
+        constexpr static uint LastProperty                      = FirstProperty + 1;
     };
 
 
     class IdentificationSection
     {
       public:
-        constexpr static const uint FirstProperty                     = IndicatorSection::LastProperty + 1;
-        constexpr static const uint Centre                            = FirstProperty + 0;
-        constexpr static const uint SubCentre                         = FirstProperty + 1;
-        constexpr static const uint TablesVersion                     = FirstProperty + 2;
-        constexpr static const uint LocalTablesVersion                = FirstProperty + 3;
-        constexpr static const uint SignificanceOfReferenceTime       = FirstProperty + 4;
-        constexpr static const uint Year                              = FirstProperty + 5;
-        constexpr static const uint Month                             = FirstProperty + 6;
-        constexpr static const uint Day                               = FirstProperty + 7;
-        constexpr static const uint Hour                              = FirstProperty + 8;
-        constexpr static const uint Minute                            = FirstProperty + 9;
-        constexpr static const uint Second                            = FirstProperty + 10;
-        constexpr static const uint ProductionStatusOfProcessedData   = FirstProperty + 11;
-        constexpr static const uint TypeOfProcessedData               = FirstProperty + 12;
-        constexpr static const uint LastProperty                      = FirstProperty + 12;
+        constexpr static uint FirstProperty                     = IndicatorSection::LastProperty + 1;
+        constexpr static uint Centre                            = FirstProperty + 0;
+        constexpr static uint SubCentre                         = FirstProperty + 1;
+        constexpr static uint TablesVersion                     = FirstProperty + 2;
+        constexpr static uint LocalTablesVersion                = FirstProperty + 3;
+        constexpr static uint SignificanceOfReferenceTime       = FirstProperty + 4;
+        constexpr static uint Year                              = FirstProperty + 5;
+        constexpr static uint Month                             = FirstProperty + 6;
+        constexpr static uint Day                               = FirstProperty + 7;
+        constexpr static uint Hour                              = FirstProperty + 8;
+        constexpr static uint Minute                            = FirstProperty + 9;
+        constexpr static uint Second                            = FirstProperty + 10;
+        constexpr static uint ProductionStatusOfProcessedData   = FirstProperty + 11;
+        constexpr static uint TypeOfProcessedData               = FirstProperty + 12;
+        constexpr static uint LastProperty                      = FirstProperty + 12;
     };
 
 
     class LocalSection
     {
       public:
-        constexpr static const uint FirstProperty                     = IdentificationSection::LastProperty +1;
-        constexpr static const uint LastProperty                      = FirstProperty + 0;
+        constexpr static uint FirstProperty                     = IdentificationSection::LastProperty +1;
+        constexpr static uint LastProperty                      = FirstProperty + 0;
     };
 
 
     class GridSection
     {
       public:
-        constexpr static const uint FirstProperty                     = LocalSection::LastProperty + 1;
-        constexpr static const uint SourceOfGridDefinition            = FirstProperty + 0;
-        constexpr static const uint NumberOfGridPoints                = FirstProperty + 1;
-        constexpr static const uint NumberOfOctetsForNumberOfPoints   = FirstProperty + 2;
-        constexpr static const uint InterpretationOfNumberOfPoints    = FirstProperty + 3;
-        constexpr static const uint GridDefinitionTemplateNumber      = FirstProperty + 4;
+        constexpr static uint FirstProperty                     = LocalSection::LastProperty + 1;
+        constexpr static uint SourceOfGridDefinition            = FirstProperty + 0;
+        constexpr static uint NumberOfGridPoints                = FirstProperty + 1;
+        constexpr static uint NumberOfOctetsForNumberOfPoints   = FirstProperty + 2;
+        constexpr static uint InterpretationOfNumberOfPoints    = FirstProperty + 3;
+        constexpr static uint GridDefinitionTemplateNumber      = FirstProperty + 4;
 
 
         class EarthShape
         {
           public:
-            constexpr static const uint FirstProperty                 = GridSection::FirstProperty + 5;
-            constexpr static const uint ShapeOfTheEarth               = FirstProperty + 0;
-            constexpr static const uint ScaleFactorOfRadiusOfSphericalEarth = FirstProperty + 1;
-            constexpr static const uint ScaledValueOfRadiusOfSphericalEarth = FirstProperty + 2;
-            constexpr static const uint ScaleFactorOfEarthMajorAxis   = FirstProperty + 3;
-            constexpr static const uint ScaledValueOfEarthMajorAxis   = FirstProperty + 4;
-            constexpr static const uint ScaleFactorOfEarthMinorAxis   = FirstProperty + 5;
-            constexpr static const uint ScaledValueOfEarthMinorAxis   = FirstProperty + 6;
-            constexpr static const uint LastProperty                  = FirstProperty + 6;
+            constexpr static uint FirstProperty                 = GridSection::FirstProperty + 5;
+            constexpr static uint ShapeOfTheEarth               = FirstProperty + 0;
+            constexpr static uint ScaleFactorOfRadiusOfSphericalEarth = FirstProperty + 1;
+            constexpr static uint ScaledValueOfRadiusOfSphericalEarth = FirstProperty + 2;
+            constexpr static uint ScaleFactorOfEarthMajorAxis   = FirstProperty + 3;
+            constexpr static uint ScaledValueOfEarthMajorAxis   = FirstProperty + 4;
+            constexpr static uint ScaleFactorOfEarthMinorAxis   = FirstProperty + 5;
+            constexpr static uint ScaledValueOfEarthMinorAxis   = FirstProperty + 6;
+            constexpr static uint LastProperty                  = FirstProperty + 6;
         };
 
         class Grid
         {
           public:
-            constexpr static const uint FirstProperty                 = EarthShape::LastProperty + 1;
-            constexpr static const uint Ni                            = FirstProperty + 0;
-            constexpr static const uint Nj                            = FirstProperty + 1;
-            constexpr static const uint BasicAngleOfTheInitialProductionDomain = FirstProperty + 2;
-            constexpr static const uint SubdivisionsOfBasicAngle      = FirstProperty + 3;
-            constexpr static const uint LatitudeOfFirstGridPoint      = FirstProperty + 4;
-            constexpr static const uint LongitudeOfFirstGridPoint     = FirstProperty + 5;
-            constexpr static const uint LatitudeOfLastGridPoint       = FirstProperty + 6;
-            constexpr static const uint LongitudeOfLastGridPoint      = FirstProperty + 7;
-            constexpr static const uint ResolutionAndComponentFlags   = FirstProperty + 8;
-            constexpr static const uint LastProperty                  = FirstProperty + 8;
+            constexpr static uint FirstProperty                 = EarthShape::LastProperty + 1;
+            constexpr static uint Ni                            = FirstProperty + 0;
+            constexpr static uint Nj                            = FirstProperty + 1;
+            constexpr static uint BasicAngleOfTheInitialProductionDomain = FirstProperty + 2;
+            constexpr static uint SubdivisionsOfBasicAngle      = FirstProperty + 3;
+            constexpr static uint LatitudeOfFirstGridPoint      = FirstProperty + 4;
+            constexpr static uint LongitudeOfFirstGridPoint     = FirstProperty + 5;
+            constexpr static uint LatitudeOfLastGridPoint       = FirstProperty + 6;
+            constexpr static uint LongitudeOfLastGridPoint      = FirstProperty + 7;
+            constexpr static uint ResolutionAndComponentFlags   = FirstProperty + 8;
+            constexpr static uint LastProperty                  = FirstProperty + 8;
         };
 
         class Rotation
         {
           public:
-            constexpr static const uint FirstProperty                 = Grid::LastProperty + 1;
-            constexpr static const uint LatitudeOfSouthernPole        = FirstProperty + 0;
-            constexpr static const uint LongitudeOfSouthernPole       = FirstProperty + 1;
-            constexpr static const uint AngleOfRotation               = FirstProperty + 2;
-            constexpr static const uint LastProperty                  = FirstProperty + 2;
+            constexpr static uint FirstProperty                 = Grid::LastProperty + 1;
+            constexpr static uint LatitudeOfSouthernPole        = FirstProperty + 0;
+            constexpr static uint LongitudeOfSouthernPole       = FirstProperty + 1;
+            constexpr static uint AngleOfRotation               = FirstProperty + 2;
+            constexpr static uint LastProperty                  = FirstProperty + 2;
         };
 
 
         class LatLon
         {
           public:
-            constexpr static const uint FirstProperty                 = Rotation::LastProperty + 1;
-            constexpr static const uint IDirectionIncrement           = FirstProperty + 0;
-            constexpr static const uint JDirectionIncrement           = FirstProperty + 1;
-            constexpr static const uint ScanningMode                  = FirstProperty + 2;
-            constexpr static const uint LastProperty                  = FirstProperty + 2;
+            constexpr static uint FirstProperty                 = Rotation::LastProperty + 1;
+            constexpr static uint IDirectionIncrement           = FirstProperty + 0;
+            constexpr static uint JDirectionIncrement           = FirstProperty + 1;
+            constexpr static uint ScanningMode                  = FirstProperty + 2;
+            constexpr static uint LastProperty                  = FirstProperty + 2;
         };
 
         class PolarStereographic
         {
           public:
-            constexpr static const uint FirstProperty                 = LatLon::LastProperty + 1;
-            constexpr static const uint Nx                            = FirstProperty + 0;
-            constexpr static const uint Ny                            = FirstProperty + 1;
-            constexpr static const uint LatitudeOfFirstGridPoint      = FirstProperty + 2;
-            constexpr static const uint LongitudeOfFirstGridPoint     = FirstProperty + 3;
-            constexpr static const uint ResolutionAndComponentFlags   = FirstProperty + 4;
-            constexpr static const uint LaD                           = FirstProperty + 5;
-            constexpr static const uint OrientationOfTheGrid          = FirstProperty + 6;
-            constexpr static const uint Dx                            = FirstProperty + 7;
-            constexpr static const uint Dy                            = FirstProperty + 8;
-            constexpr static const uint ProjectionCentreFlag          = FirstProperty + 9;
-            constexpr static const uint ScanningMode                  = FirstProperty + 10;
-            constexpr static const uint LastProperty                  = FirstProperty + 10;
+            constexpr static uint FirstProperty                 = LatLon::LastProperty + 1;
+            constexpr static uint Nx                            = FirstProperty + 0;
+            constexpr static uint Ny                            = FirstProperty + 1;
+            constexpr static uint LatitudeOfFirstGridPoint      = FirstProperty + 2;
+            constexpr static uint LongitudeOfFirstGridPoint     = FirstProperty + 3;
+            constexpr static uint ResolutionAndComponentFlags   = FirstProperty + 4;
+            constexpr static uint LaD                           = FirstProperty + 5;
+            constexpr static uint OrientationOfTheGrid          = FirstProperty + 6;
+            constexpr static uint Dx                            = FirstProperty + 7;
+            constexpr static uint Dy                            = FirstProperty + 8;
+            constexpr static uint ProjectionCentreFlag          = FirstProperty + 9;
+            constexpr static uint ScanningMode                  = FirstProperty + 10;
+            constexpr static uint LastProperty                  = FirstProperty + 10;
         };
 
         class LambertConformal
         {
           public:
-            constexpr static const uint FirstProperty                 = PolarStereographic::LastProperty + 1;
-            constexpr static const uint Nx                            = FirstProperty + 0;
-            constexpr static const uint Ny                            = FirstProperty + 1;
-            constexpr static const uint LatitudeOfFirstGridPoint      = FirstProperty + 2;
-            constexpr static const uint LongitudeOfFirstGridPoint     = FirstProperty + 3;
-            constexpr static const uint ResolutionAndComponentFlags   = FirstProperty + 4;
-            constexpr static const uint LaD                           = FirstProperty + 5;
-            constexpr static const uint LoV                           = FirstProperty + 6;
-            constexpr static const uint Dx                            = FirstProperty + 7;
-            constexpr static const uint Dy                            = FirstProperty + 8;
-            constexpr static const uint ProjectionCentreFlag          = FirstProperty + 9;
-            constexpr static const uint ScanningMode                  = FirstProperty + 10;
-            constexpr static const uint Latin1                        = FirstProperty + 11;
-            constexpr static const uint Latin2                        = FirstProperty + 12;
-            constexpr static const uint LatitudeOfSouthernPole        = FirstProperty + 13;
-            constexpr static const uint LongitudeOfSouthernPole       = FirstProperty + 14;
-            constexpr static const uint LastProperty                  = FirstProperty + 14;
+            constexpr static uint FirstProperty                 = PolarStereographic::LastProperty + 1;
+            constexpr static uint Nx                            = FirstProperty + 0;
+            constexpr static uint Ny                            = FirstProperty + 1;
+            constexpr static uint LatitudeOfFirstGridPoint      = FirstProperty + 2;
+            constexpr static uint LongitudeOfFirstGridPoint     = FirstProperty + 3;
+            constexpr static uint ResolutionAndComponentFlags   = FirstProperty + 4;
+            constexpr static uint LaD                           = FirstProperty + 5;
+            constexpr static uint LoV                           = FirstProperty + 6;
+            constexpr static uint Dx                            = FirstProperty + 7;
+            constexpr static uint Dy                            = FirstProperty + 8;
+            constexpr static uint ProjectionCentreFlag          = FirstProperty + 9;
+            constexpr static uint ScanningMode                  = FirstProperty + 10;
+            constexpr static uint Latin1                        = FirstProperty + 11;
+            constexpr static uint Latin2                        = FirstProperty + 12;
+            constexpr static uint LatitudeOfSouthernPole        = FirstProperty + 13;
+            constexpr static uint LongitudeOfSouthernPole       = FirstProperty + 14;
+            constexpr static uint LastProperty                  = FirstProperty + 14;
         };
 
 
         class Mercator
         {
           public:
-            constexpr static const uint FirstProperty                 = LambertConformal::LastProperty + 1;
-            constexpr static const uint Ni                            = FirstProperty + 0;
-            constexpr static const uint Nj                            = FirstProperty + 1;
-            constexpr static const uint LatitudeOfFirstGridPoint      = FirstProperty + 2;
-            constexpr static const uint LongitudeOfFirstGridPoint     = FirstProperty + 3;
-            constexpr static const uint LaD                           = FirstProperty + 4;
-            constexpr static const uint LatitudeOfLastGridPoint       = FirstProperty + 5;
-            constexpr static const uint LongitudeOfLastGridPoint      = FirstProperty + 6;
-            constexpr static const uint OrientationOfTheGrid          = FirstProperty + 7;
-            constexpr static const uint Di                            = FirstProperty + 8;
-            constexpr static const uint Dj                            = FirstProperty + 9;
-            constexpr static const uint ResolutionAndComponentFlags   = FirstProperty + 10;
-            constexpr static const uint ScanningMode                  = FirstProperty + 11;
-            constexpr static const uint LastProperty                  = FirstProperty + 11;
+            constexpr static uint FirstProperty                 = LambertConformal::LastProperty + 1;
+            constexpr static uint Ni                            = FirstProperty + 0;
+            constexpr static uint Nj                            = FirstProperty + 1;
+            constexpr static uint LatitudeOfFirstGridPoint      = FirstProperty + 2;
+            constexpr static uint LongitudeOfFirstGridPoint     = FirstProperty + 3;
+            constexpr static uint LaD                           = FirstProperty + 4;
+            constexpr static uint LatitudeOfLastGridPoint       = FirstProperty + 5;
+            constexpr static uint LongitudeOfLastGridPoint      = FirstProperty + 6;
+            constexpr static uint OrientationOfTheGrid          = FirstProperty + 7;
+            constexpr static uint Di                            = FirstProperty + 8;
+            constexpr static uint Dj                            = FirstProperty + 9;
+            constexpr static uint ResolutionAndComponentFlags   = FirstProperty + 10;
+            constexpr static uint ScanningMode                  = FirstProperty + 11;
+            constexpr static uint LastProperty                  = FirstProperty + 11;
         };
 
-        constexpr static const uint LastProperty                = Mercator::LastProperty;
+        constexpr static uint LastProperty                = Mercator::LastProperty;
     };
 
 
     class ProductSection
     {
       public:
-        constexpr static const uint FirstProperty               = GridSection::LastProperty + 1;
-        constexpr static const uint ProductDefinitionTemplateNumber = FirstProperty + 0;
-        constexpr static const uint NV                          = FirstProperty + 1;
+        constexpr static uint FirstProperty               = GridSection::LastProperty + 1;
+        constexpr static uint ProductDefinitionTemplateNumber = FirstProperty + 0;
+        constexpr static uint NV                          = FirstProperty + 1;
 
         class ParameterSettings
         {
           public:
-            constexpr static const uint FirstProperty           = ProductSection::FirstProperty + 10;
-            constexpr static const uint ParameterCategory       = FirstProperty + 0;
-            constexpr static const uint ParameterNumber         = FirstProperty + 1;
-            constexpr static const uint TypeOfGeneratingProcess = FirstProperty + 2;
-            constexpr static const uint BackgroundProcess       = FirstProperty + 3;
-            constexpr static const uint GeneratingProcessIdentifier = FirstProperty + 4;
-            constexpr static const uint HoursAfterDataCutoff    = FirstProperty + 5;
-            constexpr static const uint MinutesAfterDataCutoff  = FirstProperty + 6;
-            constexpr static const uint IndicatorOfUnitOfTimeRange = FirstProperty + 7;
-            constexpr static const uint ForecastTime            = FirstProperty + 8;
-            constexpr static const uint LastProperty            = FirstProperty + 8;
+            constexpr static uint FirstProperty           = ProductSection::FirstProperty + 10;
+            constexpr static uint ParameterCategory       = FirstProperty + 0;
+            constexpr static uint ParameterNumber         = FirstProperty + 1;
+            constexpr static uint TypeOfGeneratingProcess = FirstProperty + 2;
+            constexpr static uint BackgroundProcess       = FirstProperty + 3;
+            constexpr static uint GeneratingProcessIdentifier = FirstProperty + 4;
+            constexpr static uint HoursAfterDataCutoff    = FirstProperty + 5;
+            constexpr static uint MinutesAfterDataCutoff  = FirstProperty + 6;
+            constexpr static uint IndicatorOfUnitOfTimeRange = FirstProperty + 7;
+            constexpr static uint ForecastTime            = FirstProperty + 8;
+            constexpr static uint LastProperty            = FirstProperty + 8;
         };
 
         class HorizontalSettings
         {
           public:
-            constexpr static const uint FirstProperty           = ParameterSettings::LastProperty + 1;
-            constexpr static const uint TypeOfFirstFixedSurface = FirstProperty + 0;
-            constexpr static const uint ScaleFactorOfFirstFixedSurface = FirstProperty + 1;
-            constexpr static const uint ScaledValueOfFirstFixedSurface = FirstProperty + 2;
-            constexpr static const uint TypeOfSecondFixedSurface = FirstProperty + 3;
-            constexpr static const uint ScaleFactorOfSecondFixedSurface = FirstProperty + 4;
-            constexpr static const uint ScaledValueOfSecondFixedSurface = FirstProperty + 5;
-            constexpr static const uint LastProperty            = FirstProperty + 5;
+            constexpr static uint FirstProperty           = ParameterSettings::LastProperty + 1;
+            constexpr static uint TypeOfFirstFixedSurface = FirstProperty + 0;
+            constexpr static uint ScaleFactorOfFirstFixedSurface = FirstProperty + 1;
+            constexpr static uint ScaledValueOfFirstFixedSurface = FirstProperty + 2;
+            constexpr static uint TypeOfSecondFixedSurface = FirstProperty + 3;
+            constexpr static uint ScaleFactorOfSecondFixedSurface = FirstProperty + 4;
+            constexpr static uint ScaledValueOfSecondFixedSurface = FirstProperty + 5;
+            constexpr static uint LastProperty            = FirstProperty + 5;
         };
 
 
         class StatisticalSettings
         {
           public:
-            constexpr static const uint FirstProperty               = HorizontalSettings::LastProperty + 1;
-            constexpr static const uint YearOfEndOfOverallTimeInterval = FirstProperty + 0;
-            constexpr static const uint MonthOfEndOfOverallTimeInterval = FirstProperty + 1;
-            constexpr static const uint DayOfEndOfOverallTimeInterval = FirstProperty + 2;
-            constexpr static const uint HourOfEndOfOverallTimeInterval = FirstProperty + 3;
-            constexpr static const uint MinuteOfEndOfOverallTimeInterval = FirstProperty + 4;
-            constexpr static const uint SecondOfEndOfOverallTimeInterval = FirstProperty + 5;
-            constexpr static const uint NumberOfTimeRange           = FirstProperty + 6;
-            constexpr static const uint NumberOfMissingInStatisticalProcess = FirstProperty + 7;
-            constexpr static const uint TypeOfStatisticalProcessing = FirstProperty + 8;
-            constexpr static const uint TypeOfTimeIncrement         = FirstProperty + 9;
-            constexpr static const uint IndicatorOfUnitForTimeRange = FirstProperty + 10;
-            constexpr static const uint LengthOfTimeRange           = FirstProperty + 11;
-            constexpr static const uint IndicatorOfUnitForTimeIncrement = FirstProperty + 12;
-            constexpr static const uint TimeIncrement               = FirstProperty + 13;
-            constexpr static const uint LastProperty                = FirstProperty + 13;
+            constexpr static uint FirstProperty               = HorizontalSettings::LastProperty + 1;
+            constexpr static uint YearOfEndOfOverallTimeInterval = FirstProperty + 0;
+            constexpr static uint MonthOfEndOfOverallTimeInterval = FirstProperty + 1;
+            constexpr static uint DayOfEndOfOverallTimeInterval = FirstProperty + 2;
+            constexpr static uint HourOfEndOfOverallTimeInterval = FirstProperty + 3;
+            constexpr static uint MinuteOfEndOfOverallTimeInterval = FirstProperty + 4;
+            constexpr static uint SecondOfEndOfOverallTimeInterval = FirstProperty + 5;
+            constexpr static uint NumberOfTimeRange           = FirstProperty + 6;
+            constexpr static uint NumberOfMissingInStatisticalProcess = FirstProperty + 7;
+            constexpr static uint TypeOfStatisticalProcessing = FirstProperty + 8;
+            constexpr static uint TypeOfTimeIncrement         = FirstProperty + 9;
+            constexpr static uint IndicatorOfUnitForTimeRange = FirstProperty + 10;
+            constexpr static uint LengthOfTimeRange           = FirstProperty + 11;
+            constexpr static uint IndicatorOfUnitForTimeIncrement = FirstProperty + 12;
+            constexpr static uint TimeIncrement               = FirstProperty + 13;
+            constexpr static uint LastProperty                = FirstProperty + 13;
         };
 
 
         class EpsSettings
         {
           public:
-            constexpr static const uint FirstProperty               = StatisticalSettings::LastProperty + 1;
-            constexpr static const uint TypeOfEnsembleForecast      = FirstProperty + 0;
-            constexpr static const uint PerturbationNumber          = FirstProperty + 1;
-            constexpr static const uint NumberOfForecastsInEnsemble = FirstProperty + 2;
-            constexpr static const uint LastProperty                = FirstProperty + 2;
+            constexpr static uint FirstProperty               = StatisticalSettings::LastProperty + 1;
+            constexpr static uint TypeOfEnsembleForecast      = FirstProperty + 0;
+            constexpr static uint PerturbationNumber          = FirstProperty + 1;
+            constexpr static uint NumberOfForecastsInEnsemble = FirstProperty + 2;
+            constexpr static uint LastProperty                = FirstProperty + 2;
         };
 
 
         class DerivedSettings
         {
           public:
-            constexpr static const uint FirstProperty               = EpsSettings::LastProperty + 1;
-            constexpr static const uint DerivedForecast             = FirstProperty + 0;
-            constexpr static const uint NumberOfForecastsInEnsemble = FirstProperty + 1;
-            constexpr static const uint LastProperty                = FirstProperty + 1;
+            constexpr static uint FirstProperty               = EpsSettings::LastProperty + 1;
+            constexpr static uint DerivedForecast             = FirstProperty + 0;
+            constexpr static uint NumberOfForecastsInEnsemble = FirstProperty + 1;
+            constexpr static uint LastProperty                = FirstProperty + 1;
         };
 
 
         class RectangularClusterSettings
         {
           public:
-            constexpr static const uint FirstProperty               = DerivedSettings::LastProperty + 1;
-            constexpr static const uint ClusterIdentifier           = FirstProperty + 0;
-            constexpr static const uint NH                          = FirstProperty + 1;
-            constexpr static const uint NL                          = FirstProperty + 2;
-            constexpr static const uint TotalNumberOfClusters       = FirstProperty + 3;
-            constexpr static const uint ClusteringMethod            = FirstProperty + 4;
-            constexpr static const uint NorthernLatitudeOfClusterDomain = FirstProperty + 5;
-            constexpr static const uint SouthernLatitudeOfClusterDomain = FirstProperty + 6;
-            constexpr static const uint EasternLongitudeOfClusterDomain = FirstProperty + 7;
-            constexpr static const uint WesternLongitudeOfClusterDomain = FirstProperty + 8;
-            constexpr static const uint NumberOfForecastsInTheCluster = FirstProperty + 9;
-            constexpr static const uint ScaleFactorOfStandardDeviation = FirstProperty + 10;
-            constexpr static const uint ScaledValueOfStandardDeviation = FirstProperty + 11;
-            constexpr static const uint ScaleFactorOfDistanceFromEnsembleMean = FirstProperty + 12;
-            constexpr static const uint ScaledValueOfDistanceFromEnsembleMean = FirstProperty + 13;
-            constexpr static const uint LastProperty                = FirstProperty + 13;
+            constexpr static uint FirstProperty               = DerivedSettings::LastProperty + 1;
+            constexpr static uint ClusterIdentifier           = FirstProperty + 0;
+            constexpr static uint NH                          = FirstProperty + 1;
+            constexpr static uint NL                          = FirstProperty + 2;
+            constexpr static uint TotalNumberOfClusters       = FirstProperty + 3;
+            constexpr static uint ClusteringMethod            = FirstProperty + 4;
+            constexpr static uint NorthernLatitudeOfClusterDomain = FirstProperty + 5;
+            constexpr static uint SouthernLatitudeOfClusterDomain = FirstProperty + 6;
+            constexpr static uint EasternLongitudeOfClusterDomain = FirstProperty + 7;
+            constexpr static uint WesternLongitudeOfClusterDomain = FirstProperty + 8;
+            constexpr static uint NumberOfForecastsInTheCluster = FirstProperty + 9;
+            constexpr static uint ScaleFactorOfStandardDeviation = FirstProperty + 10;
+            constexpr static uint ScaledValueOfStandardDeviation = FirstProperty + 11;
+            constexpr static uint ScaleFactorOfDistanceFromEnsembleMean = FirstProperty + 12;
+            constexpr static uint ScaledValueOfDistanceFromEnsembleMean = FirstProperty + 13;
+            constexpr static uint LastProperty                = FirstProperty + 13;
         };
 
 
         class ProbabilitySettings
         {
           public:
-            constexpr static const uint FirstProperty               = RectangularClusterSettings::LastProperty + 1;
-            constexpr static const uint ForecastProbabilityNumber   = FirstProperty + 0;
-            constexpr static const uint TotalNumberOfForecastProbabilities = FirstProperty + 1;
-            constexpr static const uint ProbabilityType             = FirstProperty + 2;
-            constexpr static const uint ScaleFactorOfLowerLimit     = FirstProperty + 3;
-            constexpr static const uint ScaledValueOfLowerLimit     = FirstProperty + 4;
-            constexpr static const uint ScaleFactorOfUpperLimit     = FirstProperty + 5;
-            constexpr static const uint ScaledValueOfUpperLimit     = FirstProperty + 6;
-            constexpr static const uint LastProperty                = FirstProperty + 6;
+            constexpr static uint FirstProperty               = RectangularClusterSettings::LastProperty + 1;
+            constexpr static uint ForecastProbabilityNumber   = FirstProperty + 0;
+            constexpr static uint TotalNumberOfForecastProbabilities = FirstProperty + 1;
+            constexpr static uint ProbabilityType             = FirstProperty + 2;
+            constexpr static uint ScaleFactorOfLowerLimit     = FirstProperty + 3;
+            constexpr static uint ScaledValueOfLowerLimit     = FirstProperty + 4;
+            constexpr static uint ScaleFactorOfUpperLimit     = FirstProperty + 5;
+            constexpr static uint ScaledValueOfUpperLimit     = FirstProperty + 6;
+            constexpr static uint LastProperty                = FirstProperty + 6;
         };
 
 
         class PercentileSettings
         {
           public:
-            constexpr static const uint FirstProperty               = ProbabilitySettings::LastProperty + 1;
-            constexpr static const uint PercentileValue             = FirstProperty + 0;
-            constexpr static const uint LastProperty                = FirstProperty + 0;
+            constexpr static uint FirstProperty               = ProbabilitySettings::LastProperty + 1;
+            constexpr static uint PercentileValue             = FirstProperty + 0;
+            constexpr static uint LastProperty                = FirstProperty + 0;
         };
 
 
         class CategoricalSettings
         {
           public:
-            constexpr static const uint FirstProperty               = PercentileSettings::LastProperty + 1;
-            constexpr static const uint NumberOfCategories          = FirstProperty + 0;
-            constexpr static const uint CategoryType                = FirstProperty + 1;
-            constexpr static const uint CodeFigure                  = FirstProperty + 2;
-            constexpr static const uint ScaleFactorOfLowerLimit     = FirstProperty + 3;
-            constexpr static const uint ScaledValueOfLowerLimit     = FirstProperty + 4;
-            constexpr static const uint ScaleFactorOfUpperLimit     = FirstProperty + 5;
-            constexpr static const uint ScaledValueOfUpperLimit     = FirstProperty + 6;
-            constexpr static const uint LastProperty                = FirstProperty + 6;
+            constexpr static uint FirstProperty               = PercentileSettings::LastProperty + 1;
+            constexpr static uint NumberOfCategories          = FirstProperty + 0;
+            constexpr static uint CategoryType                = FirstProperty + 1;
+            constexpr static uint CodeFigure                  = FirstProperty + 2;
+            constexpr static uint ScaleFactorOfLowerLimit     = FirstProperty + 3;
+            constexpr static uint ScaledValueOfLowerLimit     = FirstProperty + 4;
+            constexpr static uint ScaleFactorOfUpperLimit     = FirstProperty + 5;
+            constexpr static uint ScaledValueOfUpperLimit     = FirstProperty + 6;
+            constexpr static uint LastProperty                = FirstProperty + 6;
         };
 
-        constexpr static const uint LastProperty                = CategoricalSettings::LastProperty;
+        constexpr static uint LastProperty                = CategoricalSettings::LastProperty;
     };
 
 
     class RepresentationSection
     {
       public:
-        constexpr static const uint FirstProperty               = ProductSection::LastProperty + 1;
-        constexpr static const uint RepresentationTemplateNumber = FirstProperty + 0;
+        constexpr static uint FirstProperty               = ProductSection::LastProperty + 1;
+        constexpr static uint RepresentationTemplateNumber = FirstProperty + 0;
 
         class Packing
         {
           public:
-            constexpr static const uint FirstProperty           = RepresentationSection::FirstProperty + 10;
-            constexpr static const uint ReferenceValue          = FirstProperty + 0;
-            constexpr static const uint BinaryScaleFactor       = FirstProperty + 1;
-            constexpr static const uint DecimalScaleFactor      = FirstProperty + 2;
-            constexpr static const uint BitsPerValue            = FirstProperty + 3;
-            constexpr static const uint LastProperty            = FirstProperty + 3;
+            constexpr static uint FirstProperty           = RepresentationSection::FirstProperty + 10;
+            constexpr static uint ReferenceValue          = FirstProperty + 0;
+            constexpr static uint BinaryScaleFactor       = FirstProperty + 1;
+            constexpr static uint DecimalScaleFactor      = FirstProperty + 2;
+            constexpr static uint BitsPerValue            = FirstProperty + 3;
+            constexpr static uint LastProperty            = FirstProperty + 3;
         };
 
         class OriginalValues
         {
           public:
-            constexpr static const uint FirstProperty           = Packing::LastProperty + 1;
-            constexpr static const uint TypeOfOriginalFieldValues = FirstProperty + 0;
-            constexpr static const uint LastProperty            = FirstProperty + 0;
+            constexpr static uint FirstProperty           = Packing::LastProperty + 1;
+            constexpr static uint TypeOfOriginalFieldValues = FirstProperty + 0;
+            constexpr static uint LastProperty            = FirstProperty + 0;
         };
 
-        constexpr static const uint LastProperty                = OriginalValues::LastProperty;
+        constexpr static uint LastProperty                = OriginalValues::LastProperty;
     };
 
 
     class BitmapSection
     {
       public:
-        constexpr static const uint FirstProperty               = RepresentationSection::LastProperty;
-        constexpr static const uint LastProperty                = FirstProperty + 0;
+        constexpr static uint FirstProperty               = RepresentationSection::LastProperty;
+        constexpr static uint LastProperty                = FirstProperty + 0;
     };
 
 
     class DataSection
     {
       public:
-        constexpr static const uint FirstProperty               = BitmapSection::LastProperty;
-        constexpr static const uint LastProperty                = FirstProperty + 0;
+        constexpr static uint FirstProperty               = BitmapSection::LastProperty;
+        constexpr static uint LastProperty                = FirstProperty + 0;
     };
 
 
-    constexpr static const uint LastProperty                    = DataSection::LastProperty;
+    constexpr static uint LastProperty                    = DataSection::LastProperty;
 
   protected:
 
