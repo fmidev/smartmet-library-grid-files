@@ -3,7 +3,7 @@
 %define SPECNAME smartmet-library-%{DIRNAME}
 Summary: grid file handling library
 Name: %{SPECNAME}
-Version: 26.4.17
+Version: 26.4.22
 Release: 1%{?dist}.fmi
 License: MIT
 Group: Development/Libraries
@@ -23,9 +23,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: rpm-build
 BuildRequires: smartmet-utils-devel >= 26.2.4
 BuildRequires: smartmet-library-newbase-devel >= 26.2.4
-BuildRequires: smartmet-library-spine-devel >= 26.4.13
-BuildRequires: smartmet-library-macgyver >= 26.4.13
-BuildRequires: smartmet-library-trax-devel >= 26.4.13
+BuildRequires: smartmet-library-spine-devel >= 26.3.13
+BuildRequires: smartmet-library-macgyver >= 26.2.4
+BuildRequires: smartmet-library-trax-devel >= 26.2.4
 BuildRequires: %{smartmet_boost}-devel
 BuildRequires: gcc-c++
 BuildRequires: gdal312-devel
@@ -51,9 +51,9 @@ Requires: libcurl
 Requires: openjpeg2
 Requires: libwebp13 >= 1.3.2
 Requires: smartmet-library-newbase >= 26.2.4
-Requires: smartmet-library-macgyver >= 26.4.13
-Requires: smartmet-library-spine >= 26.4.13
-Requires: smartmet-library-trax >= 26.4.13
+Requires: smartmet-library-macgyver >= 26.2.4
+Requires: smartmet-library-spine >= 26.3.13
+Requires: smartmet-library-trax >= 26.2.4
 Requires: smartmet-topography-data >= 1.0.0
 
 %description
@@ -86,7 +86,7 @@ Provides: %{SPECNAME}-devel
 Requires: %{SPECNAME} = %{version}-%{release}
 Requires: smartmet-library-newbase-devel >= 26.2.4
 Requires: smartmet-library-spine-devel
-Requires: smartmet-library-macgyver >= 26.4.13
+Requires: smartmet-library-macgyver >= 26.2.4
 Requires: smartmet-library-trax-devel
 Requires: %{smartmet_boost}-devel
 Requires: libcurl-devel
@@ -100,6 +100,8 @@ FMI Grid File library development files
 %{_includedir}/smartmet/%{DIRNAME}
 
 %changelog
+* Wed Apr 22 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.4.22-1.fmi
+- Added option for subdividing contouring cells by bilinear interpolation
 * Fri Apr 17 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> - 26.4.17-1.fmi
 - Added limited GeoTiff support
 * Mon Apr 13 2026 Mika Heiskanen <mika.heiskanen@fmi.fi> 26.4.13-1.fmi
