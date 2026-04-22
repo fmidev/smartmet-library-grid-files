@@ -77,7 +77,8 @@ void getIsolines(
     short interpolationMethod,
     size_t smooth_size,
     size_t smooth_degree,
-    T::ByteData_vec& contours);
+    T::ByteData_vec& contours,
+    int subdivide = 0);
 
 void getIsobands(
     std::vector<float>& gridData,
@@ -89,7 +90,8 @@ void getIsobands(
     short interpolationMethod,
     size_t smooth_size,
     size_t smooth_degree,
-    T::ByteData_vec& contours);
+    T::ByteData_vec& contours,
+    int subdivide = 0);
 
 bool getLineIntersectionPoint(
     double x1,double y1,double x2,double y2,  // Line 1

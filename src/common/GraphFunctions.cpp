@@ -1139,7 +1139,7 @@ T::Polygon_vec getEnlargedPolygonPath(T::Polygon_vec &oldPath, double areaExtens
 
 
 void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, int width, int height, std::vector<float> &contourValues, short interpolationMethod,
-    size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours)
+    size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide)
 {
   try
   {
@@ -1154,6 +1154,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
 
     Trax::Contour contourer;
     contourer.interpolation((Trax::InterpolationType) interpolationMethod);
+    contourer.subdivide(subdivide);
 
     TraxGrid grid(&gridData, coordinates, width, height);
 
@@ -1200,7 +1201,7 @@ void getIsolines(std::vector<float> &gridData, T::Coordinate_vec *coordinates, i
 
 
 void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coordinates, int width, int height, std::vector<float> &contourLowValues,
-    std::vector<float> &contourHighValues, short interpolationMethod, size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours)
+    std::vector<float> &contourHighValues, short interpolationMethod, size_t smooth_size, size_t smooth_degree, T::ByteData_vec &contours, int subdivide)
 {
   try
   {
@@ -1215,6 +1216,7 @@ void getIsobands(std::vector<float> &gridData, std::vector<T::Coordinate> *coord
 
     Trax::Contour contourer;
     contourer.interpolation((Trax::InterpolationType) interpolationMethod);
+    contourer.subdivide(subdivide);
 
     TraxGrid grid(&gridData, coordinates, width, height);
     Trax::IsobandLimits limits;
