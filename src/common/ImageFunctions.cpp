@@ -4,6 +4,7 @@
 #include "MemoryReader.h"
 #include "ShowFunction.h"
 #include <macgyver/Exception.h>
+#include <memory>
 #include <gis/OGR.h>
 #include <stdint.h>
 #include <math.h>
@@ -107,7 +108,7 @@ void jpeg_save(const char *filename, uint *image, int image_height,int image_wid
   try
   {
     int size = image_width * image_height;
-    unsigned char *image_buffer = new unsigned char[size*3];
+    auto image_buffer = std::make_unique<unsigned char[]>(size*3);
     uint c = 0;
     uint p = 0;
 
@@ -162,7 +163,6 @@ void jpeg_save(const char *filename, uint *image, int image_height,int image_wid
     fclose(outfile);
 
     jpeg_destroy_compress(&cinfo);
-    delete[] image_buffer;
   }
   catch (...)
   {
@@ -578,7 +578,7 @@ uchar *readpng_get_image(double display_exponent, int *pChannels, uint *pRowbyte
   *pRowbytes = rowbytes = png_get_rowbytes(png_ptr, info_ptr);
   *pChannels = C_INT(png_get_channels(png_ptr, info_ptr));
 
-  if ((image_data = (uchar *)malloc(rowbytes*height)) == nullptr)
+  if ((image_data = (uchar *)malloc((size_t)rowbytes*(size_t)height)) == nullptr)
   {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     return nullptr;
