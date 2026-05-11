@@ -48,10 +48,11 @@ void FileWriter::createFile(const char *_filename)
   {
     mFilename = _filename;
     mFileHandle = fopen(_filename,"we");
-    if (mFileHandle)
+    if (!mFileHandle)
     {
       Fmi::Exception exception(BCP,"Cannot create a file!");
       exception.addParameter("Filename",mFilename);
+      throw exception;
     }
   }
   catch (...)
