@@ -224,13 +224,10 @@ void ConfigurationFile::replaceAttributeNamesWithValues(const std::string& input
     }
 
     char st[10000];
-    while (!feof(inFile))
+    while (fgets(st,10000,inFile) != nullptr)
     {
-      if (fgets(st,10000,inFile) != nullptr)
-      {
-        std::string newStr = parseValue(std::string(st));
-        fprintf(outFile,"%s",newStr.c_str());
-      }
+      std::string newStr = parseValue(std::string(st));
+      fprintf(outFile,"%s",newStr.c_str());
     }
 
     fclose(inFile);

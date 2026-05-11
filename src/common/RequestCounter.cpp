@@ -420,9 +420,9 @@ void RequestCounter::loadGeometryHitCounters(const char *filename)
 
     char st[100000];
 
-    while (!feof(file))
+    while (fgets(st,100000,file) != nullptr)
     {
-      if (fgets(st,100000,file) != nullptr  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         char *field[10000];
         uint c = 1;

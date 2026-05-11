@@ -459,10 +459,10 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
     }
 
     char buf[1000000];
-    while (!feof(sFile)  &&  !shutdownRequested)
+    int nr;
+    while (!shutdownRequested && (nr = fread(buf,1,1000000,sFile)) > 0)
     {
-      int nr = fread(buf,1,1000000,sFile);
-      if (nr > 0 && !shutdownRequested)
+      if (!shutdownRequested)
       {
         int nw = fwrite(buf,1,nr,tFile);
       }
@@ -2967,9 +2967,9 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
 
     char st[10000];
 
-    while (!feof(file))
+    while (fgets(st,10000,file) != nullptr)
     {
-      if (fgets(st,10000,file) != nullptr  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         std::vector<std::string> fields;
         bool ind = false;
@@ -3047,16 +3047,13 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
     char st[10000];
     fseek(file,startPos,SEEK_SET);
 
-    while (!feof(file))
+    while (fgets(st,10000,file) != nullptr)
     {
-      if (fgets(st,10000,file) != nullptr)
-      {
-        char *p = strstr(st,"\n");
-        if (p)
-          *p ='\0';
+      char *p = strstr(st,"\n");
+      if (p)
+        *p ='\0';
 
-        tmpLines.push_back(std::string(st));
-      }
+      tmpLines.push_back(std::string(st));
     }
     fclose(file);
 

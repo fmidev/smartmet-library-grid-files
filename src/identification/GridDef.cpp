@@ -912,9 +912,9 @@ void GridDef::loadGribParameterDefinitions(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1424,9 +1424,9 @@ void GridDef::loadGrib1ParameterDefs(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1504,9 +1504,9 @@ void GridDef::loadGrib2ParameterDefs(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1585,9 +1585,9 @@ void GridDef::loadFmiLevelDefinitions(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1662,9 +1662,9 @@ void GridDef::loadFmiGeometryGroupDefinitions(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1736,9 +1736,9 @@ void GridDef::loadFmiForecastTypeDefinitions(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1807,9 +1807,9 @@ void GridDef::loadFmiProcessingTypeDefinitions(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1878,9 +1878,9 @@ void GridDef::loadFmiAggregationDefinitions(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -1949,9 +1949,9 @@ void GridDef::loadFmiParameterId_grib(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2036,9 +2036,9 @@ void GridDef::loadFmiParameterId_newbase(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2137,9 +2137,9 @@ void GridDef::loadFmiParameterId_netCdf(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2226,9 +2226,9 @@ void GridDef::loadFmiParameterDefinitions(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2314,9 +2314,9 @@ void GridDef::loadFmiLevelId_grib1(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2395,9 +2395,9 @@ void GridDef::loadFmiLevelId_grib2(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2476,9 +2476,9 @@ void GridDef::loadFmiLevelId_newbase(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2567,9 +2567,9 @@ void GridDef::loadNewbaseParameterDefinitions(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -2640,9 +2640,9 @@ void GridDef::loadNetCdfParameterDefinitions(const char *filename)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -4117,9 +4117,9 @@ void GridDef::loadGeometryDefinitions(const char *filename)
     char st[1000];
 
     uint cnt = 0;
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file)  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         cnt++;
         GRIB1::GridDefinition *def1 = createGrib1GridDefinition(st);
