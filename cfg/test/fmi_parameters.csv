@@ -27,7 +27,7 @@
 1000000012;SpecificHumidity;;SpecificHumidity;1;1;1;;
 1000000013;Humidity;;Humidity;1;1;1;;
 1000000014;MixingRatio;;MixingRatio;1;1;1;;
-1000000015;StabilityIndex;;StabilityIndex;1;1;1;;
+1000000015;StabilityIndex;;StabilityIndex;2;2;2;;
 1000000016;SaturationDeficit;;SaturationDeficit;1;1;1;;
 1000000017;TopoGraf;;TopoGraf;1;1;1;;
 1000000019;TotalWindMS;;TotalWindMS;1;1;1;;
@@ -67,7 +67,7 @@
 1000000055;PrecipitationLarge;;PrecipitationLarge;1;1;1;;
 1000000056;PrecipitationType;;PrecipitationType;1;1;1;;
 1000000057;PrecipitationForm;;PrecipitationForm;1;1;1;;
-1000000058;GolfIndex;;GolfIndex;1;1;1;;
+1000000058;GolfIndex;;GolfIndex;2;2;2;;
 1000000059;CAPE;;CAPE;1;1;1;;
 1000000060;SeaLevel;;SeaLevel;1;1;1;;
 1000000061;TemperatureSea;;TemperatureSea;1;1;1;;
@@ -80,7 +80,7 @@
 1000000068;LCL;;LCL;1;1;1;;
 1000000069;LNB;;LNB;1;1;1;;
 1000000079;TotalCloudCover;;TotalCloudCover;1;1;1;;
-1000000080;KIndex;;KIndex;1;1;1;;
+1000000080;KIndex;;KIndex;2;2;2;;
 1000000081;RoadT1Derivative;;RoadT1Derivative;1;1;1;;
 1000000082;RoadT2Derivative;;RoadT2Derivative;1;1;1;;
 1000000083;FreezingPoint1;;FreezingPoint1;1;1;1;;
@@ -159,7 +159,7 @@
 1000000175;SigWaveHeightBandC;;SigWaveHeightBandC;1;1;1;;
 1000000176;SigWavePeriodBandC;;SigWavePeriodBandC;1;1;1;;
 1000000177;WaveDirectionBandC;;WaveDirectionBandC;1;1;1;;
-1000000178;UnidirectivityIndex;;UnidirectivityIndex;1;1;1;;
+1000000178;UnidirectivityIndex;;UnidirectivityIndex;2;2;2;;
 1000000179;SigWaveLength;;SigWaveLength;1;1;1;;
 1000000180;MixedLayerDepth;;MixedLayerDepth;1;1;1;;
 1000000181;SigWaveHeightSwell0;;SigWaveHeightSwell0;1;1;1;;
@@ -175,10 +175,10 @@
 1000000191;NO2Contents;;NO2Contents;1;1;1;;
 1000000192;COContents;;COContents;1;1;1;;
 1000000193;SO2Contents;;SO2Contents;1;1;1;;
-1000000194;AQIndex;;AQIndex;1;1;1;;
-1000000195;SmogIndex;;SmogIndex;1;1;1;;
-1000000196;UVIndexMax;;UVIndexMax;1;1;1;;
-1000000197;UVIndex;;UVIndex;1;1;1;;
+1000000194;AQIndex;;AQIndex;2;2;2;;
+1000000195;SmogIndex;;SmogIndex;2;2;2;;
+1000000196;UVIndexMax;;UVIndexMax;2;2;2;;
+1000000197;UVIndex;;UVIndex;2;2;2;;
 1000000198;OzoneAnomaly;;OzoneAnomaly;1;1;1;;
 1000000200;PrecipitationRateLarge;;PrecipitationRateLarge;1;1;1;;
 1000000201;PrecipitationRateConv;;PrecipitationRateConv;1;1;1;;
@@ -190,6 +190,7 @@
 1000000207;PM25Contents;;PM25Contents;1;1;1;;
 1000000212;TemperatureVirtual;;TemperatureVirtual;1;1;1;;
 1000000220;SnowWarning;;SnowWarning;1;1;1;;
+1000000221;HardPackedSnowIndex;;HardPackedSnowIndex;2;2;2;;
 1000000226;PressureAnomaly;;PressureAnomaly;1;1;1;;
 1000000227;GeopotentialHeightAnomaly;;GeopotentialHeightAnomaly;1;1;1;;
 1000000235;SkinTemperature;;SkinTemperature;1;1;1;;
@@ -300,7 +301,7 @@
 1000000364;CloudTopBrightnessTemperature;;CloudTopBrightnessTemperature;1;1;1;;
 1000000365;WaterVapourBrightnessTemperature;;WaterVapourBrightnessTemperature;1;1;1;;
 1000000366;WaterVapourBrightnessTemperatureIncludingCloudCorrection;;WaterVapourBrightnessTemperatureIncludingCloudCorrection;1;1;1;;
-1000000367;MaximumIcingIndex;;MaximumIcingIndex;1;1;1;;
+1000000367;MaximumIcingIndex;;MaximumIcingIndex;2;2;2;;
 1000000368;CloudWaterReflectivity;;CloudWaterReflectivity;1;1;1;;
 1000000370;SatoKierto;;SatoKierto;1;1;1;;
 1000000372;FrostProbability;;FrostProbability;1;1;1;;
@@ -555,9 +556,9 @@
 1000000658;GrowthPeriodOnOff;;GrowthPeriodOnOff;1;1;1;;
 1000000659;RoadNotification;;RoadNotification;1;1;1;;
 1000000660;RoadWarning;;RoadWarning;1;1;1;;
-1000000661;PedestrianIndex;;PedestrianIndex;1;1;1;;
+1000000661;PedestrianIndex;;PedestrianIndex;2;2;2;;
 1000000662;RoadReasoning;;RoadReasoning;1;1;1;;
-1000000663;TrafficIndex;;TrafficIndex;1;1;1;;
+1000000663;TrafficIndex;;TrafficIndex;2;2;2;;
 1000000664;Friction;;Friction;1;1;1;;
 1000000665;RoadIceCover;;RoadIceCover;1;1;1;;
 1000000666;RoadIceCoverOnVehiclePath;;RoadIceCoverOnVehiclePath;1;1;1;;
@@ -649,7 +650,7 @@
 1000000783;FLCbCover;;FLCbCover;1;1;1;;
 1000000784;FLMinBase;;FLMinBase;1;1;1;;
 1000000785;FLMaxBase;;FLMaxBase;1;1;1;;
-1000000786;PollenIndexNut;;PollenIndexNut;1;1;1;;
+1000000786;PollenIndexNut;;PollenIndexNut;2;2;2;;
 1000000787;PollenIndexAlder;;PollenIndexAlder;1;1;1;;
 1000000788;PollenIndexBirch;;PollenIndexBirch;1;1;1;;
 1000000789;PollenIndexMugwort;;PollenIndexMugwort;1;1;1;;

@@ -15,6 +15,17 @@
 #   2 Fields used for identification
 #
 #################################################################################
+# SCFR soil clay fraction
+198007;discipline=192,centre=98,parameterCategory=128,parameterNumber=7;
+
+# SSFR soil sand fraction
+198006;discipline=192,centre=98,parameterCategory=128,parameterNumber=6;
+
+# Soilp representing the soil silt fraction
+#198008;discipline=2,centre=98,parameterCategory=3,parameterNumber=15;
+
+# Soiltexture representing the soil organic carbon fraction
+#198009;discipline=192,centre=98,parameterCategory=228,parameterNumber=92;
 
 # SWVL1;Volumetric soil water layer 1
 198039;discipline=192,centre=86,parameterCategory=128,parameterNumber=39;
@@ -51,4 +62,73 @@
 
 # Soil temperature layer 4 organic soil
 199236;discipline=192,centre=86,parameterCategory=128,parameterNumber=236;
+
+# 301 - Satellite products
+# MIR Medium Infrared reflectance
+301220;discipline=3,parameterCategory=0,parameterNumber=220;
+
+# Band 0 reflectance
+301200;discipline=3,parameterCategory=0,parameterNumber=200;
+
+# Band 1 reflectance
+301201;discipline=3,parameterCategory=0,parameterNumber=201;
+
+# Band 2 reflectance
+301202;discipline=3,parameterCategory=0,parameterNumber=202;
+
+# Band 3 reflectance
+301203;discipline=3,parameterCategory=0,parameterNumber=203;
+
+# Band 4 reflectance
+301204;discipline=3,parameterCategory=0,parameterNumber=204;
+
+# Band 5 reflectance
+301205;discipline=3,parameterCategory=0,parameterNumber=205;
+
+# Band 6 reflectance
+301206;discipline=3,parameterCategory=0,parameterNumber=206;
+
+# Band 7 reflectance
+301207;discipline=3,parameterCategory=0,parameterNumber=207;
+
+# Band 8 reflectance
+301208;discipline=3,parameterCategory=0,parameterNumber=208;
+
+# Band 9 reflectance
+301209;discipline=3,parameterCategory=0,parameterNumber=209;
+
+# Mean total precipitation flux short=mtpf
+#235013;discipline=0,parameterCategory=1,parameterNumber=52,typeOfStatisticalProcessing=0;
+
+# 10 metre wind gust since previous post-processing (removing is_uerra=1)
+49;discipline=0,parameterCategory=2,parameterNumber=22,typeOfFirstFixedSurface=103,scaledValueOfFirstFixedSurface=10,scaleFactorOfFirstFixedSurface=0,crraLocalVersion=1;
+
+# Albedo
+174;discipline=0,parameterCategory=19,parameterNumber=1,crraLocalVersion=1;
+
+# Soil temperature layer 1 
+#174139;discipline=192,parameterCategory=174,parameterNumber=139;
+
+# Total precipitation
+228;discipline=0,parameterCategory=1,parameterNumber=193,typeOfFirstFixedSurface=1,typeOfStatisticalProcessing=1,unitsFactor=1000;
+
+# Maximum temperature at 2 metres in the last 24 hours
+301121;discipline=0,parameterCategory=0,parameterNumber=0,typeOfFirstFixedSurface=103,scaledValueOfFirstFixedSurface=2,scaleFactorOfFirstFixedSurface=0,indicatorOfUnitForTimeRange=1,typeOfStatisticalProcessing=2,lengthOfTimeRange=24,is_uerra=0;
+
+# Minimum temperature at 2 metres in the last 24 hours
+301122;discipline=0,parameterCategory=0,parameterNumber=0,typeOfFirstFixedSurface=103,scaledValueOfFirstFixedSurface=2,scaleFactorOfFirstFixedSurface=0,indicatorOfUnitForTimeRange=1,typeOfStatisticalProcessing=3,lengthOfTimeRange=24,is_uerra=0;
+
+# VSW - Volumetric soil water for layer 1 and 2
+360199;discipline=2,parameterCategory=0,parameterNumber=25;,typeOfFirstFixedSurface=106,scaledValueOfFirstFixedSurface=0,
+460199;discipline=2,parameterCategory=0,parameterNumber=25;,typeOfFirstFixedSurface=106,scaledValueOfFirstFixedSurface=7,
+
+
+
+# CAM 
+#22211122;discipline=0,centre=98,parameterCategory=20,parameterNumber=2,constituentType=8;
+
+20000000;discipline=0,parameterCategory=20,parameterNumber=0,aerosolType=62026,scaleFactorOfFirstSize=7,scaledValueOfFirstSize=25
+20000001;centre=98,typeOfProcessedData=2,parameterNumber=1,generatingProcessIdentifier=128
+20000002;discipline=0,parameterCategory=20,parameterNumber=0,aerosolType=62026,scaleFactorOfFirstSize=6,scaledValueOfFirstSize=10
+
 

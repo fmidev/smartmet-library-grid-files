@@ -5820,13 +5820,13 @@
 210120;discipline=192,parameterCategory=210,parameterNumber=120;
 
 # Nitrogen dioxide mass mixing ratio
-210121;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=5,is_chemical=1;
+210121;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=5
 
 # Sulphur dioxide mass mixing ratio
-210122;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=8,is_chemical=1;
+210122;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=8
 
 # Carbon monoxide mass mixing ratio
-210123;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=4,is_chemical=1;
+210123;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=4;
 
 # Formaldehyde
 210124;discipline=192,parameterCategory=210,parameterNumber=124;
@@ -6024,7 +6024,7 @@
 210197;discipline=192,parameterCategory=210,parameterNumber=197;
 
 # Ozone mass mixing ratio (full chemistry scheme)
-210203;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=0,is_chemical=1;
+210203;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=0;
 
 # GEMS Total column ozone
 210206;discipline=192,parameterCategory=210,parameterNumber=206;
@@ -6466,13 +6466,13 @@
 211120;discipline=192,parameterCategory=211,parameterNumber=120;
 
 # Nitrogen dioxide mass mixing ratio difference
-211121;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=5,typeOfGeneratingProcess=20,is_chemical=1;
+211121;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=5,typeOfGeneratingProcess=20;
 
 # Sulphur dioxide mass mixing ratio difference
-211122;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=8,typeOfGeneratingProcess=20,is_chemical=1;
+211122;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=8,typeOfGeneratingProcess=20;
 
 # Carbon monoxide mass mixing ratio difference
-211123;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=4,typeOfGeneratingProcess=20,is_chemical=1;
+211123;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=4,typeOfGeneratingProcess=20;
 
 # Formaldehyde
 211124;discipline=192,parameterCategory=211,parameterNumber=124;
@@ -6622,7 +6622,7 @@
 211185;discipline=192,parameterCategory=211,parameterNumber=185;
 
 # Ozone mass mixing ratio difference (full chemistry scheme)
-211203;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=0,typeOfGeneratingProcess=20,is_chemical=1;
+211203;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=0,typeOfGeneratingProcess=20;
 
 # GEMS Total column ozone
 211206;discipline=192,parameterCategory=211,parameterNumber=206;
@@ -9241,7 +9241,7 @@
 217018;discipline=192,parameterCategory=217,parameterNumber=18;
 
 # Ammonia mass mixing ratio
-217019;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=9,is_chemical=1;
+217019;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=9;
 
 # Sulfate
 217020;discipline=192,parameterCategory=217,parameterNumber=20;
@@ -9262,7 +9262,7 @@
 217026;discipline=192,parameterCategory=217,parameterNumber=26;
 
 # Nitrogen monoxide mass mixing ratio
-217027;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=11,is_chemical=1;
+217027;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=11;
 
 # Hydroperoxy radical
 217028;discipline=192,parameterCategory=217,parameterNumber=28;
@@ -9799,37 +9799,37 @@
 217206;discipline=192,parameterCategory=217,parameterNumber=206;
 
 # Aromatic peroxy radical mass mixing ratio
-217222;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=60029,is_chemical=1;
+217222;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=60029;
 
 # Ethyne mass mixing ratio
-217223;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=10010,is_chemical=1;
+217223;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=10010;
 
 # Acetonitrile mass mixing ratio
-217224;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=10007,is_chemical=1;
+217224;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=10007;
 
 # Methyl peroxy nitrate mass mixing ratio
-217225;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=10055,is_chemical=1;
+217225;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=10055;
 
 # Hydrogen cyanide mass mixing ratio
-217226;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=10006,is_chemical=1;
+217226;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=10006;
 
 # Hydroperoxy aldehydes type 1 mass mixing ratio
-217227;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=60058,is_chemical=1;
+217227;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=60058;
 
 # Hydroperoxy aldehydes type 2 mass mixing ratio
-217228;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=60059,is_chemical=1;
+217228;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=60059;
 
 # Isoprene peroxy type B mass mixing ratio
-217229;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=60056,is_chemical=1;
+217229;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=60056;
 
 # Isoprene peroxy type D mass mixing ratio
-217230;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=60057,is_chemical=1;
+217230;discipline=0,parameterCategory=20,parameterNumber=2,constituentType=60057;
 
 # Anthropogenic volatile organic compounds mass mixing ratio
-217231;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=2,constituentType=65532,is_chemical=1;
+217231;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=2,constituentType=65532;
 
 # Biomass burning volatile organic compounds mass mixing ratio
-217232;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=2,constituentType=65531,is_chemical=1;
+217232;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=2,constituentType=65531;
 
 # Total column hydrogen peroxide
 218003;discipline=192,parameterCategory=218,parameterNumber=3;
@@ -10432,37 +10432,37 @@
 218221;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=8,is_chemical_srcsink=1,sourceSinkChemicalPhysicalProcess=7;
 
 # Column integrated mass density of Aromatic peroxy radical 
-218222;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=60029,is_chemical=1;
+218222;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=60029;
 
 # Column integrated mass density of Ethyne 
-218223;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=10010,is_chemical=1;
+218223;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=10010;
 
 # Column integrated mass density of Acetonitrile 
-218224;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=10007,is_chemical=1;
+218224;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=10007;
 
 # Column integrated mass density of Methyl peroxy nitrate 
-218225;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=10055,is_chemical=1;
+218225;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=10055;
 
 # Column integrated mass density of Hydrogen cyanide 
-218226;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=10006,is_chemical=1;
+218226;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=10006;
 
 # Column integrated mass density of Hydroperoxy aldehydes type 1 
-218227;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=60058,is_chemical=1;
+218227;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=60058;
 
 # Column integrated mass density of Hydroperoxy aldehydes type 2 
-218228;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=60059,is_chemical=1;
+218228;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=60059;
 
 # Column integrated mass density of Isoprene peroxy type B 
-218229;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=60056,is_chemical=1;
+218229;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=60056;
 
 # Column integrated mass density of Isoprene peroxy type D 
-218230;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=60057,is_chemical=1;
+218230;discipline=0,parameterCategory=20,parameterNumber=1,constituentType=60057;
 
 # Column integrated mass density of Anthropogenic volatile organic compounds 
-218231;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=1,constituentType=65532,is_chemical=1;
+218231;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=1,constituentType=65532;
 
 # Column integrated mass density of Biomass burning volatile organic compounds 
-218232;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=1,constituentType=65531,is_chemical=1;
+218232;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=1,constituentType=65531;
 
 # Ozone emissions
 219001;discipline=192,parameterCategory=219,parameterNumber=1;
@@ -11128,37 +11128,37 @@
 219221;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=8,is_chemical_srcsink=1,sourceSinkChemicalPhysicalProcess=7;
 
 # Atmosphere emission mass flux of Aromatic peroxy radical 
-219222;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=60029,is_chemical=1;
+219222;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=60029;
 
 # Atmosphere emission mass flux of Ethyne 
-219223;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=10010,is_chemical=1;
+219223;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=10010;
 
 # Atmosphere emission mass flux of Acetonitrile 
-219224;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=10007,is_chemical=1;
+219224;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=10007;
 
 # Atmosphere emission mass flux of Methyl peroxy nitrate 
-219225;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=10055,is_chemical=1;
+219225;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=10055;
 
 # Atmosphere emission mass flux of Hydrogen cyanide 
-219226;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=10006,is_chemical=1;
+219226;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=10006;
 
 # Atmosphere emission mass flux of Hydroperoxy aldehydes type 1 
-219227;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=60058,is_chemical=1;
+219227;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=60058;
 
 # Atmosphere emission mass flux of Hydroperoxy aldehydes type 2 
-219228;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=60059,is_chemical=1;
+219228;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=60059;
 
 # Atmosphere emission mass flux of Isoprene peroxy type B 
-219229;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=60056,is_chemical=1;
+219229;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=60056;
 
 # Atmosphere emission mass flux of Isoprene peroxy type D 
-219230;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=60057,is_chemical=1;
+219230;discipline=0,parameterCategory=20,parameterNumber=3,constituentType=60057;
 
 # Atmosphere emission mass flux of Anthropogenic volatile organic compounds 
-219231;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=3,constituentType=65532,is_chemical=1;
+219231;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=3,constituentType=65532;
 
 # Atmosphere emission mass flux of Biomass burning volatile organic compounds 
-219232;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=3,constituentType=65531,is_chemical=1;
+219232;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=3,constituentType=65531;
 
 # Total precipitation observation count
 220228;discipline=192,parameterCategory=220,parameterNumber=228;
@@ -11785,37 +11785,37 @@
 221221;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=8,is_chemical_srcsink=1,sourceSinkChemicalPhysicalProcess=7;
 
 # Dry deposition velocity of Aromatic peroxy radical 
-221222;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=60029,is_chemical=1;
+221222;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=60029;
 
 # Dry deposition velocity of Ethyne 
-221223;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=10010,is_chemical=1;
+221223;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=10010;
 
 # Dry deposition velocity of Acetonitrile 
-221224;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=10007,is_chemical=1;
+221224;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=10007;
 
 # Dry deposition velocity of Methyl peroxy nitrate 
-221225;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=10055,is_chemical=1;
+221225;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=10055;
 
 # Dry deposition velocity of Hydrogen cyanide 
-221226;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=10006,is_chemical=1;
+221226;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=10006;
 
 # Dry deposition velocity of Hydroperoxy aldehydes type 1 
-221227;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=60058,is_chemical=1;
+221227;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=60058;
 
 # Dry deposition velocity of Hydroperoxy aldehydes type 2 
-221228;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=60059,is_chemical=1;
+221228;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=60059;
 
 # Dry deposition velocity of Isoprene peroxy type B 
-221229;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=60056,is_chemical=1;
+221229;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=60056;
 
 # Dry deposition velocity of Isoprene peroxy type D 
-221230;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=60057,is_chemical=1;
+221230;discipline=0,parameterCategory=20,parameterNumber=15,constituentType=60057;
 
 # Dry deposition velocity of Anthropogenic volatile organic compounds 
-221231;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=15,constituentType=65532,is_chemical=1;
+221231;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=15,constituentType=65532;
 
 # Dry deposition velocity of Biomass burning volatile organic compounds 
-221232;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=15,constituentType=65531,is_chemical=1;
+221232;localTablesVersion=1,discipline=0,parameterCategory=20,parameterNumber=15,constituentType=65531;
 
 # Convective inhibition
 228001;discipline=0,parameterCategory=7,parameterNumber=7,typeOfFirstFixedSurface=1,typeOfSecondFixedSurface=8;

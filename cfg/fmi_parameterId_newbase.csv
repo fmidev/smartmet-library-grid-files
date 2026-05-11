@@ -70,10 +70,6 @@ ICNCT-PRCNT;IceConcentration;;;
 # ITHK-CM[25] => IceThickness[385]
 ITHK-CM;IceThickness;;;
 
-# Ice thickness
-# ITHK-CM[25] => MeanIceThickness[1154]
-ITHK-CM;MeanIceThickness;;;
-
 # Ice minimum thickness
 # IMINTHK-CM[26] => IceMinThickness[386]
 IMINTHK-CM;IceMinThickness;;;
@@ -1186,17 +1182,9 @@ WVELW-MS;SeaWaterVelocityW;;;
 # IRCNCT-PRCNT[306] => RaftIceConcentration[1151]
 IRCNCT-PRCNT;RaftIceConcentration;;;
 
-# Rafted sea ice concentration
-# IRCNCT-PRCNT[306] => RaftIceConcentration[1151]
-IRCNCT-PRCNT;RaftIceConcentration;MUL{$,100.000000};DIV{$,100.000000};
-
 # Ice concentration of ridging
 # IRIDGC-PRCNT[307] => RidgeIceConcentration[1153]
 IRIDGC-PRCNT;RidgeIceConcentration;;;
-
-# Ice concentration of ridging
-# IRIDGC-PRCNT[307] => RidgeIceConcentration[1153]
-IRIDGC-PRCNT;RidgeIceConcentration;MUL{$,100.000000};DIV{$,100.000000};
 
 # Ice speed in m/s
 # IFF-MS[308] => IceSpeed[389]
@@ -1250,15 +1238,15 @@ RADGLOA-JM2;RadiationGlobalAccumulation;;;
 # RRH-KGM2 => UNKNOWN
 # RRH-KGM2;0;;;
 
-# Precipitation form, duplicate parameter for HIMAN purposes
+# Precipitation form, parameter version 2
 # PRECFORM2-N[322] => PrecipitationForm[57]
 PRECFORM2-N;PrecipitationForm;;;
 
-# Precipitation form, duplicate parameter for HIMAN purposes
+# Precipitation form, parameter version 2
 # PRECFORM2-N[322] => PrecipitationForm3[1206]
 PRECFORM2-N;PrecipitationForm3;;;
 
-# Precipitation form, duplicate parameter for HIMAN purposes
+# Precipitation form, parameter version 2
 # PRECFORM2-N[322] => atmosphere_eastward_stress_due_to_gravity_wave_drag[10058]
 PRECFORM2-N;atmosphere_eastward_stress_due_to_gravity_wave_drag;;;
 
@@ -1986,11 +1974,11 @@ RR-1-MM;Precipitation1h;;;
 # RR-3-MM[506] => Precipitation3h[354]
 RR-3-MM;Precipitation3h;;;
 
-# Max temperature in Celsius on the preceding 24 hours period of the date-value
+# Maximum temperature during the preceding 24 hour period
 # TMAX-24-C[507] => MaximumTemperature24h[358]
 TMAX-24-C;MaximumTemperature24h;;;
 
-# Min temperature in Celsius on the preceding 24 hours period of the date-value
+# Minimum temperature during the preceding 24 hour period
 # TMIN-24-C[508] => MinimumTemperature24h[359]
 TMIN-24-C;MinimumTemperature24h;;;
 
@@ -2359,8 +2347,8 @@ ICING-N;Icing;;;
 # ALTIT-M;0;;;
 
 # Water level in centimeters
-# WATLEV-CM[648] => SeaLevel[60]
-WATLEV-CM;SeaLevel;;;
+# WATLEV-CM => UNKNOWN
+# WATLEV-CM;0;;;
 
 # Minimum water level in centimeters
 # WATMIN-CM => UNKNOWN
@@ -2498,7 +2486,7 @@ GRAUPMR-KGKG;GraupelMixingRatio;;;
 # PRI-KGM2[695] => PrecipitationInstantTotal[1208]
 PRI-KGM2;PrecipitationInstantTotal;;;
 
-# Precipitation form, triplicate parameter for HIMAN purposes
+# Precipitation form, parameter version 3
 # PRECFORM3-N[696] => PrecipitationForm2[1205]
 PRECFORM3-N;PrecipitationForm2;;;
 
@@ -4171,8 +4159,8 @@ PROB-LVP-1;ProbabilityOfLVP;MUL{$,100.000000};DIV{$,100.000000};
 # EHLCY-M2S2;0;;;
 
 # Ice ridge thickness
-# IRIDGE-CM[1172] => IceDegreeOfRidging[388]
-IRIDGE-CM;IceDegreeOfRidging;;;
+# IRIDGE-CM => UNKNOWN
+# IRIDGE-CM;0;;;
 
 # Ice deformation fraction
 # ICEDEFR-0TO1 => UNKNOWN
@@ -4210,7 +4198,7 @@ F90-TD-K;5103;SUM{$,-273.15};SUM{$,273.15};
 # SMARTSYMBOL-N[1181] => SmartSymbol[1383]
 SMARTSYMBOL-N;SmartSymbol;;;
 
-# Weather number describing the state of weather, precursor to Smart weather symbol
+# Weather number describing the state of weather
 # WEATHERNUMBER-N[1182] => WeatherNumber[1382]
 WEATHERNUMBER-N;WeatherNumber;;;
 
@@ -4230,11 +4218,11 @@ TMAX18-K;MaximumTemperature18;SUM{$,-273.15};SUM{$,273.15};
 # TMIN18-K[1186] => MinimumTemperature18[431]
 TMIN18-K;MinimumTemperature18;SUM{$,-273.15};SUM{$,273.15};
 
-# Maximum temperature in Kelvin on the preceding 24 hours period of the date-value
+# Maximum temperature during the preceding 24 hour period
 # TMAX-24-K[1187] => MaximumTemperature24h[358]
 TMAX-24-K;MaximumTemperature24h;SUM{$,-273.15};SUM{$,273.15};
 
-# Minimum temperature in Kelvin on the preceding 24 hours period of the date-value
+# Minimum temperature during the preceding 24 hour period
 # TMIN-24-K[1188] => MinimumTemperature24h[359]
 TMIN-24-K;MinimumTemperature24h;SUM{$,-273.15};SUM{$,273.15};
 
@@ -4274,7 +4262,7 @@ TMIN-24-K;MinimumTemperature24h;SUM{$,-273.15};SUM{$,273.15};
 # F100-TD2M-C => UNKNOWN
 # F100-TD2M-C;0;;;
 
-# Precipitation form, fourth version
+# Precipitation form, parameter version 4
 # PRECFORM4-N => UNKNOWN
 # PRECFORM4-N;0;;;
 
@@ -5059,12 +5047,12 @@ F5-WATLEV-N2000-CM;4917;;;
 F0-WATLEV-N2000-CM;4914;;;
 
 # Standard deviation of N2000 sea level height
-# WATLEV-STDDEV-N2000[1409] => NEWBASE-PARAMETER[4916]
-WATLEV-STDDEV-N2000;4916;;;
+# WATLEV-N2000-STDDEV-CM[1409] => NEWBASE-PARAMETER[4916]
+WATLEV-N2000-STDDEV-CM;4916;;;
 
 # Mean N2000 sea level height
-# WATLEV-MEAN-N2000[1410] => NEWBASE-PARAMETER[4913]
-WATLEV-MEAN-N2000;4913;;;
+# WATLEV-N2000-MEAN-CM[1410] => NEWBASE-PARAMETER[4913]
+WATLEV-N2000-MEAN-CM;4913;;;
 
 # Probability of N2000 water level being lower than given threshold
 # PROB-WATLEV-N2000-LOW-1[1411] => NEWBASE-PARAMETER[4909]
@@ -5539,16 +5527,16 @@ F100-CEIL-2-M;1526;MUL{$,3.280800};DIV{$,3.280800};
 # VF-PM10-UGM;0;;;
 
 # Probability of atmospheric ice growth for 3cm cylinder
-# PROB-ATMICEG-GH-3CM-LIMIT10 => UNKNOWN
-# PROB-ATMICEG-GH-3CM-LIMIT10;0;;;
+# PROB-ATMICEG-GH-3CM-1 => UNKNOWN
+# PROB-ATMICEG-GH-3CM-1;0;;;
 
 # Probability of atmospheric ice growth for 3cm cylinder
-# PROB-ATMICEG-GH-3CM-LIMIT100 => UNKNOWN
-# PROB-ATMICEG-GH-3CM-LIMIT100;0;;;
+# PROB-ATMICEG-GH-3CM-2 => UNKNOWN
+# PROB-ATMICEG-GH-3CM-2;0;;;
 
 # Probability of atmospheric ice growth for 3cm cylinder
-# PROB-ATMICEG-GH-3CM-LIMIT200 => UNKNOWN
-# PROB-ATMICEG-GH-3CM-LIMIT200;0;;;
+# PROB-ATMICEG-GH-3CM-3 => UNKNOWN
+# PROB-ATMICEG-GH-3CM-3;0;;;
 
 # Probability of atmospheric ice growth for 15cm cylinder
 # PROB-ATMICEG-GH-15CM-LIMIT10 => UNKNOWN
@@ -5633,3 +5621,99 @@ NL-STDDEV-0TO1;685;MUL{$,100.000000};DIV{$,100.000000};
 # FeelsLike temperature
 # FEELSLIKE-K => UNKNOWN
 # FEELSLIKE-K;0;;;
+
+# Wildfires per square kilometer
+# WILDFIRES-KM2 => UNKNOWN
+# WILDFIRES-KM2;0;;;
+
+# Major (>= 0.5 ha) wildfires per square kilometer
+# MAJORWILDFIRES-KM2 => UNKNOWN
+# MAJORWILDFIRES-KM2;0;;;
+
+# visibility class from 0 to 8, 0 is lowest
+# VV-N => UNKNOWN
+# VV-N;0;;;
+
+# cloud base height class from 0 to 5, 0 is lowest
+# CLDBASE-N => UNKNOWN
+# CLDBASE-N;0;;;
+
+# Forecast of wildfires per square kilometer
+# WILDFIRES-FC-KM2 => UNKNOWN
+# WILDFIRES-FC-KM2;0;;;
+
+# Forecast of major (>= 0.5 ha) wildfires per square kilometer
+# MAJORWILDFIRES-FC-KM2 => UNKNOWN
+# MAJORWILDFIRES-FC-KM2;0;;;
+
+# Mean value of multiplicity Of The Flash, strikes / time unit / area
+# FL-MPLTY-MEAN-N => UNKNOWN
+# FL-MPLTY-MEAN-N;0;;;
+
+# Standard deviation of multiplicity Of The Flash, strikes / time unit / area
+# FL-MPLTY-STDDEV-N => UNKNOWN
+# FL-MPLTY-STDDEV-N;0;;;
+
+# 50th fractal multiplicity Of The Flash, strikes / time unit / area in EPS
+# F50-FL-MPLTY-N => UNKNOWN
+# F50-FL-MPLTY-N;0;;;
+
+# Humidity mixing ratio
+# MIXR-KGKG => UNKNOWN
+# MIXR-KGKG;0;;;
+
+# Ozone mixing ratio
+# O3MR => UNKNOWN
+# O3MR;0;;;
+
+# Top of icing in flight level
+# ICING-TOP-FL => UNKNOWN
+# ICING-TOP-FL;0;;;
+
+# Base of icing in flight level
+# ICING-BASE-FL => UNKNOWN
+# ICING-BASE-FL;0;;;
+
+# Top of icing in hft
+# ICING-TOP-FT => UNKNOWN
+# ICING-TOP-FT;0;;;
+
+# Base of icing in hft
+# ICING-BASE-FT => UNKNOWN
+# ICING-BASE-FT;0;;;
+
+# ICAO weather code
+# ICAOWX-N => UNKNOWN
+# ICAOWX-N;0;;;
+
+# Solid precipitation over the last 12 hours water eqivalent
+# RRS-12-MM => UNKNOWN
+# RRS-12-MM;0;;;
+
+# Cloud cover in lowest layer
+# CLCOV1-0TO1 => UNKNOWN
+# CLCOV1-0TO1;0;;;
+
+# Cloud cover in second lowest layer
+# CLCOV2-0TO1 => UNKNOWN
+# CLCOV2-0TO1;0;;;
+
+# Cloud cover in third lowest layer
+# CLCOV3-0TO1 => UNKNOWN
+# CLCOV3-0TO1;0;;;
+
+# Probability of temperature being higher than given threshold
+# PROB-TW-0 => UNKNOWN
+# PROB-TW-0;0;;;
+
+# Extreme Forecast Index for wind speed
+# EFI-FF--1TO1 => UNKNOWN
+# EFI-FF--1TO1;0;;;
+
+# Wind shear per 100ft
+# WSHR-KTHFT => UNKNOWN
+# WSHR-KTHFT;0;;;
+
+# Maximum wind shear per 100ft
+# WSHR-MAX-KTHFT => UNKNOWN
+# WSHR-MAX-KTHFT;0;;;

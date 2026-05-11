@@ -273,8 +273,8 @@ void DataFetcher::splitUrl(const char *urlStr,uint& protocol,std::string& server
     if (!urlStr)
       return;
 
-    char url[3000];
-    strcpy(url,urlStr);
+    std::string urlBuf(urlStr);
+    char *url = urlBuf.data();
     char *s = url;
 
     protocol = 0;

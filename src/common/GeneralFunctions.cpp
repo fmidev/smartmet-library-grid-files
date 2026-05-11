@@ -1834,8 +1834,8 @@ void parseLatLonCoordinates(const std::string& latLonCoordinates, std::vector<T:
 {
   try
   {
-    char st[10000];
-    strcpy(st, latLonCoordinates.c_str());
+    std::string stStr(latLonCoordinates);
+    char *st = stStr.data();
     char *field[1000];
     uint c = 1;
     field[0] = st;
@@ -2668,8 +2668,8 @@ int timePeriodToSeconds(const char *timePeriod)
 {
   try
   {
-    char tmp[100];
-    strcpy(tmp, timePeriod);
+    std::string tmpStr(timePeriod);
+    char *tmp = tmpStr.data();
     char *p = strcasestr(tmp, "s");
     if (p != nullptr)
     {

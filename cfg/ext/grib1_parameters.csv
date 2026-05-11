@@ -27,3 +27,13 @@
 #228139;table2Version=128,indicatorOfParameter=170,indicatorOfTypeOfLevel=112;
 #228251;table2Version=228,indicatorOfParameter=251;
 
+# Snow melt
+45;table2Version=128,indicatorOfParameter=45;
+
+# Distance to water(in general), river, lake and ocean parameters from DEM
+128100;table2Version=128,indicatorOfParameter=100;
+128101;table2Version=128,indicatorOfParameter=101;
+128102;table2Version=128,indicatorOfParameter=102;
+128103;table2Version=128,indicatorOfParameter=103;
+
+# C3S land cover info as 
