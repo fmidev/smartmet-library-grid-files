@@ -192,15 +192,14 @@ void NetCdfFile::readAttribute(MemoryReader& memoryReader,std::string& attrName,
         if (rCount > 0)
           rCount = ((rCount-1)/4 + 1) * 4;
 
-        char str[rCount+1];
+        std::string str(attrCount, '\0');
         for (uint a=0; a<rCount; a++)
         {
           memoryReader >> val;
           if (a < attrCount)
             str[a] = val;
         }
-        str[attrCount] = '\0';
-        attrValues.push_back(std::string(str));
+        attrValues.push_back(str);
       }
       break;
 
@@ -853,7 +852,7 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
   try
   {
     int typeSize[] = {0,1,1,2,4,4,8};
-    char tmp[1000];
+    std::string tmp;
 
 
     uchar type[5] = {0};
@@ -908,11 +907,9 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       if (nameLen > 0)
         nameLen = ((nameLen-1)/4 + 1) * 4;
 
-      char name[nameLen+1];
+      std::string name(nameLen, '\0');
       for (uint n = 0; n<nameLen; n++)
         name[n] = memoryReader.read_int8();
-
-      name[nameLen] = '\0';
 
       uint dimLen = 0;
       memoryReader >> dimLen;
@@ -920,12 +917,11 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       if (dimLen == 0)
         dimLen = recordCount;
 
-      //printf("  [%s][%u]\n",name,dimLen);
-      dimNames.push_back(std::string(name));
+      //printf("  [%s][%u]\n",name.c_str(),dimLen);
+      dimNames.push_back(name);
       dimLengths.push_back(std::to_string(dimLen));
 
-      sprintf(tmp,"%s.dimension.length",name);
-      insertProperty(tmp,dimLen);
+      insertProperty(name + ".dimension.length", dimLen);
     }
 
     insertProperty("netcdf.dimension.names",dimNames);
@@ -950,8 +946,7 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       std::string attrName;
       std::vector<std::string> attrValues;
       readAttribute(memoryReader,attrName,attrValues);
-      sprintf(tmp,"netcdf.attributes.%s",attrName.c_str());
-      insertProperty(tmp,attrValues);
+      insertProperty("netcdf.attributes." + attrName, attrValues);
     }
 
 
@@ -978,12 +973,11 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
       if (nameLen > 0)
         nameLen = ((nameLen-1)/4 + 1) * 4;
 
-      char varName[nameLen+1];
+      std::string varName(nameLen, '\0');
       for (uint n = 0; n<nameLen; n++)
         varName[n] = memoryReader.read_int8();
 
-      varName[nameLen] = '\0';
-      variables.push_back(std::string(varName));
+      variables.push_back(varName);
 
       // Variable dimension indexes
 
@@ -1000,11 +994,8 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
         if (dim < dimNames.size() )
           dimList2.push_back(dimNames[dim]);
       }
-      sprintf(tmp,"%s.dimension.indexes",varName);
-      insertProperty(tmp,dimList);
-
-      sprintf(tmp,"%s.dimension.names",varName);
-      insertProperty(tmp,dimList2);
+      insertProperty(varName + ".dimension.indexes", dimList);
+      insertProperty(varName + ".dimension.names", dimList2);
 
       // Variable attributes
 
@@ -1027,8 +1018,7 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
         std::vector<std::string> attrValues;
         readAttribute(memoryReader,attrName,attrValues);
 
-        sprintf(tmp,"%s.%s",varName,attrName.c_str());
-        insertProperty(tmp,attrValues);
+        insertProperty(varName + "." + attrName, attrValues);
       }
 
       // Variable value
@@ -1047,17 +1037,10 @@ void NetCdfFile::readPropertyList(MemoryReader& memoryReader)
 
       uint items = vSize/typeSize[ncType];
 
-      sprintf(tmp,"%s.type",varName);
-      insertProperty(tmp,ncType);
-
-      sprintf(tmp,"%s.items",varName);
-      insertProperty(tmp,items);
-
-      sprintf(tmp,"%s.offset",varName);
-      insertProperty(tmp,offset);
-
-      sprintf(tmp,"%s.size",varName);
-      insertProperty(tmp,vSize);
+      insertProperty(varName + ".type", ncType);
+      insertProperty(varName + ".items", items);
+      insertProperty(varName + ".offset", offset);
+      insertProperty(varName + ".size", vSize);
     }
 
     insertProperty("netcdf.variables",variables);
@@ -1079,7 +1062,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
   try
   {
     int typeSize[] = {0,1,1,2,4,4,8};
-    char tmp[1000];
+    std::string tmp;
 
     OGRSpatialReference latlonSp;
     latlonSp.importFromEPSG(4326);
@@ -1093,7 +1076,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
     {
       for (auto it = d->second.begin(); it != d->second.end(); ++it)
       {
-        sprintf(tmp,"%s.dimension.indexes",it->c_str());
+        tmp = *it + ".dimension.indexes";
         auto dd = mPropertyList.find(tmp);
         if (dd != mPropertyList.end())
         {
@@ -1125,7 +1108,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             // This is a grid variable
 
             std::string coordStr;
-            sprintf(tmp,"%s.coordinates",it->c_str());
+            tmp = *it + ".coordinates";
             if (getProperty(tmp,0,coordStr))
             {
               std::vector<std::string> coords;
@@ -1155,24 +1138,19 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
                 n = yName;
 
               std::string standardName;
-              sprintf(tmp,"%s.standard_name",n.c_str());
-              getProperty(tmp,0,standardName);
+              getProperty(n + ".standard_name", 0, standardName);
 
               std::string longName;
-              sprintf(tmp,"%s.long_name",n.c_str());
-              getProperty(tmp,0,longName);
+              getProperty(n + ".long_name", 0, longName);
 
               std::string units;
-              sprintf(tmp,"%s.units",n.c_str());
-              getProperty(tmp,0,units);
+              getProperty(n + ".units", 0, units);
 
               std::string axis;
-              sprintf(tmp,"%s.axis",n.c_str());
-              getProperty(tmp,0,axis);
+              getProperty(n + ".axis", 0, axis);
 
               std::string positive;
-              sprintf(tmp,"%s.positive",n.c_str());
-              getProperty(tmp,0,positive);
+              getProperty(n + ".positive", 0, positive);
 
               if (strcasecmp(standardName.c_str(),"time") == 0 || strcasecmp(longName.c_str(),"time") == 0 || strcasecmp(axis.c_str(),"T") == 0 || strcasecmp(n.c_str(),"time") == 0 || strcasecmp(n.c_str(),"time_counter") == 0)
               {
@@ -1228,62 +1206,41 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
 
 
             Int64 dataStartOffset = 0;
-            sprintf(tmp,"%s.offset",it->c_str());
-            getProperty(tmp,0,dataStartOffset);
+            getProperty(*it + ".offset", 0, dataStartOffset);
 
             uint dataType = 0;
-            sprintf(tmp,"%s.type",it->c_str());
-            getProperty(tmp,0,dataType);
+            getProperty(*it + ".type", 0, dataType);
 
             double dataBaseValue = 0;
-            sprintf(tmp,"%s.add_offset",it->c_str());
-            getProperty(tmp,0,dataBaseValue);
+            getProperty(*it + ".add_offset", 0, dataBaseValue);
 
             double dataScaleFactor = 1;
-            sprintf(tmp,"%s.scale_factor",it->c_str());
-            getProperty(tmp,0,dataScaleFactor);
+            getProperty(*it + ".scale_factor", 0, dataScaleFactor);
 
             float missingValue = ParamValueMissing;
-            sprintf(tmp,"%s.missing_value",it->c_str());
-            if (!getProperty(tmp,0,missingValue))
-            {
-              sprintf(tmp,"%s._FillValue",it->c_str());
-              getProperty(tmp,0,missingValue);
-            }
+            if (!getProperty(*it + ".missing_value", 0, missingValue))
+              getProperty(*it + "._FillValue", 0, missingValue);
 
-            sprintf(tmp,"%s.missing_value",xName.c_str());
-            if (!getProperty(tmp,0,xMissingValue))
-            {
-              sprintf(tmp,"%s._FillValue",xName.c_str());
-              getProperty(tmp,0,xMissingValue);
-            }
+            if (!getProperty(xName + ".missing_value", 0, xMissingValue))
+              getProperty(xName + "._FillValue", 0, xMissingValue);
 
-            sprintf(tmp,"%s.missing_value",yName.c_str());
-            if (!getProperty(tmp,0,yMissingValue))
-            {
-              sprintf(tmp,"%s._FillValue",yName.c_str());
-              getProperty(tmp,0,yMissingValue);
-            }
+            if (!getProperty(yName + ".missing_value", 0, yMissingValue))
+              getProperty(yName + "._FillValue", 0, yMissingValue);
 
             std::string xUnits;
-            sprintf(tmp,"%s.units",xName.c_str());
-            getProperty(tmp,0,xUnits);
+            getProperty(xName + ".units", 0, xUnits);
 
             std::string yUnits;
-            sprintf(tmp,"%s.units",yName.c_str());
-            getProperty(tmp,0,yUnits);
+            getProperty(yName + ".units", 0, yUnits);
 
             std::string dataUnits;
-            sprintf(tmp,"%s.units",it->c_str());
-            getProperty(tmp,0,dataUnits);
+            getProperty(*it + ".units", 0, dataUnits);
 
             std::string parameterStandardName;
-            sprintf(tmp,"%s.standard_name",it->c_str());
-            getProperty(tmp,0,parameterStandardName);
+            getProperty(*it + ".standard_name", 0, parameterStandardName);
 
             std::string gridMapping;
-            sprintf(tmp,"%s.grid_mapping",it->c_str());
-            getProperty(tmp,0,gridMapping);
+            getProperty(*it + ".grid_mapping", 0, gridMapping);
 
             uint dataSize = xCount * yCount * typeSize[dataType];
 
@@ -1326,9 +1283,8 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             int second = 0;
             time_t unitSize = 0;
 
-            sprintf(tmp,"%s.units",timeName.c_str());
             std::string time_units;
-            if (getProperty(tmp,0,time_units))
+            if (getProperty(timeName + ".units", 0, time_units))
             {
               parseNetCdfTime(time_units,year,month,day,hour,minute,second,unitSize);
               // printf("TIME %04d%02d%02dT%02d%02d%02d  %ld\n",year,month,day,hour,minute,second,unitSize);
@@ -1346,23 +1302,12 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             double scaleFactor = 1;
             double baseValue = 0;
 
-            sprintf(tmp,"%s.type",timeName.c_str());
-            getProperty(tmp,0,type);
-
-            sprintf(tmp,"%s.size",timeName.c_str());
-            getProperty(tmp,0,size);
-
-            sprintf(tmp,"%s.add_offset",timeName.c_str());
-            getProperty(tmp,0,baseValue);
-
-            sprintf(tmp,"%s.scale_factor",timeName.c_str());
-            getProperty(tmp,0,scaleFactor);
-
-            sprintf(tmp,"%s.offset",timeName.c_str());
-            getProperty(tmp,0,offset);
-
-            sprintf(tmp,"%s.items",timeName.c_str());
-            getProperty(tmp,0,itemCount);
+            getProperty(timeName + ".type", 0, type);
+            getProperty(timeName + ".size", 0, size);
+            getProperty(timeName + ".add_offset", 0, baseValue);
+            getProperty(timeName + ".scale_factor", 0, scaleFactor);
+            getProperty(timeName + ".offset", 0, offset);
+            getProperty(timeName + ".items", 0, itemCount);
 
             std::vector<double> timeValues;
             //printf("READ TIME %f %f\n",baseValue,scaleFactor);
@@ -1405,23 +1350,12 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               scaleFactor = 1;
               baseValue = 0;
 
-              sprintf(tmp,"%s.type",levelName.c_str());
-              getProperty(tmp,0,type);
-
-              sprintf(tmp,"%s.size",levelName.c_str());
-              getProperty(tmp,0,size);
-
-              sprintf(tmp,"%s.add_offset",levelName.c_str());
-              getProperty(tmp,0,baseValue);
-
-              sprintf(tmp,"%s.scale_factor",levelName.c_str());
-              getProperty(tmp,0,scaleFactor);
-
-              sprintf(tmp,"%s.offset",levelName.c_str());
-              getProperty(tmp,0,offset);
-
-              sprintf(tmp,"%s.items",levelName.c_str());
-              getProperty(tmp,0,itemCount);
+              getProperty(levelName + ".type", 0, type);
+              getProperty(levelName + ".size", 0, size);
+              getProperty(levelName + ".add_offset", 0, baseValue);
+              getProperty(levelName + ".scale_factor", 0, scaleFactor);
+              getProperty(levelName + ".offset", 0, offset);
+              getProperty(levelName + ".items", 0, itemCount);
 
               readValues(memoryReader,type,itemCount,offset,baseValue,scaleFactor,levelList);
             }
@@ -1449,23 +1383,12 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               scaleFactor = 1;
               baseValue = 0;
 
-              sprintf(tmp,"%s.type",xName.c_str());
-              getProperty(tmp,0,type);
-
-              sprintf(tmp,"%s.size",xName.c_str());
-              getProperty(tmp,0,size);
-
-              sprintf(tmp,"%s.offset",xName.c_str());
-              getProperty(tmp,0,offset);
-
-              sprintf(tmp,"%s.add_offset",xName.c_str());
-              getProperty(tmp,0,baseValue);
-
-              sprintf(tmp,"%s.scale_factor",xName.c_str());
-              getProperty(tmp,0,scaleFactor);
-
-              sprintf(tmp,"%s.items",xName.c_str());
-              getProperty(tmp,0,itemCount);
+              getProperty(xName + ".type", 0, type);
+              getProperty(xName + ".size", 0, size);
+              getProperty(xName + ".offset", 0, offset);
+              getProperty(xName + ".add_offset", 0, baseValue);
+              getProperty(xName + ".scale_factor", 0, scaleFactor);
+              getProperty(xName + ".items", 0, itemCount);
 
               readValues(memoryReader,type,xCount,offset,baseValue,scaleFactor*xScale,mXCoordinates);
 
@@ -1488,23 +1411,12 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               scaleFactor = 1;
               baseValue = 0;
 
-              sprintf(tmp,"%s.type",yName.c_str());
-              getProperty(tmp,0,type);
-
-              sprintf(tmp,"%s.size",yName.c_str());
-              getProperty(tmp,0,size);
-
-              sprintf(tmp,"%s.offset",yName.c_str());
-              getProperty(tmp,0,offset);
-
-              sprintf(tmp,"%s.add_offset",yName.c_str());
-              getProperty(tmp,0,baseValue);
-
-              sprintf(tmp,"%s.scale_factor",yName.c_str());
-              getProperty(tmp,0,scaleFactor);
-
-              sprintf(tmp,"%s.items",yName.c_str());
-              getProperty(tmp,0,itemCount);
+              getProperty(yName + ".type", 0, type);
+              getProperty(yName + ".size", 0, size);
+              getProperty(yName + ".offset", 0, offset);
+              getProperty(yName + ".add_offset", 0, baseValue);
+              getProperty(yName + ".scale_factor", 0, scaleFactor);
+              getProperty(yName + ".items", 0, itemCount);
 
               if ((int)itemCount == yCount)
               {
@@ -1544,8 +1456,7 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
             // ##### Projection ####################################################
 
             std::string mappingName;
-            sprintf(tmp,"%s.grid_mapping_name",gridMapping.c_str());
-            getProperty(tmp,0,mappingName);
+            getProperty(gridMapping + ".grid_mapping_name", 0, mappingName);
 
             double startx = mXCoordinates[0];
             double starty = mYCoordinates[0];
@@ -1613,28 +1524,22 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               projectionId = T::GridProjectionValue::PolarStereographic;
 
               double longitude_of_projection_origin = 0.0;
-              sprintf(tmp,"%s.longitude_of_projection_origin",gridMapping.c_str());
-              getProperty(tmp,0,longitude_of_projection_origin);
+              getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
 
               double latitude_of_projection_origin = 0.0;
-              sprintf(tmp,"%s.latitude_of_projection_origin",gridMapping.c_str());
-              getProperty(tmp,0,latitude_of_projection_origin);
+              getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
 
               double scale_factor_at_projection_origin = 0.0;
-              sprintf(tmp,"%s.scale_factor_at_projection_origin",gridMapping.c_str());
-              getProperty(tmp,0,scale_factor_at_projection_origin);
+              getProperty(gridMapping + ".scale_factor_at_projection_origin", 0, scale_factor_at_projection_origin);
 
               double straight_vertical_longitude_from_pole = 0.0;
-              sprintf(tmp,"%s.straight_vertical_longitude_from_pole",gridMapping.c_str());
-              getProperty(tmp,0,straight_vertical_longitude_from_pole);
+              getProperty(gridMapping + ".straight_vertical_longitude_from_pole", 0, straight_vertical_longitude_from_pole);
 
               double false_easting = 0.0;
-              sprintf(tmp,"%s.false_easting",gridMapping.c_str());
-              getProperty(tmp,0,false_easting);
+              getProperty(gridMapping + ".false_easting", 0, false_easting);
 
               double false_northing = 0.0;
-              sprintf(tmp,"%s.false_northing",gridMapping.c_str());
-              getProperty(tmp,0,false_northing);
+              getProperty(gridMapping + ".false_northing", 0, false_northing);
 
               OGRSpatialReference sp;
               sp.SetPS(latitude_of_projection_origin,longitude_of_projection_origin,scale_factor_at_projection_origin,false_easting,false_northing);
@@ -1673,20 +1578,16 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               dy = mYCoordinates[1] - mYCoordinates[0];
 
               double longitude_of_projection_origin = 0.0;
-              sprintf(tmp,"%s.longitude_of_projection_origin",gridMapping.c_str());
-              getProperty(tmp,0,longitude_of_projection_origin);
+              getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
 
               double latitude_of_projection_origin = 0.0;
-              sprintf(tmp,"%s.latitude_of_projection_origin",gridMapping.c_str());
-              getProperty(tmp,0,latitude_of_projection_origin);
+              getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
 
               double false_easting = 0.0;
-              sprintf(tmp,"%s.false_easting",gridMapping.c_str());
-              getProperty(tmp,0,false_easting);
+              getProperty(gridMapping + ".false_easting", 0, false_easting);
 
               double false_northing = 0.0;
-              sprintf(tmp,"%s.false_northing",gridMapping.c_str());
-              getProperty(tmp,0,false_northing);
+              getProperty(gridMapping + ".false_northing", 0, false_northing);
 
               OGRSpatialReference sp;
               sp.SetLAEA(latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);
@@ -1728,33 +1629,26 @@ void NetCdfFile::createMessageInfoList(MemoryReader& memoryReader,MessageInfoVec
               dy = (mYCoordinates[1] - mYCoordinates[0])*1000;
 
               double standard_parallel = 0.0;
-              sprintf(tmp,"%s.standard_parallel",gridMapping.c_str());
-              getProperty(tmp,0,standard_parallel);
+              getProperty(gridMapping + ".standard_parallel", 0, standard_parallel);
 
               double longitude_of_central_meridian = 0.0;
-              sprintf(tmp,"%s.longitude_of_central_meridian",gridMapping.c_str());
-              getProperty(tmp,0,longitude_of_central_meridian);
+              getProperty(gridMapping + ".longitude_of_central_meridian", 0, longitude_of_central_meridian);
 
 
               double longitude_of_projection_origin = 0.0;
-              sprintf(tmp,"%s.longitude_of_projection_origin",gridMapping.c_str());
-              getProperty(tmp,0,longitude_of_projection_origin);
+              getProperty(gridMapping + ".longitude_of_projection_origin", 0, longitude_of_projection_origin);
 
               double latitude_of_projection_origin = 0.0;
-              sprintf(tmp,"%s.latitude_of_projection_origin",gridMapping.c_str());
-              getProperty(tmp,0,latitude_of_projection_origin);
+              getProperty(gridMapping + ".latitude_of_projection_origin", 0, latitude_of_projection_origin);
 
               double false_easting = 0.0;
-              sprintf(tmp,"%s.false_easting",gridMapping.c_str());
-              getProperty(tmp,0,false_easting);
+              getProperty(gridMapping + ".false_easting", 0, false_easting);
 
               double false_northing = 0.0;
-              sprintf(tmp,"%s.false_northing",gridMapping.c_str());
-              getProperty(tmp,0,false_northing);
+              getProperty(gridMapping + ".false_northing", 0, false_northing);
 
               double earth_radius = 6371229.0;
-              sprintf(tmp,"%s.earth_radius",gridMapping.c_str());
-              getProperty(tmp,0,earth_radius);
+              getProperty(gridMapping + ".earth_radius", 0, earth_radius);
 
               OGRSpatialReference sp;
               sp.SetLCC(standard_parallel,longitude_of_central_meridian,latitude_of_projection_origin,longitude_of_projection_origin,false_easting,false_northing);

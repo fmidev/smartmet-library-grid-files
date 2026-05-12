@@ -515,13 +515,10 @@ void Log::truncate()
     fseek(oldfile,pos,SEEK_SET);
     if (fgets(st,10000,oldfile) != 0)
     {
-      while (!feof(oldfile))
+      int n;
+      while ((n = fread(st,1,10000,oldfile)) > 0)
       {
-        int n = fread(st,1,10000,oldfile);
-        if (n > 0)
-        {
-          fwrite(st,1,n,file);
-        }
+        fwrite(st,1,n,file);
       }
     }
     fclose(oldfile);

@@ -459,10 +459,10 @@ void copyFile(const char *sourceFileName,const char *targetFileName,bool& shutdo
     }
 
     char buf[1000000];
-    while (!feof(sFile)  &&  !shutdownRequested)
+    int nr;
+    while (!shutdownRequested && (nr = fread(buf,1,1000000,sFile)) > 0)
     {
-      int nr = fread(buf,1,1000000,sFile);
-      if (nr > 0 && !shutdownRequested)
+      if (!shutdownRequested)
       {
         int nw = fwrite(buf,1,nr,tFile);
       }
@@ -1834,8 +1834,8 @@ void parseLatLonCoordinates(const std::string& latLonCoordinates, std::vector<T:
 {
   try
   {
-    char st[10000];
-    strcpy(st, latLonCoordinates.c_str());
+    std::string stStr(latLonCoordinates);
+    char *st = stStr.data();
     char *field[1000];
     uint c = 1;
     field[0] = st;
@@ -2668,8 +2668,8 @@ int timePeriodToSeconds(const char *timePeriod)
 {
   try
   {
-    char tmp[100];
-    strcpy(tmp, timePeriod);
+    std::string tmpStr(timePeriod);
+    char *tmp = tmpStr.data();
     char *p = strcasestr(tmp, "s");
     if (p != nullptr)
     {
@@ -2967,9 +2967,9 @@ void readCsvFile(const char *filename,std::vector<std::vector<std::string>>& rec
 
     char st[10000];
 
-    while (!feof(file))
+    while (fgets(st,10000,file) != nullptr)
     {
-      if (fgets(st,10000,file) != nullptr  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         std::vector<std::string> fields;
         bool ind = false;
@@ -3047,16 +3047,13 @@ void readEofLines(const char *filename,uint numberOfLines,std::vector<std::strin
     char st[10000];
     fseek(file,startPos,SEEK_SET);
 
-    while (!feof(file))
+    while (fgets(st,10000,file) != nullptr)
     {
-      if (fgets(st,10000,file) != nullptr)
-      {
-        char *p = strstr(st,"\n");
-        if (p)
-          *p ='\0';
+      char *p = strstr(st,"\n");
+      if (p)
+        *p ='\0';
 
-        tmpLines.push_back(std::string(st));
-      }
+      tmpLines.push_back(std::string(st));
     }
     fclose(file);
 

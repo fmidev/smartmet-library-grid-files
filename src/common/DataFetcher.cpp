@@ -100,9 +100,9 @@ void DataFetcher::loadAccessFile(const char *filename,AccessMap& mAccessMap)
 
     char st[1000];
 
-    while (!feof(file))
+    while (fgets(st,1000,file) != nullptr)
     {
-      if (fgets(st,1000,file) != nullptr  &&  st[0] != '#')
+      if (st[0] != '#')
       {
         bool ind = false;
         char *field[100];
@@ -273,8 +273,8 @@ void DataFetcher::splitUrl(const char *urlStr,uint& protocol,std::string& server
     if (!urlStr)
       return;
 
-    char url[3000];
-    strcpy(url,urlStr);
+    std::string urlBuf(urlStr);
+    char *url = urlBuf.data();
     char *s = url;
 
     protocol = 0;

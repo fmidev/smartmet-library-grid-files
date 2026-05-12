@@ -3,6 +3,7 @@
 #include "ShowFunction.h"
 #include "GeneralFunctions.h"
 #include <macgyver/Exception.h>
+#include <vector>
 
 
 #define FUNCTION_TRACE FUNCTION_TRACE_OFF
@@ -418,13 +419,14 @@ void RequestCounter::loadGeometryHitCounters(const char *filename)
       */
     }
 
-    char st[100000];
+    std::vector<char> stBuf(100001);
+    char *st = stBuf.data();
 
-    while (!feof(file))
+    while (fgets(st,100000,file) != nullptr)
     {
-      if (fgets(st,100000,file) != nullptr  &&  st[0] != '#')
+      if (st[0] != '#')
       {
-        char *field[10000];
+        std::vector<char*> field(10001);
         uint c = 1;
         field[0] = st;
         char *p = st;

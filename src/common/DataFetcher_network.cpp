@@ -292,16 +292,16 @@ void DataFetcher_network::getFileList_S3(uint protocol,const char *server,const 
     char data[dataSize];
     bool truncated = false;
     std::string lastKey;
-    char fname[1000];
+    std::string fname;
 
     do
     {
       if (truncated)
-        sprintf(fname,"%s?marker=%s",dir,lastKey.c_str());
+        fname = std::string(dir) + "?marker=" + lastKey;
       else
-        strcpy(fname,dir);
+        fname = dir;
 
-      int n = getData(ServerType::S3,protocol,server,fname,dataSize,dataSize,data);
+      int n = getData(ServerType::S3,protocol,server,fname.c_str(),dataSize,dataSize,data);
       //printf("READ %d\n",n);
       if (n <= 0)
         return;

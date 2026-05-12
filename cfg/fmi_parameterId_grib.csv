@@ -481,6 +481,7 @@ TMAX-K;201;;;
 TMIN-K;202;;;
 
 # 203:Ozone mass mixing ratio (kg kg-1)
+O3-KGKG;203
 
 # 204:Precipitation analysis weights (~)
 
@@ -4093,10 +4094,13 @@ RADGLO-WM2;3116;;;
 # 210120:Altitude of plume top (m)
 
 # 210121:Nitrogen dioxide mass mixing ratio (kg kg-1)
+NO2-UGM3;210121
 
 # 210122:Sulphur dioxide mass mixing ratio (kg kg-1)
+SO2-UGM3;210122;
 
 # 210123:Carbon monoxide mass mixing ratio (kg kg-1)
+CO-UGM3;210123
 
 # 210124:Formaldehyde (kg kg-1)
 
@@ -4229,6 +4233,7 @@ RADGLO-WM2;3116;;;
 # 210197:Near IR albedo for diffuse radiation, geometric component  ((0 - 1))
 
 # 210203:Ozone mass mixing ratio (full chemistry scheme) (kg kg-1)
+O3-UGM3;210203
 
 # 210206:GEMS Total column ozone (kg m-2)
 
@@ -8986,6 +8991,7 @@ NLM-PRCNT;260110;;;
 # 260129:Aerosol type (code table (4.205))
 
 # 260130:Total ozone (DU)
+O3-KGKG;260130
 
 # 260131:Ozone mixing ratio (kg kg-1)
 

@@ -224,13 +224,10 @@ void ConfigurationFile::replaceAttributeNamesWithValues(const std::string& input
     }
 
     char st[10000];
-    while (!feof(inFile))
+    while (fgets(st,10000,inFile) != nullptr)
     {
-      if (fgets(st,10000,inFile) != nullptr)
-      {
-        std::string newStr = parseValue(std::string(st));
-        fprintf(outFile,"%s",newStr.c_str());
-      }
+      std::string newStr = parseValue(std::string(st));
+      fprintf(outFile,"%s",newStr.c_str());
     }
 
     fclose(inFile);
@@ -1026,7 +1023,7 @@ void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UI
     bool ind = false;
     while (a < len)
     {
-      if (st[a] == '"'  &&  st[a-1] != '\\')
+      if (st[a] == '"'  &&  (a == 0 || st[a-1] != '\\'))
       {
         ind = !ind;
         if (ind)
@@ -1048,7 +1045,7 @@ void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UI
           while (a < len  &&  st[a] != '\n')
             a++;
         }
-        if (st[a] == '/'  &&  st[a+1] == '/')
+        if ((a+1) < len  &&  st[a] == '/'  &&  st[a+1] == '/')
         {
           while (a < len  &&  st[a] != '\n')
             a++;
@@ -1057,9 +1054,9 @@ void ConfigurationFile::removeComments(char *st,UInt64 *positions,char *newst,UI
             a++;
         }
         else
-        if (st[a] == '/'  &&  st[a+1] == '*')
+        if ((a+1) < len  &&  st[a] == '/'  &&  st[a+1] == '*')
         {
-          while (a < len  &&  !(st[a-1] == '*'  &&  st[a] == '/'))
+          while (a < len  &&  !(a > 0 &&  st[a-1] == '*'  &&  st[a] == '/'))
             a++;
 
           if (a < len)

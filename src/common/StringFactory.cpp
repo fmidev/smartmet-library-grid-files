@@ -79,9 +79,22 @@ uint StringFactory::create(const char *str)
     }
 
     AutoWriteLock writeLock(&modificationLock);
+
+    // Re-check after acquiring write lock: another thread may have inserted between the two locks
+    auto res = stringIndex.find(str);
+    if (res != stringIndex.end())
+      return res->second;
+
     uint idx = stringIndex.size();
     uint arrayNum = idx / stringArraySize;
     uint arrayIdx = idx % stringArraySize;
+
+    if (arrayNum >= stringArrayCount)
+    {
+      Fmi::Exception exception(BCP, "StringFactory capacity exceeded!");
+      exception.addParameter("Capacity", std::to_string(stringArrayCount * stringArraySize));
+      throw exception;
+    }
 
     if (stringTable[arrayNum] == nullptr)
     {
