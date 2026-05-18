@@ -591,12 +591,6 @@ void Message::getGridIsobandsByGeometry(T::ParamValue_vec& contourLowValues,T::P
         char tmp[100];
         if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (getGridProjection() == T::GridProjectionValue::LatLon)
@@ -1011,12 +1005,6 @@ void Message::getGridIsolinesByGeometry(T::ParamValue_vec& contourValues,T::Attr
         char tmp[100];
         if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (getGridProjection() == T::GridProjectionValue::LatLon)
@@ -1441,12 +1429,6 @@ void Message::getGridStreamlinesByGeometry(T::AttributeList& attributeList,uint 
         char tmp[100];
         if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (getGridProjection() == T::GridProjectionValue::LatLon)
@@ -3192,12 +3174,6 @@ void Message::getGridValueVectorByGeometry(T::AttributeList& attributeList,uint 
         char tmp[100];
         if (getGridLatLonCoordinatesByGridPoint(px1,py1,y1,x1)  &&  getGridLatLonCoordinatesByGridPoint(px2,py2,y2,x2))
         {
-          if (x2 < x1  &&  x2 < 0)
-            x2 += 360;
-
-          if (x2 < x1  && x1 >= 180)
-            x1 -= 360;
-
           sprintf(tmp,"%.15f,%.15f,%.15f,%.15f",x1,y1,x2,y2);
           attributeList.setAttribute("grid.llbox",tmp);
           if (getGridProjection() == T::GridProjectionValue::LatLon)
